@@ -27,6 +27,9 @@ public class FuguGetByLabelIdParams {
     @SerializedName("app_version")
     @Expose
     private String appVersion = BuildConfig.VERSION_NAME;
+    @SerializedName("source_type")
+    @Expose
+    private int source;
 
     public FuguGetByLabelIdParams(String appSecretKey, Long labelId, String userId, Integer pageStart) {
         this.appSecretKey = appSecretKey;

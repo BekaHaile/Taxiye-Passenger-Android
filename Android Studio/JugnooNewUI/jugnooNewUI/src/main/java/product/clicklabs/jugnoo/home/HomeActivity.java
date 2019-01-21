@@ -67,7 +67,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
@@ -2514,12 +2514,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void endRideWithGif() {
         relativeLayoutGreat.setVisibility(View.VISIBLE);
-        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
+        RequestOptions options = new RequestOptions().placeholder(R.drawable.great_place_holder);
         Glide.with(HomeActivity.this)
                 .load(R.drawable.android_thumbs_up)
-                .placeholder(R.drawable.great_place_holder)
+                .apply(options)
                 //.fitCenter()
-                .into(imageViewTarget);
+                .into(imageViewThumbsUpGif);
         getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -1,11 +1,18 @@
 package com.fugu.retrofit;
 
+import com.fugu.BuildConfig;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+
+import static com.fugu.constant.FuguAppConstant.ANDROID_USER;
+import static com.fugu.constant.FuguAppConstant.APP_SOURCE_TYPE;
+import static com.fugu.constant.FuguAppConstant.APP_VERSION;
+import static com.fugu.constant.FuguAppConstant.DEVICE_TYPE;
 
 
 /**
@@ -16,6 +23,9 @@ public class MultipartParams {
     HashMap<String, RequestBody> map = new HashMap<>();
 
     private MultipartParams(Builder builder) {
+        builder.map.put(APP_SOURCE_TYPE, RetrofitUtils.getRequestBodyFromString(String.valueOf(1)));
+        builder.map.put(APP_VERSION, RetrofitUtils.getRequestBodyFromString(String.valueOf(BuildConfig.VERSION_CODE)));
+        builder.map.put(DEVICE_TYPE, RetrofitUtils.getRequestBodyFromString(String.valueOf(ANDROID_USER)));
         this.map = builder.map;
 
     }

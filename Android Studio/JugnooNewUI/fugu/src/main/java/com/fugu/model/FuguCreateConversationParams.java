@@ -2,6 +2,7 @@ package com.fugu.model;
 
 import com.fugu.BuildConfig;
 import com.fugu.FuguConfig;
+import com.fugu.GroupingTag;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -57,6 +58,28 @@ public class FuguCreateConversationParams {
     @SerializedName("app_version")
     @Expose
     private String appVersion = BuildConfig.VERSION_NAME;
+    @SerializedName("source_type")
+    @Expose
+    private int source;
+    @SerializedName("grouping_tags")
+    @Expose
+    private ArrayList<String> groupingTags = new ArrayList<>();
+
+    public void setIsSupportTicket(int isSupportTicket) {
+        this.isSupportTicket = isSupportTicket;
+    }
+
+    @SerializedName("in_app_support_channel")
+    @Expose
+    private int isSupportTicket;
+
+    public void setCustomAttributes(CustomAttributes customAttributes) {
+        this.customAttributes = customAttributes;
+    }
+
+    @SerializedName("custom_attributes")
+    @Expose
+    public CustomAttributes customAttributes;
 
     public FuguCreateConversationParams(String appSecretKey, Long labelId,
                                         String transactionId, String userUniqueKey, JsonArray otherUserUniqueKeys,
@@ -81,6 +104,7 @@ public class FuguCreateConversationParams {
 
         this.channelName = channelName;
         this.tags = tags;
+        source = 1;
     }
 
     public FuguCreateConversationParams(String appSecretKey, Long labelId,
@@ -96,12 +120,14 @@ public class FuguCreateConversationParams {
         this.enUserId=enUserId;
         this.deviceType = 1;
         this.appVersion = BuildConfig.VERSION_NAME;
+        source = 1;
     }
 
     public FuguCreateConversationParams(String appSecretKey, Long labelId, String enUserId) {
         this.appSecretKey = appSecretKey;
         this.labelId = labelId;
         this.enUserId = enUserId;
+        source = 1;
     }
 
     @Override
@@ -123,6 +149,7 @@ public class FuguCreateConversationParams {
         this.user_first_messages = user_first_messages;
         this.deviceType = 1;
         this.appVersion = BuildConfig.VERSION_NAME;
+        source = 1;
     }
 
     public String getTransactionId() {
@@ -132,4 +159,14 @@ public class FuguCreateConversationParams {
     public void setTransactionId(String transactionId) {
         this.transactionId = transactionId;
     }
+
+    public ArrayList<String> getGroupingTags() {
+        return groupingTags;
+    }
+
+    public void setGroupingTags(ArrayList<String> groupingTags) {
+        this.groupingTags = groupingTags;
+    }
+
+
 }

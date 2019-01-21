@@ -1,6 +1,10 @@
 package com.fugu.retrofit;
 
 
+import android.text.TextUtils;
+
+import com.fugu.FuguConfig;
+import com.fugu.constant.FuguAppConstant;
 import com.fugu.database.CommonData;
 
 import java.util.concurrent.TimeUnit;
@@ -23,8 +27,11 @@ public class RestClient {
      */
     public static ApiInterface getApiInterface() {
         if (retrofit == null) {
+            String baseUrl = CommonData.getServerUrl();
+            if (TextUtils.isEmpty(baseUrl.trim()))
+                baseUrl = FuguAppConstant.LIVE_SERVER;
             retrofit = new Retrofit.Builder()
-                    .baseUrl(CommonData.getServerUrl())
+                    .baseUrl(baseUrl)
                     //.baseUrl("https://api.github.com/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(httpClient().build())
@@ -34,13 +41,31 @@ public class RestClient {
     }
 
 
+    public static AgentApiInterface getAgentApiInterface() {
+        if (retrofit == null) {
+            String baseUrl = CommonData.getServerUrl();
+            if (TextUtils.isEmpty(baseUrl.trim()))
+                baseUrl = FuguAppConstant.LIVE_SERVER;
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient().build())
+                    .build();
+        }
+        return retrofit.create(AgentApiInterface.class);
+    }
+
+
     /**
      * @return
      */
     public static Retrofit getRetrofitBuilder() {
         if (retrofit == null) {
+            String baseUrl = CommonData.getServerUrl();
+            if (TextUtils.isEmpty(baseUrl.trim()))
+                baseUrl = FuguAppConstant.LIVE_SERVER;
             retrofit = new Retrofit.Builder()
-                    .baseUrl(CommonData.getServerUrl())
+                    .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(httpClient().build())
                     .build();
@@ -55,15 +80,19 @@ public class RestClient {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         // set your desired log level
         //logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
-        //logging.setLevel(HttpLoggingInterceptor.Level.NONE);
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        if(FuguConfig.DEBUG)
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        else
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+//        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder().readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(30, TimeUnit.SECONDS);
 
-        // add_small your other interceptors …
+        // add_small your other interceptors
         // add_small logging as last interceptor
         httpClient.addInterceptor(logging);
         return httpClient;
     }
+
 
 }

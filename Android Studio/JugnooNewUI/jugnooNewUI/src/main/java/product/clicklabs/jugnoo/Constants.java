@@ -997,4 +997,6 @@ public interface Constants {
     String KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM = "customer_hit_geocode_free_roam";
     String KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED = "customer_pickup_free_roam_allowed";
     String KEY_CUSTOMER_SHOW_ADD_SAVED_PLACE = "customer_show_add_saved_place";
+
+    String HIPPO_SUPPORT_FAQ_NAME = "customer_hippo_support_faq_name";
 }

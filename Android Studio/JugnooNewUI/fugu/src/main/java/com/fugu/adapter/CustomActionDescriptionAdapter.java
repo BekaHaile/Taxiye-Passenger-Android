@@ -39,7 +39,7 @@ public class CustomActionDescriptionAdapter extends RecyclerView.Adapter<CustomA
 
     @Override
     public DescriptionViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        View main = mLayoutInflater.inflate(R.layout.list_item_description, parent, false);
+        View main = mLayoutInflater.inflate(R.layout.hippo_list_item_description,parent,false);
         return new DescriptionViewHolder(main);
     }
 

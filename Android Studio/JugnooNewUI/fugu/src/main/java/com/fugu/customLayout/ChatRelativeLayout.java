@@ -3,14 +3,11 @@ package com.fugu.customLayout;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fugu.R;
-
-import org.w3c.dom.Text;
 
 /**
  * Created by rajatdhamija on 16/10/17.
@@ -75,57 +72,108 @@ public class ChatRelativeLayout extends RelativeLayout {
          *  set paddings for parent and child layouts onLayout
          *  If parent and child views are not null else exit
          */
-        int availableWidth = widthSize - getPaddingLeft() - getPaddingRight();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            int availableWidth = widthSize - getPaddingStart() - getPaddingEnd();
 
-        parentLayoutParams = (LayoutParams) parentTextView.getLayoutParams();
-        parentWidth = parentTextView.getMeasuredWidth() + parentLayoutParams.leftMargin + parentLayoutParams.rightMargin;
-        parentHeight = parentTextView.getMeasuredHeight() + parentLayoutParams.topMargin + parentLayoutParams.bottomMargin;
+            parentLayoutParams = (LayoutParams) parentTextView.getLayoutParams();
+            parentWidth = parentTextView.getMeasuredWidth() + parentLayoutParams.getMarginStart() + parentLayoutParams.getMarginEnd();
+            parentHeight = parentTextView.getMeasuredHeight() + parentLayoutParams.topMargin + parentLayoutParams.bottomMargin;
 
-        childLayoutParams = (LayoutParams) childView.getLayoutParams();
-        childWidth = childView.getMeasuredWidth() + childLayoutParams.leftMargin + childLayoutParams.rightMargin;
-        childHeight = childView.getMeasuredHeight() + childLayoutParams.topMargin + childLayoutParams.bottomMargin;
+            childLayoutParams = (LayoutParams) childView.getLayoutParams();
+            childWidth = childView.getMeasuredWidth() + childLayoutParams.getMarginStart() + childLayoutParams.getMarginEnd();
+            childHeight = childView.getMeasuredHeight() + childLayoutParams.topMargin + childLayoutParams.bottomMargin;
 
-        int parentLineCount = parentTextView.getLineCount();
+            int parentLineCount = parentTextView.getLineCount();
 
-        float parentLastLineWitdh = parentLineCount > 0 ? parentTextView.getLayout().getLineWidth(parentLineCount - 1) : 0;
+            float parentLastLineWitdh = parentLineCount > 0 ? parentTextView.getLayout().getLineWidth(parentLineCount - 1) : 0;
 
-        widthSize = getPaddingLeft() + getPaddingRight();
-        int heightSize = getPaddingTop() + getPaddingBottom();
+            widthSize = getPaddingStart() + getPaddingEnd();
+            int heightSize = getPaddingTop() + getPaddingBottom();
 
-        if (parentLineCount > 1 && (parentLastLineWitdh + childWidth) < parentTextView.getMeasuredWidth()) {
-            widthSize += parentWidth;
-            heightSize += parentHeight;
-        } else if (parentLineCount == 1 && (parentWidth + childWidth) >= availableWidth) {
-            widthSize += parentTextView.getMeasuredWidth();
-            heightSize += parentHeight + childHeight;
-        } else if (parentLineCount > 1 && (parentLastLineWitdh + childWidth) >= availableWidth) {
-            widthSize += parentWidth;
-            heightSize += parentHeight + childHeight;
+            if (parentLineCount > 1 && (parentLastLineWitdh + childWidth) < parentTextView.getMeasuredWidth()) {
+                widthSize += parentWidth;
+                heightSize += parentHeight;
+            } else if (parentLineCount == 1 && (parentWidth + childWidth) >= availableWidth) {
+                widthSize += parentTextView.getMeasuredWidth();
+                heightSize += parentHeight + childHeight;
+            } else if (parentLineCount > 1 && (parentLastLineWitdh + childWidth) >= availableWidth) {
+                widthSize += parentWidth;
+                heightSize += parentHeight + childHeight;
+            } else {
+                widthSize += parentWidth + childWidth;
+                heightSize += parentHeight;
+            }
+
+            this.setMeasuredDimension(widthSize, heightSize);
+            super.onMeasure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
         } else {
-            widthSize += parentWidth + childWidth;
-            heightSize += parentHeight;
-        }
+            int availableWidth = widthSize - getPaddingLeft() - getPaddingRight();
+            parentLayoutParams = (LayoutParams) parentTextView.getLayoutParams();
+            parentWidth = parentTextView.getMeasuredWidth() + parentLayoutParams.leftMargin + parentLayoutParams.rightMargin;
+            parentHeight = parentTextView.getMeasuredHeight() + parentLayoutParams.topMargin + parentLayoutParams.bottomMargin;
 
-        this.setMeasuredDimension(widthSize, heightSize);
-        super.onMeasure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
+            childLayoutParams = (LayoutParams) childView.getLayoutParams();
+            childWidth = childView.getMeasuredWidth() + childLayoutParams.leftMargin + childLayoutParams.rightMargin;
+            childHeight = childView.getMeasuredHeight() + childLayoutParams.topMargin + childLayoutParams.bottomMargin;
+
+            int parentLineCount = parentTextView.getLineCount();
+
+            float parentLastLineWitdh = parentLineCount > 0 ? parentTextView.getLayout().getLineWidth(parentLineCount - 1) : 0;
+
+            widthSize = getPaddingLeft() + getPaddingRight();
+            int heightSize = getPaddingTop() + getPaddingBottom();
+
+            if (parentLineCount > 1 && (parentLastLineWitdh + childWidth) < parentTextView.getMeasuredWidth()) {
+                widthSize += parentWidth;
+                heightSize += parentHeight;
+            } else if (parentLineCount == 1 && (parentWidth + childWidth) >= availableWidth) {
+                widthSize += parentTextView.getMeasuredWidth();
+                heightSize += parentHeight + childHeight;
+            } else if (parentLineCount > 1 && (parentLastLineWitdh + childWidth) >= availableWidth) {
+                widthSize += parentWidth;
+                heightSize += parentHeight + childHeight;
+            } else {
+                widthSize += parentWidth + childWidth;
+                heightSize += parentHeight;
+            }
+
+            this.setMeasuredDimension(widthSize, heightSize);
+            super.onMeasure(MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY));
+        }
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (parentTextView != null && childView != null) {
+                parentTextView.layout(
+                        getPaddingStart(),
+                        getPaddingTop(),
+                        parentTextView.getWidth() + getPaddingStart(),
+                        parentTextView.getHeight() + getPaddingTop());
 
-        if (parentTextView != null && childView != null) {
-            parentTextView.layout(
-                    getPaddingLeft(),
-                    getPaddingTop(),
-                    parentTextView.getWidth() + getPaddingLeft(),
-                    parentTextView.getHeight() + getPaddingTop());
+                childView.layout(
+                        right - left - childWidth - getPaddingRight(),
+                        bottom - top - getPaddingBottom() - childHeight,
+                        right - left - getPaddingRight(),
+                        bottom - top - getPaddingBottom());
+            }
+        } else {
 
-            childView.layout(
-                    right - left - childWidth - getPaddingRight(),
-                    bottom - top - getPaddingBottom() - childHeight,
-                    right - left - getPaddingRight(),
-                    bottom - top - getPaddingBottom());
+            if (parentTextView != null && childView != null) {
+                parentTextView.layout(
+                        getPaddingLeft(),
+                        getPaddingTop(),
+                        parentTextView.getWidth() + getPaddingLeft(),
+                        parentTextView.getHeight() + getPaddingTop());
+
+                childView.layout(
+                        right - left - childWidth - getPaddingRight(),
+                        bottom - top - getPaddingBottom() - childHeight,
+                        right - left - getPaddingRight(),
+                        bottom - top - getPaddingBottom());
+            }
         }
     }
 }

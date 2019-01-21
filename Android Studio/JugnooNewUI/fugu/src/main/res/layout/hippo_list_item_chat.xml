@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="5dp"
+        card_view:cardBackgroundColor="@color/hippo_white"
+        card_view:cardCornerRadius="3dp">
+
+        <RelativeLayout
+            android:id="@+id/rlChat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:paddingBottom="@dimen/fugu_margin_20"
+            android:paddingLeft="@dimen/fugu_margin_15"
+            android:paddingRight="@dimen/fugu_margin_12"
+            android:paddingTop="@dimen/fugu_margin_13">
+
+            <RelativeLayout
+                android:id="@+id/llName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvClosed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="@dimen/fugu_margin_4"
+                    android:background="@drawable/hippo_bg_closed_color_rounded"
+                    android:gravity="end"
+                    android:paddingBottom="@dimen/fugu_spacing_dimin"
+                    android:paddingLeft="@dimen/fugu_padding_8"
+                    android:paddingRight="@dimen/fugu_padding_8"
+                    android:paddingTop="@dimen/fugu_spacing_dimin"
+                    android:text="@string/fugu_closed"
+                    android:textColor="#ffffff"
+                    android:textSize="@dimen/fugu_text_size_small"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/tvTime"
+                    android:layout_toRightOf="@+id/tvClosed">
+
+                    <TextView
+                        android:id="@+id/tvName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:maxWidth="230dp"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+
+                    <TextView
+                        android:id="@+id/tvUnread"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="@dimen/fugu_margin_5"
+                        android:layout_marginRight="@dimen/fugu_margin_10"
+                        android:layout_toRightOf="@+id/tvName"
+                        android:background="@drawable/hippo_circle_red"
+                        android:gravity="center"
+                        android:textColor="@color/hippo_white"
+                        android:textSize="@dimen/fugu_text_size_tiny"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/fugu_text_color_primary"
+                    android:textSize="@dimen/fugu_text_size_small" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/llChannel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvMessage"
+                android:layout_marginTop="@dimen/fugu_margin_4"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvTyping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/fugu_margin_6"
+                    android:background="@drawable/hippo_bg_typing_color_rounded"
+                    android:gravity="end"
+                    android:paddingBottom="@dimen/fugu_spacing_dimin"
+                    android:paddingLeft="@dimen/fugu_padding_8"
+                    android:paddingRight="@dimen/fugu_padding_8"
+                    android:paddingTop="@dimen/fugu_spacing_dimin"
+                    android:text="...Rohit is typing"
+                    android:textColor="@color/fugu_text_color_primary"
+                    android:textSize="@dimen/fugu_text_size_tiny"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvTagged"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/fugu_margin_6"
+                    android:background="@drawable/hippo_bg_tagged_color_rounded"
+                    android:gravity="end"
+                    android:paddingBottom="@dimen/fugu_spacing_dimin"
+                    android:paddingLeft="@dimen/fugu_padding_8"
+                    android:paddingRight="@dimen/fugu_padding_8"
+                    android:paddingTop="@dimen/fugu_spacing_dimin"
+                    android:text="Rohit tagged you"
+                    android:textColor="@color/hippo_white"
+                    android:textSize="@dimen/fugu_text_size_tiny"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvUnassigned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/fugu_margin_6"
+                    android:background="@drawable/hippo_bg_unassigned_color_rounded"
+                    android:gravity="end"
+                    android:paddingBottom="@dimen/fugu_spacing_dimin"
+                    android:paddingLeft="@dimen/fugu_padding_8"
+                    android:paddingRight="@dimen/fugu_padding_8"
+                    android:paddingTop="@dimen/fugu_spacing_dimin"
+                    android:text="Unassigned"
+                    android:textColor="@color/hippo_white"
+                    android:textSize="@dimen/fugu_text_size_tiny"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvChannelName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/fugu_margin_5"
+                    android:background="@drawable/hippo_bg_tag_color_rounded"
+                    android:gravity="end"
+                    android:maxLength="20"
+                    android:paddingBottom="@dimen/fugu_spacing_dimin"
+                    android:paddingLeft="@dimen/fugu_padding_8"
+                    android:paddingRight="@dimen/fugu_padding_8"
+                    android:paddingTop="@dimen/fugu_spacing_dimin"
+                    android:text="issue with order"
+                    android:textColor="@color/fugu_read_chat_text_color"
+                    android:textSize="@dimen/fugu_text_size_tiny"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvAgentName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/hippo_bg_tag_color_rounded"
+                    android:gravity="end"
+                    android:paddingBottom="@dimen/fugu_spacing_dimin"
+                    android:paddingLeft="@dimen/fugu_padding_8"
+                    android:paddingRight="@dimen/fugu_padding_8"
+                    android:paddingTop="@dimen/fugu_spacing_dimin"
+                    android:text="issue with order"
+                    android:textColor="@color/fugu_read_chat_text_color"
+                    android:textSize="@dimen/fugu_text_size_tiny"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/llName"
+                android:layout_marginRight="@dimen/fugu_dp_40"
+                android:drawablePadding="@dimen/fugu_margin_2"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/fugu_text_color_primary"
+                android:textSize="@dimen/fugu_text_size_medium" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/fugu_overlay_green_95"
+            android:drawableLeft="@drawable/hippo_ic_chat_re_opened"
+            android:drawablePadding="@dimen/fugu_margin_10"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/fugu_margin_20"
+            android:text="conversation re-opened"
+            android:textColor="@color/hippo_white"
+            android:textSize="@dimen/fugu_text_size_large"
+            android:visibility="gone" />
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

@@ -6,26 +6,37 @@ import android.app.Dialog;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.text.TextUtilsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.text.util.Linkify;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -35,6 +46,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
 import com.fugu.FuguFontConfig;
@@ -47,13 +59,16 @@ import com.fugu.model.FuguConversation;
 import com.fugu.model.FuguFileDetails;
 import com.fugu.model.Message;
 import com.fugu.utils.DateUtils;
-import com.fugu.utils.FuguLog;
 import com.fugu.utils.GridDividerItemDecoration;
+import com.fugu.utils.MyCustomEditTextListener;
 import com.fugu.utils.RoundedCornersTransformation;
+import com.fugu.utils.zoomview.ZoomageView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Bhavya Rattan on 02/05/17
@@ -61,44 +76,115 @@ import java.util.List;
  * bhavya.rattan@click-labs.com
  */
 
-public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements FuguAppConstant {
+public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements FuguAppConstant, QRCallback  {
 
     private final int FUGU_TYPE_HEADER = 0;
     private final int FUGU_ITEM_TYPE_OTHER = 1;
     private final int FUGU_ITEM_TYPE_SELF = 2;
+    private final int FUGU_RATING_VIEW = 3;
+    private final int FUGU_GALLERY_VIEW = -990; // TODO: 09/05/18 Update with the correct value
+    private final int FUGU_TEXT_VIEW = 15;
+    private final int FUGU_QUICK_REPLY_VIEW = 16;
+    private final int FUGU_FORUM_VIEW = 17;
+    private final int FUGU_VIDEO_CALL_VIEW = 18;
+    private final int FUGU_OTHER_VIDEO_CALL_VIEW = 19;
     private DateUtils fuguDateUtil = DateUtils.getInstance();
     private Long fuguLabelId;
     private OnRetryListener mOnRetry;
+    private onVideoCall onVideoCall;
     private FuguColorConfig fuguColorConfig;
     private Activity activity;
     private FuguConversation fuguConversation;
     private FuguChatActivity fuguChatActivity;
+    private Configuration config;
+    //for bot
+    private QuickReplyAdapaterActivityCallback qrCallback;
+    private OnRatingListener onRatingListener;
+    private FragmentManager fragmentManager;
     private FuguFontConfig fuguFontConfig;
 
+    private String agentName = "";
+    private boolean isVideoCallEnabled = false;
+    private boolean isAudioCallEnabled = false;
+    String callType = "video";
     @NonNull
     private List<ListItem> fuguItems = Collections.emptyList();
 
-    public FuguMessageAdapter(Activity activity, @NonNull List<ListItem> fuguItems, Long fuguLabelId, FuguConversation fuguConversation) {
+    /*public FuguMessageAdapter(Activity activity, @NonNull List<ListItem> fuguItems, Long fuguLabelId, FuguConversation fuguConversation) {
         this.fuguItems = fuguItems;
         this.activity = activity;
         this.fuguLabelId = fuguLabelId;
         this.fuguConversation = fuguConversation;
         removeDefaultMsgTime();
         fuguColorConfig = CommonData.getColorConfig();
-        fuguFontConfig = CommonData.getFontConfig();
+        config = activity.getResources().getConfiguration();
+    }*/
+
+    public FuguMessageAdapter(Activity activity, @NonNull List<ListItem> fuguItems, Long fuguLabelId,
+                              FuguConversation fuguConversation, OnRatingListener onRatingListener,
+                              QuickReplyAdapaterActivityCallback callback, FragmentManager fragmentManager) {
+        this.fuguItems = fuguItems;
+        this.activity = activity;
+        this.fuguLabelId = fuguLabelId;
+        this.fuguConversation = fuguConversation;
+        removeDefaultMsgTime();
+        fuguColorConfig = CommonData.getColorConfig();
+        config = activity.getResources().getConfiguration();
+        this.onRatingListener = onRatingListener;
+        this.qrCallback = callback;
+        this.fragmentManager = fragmentManager;
+		fuguFontConfig = CommonData.getFontConfig();
     }
 
     public void setOnRetryListener(OnRetryListener OnRetryListener) {
         mOnRetry = OnRetryListener;
     }
 
+    public void setOnVideoCallListener(onVideoCall onVideoCall) {
+        this.onVideoCall = onVideoCall;
+    }
+
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
+    }
+
+    public void isVideoCallEnabled(boolean isVideoCallEnabled) {
+        this.isVideoCallEnabled = isVideoCallEnabled;
+    }
+
+    public void isAudioCallEnabled(boolean isAudioCallEnabled) {
+        this.isAudioCallEnabled = isAudioCallEnabled;
+    }
+
+    @Override
+    public void onFormClickListener(int id, Message currentFormMsg) {
+        onRatingListener.onFormDataCallback(currentFormMsg);
+    }
+
+    @Override
+    public void DataFormCallback() {
+
+    }
+
+    @Override
+    public void onClickListener(Message message, int pos, QuickReplyViewHolder viewHolder) {
+        viewHolder.list_qr.setVisibility(View.GONE);
+        qrCallback.QuickReplyListener(message, pos);
+    }
+
     public interface OnRetryListener {
         void onRetry(String file, final int messageIndex, int messageType, FuguFileDetails fileDetails, String uuid);
+        void onMessageRetry(String muid, int position);
+        void onMessageCancel(String muid, int position);
     }
 
     public void updateList(@NonNull List<ListItem> items) {
+        updateList(items, true);
+    }
+    public void updateList(@NonNull List<ListItem> items, boolean flag) {
         this.fuguItems = items;
-        removeDefaultMsgTime();
+        if(flag)
+            removeDefaultMsgTime();
     }
 
     private void removeDefaultMsgTime() {
@@ -118,7 +204,7 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == FUGU_TYPE_HEADER) {
+        /*if (viewType == FUGU_TYPE_HEADER) {
             View normalView = LayoutInflater.from(activity).inflate(R.layout.fugu_item_message_date, parent, false);
             return new DateViewHolder(normalView);
         } else if (viewType == FUGU_ITEM_TYPE_OTHER) {
@@ -127,6 +213,38 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else if (viewType == FUGU_ITEM_TYPE_SELF) {
             View headerRow = LayoutInflater.from(activity).inflate(R.layout.fugu_item_message_right, parent, false);
             return new SelfMessageViewHolder(headerRow);
+        }*/
+
+        if (viewType == FUGU_TYPE_HEADER) {
+            View normalView = LayoutInflater.from(activity).inflate(R.layout.fugu_item_message_date, parent, false);
+            return new DateViewHolder(normalView);
+        } else if (viewType == FUGU_ITEM_TYPE_OTHER) {
+            View normalView = LayoutInflater.from(activity).inflate(R.layout.fugu_item_message_left, parent, false);
+            return new OtherMessageViewHolder(normalView);
+        } else if (viewType == FUGU_FORUM_VIEW) {
+            View forumView = LayoutInflater.from(activity).inflate(R.layout.fugu_data_fourm, parent, false);
+            return new ForumViewHolder(forumView);
+        } else if (viewType == FUGU_TEXT_VIEW) {
+            View forumView = LayoutInflater.from(activity).inflate(R.layout.fugu_text_item, parent, false);
+            return new SimpleTextView(forumView);
+        } else if (viewType == FUGU_QUICK_REPLY_VIEW) {
+            View normalView = LayoutInflater.from(activity).inflate(R.layout.hippo_item_quick_replay, parent, false);
+            return new QuickReplyViewHolder(normalView);
+        } else if (viewType == FUGU_GALLERY_VIEW) {
+            View galleryView = LayoutInflater.from(activity).inflate(R.layout.fugu_item_gallery, parent, false);
+            return new GalleryViewHolder(galleryView);
+        } else if (viewType == FUGU_ITEM_TYPE_SELF) {
+            View headerRow = LayoutInflater.from(activity).inflate(R.layout.fugu_item_message_right, parent, false);
+            return new SelfMessageViewHolder(headerRow);
+        } else if (viewType == FUGU_RATING_VIEW) {
+            View ratingView = LayoutInflater.from(activity).inflate(R.layout.hippo_feedback_dialog, parent, false);
+            return new RatingViewHolder(ratingView, new MyCustomEditTextListener());
+        } else if(viewType == FUGU_VIDEO_CALL_VIEW) {
+            View videoCallView = LayoutInflater.from(activity).inflate(R.layout.hippo_video_self_side, parent, false);
+            return new SelfVideoViewHolder(videoCallView);
+        } else if(viewType == FUGU_OTHER_VIDEO_CALL_VIEW) {
+            View otherVideoCallView = LayoutInflater.from(activity).inflate(R.layout.hippo_video_other_side, parent, false);
+            return new VideoViewHolder(otherVideoCallView);
         }
 
         return null;
@@ -151,19 +269,388 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return null;
     }
 
+    private void setImageClick(int item, ImageView... imageViews) {
+        int width = (int) convertDpToPixel(40);
+        int height = (int) convertDpToPixel(40);
+        /*for(ImageView imageView : imageViews) {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+            imageView.setLayoutParams(layoutParams);
+        }*/
+
+        for (int i = 1; i <= imageViews.length; i++) {
+            if (i == item) {
+                int length = (int) convertDpToPixel(60);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(length, length);
+                imageViews[i - 1].setLayoutParams(layoutParams);
+                switch (item) {
+                    case 1:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_terrible_image_selected);
+                        break;
+                    case 2:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_bad_image_selected);
+                        break;
+                    case 3:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_okay_image_selected);
+                        break;
+                    case 4:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_good_image_selected);
+                        break;
+                    case 5:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_great_image_selected);
+                        break;
+                    default:
+
+                        break;
+                }
+            } else {
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(width, height);
+                imageViews[i - 1].setLayoutParams(layoutParams);
+                switch (i) {
+                    case 1:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_terrible_image);
+                        break;
+                    case 2:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_bad_image);
+                        break;
+                    case 3:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_okay_image);
+                        break;
+                    case 4:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_good_image);
+                        break;
+                    case 5:
+                        imageViews[i - 1].setBackgroundResource(R.drawable.hippo_ic_great_image);
+                        break;
+                    default:
+
+                        break;
+                }
+            }
+        }
+    }
+
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int pos) {
         final int position = holder.getAdapterPosition();
         final int itemType = getItemViewType(position);
         fuguChatActivity = (FuguChatActivity) activity;
+
+        boolean isRightToLeft = false;
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                isRightToLeft = config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
+            } else {
+                isRightToLeft = TextUtilsCompat.getLayoutDirectionFromLocale(Locale
+                        .getDefault()) == ViewCompat.LAYOUT_DIRECTION_RTL;
+            }
+        } catch (Exception e) {
+
+        }
+
         switch (itemType) {
+            case FUGU_VIDEO_CALL_VIEW:
+                final SelfVideoViewHolder videoViewHolder = (SelfVideoViewHolder) holder;
+                Message videoMessage = ((EventItem) fuguItems.get(position)).getEvent();
+                callType = "video";
+                if(!TextUtils.isEmpty(videoMessage.getCallType()) && videoMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+                    callType = "voice";
+                }
+                if(videoMessage.getMessageState() != null && videoMessage.getMessageState().intValue() == 2) {
+                    videoViewHolder.tvMsg.setText(agentName+" missed a "+ callType +" call with you");
+                } else {
+                    videoViewHolder.tvMsg.setText("The "+ callType +" call ended");
+                }
+                if (videoMessage.getSentAtUtc().isEmpty()) {
+                    videoViewHolder.tvTime.setVisibility(View.GONE);
+                } else {
+                    videoViewHolder.tvTime.setText(DateUtils.getTime(fuguDateUtil.convertToLocal(videoMessage.getSentAtUtc())));
+                    videoViewHolder.tvTime.setVisibility(View.VISIBLE);
+                }
+                if(videoMessage.getVideoCallDuration()>0) {
+                    videoViewHolder.ivCallIcon.setVisibility(View.VISIBLE);
+                    videoViewHolder.tvDuration.setVisibility(View.VISIBLE);
+                    videoViewHolder.tvDuration.setText(convertSeconds(videoMessage.getVideoCallDuration())+" at ");
+//                    videoViewHolder.tvDuration.setText(videoMessage.getVideoCallDuration()+"sec at ");
+
+                } else {
+                    videoViewHolder.ivCallIcon.setVisibility(View.GONE);
+                    videoViewHolder.tvDuration.setVisibility(View.GONE);
+                }
+
+                if (!TextUtils.isEmpty(videoMessage.getCallType()) && videoMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+                    if(!CommonData.getAudioCallStatus() || !isAudioCallEnabled) {
+                        videoViewHolder.callAgain.setVisibility(View.GONE);
+                    }
+                } else {
+                    if(!CommonData.getVideoCallStatus() || !isVideoCallEnabled) {
+                        videoViewHolder.callAgain.setVisibility(View.GONE);
+                    }
+                }
+
+                videoViewHolder.callAgain.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        /*if(onVideoCall != null) {
+                            int callType = FuguAppConstant.VIDEO_CALL_VIEW;
+                            if (!TextUtils.isEmpty(videoMessage.getCallType()) && videoMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+                                callType = FuguAppConstant.AUDIO_CALL_VIEW;
+                            }
+                            onVideoCall.onVideoCallClicked(callType);
+                        }*/
+                    }
+                });
+                break;
+            case FUGU_OTHER_VIDEO_CALL_VIEW:
+                final VideoViewHolder videoOtherViewHolder = (VideoViewHolder) holder;
+                Message videoOtherMessage = ((EventItem) fuguItems.get(position)).getEvent();
+                callType = "video";
+                if(!TextUtils.isEmpty(videoOtherMessage.getCallType()) && videoOtherMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+                    callType = "voice";
+                }
+                if(videoOtherMessage.getMessageState() != null && videoOtherMessage.getMessageState().intValue() == 2) {
+                    videoOtherViewHolder.tvMsg.setText("You missed a "+ callType +" call with "+videoOtherMessage.getfromName());
+                } else {
+                    videoOtherViewHolder.tvMsg.setText("The "+ callType +" call ended");
+                }
+                if (videoOtherMessage.getSentAtUtc().isEmpty()) {
+                    videoOtherViewHolder.tvTime.setVisibility(View.GONE);
+                } else {
+                    videoOtherViewHolder.tvTime.setText(DateUtils.getTime(fuguDateUtil.convertToLocal(videoOtherMessage.getSentAtUtc())));
+                    videoOtherViewHolder.tvTime.setVisibility(View.VISIBLE);
+                }
+
+                if(videoOtherMessage.getVideoCallDuration()>0) {
+                    videoOtherViewHolder.ivCallIcon.setVisibility(View.VISIBLE);
+                    videoOtherViewHolder.tvDuration.setVisibility(View.VISIBLE);
+                    videoOtherViewHolder.tvDuration.setText(convertSeconds(videoOtherMessage.getVideoCallDuration())+" at ");
+//                    videoOtherViewHolder.tvDuration.setText(videoOtherMessage.getVideoCallDuration()+"sec at ");
+                } else {
+                    videoOtherViewHolder.ivCallIcon.setVisibility(View.GONE);
+                    videoOtherViewHolder.tvDuration.setVisibility(View.GONE);
+                }
+
+                if (!TextUtils.isEmpty(videoOtherMessage.getCallType()) && videoOtherMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+                    if(!CommonData.getAudioCallStatus() || !isAudioCallEnabled) {
+                        videoOtherViewHolder.callAgain.setVisibility(View.GONE);
+                    }
+                } else {
+                    if(!CommonData.getVideoCallStatus() || !isVideoCallEnabled) {
+                        videoOtherViewHolder.callAgain.setVisibility(View.GONE);
+                    }
+                }
+
+                videoOtherViewHolder.callAgain.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        /*if(onVideoCall != null) {
+                            int callType = FuguAppConstant.VIDEO_CALL_VIEW;
+                            if (!TextUtils.isEmpty(videoOtherMessage.getCallType()) && videoOtherMessage.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+                                callType = FuguAppConstant.AUDIO_CALL_VIEW;
+                            }
+                            onVideoCall.onVideoCallClicked(callType);
+                        }*/
+                    }
+                });
+
+                break;
+            case FUGU_GALLERY_VIEW:
+                int count = 4;
+                final GalleryViewHolder viewHolder1 = (GalleryViewHolder) holder;
+                setView(viewHolder1.llGalleryButtonLayout, count);
+                break;
+            case FUGU_TEXT_VIEW:
+
+                final SimpleTextView textView = (SimpleTextView) holder;
+                Message msg = ((EventItem) fuguItems.get(position)).getEvent();
+                textView.tvText.setText(msg.getMessage());
+                break;
+            case FUGU_RATING_VIEW:
+
+
+                final RatingViewHolder viewHolder = (RatingViewHolder) holder;
+                final Message currentMessage = ((EventItem) fuguItems.get(position)).getEvent();
+                if (currentMessage.isRatingGiven()) {
+                    viewHolder.askRateLayout.setVisibility(View.GONE);
+                    viewHolder.ratedLayout.setVisibility(View.VISIBLE);
+
+                    String title = currentMessage.getLineAfterFeedback_1() + "  ";
+                    SpannableStringBuilder ssb = new SpannableStringBuilder(title);
+                    //Bitmap smiley = BitmapFactory.decodeResource(activity.getResources(), R.drawable.photo_icon );
+
+                    Drawable android = activity.getResources().getDrawable(R.drawable.hippo_ic_okay_image_selected);
+                    switch (currentMessage.getRatingGiven()) {
+                        case 1:
+                            android = activity.getResources().getDrawable(R.drawable.hippo_ic_terrible_image_selected);
+                            break;
+                        case 2:
+                            android = activity.getResources().getDrawable(R.drawable.hippo_ic_bad_image_selected);
+                            break;
+                        case 3:
+                            android = activity.getResources().getDrawable(R.drawable.hippo_ic_okay_image_selected);
+                            break;
+                        case 4:
+                            android = activity.getResources().getDrawable(R.drawable.hippo_ic_good_image_selected);
+                            break;
+                        case 5:
+                            android = activity.getResources().getDrawable(R.drawable.hippo_ic_great_image_selected);
+                            break;
+                        default:
+
+                            break;
+                    }
+                    int size = (int) convertDpToPixel(34);
+                    android.setBounds(0, 0, size, size);
+                    ImageSpan image = new ImageSpan(android, ImageSpan.ALIGN_BOTTOM);
+
+                    ssb.setSpan(image, title.length() - 1, title.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                    viewHolder.ratedTitle.setText(ssb, TextView.BufferType.SPANNABLE);
+
+                    //viewHolder.ratedTitle.setText(""+activity.getString(R.string.hippo_rating_title));
+                    viewHolder.ratedSubTitle.setText(currentMessage.getLineAfterFeedback_2());
+                    if (!TextUtils.isEmpty(currentMessage.getComment())) {
+                        viewHolder.ratedMessage.setText("" + currentMessage.getComment());
+                        viewHolder.messageLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        viewHolder.messageLayout.setVisibility(View.GONE);
+                    }
+
+
+                } else {
+                    viewHolder.askRateLayout.setVisibility(View.VISIBLE);
+                    viewHolder.ratedLayout.setVisibility(View.GONE);
+
+                    viewHolder.titleTxt.setText(currentMessage.getLineBeforeFeedback());
+                    //FuguLog.e("MESSAGE", " = "+currentMessage.getComment());
+
+                    viewHolder.myCustomEditTextListener.updatePosition(currentMessage);
+                    viewHolder.editText.setText(currentMessage.getComment());
+
+                    if (currentMessage.getRatingGiven() > 0) {
+                        setImageClick(currentMessage.getRatingGiven(), viewHolder.terribleImage, viewHolder.badImage,
+                                viewHolder.okayImage, viewHolder.goodImage, viewHolder.greatImage);
+                    } else {
+                        setImageClick(3, viewHolder.terribleImage, viewHolder.badImage,
+                                viewHolder.okayImage, viewHolder.goodImage, viewHolder.greatImage);
+                        currentMessage.setRatingGiven(3);
+                    }
+                }
+
+                viewHolder.sendBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        onRatingListener.onSubmitRating(viewHolder.editText.getText().toString(), currentMessage, position);
+                        viewHolder.editText.setText("");
+                    }
+                });
+
+                viewHolder.terribleImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        setImageClick(1, viewHolder.terribleImage, viewHolder.badImage, viewHolder.okayImage,
+                                viewHolder.goodImage, viewHolder.greatImage);
+
+                        onRatingListener.onRatingSelected(1, currentMessage);
+//                        int height = (int) convertDpToPixel(60);
+//                        viewHolder.terribleImage.getLayoutParams().width = height;
+//                        viewHolder.terribleImage.getLayoutParams().height = height;
+//                        viewHolder.terribleImage.requestLayout();
+                    }
+                });
+                viewHolder.badImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setImageClick(2, viewHolder.terribleImage, viewHolder.badImage, viewHolder.okayImage,
+                                viewHolder.goodImage, viewHolder.greatImage);
+
+                        onRatingListener.onRatingSelected(2, currentMessage);
+                        /*int height = (int) convertDpToPixel(60);
+                        viewHolder.badImage.getLayoutParams().width = height;
+                        viewHolder.badImage.getLayoutParams().height = height;
+                        viewHolder.badImage.requestLayout();*/
+                    }
+                });
+                viewHolder.okayImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setImageClick(3, viewHolder.terribleImage, viewHolder.badImage, viewHolder.okayImage,
+                                viewHolder.goodImage, viewHolder.greatImage);
+                        onRatingListener.onRatingSelected(3, currentMessage);
+//                        int height = (int) convertDpToPixel(60);
+//                        viewHolder.okayImage.getLayoutParams().width = height;
+//                        viewHolder.okayImage.getLayoutParams().height = height;
+//                        viewHolder.okayImage.requestLayout();
+                    }
+                });
+                viewHolder.goodImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setImageClick(4, viewHolder.terribleImage, viewHolder.badImage,
+                                viewHolder.okayImage, viewHolder.goodImage, viewHolder.greatImage);
+
+                        onRatingListener.onRatingSelected(4, currentMessage);
+//                        int height = (int) convertDpToPixel(60);
+//                        viewHolder.goodImage.getLayoutParams().width = height;
+//                        viewHolder.goodImage.getLayoutParams().height = height;
+//                        viewHolder.goodImage.requestLayout();
+                    }
+                });
+
+                viewHolder.greatImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setImageClick(5, viewHolder.terribleImage, viewHolder.badImage,
+                                viewHolder.okayImage, viewHolder.goodImage, viewHolder.greatImage);
+
+                        onRatingListener.onRatingSelected(5, currentMessage);
+//                        int height = (int) convertDpToPixel(60);
+//                        viewHolder.greatImage.getLayoutParams().width = height;
+//                        viewHolder.greatImage.getLayoutParams().height = height;
+//                        viewHolder.greatImage.requestLayout();
+                    }
+                });
+
+                //*******************          //QUICK REPLIES//--------*********************
+
+                break;
+
+            case FUGU_QUICK_REPLY_VIEW:
+
+                final QuickReplyViewHolder qrViewHolder = (QuickReplyViewHolder) holder;
+                Message currentFormMsg = ((EventItem) fuguItems.get(position)).getEvent();
+//                qrViewHolder.title_view_text.setText(currentFormMsg.getMessage());
+//                if (fuguItems.get(position + 1) != null) {
+//                    qrCallback.sendActionId(((EventItem) fuguItems.get(position)).getEvent(),position);
+//                }
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+                layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                qrViewHolder.list_qr.setLayoutManager(layoutManager);
+                HippoQuickReplayAdapter replayAdapter = new HippoQuickReplayAdapter(currentFormMsg, this, qrViewHolder);
+                qrViewHolder.list_qr.setAdapter(replayAdapter);
+
+
+                break;
+            case FUGU_FORUM_VIEW:
+
+                Message currentFormDataMsg = ((EventItem) fuguItems.get(position)).getEvent();
+                final ForumViewHolder forumViewHolder = (ForumViewHolder) holder;
+                LinearLayoutManager mlayoutManager = new LinearLayoutManager(activity);
+                forumViewHolder.rvDataForm.setLayoutManager(mlayoutManager);
+                DataFormAdapter dataFormAdapter = new DataFormAdapter(currentFormDataMsg, this, fragmentManager);
+                forumViewHolder.rvDataForm.setNestedScrollingEnabled(true);
+                forumViewHolder.rvDataForm.setAdapter(dataFormAdapter);
+
+
+                break;
             case FUGU_TYPE_HEADER:
                 final DateViewHolder dateViewHolder = (DateViewHolder) holder;
                 HeaderItem headerItem = (HeaderItem) fuguItems.get(position);
                 if (headerItem.getDate().isEmpty()) {
                     dateViewHolder.tvDate.setVisibility(View.GONE);
                 } else {
-                    dateViewHolder.tvDate.setText(headerItem.getDate());
+                    String date = DateUtils.getInstance().getDate(headerItem.getDate());
+                    dateViewHolder.tvDate.setText(date);
                     dateViewHolder.tvDate.setVisibility(View.VISIBLE);
                 }
 
@@ -213,66 +700,64 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             : activity.getString(R.string.fugu_support);
 
                 }
+
+                int dp_1 = pxToDp(1);
+                int dp_2 = pxToDp(2);
+                int dp_4 = pxToDp(4);
+                int dp_5 = pxToDp(5);
+                int dp_7 = pxToDp(7);
+                int dp_8 = pxToDp(8);
+                int dp_10 = pxToDp(10);
+                int dp_15 = pxToDp(15);
+                int dp_17 = pxToDp(17);
+
                 if (position != 0 && getItemViewType(position - 1) == FUGU_ITEM_TYPE_OTHER) {
                     Message lastOrderItem = ((EventItem) fuguItems.get(position - 1)).getEvent();
                     if (currentOrderItem.getUserId().compareTo(lastOrderItem.getUserId()) != 0) {
-                        otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.chat_bg_left);
+                        otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_left);
                         otherMessageViewHolder.tvUserName.setVisibility(View.VISIBLE);
                         otherMessageViewHolder.tvUserName.setText(userNameText);
-                        otherMessageViewHolder.llRoot.setPadding(pxToDp(10),
-                                pxToDp(8),
-                                0,
-                                pxToDp(1));
-                        otherMessageViewHolder.tvUserName.setPadding(pxToDp(15),
-                                pxToDp(7),
-                                pxToDp(10),
-                                pxToDp(0));
-                        otherMessageViewHolder.tvMsg.setPadding(pxToDp(15),
-                                pxToDp(7),
-                                pxToDp(2),
-                                pxToDp(7));
-                        otherMessageViewHolder.ivMsgImage.setPadding(pxToDp(0),
-                                pxToDp(5),
-                                0,
-                                pxToDp(0));
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            otherMessageViewHolder.llRoot.setPaddingRelative(dp_10, dp_8, 0, dp_1);
+                            otherMessageViewHolder.tvUserName.setPaddingRelative(dp_15, dp_7, dp_10, 0);
+                            otherMessageViewHolder.tvMsg.setPaddingRelative(dp_15, dp_7, dp_2, dp_7);
+                            otherMessageViewHolder.ivMsgImage.setPaddingRelative(0, dp_5, 0, 0);
+                        } else {
+                            otherMessageViewHolder.llRoot.setPadding(dp_10, dp_8, 0, dp_1);
+                            otherMessageViewHolder.tvUserName.setPadding(dp_15, dp_7, dp_10, 0);
+                            otherMessageViewHolder.tvMsg.setPadding(dp_15, dp_7, dp_2, dp_7);
+                            otherMessageViewHolder.ivMsgImage.setPadding(0, dp_5, 0, 0);
+                        }
+
                     } else if (position + 1 != fuguItems.size() && getItemViewType(position + 1) != FUGU_ITEM_TYPE_OTHER) {
                         otherMessageViewHolder.tvUserName.setVisibility(View.GONE);
-                        otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.chat_bg_left_normal);
-                        otherMessageViewHolder.llRoot.setPadding(pxToDp(17),
-                                pxToDp(1),
-                                pxToDp(0),
-                                pxToDp(4));
-                        otherMessageViewHolder.tvUserName.setPadding(pxToDp(8),
-                                pxToDp(7),
-                                pxToDp(10),
-                                pxToDp(0));
-                        otherMessageViewHolder.tvMsg.setPadding(pxToDp(8),
-                                pxToDp(7),
-                                pxToDp(2),
-                                pxToDp(7));
-                        otherMessageViewHolder.ivMsgImage.setPadding(pxToDp(0),
-                                pxToDp(5),
-                                0,
-                                pxToDp(0));
+                        otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_left_normal);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            otherMessageViewHolder.llRoot.setPaddingRelative(dp_17, dp_1, 0, dp_4);
+                            otherMessageViewHolder.tvUserName.setPaddingRelative(dp_8, dp_7, dp_10, 0);
+                            otherMessageViewHolder.tvMsg.setPaddingRelative(dp_8, dp_7, dp_2, dp_7);
+                            otherMessageViewHolder.ivMsgImage.setPaddingRelative(0, dp_5, 0, 0);
+                        } else {
+                            otherMessageViewHolder.llRoot.setPadding(dp_17, dp_1, 0, dp_4);
+                            otherMessageViewHolder.tvUserName.setPadding(dp_8, dp_7, dp_10, 0);
+                            otherMessageViewHolder.tvMsg.setPadding(dp_8, dp_7, dp_2, dp_7);
+                            otherMessageViewHolder.ivMsgImage.setPadding(0, dp_5, 0, 0);
+                        }
                     } else {
                         otherMessageViewHolder.tvUserName.setVisibility(View.GONE);
-                        otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.chat_bg_left_normal);
-                        otherMessageViewHolder.llRoot.setPadding(pxToDp(17),
-                                pxToDp(1),
-                                0,
-                                pxToDp(1));
-                        otherMessageViewHolder.tvUserName.setPadding(pxToDp(8),
-                                pxToDp(7),
-                                pxToDp(10),
-                                pxToDp(0));
-                        otherMessageViewHolder.tvMsg.setPadding(pxToDp(8),
-                                pxToDp(7),
-                                pxToDp(2),
-                                pxToDp(7));
-                        otherMessageViewHolder.ivMsgImage.setPadding(pxToDp(0),
-                                pxToDp(5),
-                                0,
-                                pxToDp(0));
+                        otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_left_normal);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            otherMessageViewHolder.llRoot.setPaddingRelative(dp_17, dp_1, 0, dp_1);
+                            otherMessageViewHolder.tvUserName.setPaddingRelative(dp_8, dp_7, dp_10, 0);
+                            otherMessageViewHolder.tvMsg.setPaddingRelative(dp_8, dp_7, dp_2, dp_7);
+                            otherMessageViewHolder.ivMsgImage.setPaddingRelative(0, dp_5, 0, 0);
+                        } else {
+                            otherMessageViewHolder.llRoot.setPadding(dp_17, dp_1, 0, dp_1);
+                            otherMessageViewHolder.tvUserName.setPadding(dp_8, dp_7, dp_10, 0);
+                            otherMessageViewHolder.tvMsg.setPadding(dp_8, dp_7, dp_2, dp_7);
+                            otherMessageViewHolder.ivMsgImage.setPadding(0, dp_5, 0, 0);
+                        }
                     }
                 } else if (position != 0 && (position + 1 != fuguItems.size()) && (getItemViewType(position + 1) == FUGU_ITEM_TYPE_OTHER)) {
                     int tvMsgTopPadding;
@@ -285,23 +770,18 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                     otherMessageViewHolder.tvUserName.setVisibility(View.VISIBLE);
                     otherMessageViewHolder.tvUserName.setText(userNameText);
-                    otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.chat_bg_left);
-                    otherMessageViewHolder.llRoot.setPadding(pxToDp(10),
-                            pxToDp(4),
-                            pxToDp(0),
-                            pxToDp(1));
-                    otherMessageViewHolder.tvUserName.setPadding(pxToDp(15),
-                            pxToDp(7),
-                            pxToDp(10),
-                            pxToDp(0));
-                    otherMessageViewHolder.tvMsg.setPadding(pxToDp(15),
-                            pxToDp(tvMsgTopPadding),
-                            pxToDp(2),
-                            pxToDp(7));
-                    otherMessageViewHolder.ivMsgImage.setPadding(pxToDp(5),
-                            pxToDp(0),
-                            0,
-                            pxToDp(0));
+                    otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_left);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        otherMessageViewHolder.llRoot.setPaddingRelative(pxToDp(10), pxToDp(4), pxToDp(0), pxToDp(1));
+                        otherMessageViewHolder.tvUserName.setPaddingRelative(pxToDp(15), pxToDp(7), pxToDp(10), pxToDp(0));
+                        otherMessageViewHolder.tvMsg.setPaddingRelative(pxToDp(15), pxToDp(tvMsgTopPadding), pxToDp(2), pxToDp(7));
+                        otherMessageViewHolder.ivMsgImage.setPaddingRelative(dp_5, 0, 0, 0);
+                    } else {
+                        otherMessageViewHolder.llRoot.setPadding(pxToDp(10), pxToDp(4), pxToDp(0), pxToDp(1));
+                        otherMessageViewHolder.tvUserName.setPadding(pxToDp(15), pxToDp(7), pxToDp(10), pxToDp(0));
+                        otherMessageViewHolder.tvMsg.setPadding(pxToDp(15), pxToDp(tvMsgTopPadding), pxToDp(2), pxToDp(7));
+                        otherMessageViewHolder.ivMsgImage.setPadding(dp_5, 0, 0, 0);
+                    }
                 } else {
                     int tvMsgTopPadding;
                     if (currentOrderItem.getMessageType() == TEXT_MESSAGE) {
@@ -313,23 +793,18 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     }
                     otherMessageViewHolder.tvUserName.setVisibility(View.VISIBLE);
                     otherMessageViewHolder.tvUserName.setText(userNameText);
-                    otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.chat_bg_left);
-                    otherMessageViewHolder.llRoot.setPadding(pxToDp(10),
-                            pxToDp(4),
-                            0,
-                            pxToDp(4));
-                    otherMessageViewHolder.tvUserName.setPadding(pxToDp(15),
-                            pxToDp(7),
-                            pxToDp(10),
-                            pxToDp(0));
-                    otherMessageViewHolder.tvMsg.setPadding(pxToDp(15),
-                            pxToDp(tvMsgTopPadding),
-                            pxToDp(2),
-                            pxToDp(7));
-                    otherMessageViewHolder.ivMsgImage.setPadding(pxToDp(5),
-                            pxToDp(0),
-                            0,
-                            pxToDp(0));
+                    otherMessageViewHolder.llMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_left);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                        otherMessageViewHolder.llRoot.setPaddingRelative(pxToDp(10), pxToDp(4), 0, pxToDp(4));
+                        otherMessageViewHolder.tvUserName.setPaddingRelative(pxToDp(15), pxToDp(7), pxToDp(10), pxToDp(0));
+                        otherMessageViewHolder.tvMsg.setPaddingRelative(pxToDp(15), pxToDp(tvMsgTopPadding), pxToDp(2), pxToDp(7));
+                        otherMessageViewHolder.ivMsgImage.setPaddingRelative(pxToDp(5), pxToDp(0), 0, pxToDp(0));
+                    } else {
+                        otherMessageViewHolder.llRoot.setPadding(pxToDp(10), pxToDp(4), 0, pxToDp(4));
+                        otherMessageViewHolder.tvUserName.setPadding(pxToDp(15), pxToDp(7), pxToDp(10), pxToDp(0));
+                        otherMessageViewHolder.tvMsg.setPadding(pxToDp(15), pxToDp(tvMsgTopPadding), pxToDp(2), pxToDp(7));
+                        otherMessageViewHolder.ivMsgImage.setPadding(pxToDp(5), pxToDp(0), 0, pxToDp(0));
+                    }
                 }
                 if (currentOrderItem.getSentAtUtc().isEmpty()) {
                     otherMessageViewHolder.tvTime.setVisibility(View.GONE);
@@ -344,25 +819,25 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         case 1:
                             length = otherMessageViewHolder.tvUserName.length() - otherMessageViewHolder.tvMsg.length() - otherMessageViewHolder.tvTime.length() + 2;
                             for (int i = 0; i < length; i++) {
-                                otherMessageViewHolder.tvMsg.append(activity.getString(R.string.space));
+                                otherMessageViewHolder.tvMsg.append(activity.getString(R.string.hippo_space));
                             }
                             break;
                         case 2:
                             length = otherMessageViewHolder.tvUserName.length() - otherMessageViewHolder.tvMsg.length() - otherMessageViewHolder.tvTime.length();
                             for (int i = 0; i < length; i++) {
-                                otherMessageViewHolder.tvMsg.append(activity.getString(R.string.space));
+                                otherMessageViewHolder.tvMsg.append(activity.getString(R.string.hippo_space));
                             }
                             break;
                         case 3:
                             length = otherMessageViewHolder.tvUserName.length() - otherMessageViewHolder.tvMsg.length() - otherMessageViewHolder.tvTime.length() - 1;
                             for (int i = 0; i < length; i++) {
-                                otherMessageViewHolder.tvMsg.append(activity.getString(R.string.space));
+                                otherMessageViewHolder.tvMsg.append(activity.getString(R.string.hippo_space));
                             }
                             break;
                         default:
                             length = otherMessageViewHolder.tvUserName.length() - otherMessageViewHolder.tvMsg.length() - otherMessageViewHolder.tvTime.length() - 1;
                             for (int i = 0; i < length; i++) {
-                                otherMessageViewHolder.tvMsg.append(activity.getString(R.string.space));
+                                otherMessageViewHolder.tvMsg.append(activity.getString(R.string.hippo_space));
                             }
                             break;
                     }
@@ -371,12 +846,15 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 NinePatchDrawable drawable2 = (NinePatchDrawable) otherMessageViewHolder.llMessageBg.getBackground();
                 drawable2.setColorFilter(fuguColorConfig.getFuguBgMessageFrom(), PorterDuff.Mode.MULTIPLY);
                 if (!currentOrderItem.getThumbnailUrl().isEmpty()) {
-                    Glide.with(activity).load(currentOrderItem.getThumbnailUrl())
+                    new RequestOptions();
+                    RequestOptions myOptions = RequestOptions
                             .bitmapTransform(new RoundedCornersTransformation(activity, 7, 2))
-                            .placeholder(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+                            .placeholder(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder))
                             .dontAnimate()
-                            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                            .error(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .error(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder));
+                    Glide.with(activity).load(currentOrderItem.getThumbnailUrl())
+                            .apply(myOptions)
                             .into(otherMessageViewHolder.ivMsgImage);
                     otherMessageViewHolder.rlImageMessage.setVisibility(View.VISIBLE);
                 } else {
@@ -433,13 +911,15 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             .rlCustomAction.getLayoutParams();
 
                     // increase left margin if background is chat_bg_left
-                    if (otherMessageViewHolder.llMessageBg.getBackground().getConstantState() ==
-                            ContextCompat.getDrawable(activity, R.drawable.chat_bg_left).getConstantState()) {
-                        layoutParams.setMargins(pxToDp(13), pxToDp(10),
-                                pxToDp(10), pxToDp(10));
+                    if (otherMessageViewHolder.llMessageBg.getBackground().getConstantState() == ContextCompat.getDrawable(activity, R.drawable.hippo_chat_bg_left).getConstantState()) {
+                        layoutParams.setMargins(pxToDp(13), pxToDp(10), pxToDp(10), pxToDp(10));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            layoutParams.setMarginStart(pxToDp(13));
+                            layoutParams.setMarginEnd(dp_10);
+                        }
                     } else {
-                        layoutParams.setMargins(pxToDp(10), pxToDp(10),
-                                pxToDp(10), pxToDp(10));
+                        layoutParams.setMargins(pxToDp(10), pxToDp(10), pxToDp(10), pxToDp(10));
+
                     }
 
                     CustomAction customAction = currentOrderItem.getCustomAction();
@@ -464,11 +944,14 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         if (customAction.getImageUrl() != null && !TextUtils.isEmpty(customAction.getImageUrl())) {
                             otherMessageViewHolder.llTextualContent.setBackgroundResource(R.drawable.fugu_white_background_curved_bottom);
                             otherMessageViewHolder.ivActionImage.setVisibility(View.VISIBLE);
-                            Glide.with(activity).load(customAction.getImageUrl())
-                                    .placeholder(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+                            RequestOptions myOptions = RequestOptions
+                                    .bitmapTransform(new RoundedCornersTransformation(activity, 7, 2))
+                                    .placeholder(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder))
                                     .dontAnimate()
-                                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                    .error(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                    .error(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder));
+                            Glide.with(activity).load(customAction.getImageUrl())
+                                    .apply(myOptions)
                                     .into(otherMessageViewHolder.ivActionImage);
                         } else {
                             otherMessageViewHolder.ivActionImage.setVisibility(View.GONE);
@@ -519,101 +1002,122 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             case FUGU_ITEM_TYPE_SELF:
                 final SelfMessageViewHolder selfMessageViewHolder = (SelfMessageViewHolder) holder;
                 final Message currentOrderItem2 = ((EventItem) fuguItems.get(position)).getEvent();
-                if (position != 0
-                        && (getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF)
-                        && (position + 1 != fuguItems.size())
-                        && (getItemViewType(position + 1) == FUGU_ITEM_TYPE_SELF)) {
-                    selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0),
-                            pxToDp(1),
-                            pxToDp(17),
-                            pxToDp(1));
-                    selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0),
-                            pxToDp(4),
-                            pxToDp(0),
-                            pxToDp(4));
-                } else if (position != 0
-                        && ((getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF)
-                        && (position + 1 != fuguItems.size())
-                        && (getItemViewType(position + 1) != FUGU_ITEM_TYPE_SELF))
-                        || (!(position - 1 < 0) && (getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF))) {
-                    if (position == fuguItems.size() - 1) {
-                        selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0),
-                                pxToDp(1),
-                                pxToDp(17),
-                                pxToDp(1));
-                        selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0),
-                                pxToDp(4),
-                                pxToDp(0),
-                                pxToDp(4));
-                    } else {
-                        selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0),
-                                pxToDp(1),
-                                pxToDp(17),
-                                pxToDp(4));
-                        selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0),
-                                pxToDp(4),
-                                pxToDp(0),
-                                pxToDp(4));
-                    }
+                int start = 0;
+                int firstMsgStart = 0;
+                int startImage = 0;
+                int endImage = 0;
+                int right = pxToDp(17);
 
-                } else if (position != 0
-                        && (position + 1 != fuguItems.size())
-                        && (getItemViewType(position + 1) == FUGU_ITEM_TYPE_SELF)) {
-                    selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0),
-                            pxToDp(4),
-                            pxToDp(10),
-                            pxToDp(1));
-                    selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0),
-                            pxToDp(4),
-                            pxToDp(0),
-                            pxToDp(4));
-                } else {
-                    if (position == fuguItems.size() - 1) {
-                        selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0),
-                                pxToDp(4),
-                                pxToDp(10),
-                                pxToDp(1));
-                        selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0),
-                                pxToDp(4),
-                                pxToDp(0),
-                                pxToDp(4));
+                if(isRightToLeft) {
+                    start = pxToDp(4);
+                    firstMsgStart = pxToDp(10);
+                    startImage = pxToDp(2);
+                    endImage = pxToDp(14);
+                    right = pxToDp(10);
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+
+                    if (position != 0
+                            && (getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF)
+                            && (position + 1 != fuguItems.size())
+                            && (getItemViewType(position + 1) == FUGU_ITEM_TYPE_SELF)) {
+
+                        selfMessageViewHolder.fuguLlRoot.setPaddingRelative(pxToDp(0), pxToDp(1), right, pxToDp(1));
+                        selfMessageViewHolder.fuguRlImageMessage.setPaddingRelative(pxToDp(0), pxToDp(4), pxToDp(0), pxToDp(4));
+
+                    } else if (position != 0
+                            && ((getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF)
+                            && (position + 1 != fuguItems.size())
+                            && (getItemViewType(position + 1) != FUGU_ITEM_TYPE_SELF))
+                            || (!(position - 1 < 0) && (getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF))) {
+                        if (position == fuguItems.size() - 1) {
+                            selfMessageViewHolder.fuguLlRoot.setPaddingRelative(start, pxToDp(1), right, pxToDp(1));
+                            selfMessageViewHolder.fuguRlImageMessage.setPaddingRelative(startImage, pxToDp(4), endImage, pxToDp(4));
+                        } else {
+                            selfMessageViewHolder.fuguLlRoot.setPaddingRelative(start, pxToDp(1), right, pxToDp(4));
+                            selfMessageViewHolder.fuguRlImageMessage.setPaddingRelative(startImage, pxToDp(4), endImage, pxToDp(4));
+                        }
+
+                    } else if (position != 0
+                            && (position + 1 != fuguItems.size())
+                            && (getItemViewType(position + 1) == FUGU_ITEM_TYPE_SELF)) {
+                        selfMessageViewHolder.fuguLlRoot.setPaddingRelative(start, pxToDp(4), pxToDp(10), pxToDp(1));
+                        selfMessageViewHolder.fuguRlImageMessage.setPaddingRelative(startImage, pxToDp(4), endImage, pxToDp(4));
                     } else {
-                        selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0),
-                                pxToDp(4),
-                                pxToDp(10),
-                                pxToDp(4));
-                        selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0),
-                                pxToDp(4),
-                                pxToDp(0),
-                                pxToDp(4));
+                        if (position == fuguItems.size() - 1) {
+                            selfMessageViewHolder.fuguLlRoot.setPaddingRelative(start, pxToDp(4), pxToDp(10), pxToDp(1));
+                            selfMessageViewHolder.fuguRlImageMessage.setPaddingRelative(startImage, pxToDp(4), endImage, pxToDp(4));
+                        } else {
+                            selfMessageViewHolder.fuguLlRoot.setPaddingRelative(start, pxToDp(4), pxToDp(10), pxToDp(4));
+                            selfMessageViewHolder.fuguRlImageMessage.setPaddingRelative(startImage, pxToDp(4), endImage, pxToDp(4));
+                        }
+                    }
+                    if (position != 0 && (getItemViewType(position - 1) != FUGU_ITEM_TYPE_SELF)) {
+                        selfMessageViewHolder.FuguLlMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_right);
+                        //selfMessageViewHolder.FuguLlMessageBg.setPaddingRelative(firstMsgStart, pxToDp(0), pxToDp(12), pxToDp(0));
+                        selfMessageViewHolder.fuguRlMessages.setPaddingRelative(firstMsgStart, pxToDp(0), pxToDp(12), pxToDp(0));
+                        selfMessageViewHolder.fuguRlImageMessage.setPaddingRelative(startImage, pxToDp(4), endImage, pxToDp(4));
+                    } else {
+                        selfMessageViewHolder.FuguLlMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_right_normal);
+                        selfMessageViewHolder.fuguRlMessages.setPaddingRelative(start, pxToDp(0), pxToDp(4), pxToDp(0));
+                        selfMessageViewHolder.fuguRlImageMessage.setPaddingRelative(startImage, pxToDp(4), endImage, pxToDp(4));
+                    }
+                } else {
+
+
+                    if (position != 0
+                            && (getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF)
+                            && (position + 1 != fuguItems.size())
+                            && (getItemViewType(position + 1) == FUGU_ITEM_TYPE_SELF)) {
+
+                        selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0), pxToDp(1), pxToDp(17), pxToDp(1));
+                        selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0), pxToDp(4), pxToDp(0), pxToDp(4));
+
+                    } else if (position != 0
+                            && ((getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF)
+                            && (position + 1 != fuguItems.size())
+                            && (getItemViewType(position + 1) != FUGU_ITEM_TYPE_SELF))
+                            || (!(position - 1 < 0) && (getItemViewType(position - 1) == FUGU_ITEM_TYPE_SELF))) {
+                        if (position == fuguItems.size() - 1) {
+                            selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0), pxToDp(1), pxToDp(17), pxToDp(1));
+                            selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0), pxToDp(4), pxToDp(0), pxToDp(4));
+                        } else {
+                            selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0), pxToDp(1), pxToDp(17), pxToDp(4));
+                            selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0), pxToDp(4), pxToDp(0), pxToDp(4));
+                        }
+
+                    } else if (position != 0
+                            && (position + 1 != fuguItems.size())
+                            && (getItemViewType(position + 1) == FUGU_ITEM_TYPE_SELF)) {
+                        selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0), pxToDp(4), pxToDp(10), pxToDp(1));
+                        selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0), pxToDp(4), pxToDp(0), pxToDp(4));
+                    } else {
+                        if (position == fuguItems.size() - 1) {
+                            selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0), pxToDp(4), pxToDp(10), pxToDp(1));
+                            selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0), pxToDp(4), pxToDp(0), pxToDp(4));
+                        } else {
+                            selfMessageViewHolder.fuguLlRoot.setPadding(pxToDp(0), pxToDp(4), pxToDp(10), pxToDp(4));
+                            selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0), pxToDp(4), pxToDp(0), pxToDp(4));
+                        }
+                    }
+                    if (position != 0 && (getItemViewType(position - 1) != FUGU_ITEM_TYPE_SELF)) {
+                        selfMessageViewHolder.FuguLlMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_right);
+                        selfMessageViewHolder.fuguRlMessages.setPadding(pxToDp(0), pxToDp(0), pxToDp(12), pxToDp(0));
+                        selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0), pxToDp(4), pxToDp(4), pxToDp(4));
+                    } else {
+                        selfMessageViewHolder.FuguLlMessageBg.setBackgroundResource(R.drawable.hippo_chat_bg_right_normal);
+                        selfMessageViewHolder.fuguRlMessages.setPadding(pxToDp(0), pxToDp(0), pxToDp(4), pxToDp(0));
+                        selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0), pxToDp(4), 0, pxToDp(4));
                     }
 
 
                 }
-                if (position != 0 && (getItemViewType(position - 1) != FUGU_ITEM_TYPE_SELF)) {
-                    selfMessageViewHolder.FuguLlMessageBg.setBackgroundResource(R.drawable.chat_bg_right);
-                    selfMessageViewHolder.fuguRlMessages.setPadding(pxToDp(0),
-                            pxToDp(0),
-                            pxToDp(12),
-                            pxToDp(0));
-                    selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0),
-                            pxToDp(4),
-                            pxToDp(4),
-                            pxToDp(4));
-                } else {
-                    selfMessageViewHolder.FuguLlMessageBg.setBackgroundResource(R.drawable.chat_bg_right_normal);
-                    selfMessageViewHolder.fuguRlMessages.setPadding(pxToDp(0),
-                            pxToDp(0),
-                            pxToDp(4),
-                            pxToDp(0));
-                    selfMessageViewHolder.fuguRlImageMessage.setPadding(pxToDp(0),
-                            pxToDp(4),
-                            0,
-                            pxToDp(4));
-                }
+
 
                 NinePatchDrawable drawable3 = (NinePatchDrawable) selfMessageViewHolder.FuguLlMessageBg.getBackground();
                 drawable3.setColorFilter(fuguColorConfig.getFuguBgMessageYou(), PorterDuff.Mode.MULTIPLY);
+
                 selfMessageViewHolder.fuguTvMsg.setTextColor(fuguColorConfig.getFuguPrimaryTextMsgYou());
                 selfMessageViewHolder.fuguTvMsg.setLinkTextColor(fuguColorConfig.getFuguPrimaryTextMsgYou());
                 selfMessageViewHolder.fuguTvMsg.setAutoLinkMask(Linkify.ALL);
@@ -641,15 +1145,18 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     selfMessageViewHolder.fuguTvTime.setText(DateUtils.getTime(fuguDateUtil.convertToLocal(currentOrderItem2.getSentAtUtc())));
                     selfMessageViewHolder.fuguTvTime.setVisibility(View.VISIBLE);
                 }
-                FuguLog.e("currentOrderItem.getThumbnailUrl()", "==" + currentOrderItem2.getThumbnailUrl());
+//                FuguLog.e("currentOrderItem.getThumbnailUrl()", "==" + currentOrderItem2.getThumbnailUrl());
 
-                if (!currentOrderItem2.getThumbnailUrl().isEmpty()) {
+                if (!TextUtils.isEmpty(currentOrderItem2.getThumbnailUrl())) {
                     if (currentOrderItem2.getMessageStatus() == MESSAGE_UNSENT || currentOrderItem2.getMessageStatus() == MESSAGE_IMAGE_RETRY) {
-                        Glide.with(activity).load(currentOrderItem2.getThumbnailUrl())
+                        RequestOptions myOptions = RequestOptions
                                 .bitmapTransform(new RoundedCornersTransformation(activity, 7, 2))
+                                .placeholder(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder))
                                 .dontAnimate()
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                .error(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .error(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder));
+                        Glide.with(activity).load(currentOrderItem2.getThumbnailUrl())
+                                .apply(myOptions)
                                 .into(selfMessageViewHolder.fuguIvMsgImage);
                         if (currentOrderItem2.getMessageStatus() == MESSAGE_IMAGE_RETRY) {
                             selfMessageViewHolder.fuguPbLoading.setVisibility(View.GONE);
@@ -659,13 +1166,14 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             selfMessageViewHolder.fuguBtnRetry.setVisibility(View.GONE);
                         }
                     } else {
-                        Glide.with(activity).load(currentOrderItem2.getThumbnailUrl())
-                                //.centerCrop()
+                        RequestOptions myOptions = RequestOptions
                                 .bitmapTransform(new RoundedCornersTransformation(activity, 7, 2))
-                                .placeholder(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+                                .placeholder(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder))
                                 .dontAnimate()
-                                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                                .error(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .error(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder));
+                        Glide.with(activity).load(currentOrderItem2.getThumbnailUrl())
+                                .apply(myOptions)
                                 .into(selfMessageViewHolder.fuguIvMsgImage);
                         selfMessageViewHolder.fuguPbLoading.setVisibility(View.GONE);
                         selfMessageViewHolder.fuguBtnRetry.setVisibility(View.GONE);
@@ -683,6 +1191,39 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         showImageDialog(activity, currentOrderItem2.getUrl());
                     }
                 });
+
+                if(currentOrderItem2.getIsMessageExpired() == 1) {
+                    selfMessageViewHolder.llRetry.setVisibility(View.VISIBLE);
+                    selfMessageViewHolder.tvTryAgain.setTag(position);
+                    selfMessageViewHolder.tvCancel.setTag(position);
+                    selfMessageViewHolder.tvTryAgain.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(mOnRetry != null) {
+                                String muid = currentOrderItem2.getMuid();
+                                int pos = selfMessageViewHolder.getAdapterPosition();
+                                //int pos = (int) view.getTag();
+                                mOnRetry.onMessageRetry(muid, pos);
+                                //selfMessageViewHolder.llRetry.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+
+                    selfMessageViewHolder.tvCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //int pos = (int) view.getTag();
+                            int pos = selfMessageViewHolder.getAdapterPosition();
+                            if(mOnRetry != null) {
+                                String muid = currentOrderItem2.getMuid();
+                                mOnRetry.onMessageCancel(muid, pos);
+                            }
+                        }
+                    });
+                } else {
+                    selfMessageViewHolder.llRetry.setVisibility(View.GONE);
+                }
+
                 switch (currentOrderItem2.getMessageStatus()) {
                     case MESSAGE_UNSENT:
                     case MESSAGE_IMAGE_RETRY:
@@ -692,7 +1233,8 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                         selfMessageViewHolder.fuguIvMessageState.getDrawable()
                                 .setColorFilter(fuguColorConfig.getFuguSecondaryTextMsgYou(), PorterDuff.Mode.SRC_ATOP);
-                        new Handler().postDelayed(new Runnable() {
+                        // TODO: 27/08/18
+                        /*new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 if (!currentOrderItem2.isSent()) {
@@ -700,14 +1242,12 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                         @Override
                                         public void onClick(View view) {
                                             fuguChatActivity.sendMessage(selfMessageViewHolder.getAdapterPosition());
-//                                            selfMessageViewHolder.llRetry.setVisibility(View.GONE);
                                         }
                                     });
                                     selfMessageViewHolder.tvCancel.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             fuguChatActivity.cancelMessage(selfMessageViewHolder.getAdapterPosition());
-//                                            selfMessageViewHolder.llRetry.setVisibility(View.GONE);
                                         }
                                     });
                                     if (TextUtils.isEmpty(currentOrderItem2.getMessage())) {
@@ -721,7 +1261,7 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                     selfMessageViewHolder.llRetry.setVisibility(View.GONE);
                                 }
                             }
-                        }, 0);
+                        }, 0);*/
 
 
                         break;
@@ -745,7 +1285,7 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         break;
                     case MESSAGE_DELIVERED:
                         selfMessageViewHolder.fuguIvMessageState.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.fugu_tick_double));
-                        if (android.os.Build.VERSION.SDK_INT >= 21) {
+                        if (Build.VERSION.SDK_INT >= 21) {
                             selfMessageViewHolder.fuguIvMessageState.getDrawable().setTint(ContextCompat.getColor(activity, R.color.fugu_drawable_color));
                         }
                         selfMessageViewHolder.fuguIvMessageState.setVisibility(View.VISIBLE);
@@ -772,7 +1312,7 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             selfMessageViewHolder.fuguPbLoading.setVisibility(View.VISIBLE);
                             selfMessageViewHolder.fuguBtnRetry.setVisibility(View.GONE);
                             mOnRetry.onRetry(currentOrderItem2.getUrl(), currentOrderItem2.getMessageIndex(),
-                                    IMAGE_MESSAGE, null, currentOrderItem2.getUuid());
+                                    IMAGE_MESSAGE, null, currentOrderItem2.getMuid());
                         }
                     }
                 });
@@ -795,7 +1335,7 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 selfMessageViewHolder.fuguRlStopUpload.setVisibility(View.VISIBLE);
                                 selfMessageViewHolder.fuguIvUpload.setVisibility(View.GONE);
                                 mOnRetry.onRetry(currentOrderItem2.getUrl(), currentOrderItem2.getMessageIndex(),
-                                        FILE_MESSAGE, fileDetails, currentOrderItem2.getUuid());
+                                        FILE_MESSAGE, fileDetails, currentOrderItem2.getMuid());
                             }
                         }
                     });
@@ -826,7 +1366,7 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE, "Please grant permission to Storage",
                                 PERMISSION_READ_FILE)) return;
 
-                        FuguLog.e("adapter file path", currentOrderItem2.getFilePath());
+//                        FuguLog.e("adapter file path", currentOrderItem2.getFilePath());
 
                         try {
                             Intent photoPickerIntent = new Intent(Intent.ACTION_VIEW);
@@ -845,9 +1385,39 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    private void setView(LinearLayout llGalleryButtonLayout, int count) {
+        llGalleryButtonLayout.removeAllViews();
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add("Amit");
+        strings.add("Gurmail");
+        strings.add("Ankush");
+        strings.add("Vishal");
+        strings.add("Gagan");
+        for (int i = 0; i < count; i++) {
+            final int pos = i;
+            LayoutInflater layoutInflater = (LayoutInflater) activity.getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = layoutInflater.inflate(R.layout.hippo_layout_gallery_button, null);
+            TextView textView = view.findViewById(R.id.tvButton);
+            textView.setText(strings.get(i));
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(activity, "Button" + String.valueOf(pos) + "clicked", Toast.LENGTH_SHORT).show();
+                }
+            });
+            llGalleryButtonLayout.addView(view);
+        }
+    }
+
     @Override
     public int getItemViewType(int position) {
         return fuguItems.get(position).getType();
+    }
+
+    private float convertDpToPixel(float dp) {
+        DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
+        float px = dp * (metrics.densityDpi / 160f);
+        return Math.round(px);
     }
 
     @Override
@@ -966,6 +1536,117 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
+    class ForumViewHolder extends RecyclerView.ViewHolder {
+        private RecyclerView rvDataForm;
+
+        ForumViewHolder(View itemView) {
+            super(itemView);
+            rvDataForm = itemView.findViewById(R.id.rvDataForm);
+        }
+
+    }
+
+    class SimpleTextView extends RecyclerView.ViewHolder {
+
+        private TextView tvText;
+
+        public SimpleTextView(View itemView) {
+            super(itemView);
+            tvText = itemView.findViewById(R.id.tvText);
+
+        }
+    }
+
+    class QuickReplyViewHolder extends RecyclerView.ViewHolder {
+        private RecyclerView list_qr;
+        private TextView title_view_text;
+
+        QuickReplyViewHolder(View itemView) {
+            super(itemView);
+            list_qr = itemView.findViewById(R.id.list_qr);
+            title_view_text = itemView.findViewById(R.id.title_view_text);
+        }
+
+    }
+
+    class SelfVideoViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView tvMsg, tvTime, callAgain, tvDuration;
+        private ImageView ivCallIcon;
+        public SelfVideoViewHolder(View itemView) {
+            super(itemView);
+            tvMsg = itemView.findViewById(R.id.tvMsg);
+            tvTime = itemView.findViewById(R.id.tvTime);
+            callAgain = itemView.findViewById(R.id.callAgain);
+            tvDuration = itemView.findViewById(R.id.tvDuration);
+
+            ivCallIcon = itemView.findViewById(R.id.ivCallIcon);
+        }
+    }
+
+    class VideoViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView tvMsg, tvTime, callAgain, tvDuration;
+        private ImageView ivCallIcon;
+        public VideoViewHolder(View itemView) {
+            super(itemView);
+            tvMsg = itemView.findViewById(R.id.tvMsg);
+            tvTime = itemView.findViewById(R.id.tvTime);
+            callAgain = itemView.findViewById(R.id.callAgain);
+            tvDuration = itemView.findViewById(R.id.tvDuration);
+
+            ivCallIcon = itemView.findViewById(R.id.ivCallIcon);
+        }
+    }
+
+    class RatingViewHolder extends RecyclerView.ViewHolder {
+
+        public MyCustomEditTextListener myCustomEditTextListener;
+        private LinearLayout ratedLayout, askRateLayout, messageLayout;
+        private TextView titleTxt, ratedTitle, ratedSubTitle, ratedMessage;
+        private ImageView terribleImage, badImage, okayImage, goodImage, greatImage;
+        private EditText editText;
+        private Button sendBtn;
+        private RelativeLayout sendFeedback;
+
+        public RatingViewHolder(View itemView, MyCustomEditTextListener myCustomEditTextListener) {
+            super(itemView);
+            titleTxt = itemView.findViewById(R.id.title_view);
+            ratedTitle = itemView.findViewById(R.id.rated_title);
+            ratedSubTitle = itemView.findViewById(R.id.rated_sub_title);
+            ratedMessage = itemView.findViewById(R.id.rated_message);
+
+            editText = itemView.findViewById(R.id.ed_rating_txt);
+            this.myCustomEditTextListener = myCustomEditTextListener;
+            this.editText.addTextChangedListener(myCustomEditTextListener);
+
+            sendFeedback = itemView.findViewById(R.id.send_btn);
+            sendBtn = itemView.findViewById(R.id.sendBtn);
+            ratedLayout = itemView.findViewById(R.id.rated_layout);
+            askRateLayout = itemView.findViewById(R.id.ask_rate_layout);
+            messageLayout = itemView.findViewById(R.id.message_layout);
+
+            terribleImage = itemView.findViewById(R.id.terrible_image);
+            badImage = itemView.findViewById(R.id.bad_image);
+            okayImage = itemView.findViewById(R.id.okay_image);
+            goodImage = itemView.findViewById(R.id.good_image);
+            greatImage = itemView.findViewById(R.id.great_image);
+        }
+    }
+
+    class GalleryViewHolder extends RecyclerView.ViewHolder {
+
+        private LinearLayout llGalleryButtonLayout;
+        private TextView tvButton;
+
+        public GalleryViewHolder(View itemView) {
+            super(itemView);
+            tvButton = itemView.findViewById(R.id.tvButton);
+            llGalleryButtonLayout = itemView.findViewById(R.id.llGalleryButtonLayout);
+
+        }
+    }
+
     class DateViewHolder extends RecyclerView.ViewHolder {
         private TextView tvDate;
 
@@ -990,12 +1671,15 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             dialog.setCancelable(true);
             dialog.setCanceledOnTouchOutside(false);
-            ImageView ivImage = dialog.findViewById(R.id.ivImage);
-            Glide.with(activity).load(imgUrl)
-                    .placeholder(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+            ZoomageView ivImage = dialog.findViewById(R.id.ivImage);
+            RequestOptions myOptions = RequestOptions
+                    .bitmapTransform(new RoundedCornersTransformation(activity, 7, 2))
+                    .placeholder(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder))
                     .dontAnimate()
-                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                    .error(ContextCompat.getDrawable(activity, R.drawable.placeholder))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(ContextCompat.getDrawable(activity, R.drawable.hippo_placeholder));
+            Glide.with(activity).load(imgUrl)
+                    .apply(myOptions)
                     .into(ivImage);
             TextView tvCross = dialog.findViewById(R.id.tvCross);
             tvCross.setOnClickListener(new View.OnClickListener() {
@@ -1008,6 +1692,27 @@ public class FuguMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    public interface OnRatingListener {
+        void onSubmitRating(String text, Message currentOrderItem, int position);
+
+        void onRatingSelected(int rating, Message currentOrderItem);
+
+        void onFormDataCallback(Message currentOrderItem);
+    }
+
+    public interface onVideoCall {
+        void onVideoCallClicked(int callType);
+    }
+
+    private String convertSeconds(int seconds) {
+        int h = seconds / 3600;
+        int m = (seconds % 3600) / 60;
+        int s = seconds % 60;
+        String sh = (h > 0 ? String.valueOf(h) + " " + "h" : "");
+        String sm = (m < 10 && m > 0 && h > 0 ? "0" : "") + (m > 0 ? (h > 0 && s == 0 ? String.valueOf(m) : String.valueOf(m) + " " + "min") : "");
+        String ss = (s == 0 && (h > 0 || m > 0) ? "" : (s < 10 && (h > 0 || m > 0) ? "0" : "") + String.valueOf(s) + " " + "sec");
+        return sh + (h > 0 ? " " : "") + sm + (m > 0 ? " " : "") + ss;
     }
 }

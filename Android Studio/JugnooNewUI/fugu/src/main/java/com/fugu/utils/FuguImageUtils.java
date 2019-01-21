@@ -44,9 +44,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fugu.BuildConfig;
 import com.fugu.FuguConfig;
 import com.fugu.R;
 import com.fugu.adapter.FuguAttachmentAdapter;
+import com.fugu.agent.database.AgentCommonData;
+import com.fugu.agent.model.LoginModel.UserData;
 import com.fugu.constant.FuguAppConstant;
 import com.fugu.database.CommonData;
 import com.fugu.model.FuguFileDetails;
@@ -95,6 +98,9 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
     }
 
     public void showImageChooser(int cameraRequestCode, int galleryRequestCode, int selectFileRequestCode) {
+        showImageChooser(cameraRequestCode, galleryRequestCode, selectFileRequestCode, null);
+    }
+    public void showImageChooser(int cameraRequestCode, int galleryRequestCode, int selectFileRequestCode, final ViewOpened viewOpened) {
 
         this.cameraRequestCode = cameraRequestCode;
         this.galleryRequestCode = galleryRequestCode;
@@ -141,10 +147,22 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
                     switch (action) {
                         case OPEN_CAMERA_ADD_IMAGE:
                             startCamera();
+                            try {
+                                if(viewOpened != null)
+                                    viewOpened.open();
+                            } catch (Exception e) {
+
+                            }
                             dialog.dismiss();
                             break;
                         case OPEN_GALLERY_ADD_IMAGE:
                             openGallery();
+                            try {
+                                if(viewOpened != null)
+                                    viewOpened.open();
+                            } catch (Exception e) {
+
+                            }
                             dialog.dismiss();
                             break;
                         case SELECT_FILE:
@@ -184,10 +202,12 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
         FuguLog.e(TAG, "startCamera");
 
         /** Code to check whether the Location Permission is Granted */
-        String[] permissionsRequired = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissionsRequired = new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
+        /*  Check if the Permission for the Camera was Granted  */
         if (!FuguConfig.getInstance().askUserToGrantPermission(activity,
-                permissionsRequired, "Please grant permission to access storage to save images",
+                permissionsRequired, "Please grant permission to access Camera",
                 cameraPermission)) return;
 
 
@@ -219,8 +239,8 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
                 }
             }
             if (!TextUtils.isEmpty(CommonData.getProvider())) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(activity,
-                        CommonData.getProvider(), fileToBeWritten));
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        FileProvider.getUriForFile(activity,CommonData.getProvider(), fileToBeWritten));
             } else {
                 new CustomAlertDialog.Builder(activity)
                         .setMessage("Provider cannot be null")
@@ -247,8 +267,24 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
     private File getDirectory(FileType type) {
 
         try {
-            String strFolder = Environment.getExternalStorageDirectory()
-                    + File.separator + CommonData.getUserDetails().getData().getBusinessName().replaceAll(" ", "").replaceAll("'s", "") + File.separator + type.directory;
+            String strFolder = "";
+            if(AgentCommonData.isAgentFlow()) {
+                String folderName = "agentSdk";
+                UserData userData = AgentCommonData.getUserData();
+                if(!TextUtils.isEmpty(userData.getBusinessName())) {
+                    folderName = userData.getBusinessName();
+                } else if(!TextUtils.isEmpty(userData.getUserName())) {
+                    folderName = userData.getUserName();
+                } else if(!TextUtils.isEmpty(userData.getFullName())) {
+                    folderName = userData.getFullName();
+                }
+                strFolder = Environment.getExternalStorageDirectory()
+                        + File.separator + folderName + File.separator + type.directory;
+            } else {
+                strFolder = Environment.getExternalStorageDirectory()
+                        + File.separator + CommonData.getUserDetails().getData().getBusinessName().replaceAll(" ", "").replaceAll("'s", "") + File.separator + type.directory;
+            }
+
 
             File folder = new File(strFolder);
             if (!folder.exists()) {
@@ -826,6 +862,27 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
         }
     }
 
+    private String getFileName() {
+        String fileName = "";
+        String timeStamp = new SimpleDateFormat("ddMMyyyy_hhmmss", Locale.ENGLISH).format(new Date());
+        if(AgentCommonData.isAgentFlow()) {
+            String folderName = "agentSdk";
+            UserData userData = AgentCommonData.getUserData();
+            if(!TextUtils.isEmpty(userData.getBusinessName())) {
+                folderName = userData.getBusinessName();
+            } else if(!TextUtils.isEmpty(userData.getUserName())) {
+                folderName = userData.getUserName();
+            } else if(!TextUtils.isEmpty(userData.getFullName())) {
+                folderName = userData.getFullName();
+            }
+            fileName = folderName + "_" + timeStamp + ".jpg";
+        } else {
+            fileName = CommonData.getUserDetails().getData().getBusinessName()
+                    .replaceAll(" ", "").
+                            replaceAll("'s", "") + "_" + timeStamp + ".jpg";
+        }
+        return fileName;
+    }
     /**
      * Method to save the Bitmap
      *
@@ -834,8 +891,8 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
     public String saveBitmapImage(Bitmap bitmap) throws IOException {
 
         FuguLog.e(TAG, "saveBitmapImage");
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_hhmmss", Locale.ENGLISH).format(new Date());
-        String fileName = CommonData.getUserDetails().getData().getBusinessName().replaceAll(" ", "").replaceAll("'s", "") + "_" + timeStamp + ".jpg";
+
+        String fileName = getFileName();
 
 //        String path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), fileName).getAbsolutePath();
         String path = new File(getDirectory(FileType.IMAGE_FILE), fileName).getAbsolutePath();
@@ -862,8 +919,7 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
             }
         }
 
-        String timeStamp = new SimpleDateFormat("ddMMyyyy_hhmmss", Locale.ENGLISH).format(new Date());
-        String fileName = fuguFileDetails.getFileName() + CommonData.getUserDetails().getData().getBusinessName().replaceAll(" ", "").replaceAll("'s", "") + "_" + timeStamp + type.extension;
+        String fileName = fuguFileDetails.getFileName() + getFileName();
 
         try {
 
@@ -924,5 +980,9 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
     @Override
     public void onAnimationRepeat(Animation animation) {
 
+    }
+
+    public interface ViewOpened {
+        void open();
     }
 }

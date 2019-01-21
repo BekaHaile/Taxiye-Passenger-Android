@@ -2,6 +2,7 @@ package com.sabkuchfresh.dialogs;
 
 import android.app.DialogFragment;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -18,8 +19,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
@@ -246,39 +249,41 @@ public class ReviewImagePagerDialog extends DialogFragment {
 			});
 
 
-
-			if(reviewImages!=null && reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>0)
-			  Glide.with(activity).load(reviewImages.get(position).getUrl()).listener(new RequestListener<String, GlideDrawable>() {
-				  @Override
-				  public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-					  progressBar.setVisibility(View.GONE);
-					  return false;
-				  }
-
-
-				  @Override
-				  public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-					  progressBar.setVisibility(View.GONE);
-					  ivReviewImage.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
-					  return false;
-				  }
-			  }).error(R.drawable.ic_fresh_item_placeholder).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).into(ivReviewImage);
-			else
-				Glide.with(activity).load(reviewImages.get(position).getUrl()).listener(new RequestListener<String, GlideDrawable>() {
+			RequestOptions options = new RequestOptions()
+					.override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+					.error(R.drawable.ic_fresh_item_placeholder);
+			if(reviewImages!=null && reviewImages.size()==1 && reviewImages.get(0).getHeight()!=null && reviewImages.get(0).getHeight()>0) {
+				Glide.with(activity).load(reviewImages.get(position).getUrl()).listener(new RequestListener<Drawable>() {
 					@Override
-					public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+					public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
 						progressBar.setVisibility(View.GONE);
 						return false;
 					}
 
-
 					@Override
-					public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+					public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
 						progressBar.setVisibility(View.GONE);
-						ivReviewImage.setBackgroundColor(ContextCompat.getColor(activity,R.color.white));
+						ivReviewImage.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
 						return false;
 					}
-				}).error(R.drawable.ic_fresh_item_placeholder).into(ivReviewImage);
+				}).apply(options).into(ivReviewImage);
+			}
+			else {
+				Glide.with(activity).load(reviewImages.get(position).getUrl()).listener(new RequestListener<Drawable>() {
+					@Override
+					public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+						progressBar.setVisibility(View.GONE);
+						return false;
+					}
+
+					@Override
+					public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+						progressBar.setVisibility(View.GONE);
+						ivReviewImage.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+						return false;
+					}
+				}).apply(options).into(ivReviewImage);
+			}
 			container.addView(root);
 			return root;
 		}

@@ -103,6 +103,61 @@ public class FuguGetMessageResponse {
         @Expose
         private String businessName;
 
+        public boolean isDisableReply() {
+            return disableReply != null && disableReply == 1;
+        }
+
+        public void setDisableReply(Integer disableReply) {
+            this.disableReply = disableReply;
+        }
+
+        @SerializedName("disable_reply")
+        @Expose
+        private Integer disableReply;
+
+        @SerializedName("chat_type")
+        @Expose
+        private Integer chatType;
+        @SerializedName("agent_name")
+        @Expose
+        private String agentName;
+        @SerializedName("user_id")
+        @Expose
+        private Long agentId;
+        @SerializedName("other_users")
+        @Expose
+        private List<OtherUser> otherUsers = new ArrayList<OtherUser>();
+        @SerializedName("allow_video_call")
+        @Expose
+        private Integer allowVideoCall;
+        @SerializedName("allow_audio_call")
+        @Expose
+        private Integer allowAudioCall;
+
+        public boolean isAllowVideoCall() {
+            try {
+                return allowVideoCall == 1;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        public void setAllowVideoCall(Integer allowVideoCall) {
+            this.allowVideoCall = allowVideoCall;
+        }
+
+        public boolean isAllowAudioCall() {
+            try {
+                return allowAudioCall == 1;
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        public void setAllowAudioCall(Integer allowAudioCall) {
+            this.allowAudioCall = allowAudioCall;
+        }
+
         public ArrayList<Message> getMessages() {
             return messages;
         }
@@ -144,6 +199,37 @@ public class FuguGetMessageResponse {
             this.businessName = businessName;
         }
 
+        public Integer getChatType() {
+            return chatType;
+        }
+
+        public void setChatType(Integer chatType) {
+            this.chatType = chatType;
+        }
+
+        public List<OtherUser> getOtherUsers() {
+            return otherUsers;
+        }
+
+        public void setOtherUsers(List<OtherUser> otherUsers) {
+            this.otherUsers = otherUsers;
+        }
+
+        public String getAgentName() {
+            return agentName;
+        }
+
+        public void setAgentName(String agentName) {
+            this.agentName = agentName;
+        }
+
+        public Long getAgentId() {
+            return agentId;
+        }
+
+        public void setAgentId(Long agentId) {
+            this.agentId = agentId;
+        }
     }
 
 }

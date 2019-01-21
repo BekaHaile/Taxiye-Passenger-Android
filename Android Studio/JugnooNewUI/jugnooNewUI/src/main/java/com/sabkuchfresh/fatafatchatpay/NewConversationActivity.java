@@ -480,7 +480,7 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
                             if (createChatResponse != null && !TextUtils.isEmpty(createChatResponse.getChannelId())
                                     && createChatResponse.getFuguData() != null) {
 
-                                FuguConfig.getInstance().openDirectChat(NewConversationActivity.this,
+                                FuguConfig.getInstance().openChat(NewConversationActivity.this,
                                         Long.parseLong(createChatResponse.getChannelId()));
                             }
                             // indicate to fugu that a new peer chat is created ( so we can refresh the chat

@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/fugu_dp_1"
+        android:layout_marginLeft="@dimen/fugu_margin_12"
+        android:layout_marginRight="@dimen/fugu_margin_12"
+        android:layout_marginTop="@dimen/fugu_margin_12"
+        card_view:cardBackgroundColor="@color/hippo_white"
+        card_view:cardCornerRadius="@dimen/fugu_dp_1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:splitMotionEvents="false">
+
+            <LinearLayout
+                android:id="@+id/linearLayoutMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/fugu_padding_10"
+                android:splitMotionEvents="false">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textViewStatus"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/fugu_margin_10"
+                        android:layout_marginRight="@dimen/fugu_margin_10"
+                        android:text="Status:"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+
+                    <TextView
+                        android:id="@+id/textViewStatusValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/textViewStatus"
+                        android:text="Pending"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/fugu_margin_5">
+
+                    <TextView
+                        android:id="@+id/textViewName"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/fugu_margin_10"
+                        android:layout_marginRight="@dimen/fugu_margin_10"
+                        android:text="Name:"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+
+                    <TextView
+                        android:id="@+id/textViewIdValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/textViewName"
+                        android:text="Name"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/fugu_margin_5">
+
+                    <TextView
+                        android:id="@+id/textViewTitle"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/fugu_margin_10"
+                        android:layout_marginRight="@dimen/fugu_margin_10"
+                        android:text="Title:"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+
+                    <TextView
+                        android:id="@+id/textViewTitleValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/textViewTitle"
+                        android:text="Name"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/fugu_margin_5">
+
+                    <TextView
+                        android:id="@+id/textViewMsg"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/fugu_margin_10"
+                        android:layout_marginRight="@dimen/fugu_margin_10"
+                        android:text="Message:"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+
+                    <TextView
+                        android:id="@+id/textViewMsgValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/textViewMsg"
+                        android:text="hkhsdk askdh kasdh kash dkjh aksdh kasdh khkasdh kasdk h"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/fugu_margin_5">
+
+                    <TextView
+                        android:id="@+id/textViewDate"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/fugu_margin_10"
+                        android:layout_marginRight="@dimen/fugu_margin_10"
+                        android:text="Date:"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+
+                    <TextView
+                        android:id="@+id/textViewDateValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@id/textViewDate"
+                        android:text="26-09-18"
+                        android:textColor="@color/fugu_text_color_primary"
+                        android:textSize="@dimen/fugu_text_size_normal" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/viewExtra"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/linearLayoutMain" />
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>

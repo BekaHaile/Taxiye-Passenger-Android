@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/fugu_margin_5"
+    android:layout_marginLeft="@dimen/fugu_margin_15"
+    android:layout_marginRight="@dimen/fugu_margin_40"
+    android:layout_marginTop="@dimen/fugu_margin_5"
+    android:background="@drawable/hippo_rating_background"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:id="@+id/ask_rate_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/title_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fugu_margin_10"
+            android:gravity="center"
+            android:padding="@dimen/fugu_padding_7"
+            android:text="@string/hippo_rating_title_text" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/fugu_padding_5">
+
+            <ImageView
+                android:id="@+id/terrible_image"
+                android:layout_width="@dimen/fugu_dp_40"
+                android:layout_height="@dimen/fugu_dp_40"
+                android:layout_marginRight="@dimen/fugu_margin_7"
+                android:background="@drawable/hippo_ic_terrible_image" />
+
+            <ImageView
+                android:id="@+id/bad_image"
+                android:layout_width="@dimen/fugu_dp_40"
+                android:layout_height="@dimen/fugu_dp_40"
+                android:layout_marginRight="@dimen/fugu_margin_7"
+                android:background="@drawable/hippo_ic_bad_image" />
+
+            <ImageView
+                android:id="@+id/okay_image"
+                android:layout_width="@dimen/fugu_dp_60"
+                android:layout_height="@dimen/fugu_dp_60"
+                android:layout_marginRight="@dimen/fugu_margin_7"
+                android:background="@drawable/hippo_ic_okay_image_selected" />
+
+            <ImageView
+                android:id="@+id/good_image"
+                android:layout_width="@dimen/fugu_dp_40"
+                android:layout_height="@dimen/fugu_dp_40"
+                android:layout_marginRight="@dimen/fugu_margin_7"
+                android:background="@drawable/hippo_ic_good_image" />
+
+            <ImageView
+                android:id="@+id/great_image"
+                android:layout_width="@dimen/fugu_dp_40"
+                android:layout_height="@dimen/fugu_dp_40"
+                android:layout_marginRight="@dimen/fugu_margin_7"
+                android:background="@drawable/hippo_ic_great_image" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/fugu_dp_1"
+            android:background="@color/fugu_type_message_hint" />
+
+        <RelativeLayout
+            android:id="@+id/bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/send_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/fugu_ic_send" />
+
+            </RelativeLayout>
+
+            <EditText
+                android:id="@+id/ed_rating_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/fugu_margin_7"
+                android:layout_toLeftOf="@+id/send_btn"
+                android:background="@null"
+                android:gravity="center_vertical"
+                android:hint="Tell us more..."
+                android:minHeight="60dp"
+                android:textSize="15sp"
+                android:padding="@dimen/fugu_padding_5"
+                android:paddingLeft="@dimen/fugu_padding_7"
+                android:paddingRight="@dimen/fugu_padding_7" />
+
+            <Button
+                android:id="@+id/sendBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ed_rating_txt"
+                android:background="@drawable/hippo_button_rounded"
+                android:text="Submit"
+                android:textColor="@color/hippo_white" />
+
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/buttonSubmit"
+            style="@style/rating_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hippo_button_height"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/fugu_margin_15"
+            android:background="@drawable/fugu_rating_btn_selector"
+            android:elevation="@dimen/fugu_elevation_4"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/fugu_padding_10"
+            android:paddingRight="@dimen/fugu_padding_10"
+            android:text="submit"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/rated_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/rated_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fugu_margin_20"
+            android:gravity="center"
+            android:paddingLeft="@dimen/fugu_margin_10"
+            android:paddingRight="@dimen/fugu_margin_10"
+            android:text="@string/hippo_rating_title" />
+
+        <TextView
+            android:id="@+id/rated_sub_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/fugu_margin_20"
+            android:layout_marginTop="@dimen/fugu_margin_10"
+            android:gravity="center"
+            android:paddingLeft="@dimen/fugu_margin_10"
+            android:paddingRight="@dimen/fugu_margin_10"
+            android:text="@string/hippo_rated_message" />
+
+        <LinearLayout
+            android:id="@+id/message_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fugu_dp_1"
+                android:background="@color/fugu_type_message_hint" />
+
+
+            <TextView
+                android:id="@+id/rated_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/fugu_margin_10"
+                android:padding="@dimen/fugu_margin_10"
+                android:text="@string/hippo_thanks" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

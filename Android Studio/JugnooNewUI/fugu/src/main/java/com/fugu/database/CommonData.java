@@ -2,26 +2,36 @@ package com.fugu.database;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
+import com.fugu.CaptureUserData;
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguFontConfig;
+import com.fugu.FuguStringConfig;
 import com.fugu.adapter.ListItem;
+import com.fugu.constant.FuguAppConstant;
 import com.fugu.model.FuguConversation;
 import com.fugu.model.FuguDeviceDetails;
 import com.fugu.model.FuguGetMessageResponse;
 import com.fugu.model.FuguPutUserDetailsResponse;
 import com.fugu.model.Message;
+import com.fugu.model.UnreadCountModel;
 import com.fugu.utils.FuguLog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -39,20 +49,30 @@ public final class CommonData implements PaperDbConstant {
     public static FuguPutUserDetailsResponse USER_DETAILS = null;
     public static String SERVER_URL = "";
     public static String APP_SECRET_KEY = "";
-    public static int APP_TYPE = 1;
+    public static String APP_TYPE = "1";
     public static TreeMap<Long, FuguGetMessageResponse> GET_MESSAGE_RESPONSE_MAP = new TreeMap<>();
     public static TreeMap<Long, FuguGetMessageResponse> GET_LABEL_ID_RESPONSE_MAP = new TreeMap<>();
     public static TreeMap<Long, TreeMap<String, ListItem>> UNSENT_MESSAGE_MAP = new TreeMap<>();
     public static FuguColorConfig COLOR_CONFIG = new FuguColorConfig();
+    public static FuguStringConfig STRING_CONFIG = new FuguStringConfig();
     public static FuguFontConfig FONT_CONFIG = new FuguFontConfig();
     public static String isNewChatKey = "IS_NEW_CHAT";
     public static String providerKey = "PROVIDER_KEY";
     public static String pushKey = "PUSH_KEY";
+    public static String NOTIFICATION_FIRST_CLICK = "hippo_notification_first_click";
     public static String pushChannelKey = "PUSH_CHANNEL_KEY";
     public static String isAppOpenKey = "isAppOpen";
     public static String newPeerChatCreated = "FUGU_NEW_PEER_CHAT_CREATED";
     public static TreeMap<Long, ArrayList<ListItem>> FUGU_MESSAGE_LIST = new TreeMap<>();
     public static final String clearFuguDataKey = "clearFuguData";
+    public static final String HIPPO_UNREAD_COUNT = "hippo_unread_count";
+    private static String keyQuickReply = "saveQuickReplay";
+
+
+    public static HashMap<Long, LinkedHashMap<String, JSONObject>> UNSENT_MESSAGE_JSON = new HashMap<>();
+    public static HashMap<Long, LinkedHashMap<String, ListItem>> SENT_MESSAGES = new HashMap<>();
+    public static HashMap<Long, LinkedHashMap<String, ListItem>> UNSENT_MESSAGES = new HashMap<>();
+
 
     /**
      * Empty Constructor
@@ -73,39 +93,6 @@ public final class CommonData implements PaperDbConstant {
         Paper.book().write(PAPER_GET_MESSAGE_RESPONSE_MAP, CommonData.GET_MESSAGE_RESPONSE_MAP);
     }
 
-//    public static void setFuguMessageList(Long channelId, ArrayList<ListItem> fuguMessageList) {
-//        FUGU_MESSAGE_LIST.put(channelId, fuguMessageList);
-//        Paper.book().write(PAPER_FUGU_MESSAGE_LIST, CommonData.FUGU_MESSAGE_LIST);
-//    }
-
-
-    /**
-     * Save PAPER_GET_MESSAGE_RESPONSE_MAP
-     *
-     * @param channelId
-     * @param messages
-     */
-
-    public static void setMessagesToMessageMap(Long channelId, ArrayList<Message> messages) {
-        if (GET_MESSAGE_RESPONSE_MAP.get(channelId) != null && GET_MESSAGE_RESPONSE_MAP.get(channelId).getData() != null) {
-            GET_MESSAGE_RESPONSE_MAP.get(channelId).getData().setMessages(messages);
-            Paper.book().write(PAPER_GET_MESSAGE_RESPONSE_MAP, CommonData.GET_MESSAGE_RESPONSE_MAP);
-        }
-    }
-
-    /**
-     * Save PAPER_GET_LABEL_ID_RESPONSE_MAP
-     *
-     * @param channelId
-     * @param messages
-     */
-
-    public static void setMessagesToLabelMap(Long channelId, ArrayList<Message> messages) {
-        if (GET_LABEL_ID_RESPONSE_MAP.get(channelId) != null && GET_LABEL_ID_RESPONSE_MAP.get(channelId).getData() != null) {
-            GET_LABEL_ID_RESPONSE_MAP.get(channelId).getData().setMessages(messages);
-            Paper.book().write(PAPER_GET_LABEL_ID_RESPONSE_MAP, CommonData.GET_LABEL_ID_RESPONSE_MAP);
-        }
-    }
 
     /**
      * Gets PAPER_GET_MESSAGE_RESPONSE_MAP
@@ -118,24 +105,6 @@ public final class CommonData implements PaperDbConstant {
             GET_MESSAGE_RESPONSE_MAP = Paper.book().read(PAPER_GET_MESSAGE_RESPONSE_MAP, new TreeMap<Long, FuguGetMessageResponse>());
         }
         return GET_MESSAGE_RESPONSE_MAP.get(channelId);
-    }
-
-//    public static ArrayList<ListItem> getFuguMessageList(Long channelId) {
-//        if (FUGU_MESSAGE_LIST.isEmpty()) {
-//            FUGU_MESSAGE_LIST = Paper.book().read(PAPER_FUGU_MESSAGE_LIST, new TreeMap<Long, ArrayList<ListItem>>());
-//        }
-//        return FUGU_MESSAGE_LIST.get(channelId);
-//    }
-
-    /**
-     * Save PAPER_CONVERSATION_LIST
-     *
-     * @param getByLabelIdResponse
-     */
-
-    public static void setLabelIdResponse(Long labelId, FuguGetMessageResponse getByLabelIdResponse) {
-        GET_LABEL_ID_RESPONSE_MAP.put(labelId, getByLabelIdResponse);
-        Paper.book().write(PAPER_GET_LABEL_ID_RESPONSE_MAP, CommonData.GET_LABEL_ID_RESPONSE_MAP);
     }
 
     /**
@@ -170,8 +139,8 @@ public final class CommonData implements PaperDbConstant {
      */
 
     public static String getServerUrl() {
-        if (SERVER_URL.isEmpty()) {
-            SERVER_URL = Paper.book().read(PAPER_SERVER_URL, "");
+        if (TextUtils.isEmpty(SERVER_URL.trim())) {
+            SERVER_URL = Paper.book().read(PAPER_SERVER_URL, FuguAppConstant.LIVE_SERVER);
         }
         return SERVER_URL;
     }
@@ -208,7 +177,7 @@ public final class CommonData implements PaperDbConstant {
      * @param appType
      */
 
-    public static void setAppType(int appType) {
+    public static void setAppType(String appType) {
         APP_TYPE = appType;
         Paper.book().write(PAPER_APP_TYPE, CommonData.APP_TYPE);
     }
@@ -219,9 +188,17 @@ public final class CommonData implements PaperDbConstant {
      * @return the appSecretKey
      */
 
-    public static int getAppType() {
-        APP_TYPE = Paper.book().read(PAPER_APP_TYPE, 1);
+    public static String getAppType() {
+        APP_TYPE = Paper.book().read(PAPER_APP_TYPE, "1");
         return APP_TYPE;
+    }
+
+    public static int getPushFlags() {
+        return Paper.book().read(PAPER_PUSH_FLAGS, -1);
+    }
+
+    public static void setPushFlags(int flags) {
+        Paper.book().write(PAPER_PUSH_FLAGS, flags);
     }
 
     /*
@@ -309,6 +286,31 @@ public final class CommonData implements PaperDbConstant {
         return COLOR_CONFIG;
     }
 
+
+    /**
+     * Save PAPER_STRING_CONFIG
+     *
+     * @param fuguStringConfig
+     */
+    public static void setStringConfig(FuguStringConfig fuguStringConfig) {
+        CommonData.STRING_CONFIG = fuguStringConfig;
+        Paper.book().write(PAPER_STRING_CONFIG, fuguStringConfig);
+    }
+
+    /**
+     * Gets PAPER_COLOR_CONFIG
+     *
+     * @return the fuguColorConfig
+     */
+
+    public static FuguStringConfig getStringConfig() {
+        if (STRING_CONFIG == null)
+            STRING_CONFIG = Paper.book().read(PAPER_STRING_CONFIG, null);
+        return STRING_CONFIG;
+    }
+
+
+
     /**
      * Gets PAPER_FONT_CONFIG
      *
@@ -332,15 +334,15 @@ public final class CommonData implements PaperDbConstant {
     }
 
 
-    public static void setUnsentMessageMapByChannel(Long channelId, TreeMap<String, ListItem> unsentMessageMap) {
-        UNSENT_MESSAGE_MAP.put(channelId, unsentMessageMap);
-        Paper.book().write(PAPER_UNSENT_MESSAGE_MAP, CommonData.UNSENT_MESSAGE_MAP);
-    }
-
-    public static void removeUnsentMessageMapChannel(Long channelId) {
-        CommonData.UNSENT_MESSAGE_MAP.remove(channelId);
-        Paper.book().write(PAPER_UNSENT_MESSAGE_MAP, UNSENT_MESSAGE_MAP);
-    }
+//    public static void setUnsentMessageMapByChannel(Long channelId, TreeMap<String, ListItem> unsentMessageMap) {
+//        UNSENT_MESSAGE_MAP.put(channelId, unsentMessageMap);
+//        Paper.book().write(PAPER_UNSENT_MESSAGE_MAP, CommonData.UNSENT_MESSAGE_MAP);
+//    }
+//
+//    public static void removeUnsentMessageMapChannel(Long channelId) {
+//        CommonData.UNSENT_MESSAGE_MAP.remove(channelId);
+//        Paper.book().write(PAPER_UNSENT_MESSAGE_MAP, UNSENT_MESSAGE_MAP);
+//    }
 
     /**
      * Gets PAPER_UNSENT_MESSAGE_MAP
@@ -348,7 +350,7 @@ public final class CommonData implements PaperDbConstant {
      * @return the unsentMessageMap
      */
 
-    public static TreeMap<String, ListItem> getUnsentMessageMapByChannel(Long channelId) {
+    /*public static TreeMap<String, ListItem> getUnsentMessageMapByChannel(Long channelId) {
         if (UNSENT_MESSAGE_MAP.isEmpty()) {
             UNSENT_MESSAGE_MAP = Paper.book().read(PAPER_UNSENT_MESSAGE_MAP, new TreeMap<Long, TreeMap<String, ListItem>>());
         }
@@ -360,7 +362,7 @@ public final class CommonData implements PaperDbConstant {
             UNSENT_MESSAGE_MAP = Paper.book().read(PAPER_UNSENT_MESSAGE_MAP, new TreeMap<Long, TreeMap<String, ListItem>>());
         }
         return UNSENT_MESSAGE_MAP;
-    }
+    }*/
 
 
     //======================================== Clear Data ===============================================
@@ -377,7 +379,7 @@ public final class CommonData implements PaperDbConstant {
         SERVER_URL = "";
         APP_SECRET_KEY = "";
         COLOR_CONFIG = new FuguColorConfig();
-        APP_TYPE = 1;
+        APP_TYPE = "";
         Paper.book().destroy();
     }
 
@@ -400,6 +402,15 @@ public final class CommonData implements PaperDbConstant {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             return 0;
+        }
+    }
+
+    public static String getPackageName(Context context) {
+        try {
+            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).packageName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
@@ -456,6 +467,14 @@ public final class CommonData implements PaperDbConstant {
         return Paper.book().read(pushKey);
     }
 
+    public static void setNotificationFirstClick(boolean flag) {
+        Paper.book().write(NOTIFICATION_FIRST_CLICK, flag);
+    }
+
+    public static boolean isFirstTimeWithNotification() {
+        return Paper.book().read(NOTIFICATION_FIRST_CLICK, false);
+    }
+
     public static void setPushChannel(Long pushChannel) {
         Paper.book().write(pushChannelKey, pushChannel);
     }
@@ -496,5 +515,269 @@ public final class CommonData implements PaperDbConstant {
 
     public static boolean getClearFuguDataKey() {
         return Paper.book().read(clearFuguDataKey, false);
+    }
+
+//    public static void setUnreadCount(int count) {
+//        Paper.book().write(HIPPO_UNREAD_COUNT, count);
+//    }
+//
+//    public static int getUnreadCount() {
+//        return Paper.book().read(HIPPO_UNREAD_COUNT);
+//    }
+
+    public static void setUnreadCount(ArrayList<UnreadCountModel> unreadCount) {
+        //FuguLog.v("Array", "Array = "+new Gson().toJson(unreadCount, listType));
+        Paper.book().write(HIPPO_UNREAD_COUNT, unreadCount);
+    }
+
+    public static ArrayList<UnreadCountModel> getUnreadCountModel() {
+        ArrayList<UnreadCountModel> countModel = Paper.book().read(HIPPO_UNREAD_COUNT, new ArrayList<UnreadCountModel>());
+        return countModel;
+    }
+
+    public static Type listType = new TypeToken<List<UnreadCountModel>>() {
+    }.getType();
+
+    public static void setIsDataCleared(boolean isDataCleared) {
+        Paper.book().write("isDataCleared", isDataCleared);
+    }
+
+    public static boolean getIsDataCleared() {
+        return Paper.book().read("isDataCleared", false);
+    }
+
+    public static void setChatTitle(String chatTitle) {
+        Paper.book().write("chat_title", chatTitle);
+    }
+
+    public static String getChatTitle() {
+        return Paper.book().read("chat_title", "Support");
+    }
+
+    public static void saveResellerData(String resellerToken, int referenceId) {
+        Paper.book().write("fugu_resellerToken", resellerToken);
+        Paper.book().write("fugu_referenceId", referenceId);
+    }
+
+    public static void saveUserData(CaptureUserData userData) {
+        Paper.book().write("fugu_userData", userData);
+    }
+
+    public static CaptureUserData getUserData() {
+        return Paper.book().read("fugu_userData", new CaptureUserData());
+    }
+
+    public static int getReferenceId() {
+        return Paper.book().read("fugu_referenceId", 1);
+    }
+
+    public static String getResellerToken() {
+        return Paper.book().read("fugu_resellerToken", null);
+    }
+
+    // for support
+
+    public static void setCurrentVersion(int versionCode) {
+        Paper.book().write(PAPER_DB_VERSION, versionCode);
+    }
+
+    public static int getLocalVersion() {
+        return Paper.book().read(PAPER_DB_VERSION, -1);
+    }
+
+    public static String getDefaultCategory() {
+        return Paper.book().read(PAPER_USER_DEFAULT_CATEGORY, null);
+    }
+
+    public static void setDefaultCategory(String defaultCategory) {
+        Paper.book().write(PAPER_USER_DEFAULT_CATEGORY, defaultCategory);
+    }
+
+    public static void setSupportPath(ArrayList<String> pathList) {
+        Paper.book().write(PAPER_SUPPORT_PATH, pathList);
+        FuguLog.d("TAG", "Path = " + new Gson().toJson(pathList));
+    }
+
+    public static ArrayList<String> getPathList() {
+        return Paper.book().read(PAPER_SUPPORT_PATH, new ArrayList<String>());
+    }
+
+    public static void removeLastPath() {
+        ArrayList<String> pathList = getPathList();
+        pathList.remove(pathList.size() - 1);
+        setSupportPath(pathList);
+    }
+
+    public static void clearPathList() {
+        Paper.book().delete(PAPER_SUPPORT_PATH);
+    }
+
+    public static void saveUserUniqueKey(String userUniqueKey) {
+        Paper.book().write(PAPER_USER_UNIQUE_KEY, userUniqueKey);
+    }
+
+    public static String getUserUniqueKey() {
+        return Paper.book().read(PAPER_USER_UNIQUE_KEY);
+    }
+
+    public static Message getQuickReplyData() {
+        return Paper.book().read(keyQuickReply);
+    }
+
+    public static void setQuickReplyData(Message quickReplyData) {
+        Paper.book().write(keyQuickReply, quickReplyData);
+    }
+
+    public static void clearQuickReplyData() {
+        Paper.book().delete(keyQuickReply);
+    }
+
+    // Unsent messages as JSONObject
+    public static void setUnsentMessageMapByChannel(Long uniqueId, LinkedHashMap<String, JSONObject> unsentMessageMap) {
+        UNSENT_MESSAGE_JSON = getUnsentMessageMap();
+        if(unsentMessageMap != null && unsentMessageMap.values().size()>0) {
+            UNSENT_MESSAGE_JSON.put(uniqueId, unsentMessageMap);
+            Paper.book().write(PAPER_UNSENT_MESSAGE_MAP, UNSENT_MESSAGE_JSON);
+        }
+    }
+
+    public static void removeUnsentMessageMapChannel(Long channelId) {
+        UNSENT_MESSAGE_JSON = getUnsentMessageMap();
+        UNSENT_MESSAGE_JSON.remove(channelId);
+        Paper.book().write(PAPER_UNSENT_MESSAGE_MAP, UNSENT_MESSAGE_JSON);
+    }
+
+    public static LinkedHashMap<String, JSONObject> getUnsentMessageMapByChannel(Long channelId) {
+        UNSENT_MESSAGE_JSON = Paper.book().read(PAPER_UNSENT_MESSAGE_MAP, new HashMap<Long, LinkedHashMap<String, JSONObject>>());
+        return UNSENT_MESSAGE_JSON.get(channelId);
+    }
+    // Unsent messages as JSONObject ended
+
+    public static HashMap<Long, LinkedHashMap<String, JSONObject>> getUnsentMessageMap() {
+        UNSENT_MESSAGE_JSON = Paper.book().read(PAPER_UNSENT_MESSAGE_MAP, new HashMap<Long, LinkedHashMap<String, JSONObject>>());
+        return UNSENT_MESSAGE_JSON;
+    }
+    // Unsent messages as JSONObject ended
+
+
+    //Unsent messages as Object
+
+    public static void setAllUnsentMessageByChannel(LinkedHashMap<String, ListItem> unsentMessage) {
+        Paper.book().write(PAPER_UNSENT_MESSAGES, unsentMessage);
+    }
+
+    public static void setUnsentMessageByChannel(Long channelId, LinkedHashMap<String, ListItem> unsentMessage) {
+        UNSENT_MESSAGES = getUnsentMessages();
+        if(unsentMessage != null && unsentMessage.values().size()>0) {
+            UNSENT_MESSAGES.put(channelId, unsentMessage);
+            Paper.book().write(PAPER_UNSENT_MESSAGES, UNSENT_MESSAGES);
+        }
+    }
+
+    public static void removeUnsentMessageChannel(Long channelId) {
+        UNSENT_MESSAGES = getUnsentMessages();
+        UNSENT_MESSAGES.remove(channelId);
+        Paper.book().write(PAPER_UNSENT_MESSAGES, UNSENT_MESSAGES);
+    }
+
+    public static LinkedHashMap<String, ListItem> getUnsentMessageByChannel(Long channelId) {
+        UNSENT_MESSAGES = Paper.book().read(PAPER_UNSENT_MESSAGES, new HashMap<Long, LinkedHashMap<String, ListItem>>());
+        return UNSENT_MESSAGES.get(channelId);
+    }
+
+    public static HashMap<Long, LinkedHashMap<String, ListItem>> getUnsentMessages() {
+        UNSENT_MESSAGES = Paper.book().read(PAPER_UNSENT_MESSAGES, new HashMap<Long, LinkedHashMap<String, ListItem>>());
+        return UNSENT_MESSAGES;
+    }
+    //Unsent messages as Object ended
+
+
+    //Sent messages
+    public static void addExistingMessages(Long channelId, LinkedHashMap<String, ListItem> sentMessage) {
+        LinkedHashMap<String, ListItem> allSentMessages = getSentMessageByChannel(channelId);
+        allSentMessages.putAll(sentMessage);
+        setSentMessageByChannel(channelId, allSentMessages);
+    }
+
+    public static void setSentMessageByChannel(Long channelId, LinkedHashMap<String, ListItem> sentMessage) {
+        SENT_MESSAGES = getSentMessages();
+        SENT_MESSAGES.put(channelId, sentMessage);
+        Paper.book().write(PAPER_SENT_MESSAGES, SENT_MESSAGES);
+
+    }
+
+    public static void removeSentMessageChannel(Long channelId) {
+        SENT_MESSAGES = getSentMessages();
+        SENT_MESSAGES.remove(channelId);
+        Paper.book().write(PAPER_SENT_MESSAGES, SENT_MESSAGES);
+    }
+
+    public static LinkedHashMap<String, ListItem> getSentMessageByChannel(Long channelId) {
+        SENT_MESSAGES = Paper.book().read(PAPER_SENT_MESSAGES, new HashMap<Long, LinkedHashMap<String, ListItem>>());
+        return SENT_MESSAGES.get(channelId);
+    }
+
+    public static HashMap<Long, LinkedHashMap<String, ListItem>> getSentMessages() {
+        SENT_MESSAGES = Paper.book().read(PAPER_SENT_MESSAGES, new HashMap<Long, LinkedHashMap<String, ListItem>>());
+        return SENT_MESSAGES;
+    }
+    //Sent messages ended
+
+
+    public static String getCallStatus() {
+        return Paper.book().read(PAPER_CALL_STATUS);
+    }
+
+    public static void setCallStatus(String callStatus) {
+        Paper.book().write(PAPER_CALL_STATUS, callStatus);
+    }
+
+    public static String getCallType() {
+        return Paper.book().read(PAPER_CALL_TYPE);
+    }
+
+    public static void setCallType(String callType) {
+        Paper.book().write(PAPER_CALL_TYPE, callType);
+    }
+
+    public static boolean getVideoCallStatus() {
+        try {
+            return getUserDetails().getData().isVideoCallEnabled();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean getAudioCallStatus() {
+        try {
+            return getUserDetails().getData().isAudioCallEnabled();
+        } catch (java.lang.Exception e) {
+            return false;
+        }
+    }
+
+    //public HashMap<Long, FuguGetMessageResponse> agentNameData = new HashMap<>();
+
+    public static HashMap<Long, FuguGetMessageResponse> getAgentData() {
+        return Paper.book().read("agent_name_data", new HashMap<Long, FuguGetMessageResponse>());
+    }
+
+    public static FuguGetMessageResponse getSingleAgentData(Long channelId) {
+        HashMap<Long, FuguGetMessageResponse> agentNameData = getAgentData();
+        return agentNameData.get(channelId);
+    }
+
+    public static void saveVideoCallAgent(Long channelId, FuguGetMessageResponse agentName) {
+        HashMap<Long, FuguGetMessageResponse> agentNameData = getAgentData();
+        agentNameData.put(channelId, agentName);
+        Paper.book().write("agent_name_data", agentNameData);
+    }
+
+    public static void setCallAnswered(boolean b) {
+        Paper.book().write("hippo_call_answer", b);
+    }
+
+    public static boolean isCallAnswered() {
+        return Paper.book().read("hippo_call_answer", false);
     }
 }

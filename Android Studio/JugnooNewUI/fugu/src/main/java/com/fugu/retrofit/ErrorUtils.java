@@ -1,5 +1,7 @@
 package com.fugu.retrofit;
 
+import org.json.JSONObject;
+
 import java.lang.annotation.Annotation;
 
 import okhttp3.ResponseBody;
@@ -32,8 +34,16 @@ public class ErrorUtils {
             String message = ResponseResolver.UNEXPECTED_ERROR_OCCURRED;
             if (response.code() != 0)
                 statusCode = response.code();
-            if (response.message() != null && !response.message().isEmpty())
-                message = response.message();
+            try {
+                if (response.errorBody() != null) {
+                    JSONObject jObjError = new JSONObject(response.errorBody().string());
+                    message = jObjError.getString("message");
+                }
+            } catch (Exception e1) {
+                if (response.message() != null && !response.message().isEmpty())
+                    message = response.message();
+            }
+
             return new APIError(statusCode, message,type);
         }
         return error;

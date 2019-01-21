@@ -2,12 +2,10 @@ package com.fugu.adapter;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,16 +16,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
 import com.fugu.FuguFontConfig;
 import com.fugu.R;
+import com.fugu.constant.FuguAppConstant;
 import com.fugu.database.CommonData;
 import com.fugu.datastructure.ChannelStatus;
 import com.fugu.model.FuguConversation;
 import com.fugu.utils.DateUtils;
 import com.fugu.utils.FuguLog;
+import com.fugu.utils.RoundedCornersTransformation;
 
 import java.util.ArrayList;
 
@@ -35,6 +36,7 @@ import static com.fugu.constant.FuguAppConstant.IMAGE_MESSAGE;
 import static com.fugu.constant.FuguAppConstant.MESSAGE_IMAGE_RETRY;
 import static com.fugu.constant.FuguAppConstant.MESSAGE_READ;
 import static com.fugu.constant.FuguAppConstant.MESSAGE_UNSENT;
+import static com.fugu.constant.FuguAppConstant.VIDEO_CALL;
 
 /**
  * Created by Bhavya Rattan on 08/05/17
@@ -86,9 +88,12 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             channelViewHolder.tvChannelName.setText(currentChannelItem.getLabel());
             channelViewHolder.tvChannelName.setTextColor(fuguColorConfig.getFuguTextColorPrimary());
-            channelViewHolder.tvMessage.setTextColor(fuguColorConfig.getFuguTextColorSecondary());
+            channelViewHolder.tvMessage.setTextColor(fuguColorConfig.getFuguTextColorPrimary());
             channelViewHolder.viewDivider.setBackgroundColor(fuguColorConfig.getFuguBorderColor());
-            if (TextUtils.isEmpty(currentChannelItem.getMessage())) {
+            if(currentChannelItem.getMessage_type() == VIDEO_CALL) {
+                channelViewHolder.ivMessageState.setVisibility(View.GONE);
+                channelViewHolder.tvMessage.setText(getMessageData(currentChannelItem));
+            } else if (TextUtils.isEmpty(currentChannelItem.getMessage())) {
                 if (!TextUtils.isEmpty(currentChannelItem.getLast_sent_by_full_name())) {
                     if (currentChannelItem.getUserId().equals(FuguConfig.getInstance().getUserData().getUserId())) {
                         if (FuguConfig.getInstance().getUserData().getUserId().compareTo(currentChannelItem.getLast_sent_by_id()) == 0) {
@@ -196,7 +201,7 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 channelViewHolder.tvChannelName.setTypeface(channelViewHolder.tvChannelName.getTypeface(),Typeface.BOLD);
                 channelViewHolder.tvMessage.setTypeface(channelViewHolder.tvMessage.getTypeface(),Typeface.BOLD);
                 channelViewHolder.circularTvMessageCount.setVisibility(View.VISIBLE);
-                channelViewHolder.rlRoot.setSelected(true);
+				channelViewHolder.rlRoot.setSelected(true);
                 //            channelViewHolder.circularTvMessageCount.setSolidColor(FuguConfig.getInstance().getThemeColor());
                 //            channelViewHolder.circularTvMessageCount.setStrokeWidth(0);
                 channelViewHolder.circularTvMessageCount.setText(String.valueOf(currentChannelItem.getUnreadCount()));
@@ -207,35 +212,37 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 channelViewHolder.tvChannelName.setTypeface(channelViewHolder.tvChannelName.getTypeface(),Typeface.NORMAL);
                 channelViewHolder.tvMessage.setTypeface(channelViewHolder.tvMessage.getTypeface(),Typeface.NORMAL);
                 channelViewHolder.circularTvMessageCount.setVisibility(View.GONE);
-                channelViewHolder.rlRoot.setSelected(false);
                 channelViewHolder.tvDate.setTextColor(fuguColorConfig.getFuguChannelDateText());
+				channelViewHolder.rlRoot.setSelected(false);
             }
 
             if (currentChannelItem.getChannelImage() == null || currentChannelItem.getChannelImage().trim().isEmpty()) {
+                channelViewHolder.ivChannelIcon.setVisibility(View.GONE);
+
                 channelViewHolder.tvChannelIcon.setText(currentChannelItem.getLabel().substring(0, 1).toUpperCase());
                 channelViewHolder.tvChannelIcon.setVisibility(View.VISIBLE);
-                Glide.clear(channelViewHolder.ivChannelIcon);
 
-                channelViewHolder.ivChannelIcon.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ring_grey));
+                Glide.with(activity).clear(channelViewHolder.ivChannelIcon);
+
+                channelViewHolder.ivChannelIcon.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.hippo_ring_grey));
 
                 channelViewHolder.ivChannelIcon.getDrawable()
                         .setColorFilter(fuguColorConfig.getFuguChannelDateText(), PorterDuff.Mode.SRC_ATOP);
                 channelViewHolder.tvChannelIcon.setTextColor(fuguColorConfig.getFuguChannelItemBg());
 
+                GradientDrawable tvBackground = (GradientDrawable) channelViewHolder.tvChannelIcon.getBackground();
+                tvBackground.setColor(fuguColorConfig.getFuguChannelDateText());
+
             } else {
-                Glide.with(activity).load(currentChannelItem.getChannelImage()).asBitmap()
-                        .centerCrop()
+                RequestOptions myOptions = RequestOptions
+                        .bitmapTransform(new RoundedCornersTransformation(activity, 7, 2))
                         .placeholder(ContextCompat.getDrawable(activity, R.drawable.fugu_ic_channel_icon))
-                        .error(ContextCompat.getDrawable(activity, R.drawable.fugu_ic_channel_icon))
-                        .into(new BitmapImageViewTarget(channelViewHolder.ivChannelIcon) {
-                            @Override
-                            protected void setResource(Bitmap resource) {
-                                RoundedBitmapDrawable circularBitmapDrawable =
-                                        RoundedBitmapDrawableFactory.create(activity.getResources(), resource);
-                                circularBitmapDrawable.setCircular(true);
-                                channelViewHolder.ivChannelIcon.setImageDrawable(circularBitmapDrawable);
-                            }
-                        });
+                        .dontAnimate()
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .error(ContextCompat.getDrawable(activity, R.drawable.fugu_ic_channel_icon));
+                Glide.with(activity).load(currentChannelItem.getChannelImage())
+                        .apply(myOptions)
+                        .into(channelViewHolder.ivChannelIcon);
 
                 channelViewHolder.tvChannelIcon.setVisibility(View.GONE);
             }
@@ -255,8 +262,7 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
 
             channelViewHolder.rlRoot.setBackgroundDrawable(FuguColorConfig
-                    .makeSelector(fuguColorConfig.getFuguChannelItemBg(), fuguColorConfig.getFuguChannelItemBgPressed(),
-                            fuguColorConfig.getFuguChannelItemBgSelected()));
+                    .makeSelector(fuguColorConfig.getFuguChannelItemBg(), fuguColorConfig.getFuguChannelItemBgPressed()));
 
             channelViewHolder.rlRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -326,5 +332,26 @@ public class FuguChannelsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public interface Callback {
         void onClick(FuguConversation conversation);
     }
+
+    private String getMessageData(FuguConversation currentChannelItem) {
+        String message = "The video call ended";
+        String callType = "video";
+        if(!TextUtils.isEmpty(currentChannelItem.getCallType()) && currentChannelItem.getCallType().equalsIgnoreCase(FuguAppConstant.CallType.AUDIO.toString())) {
+            callType = "voice";
+        }
+        if(currentChannelItem.getMessageState() != null && currentChannelItem.getMessageState().intValue() == 2) {
+            if (currentChannelItem.getLast_sent_by_id().equals(FuguConfig.getInstance().getUserData().getUserId())) {
+                message = "Customer missed a " + callType + " call with you";
+            } else {
+                message = "You missed a " + callType + " call with "+currentChannelItem.getLast_sent_by_full_name();
+            }
+        } else {
+            message = "The " + callType + " call ended";
+        }
+
+        return message;
+    }
+
+
 }
 

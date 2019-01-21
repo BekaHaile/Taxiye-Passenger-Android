@@ -11,8 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import product.clicklabs.jugnoo.R;
+import com.bumptech.glide.request.RequestOptions;
 import com.picker.image.model.AlbumEntry;
 import com.picker.image.util.Events;
 import com.picker.image.util.Picker;
@@ -21,6 +20,7 @@ import com.picker.image.util.Util;
 import java.util.ArrayList;
 
 import de.greenrobot.event.EventBus;
+import product.clicklabs.jugnoo.R;
 
 
 public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewHolder> implements Util.OnClickAlbum {
@@ -90,10 +90,13 @@ public class AlbumsAdapter extends RecyclerView.Adapter<AlbumsAdapter.AlbumViewH
 
         holder.detailsLayout.setBackgroundColor(mPickOptions.albumBackgroundColor);
 
+        RequestOptions options = new RequestOptions()
+                .centerCrop();
+
         Glide.with(mFragment)
-                .load(album.coverImage.path)
                 .asBitmap()
-                .centerCrop()
+                .apply(options)
+                .load(album.coverImage.path)
                 .into(holder.thumbnail);
 
     }

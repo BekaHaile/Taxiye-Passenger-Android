@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="157dp"
+        android:layout_height="121dp"
+        android:src="@drawable/hippo_no_conversation_found" />
+
+    <TextView
+        android:id="@+id/title_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/fugu_no_conversation_found"
+        android:textColor="@color/fugu_type_message_text"
+        android:textSize="@dimen/fugu_text_size_very_large"
+         />
+
+    <TextView
+        android:id="@+id/detail_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/fugu_margin_7"
+        android:gravity="center"
+        android:text="@string/fugu_no_conversation"
+        android:textColor="@color/fugu_secondary_text_msg_from"
+        android:textSize="@dimen/fugu_text_size_medium"
+         />
+
+
+</LinearLayout>

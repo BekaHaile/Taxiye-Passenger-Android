@@ -32,6 +32,7 @@ public enum MenuInfoTags {
     EMAIL_SUPPORT("email_support"),
     CHANGE_LOCALE("change_locale"),
     CALL_SUPPORT("call_support"),
+    TICKET_SUPPORT("ticket_support"),
     FARE_DETAILS("fare_details"),
     ;
 

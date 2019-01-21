@@ -15,12 +15,24 @@ public class FuguColorConfig {
         return Color.parseColor(fuguActionBarBg);
     }
 
+    public int getFuguRunsOnColor() {
+        return Color.parseColor("#627de3");
+    }
+
     public int getFuguActionBarText() {
         return Color.parseColor(fuguActionBarText);
     }
 
     public int getFuguBgMessageYou() {
         return Color.parseColor(fuguBgMessageYou);
+    }
+
+    public int getFuguPrivateMsg(){
+        return Color.parseColor(fuguBgPrivateMessageYou);
+    }
+
+    public int getFuguAgentBgMessageYou() {
+        return Color.parseColor(fuguAgentBgMessageYou);
     }
 
     public int getFuguBgMessageFrom() {
@@ -51,9 +63,14 @@ public class FuguColorConfig {
         return Color.parseColor(fuguSecondaryTextMsgFromName);
     }
 
+    public int getFuguPrimaryTextMsgFromName() {
+        return Color.parseColor(fuguPrimaryTextMsgFromName);
+    }
+
     public int getFuguTextColorPrimary() {
         return Color.parseColor(fuguTextColorPrimary);
     }
+
     public int getFuguTextColorSecondary() {
         return Color.parseColor(fuguTextColorSecondary);
     }
@@ -102,17 +119,61 @@ public class FuguColorConfig {
         return Color.parseColor(fuguChannelItemBgPressed);
     }
 
-    public int getFuguChannelItemBgSelected() {
-        return Color.parseColor(fuguChannelItemBgSelected);
-    }
-
     public int getFuguChannelItemBg() {
         return Color.parseColor(fuguChannelItemBg);
+    }
+
+
+    public int getFuguTabTextColor() {
+        return Color.parseColor(fuguTabTextColor);
+    }
+
+    public int getFuguTabSelectedTextColor() {
+        return Color.parseColor(fuguTabSelectedTextColor);
+    }
+
+    public int getFuguSelectedTabIndicatorColor() {
+        return Color.parseColor(fuguSelectedTabIndicatorColor);
+    }
+
+    public int getFuguHomeColor() {
+        return Color.parseColor(fuguHomeColor);
+    }
+
+    public int getFuguFaqDescription() {
+        return Color.parseColor(hippoFaqDescription);
+    }
+
+    public int getHippoLoaderColor() {
+        return Color.parseColor(hippoLoaderColor);
+    }
+
+
+//    public int getFuguConnecting() {
+//        return Color.parseColor(fuguConnecting);
+//    }
+
+    public int getFuguNotConnected() {
+        return Color.parseColor(fuguNotConnected);
+    }
+
+    public int getFuguConnected() {
+        return Color.parseColor(fuguConnected);
+    }
+
+    public int getFuguVideoCallBg() {
+        return Color.parseColor(fuguVideoCallBg);
+    }
+
+    public int getFuguAudioCallBg() {
+        return Color.parseColor(fuguAudioCallBg);
     }
 
     private String fuguActionBarBg = "#627de3";
     private String fuguActionBarText = "#ffffff";
     private String fuguBgMessageYou = "#ffffff";
+    private String fuguBgPrivateMessageYou = "#FEF8E3";
+    private String fuguAgentBgMessageYou = "#ffffff";
     private String fuguBgMessageFrom = "#e8ecfc";
     private String fuguPrimaryTextMsgYou = "#2c2333";
     private String fuguMessageRead = "#627de3";
@@ -120,11 +181,15 @@ public class FuguColorConfig {
     private String fuguSecondaryTextMsgYou = "#8e8e8e";
     private String fuguSecondaryTextMsgFrom = "#8e8e8e";
 
-
+    private String fuguPrimaryTextMsgFromName = "#aaaaaa";
     private String fuguSecondaryTextMsgFromName = "#627de3";
 
+    private String fuguTabTextColor = "#8e8e8e";
+    private String fuguTabSelectedTextColor = "#2c2333";
+    private String fuguSelectedTabIndicatorColor = "#627de3";
+
     private String fuguTextColorPrimary = "#2c2333";
-    private String fuguTextColorSecondary = "#2c2333";
+    private String fuguTextColorSecondary = "#8e8e8e";
     private String fuguChannelDateText = "#88838c";
     private String fuguChatBg = "#f8f9ff";
     private String fuguBorderColor = "#dce0e6";
@@ -137,10 +202,28 @@ public class FuguColorConfig {
     private String fuguChannelBg = "#ffffff";
     private String fuguChannelItemBg = "#ffffff";
     private String fuguChannelItemBgPressed = "#ffd2d1d1";
-    private String fuguChannelItemBgSelected = "#f7f7f7";
+    private String fuguHomeColor = "#FFFFFF";
+    private String hippoFaqDescription = "#858585";
+    private String hippoLoaderColor = "#0000FF";
+
+//    private String fuguConnecting = "#FFA500";
+    private String fuguNotConnected = "#FF0000";
+    private String fuguConnected = "#00AA00";
+    private String fuguVideoCallBg = "#FFFFFF";
+    private String fuguAudioCallBg = "#FFFFFF";
 
     public static class Builder {
         private FuguColorConfig fuguColorConfig = new FuguColorConfig();
+
+        public Builder fuguVideoCallBg(String fuguVideoCallBg) {
+            fuguColorConfig.fuguVideoCallBg = fuguVideoCallBg;
+            return this;
+        }
+
+        public Builder fuguAudioCallBg(String fuguAudioCallBg) {
+            fuguColorConfig.fuguAudioCallBg = fuguAudioCallBg;
+            return this;
+        }
 
         public Builder fuguActionBarBg(String fuguActionBarBg) {
             fuguColorConfig.fuguActionBarBg = fuguActionBarBg;
@@ -154,6 +237,11 @@ public class FuguColorConfig {
 
         public Builder fuguBgMessageYou(String fuguBgMessageYou) {
             fuguColorConfig.fuguBgMessageYou = fuguBgMessageYou;
+            return this;
+        }
+
+        public Builder fuguAgentBgMessageYou(String fuguAgentBgMessageYou) {
+            fuguColorConfig.fuguAgentBgMessageYou = fuguAgentBgMessageYou;
             return this;
         }
 
@@ -184,6 +272,11 @@ public class FuguColorConfig {
 
         public Builder fuguSecondaryTextMsgFrom(String fuguSecondaryTextMsgFrom) {
             fuguColorConfig.fuguSecondaryTextMsgFrom = fuguSecondaryTextMsgFrom;
+            return this;
+        }
+
+        public Builder fuguPrimaryTextMsgFromName(String fuguPrimaryTextMsgFromName) {
+            fuguColorConfig.fuguPrimaryTextMsgFromName = fuguPrimaryTextMsgFromName;
             return this;
         }
 
@@ -257,13 +350,56 @@ public class FuguColorConfig {
             return this;
         }
 
-        public Builder fuguChannelItemBgSelected(String fuguChannelItemBgSelected) {
-            fuguColorConfig.fuguChannelItemBgSelected = fuguChannelItemBgSelected;
+        public Builder fuguChannelItemBg(String fuguChannelItemBg) {
+            fuguColorConfig.fuguChannelItemBg = fuguChannelItemBg;
             return this;
         }
 
-        public Builder fuguChannelItemBg(String fuguChannelItemBg) {
-            fuguColorConfig.fuguChannelItemBg = fuguChannelItemBg;
+        public Builder fuguTabTextColor(String fuguTabTextColor) {
+            fuguColorConfig.fuguTabTextColor = fuguTabTextColor;
+            return this;
+        }
+
+        public Builder fuguTabSelectedTextColor(String fuguTabSelectedTextColor) {
+            fuguColorConfig.fuguTabSelectedTextColor = fuguTabSelectedTextColor;
+            return this;
+        }
+
+        public Builder fuguSelectedTabIndicatorColor(String fuguSelectedTabIndicatorColor) {
+            fuguColorConfig.fuguSelectedTabIndicatorColor = fuguSelectedTabIndicatorColor;
+            return this;
+        }
+
+        public Builder fuguHomeColor(String fuguHomeColor) {
+            fuguColorConfig.fuguHomeColor = fuguHomeColor;
+            return this;
+        }
+
+        public Builder hippoFaqDescription(String hippoFaqDescription) {
+            fuguColorConfig.hippoFaqDescription = hippoFaqDescription;
+            return this;
+        }
+
+        public Builder huguLoaderColor(String huguLoaderColor) {
+            fuguColorConfig.hippoLoaderColor = huguLoaderColor;
+            return this;
+        }
+
+        public Builder fuguBgPrivateMessageYou(String fuguBgPrivateMessageYou) {
+            fuguColorConfig.fuguBgPrivateMessageYou = fuguBgPrivateMessageYou;
+            return this;
+        }
+
+//        public Builder fuguConnecting(String fuguConnecting) {
+//            fuguColorConfig.fuguConnecting = fuguConnecting;
+//            return this;
+//        }
+        public Builder fuguNotConnected(String fuguNotConnected) {
+            fuguColorConfig.fuguNotConnected = fuguNotConnected;
+            return this;
+        }
+        public Builder fuguConnected(String fuguConnected) {
+            fuguColorConfig.fuguConnected = fuguConnected;
             return this;
         }
 
@@ -282,16 +418,18 @@ public class FuguColorConfig {
         return res;
     }
 
-    public static StateListDrawable makeSelector(int color, int colorPressed, int colorSelected) {
+    public static StateListDrawable makeRoundedSelector(int color) {
+        return makeRoundedSelector(color, 150);
+    }
+    public static StateListDrawable makeRoundedSelector(int color, float radius) {
         StateListDrawable res = new StateListDrawable();
         // res.setExitFadeDuration(400);
         //res.setAlpha(230);
-        res.addState(new int[]{android.R.attr.state_pressed}, roundedBackground(0, colorPressed, false));
-        res.addState(new int[]{android.R.attr.state_selected}, roundedBackground(0, colorSelected, false));
-        res.addState(new int[]{}, roundedBackground(0, color, false));
+        res.addState(new int[]{android.R.attr.state_pressed}, roundedBackground(radius, color, true));
+        res.addState(new int[]{}, roundedBackground(radius, color, false));
         return res;
     }
-
+    /*
     public static StateListDrawable makeRoundedSelector(int color) {
         StateListDrawable res = new StateListDrawable();
         // res.setExitFadeDuration(400);
@@ -299,7 +437,7 @@ public class FuguColorConfig {
         res.addState(new int[]{android.R.attr.state_pressed}, roundedBackground(150, color, true));
         res.addState(new int[]{}, roundedBackground(150, color, false));
         return res;
-    }
+    }*/
 
     private static ShapeDrawable roundedBackground(float radius, int color, boolean isPressed) {
         ShapeDrawable footerBackground = new ShapeDrawable();

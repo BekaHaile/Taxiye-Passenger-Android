@@ -30,6 +30,12 @@ public class FuguGetMessageParams {
     @SerializedName("app_version")
     @Expose
     private String appVersion = BuildConfig.VERSION_NAME;
+    @SerializedName("source_type")
+    @Expose
+    private int source;
+    @SerializedName("page_end")
+    @Expose
+    private Integer pageEnd;
 
     public FuguGetMessageParams(String appSecretKey, Long channelId,
                                 String userId, Integer pageStart, String channelName) {
@@ -40,5 +46,9 @@ public class FuguGetMessageParams {
         this.channelName = channelName;
         this.deviceType = 1;
         this.appVersion = BuildConfig.VERSION_NAME;
+    }
+
+    public void setPageEnd(Integer size) {
+        pageEnd = size;
     }
 }

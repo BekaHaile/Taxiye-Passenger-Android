@@ -54,6 +54,10 @@ public class MenuInfo {
     public MenuInfo(String tag){
         this.tag = tag;
     }
+    public MenuInfo(String name, String tag){
+        this.name = name;
+        this.tag = tag;
+    }
 
     public String getTag() {
         return tag;
