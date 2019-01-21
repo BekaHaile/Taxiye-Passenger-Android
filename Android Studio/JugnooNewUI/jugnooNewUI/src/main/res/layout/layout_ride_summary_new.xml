@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:background="@color/white"
     android:id="@+id/endRideReviewRl"
@@ -150,13 +151,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20px"
+                android:layout_marginTop="10px"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:src="@drawable/ic_history_pressed"
                     android:tag="@string/dont_touch_me"/>
 
@@ -168,9 +169,7 @@
                     android:textAllCaps="true"
                     android:text="@string/ride_summary_view_invoice_text"
                     android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_30"
-                    android:layout_marginTop="5px"
-                    android:layout_marginBottom="5px"
+                    android:textSize="@dimen/text_size_26"
                     />
 
             </LinearLayout>
@@ -180,7 +179,7 @@
                 android:id="@+id/tvPayOnline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_17"
+                android:textSize="@dimen/sp_15"
                 android:textColor="@color/text_color"
                 android:gravity="center_horizontal"
                 android:text="@string/want_to_pay_online"
@@ -192,8 +191,8 @@
                 />
             <LinearLayout
                 android:id="@+id/llPayOnline"
-                android:layout_width="@dimen/dp_250"
-                android:layout_height="@dimen/dp_50"
+                android:layout_width="220dp"
+                android:layout_height="45dp"
                 android:tag="@string/dont_touch_me"
                 android:background="@drawable/capsule_theme_color_selector"
                 android:orientation="horizontal"
@@ -209,7 +208,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/sp_16"
+                    android:textSize="@dimen/sp_15"
                     android:textAllCaps="true"
                     android:text="@string/pay_online"
                     app:typekitFont="@string/maven"
@@ -219,6 +218,14 @@
                     />
 
             </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llFeedbackMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
 
 
             <RelativeLayout
@@ -268,7 +275,7 @@
                 android:orientation="horizontal">
 
 
-                
+
                 <ImageView
                     android:id="@+id/imageViewThumbsDown"
                     android:layout_width="238px"
@@ -423,7 +430,7 @@
                 android:textSize="@dimen/button_small_text_size"/>
 
             </LinearLayout>
-
+            </LinearLayout>
 
             <Button
                 android:id="@+id/buttonAddTipEndRide"
@@ -432,8 +439,123 @@
                 android:textAllCaps="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="30px"
+                android:layout_marginTop="20px"
                 android:text="@string/action_add_tip"
                 />
+
+            <LinearLayout
+                android:id="@+id/llAddTip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:tag="@string/dont_touch_me"
+                android:layout_marginTop="30dp"
+                >
+
+                <TextView
+                    android:id="@+id/tvTipDriver"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color"
+                    android:textSize="13sp"
+                    android:text="@string/tip_the_driver"
+                    android:layout_gravity="center_horizontal"
+                    android:textAllCaps="true"
+                    android:layout_marginTop="10dp"
+                    app:typekitFont="@string/maven"
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    >
+                    <TextView
+                        android:id="@+id/tvTipFirst"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:textColor="@color/text_color"
+                        tools:text="Rs10"
+                        android:background="@drawable/circle_white_grey_selector"
+                        app:typekitFont="@string/maven"
+                        />
+                    <TextView
+                        android:id="@+id/tvTipSecond"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:textColor="@color/text_color"
+                        tools:text="Rs20"
+                        android:background="@drawable/circle_white_grey_selector"
+                        android:layout_marginStart="30dp"
+                        app:typekitFont="@string/maven"
+                        />
+                    <TextView
+                        android:id="@+id/tvTipThird"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:textSize="14sp"
+                        android:gravity="center"
+                        android:textColor="@color/text_color"
+                        tools:text="Rs30"
+                        android:background="@drawable/circle_white_grey_selector"
+                        android:layout_marginStart="30dp"
+                        app:typekitFont="@string/maven"
+                        />
+
+                </LinearLayout>
+
+                <product.clicklabs.jugnoo.widgets.PrefixedEditText
+                    android:id="@+id/etTipOtherValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="45dp"
+                    android:layout_marginEnd="45dp"
+                    android:layout_marginTop="35dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/background_white_bottom_border"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_hint"
+                    android:textSize="13sp"
+                    android:drawablePadding="5dp"
+                    android:hint="@string/add_other_value"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    app:typekitFont="@string/maven"
+                    />
+
+                <Button
+                    android:id="@+id/bPayTip"
+                    style="@style/ButtonThemeCapsule"
+                    android:layout_width="110dp"
+                    android:layout_height="45dp"
+                    android:textAllCaps="true"
+                    android:textSize="15sp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/pay"
+                    app:typekitFont="@string/maven"
+                    />
+
+                <TextView
+                    android:id="@+id/tvSkipTip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_color_less_light"
+                    android:textSize="15sp"
+                    android:text="@string/skip"
+                    android:layout_gravity="center_horizontal"
+                    android:textAllCaps="true"
+                    android:layout_marginTop="100dp"
+                    app:typekitFont="@string/maven"
+                    />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewRSScroll"

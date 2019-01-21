@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 
@@ -203,14 +202,14 @@ public class  RideTransactionsActivity extends BaseAppCompatActivity implements 
 
 		if(getIntent().getExtras()!=null && getIntent().getExtras().containsKey(Constants.KEY_FUGU_CHANNEL_ID)){
 			// we come from anywhere payment and have to start fugu
-			if(BuildConfig.DEBUG) {
-				Bundle extras = getIntent().getExtras();
-				FuguConfig.getInstance().openChatByTransactionId(extras.getString(Constants.KEY_FUGU_CHANNEL_ID),
-						String.valueOf(Data.getFuguUserData().getUserId()),
-						extras.getString(Constants.KEY_FUGU_CHANNEL_NAME),
-						extras.getStringArrayList(Constants.KEY_FUGU_TAGS),
-						new String[]{extras.getString(Constants.KEY_MESSAGE)});
-			}
+//			if(BuildConfig.DEBUG) {
+//				Bundle extras = getIntent().getExtras();
+//				FuguConfig.getInstance().openChatByTransactionId(extras.getString(Constants.KEY_FUGU_CHANNEL_ID),
+//						String.valueOf(Data.getFuguUserData().getUserId()),
+//						extras.getString(Constants.KEY_FUGU_CHANNEL_NAME),
+//						extras.getStringArrayList(Constants.KEY_FUGU_TAGS),
+//						new String[]{extras.getString(Constants.KEY_MESSAGE)});
+//			}
 		}
 	}
 
