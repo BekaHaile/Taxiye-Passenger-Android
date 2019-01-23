@@ -579,4 +579,7 @@ public class AutoData {
         return corporatesFetched;
     }
 
+    public void setCorporatesFetched(ArrayList<Corporate> corporates){
+        this.corporatesFetched = corporates;
+    }
 }
