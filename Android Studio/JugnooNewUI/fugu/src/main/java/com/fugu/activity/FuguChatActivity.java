@@ -2455,7 +2455,6 @@ public class FuguChatActivity extends FuguBaseActivity implements Animation.Anim
                 }
             } else if (FuguConfig.getInstance().getTargetSDKVersion() <= 22 &&
                     grantResults.length > 0
-                    && FuguConfig.getInstance().isPermissionGranted(FuguChatActivity.this, Manifest.permission.CAMERA)
                     && FuguConfig.getInstance().isPermissionGranted(FuguChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 switch (requestCode) {
 

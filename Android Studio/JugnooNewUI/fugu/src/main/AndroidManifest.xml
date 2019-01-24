@@ -8,8 +8,6 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
 
-    <!-- Permissions to use CAMERA -->
-    <uses-permission android:name="android.permission.CAMERA" />
 
     <!-- Permissions to use CAMERA with AUTO-FOCUS -->
     <uses-feature android:name="android.hardware.camera" />

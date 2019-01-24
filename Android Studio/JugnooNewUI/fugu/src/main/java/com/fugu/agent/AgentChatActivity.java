@@ -2406,8 +2406,7 @@ public class AgentChatActivity extends AgentBaseActivity implements FayeAgentLis
 
         FuguLog.e(TAG, "onRequestPermissionsResult" + requestCode);
 
-        if (grantResults.length > 0 &&
-                FuguConfig.getInstance().isPermissionGranted(AgentChatActivity.this, Manifest.permission.CAMERA)
+        if (grantResults.length > 0
                 && FuguConfig.getInstance().isPermissionGranted(AgentChatActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             switch (requestCode) {
                 case PERMISSION_CONSTANT_CAMERA:
