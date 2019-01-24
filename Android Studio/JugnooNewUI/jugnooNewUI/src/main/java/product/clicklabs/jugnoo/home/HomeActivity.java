@@ -3927,9 +3927,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
            buttonAddTipEndRide.setVisibility(View.GONE);
            llFeedbackMain.setVisibility(View.GONE);
            llAddTip.setVisibility(View.VISIBLE);
-           tvTipFirst.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), 10.0)); tvTipFirst.setTag(10.0);
-           tvTipSecond.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), 20.0)); tvTipSecond.setTag(20.0);
-           tvTipThird.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), 30.0)); tvTipThird.setTag(30.0);
+           double first = 10, second = 20, third = 30;
+            try {
+                String tipValues = Prefs.with(this).getString(KEY_CUSTOMER_TIP_VALUES, "10,20,30");
+                if(tipValues.contains(",")){
+                    String arr[] = tipValues.split(",");
+                    if(arr.length > 0){
+                        first = Double.parseDouble(arr[0]);
+                    }
+                    if(arr.length > 1){
+                        second = Double.parseDouble(arr[1]);
+                    }
+                    if(arr.length > 2){
+                        third = Double.parseDouble(arr[2]);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            tvTipFirst.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), first)); tvTipFirst.setTag(first);
+           tvTipSecond.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), second)); tvTipSecond.setTag(second);
+           tvTipThird.setText(Utils.formatCurrencyValue(Data.autoData.getEndRideData().getCurrency(), third)); tvTipThird.setTag(third);
             etTipOtherValue.setPrefixTextColor(ContextCompat.getColor(this, R.color.theme_color));
             etTipOtherValue.setPrefix(Data.autoData.getEndRideData().getCurrency());
 

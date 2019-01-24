@@ -476,6 +476,8 @@ public class JSONParser implements Constants {
 				context.getResources().getInteger(R.integer.customer_show_add_saved_place)));
         Prefs.with(context).save(HIPPO_SUPPORT_FAQ_NAME, autoData.optString(HIPPO_SUPPORT_FAQ_NAME,
                 context.getString(R.string.customer_hippo_support_faq_name)));
+        Prefs.with(context).save(KEY_CUSTOMER_TIP_VALUES, autoData.optString(KEY_CUSTOMER_TIP_VALUES,
+                context.getString(R.string.customer_tip_values)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

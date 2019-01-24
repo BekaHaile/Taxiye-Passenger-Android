@@ -999,4 +999,5 @@ public interface Constants {
     String KEY_CUSTOMER_SHOW_ADD_SAVED_PLACE = "customer_show_add_saved_place";
 
     String HIPPO_SUPPORT_FAQ_NAME = "customer_hippo_support_faq_name";
+    String KEY_CUSTOMER_TIP_VALUES = "customer_tip_values";
 }
