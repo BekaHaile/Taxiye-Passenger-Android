@@ -21,7 +21,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.RequestOptions;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -569,12 +569,12 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
     private void endRideWithGif() {
         relativeLayoutGreat.setVisibility(View.VISIBLE);
-        GlideDrawableImageViewTarget imageViewTarget = new GlideDrawableImageViewTarget(imageViewThumbsUpGif);
+        RequestOptions options = new RequestOptions().placeholder(R.drawable.great_place_holder);
         Glide.with(activity)
                 .load(R.drawable.android_thumbs_up)
-                .placeholder(R.drawable.great_place_holder)
+                .apply(options)
                 //.fitCenter()
-                .into(imageViewTarget);
+                .into(imageViewThumbsUpGif);
         activity.getHandler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -265,8 +265,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_about_selector);
                 }else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
-
-                }else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                }
+                else if(MenuInfoTags.TICKET_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
+                }
+                else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_jugnoo_chat_selector);
 
                 }else if(MenuInfoTags.FARE_DETAILS.getTag().equalsIgnoreCase(menuInfo.getTag())) {
@@ -633,10 +636,14 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
-
             else if(MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(tag)){
                 if(activity instanceof BaseAppCompatActivity){
                     ((BaseAppCompatActivity)activity).openFugu();
+                }
+            }
+            else if(MenuInfoTags.TICKET_SUPPORT.getTag().equalsIgnoreCase(tag)){
+                if(activity instanceof BaseAppCompatActivity){
+                    ((BaseAppCompatActivity)activity).openHippoTicketSupport();
                 }
             }
             else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(tag)){

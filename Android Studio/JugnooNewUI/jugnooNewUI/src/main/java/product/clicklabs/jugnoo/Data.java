@@ -565,11 +565,11 @@ public class Data {
     public static final int FUGU_APP_TYPE = 1;
     public static void initializeFuguHandler(Activity context, CaptureUserData userData) {
         if (Config.getConfigMode() == ConfigMode.LIVE) {
-            FuguConfig.init(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE),
+            FuguConfig.init(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)),
                     Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)),
                     context, "live", userData,context.getString(R.string.file_provider_name));
         } else {
-            FuguConfig.init(FUGU_APP_TYPE, context.getString(R.string.fugu_key_test), context, "test", userData,context.getString(R.string.file_provider_name));
+            FuguConfig.init(String.valueOf(FUGU_APP_TYPE), context.getString(R.string.fugu_key_test), context, "test", userData,context.getString(R.string.file_provider_name));
         }
 
         FuguConfig.getInstance().setHomeUpIndicatorDrawableId(R.drawable.ic_back_selector);

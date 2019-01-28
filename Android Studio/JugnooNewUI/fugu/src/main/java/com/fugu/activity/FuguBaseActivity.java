@@ -1,5 +1,6 @@
 package com.fugu.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
@@ -13,6 +14,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.fugu.BuildConfig;
@@ -22,6 +25,7 @@ import com.fugu.constant.FuguAppConstant;
 import com.fugu.database.CommonData;
 import com.fugu.receiver.FuguNetworkStateReceiver;
 import com.fugu.retrofit.APIError;
+import com.fugu.retrofit.CommonParams;
 import com.fugu.retrofit.CommonResponse;
 import com.fugu.retrofit.ResponseResolver;
 import com.fugu.retrofit.RestClient;
@@ -45,14 +49,14 @@ public class FuguBaseActivity extends AppCompatActivity implements FuguAppConsta
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         uncaughtExceptionError();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             try {
                 registerReceiver(new FuguNetworkStateReceiver(),
                         new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
             } catch (Exception e) {
                 FuguLog.e(TAG, "Error in broadcasting");
             }
-        }
+        }*/
     }
 
     /**
@@ -104,7 +108,11 @@ public class FuguBaseActivity extends AppCompatActivity implements FuguAppConsta
             params.put(FuguAppConstant.DEVICE_DETAILS, CommonData.deviceDetails(FuguBaseActivity.this));
             params.put(FuguAppConstant.ERROR, error.toString());
 
-            RestClient.getApiInterface().sendError(params)
+            CommonParams commonParams = new CommonParams.Builder()
+                    .putMap(params)
+                    .build();
+
+            RestClient.getApiInterface().sendError(commonParams.getMap())
                     .enqueue(new ResponseResolver<CommonResponse>(FuguBaseActivity.this, false, true) {
                         @Override
                         public void success(CommonResponse commonResponse) {
@@ -175,12 +183,26 @@ public class FuguBaseActivity extends AppCompatActivity implements FuguAppConsta
     }
 
     /**
-     * Set toolbar data
-     *
-     * @param toolbar toolbar instance
-     * @param title   title to be displayed
-     * @return action bar
+     * Hide softkeyboard of opened
+     * @param activity
      */
+    protected void hideKeyboard(Activity activity) {
+        try {
+            View view = activity.getCurrentFocus();
+            InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+        /**
+         * Set toolbar data
+         *
+         * @param toolbar toolbar instance
+         * @param title   title to be displayed
+         * @return action bar
+         */
     public ActionBar setToolbar(Toolbar toolbar, String title) {
 
         ActionBar ab = getSupportActionBar();
@@ -195,10 +217,9 @@ public class FuguBaseActivity extends AppCompatActivity implements FuguAppConsta
 
             toolbar.setTitleTextColor(CommonData.getColorConfig().getFuguActionBarText());
 
-            TextView tvTitle = (TextView) toolbar.findViewById(R.id.tv_toolbar_name);
-            tvTitle.setText(title);
-            tvTitle.setTextColor(CommonData.getColorConfig().getFuguActionBarText());
-            tvTitle.setTypeface(CommonData.getFontConfig().getHeaderTitleTypeFace(this.getApplicationContext()));
+            ((TextView) toolbar.findViewById(R.id.tv_toolbar_name)).setText(title);
+            ((TextView) toolbar.findViewById(R.id.tv_toolbar_name)).setTextColor(CommonData.getColorConfig().getFuguActionBarText());
+			((TextView) toolbar.findViewById(R.id.tv_toolbar_name)).setTypeface(CommonData.getFontConfig().getHeaderTitleTypeFace(this.getApplicationContext()));
         }
         return getSupportActionBar();
     }

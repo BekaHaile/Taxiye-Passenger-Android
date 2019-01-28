@@ -50,14 +50,30 @@
  -keep class com.fugu.FuguColorConfig* {
     *;
  }
+-keep class com.fugu.FuguStringConfig{ *; }
+ -keep class com.fugu.FuguStringConfig* {
+    *;
+ }
+ -keep class com.fugu.GroupingTag{ *; }
+ -keep class com.fugu.GroupingTag* {
+    *;
+}
+-keep class com.fugu.FuguTicketAttributes{ *; }
+ -keep class com.fugu.FuguTicketAttributes* {
+    *;
+ }
+-keep class com.fugu.FuguNotificationConfig{ *; }
 
  -keep class com.fugu.FuguFontConfig{ *; }
   -keep class com.fugu.FuguFontConfig* {
      *;
   }
-
--keep class com.fugu.FuguNotificationConfig{ *; }
 -keep class com.fugu.model.** { *; }
+-keep interface com.fugu.**{ *; }
+
+-keep class com.fugu.videoCall.** { *; }
+-keep class com.fugu.videoCall.model.** { *; }
+-keep interface com.fugu.videoCall.**{ *; }
 
 # glide proguard rules
 -keep public class * implements com.bumptech.glide.module.GlideModule
@@ -73,3 +89,6 @@ public *;
 -keepclassmembers class * implements android.os.Parcelable {
     static ** CREATOR;
 }
+
+-keep class your.app.data.model.** { *; }
+-keep class * implements java.io.Serializable { *; }

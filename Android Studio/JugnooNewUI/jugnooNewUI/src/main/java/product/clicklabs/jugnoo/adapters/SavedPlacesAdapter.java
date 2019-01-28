@@ -25,7 +25,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
 
     private class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress, textViewAddressUsed;
-        ImageView imageViewType, imageViewSep, ivDeleteAddress;
+        ImageView imageViewType, imageViewSep, ivDeleteAddress, ivAddAddress;
         RelativeLayout relative;
         int id;
     }
@@ -34,12 +34,12 @@ public class SavedPlacesAdapter extends BaseAdapter{
     private LayoutInflater mInflater;
     private ViewHolderSearchItem holder;
     private Callback callback;
-    private boolean separatorOnTop, addSepMargins, showDelete;
+    private boolean separatorOnTop, addSepMargins, showDelete, showAdd;
 
     private ArrayList<SearchResult> searchResults;
 
     public SavedPlacesAdapter(Context context, ArrayList<SearchResult> searchResults, Callback callback,
-                              boolean separatorOnTop, boolean addSepMargins, boolean showDelete)
+                              boolean separatorOnTop, boolean addSepMargins, boolean showDelete, boolean showAdd)
             throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
@@ -49,6 +49,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
             this.separatorOnTop = separatorOnTop;
             this.addSepMargins = addSepMargins;
             this.showDelete = showDelete;
+            this.showAdd = showAdd;
         }
         else{
             throw new IllegalStateException("context passed is not of Activity type");
@@ -91,9 +92,11 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
             holder.ivDeleteAddress = (ImageView) convertView.findViewById(R.id.ivDeleteAddress);
+            holder.ivAddAddress = (ImageView) convertView.findViewById(R.id.ivAddAddress);
 
             holder.relative.setTag(holder);
             holder.ivDeleteAddress.setTag(holder);
+            holder.ivAddAddress.setTag(holder);
 
             holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             ASSL.DoMagic(holder.relative);
@@ -164,6 +167,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
                 }
             }
             holder.ivDeleteAddress.setVisibility(showDelete ? View.VISIBLE : View.GONE);
+            holder.ivAddAddress.setVisibility(showAdd ? View.VISIBLE : View.GONE);
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 
@@ -176,6 +180,20 @@ public class SavedPlacesAdapter extends BaseAdapter{
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				}
+                  });
+            holder.relative.setOnLongClickListener(new View.OnLongClickListener() {
+
+                @Override
+                public boolean onLongClick(View v) {
+					try {
+						holder = (ViewHolderSearchItem) v.getTag();
+                        final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
+                        callback.onItemLongClick(autoCompleteSearchResult);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return true;
 				}
                   });
 
@@ -191,6 +209,18 @@ public class SavedPlacesAdapter extends BaseAdapter{
                     }
                 }
             });
+            holder.ivAddAddress.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        holder = (ViewHolderSearchItem) v.getTag();
+                        final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
+                        callback.onAddClick(autoCompleteSearchResult);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,9 +229,11 @@ public class SavedPlacesAdapter extends BaseAdapter{
         return convertView;
     }
 
-    public interface Callback{
-        void onItemClick(SearchResult searchResult);
-        void onDeleteClick(SearchResult searchResult);
+    public static abstract class Callback{
+        public abstract void onItemClick(SearchResult searchResult);
+        public void onItemLongClick(SearchResult searchResult){}
+        public void onAddClick(SearchResult searchResult){}
+        public abstract void onDeleteClick(SearchResult searchResult);
     }
 
 }

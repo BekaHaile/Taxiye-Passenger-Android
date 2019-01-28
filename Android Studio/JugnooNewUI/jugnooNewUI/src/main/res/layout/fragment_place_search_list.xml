@@ -294,7 +294,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+                app:layout_behavior="com.sabkuchfresh.widgets.LockableBottomSheetBehavior">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -369,14 +369,16 @@
 
 
                             <View
-                                android:background="@color/grey_light_choose_destination"
+                                android:background="@color/fatafat_divider_color"
                                 android:layout_width="match_parent"
-                                android:layout_height="2px"/>
+                                android:layout_height="2px"
+                                android:layout_marginStart="40px"
+                                android:layout_marginEnd="40px"/>
 
                             <LinearLayout
                                 android:id="@+id/ll_set_location_on_map"
-                                android:paddingTop="15px"
-                                android:paddingBottom="15px"
+                                android:paddingTop="22px"
+                                android:paddingBottom="22px"
                                 android:theme="@style/GreyHighlight"
                                 android:background="?attr/selectableItemBackground"
                                 android:layout_width="match_parent"
@@ -399,7 +401,7 @@
                                     android:layout_gravity="center"
                                     android:layout_marginStart="20px"
                                     android:gravity="center|start"
-                                    android:textSize="32px"
+                                    android:textSize="28px"
                                     android:textColor="@color/text_color"
                                     android:text="@string/set_location_on_map"
                                     android:layout_height="wrap_content" />

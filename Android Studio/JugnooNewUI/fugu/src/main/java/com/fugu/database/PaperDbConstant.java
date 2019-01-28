@@ -11,10 +11,24 @@ public interface PaperDbConstant {
     String PAPER_USER_DETAILS = "fugu_user_details";
     String PAPER_GET_MESSAGE_RESPONSE_MAP = "fugu_get_message_response_map";
     String PAPER_GET_LABEL_ID_RESPONSE_MAP = "fugu_get_label_id_response_map";
-    String PAPER_UNSENT_MESSAGE_MAP = "fugu_unsent_message_map";
     String PAPER_SERVER_URL = "fugu_server_url";
     String PAPER_APP_SECRET_KEY = "fugu_app_secret_key";
-    String PAPER_APP_TYPE = "fugu_app_type";
+    String PAPER_APP_TYPE = "fugu_app_type_string";
     String PAPER_COLOR_CONFIG = "fugu_color_config";
+    String PAPER_STRING_CONFIG = "fugu_string_config";
+    String PAPER_DB_VERSION = "hippo_db_version";
+    String PAPER_SUPPORT_PATH = "hippo_support_path";
+    String PAPER_USER_UNIQUE_KEY = "hippo_user_unique_key";
+    String PAPER_USER_DEFAULT_CATEGORY = "hippo_user_default_category";
+    String PAPER_PUSH_FLAGS = "hippo_push_flags";
+
+    String PAPER_UNSENT_MESSAGE_MAP = "hippo_unsent_message_map";
+    String PAPER_UNSENT_MESSAGES = "hippo_unsent_messages";
+    String PAPER_SENT_MESSAGES = "hippo_sent_messages";
+    String PAPER_NOTIFICATION = "hippo_sdk_notifications";
+
+    String PAPER_CALL_STATUS = "hippo_call_status";
+    String PAPER_VIDEO_CALL = "hippo_video_call_cred";
+    String PAPER_CALL_TYPE = "hippo_call_type";
     String PAPER_FONT_CONFIG = "fugu_font_config";
 }

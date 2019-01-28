@@ -1,9 +1,9 @@
 package com.fugu.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -85,9 +85,9 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
     private final int IS_HIT_REQUIRED = 200;
     private TextView tvNoInternet, tvNewConversation;
     private TextView tvPoweredBy;
-    private FuguColorConfig fuguColorConfig;
+    private FuguColorConfig hippoColorConfig;
     private SwipeRefreshLayout swipeRefresh;
-    private ArrayList<FuguConversation> fuguConversationList = new ArrayList<>();
+    private ArrayList<FuguConversation> hippoConversationList = new ArrayList<>();
     private String label = "";
     private Long userId = -1L;
     private String enUserId = "";
@@ -96,7 +96,7 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
     private int appVersion = 0;
     private TabLayout tabLayout;
     private ViewPager viewPagerChannels;
-    private FuguChannelsPagerAdapter mFuguChannelsPagerAdapter;
+    private FuguChannelsPagerAdapter mHippoChannelsPagerAdapter;
     private CaptureUserData userData;
     /**
      * Broadcast receiver to handle push messages on channels screen
@@ -113,7 +113,7 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
                     getConversations();
                 } else {
                     //propagate push json to all tabs
-                    for (Fragment fragment : mFuguChannelsPagerAdapter.getFragments()) {
+                    for (Fragment fragment : mHippoChannelsPagerAdapter.getFragments()) {
                         ((FuguChannelsFragment) fragment).handleMessagePush(messageJson);
                     }
                 }
@@ -180,7 +180,7 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         if (isRefresh) {
             isRefresh = false;
             //refresh the unread uncount for each tab for the particular readChannelId
-            for (Fragment fragment : mFuguChannelsPagerAdapter.getFragments()) {
+            for (Fragment fragment : mHippoChannelsPagerAdapter.getFragments()) {
                 ((FuguChannelsFragment) fragment).resetUnreadCount(readChannelId);
             }
 
@@ -213,7 +213,7 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
                         grantResults.length > 0 && grantResults[0] == PermissionChecker.PERMISSION_GRANTED) {
                     sendUserDetails();
                 } else {
-                    //ActivityCompat.shouldShowRequestPermissionRationale(FuguFuguChannelsActivity.this, Manifest.permission.READ_PHONE_STATE);
+                    //ActivityCompat.shouldShowRequestPermissionRationale(HippoHippoChannelsActivity.this, Manifest.permission.READ_PHONE_STATE);
                     Toast.makeText(FuguChannelsActivityNew.this, "Go to Settings and grant permission to access phone state", Toast.LENGTH_LONG).show();
                     finish();
                 }
@@ -231,8 +231,8 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         setToolbar(myToolbar, getIntent().getStringExtra("title"));
 
         appVersion = getIntent().getIntExtra("appVersion", 0);
-        fuguColorConfig = CommonData.getColorConfig();
-        findViewById(R.id.llRoot).setBackgroundColor(fuguColorConfig.getFuguChannelBg());
+        hippoColorConfig = CommonData.getColorConfig();
+        findViewById(R.id.llRoot).setBackgroundColor(hippoColorConfig.getFuguChannelBg());
 
         tvNoInternet = (TextView) findViewById(R.id.tvNoInternet);
         tvNoInternet.setTypeface(CommonData.getFontConfig().getNormalTextTypeFace(this.getApplicationContext()));
@@ -253,9 +253,9 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         }
 
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.setBackgroundDrawable(new ColorDrawable(fuguColorConfig.getFuguActionBarBg()));
+        tabLayout.setBackgroundDrawable(new ColorDrawable(hippoColorConfig.getFuguActionBarBg()));
         tabLayout.setSelectedTabIndicatorColor(ContextCompat.getColor(this,R.color.fugu_jugnoo_orange));
-        tabLayout.setTabTextColors(fuguColorConfig.getFuguActionBarText(),ContextCompat.getColor(this,android.R.color.black));
+        tabLayout.setTabTextColors(hippoColorConfig.getFuguActionBarText(),ContextCompat.getColor(this,android.R.color.black));
         viewPagerChannels = (ViewPager) findViewById(R.id.vwPagerChannels);
 
         viewPagerChannels.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -290,15 +290,15 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
      * Config Colors of App
      */
     private void configColors() {
-        tvNewConversation.setTextColor(fuguColorConfig.getFuguActionBarText());
+        tvNewConversation.setTextColor(hippoColorConfig.getFuguActionBarText());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            tvNewConversation.setBackground(FuguColorConfig.makeRoundedSelector(fuguColorConfig.getFuguActionBarBg()));
+            tvNewConversation.setBackground(FuguColorConfig.makeRoundedSelector(hippoColorConfig.getFuguActionBarBg()));
         } else {
-            tvNewConversation.setBackgroundDrawable(FuguColorConfig.makeRoundedSelector(fuguColorConfig.getFuguActionBarBg()));
+            tvNewConversation.setBackgroundDrawable(FuguColorConfig.makeRoundedSelector(hippoColorConfig.getFuguActionBarBg()));
         }
-        swipeRefresh.setColorSchemeColors(fuguColorConfig.getFuguThemeColorPrimary());
-        tvNewConversation.setTextColor(fuguColorConfig.getFuguActionBarText());
-        tvNoInternet.setTextColor(fuguColorConfig.getFuguThemeColorSecondary());
+        swipeRefresh.setColorSchemeColors(hippoColorConfig.getFuguThemeColorPrimary());
+        tvNewConversation.setTextColor(hippoColorConfig.getFuguActionBarText());
+        tvNoInternet.setTextColor(hippoColorConfig.getFuguThemeColorSecondary());
 
     }
 
@@ -309,14 +309,13 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         if (CommonData.getUserDetails() != null && CommonData.getConversationList().size() > 0) {
             setUpUI();
             getConversations();
-        } else {//if (FuguConfig.getInstance().isPermissionGranted(FuguChannelsActivityNew.this, Manifest.permission.READ_PHONE_STATE)) {
+        } else if (FuguConfig.getInstance().isPermissionGranted(FuguChannelsActivityNew.this, Manifest.permission.READ_PHONE_STATE)) {
             sendUserDetails();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
+            }
         }
-//        else {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
-//            }
-//        }
     }
 
     /**
@@ -332,9 +331,9 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         enUserId = userData.getEn_user_id();
         if (userData.getFullName() != null && !userData.getFullName().isEmpty())
             userName = userData.getFullName();
-        fuguConversationList.clear();
+        hippoConversationList.clear();
         if (userData.getFuguConversations().size() > 0) {
-            fuguConversationList.addAll(CommonData.getConversationList());
+            hippoConversationList.addAll(CommonData.getConversationList());
         }
         setRecyclerViewData();
         setPoweredByText(userData);
@@ -351,12 +350,8 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
 
         // first tab shall default to all and will have all conversations
         ArrayList<FuguConversation> allConversations = new ArrayList<>();
-        for (FuguConversation conversation : fuguConversationList) {
-            try {
-                allConversations.add((FuguConversation) conversation.clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+        for (FuguConversation conversation : hippoConversationList) {
+            allConversations.add(new FuguConversation(conversation));
         }
         conversations.add(allConversations);
         channelFragments.add(FuguChannelsFragment.newInstance(allConversations));
@@ -377,43 +372,35 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
             }
         }
 
-        for (FuguChannelInfoObject fuguChannelInfoObject : channels) {
+        for (FuguChannelInfoObject hippoChannelInfoObject : channels) {
 
             // add title
-            if (fuguChannelInfoObject.getValue() != null) {
-                titles.add(fuguChannelInfoObject.getValue());
+            if (hippoChannelInfoObject.getValue() != null) {
+                titles.add(hippoChannelInfoObject.getValue());
             } else {
                 titles.add("");
             }
 
             ArrayList<FuguConversation> filteredConversations = new ArrayList<>();
             // decide whether to filter by chat_type or transaction id
-            if (fuguChannelInfoObject.isFilterByChatType()) {
-                int chatTypeFilterValue = fuguChannelInfoObject.getChatTypeFilterValue();
-                for (FuguConversation conversation : fuguConversationList) {
+            if (hippoChannelInfoObject.isFilterByChatType()) {
+                int chatTypeFilterValue = hippoChannelInfoObject.getChatTypeFilterValue();
+                for (FuguConversation conversation : hippoConversationList) {
                     if (conversation.getChatType() == chatTypeFilterValue) {
-                        try {
-                            filteredConversations.add((FuguConversation) conversation.clone());
-                        } catch (CloneNotSupportedException e) {
-                            e.printStackTrace();
-                        }
+                        filteredConversations.add(new FuguConversation(conversation));
                     }
                 }
             } else {
                 // filter by transaction id ( key would be present after last underscore )
-                String filterKey = fuguChannelInfoObject.getKey();
-                for (FuguConversation conversation : fuguConversationList) {
+                String filterKey = hippoChannelInfoObject.getKey();
+                for (FuguConversation conversation : hippoConversationList) {
                     if (conversation.getTransactionId() != null) {
                         String[] split = conversation.getTransactionId().split("_");
                         if (split != null && split.length > 0) {
                             // last index shall contain the key
                             String key = split[split.length - 1];
                             if (filterKey.equals(key)) {
-                                try {
-                                    filteredConversations.add((FuguConversation) conversation.clone());
-                                } catch (CloneNotSupportedException e) {
-                                    e.printStackTrace();
-                                }
+                                filteredConversations.add(new FuguConversation(conversation));
                             }
                         }
                     }
@@ -427,10 +414,10 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         }
 
         // set up viewpager and tab
-        if (mFuguChannelsPagerAdapter == null) {
-            mFuguChannelsPagerAdapter = new FuguChannelsPagerAdapter(getSupportFragmentManager(),
+        if (mHippoChannelsPagerAdapter == null) {
+            mHippoChannelsPagerAdapter = new FuguChannelsPagerAdapter(getSupportFragmentManager(),
                     channelFragments, titles);
-            viewPagerChannels.setAdapter(mFuguChannelsPagerAdapter);
+            viewPagerChannels.setAdapter(mHippoChannelsPagerAdapter);
             viewPagerChannels.setOffscreenPageLimit(titles.size() - 1);
             tabLayout.setupWithViewPager(viewPagerChannels);
             tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -444,7 +431,7 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
         } else {
             // update list
             int i = 0;
-            for (Fragment fragment : mFuguChannelsPagerAdapter.getFragments()) {
+            for (Fragment fragment : mHippoChannelsPagerAdapter.getFragments()) {
                 ((FuguChannelsFragment) fragment).setConversationList(conversations.get(i));
                 i++;
             }
@@ -472,7 +459,7 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
     protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // pass the activity result to visible fragments
-        for (Fragment fragment : mFuguChannelsPagerAdapter.getFragments()) {
+        for (Fragment fragment : mHippoChannelsPagerAdapter.getFragments()) {
             ((FuguChannelsFragment) fragment).onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -488,25 +475,25 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
 
                 String text = "<font color="
                         + String.format("#%06X",
-                        (0xFFFFFF & fuguColorConfig.getFuguTextColorPrimary())) + ">"
+                        (0xFFFFFF & hippoColorConfig.getFuguTextColorPrimary())) + ">"
                         + getString(R.string.fugu_powered_by)
                         + "<font color=" + String.format("#%06X",
-                        (0xFFFFFF & fuguColorConfig.getFuguThemeColorPrimary())) + "> "
-                        + getString(R.string.fugu_text) + "</font>";
+                        (0xFFFFFF & hippoColorConfig.getFuguThemeColorPrimary())) + "> "
+                        + getString(R.string.hippo_text) + "</font>";
                 //noinspection deprecation
                 tvPoweredBy.setText(Html.fromHtml(text));
             } else {
                 String text = "<font color="
                         + String.format("#%06X",
-                        (0xFFFFFF & fuguColorConfig.getFuguTextColorPrimary())) + ">"
+                        (0xFFFFFF & hippoColorConfig.getFuguTextColorPrimary())) + ">"
                         + getString(R.string.fugu_powered_by)
                         + "<font color=" + String.format("#%06X",
-                        (0xFFFFFF & fuguColorConfig.getFuguThemeColorPrimary())) + "> "
-                        + getString(R.string.fugu_text) + "</font>";
+                        (0xFFFFFF & hippoColorConfig.getFuguThemeColorPrimary())) + "> "
+                        + getString(R.string.hippo_text) + "</font>";
                 tvPoweredBy.setText(Html.fromHtml(text));
             }
 
-            tvPoweredBy.setBackgroundDrawable(FuguColorConfig.makeSelector(fuguColorConfig.getFuguChannelItemBg(), fuguColorConfig.getFuguChannelItemBgPressed()));
+            tvPoweredBy.setBackgroundDrawable(FuguColorConfig.makeSelector(hippoColorConfig.getFuguChannelItemBg(), hippoColorConfig.getFuguChannelItemBgPressed()));
         } else {
             tvPoweredBy.setVisibility(View.GONE);
         }
@@ -527,13 +514,13 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
                     .enqueue(new ResponseResolver<FuguGetConversationsResponse>(FuguChannelsActivityNew.this,
                             false, false) {
                         @Override
-                        public void success(FuguGetConversationsResponse fuguGetConversationsResponse) {
+                        public void success(FuguGetConversationsResponse hippoGetConversationsResponse) {
                             try {
 
-                                CommonData.setConversationList(fuguGetConversationsResponse.getData().getFuguConversationList());
+                                CommonData.setConversationList(hippoGetConversationsResponse.getData().getFuguConversationList());
 
-                                fuguConversationList.clear();
-                                fuguConversationList.addAll(fuguGetConversationsResponse.getData().getFuguConversationList());
+                                hippoConversationList.clear();
+                                hippoConversationList.addAll(hippoGetConversationsResponse.getData().getFuguConversationList());
                                 // set data
                                 setRecyclerViewData();
                                 swipeRefresh.setRefreshing(false);
@@ -549,7 +536,7 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
                     });
         } else {
             swipeRefresh.setRefreshing(false);
-            // Toast.makeText(FuguFuguChannelsActivity.this, getString(R.string.fugu_unable_to_connect_internet), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(HippoHippoChannelsActivity.this, getString(R.string.hippo_unable_to_connect_internet), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -666,9 +653,9 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
                 .enqueue(new ResponseResolver<FuguPutUserDetailsResponse>(FuguChannelsActivityNew.this,
                         true, false) {
                     @Override
-                    public void success(FuguPutUserDetailsResponse fuguPutUserDetailsResponse) {
-                        CommonData.setUserDetails(fuguPutUserDetailsResponse);
-                        CommonData.setConversationList(fuguPutUserDetailsResponse.getData().getFuguConversations());
+                    public void success(FuguPutUserDetailsResponse hippoPutUserDetailsResponse) {
+                        CommonData.setUserDetails(hippoPutUserDetailsResponse);
+                        CommonData.setConversationList(hippoPutUserDetailsResponse.getData().getFuguConversations());
                         setUpUI();
                     }
 
@@ -697,9 +684,9 @@ public class FuguChannelsActivityNew extends FuguBaseActivity implements SwipeRe
                 .enqueue(new ResponseResolver<FuguPutUserDetailsResponse>(FuguChannelsActivityNew.this,
                         true, false) {
                     @Override
-                    public void success(FuguPutUserDetailsResponse fuguPutUserDetailsResponse) {
-                        CommonData.setUserDetails(fuguPutUserDetailsResponse);
-                        CommonData.setConversationList(fuguPutUserDetailsResponse.getData().getFuguConversations());
+                    public void success(FuguPutUserDetailsResponse hippoPutUserDetailsResponse) {
+                        CommonData.setUserDetails(hippoPutUserDetailsResponse);
+                        CommonData.setConversationList(hippoPutUserDetailsResponse.getData().getFuguConversations());
                         setUpUI();
                     }
 

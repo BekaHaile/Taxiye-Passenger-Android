@@ -1,5 +1,6 @@
 package com.fugu.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
@@ -32,6 +41,7 @@ import com.fugu.CaptureUserData;
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
+import com.fugu.GroupingTag;
 import com.fugu.R;
 import com.fugu.adapter.FuguChannelsAdapter;
 import com.fugu.constant.FuguAppConstant;
@@ -40,6 +50,7 @@ import com.fugu.model.FuguConversation;
 import com.fugu.model.FuguDeviceDetails;
 import com.fugu.model.FuguGetConversationsResponse;
 import com.fugu.model.FuguPutUserDetailsResponse;
+import com.fugu.model.UnreadCountModel;
 import com.fugu.retrofit.APIError;
 import com.fugu.retrofit.CommonParams;
 import com.fugu.retrofit.ResponseResolver;
@@ -83,12 +94,15 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
     private final int IS_HIT_REQUIRED = 200;
     public static boolean isRefresh = false;
     public static Long readChannelId = -1L;
+    public static Long readLabelId = -1L;
     private TextView tvPoweredBy;
     private FuguColorConfig fuguColorConfig;
     @SuppressLint("StaticFieldLeak")
     private static LinearLayout llInternet;
     @SuppressLint("StaticFieldLeak")
     private static TextView tvStatus;
+    private boolean isScreenOpen = false;
+    private boolean isFirstTimeOpen = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +112,7 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
                 new IntentFilter(NOTIFICATION_INTENT));
         initViews();
         decideAppFlow();
+        FuguConfig.getInstance().setChannelActivity(true);
     }
 
     /**
@@ -107,7 +122,10 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
         fuguColorConfig = CommonData.getColorConfig();
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        setToolbar(myToolbar, getIntent().getStringExtra("title"));
+        String title = getIntent().getStringExtra("title");
+        if(TextUtils.isEmpty(title))
+            title = CommonData.getChatTitle();
+        setToolbar(myToolbar, title);
         appVersion = getIntent().getIntExtra("appVersion", 0);
         rlRoot = (RelativeLayout) findViewById(R.id.rlRoot);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipeRefresh);
@@ -132,14 +150,18 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
         if (CommonData.getUserDetails() != null && CommonData.getConversationList().size() > 0) {
             setUpUI();
             getConversations();
-        } else {//if (FuguConfig.getInstance().isPermissionGranted(FuguChannelsActivity.this, Manifest.permission.READ_PHONE_STATE)) {
+        } else {
             sendUserDetails();
         }
-//        else {
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_PERMISSION);
-//            }
-//        }
+    }
+
+    private void setApiHit() {
+        if (CommonData.getUserDetails() != null && CommonData.getConversationList().size() > 0) {
+            //setUpUI();
+            getConversations();
+        } else {
+            sendUserDetails();
+        }
     }
 
     /**
@@ -220,23 +242,40 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
             nm.cancelAll();
         }
         super.onResume();
+        isScreenOpen = true;
         if (isRefresh) {
             isRefresh = false;
             try {
                 for (int i = 0; i < fuguConversationList.size(); i++) {
                     FuguConversation currentConversation = fuguConversationList.get(i);
-                    if (currentConversation.getChannelId().compareTo(readChannelId) == 0) {
+                    if(readChannelId > -1 && currentConversation.getChannelId() > -1 && currentConversation.getChannelId().compareTo(readChannelId) == 0) {
                         currentConversation.setUnreadCount(0);
-
                         if (fuguChannelsAdapter != null)
                             fuguChannelsAdapter.notifyDataSetChanged();
-
+                        break;
+                    } else if(readLabelId > -1 && currentConversation.getLabelId() > -1 && currentConversation.getLabelId().compareTo(readLabelId) == 0) {
+                        currentConversation.setUnreadCount(0);
+                        if (fuguChannelsAdapter != null)
+                            fuguChannelsAdapter.notifyDataSetChanged();
+                        break;
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            updateCount(fuguConversationList);
         }
+        if(!isFirstTimeOpen) {
+            setApiHit();
+        }
+        isFirstTimeOpen = false;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isScreenOpen = false;
+        isFirstTimeOpen = false;
     }
 
     @Override
@@ -279,9 +318,11 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        FuguConfig.getInstance().setChannelActivity(false);
         // Unregister since the activity is about to be closed.
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         readChannelId = null;
+        readLabelId = null;
     }
 
     /**
@@ -323,35 +364,101 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             try {
+                if(!isScreenOpen)
+                    return;
+
                 JSONObject messageJson = new JSONObject(intent.getStringExtra(MESSAGE));
 
                 FuguLog.d("receiver", "Got message: " + messageJson.toString());
 
-                for (int i = 0; i < fuguConversationList.size(); i++) {
-                    FuguConversation currentConversation = fuguConversationList.get(i);
-                    if (messageJson.has(NEW_MESSAGE)) {
-                        if (currentConversation.getChannelId() == messageJson.getLong(CHANNEL_ID)) {
-                            if (messageJson.has(NEW_MESSAGE)) {
-                                currentConversation.setMessage(messageJson.getString(NEW_MESSAGE));
-                            }
-                            currentConversation.setDateTime(messageJson.getString(DATE_TIME).replace("+00:00", ".000Z"));
+                boolean hasChannelID = false;
+                boolean hasLabelID = false;
 
-                            if (FuguNotificationConfig.pushChannelId.compareTo(messageJson.getLong(CHANNEL_ID)) != 0) {
-                                currentConversation.setUnreadCount(currentConversation.getUnreadCount() + 1);
-                            } else {
-                                currentConversation.setUnreadCount(0);
+                if(messageJson.has(NOTIFICATION_TYPE) && messageJson.getInt(NOTIFICATION_TYPE) == 5) {
+                    getConversations();
+                } else {
+                    if(messageJson.has(CHANNEL_ID) && messageJson.getLong(CHANNEL_ID) > 0) {
+                        int index = fuguConversationList.indexOf(new FuguConversation(messageJson.getLong(CHANNEL_ID)));
+                        if(index != -1)
+                            hasChannelID = true;
+                    }
+
+                    if(messageJson.has(LABEL_ID) && messageJson.getLong(LABEL_ID) > 0) {
+                        for (int i = 0; i < fuguConversationList.size(); i++) {
+                            FuguConversation currentConversation = fuguConversationList.get(i);
+                            if (currentConversation.getLabelId() == messageJson.getLong(LABEL_ID)) {
+                                hasLabelID = true;
+                                break;
                             }
-                            currentConversation.setLast_sent_by_id(messageJson.getLong("last_sent_by_id"));
-                            currentConversation.setLast_sent_by_full_name(messageJson.getString("last_sent_by_full_name"));
-                            if (fuguChannelsAdapter != null)
-                                fuguChannelsAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    if((!hasChannelID && !hasLabelID)) {
+                        getConversations();
+                    } else {
+                        if (messageJson.has(NEW_MESSAGE) && messageJson.has(CHANNEL_ID)) {
+                            int index = fuguConversationList.indexOf(new FuguConversation(messageJson.getLong(CHANNEL_ID)));
+                            if(index>-1) {
+                                FuguConversation currentConversation = fuguConversationList.get(index);
+                                currentConversation.setDateTime(messageJson.getString(DATE_TIME).replace("+00:00", ".000Z"));
+                                if (messageJson.has(NEW_MESSAGE)) {
+                                    currentConversation.setMessage(messageJson.getString(NEW_MESSAGE));
+                                }
+                                if (FuguNotificationConfig.pushChannelId.compareTo(messageJson.getLong(CHANNEL_ID)) != 0) {
+                                    currentConversation.setUnreadCount(currentConversation.getUnreadCount() + 1);
+                                } else {
+                                    currentConversation.setUnreadCount(0);
+                                }
+                                currentConversation.setLast_sent_by_id(messageJson.getLong("last_sent_by_id"));
+                                currentConversation.setLast_sent_by_full_name(messageJson.getString("last_sent_by_full_name"));
+//                                if(index != 0) {
+//                                    fuguConversationList.remove(index);
+//                                    fuguConversationList.add(0, currentConversation);
+//                                }
+                                if (fuguChannelsAdapter != null)
+                                    fuguChannelsAdapter.notifyDataSetChanged();
+
+                                updateCount(fuguConversationList);
+                            } else {
+                                getConversations();
+                            }
+                        } else if(messageJson.has(NEW_MESSAGE) && messageJson.has(LABEL_ID)) {
+                            int index = -1;
+                            for(int i=0;i<fuguConversationList.size();i++) {
+                                if(fuguConversationList.get(i).getLabelId().compareTo(messageJson.getLong(LABEL_ID)) == 0) {
+                                    index = i;
+                                    break;
+                                }
+                            }
+                            if(index>-1) {
+                                FuguConversation currentConversation = fuguConversationList.get(index);
+                                currentConversation.setDateTime(messageJson.getString(DATE_TIME).replace("+00:00", ".000Z"));
+                                if (messageJson.has(NEW_MESSAGE)) {
+                                    currentConversation.setMessage(messageJson.getString(NEW_MESSAGE));
+                                }
+                                if (FuguNotificationConfig.pushLabelId.compareTo(messageJson.getLong(LABEL_ID)) != 0) {
+                                    currentConversation.setUnreadCount(currentConversation.getUnreadCount() + 1);
+                                } else {
+                                    currentConversation.setUnreadCount(0);
+                                }
+                                currentConversation.setLast_sent_by_id(messageJson.getLong("last_sent_by_id"));
+                                currentConversation.setLast_sent_by_full_name(messageJson.getString("last_sent_by_full_name"));
+//                                if(index != 0) {
+//                                    fuguConversationList.remove(index);
+//                                    fuguConversationList.add(0, currentConversation);
+//                                }
+                                if (fuguChannelsAdapter != null)
+                                    fuguChannelsAdapter.notifyDataSetChanged();
+
+                                updateCount(fuguConversationList);
+                            } else {
+                                getConversations();
+                            }
                         }
                     }
                 }
-                if (messageJson.getInt(NOTIFICATION_TYPE) == 5) {
-                    getConversations();
-                }
-            } catch (JSONException e) {
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -402,6 +509,24 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
 
                 if (!userData.getPhoneNumber().trim().isEmpty())
                     commonParams.put(PHONE_NUMBER, userData.getPhoneNumber());
+
+                if(!userData.getTags().isEmpty()) {
+                    ArrayList<GroupingTag> groupingTags = new ArrayList<>();
+                    for(GroupingTag tag : userData.getTags()) {
+                        GroupingTag groupingTag = new GroupingTag();
+                        if(!TextUtils.isEmpty(tag.getTagName()))
+                            groupingTag.setTagName(tag.getTagName());
+                        if(tag.getTeamId() != null)
+                            groupingTag.setTeamId(tag.getTeamId());
+
+                        if(!TextUtils.isEmpty(tag.getTagName()) || tag.getTeamId() != null) {
+                            groupingTags.add(groupingTag);
+                        }
+                    }
+                    commonParams.put(GROUPING_TAGS, new Gson().toJson(groupingTags));
+                } else {
+                    commonParams.put(GROUPING_TAGS, "[]");
+                }
             }
 
             if (!FuguNotificationConfig.fuguDeviceToken.isEmpty())
@@ -429,7 +554,10 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
      * @param commonParams params to be sent
      */
     private void apiPutUserDetail(HashMap<String, Object> commonParams) {
-        RestClient.getApiInterface().putUserDetails(commonParams)
+        CommonParams params = new CommonParams.Builder()
+                .putMap(commonParams)
+                .build();
+        RestClient.getApiInterface().putUserDetails(params.getMap())
                 .enqueue(new ResponseResolver<FuguPutUserDetailsResponse>(FuguChannelsActivity.this, true, false) {
                     @Override
                     public void success(FuguPutUserDetailsResponse fuguPutUserDetailsResponse) {
@@ -458,7 +586,10 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
      * @param commonParams params to be sent
      */
     private void apiPutUserDetailReseller(HashMap<String, Object> commonParams) {
-        RestClient.getApiInterface().putUserDetailsReseller(commonParams)
+        CommonParams params = new CommonParams.Builder()
+                .putMap(commonParams)
+                .build();
+        RestClient.getApiInterface().putUserDetailsReseller(params.getMap())
                 .enqueue(new ResponseResolver<FuguPutUserDetailsResponse>(FuguChannelsActivity.this, true, false) {
                     @Override
                     public void success(FuguPutUserDetailsResponse fuguPutUserDetailsResponse) {
@@ -486,6 +617,9 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
      * Get conversations api hit
      */
     private void getConversations() {
+        getConversations(false);
+    }
+    private void getConversations(boolean showLoader) {
         if (isNetworkAvailable()) {
             CommonParams commonParams = new CommonParams.Builder()
                     .add(APP_SECRET_KEY, FuguConfig.getInstance().getAppKey())
@@ -494,7 +628,7 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
                     .add(DEVICE_TYPE, 1)
                     .build();
             RestClient.getApiInterface().getConversations(commonParams.getMap())
-                    .enqueue(new ResponseResolver<FuguGetConversationsResponse>(FuguChannelsActivity.this, false, false) {
+                    .enqueue(new ResponseResolver<FuguGetConversationsResponse>(FuguChannelsActivity.this, showLoader, false) {
                         @Override
                         public void success(FuguGetConversationsResponse fuguGetConversationsResponse) {
                             try {
@@ -503,6 +637,7 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
 
                                 fuguConversationList.clear();
                                 fuguConversationList.addAll(fuguGetConversationsResponse.getData().getFuguConversationList());
+                                updateCount(fuguConversationList);
                                 fuguChannelsAdapter.notifyDataSetChanged();
                                 swipeRefresh.setRefreshing(false);
                             } catch (Exception e) {
@@ -544,6 +679,7 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
                         fuguConversationList.get(i).setEnUserId(conversation.getEnUserId());
                         fuguConversationList.get(i).setLast_message_status(conversation.getLast_message_status());
                         fuguChannelsAdapter.updateList(fuguConversationList);
+                        updateCount(fuguConversationList);
                         break;
                     }
                 }
@@ -558,6 +694,7 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
                         fuguConversationList.get(i).setLast_sent_by_id(conversation.getLast_sent_by_id());
                         fuguConversationList.get(i).setLast_message_status(conversation.getLast_message_status());
                         fuguChannelsAdapter.updateList(fuguConversationList);
+                        updateCount(fuguConversationList);
                         break;
                     }
                 }
@@ -570,7 +707,7 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
                 CommonData.setIsNewchat(false);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -588,6 +725,7 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
                 startActivityForResult(chatIntent, IS_HIT_REQUIRED);
             }
         }, enUserId);
+        updateCount(fuguConversationList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(FuguChannelsActivity.this);
         rvChannels.setLayoutManager(layoutManager);
         rvChannels.setAdapter(fuguChannelsAdapter);
@@ -600,31 +738,74 @@ public class FuguChannelsActivity extends FuguBaseActivity implements SwipeRefre
      */
     private void setPoweredByText(FuguPutUserDetailsResponse.Data userData) {
         if (!userData.getWhiteLabel()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-
-                String text = "<font color="
-                        + String.format("#%06X",
-                        (0xFFFFFF & fuguColorConfig.getFuguTextColorPrimary())) + ">"
-                        + getString(R.string.fugu_powered_by)
-                        + "<font color=" + String.format("#%06X",
-                        (0xFFFFFF & fuguColorConfig.getFuguThemeColorPrimary())) + "> "
-                        + getString(R.string.fugu_text) + "</font>";
-                //noinspection deprecation
-                tvPoweredBy.setText(Html.fromHtml(text));
-            } else {
-                String text = "<font color="
-                        + String.format("#%06X",
-                        (0xFFFFFF & fuguColorConfig.getFuguTextColorPrimary())) + ">"
-                        + getString(R.string.fugu_powered_by)
-                        + "<font color=" + String.format("#%06X",
-                        (0xFFFFFF & fuguColorConfig.getFuguThemeColorPrimary())) + "> "
-                        + getString(R.string.fugu_text) + "</font>";
-                tvPoweredBy.setText(Html.fromHtml(text));
+            try {
+                poweredByView(getString(R.string.fugu_powered_by), getString(R.string.fugu_text), fuguColorConfig);
+            } catch (Exception e) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    String text = "<font color="
+                            + String.format("#%06X",
+                            (0xFFFFFF & fuguColorConfig.getFuguTextColorPrimary())) + ">"
+                            + getString(R.string.fugu_powered_by)
+                            + "<font color=" + String.format("#%06X",
+                            (0xFFFFFF & fuguColorConfig.getFuguRunsOnColor())) + "> "
+                            + getString(R.string.fugu_text) + "</font>";
+                    //noinspection deprecation
+                    tvPoweredBy.setText(Html.fromHtml(text));
+                } else {
+                    String text = "<font color="
+                            + String.format("#%06X",
+                            (0xFFFFFF & fuguColorConfig.getFuguTextColorPrimary())) + ">"
+                            + getString(R.string.fugu_powered_by)
+                            + "<font color=" + String.format("#%06X",
+                            (0xFFFFFF & fuguColorConfig.getFuguRunsOnColor())) + "> "
+                            + getString(R.string.fugu_text) + "</font>";
+                    tvPoweredBy.setText(Html.fromHtml(text));
+                }
+                tvPoweredBy.setBackgroundDrawable(FuguColorConfig.makeSelector(fuguColorConfig.getFuguChannelItemBg(), fuguColorConfig.getFuguChannelItemBgPressed()));
             }
-
-            tvPoweredBy.setBackgroundDrawable(FuguColorConfig.makeSelector(fuguColorConfig.getFuguChannelItemBg(), fuguColorConfig.getFuguChannelItemBgPressed()));
         } else {
             tvPoweredBy.setVisibility(View.GONE);
+        }
+    }
+
+    private void poweredByView(String firstString, String lastString, FuguColorConfig fuguColorConfig) throws Exception {
+        String changeString = (lastString != null ? lastString : "Hippo");
+        String totalString = firstString +" "+ changeString;
+        Log.v(TAG, "totalString = "+totalString);
+        Spannable spanText = new SpannableString(totalString);
+        spanText.setSpan(new StyleSpan(Typeface.BOLD), String.valueOf(firstString).length(), totalString.length(), 0);
+        spanText.setSpan(new ForegroundColorSpan(fuguColorConfig.getFuguRunsOnColor()), String.valueOf(firstString).length(), totalString.length(), 0);
+        spanText.setSpan(new RelativeSizeSpan(0.8f), 0, String.valueOf(firstString).length(), 0);
+
+
+        tvPoweredBy.setText(spanText);
+        tvPoweredBy.setBackgroundDrawable(FuguColorConfig.makeSelector(fuguColorConfig.getFuguChannelItemBg(), fuguColorConfig.getFuguChannelItemBgPressed()));
+    }
+
+
+    ArrayList<UnreadCountModel> unreadCountModels = new ArrayList<>();
+
+    private void updateCount(ArrayList<FuguConversation> fuguConversationList) {
+        try {
+            int count = 0;
+            unreadCountModels.clear();
+            CommonData.setUnreadCount(unreadCountModels);
+            for(int i=0;i<fuguConversationList.size();i++) {
+                if(fuguConversationList.get(i).getUnreadCount()>0) {
+                    UnreadCountModel countModel = new UnreadCountModel(fuguConversationList.get(i).getChannelId(), fuguConversationList.get(i).getLabelId(), fuguConversationList.get(i).getUnreadCount());
+                    unreadCountModels.add(countModel);
+                    count = count + fuguConversationList.get(i).getUnreadCount();
+                }
+            }
+            CommonData.setUnreadCount(unreadCountModels);
+            FuguLog.e(TAG, "unreadCountModels: "+new Gson().toJson(unreadCountModels));
+            FuguLog.v(TAG, "unreadCountModels size = "+unreadCountModels.size());
+
+            if(FuguConfig.getInstance().getCallbackListener() != null) {
+                FuguConfig.getInstance().getCallbackListener().count(count);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -148,8 +148,8 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         if(getIntent().getBooleanExtra(Constants.KEY_DIRECT_CONFIRM, false)){
             openAddToAddressBook(getAddressBundle(searchResult));
         } else {
-            getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer, false);
-        }
+			openDeliveryAddressFragment();
+		}
 //        if(editThisAddress){
 //            openAddToAddressBook(getAddressBundle(searchResult));
 //        } else {
@@ -158,7 +158,11 @@ public class AddPlaceActivity extends BaseFragmentActivity {
 
     }
 
-    @Override
+	public void openDeliveryAddressFragment() {
+		getTransactionUtils().openDeliveryAddressFragment(this, relativeLayoutContainer, false);
+	}
+
+	@Override
     protected void onResume() {
         super.onResume();
     }

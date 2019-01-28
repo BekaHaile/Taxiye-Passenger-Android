@@ -22,7 +22,7 @@
 -verbose
 -dontwarn android.content.Context
 -dontwarn com.google.android.gms.**
--dontwarn com.squareup.okhttp.**
+-dontwarn com.squareup.okhttp3.**
 -dontwarn java.beans.**
 -dontwarn javax.security.**
 -dontwarn com.google.common.**
@@ -69,7 +69,7 @@
 -keep class io.branch.sdk.android.** { *; }
 -keep class com.android.support.** { *; }
 -keep class com.squareup.retrofit.** { *; }
--keep class com.squareup.okhttp.** { *; }
+-keep class com.squareup.okhttp3.** { *; }
 -keep class com.sothree.slidinguppanel.** { *; }
 -keep class sun.misc.Unsafe { *; }
 
@@ -168,7 +168,7 @@
 }
  -dontwarn java.lang.invoke**
  -dontwarn okio.**
- -dontwarn com.squareup.okhttp.**
+ -dontwarn com.squareup.okhttp3.**
  -dontwarn retrofit2.Platform$Java8
 
  -keeppackagenames org.jsoup.nodes
@@ -199,5 +199,36 @@
 -dontwarn com.fugu.FuguNotificationConfig
 -dontwarn org.npci.upi.security.pinactivitycomponent.GetCredential
 -dontwarn java.lang.annotation.Annotation
+
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+
+
+-dontwarn com.bumptech.glide.**
+-keep class com.bumptech.glide.** { *; }
+
+-dontwarn org.xmlpull.v1.**
+-dontwarn com.squareup.**
+-keep class com.squareup.** { *; }
+
+-dontwarn okio.**
+-dontwarn com.squareup.okhttp3.**
+-keep class com.squareup.okhttp3.** { *; }
+-keep interface com.squareup.okhttp3.* { *; }
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
+
+-dontwarn com.google.gson.Gson$6
+-dontwarn okhttp3.internal.*
+-dontwarn okhttp3.internal.platform.*
+-dontwarn okhttp3.internal.http.*
+-dontwarn okhttp3.internal.io.*
+-dontwarn okhttp3.internal.tls.*
+-dontwarn okhttp3.RealCall$ApplicationInterceptorChain
+-dontwarn javax.annotation.**
 
 

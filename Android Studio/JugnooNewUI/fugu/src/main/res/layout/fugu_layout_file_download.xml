@@ -14,10 +14,11 @@
         android:id="@+id/ivFileType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/pdf_attachment" />
+        android:src="@drawable/hippo_pdf_attachment" />
 
     <TextView
         android:id="@+id/tvFileName"
+        style="@style/text_rtl"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/fugu_margin_5"
@@ -31,7 +32,7 @@
         android:id="@+id/ivDownload"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/download_file_retry" />
+        android:src="@drawable/hippo_download_file_retry" />
 
     <RelativeLayout
         android:id="@+id/rlStopDownload"
@@ -42,7 +43,7 @@
         <ProgressBar
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:indeterminateDrawable="@drawable/bg_file_progress"/>
+            android:indeterminateDrawable="@drawable/hippo_bg_file_progress" />
 
         <View
             android:layout_width="6dp"

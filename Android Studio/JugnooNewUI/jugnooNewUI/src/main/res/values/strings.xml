@@ -1976,5 +1976,10 @@
     <string name="expected_toll_charge">Expected Toll Charges</string>
     <string name="schedule_ride_alert">*We cannot always guarantee that a driver will be available</string>
     <string name="vehicle">Vehicle</string>
-    <string name="vehicle_fare_estimate_alert">The estimated fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route is taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
+    <string name="vehicle_fare_estimate_alert">The estimated fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
+    <string name="choose_a_place">Choose a place</string>
+    <string name="add_saved_place">Add Saved Place</string>
+    <string name="tip_the_driver">Tip the Driver</string>
+    <string name="add_other_value">Add Other Value</string>
+    <string name="ticket_support">Ticket Support</string>
 </resources>

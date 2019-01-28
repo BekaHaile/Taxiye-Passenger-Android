@@ -471,6 +471,14 @@ public class JSONParser implements Constants {
 				context.getResources().getInteger(R.integer.customer_directions_for_driver_enroute)));
 		Prefs.with(context).save(KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM, autoData.optInt(KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM,
 				context.getResources().getInteger(R.integer.customer_hit_geocode_free_roam)));
+		Prefs.with(context).save(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, autoData.optInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED,
+				context.getResources().getInteger(R.integer.customer_pickup_free_roam_allowed)));
+		Prefs.with(context).save(KEY_CUSTOMER_SHOW_ADD_SAVED_PLACE, autoData.optInt(KEY_CUSTOMER_SHOW_ADD_SAVED_PLACE,
+				context.getResources().getInteger(R.integer.customer_show_add_saved_place)));
+        Prefs.with(context).save(HIPPO_SUPPORT_FAQ_NAME, autoData.optString(HIPPO_SUPPORT_FAQ_NAME,
+                context.getString(R.string.customer_hippo_support_faq_name)));
+        Prefs.with(context).save(KEY_CUSTOMER_TIP_VALUES, autoData.optString(KEY_CUSTOMER_TIP_VALUES,
+                context.getString(R.string.customer_tip_values)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

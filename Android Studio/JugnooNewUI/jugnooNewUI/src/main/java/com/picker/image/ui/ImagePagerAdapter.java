@@ -46,8 +46,8 @@ public class ImagePagerAdapter extends PagerAdapter {
 
 
         Glide.with(mFragment)
-                .load(imageEntry.path)
                 .asBitmap()
+                .load(imageEntry.path)
                 .into(view);
 
         container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);

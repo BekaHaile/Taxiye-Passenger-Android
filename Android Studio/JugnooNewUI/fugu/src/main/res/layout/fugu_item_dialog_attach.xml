@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="51dp"
         android:clickable="true"
-        android:drawableLeft="@drawable/camera_icon"
+        android:drawableLeft="@drawable/hippo_camera_icon"
         android:drawablePadding="@dimen/fugu_padding_10"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/fugu_padding_10"

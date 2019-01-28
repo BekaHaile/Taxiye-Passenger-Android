@@ -10,10 +10,9 @@
         android:id="@+id/ivMsgImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerInParent="true"
+        android:adjustViewBounds="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/placeholder"
-        android:adjustViewBounds="true" />
+        android:src="@drawable/hippo_placeholder" />
 
     <Button
         android:id="@+id/btnRetry"

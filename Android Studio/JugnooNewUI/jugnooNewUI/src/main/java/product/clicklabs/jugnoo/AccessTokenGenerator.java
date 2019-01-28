@@ -78,14 +78,13 @@ public class AccessTokenGenerator {
 		}
 		
 		String authKey = "";
-		authKey = AuthKeySaver.readAuthFromFile();
+		SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
+		authKey = pref.getString("authKey", "");
+//		authKey = AuthKeySaver.readAuthFromFile();
 //		Log.e("authKey", "="+authKey);
 		
 		
 		if(AuthKeySaver.NOT_FOUND.equalsIgnoreCase(authKey)){
-			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
-			authKey = pref.getString("authKey", "");
-			
 			if("".equalsIgnoreCase(authKey)){																		// SP returns empty
 				SharedPreferences pref1 = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);					// use old access token
 				final String accessToken = pref1.getString(Data.SP_ACCESS_TOKEN_KEY, "");
@@ -100,7 +99,6 @@ public class AccessTokenGenerator {
 		else if(LOGOUT.equalsIgnoreCase(authKey)){
 			authKey = "";
 //			saveAuthKey(context, authKey);
-			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
 			Editor editor = pref.edit();
 			editor.putString("authKey", "");
 			editor.commit();
@@ -122,7 +120,6 @@ public class AccessTokenGenerator {
 //            }
 //		}
 		else{
-			SharedPreferences pref = context.getSharedPreferences("shared_auth", Context.MODE_PRIVATE);
 			String freshInstall = pref.getString("freshInstall", "");
 			
 			if("".equalsIgnoreCase(freshInstall)){

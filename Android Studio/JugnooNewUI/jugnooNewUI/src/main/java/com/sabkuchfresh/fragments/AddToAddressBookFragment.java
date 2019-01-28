@@ -17,7 +17,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.sabkuchfresh.bus.AddressAdded;
 import com.sabkuchfresh.home.FreshActivity;
@@ -75,6 +81,8 @@ public class AddToAddressBookFragment extends Fragment {
     private RelativeLayout rlAddressLabels;
     private boolean showAddressLabels;
 
+    private GoogleMap mapLite;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_addto_address, container, false);
@@ -97,7 +105,55 @@ public class AddToAddressBookFragment extends Fragment {
             rlAddressLabels.setVisibility(View.GONE);
             editTextLabel.setVisibility(View.GONE);
         }
+
+        ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.mapLite)).getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                mapLite = googleMap;
+                if (mapLite != null) {
+                    mapLite.getUiSettings().setAllGesturesEnabled(false);
+                    mapLite.getUiSettings().setZoomGesturesEnabled(false);
+                    mapLite.getUiSettings().setZoomControlsEnabled(false);
+                    mapLite.getUiSettings().setTiltGesturesEnabled(false);
+                    mapLite.getUiSettings().setMyLocationButtonEnabled(false);
+                    addMarker();
+
+                    mapLite.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker) {
+                            openDeliveryAddressFragment();
+                            return true;
+                        }
+                    });
+					mapLite.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+						@Override
+						public void onMapClick(LatLng latLng) {
+                            openDeliveryAddressFragment();
+                        }
+					});
+                }
+            }
+        });
+
         return rootView;
+    }
+
+    public void openDeliveryAddressFragment() {
+        if (activity instanceof AddPlaceActivity
+                && activity.getSupportFragmentManager().findFragmentByTag(DeliveryAddressesFragment.class.getName()) == null) {
+            ((AddPlaceActivity) activity).getSearchResult().setLatitude(current_latitude);
+            ((AddPlaceActivity) activity).getSearchResult().setLongitude(current_longitude);
+            ((AddPlaceActivity) activity).openDeliveryAddressFragment();
+        }
+    }
+
+    public void addMarker() {
+        if(mapLite != null) {
+            mapLite.clear();
+            LatLng latLng = new LatLng(current_latitude, current_longitude);
+            mapLite.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+            mapLite.addMarker(new MarkerOptions().position(latLng));
+        }
     }
 
     private void fragmentUiSetup(){
@@ -356,6 +412,7 @@ public class AddToAddressBookFragment extends Fragment {
         }
         lastLabel = label;
         setAddressTypeUI(label);
+        addMarker();
     }
 
     public int getUpdatedPlaceRequestCode(int placeRequestCode) {

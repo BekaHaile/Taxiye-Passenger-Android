@@ -100,7 +100,7 @@ public class SearchListAdapter extends BaseAdapter{
 
     class ViewHolderSearchItem {
         TextView textViewSearchName, textViewSearchAddress, textViewAddressUsed;
-        ImageView imageViewType, imageViewSep, ivDeleteAddress;
+        ImageView imageViewType, imageViewSep, ivDeleteAddress, ivAddAddress;
         RelativeLayout relative;
         int id;
     }
@@ -215,6 +215,7 @@ public class SearchListAdapter extends BaseAdapter{
             holder.imageViewType = (ImageView)convertView.findViewById(R.id.imageViewType);
             holder.imageViewSep = (ImageView) convertView.findViewById(R.id.imageViewSep);
             holder.ivDeleteAddress = (ImageView) convertView.findViewById(R.id.ivDeleteAddress);
+            holder.ivAddAddress = (ImageView) convertView.findViewById(R.id.ivAddAddress);
 
             holder.relative.setTag(holder);
 
@@ -276,6 +277,7 @@ public class SearchListAdapter extends BaseAdapter{
 			}
 
 			holder.ivDeleteAddress.setVisibility(View.GONE);
+			holder.ivAddAddress.setVisibility(View.GONE);
             if(position == getCount()-1){
                 holder.imageViewSep.setVisibility(View.GONE);
             } else{

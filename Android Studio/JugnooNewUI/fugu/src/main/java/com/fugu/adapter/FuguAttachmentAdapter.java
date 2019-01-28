@@ -28,9 +28,9 @@ public class FuguAttachmentAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     public FuguAttachmentAdapter(Context context) {
         inflater = LayoutInflater.from(context);
         this.context = context;
-        attachmentList.add(new FuguAttachmentModel(R.drawable.ic_camera_icon,
+        attachmentList.add(new FuguAttachmentModel(R.drawable.hippo_ic_camera_icon,
                 context.getResources().getString(R.string.fugu_camera), OPEN_CAMERA_ADD_IMAGE));
-        attachmentList.add(new FuguAttachmentModel(R.drawable.ic_photo_icon,
+        attachmentList.add(new FuguAttachmentModel(R.drawable.hippo_ic_photo_icon,
                 context.getResources().getString(R.string.fugu_gallery), OPEN_GALLERY_ADD_IMAGE));
 //        attachmentList.add(new FuguAttachmentModel(R.drawable.ic_document_icon,
 //                context.getResources().getString(R.string.fugu_pdf), SELECT_FILE));

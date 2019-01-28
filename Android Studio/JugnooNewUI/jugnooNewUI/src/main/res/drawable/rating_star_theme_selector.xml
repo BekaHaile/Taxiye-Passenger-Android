@@ -7,6 +7,6 @@
         android:id="@android:id/secondaryProgress"
         android:drawable="@drawable/star_yellow_new_empty"/>
     <item
-        android:id="@+android:id/progress"
+        android:id="@android:id/progress"
         android:drawable="@drawable/star_yellow_new_full"/>
 </layer-list>

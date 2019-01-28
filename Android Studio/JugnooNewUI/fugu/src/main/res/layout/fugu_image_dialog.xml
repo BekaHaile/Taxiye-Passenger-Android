@@ -6,7 +6,7 @@
     android:background="@android:color/transparent">
 
 
-    <ImageView
+    <com.fugu.utils.zoomview.ZoomageView
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,7 +15,7 @@
         android:paddingLeft="@dimen/fugu_padding_10"
         android:paddingRight="@dimen/fugu_padding_10"
         android:paddingTop="30dp"
-        android:src="@drawable/placeholder" />
+        android:src="@drawable/hippo_placeholder" />
 
 
     <TextView
@@ -28,7 +28,7 @@
         android:paddingRight="@dimen/fugu_padding_15"
         android:paddingLeft="@dimen/fugu_padding_15"
         android:gravity="end"
-        android:text="@string/close"
+        android:text="CLOSE"
         android:background="@drawable/fugu_text_gradient"
         android:textColor="@android:color/white"
         android:textSize="@dimen/fugu_text_size_large" />

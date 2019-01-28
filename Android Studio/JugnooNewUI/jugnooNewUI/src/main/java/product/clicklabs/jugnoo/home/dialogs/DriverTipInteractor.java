@@ -81,31 +81,10 @@ public class DriverTipInteractor {
                             actionButton.setTag(TAG_ACTION_DONE);
                             actionButton.setText(activity.getString(R.string.done));
                       }else{
-
-                            PaymentModeConfigData stripePaymentData =   MyApplication.getInstance().getWalletCore().getConfigData(PaymentOption.STRIPE_CARDS.getOrdinal());
-                            if(!activity.getResources().getBoolean(R.bool.is_card_mandatory_for_driver_tip) ||
-                               (stripePaymentData!=null &&  stripePaymentData.getCardsData()!=null && stripePaymentData.getCardsData().size()>0)){
-                                try {
-                                    editTip(Double.parseDouble(edtAmount.getText().toString().trim()));
-                                } catch (NumberFormatException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                           }else{
-
-                                DialogPopup.alertPopupWithListener(activity, "", activity.getString(R.string.please_add_card_to_proceed), new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-
-                                        Intent intent = new Intent(activity, PaymentActivity.class);
-                                        intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
-                                        intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
-                                        intent.putExtra(Constants.KEY_ADD_CARD_DRIVER_TIP, true);
-                                        activity.startActivityForResult(intent, HomeActivity.REQ_CODE_ADD_CARD_DRIVER_TIP);
-                                        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-                                    }
-                                });
+                            try{
+                                addTip(Double.parseDouble(edtAmount.getText().toString().trim()));
+                            } catch (NumberFormatException e) {
+                                e.printStackTrace();
                             }
 
 
@@ -159,6 +138,28 @@ public class DriverTipInteractor {
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void addTip(double tipAmount) {
+        PaymentModeConfigData stripePaymentData =   MyApplication.getInstance().getWalletCore().getConfigData(PaymentOption.STRIPE_CARDS.getOrdinal());
+        if(!activity.getResources().getBoolean(R.bool.is_card_mandatory_for_driver_tip) ||
+           (stripePaymentData!=null &&  stripePaymentData.getCardsData()!=null && stripePaymentData.getCardsData().size()>0)){
+            editTip(tipAmount);
+       }else{
+
+            DialogPopup.alertPopupWithListener(activity, "", activity.getString(R.string.please_add_card_to_proceed), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    Intent intent = new Intent(activity, PaymentActivity.class);
+                    intent.putExtra(Constants.KEY_PAYMENT_ACTIVITY_PATH, PaymentActivityPath.ADD_WALLET.getOrdinal());
+                    intent.putExtra(Constants.KEY_WALLET_TYPE, PaymentOption.STRIPE_CARDS.getOrdinal());
+                    intent.putExtra(Constants.KEY_ADD_CARD_DRIVER_TIP, true);
+                    activity.startActivityForResult(intent, HomeActivity.REQ_CODE_ADD_CARD_DRIVER_TIP);
+                    activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+            });
         }
     }
 

@@ -14,8 +14,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-
-import product.clicklabs.jugnoo.R;
+import com.bumptech.glide.request.RequestOptions;
 import com.picker.image.model.AlbumEntry;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Events;
@@ -23,6 +22,7 @@ import com.picker.image.util.Picker;
 import com.picker.image.util.Util;
 
 import de.greenrobot.event.EventBus;
+import product.clicklabs.jugnoo.R;
 
 
 public class ImagesThumbnailAdapter extends RecyclerView.Adapter<ImagesThumbnailAdapter.ImageViewHolder> implements Util.OnClickImage {
@@ -103,10 +103,12 @@ public class ImagesThumbnailAdapter extends RecyclerView.Adapter<ImagesThumbnail
     public void displayThumbnail(final ImageViewHolder holder, final ImageEntry photo) {
 
 
+        RequestOptions options = new RequestOptions()
+                .centerCrop();
         Glide.with(mFragment)
-                .load(photo.path)
                 .asBitmap()
-                .centerCrop()
+                .apply(options)
+                .load(photo.path)
                 .into(holder.thumbnail)
         ;
 

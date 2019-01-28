@@ -3,6 +3,7 @@ package com.fugu;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -28,8 +29,16 @@ public class CaptureUserData implements Parcelable {
     private String country = "";
     private String zipCode = "";
     private HashMap<String, String> custom_attributes = new HashMap<>();
+    private ArrayList<GroupingTag> tags = new ArrayList<>();
     private String channelInfoJson;
 
+    public ArrayList<GroupingTag> getTags() {
+        return tags;
+    }
+
+    public void setTags(ArrayList<GroupingTag> tags) {
+        this.tags = tags;
+    }
     public String getChannelInfoJson() {
         return channelInfoJson;
     }
@@ -182,6 +191,11 @@ public class CaptureUserData implements Parcelable {
             return this;
         }
 
+        public Builder userTags(ArrayList<GroupingTag> userTags) {
+            captureUserData.tags = userTags;
+            return this;
+        }
+
         public Builder channelInfoJson(String channelInfoJson) {
             captureUserData.channelInfoJson = channelInfoJson;
             return this;
@@ -208,7 +222,7 @@ public class CaptureUserData implements Parcelable {
             this.captureUserData = in.readParcelable(CaptureUserData.class.getClassLoader());
         }
 
-        public final Creator<Builder> CREATOR = new Creator<Builder>() {
+        public final Parcelable.Creator<Builder> CREATOR = new Parcelable.Creator<Builder>() {
             @Override
             public Builder createFromParcel(Parcel source) {
                 return new Builder(source);
@@ -246,6 +260,7 @@ public class CaptureUserData implements Parcelable {
         dest.writeString(this.country);
         dest.writeString(this.zipCode);
         dest.writeSerializable(this.custom_attributes);
+        dest.writeTypedList(this.tags);
         dest.writeString(channelInfoJson);
     }
 
@@ -265,8 +280,13 @@ public class CaptureUserData implements Parcelable {
         this.country = in.readString();
         this.zipCode = in.readString();
         this.custom_attributes = (HashMap<String, String>) in.readSerializable();
+        this.tags = in.createTypedArrayList(GroupingTag.CREATOR);
+        //this.tags = in.readParcelable(GroupingTag.class.getClassLoader());
         this.channelInfoJson = in.readString();
     }
+
+    /*this.tags = new ArrayList<GroupingTag>();
+        in.readList(this.tags, GroupingTag.class.getClassLoader());*/
 
     public static final Creator<CaptureUserData> CREATOR = new Creator<CaptureUserData>() {
         @Override
