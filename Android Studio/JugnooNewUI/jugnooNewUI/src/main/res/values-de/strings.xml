@@ -164,7 +164,7 @@
 
     <!-- Priority Tip -->
     <string name="priority_tip">Priorität Tipp</string>
-    <string name="priority_tip_message">Die Preise wären höher, \n um Ihre Fahranforderung zu priorisieren</string>
+    <string name="priority_tip_message">Die Preise für diese\nFahranforderung wären höher</string>
     <string name="the_normal_fare">Der normale \nTarif</string>
     <string name="type">Art </string>
     <string name="type_bottom">um Ihren Ratenmultiplikator zu bestätigen</string>

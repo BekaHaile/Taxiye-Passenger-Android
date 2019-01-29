@@ -81,7 +81,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         }
 
 
-        if(region.getCustomerFareFactor() > 1.0){
+        if(activity.showSurgeIcon() && region.getCustomerFareFactor() > 1.0){
             holder.imageViewMultipleSurge.setVisibility(View.VISIBLE);
         } else{
             holder.imageViewMultipleSurge.setVisibility(View.GONE);

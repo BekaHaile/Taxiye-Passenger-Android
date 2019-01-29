@@ -583,7 +583,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     textViewEndRideFareFactorValue.setVisibility(View.GONE);
                 }
 
-                textViewEndRideFareFactorValue.setText(String.format(getResources().getString(R.string.priority_tip_format), decimalFormat.format(endRideData.fareFactor)));
+                textViewEndRideFareFactorValue.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
+                        activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
                 textViewEndRideBaseFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.baseFare));
                 if(Prefs.with(activity).getInt(KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY, 1) != 1){
 					linearLayoutRideDetail.setVisibility(View.VISIBLE);

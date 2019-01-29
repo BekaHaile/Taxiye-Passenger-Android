@@ -240,7 +240,7 @@
 
     <string name="priority_tip">Conseil Prioritaire</string>
 
-    <string name="priority_tip_message">Les prix seraient plus élevés pour donner la priorité à votre demande de trajet</string>
+    <string name="priority_tip_message">Les prix seraient plus élevés\npour cette demande de trajet</string>
 
     <string name="the_normal_fare">Le tarif normal</string>
 

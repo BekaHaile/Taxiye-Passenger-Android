@@ -164,7 +164,7 @@
 
     <!-- Priority Tip -->
     <string name="priority_tip">TIP DE PRIORIDAD</string>
-    <string name="priority_tip_message">Los precios serían más altos para \ndar prioridad a su solicitud paseo</string>
+    <string name="priority_tip_message">Los precios serían más altos\npara esta solicitud de viaje.</string>
     <string name="the_normal_fare">La tarifa \nnormal</string>
     <string name="type">Tipo </string>
     <string name="type_bottom">para confirmar su multiplicador de tarifas</string>
