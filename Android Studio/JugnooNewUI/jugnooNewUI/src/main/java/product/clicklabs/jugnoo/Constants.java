@@ -95,6 +95,7 @@ public interface Constants {
     String KEY_SEARCH_FIELD_TEXT = "search_field_text";
     String KEY_SEARCH_FIELD_HINT = "search_field_hint";
     String KEY_SEARCH_MODE = "search_mode";
+    String KEY_SEARCH_MODE_CLICKED = "search_mode_clicked";
 
     String KEY_OTP_VIA_CALL_ENABLED = "otp_via_call_enabled";
 
@@ -1000,4 +1001,7 @@ public interface Constants {
 
     String HIPPO_SUPPORT_FAQ_NAME = "customer_hippo_support_faq_name";
     String KEY_CUSTOMER_TIP_VALUES = "customer_tip_values";
+    String KEY_CUSTOMER_SHOW_SURGE_ICON = "customer_show_surge_icon";
+    String KEY_CUSTOMER_PRIORITY_TIP_TITLE = "customer_priority_tip_title";
+    String KEY_CUSTOMER_PRIORITY_TIP_DESCRIPTION = "customer_priority_tip_description";
 }

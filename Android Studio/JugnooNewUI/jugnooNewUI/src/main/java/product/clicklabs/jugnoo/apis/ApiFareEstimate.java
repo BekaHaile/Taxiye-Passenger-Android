@@ -76,13 +76,12 @@ public class ApiFareEstimate {
 
                                             distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
                                             timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
-                                            callback.onSuccess(list, startAddress, endAddress, distanceText, timeText, distanceValue, timeValue);
+                                            callback.onSuccess(list, startAddress, endAddress, distanceText, timeText,
+                                                    distanceValue, timeValue, promoCoupon);
                                             if(callFareEstimate) {
                                                 getFareEstimate((Activity) context, sourceLatLng, destLatLng,
                                                         distanceValue / 1000d, timeValue / 60d, isPooled, region, promoCoupon,
                                                         list);
-                                            } else{
-                                                DialogPopup.dismissLoadingDialog();
                                             }
                                         } else {
                                             DialogPopup.dismissLoadingDialog();
@@ -130,7 +129,8 @@ public class ApiFareEstimate {
     }
 
     public interface Callback{
-        void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText, double distanceValue, double timeValue);
+        void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText,
+                       double distanceValue, double timeValue, PromoCoupon promoCoupon);
         void onRetry();
         void onNoRetry();
         void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge, double tollCharge);
@@ -155,14 +155,14 @@ public class ApiFareEstimate {
                 params.put("start_longitude", "" + sourceLatLng.longitude);
                 params.put("drop_latitude", ""+desLatLng.latitude);
                 params.put("drop_longitude", ""+desLatLng.longitude);
-                params.put("ride_distance", "" + distanceValue);
-                params.put("ride_time", "" + timeValue);
+                params.put(Constants.KEY_RIDE_DISTANCE, "" + distanceValue);
+                params.put(Constants.KEY_RIDE_TIME, "" + timeValue);
                 params.put(Constants.KEY_IS_POOLED, "" + isPooled);
                 params.put(Constants.KEY_VEHICLE_TYPE, String.valueOf(region.getVehicleType()));
                 params.put(Constants.KEY_RIDE_TYPE, String.valueOf(region.getRideType()));
                 params.put(Constants.KEY_REGION_ID, String.valueOf(region.getRegionId()));
                 if(promoCoupon!=null && promoCoupon.getId()!=-1){
-                    params.put(promoCoupon instanceof CouponInfo?"coupon_id":"promo_id", String.valueOf(promoCoupon.getId()));
+                    params.put(promoCoupon instanceof CouponInfo?Constants.KEY_COUPON_ID:Constants.KEY_PROMO_ID, String.valueOf(promoCoupon.getId()));
                 }
 
                 if(latLngs != null && latLngs.size() > 0){
@@ -196,10 +196,10 @@ public class ApiFareEstimate {
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     String currency = jObj.optString(Constants.KEY_CURRENCY);
                                     double tollCharge = jObj.optDouble(Constants.KEY_TOLL_CHARGE, 0);
-                                    if(jObj.has("pool_fare_id")){
-                                        callback.onPoolSuccess(currency, jObj.optDouble("fare", 0), jObj.optDouble("ride_distance", 0),
-                                                jObj.optString("ride_distance_unit"), jObj.optDouble("ride_time", 0),
-                                                jObj.optString("ride_time_unit"), jObj.optInt("pool_fare_id", 0),
+                                    if(jObj.has(Constants.KEY_POOL_FARE_ID)){
+                                        callback.onPoolSuccess(currency, jObj.optDouble("fare", 0), jObj.optDouble(Constants.KEY_RIDE_DISTANCE, 0),
+                                                jObj.optString("ride_distance_unit"), jObj.optDouble(Constants.KEY_RIDE_TIME, 0),
+                                                jObj.optString("ride_time_unit"), jObj.optInt(Constants.KEY_POOL_FARE_ID, 0),
                                                 jObj.optDouble(Constants.KEY_CONVENIENCE_CHARGE, 0), jObj.optString("text", ""), tollCharge);
                                     } else{
                                         String minFare = jObj.getString("min_fare");

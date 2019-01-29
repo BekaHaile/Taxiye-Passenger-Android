@@ -136,6 +136,9 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     @SerializedName("menu")
     @Expose
     private List<MenuInfo> menuInfoList;
+    @SerializedName("show_region_specific_fare")
+    @Expose
+    private int showRegionSpecificFare;
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -513,5 +516,9 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
 
     public void setDistanceUnit(String distanceUnit) {
         this.distanceUnit = distanceUnit;
+    }
+
+    public int getShowRegionSpecificFare() {
+        return showRegionSpecificFare;
     }
 }

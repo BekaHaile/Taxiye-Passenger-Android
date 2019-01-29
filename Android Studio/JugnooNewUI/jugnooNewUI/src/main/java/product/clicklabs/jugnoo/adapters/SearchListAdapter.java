@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -55,13 +57,20 @@ import product.clicklabs.jugnoo.utils.Utils;
  */
 public class SearchListAdapter extends BaseAdapter{
 
-    public TextWatcher getTextWatcherEditText() {
-        return textWatcherEditText;
+
+    private SparseArray<TextWatcherEditText> textWatcherMap = new SparseArray<>();
+
+    public TextWatcher getTextWatcherEditText(int editTextId){
+        return textWatcherMap.get(editTextId);
     }
+     class TextWatcherEditText implements  TextWatcher {
+        private CustomRunnable input_finish_checker;
 
-    private final TextWatcher textWatcherEditText = new TextWatcher() {
+         public TextWatcherEditText(CustomRunnable input_finish_checker) {
+             this.input_finish_checker = input_finish_checker;
+         }
 
-        @Override
+         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
 			//You need to remove this to run only once
 			handler.removeCallbacks(input_finish_checker);
@@ -100,7 +109,6 @@ public class SearchListAdapter extends BaseAdapter{
 	long last_text_edit = 0;
 	Handler handler = new Handler();
 
-	private CustomRunnable input_finish_checker = new CustomRunnable("");
 
     Context context;
     LayoutInflater mInflater;
@@ -126,30 +134,37 @@ public class SearchListAdapter extends BaseAdapter{
      * @param searchListActionsHandler handler for custom actions
      * @throws IllegalStateException
      */
-    public SearchListAdapter(final Context context, EditText editTextForSearch, LatLng searchPivotLatLng,
+    public SearchListAdapter(final Context context,LatLng searchPivotLatLng,
 							 GeoDataClient geoDataClient, int searchMode, SearchListActionsHandler searchListActionsHandler,
-                             boolean showSavedPlaces)
+                             boolean showSavedPlaces,EditText... editTextForSearch)
             throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
             this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.searchResultsForSearch = new ArrayList<>();
             this.searchResults = new ArrayList<>();
-            this.editTextForSearch = editTextForSearch;
+
+            this.editTextForSearch = editTextForSearch[0];
             this.defaultSearchPivotLatLng = searchPivotLatLng;
             this.searchListActionsHandler = searchListActionsHandler;
 			this.geoDataClient = geoDataClient;
             this.searchMode = searchMode;
-            this.editTextForSearch.addTextChangedListener(textWatcherEditText);
 
-            this.editTextForSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            for(final EditText editText: editTextForSearch){
+                TextWatcherEditText textWatcherEditText  = new TextWatcherEditText(new CustomRunnable("",editText));
+                textWatcherMap.put(editText.getId(),textWatcherEditText);
+                editText.addTextChangedListener(textWatcherEditText);
+                editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
-                @Override
-                public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                    Utils.hideSoftKeyboard((Activity) context, SearchListAdapter.this.editTextForSearch);
-                    return true;
-                }
-            });
+                    @Override
+                    public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+                        Utils.hideSoftKeyboard((Activity) context, editText);
+                        return true;
+                    }
+                });
+            }
+
+
 
             this.showSavedPlaces = showSavedPlaces;
         }
@@ -290,7 +305,7 @@ public class SearchListAdapter extends BaseAdapter{
                                     } else{
                                         searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
                                         searchListActionsHandler.onPlaceSearchPre();
-                                        searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult);
+                                        searchListActionsHandler.onPlaceSearchPost(autoCompleteSearchResult, null);
                                     }
                                 }
                             }, 200);
@@ -331,7 +346,7 @@ public class SearchListAdapter extends BaseAdapter{
 
     private boolean refreshingAutoComplete = false;
 
-    private void getSearchResults(final String searchText, final LatLng latLng) {
+    private void getSearchResults(final String searchText, final LatLng latLng,final EditText editText) {
         try {
         	Log.e(SearchListAdapter.class.getSimpleName(), "getSearchResults running for: "+searchText);
 			if (!refreshingAutoComplete) {
@@ -357,13 +372,13 @@ public class SearchListAdapter extends BaseAdapter{
 							}
 							task.getResult().release();
 
-							addFavoriteLocations(searchText);
+							addFavoriteLocations(searchText,editText);
 
-							setSearchResultsToList();
+							setSearchResultsToList(editText);
 							refreshingAutoComplete = false;
 
-							if (!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)) {
-								recallSearch(editTextForSearch.getText().toString().trim());
+							if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
+								recallSearch(editText.getText().toString().trim(),editText);
 							}
 							GoogleRestApis.INSTANCE.logGoogleRestAPIC("0", "0", GoogleRestApis.API_NAME_AUTOCOMPLETE);
 						} catch (Exception e) {
@@ -375,8 +390,8 @@ public class SearchListAdapter extends BaseAdapter{
 					public void onFailure(@NonNull Exception e) {
 						refreshingAutoComplete = false;
 
-						if (!editTextForSearch.getText().toString().trim().equalsIgnoreCase(searchText)) {
-							recallSearch(editTextForSearch.getText().toString().trim());
+						if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
+							recallSearch(editText.getText().toString().trim(),editText);
 						}
 					}
 				});
@@ -386,16 +401,16 @@ public class SearchListAdapter extends BaseAdapter{
         }
     }
 
-	private void recallSearch(final String searchText){
+	private void recallSearch(final String searchText,final EditText editText){
 		((Activity)context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				getSearchResults(searchText, SearchListAdapter.this.getPivotLatLng());
+				getSearchResults(searchText, SearchListAdapter.this.getPivotLatLng(),editText);
 			}
 		});
 	}
 
-	private void setSearchResultsToList() {
+	private void setSearchResultsToList(final EditText editTextForSearch) {
 		((Activity) context).runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
@@ -415,7 +430,7 @@ public class SearchListAdapter extends BaseAdapter{
     }
 
 
-	private void addFavoriteLocations(String searchText){
+	private void addFavoriteLocations(String searchText,EditText editTextForSearch){
 		try {
             if(showSavedPlaces && editTextForSearch.getText().length() > 0) {
 				favLocationsCount = 0;
@@ -524,7 +539,7 @@ public class SearchListAdapter extends BaseAdapter{
             @Override
             public void run() {
                 if(searchResult != null) {
-                    searchListActionsHandler.onPlaceSearchPost(searchResult);
+                    searchListActionsHandler.onPlaceSearchPost(searchResult, null);
                 }
                 else{
                     DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.connection_lost_desc));
@@ -542,7 +557,7 @@ public class SearchListAdapter extends BaseAdapter{
 		void onSearchPost();
 		void onPlaceClick(SearchResult autoCompleteSearchResult);
 		void onPlaceSearchPre();
-		void onPlaceSearchPost(SearchResult searchResult);
+		void onPlaceSearchPost(SearchResult searchResult, PlaceSearchListFragment.PlaceSearchMode placeSearchMode);
 		void onPlaceSearchError();
         void onPlaceSaved();
 		void onNotifyDataSetChanged(int count);
@@ -550,8 +565,10 @@ public class SearchListAdapter extends BaseAdapter{
 
 	private class CustomRunnable implements Runnable {
 		private String textToSearch;
-		public CustomRunnable(String textToSearch){
+		private EditText editText;
+		public CustomRunnable(String textToSearch,EditText editText){
 			this.textToSearch = textToSearch;
+			this.editText = editText;
 		}
     	public CustomRunnable setTextToSearch(String textToSearch){
 			this.textToSearch = textToSearch;
@@ -561,7 +578,7 @@ public class SearchListAdapter extends BaseAdapter{
 		@Override
 		public void run() {
 			if (System.currentTimeMillis() > (last_text_edit + delay - 200)) {
-				getSearchResults(textToSearch, SearchListAdapter.this.getPivotLatLng());
+				getSearchResults(textToSearch, SearchListAdapter.this.getPivotLatLng(),editText);
 			}
 		}
 	}

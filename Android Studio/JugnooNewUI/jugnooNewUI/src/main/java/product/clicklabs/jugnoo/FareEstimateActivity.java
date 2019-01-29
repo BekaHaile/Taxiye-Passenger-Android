@@ -274,7 +274,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
                 @Override
                 public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
-                                      String timeText, double distanceValue, double timeValue) {
+                                      String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
                     try {
 
                         Fragment frag = getSupportFragmentManager()
@@ -486,7 +486,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     }
 
     @Override
-    public void onPlaceSearchPost(SearchResult searchResult) {
+    public void onPlaceSearchPost(SearchResult searchResult, PlaceSearchListFragment.PlaceSearchMode placeSearchMode) {
         try {
             if (Data.autoData != null) {
                 Data.autoData.setDropLatLng(searchResult.getLatLng());

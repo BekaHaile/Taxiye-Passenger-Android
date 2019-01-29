@@ -24,6 +24,7 @@ import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -46,6 +47,7 @@ public class ApiFindADriver {
 	private Region regionSelected;
 	private LatLng refreshLatLng;
 	private long refreshTime;
+	private HashMap<String, String> params;
 
 	public ApiFindADriver(HomeActivity activity, Region regionSelected, Callback callback){
 		this.activity = activity;
@@ -55,14 +57,16 @@ public class ApiFindADriver {
 
 	public void hit(String accessToken, final LatLng latLng, final int showAllDrivers, int showDriverInfo,
 					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened,
-					final boolean savedAddressUsed){
+					final boolean savedAddressUsed, HashMap<String, String> params){
 		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
 				callback.onPre();
 			}
-
-			HashMap<String, String> params = new HashMap<>();
+			this.params = params;
+			if(params == null) {
+				params = new HashMap<>();
+			}
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
@@ -131,6 +135,7 @@ public class ApiFindADriver {
 						callback.updateWalletConfig();
 						callback.onFinish();
 					}
+					DialogPopup.dismissLoadingDialog();
 				}
 
 				@Override
@@ -140,10 +145,12 @@ public class ApiFindADriver {
 						callback.onFailure();
 						callback.onFinish();
 					}
+					DialogPopup.dismissLoadingDialog();
 				}
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
+			DialogPopup.dismissLoadingDialog();
 		}
 	}
 
@@ -182,6 +189,7 @@ public class ApiFindADriver {
 			} else {
 				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
+			Data.autoData.setShowRegionSpecificFare(findADriverResponse.getShowRegionSpecificFare());
 
 			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
 
@@ -478,6 +486,10 @@ public class ApiFindADriver {
 
 	public void setRefreshLatLng(LatLng refreshLatLng){
 		this.refreshLatLng = refreshLatLng;
+	}
+
+	public HashMap<String, String> getParams() {
+		return params;
 	}
 
 

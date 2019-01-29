@@ -357,7 +357,8 @@ public class JSONParser implements Constants {
 					, cancellationChargesPopupTextLine2, inRideSendInviteTextBold, inRideSendInviteTextNormal, confirmScreenFareEstimateEnable,
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
-                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2, isRazorpayEnabled,isTipEnabled);
+                    , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2,
+                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare());
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -478,6 +479,12 @@ public class JSONParser implements Constants {
                 context.getString(R.string.customer_hippo_support_faq_name)));
         Prefs.with(context).save(KEY_CUSTOMER_TIP_VALUES, autoData.optString(KEY_CUSTOMER_TIP_VALUES,
                 context.getString(R.string.customer_tip_values)));
+        Prefs.with(context).save(KEY_CUSTOMER_SHOW_SURGE_ICON, autoData.optInt(KEY_CUSTOMER_SHOW_SURGE_ICON,
+                context.getResources().getInteger(R.integer.customer_show_surge_icon)));
+        Prefs.with(context).save(KEY_CUSTOMER_PRIORITY_TIP_TITLE, autoData.optString(KEY_CUSTOMER_PRIORITY_TIP_TITLE,
+                context.getString(R.string.customer_priority_tip_title)));
+        Prefs.with(context).save(KEY_CUSTOMER_PRIORITY_TIP_DESCRIPTION, autoData.optString(KEY_CUSTOMER_PRIORITY_TIP_DESCRIPTION,
+                context.getString(R.string.customer_priority_tip_description)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

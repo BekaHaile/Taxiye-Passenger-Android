@@ -74,6 +74,13 @@ public class Region {
 	@Expose
 	private int reverseBid;
 
+	@SerializedName("region_fare")
+	@Expose
+	private RegionFare regionFare;
+	@SerializedName("fare_mandatory")
+	@Expose
+	private int fareMandatory;
+
 	private boolean isDefault = false;
 
 	public Region(){
@@ -124,6 +131,10 @@ public class Region {
 		this.reverseBid = reverseBid;
 	}
 
+	public RegionFare getRegionFare() {
+		return regionFare;
+	}
+
 	public class OfferTexts {
 
 		@SerializedName("text1")
@@ -172,6 +183,58 @@ public class Region {
 			this.text2 = text2;
 		}
 
+	}
+
+	public class RegionFare{
+		@SerializedName("fare")
+		@Expose
+		private double fare;
+		@SerializedName("fare_without_discount")
+		@Expose
+		private double fareWithoutDiscount;
+		@SerializedName("currency")
+		@Expose
+		private String currency;
+		@SerializedName("striked_fare_text")
+		@Expose
+		private String strikedFareText;
+		@SerializedName("fare_text")
+		@Expose
+		private String fareText;
+
+		public double getFare() {
+			return fare;
+		}
+
+
+		public String getDiscountText(int fareMandatory){
+//			if(fareMandatory == 1 && fareWithoutDiscount > 0 && fareWithoutDiscount != fare){
+//				double percent = (fareWithoutDiscount - fare)*100.0/fare;
+//				return ((int)percent)+"%\noff";
+//			}
+			return "";
+		}
+
+		public CharSequence getFareText(int fareMandatory){
+//			if(fareMandatory == 1){
+//				return Utils.formatCurrencyValue(currency, fare);
+//			} else {
+				return fareText;
+//			}
+		}
+		public CharSequence getStrikedFareText(int fareMandatory){
+//			if(fareMandatory == 1){
+//				return Utils.formatCurrencyValue(currency, fareWithoutDiscount);
+//			} else {
+				return strikedFareText;
+//			}
+		}
+
+	}
+
+
+	public int getFareMandatory() {
+		return fareMandatory;
 	}
 
 	public class Images {
@@ -422,4 +485,5 @@ public class Region {
 	public void setDeepindex(Integer deepindex) {
 		this.deepindex = deepindex;
 	}
+
 }

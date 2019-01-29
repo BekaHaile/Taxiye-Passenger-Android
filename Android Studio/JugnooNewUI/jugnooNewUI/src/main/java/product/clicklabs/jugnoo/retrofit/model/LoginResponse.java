@@ -843,6 +843,9 @@ public class LoginResponse {
 		@SerializedName("distance_unit")
 		@Expose
 		private String distanceUnit;
+		@SerializedName("show_region_specific_fare")
+		@Expose
+		private int showRegionSpecificFare;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -1021,6 +1024,10 @@ public class LoginResponse {
 
 		public void setDistanceUnit(String distanceUnit) {
 			this.distanceUnit = distanceUnit;
+		}
+
+		public int getShowRegionSpecificFare() {
+			return showRegionSpecificFare;
 		}
 	}
 

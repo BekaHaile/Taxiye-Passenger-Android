@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PriorityTipCategory;
@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -110,6 +111,10 @@ public class PriorityTipDialog {
 
             textMessage.setMovementMethod(LinkMovementMethod.getInstance());
             textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+            textHead.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE, activity.getString(R.string.customer_priority_tip_title)));
+            textMessage.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_DESCRIPTION, activity.getString(R.string.customer_priority_tip_description)));
+            textHighPriority.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_DESCRIPTION, activity.getString(R.string.customer_priority_tip_description)));
 
             final Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.mavenRegular(activity));

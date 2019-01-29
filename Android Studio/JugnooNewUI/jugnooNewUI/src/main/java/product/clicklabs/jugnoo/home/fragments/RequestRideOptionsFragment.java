@@ -166,7 +166,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         recyclerViewVehicles.setHasFixedSize(false);
 
         try {
-            vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.autoData.getRegions());
+            vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.autoData.getRegions(),false);
             recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -444,7 +444,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public void updateFareFactorUI(){
         double fareFactor = getRegionSelected().getCustomerFareFactor();
-        if (fareFactor > 1 || fareFactor < 1) {
+        if (activity.showSurgeIcon() && fareFactor > 1 || fareFactor < 1) {
             relativeLayoutPriorityTipMS.setVisibility(View.VISIBLE);
             textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x_without_space),
                     Utils.getMoneyDecimalFormat().format(fareFactor)));
@@ -488,7 +488,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         }
         if(MyApplication.getInstance().getWalletCore().displayAlertAndCheckForSelectedWalletCoupon(activity,
                 Data.autoData.getPickupPaymentOption(), promoCoupon)){
+            boolean callFindADriverAtCouponChange = selectedCoupon == null || selectedCoupon.getId() != promoCoupon.getId();
             selectedCoupon = promoCoupon;
+            if(callFindADriverAtCouponChange) {
+                activity.callFindADriverAfterCouponSelect();
+            }
             return true;
         } else {
             return false;
@@ -602,7 +606,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public void setSurgeImageVisibility(){
         try {
-            if(activity.getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
+            if(activity.showSurgeIcon() && activity.getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED
                     && Data.autoData.getFareFactor() > 1.0
                     && Data.autoData.getRegions().size() == 1){
                 if(activity.getFabViewTest() != null && !activity.getFabViewTest().getIsOpened()) {
