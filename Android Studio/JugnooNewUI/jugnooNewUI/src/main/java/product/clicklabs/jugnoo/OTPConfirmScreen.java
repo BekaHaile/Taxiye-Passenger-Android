@@ -604,6 +604,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 			Data.loginLongitude = getLocationFetcher().getLongitude();
 
             params.put("phone_no", phoneNumber);
+            params.put(KEY_COUNTRY_CODE, countryCode);
             params.put("device_token", MyApplication.getInstance().getDeviceToken());
             params.put("device_name", MyApplication.getInstance().deviceName());
             params.put("os_version", MyApplication.getInstance().osVersion());
@@ -694,6 +695,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                 params.put("fb_mail", facebookRegisterData.fbUserEmail);
                 params.put("username", facebookRegisterData.fbUserName);
                 params.put("phone_no", facebookRegisterData.phoneNo);
+                params.put(KEY_COUNTRY_CODE, countryCode);
 
                 params.put("device_token", MyApplication.getInstance().getDeviceToken());
                 params.put("device_name", MyApplication.getInstance().deviceName());
@@ -797,6 +799,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                 params.put("email", googleRegisterData.email);
                 params.put("google_access_token", googleRegisterData.googleAccessToken);
                 params.put("phone_no", googleRegisterData.phoneNo);
+                params.put(KEY_COUNTRY_CODE, countryCode);
 
                 params.put("device_token", MyApplication.getInstance().getDeviceToken());
                 params.put("device_name", MyApplication.getInstance().deviceName());
