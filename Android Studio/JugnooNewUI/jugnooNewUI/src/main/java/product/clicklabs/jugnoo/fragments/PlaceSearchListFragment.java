@@ -976,7 +976,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			}
 
 		}
-		editTextSearch.clearFocus();
 
 	}
 	public void openSetLocationOnMapMode(){
