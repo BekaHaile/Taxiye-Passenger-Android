@@ -850,6 +850,7 @@ public interface Constants {
     String KEY_RAZOR_PAY_DEDUCTED = "razor_pay_deducted";
     String KEY_PAID_USING_RAZORPAY = "paid_using_razorpay";
     String KEY_PAID_USING_STRIPE = "paid_using_stripe";
+    String KEY_PAID_USING_CORPORATE = "paid_using_corporate";
     String KEY_NET_CUSTOMER_TAX = "net_customer_tax";
     String KEY_LAST_4 = "last_4";
     String KEY_TAX_PERCENTAGE = "customer_tax_percentage";

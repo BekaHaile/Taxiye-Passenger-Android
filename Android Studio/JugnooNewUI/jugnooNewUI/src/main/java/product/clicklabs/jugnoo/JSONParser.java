@@ -983,6 +983,7 @@ public class JSONParser implements Constants {
         double paidUsingFreeCharge = jLastRideData.optDouble(KEY_PAID_USING_FREECHARGE, 0);
         double paidUsingRazorpay = jLastRideData.optDouble(KEY_PAID_USING_RAZORPAY, 0);
         double paidUsingStripeCard = jLastRideData.optDouble(KEY_PAID_USING_STRIPE, 0);
+        double paidUsingCorporate = jLastRideData.optDouble(KEY_PAID_USING_CORPORATE, 0);
         String last_4 = jLastRideData.optString(KEY_LAST_4, null);
         double netCustomerTax = jLastRideData.optDouble(KEY_NET_CUSTOMER_TAX, 0);
         double taxPercentage = jLastRideData.optDouble(KEY_TAX_PERCENTAGE, 0);
@@ -1021,7 +1022,7 @@ public class JSONParser implements Constants {
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
-                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid);
+                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, paidUsingCorporate);
 	}
 
 
