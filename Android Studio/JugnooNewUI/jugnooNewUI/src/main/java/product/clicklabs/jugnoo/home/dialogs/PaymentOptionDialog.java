@@ -380,7 +380,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
                             if(corporatesAdapter==null && paymentModeConfigData.getCorporates()!=null){
                                 corporatesAdapter = new CorporatesAdapter(paymentModeConfigData.getCorporates(),
-                                        rvCorporates, new CorporatesAdapter.OnSelectedCallback() {
+                                        rvCorporates, Fonts.mavenLight(activity), new CorporatesAdapter.OnSelectedCallback() {
                                     @Override
                                     public void onItemSelected(@NotNull Corporate corporate) {
                                         if(Data.autoData.getPickupPaymentOption()!=PaymentOption.CORPORATE.getOrdinal()){

@@ -983,7 +983,6 @@ public class JSONParser implements Constants {
         double paidUsingFreeCharge = jLastRideData.optDouble(KEY_PAID_USING_FREECHARGE, 0);
         double paidUsingRazorpay = jLastRideData.optDouble(KEY_PAID_USING_RAZORPAY, 0);
         double paidUsingStripeCard = jLastRideData.optDouble(KEY_PAID_USING_STRIPE, 0);
-        double paidUsingCorporate = jLastRideData.optDouble(KEY_PAID_USING_CORPORATE, 0);
         String last_4 = jLastRideData.optString(KEY_LAST_4, null);
         double netCustomerTax = jLastRideData.optDouble(KEY_NET_CUSTOMER_TAX, 0);
         double taxPercentage = jLastRideData.optDouble(KEY_TAX_PERCENTAGE, 0);
@@ -1003,6 +1002,8 @@ public class JSONParser implements Constants {
         double driverTipAmount = jLastRideData.optDouble(Constants.KEY_TIP_AMOUNT, 0.0);
         double luggageChargesNew = jLastRideData.optDouble(Constants.KEY_LUGGAGE_CHARGES, 0.0);
         int reverseBid = jLastRideData.optInt(Constants.KEY_REVERSE_BID, 0);
+        int isCorporateRide = jLastRideData.optInt(Constants.KEY_IS_CORPORATE_RIDE, 0);
+        String partnerName = jLastRideData.optString(Constants.KEY_PARTNER_NAME, "");
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -1022,7 +1023,7 @@ public class JSONParser implements Constants {
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
-                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, paidUsingCorporate);
+                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide, partnerName);
 	}
 
 
@@ -1119,6 +1120,7 @@ public class JSONParser implements Constants {
             ArrayList<BidInfo> bidInfos = new ArrayList<>();
             String vehicleIconUrl = null;
             Double tipAmount  = null;
+            int isCorporateRide = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1186,6 +1188,7 @@ public class JSONParser implements Constants {
                             currency = jObject.optString(KEY_CURRENCY);
                             vehicleIconUrl = jObject.optString(Constants.KEY_MARKER_ICON);
                             tipAmount= jObject.optDouble(Constants.KEY_TIP_AMOUNT);
+                            isCorporateRide= jObject.optInt(Constants.KEY_IS_CORPORATE_RIDE, 0);
                             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
                             try {
@@ -1310,7 +1313,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount, isCorporateRide));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

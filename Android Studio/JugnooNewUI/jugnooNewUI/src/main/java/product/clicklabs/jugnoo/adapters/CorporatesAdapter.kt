@@ -1,17 +1,17 @@
 package product.clicklabs.jugnoo.adapters
 
+import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sabkuchfresh.adapters.ItemListener
 import kotlinx.android.synthetic.main.list_item_corporate.view.*
-import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.retrofit.model.Corporate
 
 class CorporatesAdapter(private var corporates: ArrayList<Corporate>, val recyclerView:RecyclerView
-                        ,private  val onSelectedCallback: OnSelectedCallback) :
+                        , private val typeface: Typeface?, private  val onSelectedCallback: OnSelectedCallback) :
         RecyclerView.Adapter<CorporatesAdapter.ViewHolderCorporate>(),ItemListener {
 
 
@@ -66,6 +66,9 @@ class CorporatesAdapter(private var corporates: ArrayList<Corporate>, val recycl
 
     inner class ViewHolderCorporate(view : View, listener:ItemListener) : RecyclerView.ViewHolder(view){
         init{
+            if(typeface != null) {
+                itemView.tvCorporateName.typeface = typeface
+            }
             itemView.linear.setOnClickListener{it->
                 listener.onClickItem(it, itemView)
             }

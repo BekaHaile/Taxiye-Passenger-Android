@@ -1008,4 +1008,6 @@ public interface Constants {
     String KEY_CUSTOMER_SHOW_SURGE_ICON = "customer_show_surge_icon";
     String KEY_CUSTOMER_PRIORITY_TIP_TITLE = "customer_priority_tip_title";
     String KEY_CUSTOMER_PRIORITY_TIP_DESCRIPTION = "customer_priority_tip_description";
+    String KEY_IS_CORPORATE_RIDE = "is_corporate_ride";
+    String KEY_PARTNER_NAME = "partner_name";
 }

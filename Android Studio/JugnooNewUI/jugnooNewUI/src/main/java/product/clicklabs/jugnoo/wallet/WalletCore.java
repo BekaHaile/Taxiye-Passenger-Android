@@ -396,6 +396,8 @@ public class WalletCore {
             return R.drawable.ic_cards_grey;
         } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
             return R.drawable.ic_mpesa_small;
+        } else if (paymentOption == PaymentOption.CORPORATE.getOrdinal()) {
+            return R.drawable.ic_corporate;
         } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption == PaymentOption.ACCEPT_CARD.getOrdinal()
                 ||paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
             return R.drawable.ic_card_default;

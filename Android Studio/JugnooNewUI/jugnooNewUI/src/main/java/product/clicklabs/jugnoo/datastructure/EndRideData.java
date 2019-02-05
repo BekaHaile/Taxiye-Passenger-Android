@@ -39,7 +39,8 @@ public class EndRideData {
 	private double driverTipAmount;
 	private double luggageChargesNew;
 	private int reverseBid;
-	private double paidUsingCorporate;
+	private int isCorporateRide;
+	private String partnerName;
 
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -51,7 +52,7 @@ public class EndRideData {
 					   double paidUsingStripe, String last_4, int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
 					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge, double driverTipAmount,
-					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, double paidUsingCorporate){
+					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide, String partnerName){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -123,7 +124,8 @@ public class EndRideData {
 		this.iconUrl = iconUrl;
 		this.paidUsingStripe = paidUsingStripe;
 		this.last_4 = last_4;
-		this.paidUsingCorporate = paidUsingCorporate;
+		this.isCorporateRide = isCorporateRide;
+		this.partnerName = partnerName;
 		this.driverTipAmount = driverTipAmount;
 		this.luggageChargesNew = luggageChargesNew;
 		this.netCustomerTax = netCustomerTax;
@@ -324,11 +326,19 @@ public class EndRideData {
 		return reverseBid;
 	}
 
-	public double getPaidUsingCorporate() {
-		return paidUsingCorporate;
+	public int getIsCorporateRide() {
+		return isCorporateRide;
 	}
 
-	public void setPaidUsingCorporate(double paidUsingCorporate) {
-		this.paidUsingCorporate = paidUsingCorporate;
+	public void setIsCorporateRide(int isCorporateRide) {
+		this.isCorporateRide = isCorporateRide;
+	}
+
+	public String getPartnerName() {
+		return partnerName;
+	}
+
+	public void setPartnerName(String partnerName) {
+		this.partnerName = partnerName;
 	}
 }
