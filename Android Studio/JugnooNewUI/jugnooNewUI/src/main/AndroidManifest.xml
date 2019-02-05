@@ -337,9 +337,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/fb_app_id"/>
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="f96b4d9d9886e413041e7b14fa52434b87709356"/>
+        <!--<meta-data-->
+            <!--android:name="io.fabric.ApiKey"-->
+            <!--android:value="f96b4d9d9886e413041e7b14fa52434b87709356"/>-->
         <meta-data
             android:name="io.branch.sdk.BranchKey"
             android:value="@string/branch_key"/>

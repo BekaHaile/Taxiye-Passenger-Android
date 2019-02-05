@@ -109,7 +109,6 @@ public class MyApplication extends MultiDexApplication {
 
 
         try {
-            Fabric.with(this, new Crashlytics());
             if (!this.isTestModeEnabled()) {
                 Branch.getInstance(this);
             } else {
