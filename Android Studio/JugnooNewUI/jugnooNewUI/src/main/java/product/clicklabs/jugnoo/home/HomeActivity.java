@@ -3958,11 +3958,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void updateDriverTipUI(PassengerScreenMode mode) {
         if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null  &&
-                Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()){
+                Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()
+                && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0){
             buttonTipDriver.setVisibility(View.VISIBLE);
             setAddedTipUI();
         }else if(mode==PassengerScreenMode.P_RIDE_END && Data.autoData!=null  &&
                 Data.autoData.getIsTipEnabled()  &&  Data.autoData.getEndRideData()!=null &&
+                Data.autoData.getEndRideData().getIsCorporateRide() == 0 &&
                 Data.autoData.getEndRideData().getDriverTipAmount()<=0){
            buttonAddTipEndRide.setVisibility(View.GONE);
            llFeedbackMain.setVisibility(View.GONE);
