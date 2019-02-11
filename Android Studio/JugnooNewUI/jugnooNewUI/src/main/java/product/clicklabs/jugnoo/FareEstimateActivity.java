@@ -53,6 +53,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -370,6 +371,10 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
                     textViewEstimateFare.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
                             Utils.formatCurrencyValue(currency, maxFare));
+                    if(Prefs.with(FareEstimateActivity.this).getInt(KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1){
+                        textViewEstimateFare.append(" ");
+                        textViewEstimateFare.append(getString(R.string.bracket_in_format, currency));
+                    }
 
                     if (convenienceCharge > 0) {
                         textViewConvenienceCharge.setText(getString(R.string.convenience_charge_colon) + " " + Utils.formatCurrencyValue(currency, convenienceCharge));
@@ -384,6 +389,10 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                                           double rideTime, String rideTimeUnit, int poolFareId, double convenienceCharge,
                                           String text, double tollCharge) {
                     textViewEstimateFare.setText(Utils.formatCurrencyValue(currency, fare));
+                    if(Prefs.with(FareEstimateActivity.this).getInt(KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1){
+                        textViewEstimateFare.append(" ");
+                        textViewEstimateFare.append(getString(R.string.bracket_in_format, currency));
+                    }
 
                     if (convenienceCharge > 0) {
                         textViewConvenienceCharge.setText(getString(R.string.convenience_charge_colon) + " " + Utils.formatCurrencyValue(currency, convenienceCharge));

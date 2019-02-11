@@ -8931,6 +8931,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     textViewTotalFare.setText(getString(R.string.total_fare_colon));
                     textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
                             Utils.formatCurrencyValue(currency, maxFare));
+                    if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1){
+                        textViewTotalFareValue.append(" ");
+                        textViewTotalFareValue.append(getString(R.string.bracket_in_format, currency));
+                    }
                     if (convenienceCharge > 0) {
                         textViewIncludes.setVisibility(View.VISIBLE);
                         textViewIncludes.setText(getString(R.string.convenience_charge_format, Utils.formatCurrencyValue(currency, convenienceCharge)));
@@ -8958,6 +8962,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
                     textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, fare));
+                    if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1){
+                        textViewTotalFareValue.append(" ");
+                        textViewTotalFareValue.append(getString(R.string.bracket_in_format, currency));
+                    }
 
                     textViewIncludes.setVisibility(View.VISIBLE);
                     textViewIncludes.setText(text);

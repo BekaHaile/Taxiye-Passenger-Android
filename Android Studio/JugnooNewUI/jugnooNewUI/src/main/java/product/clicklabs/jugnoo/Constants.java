@@ -1010,4 +1010,6 @@ public interface Constants {
     String KEY_CUSTOMER_PRIORITY_TIP_DESCRIPTION = "customer_priority_tip_description";
     String KEY_IS_CORPORATE_RIDE = "is_corporate_ride";
     String KEY_PARTNER_NAME = "partner_name";
+
+    String KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE = "customer_currency_code_with_fare_estimate";
 }
