@@ -3388,7 +3388,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             checkForMyLocationButtonVisibility();
                             imageViewRideNow.setVisibility(View.VISIBLE);
 //							genieLayout.setVisibility(View.VISIBLE);
-                            showCenterPickupPin(!searchedALocation);
+                            showCenterPickupPin(true);
                         }
 
                         checkForFareAvailablity();
