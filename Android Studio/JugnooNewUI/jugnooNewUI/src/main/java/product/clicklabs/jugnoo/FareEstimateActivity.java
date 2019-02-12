@@ -533,8 +533,16 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         params.put(Constants.KEY_PICKUP_TIME, DateOperations.localToUTC(finalDateTime));
         params.put(Constants.KEY_LATITUDE, String.valueOf(pickupLatLng.latitude));
         params.put(Constants.KEY_LONGITUDE, String.valueOf(pickupLatLng.longitude));
-        params.put(Constants.KEY_PICKUP_LOCATION_ADDRESS,pickupAddress);
-        params.put(Constants.KEY_DROP_LOCATION_ADDRESS, dropAddress);
+        if(!pickupAddress.equalsIgnoreCase(Constants.UNNAMED)) {
+            params.put(KEY_PICKUP_LOCATION_ADDRESS, pickupAddress);
+        } else {
+            params.put(KEY_PICKUP_LOCATION_ADDRESS, "");
+        }
+        if(!dropAddress.equalsIgnoreCase(Constants.UNNAMED)) {
+            params.put(KEY_DROP_LOCATION_ADDRESS, dropAddress);
+        } else {
+            params.put(KEY_DROP_LOCATION_ADDRESS, "");
+        }
         params.put("op_drop_latitude", String.valueOf(dropLatLng.latitude));
         params.put("op_drop_longitude", String.valueOf(dropLatLng.longitude));
         params.put("vehicle_type", String.valueOf(region.getVehicleType()));

@@ -6449,7 +6449,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             params.put("session_id", Data.autoData.getcSessionId());
             params.put(KEY_OP_DROP_LATITUDE, "" + dropLatLng.latitude);
             params.put(KEY_OP_DROP_LONGITUDE, "" + dropLatLng.longitude);
-            params.put(KEY_DROP_LOCATION_ADDRESS, address);
+            if(!address.equalsIgnoreCase(Constants.UNNAMED)) {
+                params.put(KEY_DROP_LOCATION_ADDRESS, address);
+            } else {
+                params.put(KEY_DROP_LOCATION_ADDRESS, "");
+            }
             if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                 params.put("engagement_id", Data.autoData.getcEngagementId());
             }
@@ -7832,7 +7836,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put("latitude", "" + Data.autoData.getPickupLatLng().latitude);
                                 nameValuePairs.put("longitude", "" + Data.autoData.getPickupLatLng().longitude);
                                 String address = selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng());
-                                if(!TextUtils.isEmpty(address)) {
+                                if(!TextUtils.isEmpty(address) && !address.equalsIgnoreCase(Constants.UNNAMED)) {
                                     nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, address);
                                 }
 
@@ -7850,7 +7854,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if (Data.autoData.getDropLatLng() != null) {
                                     nameValuePairs.put(KEY_OP_DROP_LATITUDE, String.valueOf(Data.autoData.getDropLatLng().latitude));
                                     nameValuePairs.put(KEY_OP_DROP_LONGITUDE, String.valueOf(Data.autoData.getDropLatLng().longitude));
-                                    nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
+                                    if(!Data.autoData.getDropAddress().equalsIgnoreCase(Constants.UNNAMED)) {
+                                        nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
+                                    } else {
+                                        nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, "");
+                                    }
                                 }
 
                                 if (promoCouponSelectedForRide != null) {

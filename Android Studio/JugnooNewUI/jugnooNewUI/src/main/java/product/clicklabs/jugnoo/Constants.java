@@ -1012,4 +1012,5 @@ public interface Constants {
     String KEY_PARTNER_NAME = "partner_name";
 
     String KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE = "customer_currency_code_with_fare_estimate";
+    String UNNAMED = "Unnamed";
 }

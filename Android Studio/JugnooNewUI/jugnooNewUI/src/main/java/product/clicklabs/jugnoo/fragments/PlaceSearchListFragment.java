@@ -13,6 +13,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -423,7 +424,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			public void onClick(View v) {
 				if(mapSettledCanForward){
 					Utils.hideSoftKeyboard(activity, editTextSearch);
-					SearchResult autoCompleteSearchResult = new SearchResult("",getFocusedEditText().getText().toString(),"", lastLatFetched, lastLngFetched,0,1,0 );
+					String address = getFocusedEditText().getText().toString();
+					SearchResult autoCompleteSearchResult = new SearchResult("",address,"", lastLatFetched, lastLngFetched,0,1,0 );
 					searchAdapterListener.onPlaceClick(autoCompleteSearchResult);
 					searchAdapterListener.onPlaceSearchPre();
 					searchAdapterListener.onPlaceSearchPost(autoCompleteSearchResult, null);
@@ -782,7 +784,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						@Override
 						public void onMapUnsettled() {
 							mapSettledCanForward=false;
-							setFetchedAddressToTextView("", true);
+							setFetchedAddressToTextView("", true, true);
 							/*mapSettledCanForward = false;
 							searchResultNearPin = null;*/
 						}
@@ -870,14 +872,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
 			params.put("language", Locale.getDefault().getCountry());
 			params.put("sensor", "false");
+			lastLatFetched = latLng.latitude;
+			lastLngFetched = latLng.longitude;
 
 			GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, LocaleHelper.getLanguage(activity), new GeocodeCallback(geoDataClient) {
 				@Override
 				public void onSuccess(GoogleGeocodeResponse geocodeResponse, Response response) {
 					try {
 						if (geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
-							lastLatFetched = latLng.latitude;
-							lastLngFetched = latLng.longitude;
 							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(geocodeResponse);
 
 							if(setSearchResult){
@@ -887,19 +889,19 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 								setFocusedSearchResult(searchResult, true);
 
 							}else{
-								setFetchedAddressToTextView(gapiAddress.getSearchableAddress(), false);
+								setFetchedAddressToTextView(gapiAddress.getSearchableAddress(), false, false);
 
 							}
 							mapSettledCanForward = true;
 						} else {
 							Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-							setFetchedAddressToTextView("", false);
+							setFetchedAddressToTextView("", false, false);
 						}
 
 					} catch (Exception e) {
 						e.printStackTrace();
 						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-						setFetchedAddressToTextView("", false);
+						setFetchedAddressToTextView("", false, false);
 					}
 					getFocussedProgressBar().setVisibility(View.GONE);
 				}
@@ -909,15 +911,19 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					product.clicklabs.jugnoo.utils.Log.e("DeliveryAddressFragment", "error=" + error.toString());
 					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 					getFocussedProgressBar().setVisibility(View.GONE);
-					setFetchedAddressToTextView("", false);
+					setFetchedAddressToTextView("", false, false);
 				}
 			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	private void setFetchedAddressToTextView(String address, boolean isAddressConfirmed){
+	private void setFetchedAddressToTextView(String address, boolean isAddressConfirmed, boolean fromMapUnsettle){
 		EditText editText = getFocusedEditText();
+		if(!fromMapUnsettle && TextUtils.isEmpty(address)){
+			address = Constants.UNNAMED;
+			mapSettledCanForward = true;
+		}
 		if(searchListAdapter!=null){
 			editText.removeTextChangedListener(searchListAdapter.getTextWatcherEditText(editText.getId()));
 			editText.setText(address);
@@ -962,7 +968,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		}
 		if(searchResult!=null){
-			setFetchedAddressToTextView(searchResult.getAddress(), true);
+			setFetchedAddressToTextView(searchResult.getAddress(), true, false);
 
 			if(searchMode==PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()){
 				if(getFocusedEditText().getId()==editTextSearch.getId()){
