@@ -254,7 +254,7 @@ class ScheduleRideFragment : Fragment(), Constants {
         }
     }
 
-    fun searchResultReceived(searchResult: SearchResult, placeSearchMode: PlaceSearchListFragment.PlaceSearchMode) {
+    fun searchResultReceived(searchResult: SearchResult, placeSearchMode: PlaceSearchListFragment.PlaceSearchMode?) {
         if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
             tvPickup.text = searchResult.nameForText
             searchResultPickup = searchResult

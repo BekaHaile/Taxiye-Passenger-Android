@@ -9450,7 +9450,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 if(scheduleRideOpen){
                     if(getScheduleRideFragment() != null){
-                        getScheduleRideFragment().searchResultReceived(searchResult, placeSearchMode);
+                        getScheduleRideFragment().searchResultReceived(searchResult, searchMode);
                     }
                 }
                 if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
