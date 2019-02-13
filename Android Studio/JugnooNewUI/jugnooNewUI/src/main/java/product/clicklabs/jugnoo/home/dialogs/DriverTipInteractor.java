@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.picker.image.util.Util;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
@@ -46,6 +47,7 @@ public class DriverTipInteractor {
     private PrefixedEditText edtAmount;
     public Button actionButton;
     private String engagementId;
+    private int mTag;
 
     private static final Integer TAG_ACTION_EDIT = 0;
     private static final Integer TAG_ACTION_DONE = 1;
@@ -79,6 +81,8 @@ public class DriverTipInteractor {
                             edtAmount.setEnabled(true);
                             edtAmount.setSelection(edtAmount.getText().toString().length());
                             actionButton.setTag(TAG_ACTION_DONE);
+                            mTag=TAG_ACTION_DONE;
+                            Utils.showKeyboard(activity,edtAmount);
                             actionButton.setText(activity.getString(R.string.done));
                       }else{
                             try{
@@ -103,8 +107,10 @@ public class DriverTipInteractor {
                 flTipAmount.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        edtAmount.requestFocus();
-                        Utils.showSoftKeyboard(activity, edtAmount);
+                        if (mTag == TAG_ACTION_DONE) {
+                            edtAmount.requestFocus();
+                            Utils.showSoftKeyboard(activity, edtAmount);
+                        }
                     }
                 });
                 edtAmountWatcher = new UpdateCurrencyDrawableWatcher(edtAmount, currency);
@@ -122,11 +128,14 @@ public class DriverTipInteractor {
             if(tipValue!=null && tipValue>0){
                 edtAmount.setText(String.valueOf(tipValue));
                 edtAmount.setEnabled(false);
+                mTag = TAG_ACTION_EDIT;
                 actionButton.setTag(TAG_ACTION_EDIT);
                 actionButton.setText(activity.getString(R.string.edit));
              }else{
                 edtAmount.setText(null);
                 edtAmount.setEnabled(true);
+                mTag = TAG_ACTION_DONE;
+                Utils.showKeyboard(activity,edtAmount);
                 actionButton.setTag(TAG_ACTION_DONE);
                 actionButton.setText(activity.getString(R.string.done));
             }
