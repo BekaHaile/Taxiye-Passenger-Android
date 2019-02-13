@@ -10813,12 +10813,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onAttachScheduleRide() {
         scheduleRideOpen = true;
         topBar.imageViewScheduleRide.setVisibility(View.GONE);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.START);
     }
 
     @Override
     public void onDestroyScheduleRide() {
         scheduleRideOpen = false;
         topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START);
     }
 
 
