@@ -532,6 +532,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private RecyclerView rvBidsIncoming;
+    private ImageView ivCancelRequest;
     private BidsPlacedAdapter bidsPlacedAdapter;
 
     private RelativeLayout rlThumbsType;
@@ -802,6 +803,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         bidsPlacedAdapter = new BidsPlacedAdapter(this, rvBidsIncoming, this);
         rvBidsIncoming.setAdapter(bidsPlacedAdapter);
         rvBidsIncoming.setVisibility(View.GONE);
+        ivCancelRequest = findViewById(R.id.ivCancelRequest);
+        ivCancelRequest.setVisibility(View.GONE);
 
 
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
@@ -1570,6 +1573,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        ivCancelRequest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initialCancelRideBtn.performClick();
             }
         });
 
@@ -8137,13 +8146,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
                         relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
                         initialCancelRideBtn.setVisibility(View.GONE);
+                        ivCancelRequest.setVisibility(View.GONE);
                         findDriverJugnooAnimation.setVisibility(View.VISIBLE);
                         if (findDriverJugnooAnimation instanceof ImageView) {
                             jugnooAnimation.start();
                         }
                     } else {
                         setDropLocationAssigningUI();
-                        initialCancelRideBtn.setVisibility(View.VISIBLE);
+
+                        long diff = Prefs.with(HomeActivity.this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
+                        if (diff <= 0 || bidsPlacedAdapter.getItemCount() == 0) {
+                            ivCancelRequest.setVisibility(View.GONE);
+                            initialCancelRideBtn.setVisibility(View.VISIBLE);
+                        } else {
+                            ivCancelRequest.setVisibility(View.VISIBLE);
+                            initialCancelRideBtn.setVisibility(View.GONE);
+                        }
+
                         if (findDriverJugnooAnimation instanceof ImageView) {
                             jugnooAnimation.stop();
                         }
