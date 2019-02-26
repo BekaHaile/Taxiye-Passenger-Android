@@ -2434,9 +2434,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }, 500);
             }
 
-            if (Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")) {
+//            if (Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")) {
                 textViewCancellation.setVisibility(View.GONE);
-            }
+//            }
 
 //            if (PermissionCommon.isGranted(Manifest.permission.READ_SMS, this) && Data.userData.getGetGogu() == 1) {
 //                new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
@@ -2918,6 +2918,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.autoData.setcSessionId("");
             Data.autoData.setBidInfos(null);
+            bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
             totalBidTime = -1;
             Prefs.with(HomeActivity.this).remove(KEY_REVERSE_BID_TIME_INTERVAL);
             Data.autoData.setcEngagementId("");
@@ -3528,11 +3529,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         requestFinalLayout.setVisibility(View.GONE);
                         hideCenterPickupPin();
 
-                        if (Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")) {
+//                        if (Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")) {
                             textViewCancellation.setVisibility(View.GONE);
-                        }
+//                        }
 
                         textViewFindingDriver.setText(R.string.finding_a_driver);
+                        findViewById(R.id.vBidTimer).setVisibility(View.GONE);
                         pwBidTimer.setVisibility(View.GONE);
                         tvBidTimer.setVisibility(View.GONE);
                         updateBidsView();
@@ -10511,9 +10513,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
         if (diff <= 0) {
             getHandler().removeCallbacks(runnableBidTimer);
+            findViewById(R.id.vBidTimer).setVisibility(View.GONE);
             pwBidTimer.setVisibility(View.GONE);
             tvBidTimer.setVisibility(View.GONE);
         } else {
+            findViewById(R.id.vBidTimer).setVisibility(View.VISIBLE);
             pwBidTimer.setVisibility(View.VISIBLE);
             tvBidTimer.setVisibility(View.VISIBLE);
             if (totalBidTime < 0) {

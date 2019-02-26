@@ -1,8 +1,8 @@
 package product.clicklabs.jugnoo.adapters;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import com.sabkuchfresh.adapters.ItemListener;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.BidInfo;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -89,6 +88,7 @@ public class BidsPlacedAdapter extends RecyclerView.Adapter<BidsPlacedAdapter.My
 			llRoot = (LinearLayout) itemView.findViewById(R.id.llRoot);
 			tvBidNumber = (TextView) itemView.findViewById(R.id.tvBidNumber);
 			tvBidValue = (TextView) itemView.findViewById(R.id.tvBidValue);
+			tvBidValue.setTypeface(tvBidValue.getTypeface(), Typeface.BOLD);
 			tvBidDistance = (TextView) itemView.findViewById(R.id.tvBidDistance);
 			tvBidRating = (TextView) itemView.findViewById(R.id.tvBidRating);
 			llRoot.setOnClickListener(new View.OnClickListener() {

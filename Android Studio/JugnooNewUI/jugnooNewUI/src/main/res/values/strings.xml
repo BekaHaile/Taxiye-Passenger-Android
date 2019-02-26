@@ -1986,4 +1986,5 @@
     <string name="company">Company</string>
     <string name="bracket_in_format">(%s)</string>
     <string name="accept">Accept</string>
+    <string name="bid">Bid</string>
 </resources>
