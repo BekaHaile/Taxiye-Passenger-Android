@@ -5862,7 +5862,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void addUserCurrentLocationAddressMarker() {
         try {
-            if(Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) {
+            if(passengerScreenMode == PassengerScreenMode.P_INITIAL
+                    && !confirmedScreenOpened
+                    && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) {
                 if (Data.autoData != null && Data.autoData.getPickupLatLng() == null && myLocation != null) {
                     Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
                 }
