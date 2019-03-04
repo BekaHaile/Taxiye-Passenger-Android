@@ -433,7 +433,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             }
             textViewMinFareValue.setText(Data.autoData.getFareStructure().getDisplayBaseFare(activity));
             textViewMinFareMSValue.setText(Data.autoData.getFareStructure().getDisplayBaseFare(activity));
-            textViewMaxPeople.setText(getResources().getString(R.string.max_people) + getRegionSelected().getMaxPeople());
+            textViewMaxPeople.setText(getResources().getString(R.string.max_people) + " " + getRegionSelected().getMaxPeople());
             updateFareFactorUI();
             updateBottomMultipleView(getRegionSelected().getRideType());
             updateFareFactorUISingle();

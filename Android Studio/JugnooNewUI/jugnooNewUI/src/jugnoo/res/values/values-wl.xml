@@ -75,5 +75,6 @@
     <bool name="schedule_ride_enabled">false</bool>
 
     <integer name="customer_show_include_toll_in_summary">1</integer>
+    <string name="label_add_store_text"><b>Suggest a missing store to %s</b></string>
 
 </resources>

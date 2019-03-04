@@ -2528,11 +2528,6 @@ from %s in your UPI app.
     <string name="upload_a_photo">Upload photos</string>
 
 
-    -<string name="label_add_store_text">
-
-<b>Suggest a missing store to %s</b>
-
-</string>
 
 
     -<string name="label_add_store_text_oh_snap">
