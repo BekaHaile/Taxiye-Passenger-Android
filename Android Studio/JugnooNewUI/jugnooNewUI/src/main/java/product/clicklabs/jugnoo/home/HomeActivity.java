@@ -3619,6 +3619,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         fabViewTest.setMenuLabelsRightTestPadding(160f);
                         setJeanieVisibility();
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
 
                         break;
 
@@ -5730,7 +5731,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
                     //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
                     if ((passengerScreenMode == PassengerScreenMode.P_INITIAL && !confirmedScreenOpened)
-                            || (passengerScreenMode == PassengerScreenMode.P_ASSIGNING && relativeLayoutAssigningDropLocationParent.getVisibility() == View.GONE)
                             || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
                             || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
