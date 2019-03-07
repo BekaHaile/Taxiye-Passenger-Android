@@ -7731,6 +7731,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.latitude = location.getLatitude();
             Data.longitude = location.getLongitude();
+            map.setTrafficEnabled(true);
             if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
                 HomeActivity.myLocation = location;
             }

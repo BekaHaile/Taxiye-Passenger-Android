@@ -974,14 +974,23 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     label += " (" + dynamicDeliveryResponse.getDeliveryCharges().getEstimatedDistance() + ")";
                                 }
                                 labelDeliveryInfo.setText(label);
-                                labelDeliveryValue.setText(String.format("%s%s", activity.getString(R.string.rupee), product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges())));
+                                String deliveryFare = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(dynamicDeliveryResponse.getDeliveryCharges().getCurrencyCode(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges(), false);
+                                if(deliveryFare.contains(dynamicDeliveryResponse.getDeliveryCharges().getCurrencyCode())){
+                                    labelDeliveryValue.setText(String.format("%s%s", dynamicDeliveryResponse.getDeliveryCharges().getCurrency(), product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges())));
+                                } else {
+                                    labelDeliveryValue.setText(deliveryFare);
+                                }
                                 if (dynamicDeliveryResponse.getDeliveryCharges() != null && dynamicDeliveryResponse.getDeliveryCharges().getPopupData() != null) {
                                     anywhereDeliveryChargesDialog = new AnywhereDeliveryChargesDialog(activity, new AnywhereDeliveryChargesDialog.Callback() {
                                         @Override
                                         public void onDialogDismiss() {
 
                                         }
-                                    }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(), dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges(), dynamicDeliveryResponse.getDeliveryCharges().getTandC());
+                                    }, dynamicDeliveryResponse.getDeliveryCharges().getPopupData(),
+                                            dynamicDeliveryResponse.getDeliveryCharges().getCurrencyCode(),
+                                            dynamicDeliveryResponse.getDeliveryCharges().getCurrency(),
+                                            dynamicDeliveryResponse.getDeliveryCharges().getEstimatedCharges(),
+                                            dynamicDeliveryResponse.getDeliveryCharges().getTandC());
 
                                     if (showFareBreakUp && activity != null && !activity.isFinishing()) {
                                         anywhereDeliveryChargesDialog.show();
