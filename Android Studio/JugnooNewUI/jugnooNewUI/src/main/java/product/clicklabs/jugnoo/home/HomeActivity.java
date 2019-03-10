@@ -8277,6 +8277,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if(myLocation != null && mapStateListener != null && map != null) {
                         mapStateListener.touchMapExplicit();
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
+                        if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) {
+                            Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                            findADriverAndGeocode(Data.autoData.getPickupLatLng(), true, true, true);
+                        }
                     }
                 }
             }, 500);
