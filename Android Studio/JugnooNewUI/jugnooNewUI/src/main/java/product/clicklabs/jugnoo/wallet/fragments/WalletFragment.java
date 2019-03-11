@@ -453,6 +453,9 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
+
+		relativeLayoutWalletTransactions.setVisibility(Prefs.with(paymentActivity).getInt(Constants.KEY_CUSTOMER_SHOW_WALLET_TRANSACTIONS, 1) == 1 ? View.VISIBLE : View.GONE);
+		relativeLayoutJugnooCash.setVisibility(Prefs.with(paymentActivity).getInt(Constants.KEY_CUSTOMER_SHOW_WALLET_CASH, 1) == 1 ? View.VISIBLE : View.GONE);
 	}
 
 

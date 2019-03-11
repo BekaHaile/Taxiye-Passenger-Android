@@ -1013,4 +1013,7 @@ public interface Constants {
 
     String KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE = "customer_currency_code_with_fare_estimate";
     String UNNAMED = "Unnamed";
+
+    String KEY_CUSTOMER_SHOW_WALLET_TRANSACTIONS = "customer_show_wallet_transactions";
+    String KEY_CUSTOMER_SHOW_WALLET_CASH = "customer_show_wallet_cash";
 }

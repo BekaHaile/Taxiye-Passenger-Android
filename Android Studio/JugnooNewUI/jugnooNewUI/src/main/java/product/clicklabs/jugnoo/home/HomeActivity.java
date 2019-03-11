@@ -3157,7 +3157,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     setCentrePinAccToGoogleMapPadding();
                     mapStateListener.touchMapExplicit();
                     zoomAfterFindADriver = true;
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
+                    if(Data.autoData != null && Data.autoData.getPickupLatLng() != null
+                            && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0){
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM), getMapAnimateDuration(), null);
+                    } else {
+                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
