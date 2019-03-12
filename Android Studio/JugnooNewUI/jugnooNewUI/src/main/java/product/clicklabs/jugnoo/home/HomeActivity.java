@@ -7702,9 +7702,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         if (relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE) {
             try {
+            	LatLng latLngToMatch = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                if(Data.autoData != null && Data.autoData.getPickupLatLng() != null
+                        && Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) {
+                    latLngToMatch = Data.autoData.getPickupLatLng();
+                }
                 if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
-                    if (MapUtils.distance(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()),
-                            map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
+                    if (MapUtils.distance(latLngToMatch, map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
                     } else {
                         initialMyLocationBtn.setVisibility(View.GONE);
