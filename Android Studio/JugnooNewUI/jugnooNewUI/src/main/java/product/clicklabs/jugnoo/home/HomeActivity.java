@@ -3157,12 +3157,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     setCentrePinAccToGoogleMapPadding();
                     mapStateListener.touchMapExplicit();
                     zoomAfterFindADriver = true;
-                    if(Data.autoData != null && Data.autoData.getPickupLatLng() != null
-                            && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0){
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM), getMapAnimateDuration(), null);
-                    } else {
-                        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
-                    }
+                    LatLng current = getDeviceLocation();
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(current, MAX_ZOOM), getMapAnimateDuration(), null);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -5639,7 +5635,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             try {
                 if (zoomAfterFindADriver) {
                     zoomAfterFindADriver = false;
-                    zoomToCurrentLocationWithOneDriver(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                    zoomToCurrentLocationWithOneDriver(getDeviceLocation());
                 }
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
                     showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
@@ -5663,6 +5659,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private LatLng getDeviceLocation(){
+        if(Data.autoData != null && Data.autoData.getPickupLatLng() != null
+                && Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0){
+            return Data.autoData.getPickupLatLng();
+        } else {
+            return new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
         }
     }
 
@@ -7702,11 +7707,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         if (relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE) {
             try {
-            	LatLng latLngToMatch = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-                if(Data.autoData != null && Data.autoData.getPickupLatLng() != null
-                        && Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) {
-                    latLngToMatch = Data.autoData.getPickupLatLng();
-                }
+            	LatLng latLngToMatch = getDeviceLocation();
                 if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity()) || changeLocalityLayout.getVisibility() == View.GONE) {
                     if (MapUtils.distance(latLngToMatch, map.getCameraPosition().target) > MAP_PAN_DISTANCE_CHECK) {
                         initialMyLocationBtn.setVisibility(View.VISIBLE);
