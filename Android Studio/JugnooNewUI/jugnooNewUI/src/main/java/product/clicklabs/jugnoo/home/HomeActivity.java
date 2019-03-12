@@ -2202,6 +2202,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             map.getUiSettings().setTiltGesturesEnabled(false);
             map.getUiSettings().setMyLocationButtonEnabled(false);
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            if(Prefs.with(this).getInt(KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED, 0) == 1) {
+                map.setTrafficEnabled(true);
+            }
 
             //30.7500, 76.7800
             //22.971723, 78.754263
