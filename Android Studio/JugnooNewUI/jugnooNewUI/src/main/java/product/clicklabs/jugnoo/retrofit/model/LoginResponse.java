@@ -1377,6 +1377,10 @@ public class LoginResponse {
 
 		@SerializedName(Constants.KEY_RIDE_END_GOOD_FEEDBACK_TEXT)
 		private String rideEndGoodFeedbackText;
+		@SerializedName(Constants.KEY_FEEDBACK_ORDER_CURRENCY_CODE)
+		private String feedbackCurrencyCode;
+		@SerializedName(Constants.KEY_FEEDBACK_ORDER_CURRENCY)
+		private String feedbackCurrency;
 
 
 		@SerializedName(Constants.KEY_NEGATIVE_FEEDBACK_REASONS)
@@ -1439,6 +1443,14 @@ public class LoginResponse {
 
 		public void setFeedbackViewType(Integer feedbackViewType) {
 			this.feedbackViewType = feedbackViewType;
+		}
+
+		public String getFeedbackCurrencyCode() {
+			return feedbackCurrencyCode;
+		}
+
+		public String getFeedbackCurrency() {
+			return feedbackCurrency;
 		}
 	}
 

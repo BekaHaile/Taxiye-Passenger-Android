@@ -821,6 +821,16 @@ public class Utils {
 
     }
 
+    public static String formatCurrencyAmount(final double amount, final String currencyCode, final String currency){
+		String itemPrice = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(currencyCode,
+				amount, false);
+
+		if(itemPrice.contains(currencyCode)){
+			return String.format("%s%s", currency, product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(amount));
+		} else {
+			return itemPrice;
+		}
+	}
 }
 
 

@@ -258,7 +258,7 @@ public class ApiFetchRestaurantMenu {
 
     private void setVendorDataToFreshActivity(VendorMenuResponse productsResponse) {
 
-        activity.setVendorOpened(productsResponse.getVendor());
+        activity.setVendorOpened(productsResponse.getVendor(), productsResponse.getCurrencyCode(), productsResponse.getCurrency());
         if (activity.getAppType() == AppConstant.ApplicationType.FEED) {
             Data.AppType = AppConstant.ApplicationType.MENUS;
             Prefs.with(activity).save(Constants.APP_TYPE, AppConstant.ApplicationType.MENUS);

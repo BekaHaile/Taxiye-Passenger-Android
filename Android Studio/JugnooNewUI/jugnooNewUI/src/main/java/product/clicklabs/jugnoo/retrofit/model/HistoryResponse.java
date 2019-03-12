@@ -338,6 +338,8 @@ public class HistoryResponse {
         private String currency;
         @SerializedName("distance_unit")
         private String distanceUnit;
+        @SerializedName("currency_code")
+        private String currencyCode;
 
         public int getIsPaid() {
             return isPaid;
@@ -1159,6 +1161,10 @@ public class HistoryResponse {
 
         public void setHistoryIcon(String historyIcon) {
             this.historyIcon = historyIcon;
+        }
+
+        public String getCurrencyCode() {
+            return currencyCode;
         }
     }
 

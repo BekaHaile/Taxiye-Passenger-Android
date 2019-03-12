@@ -174,8 +174,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime(), false) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime(), false));
                 }
 
-                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(orderHistory.getDiscountedAmount())));
-
+                holder.textViewAmount.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(orderHistory.getDiscountedAmount(), orderHistory.getCurrencyCode(), orderHistory.getCurrency()));
 
                 if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_groceries_new_vector);
@@ -247,8 +246,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getCreatedAt())));
 
                 if (orderHistory.getAmount() != 0) {
-                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format,
-                            Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
+                    holder.textViewAmount.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(orderHistory.getAmount(), orderHistory.getCurrencyCode(), orderHistory.getCurrency() ));
                 } else {
                     holder.textViewAmount.setText("");
                 }

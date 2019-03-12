@@ -518,6 +518,8 @@ public interface Constants {
     String KEY_RATING_FLAG = "rating_flag";
     String KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE = "ride_end_good_feedback_view_type";
     String KEY_RIDE_END_GOOD_FEEDBACK_TEXT = "ride_end_good_feedback_text";
+    String KEY_FEEDBACK_ORDER_CURRENCY_CODE = "feedback_order_currency_code";
+    String KEY_FEEDBACK_ORDER_CURRENCY = "feedback_order_currency";
     String KEY_IS_FEED_ORDER_FEEDBACK = "is_feed_order_feedback";
     String KEY_RATE_APP = "rate_app";
     String KEY_NEGATIVE_FEEDBACK_REASONS = "negative_feedback_reasons";

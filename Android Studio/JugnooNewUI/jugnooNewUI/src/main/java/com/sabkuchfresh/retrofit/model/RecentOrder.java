@@ -101,6 +101,10 @@ public class RecentOrder implements Serializable{
     private String orderLine2;
     @SerializedName("delivery_time_text")
     private String deliveryTimeText;
+    @SerializedName("currency_code")
+    private String currencyCode;
+    @SerializedName("currency")
+    private String currency;
 
     public String getOrderLine1End() {
         return orderLine1End;
@@ -335,5 +339,13 @@ public class RecentOrder implements Serializable{
 
     public int getProductType() {
         return productType;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public String getCurrency() {
+        return currency;
     }
 }

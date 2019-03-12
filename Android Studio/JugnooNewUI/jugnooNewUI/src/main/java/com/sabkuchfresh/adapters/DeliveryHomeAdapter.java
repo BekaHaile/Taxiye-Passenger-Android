@@ -1116,7 +1116,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         if (recentOrder.getOrderAmount() != null) {
-            statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
+
+            statusHolder.tvOrderAmount.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(recentOrder.getOrderAmount(), recentOrder.getCurrencyCode(), recentOrder.getCurrency()).replaceAll("-", ""));
         }
 
         // track or view order buttons

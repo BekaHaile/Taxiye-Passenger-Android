@@ -708,15 +708,15 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
                 String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(getAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, activity.getString(R.string.default_currency), activity.getString(R.string.default_currency), R.drawable.ic_paytm_big);
             }
             else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
                 String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(getAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, activity.getString(R.string.default_currency), activity.getString(R.string.default_currency), R.drawable.ic_mobikwik_big);
             }
             else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
                 String amount = com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(getAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, activity.getString(R.string.default_currency), activity.getString(R.string.default_currency), R.drawable.ic_freecharge_big);
             }
             else {
                 intentToWallet(paymentOption);

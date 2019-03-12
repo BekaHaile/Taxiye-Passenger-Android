@@ -47,13 +47,16 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 	private int appType;
 	private UserCheckoutResponse.SubscriptionInfo subscription;
 	private FreshCheckoutMergedFragment freshCheckoutMergedFragment;
+	private String currencyCode, currency;
 
 	public FreshCartItemsAdapter(Activity context, ArrayList<SubItem> subItems, boolean checkForCouponApplied,
-								 Callback callback, Fragment fragment) {
+								 Callback callback, Fragment fragment, String currencyCode,String currency) {
 		this.context = context;
 		this.subItems = subItems;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.callback = callback;
+		this.currencyCode = currencyCode;
+		this.currency = currency;
 		this.checkForCouponApplied = checkForCouponApplied;
 		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
 		if(fragment instanceof FreshCheckoutMergedFragment)
@@ -61,9 +64,11 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 
 	}
 
-	public synchronized void setResults(ArrayList<SubItem> subItems, UserCheckoutResponse.SubscriptionInfo subscription) {
+	public synchronized void setResults(ArrayList<SubItem> subItems, UserCheckoutResponse.SubscriptionInfo subscription, String currencyCode, String currency) {
 		this.subItems = subItems;
 		this.subscription = subscription;
+		this.currencyCode = currencyCode;
+		this.currency = currency;
 		notifyDataSetChanged();
 	}
 	public  void resetPrices() {
@@ -130,8 +135,9 @@ public class FreshCartItemsAdapter extends BaseAdapter {
 
 			mHolder.textViewItemName.setText(subItem.getSubItemName());
 			try {
-				mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-						Utils.getMoneyDecimalFormat().format((subItem.getPrice()*subItem.getSubItemQuantitySelected()))));
+
+				mHolder.textViewItemPrice.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(subItem.getPrice()*subItem.getSubItemQuantitySelected(), currencyCode, currency));
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

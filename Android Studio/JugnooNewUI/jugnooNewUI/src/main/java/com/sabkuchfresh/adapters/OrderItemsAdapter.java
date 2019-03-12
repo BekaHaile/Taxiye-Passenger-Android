@@ -30,10 +30,13 @@ public class OrderItemsAdapter extends BaseAdapter {
 	private Context context;
 	private LayoutInflater mInflater;
 	private List<HistoryResponse.OrderItem> subItems;
+	private String currencyCode, currency;
 
-	public OrderItemsAdapter(Context context, ArrayList<HistoryResponse.OrderItem> subItems) {
+	public OrderItemsAdapter(Context context, ArrayList<HistoryResponse.OrderItem> subItems, String currencyCode, String currency) {
 		this.context = context;
 		this.subItems = subItems;
+		this.currencyCode = currencyCode;
+		this.currency = currency;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -84,10 +87,12 @@ public class OrderItemsAdapter extends BaseAdapter {
 		final HistoryResponse.OrderItem subItem = subItems.get(position);
 
 		mHolder.textViewItemName.setText(subItem.getItemName());
-		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-				Utils.getMoneyDecimalFormat().format(subItem.getItemUnitPrice())));
+
+		mHolder.textViewItemPrice.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(subItem.getItemUnitPrice(), currencyCode, currency));
+
 		mHolder.textViewItemQuantity.setText("X "+subItem.getItemQuantity());
-		mHolder.textViewItemTotalPrice.setText(context.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(subItem.getItemAmount())));
+
+		mHolder.textViewItemTotalPrice.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(subItem.getItemAmount(), currencyCode, currency));
 
 		if(position == getCount()-1){
 			mHolder.imageViewSep.setVisibility(View.GONE);

@@ -93,6 +93,11 @@ public class UserCheckoutResponse{
 	@SerializedName("text_early_bird_discount_disabled")
 	private String mealsDiscountDisabled;
 
+	@SerializedName("currency_code")
+	private String currencyCode;
+	@SerializedName("currency")
+	private String currency;
+
 	public VendorInfo getVendorInfo() {
 		return vendorInfo;
 	}
@@ -300,6 +305,14 @@ public class UserCheckoutResponse{
 
 	public String getDiscountSwitchMessage(boolean isDiscountEnabled) {
 		return isDiscountEnabled?mealsDiscountEnabled:mealsDiscountDisabled;
+	}
+
+	public String getCurrencyCode() {
+		return currencyCode;
+	}
+
+	public String getCurrency() {
+		return currency;
 	}
 
 	public class PaymentInfo{

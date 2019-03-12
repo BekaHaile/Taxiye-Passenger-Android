@@ -127,6 +127,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private JSONObject responseOrderDataApi;
     private boolean isFeedOrder;
     private HomeUtil homeUtil = new HomeUtil();
+    private String currencyCode, currency;
 
     @BindView(R.id.tv2r)
     TextView tv2r;
@@ -357,9 +358,6 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
         listViewOrder = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders);
-        listViewOrder.setAdapter(orderItemsAdapter);
-
 
 
 
@@ -464,6 +462,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     datum1 = historyResponse.getData().get(0);
+                                    currencyCode = datum1.getCurrencyCode();
+                                    currency = datum1.getCurrency();
+                                    setOrderItemAdapter();
                                     llMain.setVisibility(View.VISIBLE);
                                     if (historyResponse.getRecentOrdersPossibleFatafatStatus().size() > 0) {
                                         cvOrderStatus.setVisibility(View.VISIBLE);
@@ -509,6 +510,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void setOrderItemAdapter() {
+        if(orderItemsAdapter == null) {
+            orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders, currencyCode, currency);
+            listViewOrder.setAdapter(orderItemsAdapter);
         }
     }
 
@@ -747,6 +755,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     llMain.setVisibility(View.VISIBLE);
                                     datum1 = historyResponse.getData().get(0);
+                                    currencyCode = datum1.getCurrencyCode();
+                                    currency = datum1.getCurrency();
+                                    setOrderItemAdapter();
                                     subItemsOrders.clear();
                                     subItemsOrders.addAll(historyResponse.getData().get(0).getOrderItems());
                                     orderItemsAdapter.notifyDataSetChanged();
@@ -937,13 +948,15 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             RelativeLayout relative = (RelativeLayout) view.findViewById(R.id.relative);
             TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges);
             TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
+
             tvDelCharges.setText(fieldText);
+
             if (showNegative) {
-                tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
+                tvDelChargesVal.setText("- " + com.sabkuchfresh.utils.Utils.formatCurrencyAmount(fieldTextVal, currencyCode, currency));
                 tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
             } else {
                 if (fieldTextVal > 0) {
-                    tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
+                    tvDelChargesVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(fieldTextVal, currencyCode, currency));
                     tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 } else {
                     if (showFree) {
@@ -951,9 +964,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
                     } else {
                         if (Utils.compareDouble(fieldTextVal, 0) == -1) {
-                            tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(Math.abs(fieldTextVal))));
+                            tvDelChargesVal.setText("- " + com.sabkuchfresh.utils.Utils.formatCurrencyAmount(Math.abs(fieldTextVal), currencyCode, currency));
                         } else {
-                            tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
+                            tvDelChargesVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(fieldTextVal, currencyCode, currency));
                         }
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     }
@@ -1052,11 +1065,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvTotalAmountValOld.setVisibility(View.GONE);
             if (Double.compare(datum1.getDiscountedAmount(), datum1.getOrderAmount()) != 0) {
                 tvTotalAmountValOld.setVisibility(View.VISIBLE);
-                tvTotalAmountValOld.setText(activity.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormat().format(datum1.getOrderAmount())));
+                tvTotalAmountValOld.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(datum1.getOrderAmount(), currencyCode, currency));
             }
-            tvTotalAmountVal.setText(activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(datum1.getDiscountedAmount())));
+
+            tvTotalAmountVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(datum1.getDiscountedAmount(), currencyCode, currency));
 
             tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum1.getNote()) ? View.GONE : View.VISIBLE);
             tvTotalAmountMessage.setText(datum1.getNote());
@@ -1160,8 +1172,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             rlWalletDeducted.setVisibility(View.VISIBLE);
             llPaymentSummary.removeView(rlWalletDeducted);
             llFinalAmount.addView(rlWalletDeducted);
-            tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
+
+            tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(Math.abs(datum1.getWalletDeducted()), currencyCode, currency));
+
             llFinalAmount.setVisibility(View.VISIBLE);
             vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
         } else {
