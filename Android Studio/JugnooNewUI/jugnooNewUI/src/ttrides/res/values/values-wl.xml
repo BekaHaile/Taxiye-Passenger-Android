@@ -93,4 +93,6 @@
     <integer name="customer_fetch_inride_path_interval">120000</integer>
     <integer name="customer_fetch_driver_location_interval">120000</integer>
     <integer name="google_apis_logging">1</integer>
+
+    <string name="label_show_fare_estimate">Ride Options</string>
 </resources>

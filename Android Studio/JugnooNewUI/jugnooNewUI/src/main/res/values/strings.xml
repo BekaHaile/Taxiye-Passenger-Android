@@ -1947,7 +1947,6 @@
     <string name="set_your_pickup_location">Set your pickup location</string>
     <string name="set_your_destination_location">Set your pickup location</string>
     <string name="tip">Tip</string>
-    <string name="label_show_fare_estimate">Fare Estimate</string>
     <string name="per_wait_min">Per Wait Min</string>
     <string name="paystack_add_card_success">Card added successfully</string>
     <string name="paystack_add_card_failure">Unable to add card.</string>
