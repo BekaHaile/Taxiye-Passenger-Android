@@ -40,10 +40,10 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
     private View rootView;
     private ScrollView linearLayoutRoot;
-    private LinearLayout linearLayoutWalletContainer, linearLayoutCash, llOtherModesToPay, llCorporate;
+    private LinearLayout linearLayoutWalletContainer, linearLayoutCash, llOtherModesToPay, llCorporate, llPos;
     private ImageView imageViewRadioPaytm,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack,
             imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash, imageViewRadioFreeCharge,ivStripeCardIcon,
-            ivAcceptCardIcon,ivPayStackIcon,ivOtherModesToPay, ivCorporate;
+            ivAcceptCardIcon,ivPayStackIcon,ivOtherModesToPay, ivCorporate, ivPos;
     private TextView textViewPaytm,textViewStripeCard,textViewAcceptCard,textViewPayStack, textViewPaytmValue, textViewMpesa,
             textViewMpesaValue, textViewMobikwik, textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue,
             tvOtherModesToPay;
@@ -78,6 +78,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         imageViewRadioFreeCharge = (ImageView) rootView.findViewById(R.id.imageViewRadioFreeCharge);
         ivOtherModesToPay = (ImageView) rootView.findViewById(R.id.ivOtherModesToPay);
         ivCorporate = rootView.findViewById(R.id.ivCorporate);
+        ivPos = rootView.findViewById(R.id.ivPos);
         rvCorporates = rootView.findViewById(R.id.rvCorporates);
         rvCorporates.setLayoutManager(new LinearLayoutManager(activity));
         rvCorporates.setHasFixedSize(false);
@@ -117,6 +118,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         linearLayoutCash = (LinearLayout) rootView.findViewById(R.id.linearLayoutCash);
         llOtherModesToPay = (LinearLayout) rootView.findViewById(R.id.llOtherModesToPay);
         llCorporate = rootView.findViewById(R.id.llCorporate);
+        llPos = rootView.findViewById(R.id.llPos);
         ((TextView) rootView.findViewById(R.id.textViewCash)).setTypeface(Fonts.mavenMedium(getActivity()));
         relativeLayoutFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFreeCharge);
 
@@ -130,6 +132,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         relativeLayoutFreeCharge.setOnClickListener(this);
         llOtherModesToPay.setOnClickListener(this);
         llCorporate.setOnClickListener(this);
+        llPos.setOnClickListener(this);
 
 
         activity.getSlidingBottomPanel().getSlidingUpPanelLayout().setScrollableView(linearLayoutRoot);
@@ -166,6 +169,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                     break;
                 case R.id.llCorporate:
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.CORPORATE, activity.getCallbackPaymentOptionSelector());
+                    break;
+                case R.id.llPos:
+                    MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.POS, activity.getCallbackPaymentOptionSelector());
                     break;
                 case R.id.llOtherModesToPay:
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.RAZOR_PAY, activity.getCallbackPaymentOptionSelector());
@@ -204,37 +210,40 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             }
             if (PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioPaytm, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash,
-                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
+                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate, ivPos);
             } else if (PaymentOption.MOBIKWIK.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioMobikwik, imageViewRadioMpesa, imageViewRadioPaytm, imageViewRadioCash,
-                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
+                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate, ivPos);
             } else if (PaymentOption.MPESA.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,
-                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
+                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate, ivPos);
             } else if (PaymentOption.FREECHARGE.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioFreeCharge, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioPaytm,
-                        imageViewRadioCash, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
+                        imageViewRadioCash, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate, ivPos);
             } else if (PaymentOption.RAZOR_PAY.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(ivOtherModesToPay, imageViewRadioMpesa, imageViewRadioFreeCharge, imageViewRadioMobikwik,
-                        imageViewRadioPaytm, imageViewRadioCash,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
+                        imageViewRadioPaytm, imageViewRadioCash,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate, ivPos);
             }else if (PaymentOption.STRIPE_CARDS.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioStripeCard,imageViewRadioAcceptCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
-                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioPayStack, ivCorporate);
+                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioPayStack, ivCorporate, ivPos);
             } else if (PaymentOption.ACCEPT_CARD.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioAcceptCard,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
-                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioPayStack, ivCorporate);
+                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioPayStack, ivCorporate, ivPos);
             } else if (PaymentOption.PAY_STACK_CARD.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioPayStack,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
-                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioAcceptCard, ivCorporate);
+                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioAcceptCard, ivCorporate, ivPos);
             } else if (PaymentOption.CORPORATE.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(ivCorporate, imageViewRadioPayStack,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
-                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioAcceptCard);
+                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioAcceptCard, ivPos);
                 if(corporatesAdapter!=null){
                     corporatesAdapter.selectDefault();
                 }
+            } else if (PaymentOption.POS.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
+                paymentSelection(ivPos, ivCorporate, imageViewRadioPayStack,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
+                        imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioAcceptCard);
             } else {
                 paymentSelection(imageViewRadioCash, imageViewRadioMpesa, imageViewRadioPaytm, imageViewRadioMobikwik,
-                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate);
+                        imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate, ivPos);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -338,6 +347,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                                 && Data.autoData != null && Data.autoData.isRazorpayEnabled()) {
                             linearLayoutWalletContainer.addView(llOtherModesToPay);
                             tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
+                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.POS.getOrdinal()) {
+                            linearLayoutWalletContainer.addView(llPos);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CORPORATE.getOrdinal()) {
                             linearLayoutWalletContainer.addView(llCorporate);
                             linearLayoutWalletContainer.addView(rvCorporates);

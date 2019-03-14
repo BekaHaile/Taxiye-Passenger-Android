@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -398,6 +399,8 @@ public class WalletCore {
             return R.drawable.ic_mpesa_small;
         } else if (paymentOption == PaymentOption.CORPORATE.getOrdinal()) {
             return R.drawable.ic_corporate;
+        } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
+            return R.drawable.ic_pos;
         } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption == PaymentOption.ACCEPT_CARD.getOrdinal()
                 ||paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
             return R.drawable.ic_card_default;
@@ -438,6 +441,8 @@ public class WalletCore {
                 return getMPesaName(context);
             } else if (paymentOption == PaymentOption.CORPORATE.getOrdinal()) {
                 return context.getString(R.string.corporate);
+            } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
+                return context.getString(R.string.pos);
             } else {
                 return context.getResources().getString(R.string.cash);
             }
@@ -651,6 +656,11 @@ public class WalletCore {
                 paymentModeConfigDatas.add(paymentModeConfigData);
             }
 
+            if(BuildConfig.DEBUG) {
+                PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(Constants.KEY_POS, 1, "", "POS", "", "", "", null, null);
+                paymentModeConfigDatas.add(paymentModeConfigData);
+            }
+
             if(cashPosition > -1 && Prefs.with(context).getInt(Constants.KEY_CASH_ABOVE_ALL_WALLETS, 0) == 1){
                 paymentModeConfigDatas.add(0, paymentModeConfigDatas.remove(cashPosition));
             }
@@ -861,6 +871,8 @@ public class WalletCore {
             return PaymentOption.PAY_STACK_CARD;
         } else if (PaymentOption.CORPORATE.getOrdinal() == paymentOption) {
             return PaymentOption.CORPORATE;
+        } else if (PaymentOption.POS.getOrdinal() == paymentOption) {
+            return PaymentOption.POS;
         } else {
             return PaymentOption.CASH;
         }

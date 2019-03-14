@@ -391,6 +391,7 @@ public interface Constants {
     String KEY_PAYTM = "paytm";
     String KEY_MOBIKWIK = "mobikwik";
     String KEY_MPESA = "mpesa";
+    String KEY_POS = "pos";
     String KEY_STRIPE_CARDS = "stripe_cards";
     String KEY_ACCEPT_CARDS = "accept_cards";
     String KEY_PAY_STACK_CARDS = "paystack_cards";

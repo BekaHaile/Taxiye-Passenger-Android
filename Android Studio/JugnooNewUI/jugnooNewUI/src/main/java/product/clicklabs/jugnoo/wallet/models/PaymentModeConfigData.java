@@ -10,7 +10,6 @@ import org.json.JSONException;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
@@ -69,6 +68,8 @@ public class PaymentModeConfigData {
 			paymentOption = PaymentOption.ICICI_UPI.getOrdinal();
 		}else if(Constants.KEY_MPESA.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.MPESA.getOrdinal();
+		}else if(Constants.KEY_POS.equalsIgnoreCase(name)){
+			paymentOption = PaymentOption.POS.getOrdinal();
 		}else if(Constants.KEY_CORPORATE.equalsIgnoreCase(name)){
 			paymentOption = PaymentOption.CORPORATE.getOrdinal();
 			if (corporatesData!=null) {
