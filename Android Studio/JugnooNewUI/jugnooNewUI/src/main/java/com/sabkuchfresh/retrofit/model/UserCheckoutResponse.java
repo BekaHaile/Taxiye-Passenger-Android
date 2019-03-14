@@ -8,7 +8,6 @@ import com.sabkuchfresh.retrofit.model.menus.Tax;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 
