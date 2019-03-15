@@ -1018,4 +1018,5 @@ public interface Constants {
     String KEY_CUSTOMER_SHOW_WALLET_TRANSACTIONS = "customer_show_wallet_transactions";
     String KEY_CUSTOMER_SHOW_WALLET_CASH = "customer_show_wallet_cash";
     String KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED = "customer_google_traffic_enabled";
+    String KEY_PAID_USING_POS = "paid_using_pos";
 }
