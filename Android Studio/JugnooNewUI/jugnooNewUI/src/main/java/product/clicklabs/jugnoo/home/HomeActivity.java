@@ -2620,7 +2620,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             long diff = System.currentTimeMillis() - temp.getTime();
             int minutes = (int) ((diff / (1000 * 60)) % 60);
             Log.v("diff is ", "--> " + minutes);
-            if (minutes < DESTINATION_PERSISTENCE_TIME) {
+            if (minutes < DESTINATION_PERSISTENCE_TIME
+                    && Utils.compareDouble(temp.getLatitude(), 0) != 0
+                    && Utils.compareDouble(temp.getLongitude(), 0) != 0) {
                 setDropAddressAndExpandFields(temp);
             } else {
                 Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
@@ -3981,7 +3983,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }else if(mode==PassengerScreenMode.P_RIDE_END && Data.autoData!=null  &&
                 Data.autoData.getIsTipEnabled()  &&  Data.autoData.getEndRideData()!=null &&
                 Data.autoData.getEndRideData().getIsCorporateRide() == 0 &&
-                Data.autoData.getEndRideData().getDriverTipAmount()<=0){
+                Data.autoData.getEndRideData().getDriverTipAmount()<=0 &&
+                Data.autoData.getEndRideData().getShowTipOption() == 1){
            buttonAddTipEndRide.setVisibility(View.GONE);
            llFeedbackMain.setVisibility(View.GONE);
            llAddTip.setVisibility(View.VISIBLE);
@@ -5258,7 +5261,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if (data.hasExtra(KEY_SEARCH_RESULT)) {
                             SearchResult searchResult = new Gson().fromJson(data.getStringExtra(KEY_SEARCH_RESULT), SearchResult.class);
                             searchResult.setTime(System.currentTimeMillis());
-                            setDropAddressAndExpandFields(searchResult);
+                            if(Utils.compareDouble(searchResult.getLatitude(), 0) != 0
+                                    && Utils.compareDouble(searchResult.getLongitude(), 0) != 0) {
+                                setDropAddressAndExpandFields(searchResult);
+                            } else {
+                                Utils.showToast(this, getString(R.string.wrong_address_selected));
+                            }
 //                            saveLastDestinations(searchResult);
                         }
                         slidingBottomPanel.getImageViewExtraForSliding().performClick();
@@ -7877,7 +7885,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("current_latitude", "" + Data.autoData.getPickupLatLng().latitude);
                                     nameValuePairs.put("current_longitude", "" + Data.autoData.getPickupLatLng().longitude);
                                 }
-                                if (Data.autoData.getDropLatLng() != null) {
+                                if (Data.autoData.getDropLatLng() != null
+                                        && Utils.compareDouble(Data.autoData.getDropLatLng().latitude, 0) != 0
+                                        && Utils.compareDouble(Data.autoData.getDropLatLng().longitude, 0) != 0) {
                                     nameValuePairs.put(KEY_OP_DROP_LATITUDE, String.valueOf(Data.autoData.getDropLatLng().latitude));
                                     nameValuePairs.put(KEY_OP_DROP_LONGITUDE, String.valueOf(Data.autoData.getDropLatLng().longitude));
                                     if(!Data.autoData.getDropAddress().equalsIgnoreCase(Constants.UNNAMED)) {

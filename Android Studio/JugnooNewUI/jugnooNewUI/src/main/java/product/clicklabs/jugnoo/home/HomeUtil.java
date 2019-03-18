@@ -146,8 +146,13 @@ public class HomeUtil {
 							}
 				}
 			}
-
-			return selectedNearByAddress;
+			if(selectedNearByAddress != null
+					&& Utils.compareDouble(selectedNearByAddress.getLatitude(), 0) != 0
+					&& Utils.compareDouble(selectedNearByAddress.getLongitude(), 0) != 0){
+				return selectedNearByAddress;
+			} else {
+				return null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

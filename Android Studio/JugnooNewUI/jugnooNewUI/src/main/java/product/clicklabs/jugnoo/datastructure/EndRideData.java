@@ -41,6 +41,7 @@ public class EndRideData {
 	private int reverseBid;
 	private int isCorporateRide;
 	private String partnerName;
+	private int showTipOption;
 
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -52,7 +53,7 @@ public class EndRideData {
 					   double paidUsingStripe, String last_4, int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
 					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge, double driverTipAmount,
-					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide, String partnerName){
+					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide, String partnerName, int showTipOption){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -78,6 +79,7 @@ public class EndRideData {
 		this.baseFare = baseFare;
         this.fareFactor = fareFactor;
 		this.paymentOption = paymentOption;
+		this.showTipOption = showTipOption;
 		this.discountTypes = new ArrayList<>();
 		this.discountTypes.addAll(discountTypes);
 		discountTypes.clear();
@@ -340,5 +342,13 @@ public class EndRideData {
 
 	public void setPartnerName(String partnerName) {
 		this.partnerName = partnerName;
+	}
+
+	public int getShowTipOption() {
+		return showTipOption;
+	}
+
+	public void setShowTipOption(int showTipOption) {
+		this.showTipOption = showTipOption;
 	}
 }

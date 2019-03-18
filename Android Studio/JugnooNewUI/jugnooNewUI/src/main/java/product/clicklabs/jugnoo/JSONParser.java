@@ -1012,6 +1012,7 @@ public class JSONParser implements Constants {
         int reverseBid = jLastRideData.optInt(Constants.KEY_REVERSE_BID, 0);
         int isCorporateRide = jLastRideData.optInt(Constants.KEY_IS_CORPORATE_RIDE, 0);
         String partnerName = jLastRideData.optString(Constants.KEY_PARTNER_NAME, "");
+        int showTipOption = jLastRideData.optInt(Constants.KEY_SHOW_TIP_OPTION, 1);
 
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
@@ -1031,7 +1032,7 @@ public class JSONParser implements Constants {
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
-                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide, partnerName);
+                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide, partnerName, showTipOption);
 	}
 
 
