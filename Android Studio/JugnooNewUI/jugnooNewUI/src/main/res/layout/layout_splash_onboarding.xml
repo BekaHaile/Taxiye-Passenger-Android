@@ -258,6 +258,82 @@
 
                 </RelativeLayout>
 
+
+                <RelativeLayout
+                    android:id="@+id/rlGender"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="45dp"
+                    android:layout_marginStart="45dp"
+                    android:tag="@string/dont_touch_me"
+                    >
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:src="@color/grey_light" />
+
+                    <ImageView
+                        android:id="@+id/ivGenderIcon"
+                        android:layout_width="9dp"
+                        android:layout_height="14dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_user_email"/>
+
+                    <android.support.v7.widget.AppCompatSpinner
+                        android:id="@+id/spinnerGender"
+                        android:layout_toEndOf="@+id/ivGenderIcon"
+                        android:layout_width="match_parent"
+                        android:layout_height="44dp"
+                        android:layout_marginStart="4dp"
+                        android:padding="4dp"
+                        android:popupBackground="@drawable/background_white_rounded_bordered"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlDOB"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="45dp"
+                    android:layout_marginStart="45dp"
+                    android:tag="@string/dont_touch_me"
+                    >
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:src="@color/grey_light" />
+
+                <EditText
+                    android:id="@+id/etDOB"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:tag="@string/dont_touch_me"
+                    android:textDirection="locale"
+                    android:focusable="false"
+                    android:longClickable="false"
+                    android:background="@drawable/background_transparent"
+                    android:hint="@string/date_of_birth"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPersonName|textCapCharacters"
+                    android:drawableStart="@drawable/ic_dob"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingEnd="10dp"
+                    android:drawablePadding="5dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/text_color_light"
+                    />
+
+                </RelativeLayout>
+
+
                 <Button
                     android:id="@+id/bPromoSubmit"
                     android:layout_width="@dimen/splash_button_width"
