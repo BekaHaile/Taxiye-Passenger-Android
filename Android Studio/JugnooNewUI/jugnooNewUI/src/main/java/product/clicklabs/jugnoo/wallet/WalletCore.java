@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -505,6 +504,8 @@ public class WalletCore {
                 return getConfigDisplayNameCards(context,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
                 return context.getString(R.string.mpesa);
+            } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
+                return context.getString(R.string.pos);
             } else {
                 return context.getResources().getString(R.string.cash);
             }
@@ -656,11 +657,6 @@ public class WalletCore {
                 paymentModeConfigDatas.add(paymentModeConfigData);
             }
 
-            if(BuildConfig.DEBUG) {
-                PaymentModeConfigData paymentModeConfigData = new PaymentModeConfigData(Constants.KEY_POS, 1, "", "POS", "", "", "", null, null);
-                paymentModeConfigDatas.add(paymentModeConfigData);
-            }
-
             if(cashPosition > -1 && Prefs.with(context).getInt(Constants.KEY_CASH_ABOVE_ALL_WALLETS, 0) == 1){
                 paymentModeConfigDatas.add(0, paymentModeConfigDatas.remove(cashPosition));
             }
@@ -772,6 +768,7 @@ public class WalletCore {
                             || paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()
                             || paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()
                             || paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()
+                            || paymentModeConfigData.getPaymentOption() == PaymentOption.POS.getOrdinal()
                             ) {
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;

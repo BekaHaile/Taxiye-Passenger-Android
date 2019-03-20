@@ -1232,7 +1232,7 @@ public class JSONParser implements Constants {
                             } catch(Exception e){
                                 e.printStackTrace();
                             }
-							preferredPaymentMode = jObject.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
+							preferredPaymentMode = jObject.optInt(Constants.KEY_PREFERRED_PAYMENT_MODE, PaymentOption.CASH.getOrdinal());
 
                             scheduleT20 = parseT20Schedule(jObject);
 

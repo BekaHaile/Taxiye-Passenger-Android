@@ -14,7 +14,7 @@ public enum PaymentOption {
 	ACCEPT_CARD(11),
 	PAY_STACK_CARD(12),
 	CORPORATE(18),
-	POS(20);
+	POS(21);
 
 	private int ordinal;
 

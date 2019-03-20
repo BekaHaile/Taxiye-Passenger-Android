@@ -575,9 +575,9 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 } else {
                     rlPaidUsingCorporate.setVisibility(View.GONE);
                 }
-                if(Utils.compareDouble(endRideData.getPaidUsingPOS(), 0) > 0){
+                if(endRideData.getPaymentOption() == PaymentOption.POS.getOrdinal()){
                     rlPaidUsingPOS.setVisibility(View.VISIBLE);
-                    tvEndRidePOSValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getPaidUsingPOS()));
+                    tvEndRidePOSValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.finalFare));
                 } else {
                     rlPaidUsingPOS.setVisibility(View.GONE);
                 }
