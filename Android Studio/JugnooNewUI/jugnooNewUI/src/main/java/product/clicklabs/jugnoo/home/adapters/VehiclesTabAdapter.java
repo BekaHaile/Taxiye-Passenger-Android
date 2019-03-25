@@ -142,7 +142,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     }
 
     private int getItemWidth(){
-        int width = (int)((720f / (getItemCount() > 3 ? 3 : getItemCount())) * ASSL.Xscale());
+        int width = (int)(((getItemCount() > 3 ? 700f : 720f) / (getItemCount() > 3 ? 3 : getItemCount())) * ASSL.Xscale());
         int minWidth = (int) (100f * ASSL.Xscale());
         return width >= minWidth ? width : minWidth;
     }

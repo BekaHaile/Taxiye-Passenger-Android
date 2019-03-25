@@ -7833,7 +7833,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             serverRequestStartTime = System.currentTimeMillis();
             serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
             executionTime = -10;
-            requestPeriod = 20000;
+            if(Prefs.with(this).getInt(KEY_CUSTOMER_REQUEST_RIDE_BID_FAST_INTERVAL, 0) == 1
+                    && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1){
+                requestPeriod = 5000;
+            } else {
+                requestPeriod = 20000;
+            }
 
             timerRequestRide = new Timer();
             timerTaskRequestRide = new TimerTask() {

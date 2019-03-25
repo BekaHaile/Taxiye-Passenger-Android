@@ -1019,4 +1019,6 @@ public interface Constants {
     String KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED = "customer_google_traffic_enabled";
 
     String KEY_SHOW_TIP_OPTION = "show_tip_option";
+
+    String KEY_CUSTOMER_REQUEST_RIDE_BID_FAST_INTERVAL = "customer_request_ride_bid_fast_interval";
 }
