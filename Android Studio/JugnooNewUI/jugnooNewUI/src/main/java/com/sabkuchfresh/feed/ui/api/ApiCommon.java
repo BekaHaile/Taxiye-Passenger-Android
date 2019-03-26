@@ -299,6 +299,12 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case FETCH_CORPORATES:
                 RestClient.getApiService().fetchUserCorporates(params, callback);
                 break;
+            case RENTALS_UPDATE_LOCK_STATUS:
+                RestClient.getApiService().updateLockStatus(params, callback);
+                break;
+            case RENTALS_GET_LOCK_STATUS:
+                RestClient.getApiService().getLockStatus(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

@@ -659,4 +659,15 @@ public interface ApiService {
     @POST("/fetch_user_corporates")
     void fetchUserCorporates(@FieldMap Map<String, String> params, Callback<FetchCorporatesResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/app_update_lock_status")
+    void updateLockStatus(@FieldMap Map<String,String>params,
+                          Callback<FeedCommonResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/app_get_lock_status")
+    void getLockStatus(@FieldMap Map<String,String>params,
+                          Callback<FeedCommonResponse> callback);
+
+
 }

@@ -149,6 +149,9 @@
             <!-- request final layout -->
             <include layout="@layout/layout_home_activity_request_final" />
 
+            <!--rental in ride layout -->
+            <include layout="@layout/layout_rental_in_ride"/>
+
             <!-- end ride layout -->
             <include layout="@layout/layout_ride_summary_new" />
 

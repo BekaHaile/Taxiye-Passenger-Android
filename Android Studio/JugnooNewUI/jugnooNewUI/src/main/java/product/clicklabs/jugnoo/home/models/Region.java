@@ -6,6 +6,8 @@ import android.graphics.drawable.StateListDrawable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.Constants;
@@ -76,6 +78,9 @@ public class Region {
 	@SerializedName("reverse_bidding_enabled")
 	@Expose
 	private int reverseBid;
+	@SerializedName("instructions")
+	@Expose
+	private List<Instructions> instructions;
 
 	@SerializedName("region_fare")
 	@Expose
@@ -358,6 +363,41 @@ public class Region {
 		}
 	}
 
+	public class Instructions {
+
+		@SerializedName("title")
+		@Expose
+		private String title;
+		@SerializedName("description")
+		@Expose
+		private String description;
+		@SerializedName("image")
+		private String image;
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public String getImage() {
+			return image;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public void setImage(String image) {
+			this.image = image;
+		}
+	}
 
 	public Integer getVehicleType() {
 		return vehicleType;
@@ -528,4 +568,13 @@ public class Region {
 	public boolean equals(Object obj) {
 		return (obj instanceof Region && ((Region) obj).regionId.equals(regionId));
 	}
+
+	public List<Instructions> getInstructions() {
+		return instructions;
+	}
+
+	public void setInstructions(List<Instructions> instructions) {
+		this.instructions = instructions;
+	}
+
 }

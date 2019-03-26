@@ -210,6 +210,19 @@
 
 
     </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dialog"
+        android:id="@+id/dialog_button"
+        android:layout_above="@+id/damage_button"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="damage"
+        android:id="@+id/damage_button"
+        android:layout_above="@+id/linearLayoutRequestMain"/>
 
     <LinearLayout
         android:id="@+id/linearLayoutRequestMain"
