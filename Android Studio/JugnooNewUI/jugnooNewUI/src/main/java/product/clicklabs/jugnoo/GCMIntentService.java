@@ -566,7 +566,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 						if (HomeActivity.appInterruptHandler != null) {
 							if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
-								//HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
+								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
 							}
 						}
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1){

@@ -7996,11 +7996,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void customerEndRideInterrupt(final String engagementId) {
         try {
             Log.d("HomeActivityRental","CustomerEndRIde");
-
-//            if(rentalsInRide)
-//            {
-//                return;
-//            }
             if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.autoData.getcEngagementId())) {
                 closeCancelActivity();
                 runOnUiThread(new Runnable() {
@@ -8013,7 +8008,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						}
                     }
                 });
-             //   rentalsInRide = true;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -11553,308 +11547,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-//    public void startTimerRequestRide() {
-//
-//
-//                    try {
-//                        Log.e("request_ride execution", "=" + (serverRequestEndTime - executionTime));
-//                        if (executionTime >= serverRequestEndTime) {
-//                            cancelTimerRequestRide();
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    try {
-//                                        if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-//                                            noDriverAvailablePopup(HomeActivity.this, false, "");
-//                                            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-//                                            switchPassengerScreen(passengerScreenMode);
-//                                        }
-//                                    } catch (Exception e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                            });
-//                        } else {
-//                            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-//                                updateCancelButtonUI();
-//
-//                                long apiStartTime = System.currentTimeMillis();
-//                                HashMap<String, String> nameValuePairs = new HashMap<>();
-//                                nameValuePairs.put("access_token", Data.userData.accessToken);
-//                                nameValuePairs.put("latitude", "" + Data.autoData.getPickupLatLng().latitude);
-//                                nameValuePairs.put("longitude", "" + Data.autoData.getPickupLatLng().longitude);
-//                                String address = selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng());
-//                                if(!TextUtils.isEmpty(address)) {
-//                                    nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, address);
-//                                }
-//
-//                                //30.7500, 76.7800
-////								nameValuePairs.add(new BasicNameValuePair("latitude", "30.7500"));
-////								nameValuePairs.add(new BasicNameValuePair("longitude", "76.7800"));
-//
-//                                if (myLocation != null) {
-//                                    nameValuePairs.put("current_latitude", "" + myLocation.getLatitude());
-//                                    nameValuePairs.put("current_longitude", "" + myLocation.getLongitude());
-//                                } else {
-//                                    nameValuePairs.put("current_latitude", "" + Data.autoData.getPickupLatLng().latitude);
-//                                    nameValuePairs.put("current_longitude", "" + Data.autoData.getPickupLatLng().longitude);
-//                                }
-//                                if (Data.autoData.getDropLatLng() != null) {
-//                                    nameValuePairs.put(KEY_OP_DROP_LATITUDE, String.valueOf(Data.autoData.getDropLatLng().latitude));
-//                                    nameValuePairs.put(KEY_OP_DROP_LONGITUDE, String.valueOf(Data.autoData.getDropLatLng().longitude));
-//                                    nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
-//                                }
-//
-//                                if (promoCouponSelectedForRide != null) {
-//                                    if (promoCouponSelectedForRide instanceof CouponInfo) {
-//                                        nameValuePairs.put("coupon_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
-//                                        if (promoCouponSelectedForRide.getId() == 0) {
-//                                            nameValuePairs.put("promo_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
-//                                        }
-//                                    } else if (promoCouponSelectedForRide instanceof PromotionInfo) {
-//                                        nameValuePairs.put("promo_to_apply", String.valueOf(promoCouponSelectedForRide.getId()));
-//                                    }
-//                                    nameValuePairs.put(KEY_MASTER_COUPON, String.valueOf(promoCouponSelectedForRide.getMasterCoupon()));
-//                                }
-//
-//                                if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-//                                    double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
-//                                    double driverFareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDriverFareFactor();
-//
-//                                    nameValuePairs.put("duplicate_flag", "0");
-//                                    nameValuePairs.put(KEY_CUSTOMER_FARE_FACTOR, String.valueOf(fareFactor));
-//                                    nameValuePairs.put(KEY_DRIVER_FARE_FACTOR, String.valueOf(driverFareFactor));
-//
-//                                    if (myLocation != null && myLocation.hasAccuracy()) {
-//                                        nameValuePairs.put("location_accuracy", "" + myLocation.getAccuracy());
-//                                    }
-//
-//                                } else {
-//                                    nameValuePairs.put("duplicate_flag", "1");
-//                                }
-//
-//
-//                                String links = MyApplication.getInstance().getDatabase2().getSavedLinksUpToTime(Data.BRANCH_LINK_TIME_DIFF);
-//                                if (links != null) {
-//                                    if (!"[]".equalsIgnoreCase(links)) {
-//                                        nameValuePairs.put(KEY_BRANCH_REFERRING_LINKS, links);
-//                                    }
-//                                }
-//
-//                                nameValuePairs.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
-//                                nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(slidingBottomPanel
-//                                        .getRequestRideOptionsFragment().getRegionSelected().getVehicleType()));
-//                                nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(slidingBottomPanel
-//                                        .getRequestRideOptionsFragment().getRegionSelected().getReverseBid()));
-//                                nameValuePairs.put(KEY_REGION_ID, String.valueOf(slidingBottomPanel
-//                                        .getRequestRideOptionsFragment().getRegionSelected().getRegionId()));
-//
-//                                if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-//                                    nameValuePairs.put("pool_fare_id", "" + jugnooPoolFareId);
-//                                }
-//
-//                                // TODO  if() delete the taxi one And unComment the bikeRental one
-//
-//                                if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-//                                    nameValuePairs.put("qr_code", QRCode);
-//                                    nameValuePairs.put("ride_type", String.valueOf(RideTypeValue.BIKE_RENTAL.getOrdinal()));
-//                                }
-//
-//                                Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
-//                                try {
-//                                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//                                new HomeUtil().putDefaultParams(nameValuePairs);
-//                                Response responseRetro = RestClient.getApiService().requestRide(nameValuePairs);
-//                                String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
-//
-//                                try {
-//                                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-//
-//
-//                                Log.e(TAG, "requestRide result=" + response);
-//
-//                                if (responseRetro == null || response == null
-//                                        || response.contains(Constants.SERVER_TIMEOUT)) {
-//                                    Log.e("timeout", "=");
-//                                    runOnUiThread(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-////											DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-//                                        }
-//                                    });
-//                                } else {
-//                                    try {
-//                                        JSONObject jObj = new JSONObject(response);
-//                                        if (!jObj.isNull("error")) {
-//                                            final String errorMessage = jObj.getString("error");
-//                                            final int flag = jObj.getInt("flag");
-//                                            if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
-//                                                cancelTimerRequestRide();
-//                                                HomeActivity.logoutUser(HomeActivity.this);
-//                                            } else {
-//                                                if (ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal() == flag) {
-//                                                    cancelTimerRequestRide();
-//                                                    runOnUiThread(new Runnable() {
-//                                                        @Override
-//                                                        public void run() {
-//                                                            try {
-//                                                                if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-//                                                                    DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
-//                                                                    HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-//                                                                    switchPassengerScreen(passengerScreenMode);
-//                                                                }
-//                                                            } catch (Exception e) {
-//                                                                e.printStackTrace();
-//                                                            }
-//                                                        }
-//                                                    });
-//                                                }
-//                                            }
-//                                        } else {
-//                                            int flag = jObj.getInt("flag");
-//                                            if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
-//                                                final String log = jObj.getString("log");
-//                                                Log.e("ASSIGNING_DRIVERS log", "=" + log);
-//                                                final String start_time = jObj.getString("start_time");
-//                                                if (executionTime < 0) {
-//                                                    serverRequestStartTime = new DateOperations().getMilliseconds(start_time);
-//                                                    serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
-//                                                    long stopTime = System.currentTimeMillis();
-//                                                    long elapsedTime = stopTime - startTime;
-//                                                    executionTime = serverRequestStartTime + elapsedTime;
-//                                                }
-//                                                if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-//                                                    fbLogEvent(nameValuePairs);
-//
-//                                                    // Ride Requested
-//                                                    // Google Android in-app conversion tracking snippet
-//                                                    // Add this code to the event you'd like to track in your app.
-//                                                    // See code examples and learn how to add advanced features like app deep links at:
-//                                                    //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-////                                                    AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-////                                                            GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
-//                                                    confirmedScreenOpened = false;
-//                                                    specialPickupScreenOpened = false;
-//                                                    if (Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
-//                                                        Prefs.with(HomeActivity.this).save(SP_LAST_USED_WALLET, Data.autoData.getPickupPaymentOption());
-//                                                    }
-//
-//                                                    if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
-//                                                        GAUtils.event(RIDES, HOME, slidingBottomPanel
-//                                                                .getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUESTED);
-//                                                    }
-//                                                }
-//                                                Data.autoData.setcSessionId(jObj.getString("session_id"));
-//                                                Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
-//                                                runOnUiThread(new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        try {
-//                                                            updateBidsView();
-//                                                        } catch (Exception e) {
-//                                                            e.printStackTrace();
-//                                                        }
-//                                                    }
-//                                                });
-//                                            } else if (ApiResponseFlags.RIDE_ACCEPTED.getOrdinal() == flag
-//                                                    || ApiResponseFlags.RIDE_STARTED.getOrdinal() == flag
-//                                                    || ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
-//                                                if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-//                                                    cancelTimerRequestRide();
-//                                                    fetchAcceptedDriverInfoAndChangeState(jObj, flag);
-//                                                }
-//                                            } else if (ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
-//                                                final String log = jObj.getString("log");
-//                                                Log.e("NO_DRIVERS_AVAILABLE log", "=" + log);
-//                                                cancelTimerRequestRide();
-//                                                runOnUiThread(new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        try {
-//                                                            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-//                                                                noDriverAvailablePopup(HomeActivity.this, false, log);
-//                                                                firstTimeZoom = false;
-//                                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-//                                                                switchPassengerScreen(passengerScreenMode);
-//                                                            }
-//                                                        } catch (Exception e) {
-//                                                            e.printStackTrace();
-//                                                        }
-//                                                    }
-//                                                });
-//                                            } else if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
-//                                                final String message = jObj.optString(KEY_MESSAGE, "");
-//                                                final double userDebt = jObj.optDouble(KEY_USER_DEBT, 0);
-//                                                Log.e("USER_IN_DEBT message", "=" + message);
-//                                                cancelTimerRequestRide();
-//                                                runOnUiThread(new Runnable() {
-//                                                    @Override
-//                                                    public void run() {
-//                                                        try {
-//                                                            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-//                                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
-//                                                                switchPassengerScreen(passengerScreenMode);
-//                                                                new UserDebtDialog(HomeActivity.this, Data.userData,
-//                                                                        new UserDebtDialog.Callback() {
-//                                                                            @Override
-//                                                                            public void successFullyDeducted(double userDebt) {
-//                                                                                MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
-//                                                                                setUserData();
-//                                                                            }
-//                                                                        }).showUserDebtDialog(userDebt, message);
-//                                                            }
-//                                                        } catch (Exception e) {
-//                                                            e.printStackTrace();
-//                                                        }
-//                                                    }
-//                                                });
-//                                            }
-//
-//                                        }
-//                                    } catch (Exception e) {
-//                                        e.printStackTrace();
-//                                    }
-//                                }
-//                                updateCancelButtonUI();
-//                            }
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                    long stopTime = System.currentTimeMillis();
-//                    long elapsedTime = stopTime - startTime;
-//
-//                    if (executionTime < 0) {
-//                        executionTime = serverRequestStartTime + elapsedTime;
-//                    }
-//                    if (executionTime > 0) {
-//                        if (elapsedTime >= requestPeriod) {
-//                            executionTime = executionTime + elapsedTime;
-//                        } else {
-//                            executionTime = executionTime + requestPeriod;
-//                        }
-//                    }
-//                    Log.i("request_ride execution", "=" + (serverRequestEndTime - executionTime));
-//
-//                }
-//            };
-//
-//            timerRequestRide.scheduleAtFixedRate(timerTaskRequestRide, 0, requestPeriod);
-//
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
     public void startRentalEndRideTimer() {
         Log.d("HomeActivityRentals" , " startRentalEndRideTimer");
 
@@ -11914,30 +11606,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     .execute(params, ApiName.RENTALS_GET_LOCK_STATUS, new APICommonCallback<FeedCommonResponse>() {
                                         @Override
                                         public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+
+                                            Log.d("HomeActivityRental"," Flag getlockstatus Success" +  String.valueOf(flag));
                                             cancelRentalEndRideTimer();
-                                            getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId());
-                                     //       customerEndRideInterrupt(Data.autoData.getcEngagementId());
-
-
-//                                            if(!rentalsInRide)
-//                                            {
-////                                                getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId());
-////                                                if(driverTipInteractor != null) {
-////                                                    driverTipInteractor.dismissDialog();
-////                                                }
-//                                                customerEndRideInterrupt(Data.autoData.getcEngagementId());
-//                                                rentalsInRide = true;
-//                                            }
-                                            Log.d("HomeActivityRental"," get Lock Status Success End Ride");
                                         }
 
                                         @Override
                                         public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
-                                            cancelRentalEndRideTimer();
-                                            DialogPopup.dialogRentalLock(HomeActivity.this);
-                                            Log.d("HomeActivityRental","Dialog pop up");
-                                            return false;
+                                            Log.d("HomeActivityRental"," Flag getlockstatus Success" +  String.valueOf(flag));
+
+                                            if(flag == ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal())
+                                            {
+
+                                            }
+                                            else if(flag == ApiResponseFlags.ACTION_FAILED.getOrdinal())
+                                            {
+                                                cancelRentalEndRideTimer();
+                                                DialogPopup.dialogRentalLock(HomeActivity.this);
+
+                                            }
+                                            return true;
                                         }
+
                                     });
 
                         }
@@ -11976,8 +11666,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         Log.d("HomeActivityRental","Rental InRide " + rentalsInRide);
 
-
-
         HashMap<String, String> params = new HashMap<>();
         params.put(product.clicklabs.jugnoo.rentals.Constants.KEY_LOCK_STATUS, tag);
         params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
@@ -11988,14 +11676,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     .execute(params, ApiName.RENTALS_UPDATE_LOCK_STATUS, new APICommonCallback<FeedCommonResponse>() {
                         @Override
                         public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                            Log.d("HomeActivityRental"," Flag Update Lock Status Success " + String.valueOf(flag));
+
                             Log.d("HomeActivityRental"," Update Lock Status Success End Ride");
                             startRentalEndRideTimer();
                         }
 
                         @Override
                         public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
-                            startRentalEndRideTimer();
-                            DialogPopup.dialogRentalLock(HomeActivity.this);
+                            Log.d("HomeActivityRental"," Flag Update Lock Status Error " + String.valueOf(flag));
+
+                          //  DialogPopup.dialogRentalLock(HomeActivity.this);
                             Log.d("HomeActivityRental","Dialog pop up");
                             return false;
                         }
@@ -12092,3 +11783,5 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
     }
 }
+
+// 6249786ea8fb3e7429ccfc3c3fb2f7e268adaf2ca2baaa503d029fc57d063945,

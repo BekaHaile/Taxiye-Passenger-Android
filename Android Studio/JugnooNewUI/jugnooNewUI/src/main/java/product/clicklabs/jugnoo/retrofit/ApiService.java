@@ -670,4 +670,10 @@ public interface ApiService {
                           Callback<FeedCommonResponse> callback);
 
 
+    @FormUrlEncoded
+    @POST("/app_get_lock_status")
+    Response getLockStatus(@FieldMap Map<String,String>params);
+
+
+
 }
