@@ -7519,7 +7519,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            int preferredPaymentMode = jObj.optInt("preferred_payment_mode", PaymentOption.CASH.getOrdinal());
+            int preferredPaymentMode = jObj.optInt(KEY_PREFERRED_PAYMENT_MODE, PaymentOption.CASH.getOrdinal());
             int isPooledRIde = jObj.optInt(KEY_IS_POOLED, 0);
 
             Schedule scheduleT20 = JSONParser.parseT20Schedule(jObj);

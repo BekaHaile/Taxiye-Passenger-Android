@@ -42,6 +42,7 @@ public class EndRideData {
 	private int isCorporateRide;
 	private String partnerName;
 	private int showTipOption;
+	private double paidUsingPOS;
 
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -53,7 +54,7 @@ public class EndRideData {
 					   double paidUsingStripe, String last_4, int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
 					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge, double driverTipAmount,
-					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide, String partnerName, int showTipOption){
+					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide, String partnerName, int showTipOption,double paidUsingPOS){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -133,6 +134,7 @@ public class EndRideData {
 		this.netCustomerTax = netCustomerTax;
 		this.taxPercentage = taxPercentage;
 		this.reverseBid = reverseBid;
+		this.paidUsingPOS = paidUsingPOS;
 
 		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges
 				+ this.tollCharge + this.driverTipAmount + this.netCustomerTax;
@@ -342,6 +344,10 @@ public class EndRideData {
 
 	public void setPartnerName(String partnerName) {
 		this.partnerName = partnerName;
+	}
+
+	public double getPaidUsingPOS() {
+		return paidUsingPOS;
 	}
 
 	public int getShowTipOption() {

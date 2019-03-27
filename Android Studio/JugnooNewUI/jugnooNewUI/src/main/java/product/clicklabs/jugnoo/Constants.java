@@ -391,6 +391,7 @@ public interface Constants {
     String KEY_PAYTM = "paytm";
     String KEY_MOBIKWIK = "mobikwik";
     String KEY_MPESA = "mpesa";
+    String KEY_POS = "pos";
     String KEY_STRIPE_CARDS = "stripe_cards";
     String KEY_ACCEPT_CARDS = "accept_cards";
     String KEY_PAY_STACK_CARDS = "paystack_cards";
@@ -1021,4 +1022,5 @@ public interface Constants {
     String KEY_SHOW_TIP_OPTION = "show_tip_option";
 
     String KEY_CUSTOMER_REQUEST_RIDE_BID_FAST_INTERVAL = "customer_request_ride_bid_fast_interval";
+    String KEY_PAID_USING_POS = "paid_using_pos";
 }

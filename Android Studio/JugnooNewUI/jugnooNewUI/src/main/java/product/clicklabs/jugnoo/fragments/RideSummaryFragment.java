@@ -76,7 +76,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
     RelativeLayout relativeLayoutTollCharge, relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
             relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
             relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard, rlTaxNet,relativeLayoutPaidUsingMpesa,
-            rlPaidUsingCorporate, rlToBePaid;
+            rlPaidUsingCorporate, rlPaidUsingPOS, rlToBePaid;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare,relativeLayoutDriverTip, relativeLayoutFinalFare;
     NonScrollListView listViewEndRideDiscounts;
@@ -86,7 +86,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideToBePaidValue, textViewEndRideBaseFare, textViewEndRideBaseFareValue,
             textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue,
             tvIncludeToll, tvEndRideRazorpay,tvEndRideStripeCard, tvEndRideTaxNet, tvEndRideRazorpayValue,tvEndRideStripeCardValue, tvEndRideTaxNetValue,textViewEndRideMpesaValue;
-    TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue,tvEndRideCorporate, tvEndRideCorporateValue;
+    TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue,
+            tvEndRideCorporate, tvEndRideCorporateValue, tvEndRidePOS, tvEndRidePOSValue;
     Button buttonEndRideOk;
     EndRideDiscountsAdapter endRideDiscountsAdapter;
 
@@ -228,6 +229,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
             tvEndRideStripeCard = (TextView) rootView.findViewById(R.id.tvEndRideStripeCard); tvEndRideStripeCard.setTypeface(Fonts.mavenLight(activity));
             tvEndRideCorporate = (TextView) rootView.findViewById(R.id.tvEndRideCorporate); tvEndRideCorporate.setTypeface(Fonts.mavenLight(activity));
             tvEndRideCorporateValue = (TextView) rootView.findViewById(R.id.tvEndRideCorporateValue); tvEndRideCorporateValue.setTypeface(Fonts.mavenRegular(activity));
+            tvEndRidePOS = (TextView) rootView.findViewById(R.id.tvEndRidePOS); tvEndRidePOS.setTypeface(Fonts.mavenLight(activity));
+            tvEndRidePOSValue = (TextView) rootView.findViewById(R.id.tvEndRidePOSValue); tvEndRidePOSValue.setTypeface(Fonts.mavenRegular(activity));
             tvEndRideTaxNet = (TextView) rootView.findViewById(R.id.tvEndRideTaxNet); tvEndRideTaxNet.setTypeface(Fonts.mavenLight(activity));
             tvEndRideRazorpayValue = (TextView) rootView.findViewById(R.id.tvEndRideRazorpayValue); tvEndRideRazorpayValue.setTypeface(Fonts.mavenRegular(activity));
             tvEndRideStripeCardValue = (TextView) rootView.findViewById(R.id.tvEndRideStripeCardValue); tvEndRideStripeCardValue.setTypeface(Fonts.mavenRegular(activity));
@@ -259,6 +262,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             rlPaidUsingRazorpay = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingRazorpay);
             rlPaidUsingStripeCard = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingStripeCard);
             rlPaidUsingCorporate = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingCorporate);
+            rlPaidUsingPOS = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingPOS);
             rlTaxNet = (RelativeLayout) rootView.findViewById(R.id.rlTaxNet);
             linearLayoutEndRideTime = (LinearLayout) rootView.findViewById(R.id.linearLayoutEndRideTime);
             relativeLayoutEndRideWaitTime = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutEndRideWaitTime);
@@ -570,6 +574,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
                     tvEndRideCorporateValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.finalFare));
                 } else {
                     rlPaidUsingCorporate.setVisibility(View.GONE);
+                }
+                if(endRideData.getPaymentOption() == PaymentOption.POS.getOrdinal()){
+                    rlPaidUsingPOS.setVisibility(View.VISIBLE);
+                    tvEndRidePOSValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.finalFare));
+                } else {
+                    rlPaidUsingPOS.setVisibility(View.GONE);
                 }
 
                 if(Utils.compareDouble(endRideData.getNetCustomerTax(), 0) > 0){

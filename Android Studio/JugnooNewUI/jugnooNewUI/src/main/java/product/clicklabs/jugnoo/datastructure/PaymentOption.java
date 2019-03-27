@@ -13,7 +13,8 @@ public enum PaymentOption {
 	STRIPE_CARDS(9),
 	ACCEPT_CARD(11),
 	PAY_STACK_CARD(12),
-	CORPORATE(18);
+	CORPORATE(18),
+	POS(21);
 
 	private int ordinal;
 

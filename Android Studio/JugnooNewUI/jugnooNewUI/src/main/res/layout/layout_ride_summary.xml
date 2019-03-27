@@ -640,6 +640,37 @@
                                 android:textSize="@dimen/text_size_26"
                                 />
                         </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/rlPaidUsingPOS"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:tag="@string/dont_touch_me"
+                            android:layout_marginTop="3dp">
+
+                            <TextView
+                                android:id="@+id/tvEndRidePOS"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:gravity="center_vertical"
+                                android:text="@string/pos"
+                                android:textColor="@color/text_color"
+                                android:textSize="13sp"
+                                />
+
+
+                            <TextView
+                                android:id="@+id/tvEndRidePOSValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="20dp"
+                                android:gravity="center_vertical|end"
+                                tools:text="0"
+                                android:textColor="@color/text_color"
+                                android:textSize="13sp"
+                                />
+                        </RelativeLayout>
 
                         <!-- to be paid -->
                         <RelativeLayout

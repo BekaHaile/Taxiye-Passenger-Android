@@ -398,6 +398,8 @@ public class WalletCore {
             return R.drawable.ic_mpesa_small;
         } else if (paymentOption == PaymentOption.CORPORATE.getOrdinal()) {
             return R.drawable.ic_corporate;
+        } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
+            return R.drawable.ic_pos;
         } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption == PaymentOption.ACCEPT_CARD.getOrdinal()
                 ||paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
             return R.drawable.ic_card_default;
@@ -438,6 +440,8 @@ public class WalletCore {
                 return getMPesaName(context);
             } else if (paymentOption == PaymentOption.CORPORATE.getOrdinal()) {
                 return context.getString(R.string.corporate);
+            } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
+                return context.getString(R.string.pos);
             } else {
                 return context.getResources().getString(R.string.cash);
             }
@@ -500,6 +504,8 @@ public class WalletCore {
                 return getConfigDisplayNameCards(context,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
                 return context.getString(R.string.mpesa);
+            } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
+                return context.getString(R.string.pos);
             } else {
                 return context.getResources().getString(R.string.cash);
             }
@@ -762,6 +768,7 @@ public class WalletCore {
                             || paymentModeConfigData.getPaymentOption() == PaymentOption.ICICI_UPI.getOrdinal()
                             || paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()
                             || paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()
+                            || paymentModeConfigData.getPaymentOption() == PaymentOption.POS.getOrdinal()
                             ) {
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         break;
@@ -861,6 +868,8 @@ public class WalletCore {
             return PaymentOption.PAY_STACK_CARD;
         } else if (PaymentOption.CORPORATE.getOrdinal() == paymentOption) {
             return PaymentOption.CORPORATE;
+        } else if (PaymentOption.POS.getOrdinal() == paymentOption) {
+            return PaymentOption.POS;
         } else {
             return PaymentOption.CASH;
         }
