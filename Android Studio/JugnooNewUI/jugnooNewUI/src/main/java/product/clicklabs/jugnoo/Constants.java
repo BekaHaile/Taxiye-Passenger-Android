@@ -1023,4 +1023,5 @@ public interface Constants {
 
     String KEY_CUSTOMER_REQUEST_RIDE_BID_FAST_INTERVAL = "customer_request_ride_bid_fast_interval";
     String KEY_PAID_USING_POS = "paid_using_pos";
+    String KEY_CUSTOMER_ARRIVED_BEEP_ENABLED = "customer_arrived_beep_enabled";
 }

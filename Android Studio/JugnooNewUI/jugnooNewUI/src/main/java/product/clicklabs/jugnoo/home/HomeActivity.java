@@ -3919,7 +3919,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 								&& Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_START, 0) == 1)
 							|| (mode.getOrdinal() == PassengerScreenMode.P_RIDE_END.getOrdinal()
 								&& Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1)){
-						SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+						SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1, false);
 					}
 				}
                 Prefs.with(this).save(SP_CURRENT_STATE, mode.getOrdinal());

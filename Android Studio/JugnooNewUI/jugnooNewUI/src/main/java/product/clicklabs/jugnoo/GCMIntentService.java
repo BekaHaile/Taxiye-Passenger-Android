@@ -471,7 +471,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_REQUEST_FINAL.getOrdinal());
 
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT, 0) == 1){
-							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1, false);
 							playSound = 0;
 						}
 
@@ -498,7 +498,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_DRIVER_ARRIVED.getOrdinal());
 
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ARRIVED, 0) == 1){
-							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1, false);
 							playSound = 0;
 						}
 
@@ -516,6 +516,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						} else{
 							notificationManager(this, title, driverArrivedMessage, playSound);
 						}
+						if(Prefs.with(this).getInt(Constants.KEY_CUSTOMER_ARRIVED_BEEP_ENABLED, 0) == 1) {
+							SoundMediaPlayer.INSTANCE.startSound(GCMIntentService.this, R.raw.arrived_beep, 4, true);
+						}
 
 					} else if (PushFlags.RIDE_STARTED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
@@ -525,7 +528,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Prefs.with(this).save(SP_CURRENT_STATE, PassengerScreenMode.P_IN_RIDE.getOrdinal());
 
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_START, 0) == 1){
-							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1, false);
 							playSound = 0;
 						}
 
@@ -567,7 +570,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							}
 						}
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1){
-							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1);
+							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1, false);
 							playSound = 0;
 						}
 						notificationManager(this, title, message1, playSound);
