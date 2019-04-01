@@ -2072,16 +2072,6 @@
     <string name="lock">lock</string>
 
 
-    <string-array name="damage_kind">
-        <item>Private Lock</item>
-        <item>No License Plate</item>
-        <item>Tyre Broken</item>
-        <item>Lock Broken</item>
-        <item>Pedals Broken</item>
-        <item>Park Violation</item>
-        <item>Brake Broken</item>
-        <item>Others</item>
-    </string-array>
 
 
 

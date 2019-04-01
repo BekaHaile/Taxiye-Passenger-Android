@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.Package;
+import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -81,6 +82,9 @@ public class Region {
 	@SerializedName("instructions")
 	@Expose
 	private List<Instructions> instructions;
+	@SerializedName("stations")
+	@Expose
+	private List<Stations> stations;
 
 	@SerializedName("region_fare")
 	@Expose
@@ -399,6 +403,76 @@ public class Region {
 		}
 	}
 
+	public class Stations{
+
+		@SerializedName("name")
+		@Expose
+		private String name;
+		@SerializedName("address")
+		@Expose
+		private String address;
+		@SerializedName("distance")
+		@Expose
+		private Double distance;
+		@SerializedName("latitude")
+		@Expose
+		private Double latitude;
+		@SerializedName("longitude")
+		@Expose
+		private Double longitude;
+		@SerializedName("id")
+		@Expose
+		private int location_id;
+
+		public String getName() {
+			return name;
+		}
+
+		public String getAddress() {
+			return address;
+		}
+
+		public Double getDistance() {
+			return distance;
+		}
+
+		public Double getLatitude() {
+			return latitude;
+		}
+
+		public Double getLongitude() {
+			return longitude;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public void setAddress(String address) {
+			this.address = address;
+		}
+
+		public void setDistance(Double distance) {
+			this.distance = distance;
+		}
+
+		public void setLatitude(Double latitude) {
+			this.latitude = latitude;
+		}
+
+		public void setLongitude(Double longitude) {
+			this.longitude = longitude;
+		}
+
+		public int getLocation_id() {
+			return location_id;
+		}
+
+		public void setLocation_id(int location_id) {
+			this.location_id = location_id;
+		}
+	}
+
 	public Integer getVehicleType() {
 		return vehicleType;
 	}
@@ -577,4 +651,11 @@ public class Region {
 		this.instructions = instructions;
 	}
 
+	public List<Stations> getStations() {
+		return stations;
+	}
+
+	public void setStations(List<Stations> stations) {
+		this.stations = stations;
+	}
 }

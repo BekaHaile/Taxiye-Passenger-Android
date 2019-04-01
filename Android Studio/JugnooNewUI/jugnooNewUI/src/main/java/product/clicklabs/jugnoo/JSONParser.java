@@ -55,7 +55,9 @@ import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
+import product.clicklabs.jugnoo.rentals.models.RentalRideStatus;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
@@ -351,6 +353,22 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(Constants.KEY_FUGU_APP_TYPE, fuguAppType);
             int isTipEnabled = autoData.optInt(KEY_TIP_ENABLED, 0);
 
+//            int gpsLockStatus;
+//            try {
+//                gpsLockStatus = autoData.getInt(KEY_GPS_LOCK_STATUS);
+//                if (gpsLockStatus == RentalRideStatus.END_RIDE_REQUESTED.getOrdinal()) {
+//                    // Data.autoData.setRentalInRideStatus(RentalRideStatus.END_RIDE_REQUESTED.getOrdinal());
+//                    HomeActivity.rentalInRideStatus = RentalRideStatus.END_RIDE_REQUESTED.getOrdinal();
+//
+//                } else if (gpsLockStatus == RentalRideStatus.ONGOING.getOrdinal()) {
+//                    //   Data.autoData.setRentalInRideStatus(RentalRideStatus.ONGOING.getOrdinal());
+//                    HomeActivity.rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+
             NearbyPickupRegions nearbyPickupRegionses = autosData.getNearbyPickupRegions();
 
             Data.autoData = new AutoData(destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1
@@ -364,6 +382,7 @@ public class JSONParser implements Constants {
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
             Data.autoData.setUseRecentLocAutoSnapMaxDistance(autosData.getUseRecentLocAutoSnapMaxDistance());
             Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
+            Data.autoData.setFaultConditions(autosData.getFaultConditions());
 
             if(Data.autoData.getPromoCoupons() == null){
                 Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
@@ -1151,6 +1170,9 @@ public class JSONParser implements Constants {
             String vehicleIconUrl = null;
             Double tipAmount  = null;
             int isCorporateRide = 0;
+            int rideType = RideTypeValue.NORMAL.getOrdinal();
+
+            int gpsLockStatus = RentalRideStatus.ONGOING.getOrdinal();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1258,8 +1280,11 @@ public class JSONParser implements Constants {
                             scheduleT20 = parseT20Schedule(jObject);
 
                             vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
+                            rideType = jObject.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
 
+//                            gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,RentalRideStatus.ONGOING.getOrdinal());
+//                            HomeActivity.rentalInRideStatus = gpsLockStatus;
 
                             try{
                                 cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
@@ -1282,6 +1307,30 @@ public class JSONParser implements Constants {
                                 JSONObject jReferralPopupContent = jObject.optJSONObject(KEY_REFERRAL_POPUP_CONTENT);
                                 referralPopupContent = new Gson().fromJson(jReferralPopupContent.toString(), PlaceOrderResponse.ReferralPopupContent.class);
                             } catch (Exception e){}
+
+
+//                            HomeActivity.rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
+//                            try
+//                            {
+//                                gpsLockStatus = jObject.getInt(KEY_GPS_LOCK_STATUS);
+//                                if(gpsLockStatus == RentalRideStatus.END_RIDE_REQUESTED.getOrdinal())
+//                                {
+//                                   // Data.autoData.setRentalInRideStatus(RentalRideStatus.END_RIDE_REQUESTED.getOrdinal());
+//                                      HomeActivity.rentalInRideStatus = RentalRideStatus.END_RIDE_REQUESTED.getOrdinal();
+
+//                                }
+//                                else if(gpsLockStatus == RentalRideStatus.ONGOING.getOrdinal())
+//                                {
+//                                 //   Data.autoData.setRentalInRideStatus(RentalRideStatus.ONGOING.getOrdinal());
+//                                       HomeActivity.rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
+//                                }
+//
+//                            }
+//                            catch (Exception e){
+//                                e.printStackTrace();
+//                            }
+
+
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
                         parseLastRideData(context, jObject1);
@@ -1343,7 +1392,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount, isCorporateRide));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount, isCorporateRide, rideType));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

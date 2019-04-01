@@ -51,6 +51,8 @@ public class DriverInfo {
 	private String markerUrl;
 	private int paymentMethod;
 	private Double tipAmount;
+	private int rideType;
+
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -83,7 +85,7 @@ public class DriverInfo {
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
-					  String currency, String markerUrl,Double tipAmount, int isCorporateRide){
+					  String currency, String markerUrl,Double tipAmount, int isCorporateRide, int rideType){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -116,6 +118,7 @@ public class DriverInfo {
 		this.markerUrl = markerUrl;
 		this.tipAmount = tipAmount;
 		this.isCorporateRide = isCorporateRide;
+		this.rideType = rideType;
 	}
 
 	//for last ride data
@@ -314,6 +317,14 @@ public class DriverInfo {
 
 	public void setIsCorporateRide(int isCorporateRide) {
 		this.isCorporateRide = isCorporateRide;
+	}
+
+	public int getRideType() {
+		return rideType;
+	}
+
+	public void setRideType(int rideType) {
+		this.rideType = rideType;
 	}
 
 	public enum PaymentMethod{

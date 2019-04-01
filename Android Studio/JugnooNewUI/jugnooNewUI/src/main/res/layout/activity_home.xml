@@ -152,6 +152,13 @@
             <!--rental in ride layout -->
             <include layout="@layout/layout_rental_in_ride"/>
 
+            <!-- rental end ride layout -->
+            <include layout="@layout/layout_rental_end_ride"/>
+
+            <!-- rental destination layout -->
+            <include
+                layout="@layout/layout_rental_destination"/>
+
             <!-- end ride layout -->
             <include layout="@layout/layout_ride_summary_new" />
 

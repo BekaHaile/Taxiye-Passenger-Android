@@ -76,6 +76,11 @@ public class AutoData {
     private int lock = 0;
     private String  previousSelService = "";
 
+    // RENTAL
+
+    private int rentalInRideStatus;
+    private List<String> FaultConditions;
+
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
                     String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String confirmScreenFareEstimateEnable,
@@ -730,5 +735,21 @@ public class AutoData {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public int getRentalInRideStatus() {
+        return rentalInRideStatus;
+    }
+
+    public void setRentalInRideStatus(int rentalInRideStatus) {
+        this.rentalInRideStatus = rentalInRideStatus;
+    }
+
+    public List<String> getFaultConditions() {
+        return FaultConditions;
+    }
+
+    public void setFaultConditions(List<String> faultConditions) {
+        FaultConditions = faultConditions;
     }
 }

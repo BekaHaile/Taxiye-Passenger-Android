@@ -24,7 +24,6 @@ public class DamageReportAdapter extends RecyclerView.Adapter<DamageReportAdapte
     DamageReportAdapter() {
     }
 
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -53,9 +52,18 @@ public class DamageReportAdapter extends RecyclerView.Adapter<DamageReportAdapte
     }
 
 
-    public List<String> getDamagItemsList()
+    public List<String> getDamageItemsList()
     {
-        return textViewDamageTypeList;
+        List<String> list = new ArrayList<>();
+        for(int i = 0;i < textViewDamageTypeList.size();i++)
+        {
+            if(damagedItems.containsValue(textViewDamageTypeList.get(i)))
+            {
+                list.add(textViewDamageTypeList.get(i));
+            }
+        }
+
+        return list;
     }
 
     public void setDamagedItemsList(List<String> list)

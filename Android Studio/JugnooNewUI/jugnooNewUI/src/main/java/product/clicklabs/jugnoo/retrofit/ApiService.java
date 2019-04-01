@@ -669,10 +669,13 @@ public interface ApiService {
     void getLockStatus(@FieldMap Map<String,String>params,
                           Callback<FeedCommonResponse> callback);
 
-
     @FormUrlEncoded
     @POST("/app_get_lock_status")
     Response getLockStatus(@FieldMap Map<String,String>params);
+
+    @POST("/insert_damage_report")
+    void insertDamageReport(@Body MultipartTypedOutput params,
+                           Callback<FeedCommonResponse> callback);
 
 
 

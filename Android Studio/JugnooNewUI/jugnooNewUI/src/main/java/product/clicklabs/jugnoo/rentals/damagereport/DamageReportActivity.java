@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,20 +22,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.utils.ImageCompression;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.home.models.Region;
+import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.rentals.qrscanner.ScannerActivity;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
+import retrofit.mime.TypedString;
+import product.clicklabs.jugnoo.home.HomeActivity;
 
 public class DamageReportActivity extends AppCompatActivity implements DamageReportImageAdapter.DamageReportListener {
 
@@ -49,6 +62,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
     private RecyclerView recyclerViewDamageReport;
     private ImageView imageViewScan;
     private EditText editTextBikeNumber;
+    private EditText editTextDescription;
     private Button reportButton;
     private RecyclerView recyclerViewDamageImage;
     private DamageReportImageAdapter damageReportImageAdapter;
@@ -71,6 +85,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
         reportButton = findViewById(R.id.button_report);
         recyclerViewDamageImage = findViewById(R.id.recycle_view_damage_image);
         imageViewBack = findViewById(R.id.button_back);
+        editTextDescription = findViewById(R.id.edit_view_description);
 
         // TODO have to set the number of columns to auto_fit instead of hardCoding
 
@@ -82,13 +97,15 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
 
         // TODO Values needed to be taken from the backend instead of hardcoding
 
-        Resources res = getBaseContext().getResources();
-        String[] damage_kind = res.getStringArray(R.array.damage_kind);
         damageReportAdapter = new DamageReportAdapter();
         recyclerViewDamageReport.setAdapter(damageReportAdapter);
 
-        for (String aDamage_kind : damage_kind) {
-            damageReportAdapter.insertItemInList(aDamage_kind);
+
+        List<String> damageKind  = Data.autoData.getFaultConditions();
+
+
+        for (String aDamageKind : damageKind) {
+            damageReportAdapter.insertItemInList(aDamageKind);
         }
 
 
@@ -114,7 +131,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
                 } else {
 
                     //  TODO Send an api to the backend with attached images , bike Number,damages
-                    damageReportApi();
+                    compressImage();
                 }
             }
         });
@@ -136,7 +153,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
             IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
             if (result != null) {
                 if (result.getContents() != null) {
-                    String bikeNumber = extractNumber(result.getContents());
+                    String bikeNumber = extractQRCode(result.getContents());
                     if (!bikeNumber.equals("error")) {
                         editTextBikeNumber.setText(bikeNumber);
                     } else {
@@ -153,7 +170,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
         } else if (requestCode == REQUEST_CODE_SELECT_IMAGES && resultCode == RESULT_OK) {
             Log.d("DamageActivityRequest", "OnActivityResult");
 
-            compressImageAndUpload(data);
+            showImage(data);
         } else {
             editTextBikeNumber.requestFocus();
             InputMethodManager keyboard = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -162,66 +179,25 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
 
     }
 
-    private void compressImageAndUpload(Intent data) {
-        if (data != null && data.getSerializableExtra("imagesList") != null) {
-            ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
-            final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
 
-            if (images != null && images.size() != 0) {
+//    public String extractNumber(final String result) {
+//        String bikeNumber;
+//        if (result.indexOf("no=") > 0 && result.indexOf("no=") + 10 < result.length()) {
+//            bikeNumber = result.substring(result.indexOf("no=") + 3, result.indexOf("no=") + 13);
+//        } else {
+//            bikeNumber = "error";
+//        }
+//        return bikeNumber;
+//    }
 
-                //Compress Images if any new added
-                for (Object image : images) {
-                    if (image instanceof ImageEntry) {
-                        if (imageList == null)
-                            imageList = new ArrayList<>();
+    public String extractQRCode(final String result) {
 
-                        imageList.add(((ImageEntry) image).path);
-
-                    }
-                }
-
-                damageReportImageAdapter.clearList();
-                damageReportImageAdapter.insertImageInList(imageList);
-
-
-                if (imageList != null) {
-                    //upload feedback with new Images
-                    imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
-                        @Override
-                        public void processFinish(ImageCompression.CompressedImageModel[] output) {
-
-                            if (output != null) {
-                                for (ImageCompression.CompressedImageModel file : output) {
-                                    if (file != null) {
-                                        Log.d("DamageActivityImage", String.valueOf(new TypedFile("image/*", file.getFile())));
-                                        multipartTypedOutput.addPart(Constants.KEY_UPDATED_USER_IMAGE, new TypedFile("image/*", file.getFile()));
-                                    }
-                                }
-                                Log.d("DamageActivityImage", String.valueOf(multipartTypedOutput.fileName()));
-                            }
-
-//                            //place order with images
-//                            updateUserProfileImage(multipartTypedOutput);
-
-                        }
-
-                        @Override
-                        public void onError() {
-                            DialogPopup.dismissLoadingDialog();
-
-                        }
-                    }, this);
-                    imageCompressionTask.execute(imageList.toArray(new String[imageList.size()]));
-                }
-            }
-        }
-    }
-
-
-    public String extractNumber(final String result) {
         String bikeNumber;
         if (result.indexOf("no=") > 0 && result.indexOf("no=") + 10 < result.length()) {
             bikeNumber = result.substring(result.indexOf("no=") + 3, result.indexOf("no=") + 13);
+        } else if (result.length() == 11) {
+            // TODO apply the check that all 11 digits must be numbers
+            bikeNumber = result;
         } else {
             bikeNumber = "error";
         }
@@ -302,11 +278,113 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
     }
 
 
-    void damageReportApi() {
+//    void damageReportApi() {
+//
+//        final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
+//
+//        if (imageList != null) {
+//            //upload feedback with new Images
+//            imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
+//                @Override
+//                public void processFinish(ImageCompression.CompressedImageModel[] output) {
+//
+//                    if (output != null) {
+//                        for (ImageCompression.CompressedImageModel file : output) {
+//                            if (file != null) {
+//                                multipartTypedOutput.addPart("image", new TypedFile("image/*", file.getFile()));
+//                            }
+//                        }
+//
+//                    }
+//
+////                            //place order with images
+////                            updateUserProfileImage(multipartTypedOutput);
+//
+//                    List<String> damageListItems = damageReportAdapter.getDamagItemsList();
+//                    StringBuilder damageListItemString = new StringBuilder();
+//
+//                    for(int i = 0; i < damageListItems.size(); i++)
+//                    {
+//                        damageListItemString.append(damageListItems.get(i));
+//                        if(i == damageListItems.size() - 1)
+//                        {
+//                            break;
+//                        }
+//                        damageListItemString.append(";;;");
+//
+//                    }
+//                    multipartTypedOutput.addPart("fault_condition",new TypedString(damageListItemString.toString()));
+//                    multipartTypedOutput.addPart("description",new TypedString(editTextDescription.getText().toString()));
+//
+//                    // todo
+//                    // Bike Number not added in api
+//
+//                    new ApiCommon<>(DamageReportActivity.this).showLoader(true).putAccessToken(true)
+//                            .execute(multipartTypedOutput, ApiName.RENTALS_INSERT_DAMAGE_REPORT, new APICommonCallback<FeedCommonResponse>() {
+//                                @Override
+//                                public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+//                                    Log.d("DaamageReportRental"," Success");
+//
+//                                }
+//
+//                                @Override
+//                                public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+//                                    Log.d("DaamageReportRental"," Failure");
+//
+//                                    //  DialogPopup.dialogRentalLock(HomeActivity.this);
+//                                    return false;
+//                                }
+//                            });
+//
+//
+//
+//                }
+//
+//
+//                @Override
+//                public void onError() {
+//                    DialogPopup.dismissLoadingDialog();
+//
+//                }
+//            }, this);
+//            imageCompressionTask.execute(imageList.toArray(new String[imageList.size()]));
+//        }
+//
+//
+//
+//        else {
+//
+//        }
+//
+//    }
 
+
+    private void showImage(Intent data) {
+        if (data != null && data.getSerializableExtra("imagesList") != null) {
+            ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
+            if (images != null && images.size() != 0) {
+
+                //Compress Images if any new added
+                for (Object image : images) {
+                    if (image instanceof ImageEntry) {
+                        if (imageList == null)
+                            imageList = new ArrayList<>();
+
+                        imageList.add(((ImageEntry) image).path);
+
+                    }
+                }
+
+                damageReportImageAdapter.clearList();
+                damageReportImageAdapter.insertImageInList(imageList);
+            }
+
+        }
+    }
+
+    private void compressImage() {
         final MultipartTypedOutput multipartTypedOutput = new MultipartTypedOutput();
-
-        if (imageList != null) {
+        if (imageList != null && imageList.size() > 0) {
             //upload feedback with new Images
             imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
                 @Override
@@ -315,27 +393,80 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
                     if (output != null) {
                         for (ImageCompression.CompressedImageModel file : output) {
                             if (file != null) {
-                                multipartTypedOutput.addPart("image_damage", new TypedFile("image/*", file.getFile()));
+                                multipartTypedOutput.addPart(Constants.KEY_IMAGE, new TypedFile("image/*", file.getFile()));
                             }
                         }
-
                     }
 
-//                            //place order with images
-//                            updateUserProfileImage(multipartTypedOutput);
-
+                    damageReportApi(multipartTypedOutput);
                 }
-
                 @Override
                 public void onError() {
                     DialogPopup.dismissLoadingDialog();
-
                 }
             }, this);
             imageCompressionTask.execute(imageList.toArray(new String[imageList.size()]));
-        } else {
+        }
+        else{
+            multipartTypedOutput.addPart(Constants.KEY_IMAGE,new TypedString(""));
+            damageReportApi(multipartTypedOutput);
+        }
+
+
+
+    }
+
+    private void damageReportApi(final MultipartTypedOutput multipartTypedOutput)
+    {
+
+        List<String> damageListItems = damageReportAdapter.getDamageItemsList();
+        StringBuilder damageListItemString = new StringBuilder();
+
+        for (int i = 0; i < damageListItems.size(); i++) {
+            damageListItemString.append(damageListItems.get(i));
+            if (i == damageListItems.size() - 1) {
+                break;
+            }
+            damageListItemString.append(";;;");
 
         }
 
+        int regionId = 0;
+        List<Region> region = Data.autoData.getRegions();
+
+        for(int i = 0;i < region.size();i++)
+        {
+            if(region.get(i).getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
+            {
+                regionId = region.get(i).getRegionId();
+            }
+        }
+
+        // todo address, location_id
+
+        multipartTypedOutput.addPart(Constants.KEY_FAULT_CONDITION, new TypedString(damageListItemString.toString()));
+        multipartTypedOutput.addPart(Constants.KEY_DESCRIPTION, new TypedString(editTextDescription.getText().toString()));
+        multipartTypedOutput.addPart(Constants.KEY_LATITUDE,new TypedString(String.valueOf(HomeActivity.myLocation.getLatitude())));
+        multipartTypedOutput.addPart(Constants.KEY_LONGITUDE,new TypedString(String.valueOf(HomeActivity.myLocation.getLongitude())));
+        multipartTypedOutput.addPart(Constants.KEY_REGION_ID,new TypedString(String.valueOf(regionId)));
+        multipartTypedOutput.addPart(Constants.KEY_EXTERNAL_ID,new TypedString(editTextBikeNumber.getText().toString()));
+
+
+        new ApiCommon<>(DamageReportActivity.this).showLoader(true).putAccessToken(true)
+                .execute(multipartTypedOutput, ApiName.RENTALS_INSERT_DAMAGE_REPORT, new APICommonCallback<FeedCommonResponse>() {
+                    @Override
+                    public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        Log.d("DamageReportRental", " Success");
+
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        Log.d("DamageReportRental", " Failure");
+                        //  DialogPopup.dialogRentalLock(HomeActivity.this);
+                        return false;
+                    }
+                });
     }
+
 }

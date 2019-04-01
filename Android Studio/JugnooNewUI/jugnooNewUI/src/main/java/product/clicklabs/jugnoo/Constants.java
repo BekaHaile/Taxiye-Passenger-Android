@@ -1036,4 +1036,14 @@ public interface Constants {
     String KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE = "customer_partner_dialog_message";
 
     String KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE = "customer_show_convenience_charge_fare_estimate";
+
+    // RENTALS
+
+    String KEY_GPS_LOCK_STATUS = "gps_lock_status";
+    String KEY_EXTERNAL_ID = "external_id";
+    String KEY_LOCK_STATUS = "lock_status";
+    String KEY_FAULT_CONDITION = "fault_condition";
+
+
+
 }

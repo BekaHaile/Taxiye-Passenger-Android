@@ -849,6 +849,9 @@ public class LoginResponse {
 		@SerializedName("services")
 		@Expose
 		private ArrayList<ServiceType> serviceTypes;
+		@SerializedName("fault_conditions")
+		@Expose
+		private List<String> faultConditions;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -1039,6 +1042,14 @@ public class LoginResponse {
 
 		public void setServiceTypes(ArrayList<ServiceType> serviceTypes) {
 			this.serviceTypes = serviceTypes;
+		}
+
+		public List<String> getFaultConditions() {
+			return faultConditions;
+		}
+
+		public void setFaultConditions(List<String> faultConditions) {
+			this.faultConditions = faultConditions;
 		}
 	}
 
