@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -44,8 +46,8 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.rentals.qrscanner.ScannerActivity;
-import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
+import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
@@ -56,7 +58,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
     public static final int DAMAGE_REPORT_ACTIVITY = 805;
 
     private final static int REQUEST_CODE_SELECT_IMAGES = 157;
-    private final static int MAX_IMAGE_COUNT = 3;
+//    private final static int MAX_IMAGE_COUNT = 1;
 
 
     private RecyclerView recyclerViewDamageReport;
@@ -125,12 +127,10 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editTextBikeNumber.getText().toString().equals("")) {
-                    Toast.makeText(DamageReportActivity.this, getString(R.string.bike_number_required), Toast.LENGTH_SHORT).show();
+                if (!checkRequiredFields()) {
+                    Utils.showToast(DamageReportActivity.this,"All fields should be filled");
 
                 } else {
-
-                    //  TODO Send an api to the backend with attached images , bike Number,damages
                     compressImage();
                 }
             }
@@ -190,6 +190,56 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
 //        return bikeNumber;
 //    }
 
+//    private String checkRequiredFields()
+//    {
+//        String message = "";
+//        if(editTextBikeNumber.getText().toString().equals(""))
+//        {
+//            message = getString(R.string.bike_number_required);
+//        }
+//        else if(editTextDescription.getText().toString().equals(""))
+//        {
+//            message = getString(R.string.bike_number_required);
+//
+//        }
+//        else if(imageList.size() == 0)
+//        {
+//            message = getString(R.string.bike_number_required);
+//        }
+//        else if(damageReportAdapter.getDamageItemsList().size() == 0)
+//        {
+//            message = getString(R.string.bike_number_required);
+//        }
+//        return message;
+//
+//
+//    }
+
+
+    private boolean checkRequiredFields()
+    {
+        if(editTextBikeNumber.getText().toString().equals(""))
+        {
+            return false;
+        }
+        else if(editTextDescription.getText().toString().equals(""))
+        {
+            return false;
+
+        }
+        else if(imageList.size() == 0)
+        {
+            return false;
+        }
+        else if(damageReportAdapter.getDamageItemsList().size() == 0)
+        {
+            return false;
+        }
+        return true;
+
+    }
+
+
     public String extractQRCode(final String result) {
 
         String bikeNumber;
@@ -247,7 +297,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
         if (picker == null) {
             picker = new Picker.Builder(this, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
         }
-        picker.setLimit(MAX_IMAGE_COUNT - imageList.size());
+        picker.setLimit(damageReportImageAdapter.getMaxNoOfImages() - imageList.size());
         picker.startActivity(this, REQUEST_CODE_SELECT_IMAGES);
 
     }
@@ -265,8 +315,10 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.damage_image_fragment);
-        Objects.requireNonNull(dialog.getWindow()).setGravity(Gravity.CENTER);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Objects.requireNonNull(dialog.getWindow()).setGravity(Gravity.CENTER);
+        }
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT);
         ImageView image = dialog.findViewById(R.id.damage_image);
@@ -300,7 +352,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
 ////                            //place order with images
 ////                            updateUserProfileImage(multipartTypedOutput);
 //
-//                    List<String> damageListItems = damageReportAdapter.getDamagItemsList();
+//                    List<String> damageListItems = damageReportAdapter.getDamageItemsList();
 //                    StringBuilder damageListItemString = new StringBuilder();
 //
 //                    for(int i = 0; i < damageListItems.size(); i++)
@@ -393,7 +445,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
                     if (output != null) {
                         for (ImageCompression.CompressedImageModel file : output) {
                             if (file != null) {
-                                multipartTypedOutput.addPart(Constants.KEY_IMAGE, new TypedFile("image/*", file.getFile()));
+                                multipartTypedOutput.addPart(Constants.KEY_DAMAGE_IMAGE, new TypedFile("image/*", file.getFile()));
                             }
                         }
                     }
@@ -408,7 +460,7 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
             imageCompressionTask.execute(imageList.toArray(new String[imageList.size()]));
         }
         else{
-            multipartTypedOutput.addPart(Constants.KEY_IMAGE,new TypedString(""));
+            multipartTypedOutput.addPart(Constants.KEY_DAMAGE_IMAGE,new TypedString(""));
             damageReportApi(multipartTypedOutput);
         }
 
@@ -442,7 +494,6 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
             }
         }
 
-        // todo address, location_id
 
         multipartTypedOutput.addPart(Constants.KEY_FAULT_CONDITION, new TypedString(damageListItemString.toString()));
         multipartTypedOutput.addPart(Constants.KEY_DESCRIPTION, new TypedString(editTextDescription.getText().toString()));
@@ -451,11 +502,20 @@ public class DamageReportActivity extends AppCompatActivity implements DamageRep
         multipartTypedOutput.addPart(Constants.KEY_REGION_ID,new TypedString(String.valueOf(regionId)));
         multipartTypedOutput.addPart(Constants.KEY_EXTERNAL_ID,new TypedString(editTextBikeNumber.getText().toString()));
 
+        // todo address, location_id
 
-        new ApiCommon<>(DamageReportActivity.this).showLoader(true).putAccessToken(true)
+        multipartTypedOutput.addPart(Constants.KEY_ADDRESS,new TypedString("0"));
+        multipartTypedOutput.addPart(Constants.KEY_LOCATION_ID,new TypedString("1"));
+
+
+
+
+
+        new ApiCommon<>(this).showLoader(true).putAccessToken(true)
                 .execute(multipartTypedOutput, ApiName.RENTALS_INSERT_DAMAGE_REPORT, new APICommonCallback<FeedCommonResponse>() {
                     @Override
                     public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        Toast.makeText(DamageReportActivity.this,message,Toast.LENGTH_LONG).show();
                         Log.d("DamageReportRental", " Success");
 
                     }

@@ -57,7 +57,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
-import product.clicklabs.jugnoo.rentals.models.RentalRideStatus;
+import product.clicklabs.jugnoo.rentals.models.GpsLockStatus;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
@@ -1171,8 +1171,7 @@ public class JSONParser implements Constants {
             Double tipAmount  = null;
             int isCorporateRide = 0;
             int rideType = RideTypeValue.NORMAL.getOrdinal();
-
-            int gpsLockStatus = RentalRideStatus.ONGOING.getOrdinal();
+            int gpsLockStatus = GpsLockStatus.LOCK.getOrdinal();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1282,9 +1281,8 @@ public class JSONParser implements Constants {
                             vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
                             rideType = jObject.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
+                            gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.LOCK.getOrdinal());
 
-//                            gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,RentalRideStatus.ONGOING.getOrdinal());
-//                            HomeActivity.rentalInRideStatus = gpsLockStatus;
 
                             try{
                                 cancelRideThrashHoldTime = jObject.optString("cancel_ride_threshold_time", "");
@@ -1392,7 +1390,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount, isCorporateRide, rideType));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount, isCorporateRide, rideType, gpsLockStatus));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
@@ -1415,6 +1413,9 @@ public class JSONParser implements Constants {
                 else if (Data.P_IN_RIDE.equalsIgnoreCase(screenMode)) {
                     HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                     Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
+                }
+                if(rideType == RideTypeValue.BIKE_RENTAL.getOrdinal()){
+                    HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                 }
             }
         }

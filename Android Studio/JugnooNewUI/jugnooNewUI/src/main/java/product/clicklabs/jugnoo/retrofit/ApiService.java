@@ -673,7 +673,7 @@ public interface ApiService {
     @POST("/app_get_lock_status")
     Response getLockStatus(@FieldMap Map<String,String>params);
 
-    @POST("/insert_damage_report")
+    @POST("/customer/insert_damage_report")
     void insertDamageReport(@Body MultipartTypedOutput params,
                            Callback<FeedCommonResponse> callback);
 

@@ -78,7 +78,6 @@ public class AutoData {
 
     // RENTAL
 
-    private int rentalInRideStatus;
     private List<String> FaultConditions;
 
 
@@ -737,13 +736,6 @@ public class AutoData {
         this.currency = currency;
     }
 
-    public int getRentalInRideStatus() {
-        return rentalInRideStatus;
-    }
-
-    public void setRentalInRideStatus(int rentalInRideStatus) {
-        this.rentalInRideStatus = rentalInRideStatus;
-    }
 
     public List<String> getFaultConditions() {
         return FaultConditions;

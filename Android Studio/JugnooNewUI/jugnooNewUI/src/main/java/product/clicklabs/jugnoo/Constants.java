@@ -1045,5 +1045,8 @@ public interface Constants {
     String KEY_FAULT_CONDITION = "fault_condition";
 
 
+    String KEY_LOCATION_ID = "location_id";
+    String KEY_DAMAGE_IMAGE = "damage_image";
+
 
 }

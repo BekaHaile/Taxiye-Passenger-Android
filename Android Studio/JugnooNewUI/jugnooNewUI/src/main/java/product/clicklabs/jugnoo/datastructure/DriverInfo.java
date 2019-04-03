@@ -52,6 +52,7 @@ public class DriverInfo {
 	private int paymentMethod;
 	private Double tipAmount;
 	private int rideType;
+	private int gpsLockStatus;
 
 	public DriverInfo(String userId){
 		this.userId = userId;
@@ -85,7 +86,7 @@ public class DriverInfo {
 			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
-					  String currency, String markerUrl,Double tipAmount, int isCorporateRide, int rideType){
+					  String currency, String markerUrl,Double tipAmount, int isCorporateRide, int rideType, int gpsLockStatus){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -119,6 +120,7 @@ public class DriverInfo {
 		this.tipAmount = tipAmount;
 		this.isCorporateRide = isCorporateRide;
 		this.rideType = rideType;
+		this.gpsLockStatus = gpsLockStatus;
 	}
 
 	//for last ride data
@@ -384,6 +386,14 @@ public class DriverInfo {
 
 	public void setTipAmount(Double tipAmount) {
 		this.tipAmount = tipAmount;
+	}
+
+	public int getGpsLockStatus() {
+		return gpsLockStatus;
+	}
+
+	public void setGpsLockStatus(int gpsLockStatus) {
+		this.gpsLockStatus = gpsLockStatus;
 	}
 
 }

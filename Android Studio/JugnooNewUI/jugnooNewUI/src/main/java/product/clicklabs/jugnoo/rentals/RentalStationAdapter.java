@@ -20,7 +20,7 @@ public class RentalStationAdapter extends RecyclerView.Adapter<RentalStationAdap
 
 
     private List<Region.Stations> list;
-    Context context;
+    private Context context;
 
 
     public RentalStationAdapter(Context context, List<Region.Stations> list) {

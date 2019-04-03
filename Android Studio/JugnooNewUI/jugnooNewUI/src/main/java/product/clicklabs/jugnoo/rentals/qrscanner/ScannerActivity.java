@@ -200,6 +200,8 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
 
                     Log.d("HomeActivityResume","QR CODE SCANNER Edittext " + editTextNumber);
 
+                    // todo Put it in string
+
                     if (bikeNumber[0].length() < 9) {
                         Toast.makeText(ScannerActivity.this, "QR Number too small", Toast.LENGTH_SHORT).show();
                     } else {

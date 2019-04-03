@@ -52,7 +52,7 @@ public class DamageReportAdapter extends RecyclerView.Adapter<DamageReportAdapte
     }
 
 
-    public List<String> getDamageItemsList()
+    List<String> getDamageItemsList()
     {
         List<String> list = new ArrayList<>();
         for(int i = 0;i < textViewDamageTypeList.size();i++)

@@ -2071,6 +2071,13 @@
     <string name="enter_qr_number">Enter QR Number</string>
     <string name="lock">lock</string>
 
+    <string name="drop_stations">Drop Stations</string>
+
+    <!-- Rental In Ride Layout -->
+    <string name="lock_ride">Lock Ride</string>
+    <string name="unlock_ride">Unlock Ride</string>
+    <string name="end_ride">End Ride</string>
+
 
 
 

@@ -22,11 +22,9 @@ import java.util.Objects;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.rentals.qrscanner.ScannerActivity;
-import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 
 public class InstructionDialog {
 
@@ -87,9 +85,9 @@ public class InstructionDialog {
         final ViewPager viewPager = dialog.findViewById(R.id.viewPager);
         Button buttonNext = dialog.findViewById(R.id.button_next);
         Button buttonSkip = dialog.findViewById(R.id.button_skip);
-        ImageView imageViewback = dialog.findViewById(R.id.image_view_back);
+        ImageView imageViewBack = dialog.findViewById(R.id.image_view_back);
 
-        imageViewback.setOnClickListener(new View.OnClickListener() {
+        imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

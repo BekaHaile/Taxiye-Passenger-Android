@@ -1,19 +1,13 @@
 package product.clicklabs.jugnoo.rentals.damagereport;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,7 +15,6 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import product.clicklabs.jugnoo.R;
 
@@ -31,7 +24,7 @@ public class DamageReportImageAdapter extends RecyclerView.Adapter<DamageReportI
     private Context context;
 
     // Max Number of damaged images that rider can upload
-    private final int MAX_NO_OF_IMAGES = 3;
+    private final int MAX_NO_OF_IMAGES = 1;
 
     DamageReportImageAdapter(Context context) {
         this.context = context;
@@ -108,11 +101,11 @@ public class DamageReportImageAdapter extends RecyclerView.Adapter<DamageReportI
         notifyItemRemoved(index);
     }
 
-    private int getMaxNoOfImages() {
+    int getMaxNoOfImages() {
         return MAX_NO_OF_IMAGES;
     }
 
-    int getListSize()
+    private int getListSize()
     {
         return imageViewList.size();
     }
