@@ -47,15 +47,22 @@ public class RentalStationAdapter extends RecyclerView.Adapter<RentalStationAdap
         final String address = list.get(i).getAddress();
         final Double latitude = list.get(i).getLatitude();
         final Double longitude = list.get(i).getLongitude();
+        final Double distance = list.get(i).getDistance();
+
+        if (i == list.size() - 1) {
+            viewHolder.imageViewSeparator.setVisibility(View.GONE);
+        }
 
         viewHolder.textViewName.setText(name);
         viewHolder.textViewAddress.setText(address);
+        viewHolder.textViewDistance.setText(String.valueOf(distance));
         final SearchResult autoCompleteSearchResult = new SearchResult(name, address, "", latitude, longitude, 0, 1, 0);
 
         viewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((RentalStationAdapterOnClickHandler) context).onStationClick(autoCompleteSearchResult);
+
             }
         });
 
@@ -72,13 +79,17 @@ public class RentalStationAdapter extends RecyclerView.Adapter<RentalStationAdap
         TextView textViewAddress;
         ImageView imageViewIcon;
         ConstraintLayout constraintLayout;
+        TextView textViewDistance;
+        ImageView imageViewSeparator;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
+            imageViewSeparator = itemView.findViewById(R.id.imageViewSep);
             textViewAddress = itemView.findViewById(R.id.textViewAddress);
             textViewName = itemView.findViewById(R.id.textViewSearchName);
             imageViewIcon = itemView.findViewById(R.id.imageViewIcon);
             constraintLayout = itemView.findViewById(R.id.constraint_layout);
+            textViewDistance = itemView.findViewById(R.id.textViewDistance);
         }
     }
 }

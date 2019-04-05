@@ -41,6 +41,7 @@ public class DamageReportAdapter extends RecyclerView.Adapter<DamageReportAdapte
     void insertItemInList(String damageType) {
         textViewDamageTypeList.add(damageType);
         notifyItemChanged(getItemCount());
+
     }
 
     void removeItemFromList(int index) {
@@ -93,6 +94,7 @@ public class DamageReportAdapter extends RecyclerView.Adapter<DamageReportAdapte
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
+
             if (damagedItems.containsKey(position)) {
                 damagedItems.remove(position);
                 textView.setTextColor(itemView.getResources().getColor(android.R.color.black));
@@ -100,7 +102,7 @@ public class DamageReportAdapter extends RecyclerView.Adapter<DamageReportAdapte
             } else {
                 damagedItems.put(position, textView.getText().toString());
                 textView.setTextColor(itemView.getResources().getColor(android.R.color.white));
-                linearLayout.setBackground(itemView.getResources().getDrawable(R.drawable.custom_border_white));
+                linearLayout.setBackground(itemView.getResources().getDrawable(R.drawable.capsule_green_color_selector));
             }
         }
 

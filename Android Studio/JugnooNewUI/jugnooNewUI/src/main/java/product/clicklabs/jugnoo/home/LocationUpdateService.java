@@ -12,6 +12,8 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Pair;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.AccessTokenGenerator;
@@ -21,15 +23,21 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.rentals.models.GpsLockStatus;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static product.clicklabs.jugnoo.Constants.KEY_GPS_LOCK_STATUS;
+import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
 
 public class LocationUpdateService extends Service {
 
@@ -199,6 +207,8 @@ public class LocationUpdateService extends Service {
 								public void success(SettleUserDebt settleUserDebt, Response response) {
 									String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 									Log.i(TAG, "updateCustomerLocation responseStr=" + responseStr);
+
+									updateLockStatus(responseStr);
 								}
 
 								@Override
@@ -250,6 +260,20 @@ public class LocationUpdateService extends Service {
 		builder.setContentIntent(intent);
 		builder.setPriority(Notification.PRIORITY_DEFAULT);
 		return builder.build();
+	}
+
+	private void updateLockStatus(String response) {
+		int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
+		try {
+			JSONObject jObj = new JSONObject(response);
+			gpsLockStatus = jObj.optInt(KEY_GPS_LOCK_STATUS, GpsLockStatus.UNLOCK.getOrdinal());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		if (HomeActivity.appInterruptHandler != null) {
+			HomeActivity.appInterruptHandler.updateGpsLockStatus(gpsLockStatus);
+		}
 	}
 
 }

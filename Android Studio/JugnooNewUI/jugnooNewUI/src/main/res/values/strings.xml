@@ -2078,8 +2078,13 @@
     <string name="unlock_ride">Unlock Ride</string>
     <string name="end_ride">End Ride</string>
 
-
-
+    <string name="booking_a_bike">Booking a bike...</string>
+    <string name="ending_ride">Ending Ride</string>
+    <string name="unlocking_ride">Unlocking Ride</string>
+    <string name="locking_ride">Locking Ride</string>
+    <string name="select_drop_off_station">Select Drop Off Station</string>
+    <string name="no_nearby_drop_off_stations">No nearby drop off stations available</string>
+    <string name="qr_code_too_small">QR Number too small</string>
 
 
 </resources>

@@ -602,16 +602,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     // RENTALS
 
-    private String QRCode = "";
+    private boolean checkLockStatus = false; // true -> lock , false -> unlock
+    private String qrCode = "";
+    private String qrCodeDetails = "";
 
     private Button buttonEndRide, buttonLockRide, buttonUnlockRide;
-    private RelativeLayout rentalInRideLayout,rentalEndRideLayout;
+    Button damageReportButton;
+    private RelativeLayout rentalInRideLayout;
+
+
+    // Rental End Ride Layout
+    private RelativeLayout rentalEndRideLayout;
+    private TextView textViewEndRide;
+
+
     private ConstraintLayout rentalDestinationLayout;
     private View endRideJugnooAnimation;
     private AnimationDrawable rentalJugnooAnimation;
     private Button customerLocation;
 //    public static int rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
     Dialog dialogRentalStations;
+
+
 
 
     @SuppressLint("NewApi")
@@ -1389,7 +1401,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonLockRide.setOnClickListener(this);
 
         rentalInRideLayout = findViewById(R.id.layout_rental_in_ride);
+
         rentalEndRideLayout = findViewById(R.id.layout_rental_end_ride);
+        textViewEndRide = findViewById(R.id.textViewEndRide);
+
         rentalDestinationLayout = findViewById(R.id.layout_rental_destination);
         customerLocation = findViewById(R.id.customerLocation);
         endRideJugnooAnimation = findViewById(R.id.jugnoo_animation);
@@ -1398,7 +1413,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
 
-        Button damageReportButton = findViewById(R.id.damage_button);
+        damageReportButton = findViewById(R.id.damage_button);
         damageReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1594,6 +1609,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             // todo check for no stations
                             openRentalStationList();
+                            checkFareEstimate = false;
                         }
                         else{
                             openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP);
@@ -2244,6 +2260,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         switchPassengerScreen(passengerScreenMode);
     }
 
+    public boolean checkFareEstimate = false;
+
     public void openFareEstimate() {
         if(Data.autoData == null || Data.autoData.getPickupLatLng() == null){
             Utils.showToast(this, getString(R.string.set_your_pickup_location));
@@ -2261,8 +2279,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             intent.putExtra(KEY_DROP_LATITUDE, Data.autoData.getDropLatLng().latitude);
             intent.putExtra(KEY_DROP_LONGITUDE, Data.autoData.getDropLatLng().longitude);
             intent.putExtra(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
+            startActivityForResult(intent, FARE_ESTIMATE);
+
+        } else {
+            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                    RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+
+                if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+                checkFareEstimate = true;
+                openRentalStationList();
+            }
+            else{
+                startActivityForResult(intent, FARE_ESTIMATE);
+            }
         }
-        startActivityForResult(intent, FARE_ESTIMATE);
+
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
@@ -2851,6 +2884,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (callNextAnim) {
                     translateViewBottomTop(mView, viewExchange);
                 }
+
             }
 
             @Override
@@ -2884,6 +2918,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
                 params.topMargin = (int) (ASSL.Yscale() * 80f);
                 mView.setLayoutParams(params);
+
             }
 
             @Override
@@ -2919,6 +2954,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (callNextAnim) {
                     translateViewTopBottom(mView, viewExchange);
                 }
+
             }
 
             @Override
@@ -2951,6 +2987,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
                 params.topMargin = (int) (ASSL.Yscale() * 20f);
                 mView.setLayoutParams(params);
+
             }
 
             @Override
@@ -3679,6 +3716,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         initAndClearInRidePath();
                         getTrackingLogHelper().uploadAllTrackLogs();
 
+
+                        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()
+                                == RideTypeValue.BIKE_RENTAL.getOrdinal())
+                        {
+                            damageReportButton.setVisibility(View.VISIBLE);
+                            Log.d("HomeActivityResult" , " Rental");
+                        }
+
                         break;
 
 
@@ -3696,6 +3741,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         rentalEndRideLayout.setVisibility(View.GONE);
                         rentalDestinationLayout.setVisibility(View.GONE);
 
+                        damageReportButton.setVisibility(View.GONE);
 
                         hideCenterPickupPin();
 
@@ -3732,6 +3778,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         rentalInRideLayout.setVisibility(View.GONE);
                         rentalEndRideLayout.setVisibility(View.GONE);
                         rentalDestinationLayout.setVisibility(View.GONE);
+                        damageReportButton.setVisibility(View.GONE);
 
 
                         hideCenterPickupPin();
@@ -3742,15 +3789,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         textViewFindingDriver.setText(R.string.finding_a_driver);
                         findViewById(R.id.vBidTimer).setVisibility(View.GONE);
+                        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                                RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                            textViewFindingDriver.setText(R.string.booking_a_bike);
+                        } else {
+                            textViewFindingDriver.setText(R.string.finding_a_driver);
+                        }
+
                         pwBidTimer.setVisibility(View.GONE);
                         tvBidTimer.setVisibility(View.GONE);
-                        updateBidsView();
                         initialCancelRideBtn.setVisibility(View.GONE);
                         try {
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        updateBidsView();
 
                         getHandler().postDelayed(new Runnable() {
                             @Override
@@ -3857,6 +3911,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
+                        damageReportButton.setVisibility(View.GONE);
+
 
 //                        requestFinalLayout.setVisibility(View.VISIBLE);
 
@@ -3968,6 +4024,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
 //                        requestFinalLayout.setVisibility(View.VISIBLE);
+                        damageReportButton.setVisibility(View.GONE);
+
 
                         if(Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
                         {
@@ -4057,6 +4115,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //
 //                        }
 
+
                         if(Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
                         {
                             Log.d("HomeActivityResult" , " Rental");
@@ -4084,6 +4143,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                         else
                         {
+
                             Log.d("HomeActivityResult" , " RequestFinal");
                             rentalJugnooAnimation.stop();
                             rentalEndRideLayout.setVisibility(View.GONE);
@@ -4114,6 +4174,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
 //                        requestFinalLayout.setVisibility(View.VISIBLE);
+
+                        damageReportButton.setVisibility(View.GONE);
 
 
                         rentalDestinationLayout.setVisibility(View.GONE);
@@ -4228,6 +4290,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         rentalInRideLayout.setVisibility(View.GONE);
                         rentalEndRideLayout.setVisibility(View.GONE);
                         rentalDestinationLayout.setVisibility(View.GONE);
+                        damageReportButton.setVisibility(View.GONE);
+
 
                         hideCenterPickupPin();
 
@@ -5538,12 +5602,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 openChatScreen();
                 break;
             case R.id.buttonEndRide: // 8
+                textViewEndRide.setText(R.string.ending_ride);
                 updateLockStatusApi(String.valueOf(RentalInRideValue.END_RIDE.getOrdinal()));
                 break;
             case R.id.buttonUnlockRide: // 6
+                textViewEndRide.setText(R.string.unlocking_ride);
                 updateLockStatusApi(String.valueOf(RentalInRideValue.UNLOCK_RIDE.getOrdinal()));
                 break;
             case R.id.buttonLockRide: // 4
+                textViewEndRide.setText(R.string.locking_ride);
                 updateLockStatusApi(String.valueOf(RentalInRideValue.LOCK_RIDE.getOrdinal()));
                 break;
         }
@@ -5675,9 +5742,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     if (result != null) {
                         if (result.getContents() != null) {
-                            String bikeNumber = extractQRCode(result.getContents());
+                            String bikeNumber = "";
+                            qrCodeDetails = result.getContents();
+
+                            bikeNumber = extractQRCode(result.getContents());
                             if (!bikeNumber.equals("error")) {
-                                QRCode = bikeNumber;
+                                qrCode = bikeNumber;
+
                                 // todo
                             if(Data.autoData.getDropLatLng() != null
                                     && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
@@ -5697,8 +5768,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 Toast.makeText(this, getString(R.string.incorrect_qr_code), Toast.LENGTH_SHORT).show();
                             }
                         } else if(data != null){
-                            QRCode = data.getStringExtra("qrCode");
-                            Log.d("HomeActivityResume","QR CODE HOME " + QRCode);
+                            qrCode = data.getStringExtra("qrCode");
+                            qrCodeDetails = data.getStringExtra("qr_code_details");
+
+                            Log.d("HomeActivityResume","QR CODE HOME " + qrCode);
 
                             if(Data.autoData.getDropLatLng() != null
                                     && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
@@ -5731,14 +5804,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     // Extracting Bike number from the scan
     public String extractQRCode(final String result) {
 
-        String bikeNumber;
+//        String bikeNumber;
+//        if (result.indexOf("no=") > 0 && result.indexOf("no=") + 10 < result.length()) {
+//            bikeNumber = result.substring(result.indexOf("no=") + 3, result.indexOf("no=") + 13);
+//        } else if (result.length() == 11) {
+//            // TODO apply the check that all 11 digits must be numbers
+//            bikeNumber = result;
+//        } else {
+//            bikeNumber = "error";
+//        }
+//        return bikeNumber;
+
+        String bikeNumber = "";
         if (result.indexOf("no=") > 0 && result.indexOf("no=") + 10 < result.length()) {
             bikeNumber = result.substring(result.indexOf("no=") + 3, result.indexOf("no=") + 13);
-        } else if (result.length() == 11) {
-            // TODO apply the check that all 11 digits must be numbers
-            bikeNumber = result;
         } else {
-            bikeNumber = "error";
+            bikeNumber = result;
         }
         return bikeNumber;
     }
@@ -8497,8 +8578,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 // TODO  if() delete the taxi one And unComment the bikeRental one
 
                                 if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                    nameValuePairs.put("qr_code", QRCode);
+                                    nameValuePairs.put("qr_code", qrCode);
                                     nameValuePairs.put("ride_type", String.valueOf(RideTypeValue.BIKE_RENTAL.getOrdinal()));
+                                    nameValuePairs.put("qr_code_details",qrCodeDetails);
                                 }
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
@@ -10346,6 +10428,32 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         showPoolInforBar(false);
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
+
+        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            if (textViewDestSearch.getText().toString().isEmpty()
+                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.enter_destination))
+                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.destination_required))
+                    || oldRideType == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+
+            }
+            else
+            {
+                imageViewDropCross.performClick();
+
+            }
+        }
+
+        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                    RideTypeValue.BIKE_RENTAL.getOrdinal())
+        {
+            damageReportButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            damageReportButton.setVisibility(View.GONE);
+        }
+
         return changed;
     }
 
@@ -11188,7 +11296,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void updateBidsView() {
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
-        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
+//        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
+
+
+        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.booking_a_bike : R.string.tap_a_bid);
+        } else {
+            textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
+        }
+
+
         long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
         if (diff <= 0) {
             getHandler().removeCallbacks(runnableBidTimer);
@@ -11764,6 +11882,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                                                 switchPassengerScreen(passengerScreenMode);
                                             }
+
+                                            if(checkLockStatus == true)
+                                            {
+                                                buttonLockRide.setVisibility(View.VISIBLE);
+                                                buttonUnlockRide.setVisibility(View.INVISIBLE);
+                                                checkLockStatus = false;
+                                            }
+                                            else
+                                            {
+                                                buttonUnlockRide.setVisibility(View.VISIBLE);
+                                                buttonLockRide.setVisibility(View.INVISIBLE);
+                                                checkLockStatus = true;
+                                            }
+
+                                            if(rentalInRideLayout.getVisibility() == View.VISIBLE)
+                                            {
+                                                DialogPopup.alertPopup(HomeActivity.this,"Success","Request is successful");
+
+                                            }
                                         }
 
                                         @Override
@@ -11829,6 +11966,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_LOCK_STATUS, tag);
         params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
+
 
         Log.i(TAG, String.valueOf(params));
 
@@ -11900,7 +12038,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvAdvanceBookings.setVisibility(View.VISIBLE);
     }
     }
-}
+
 
     public void switchRentalInRideUI() {
 
@@ -11952,25 +12090,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         List<Region> region = Data.autoData.getRegions();
         List<Region.Stations> stations = new ArrayList<>();
 
-        for(int i = 0;i < region.size();i++)
-        {
-            if(region.get(i).getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
-            {
+        for (int i = 0; i < region.size(); i++) {
+            if (region.get(i).getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
                 stations = region.get(i).getStations();
             }
         }
 
-        RentalStationAdapter adapter = new RentalStationAdapter(HomeActivity.this,stations);
-        recyclerView.setAdapter(adapter);
+        if (stations.size() <= 0) {
+            Utils.showToast(HomeActivity.this, getString(R.string.no_nearby_drop_off_stations));
+        } else {
+            RentalStationAdapter adapter = new RentalStationAdapter(HomeActivity.this, stations);
+            recyclerView.setAdapter(adapter);
 
-        Objects.requireNonNull(dialogRentalStations.getWindow()).setGravity(Gravity.CENTER);
-        Objects.requireNonNull(dialogRentalStations.getWindow()).setLayout(WindowManager.LayoutParams.MATCH_PARENT,
-                WindowManager.LayoutParams.WRAP_CONTENT);
-
-        dialogRentalStations.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        dialogRentalStations.show();
-
-
+            Objects.requireNonNull(dialogRentalStations.getWindow()).setGravity(Gravity.CENTER);
+            Objects.requireNonNull(dialogRentalStations.getWindow()).setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
+            dialogRentalStations.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialogRentalStations.show();
+        }
     }
 
     @Override
@@ -11981,10 +12118,38 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         rentalDestinationLayout.setVisibility(View.GONE);
         dialogRentalStations.dismiss();
         placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
+
         onPlaceClick(autoCompleteSearchResult);
         onPlaceSearchPre();
-        onPlaceSearchPost(autoCompleteSearchResult);
+        onPlaceSearchPost(autoCompleteSearchResult, placeSearchMode);
+
+        if(checkFareEstimate == true)
+        {
+            openFareEstimate();
+        }
+
     }
 
+    @Override
+    public void updateGpsLockStatus(int gpsLockStatus) {
+        buttonEndRide.setVisibility(View.VISIBLE);
+
+        if(gpsLockStatus == GpsLockStatus.LOCK.getOrdinal()
+                        || gpsLockStatus == GpsLockStatus.REQ_START_RIDE_UNLOCK.getOrdinal()
+                        || gpsLockStatus == GpsLockStatus.IN_RIDE_LOCK.getOrdinal()
+                        || gpsLockStatus == GpsLockStatus.REQ_IN_RIDE_UNLOCK.getOrdinal()
+                        || gpsLockStatus == GpsLockStatus.UNLOCK_FAILED.getOrdinal()) {
+            buttonUnlockRide.setVisibility(View.VISIBLE);
+            buttonLockRide.setVisibility(View.INVISIBLE);
+//            checkLockStatus = true;
+        }
+        else {
+            buttonLockRide.setVisibility(View.VISIBLE);
+            buttonUnlockRide.setVisibility(View.INVISIBLE);
+
+//            checkLockStatus = false;
+        }
+
+    }
 }
 

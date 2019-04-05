@@ -68,8 +68,6 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
             @Override
             public void onClick(View v) {
 
-                // TODO Update after adding the damage report activity
-
                 if (damageReportActivityCode == DamageReportActivity.DAMAGE_REPORT_ACTIVITY) {
                     finish();
                 } else {
@@ -77,23 +75,6 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
                 }
             }
         });
-    }
-
-
-    // Extracting Bike number from the scan
-    public String extractNumber(final String result) {
-
-        Log.d("MainActivity ", result);
-        String bikeNumber;
-        if (result.indexOf("no=") > 0 && result.indexOf("no=") + 10 < result.length()) {
-            bikeNumber = result.substring(result.indexOf("no=") + 3, result.indexOf("no=") + 13);
-        } else if (result.length() == 11) {
-            // TODO apply the check that all 11 digits must be numbers
-            bikeNumber = result;
-        } else {
-            bikeNumber = "error";
-        }
-        return bikeNumber;
     }
 
 
@@ -198,16 +179,26 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
                 public void onClick(View view) {
                     bikeNumber[0] = editTextNumber.getText().toString();
 
-                    Log.d("HomeActivityResume","QR CODE SCANNER Edittext " + editTextNumber);
 
-                    // todo Put it in string
+//                    if (bikeNumber[0].length() < 9) {
+//                        Toast.makeText(ScannerActivity.this, "QR Number too small", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Intent intent = getIntent();
+//                        Log.d("HomeActivityResume","QR CODE SCANNER bike Number" + bikeNumber[0]);
+//                        intent.putExtra("qrCode", bikeNumber[0]);
+//                        setResult(RESULT_OK, intent);
+//                        dialog.dismiss();
+//                        finish();
+//                    }
 
-                    if (bikeNumber[0].length() < 9) {
-                        Toast.makeText(ScannerActivity.this, "QR Number too small", Toast.LENGTH_SHORT).show();
+
+                    if (bikeNumber[0].length() == 0 || bikeNumber[0].equals("")) {
+                        Toast.makeText(ScannerActivity.this, R.string.qr_code_too_small, Toast.LENGTH_SHORT).show();
                     } else {
                         Intent intent = getIntent();
                         Log.d("HomeActivityResume","QR CODE SCANNER bike Number" + bikeNumber[0]);
                         intent.putExtra("qrCode", bikeNumber[0]);
+                        intent.putExtra("qr_code_details",bikeNumber[0]);
                         setResult(RESULT_OK, intent);
                         dialog.dismiss();
                         finish();

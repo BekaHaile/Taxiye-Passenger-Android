@@ -58,30 +58,6 @@ public class InstructionDialog {
 
         }
 
-        // TODO set the fields according to the assets and data to be provides
-        // Fake data
-
-//
-//        for(int i = 0;i < instructions.size();i++)
-//        {
-//            String title = instructions.get(i).getTitle();
-//            String image = instructions.get(i).getImage();
-//            String description = instructions.get(i).getDescription();
-//            list.add(new InstructionDialogModel(title,image,description));
-//        }
-//        list.add(new InstructionDialogModel("Title 1",
-//                "https://s3-ap-southeast-1.amazonaws.com/jugnoo-autos/app/images/ic_bike_main_android.png",
-//                "DESC 1"));
-//        list.add(new InstructionDialogModel("Title 2",
-//                "https://s3-ap-southeast-1.amazonaws.com/jugnoo-autos/app/images/ic_bike_main_android.png",
-//                "DESC 2"));
-//        list.add(new InstructionDialogModel("Title 3",
-//                "https://s3-ap-southeast-1.amazonaws.com/jugnoo-autos/app/images/ic_bike_main_android.png",
-//                "DESC 3"));
-//        list.add(new InstructionDialogModel("Title 4",
-//                "https://s3-ap-southeast-1.amazonaws.com/jugnoo-autos/app/images/ic_bike_main_android.png",
-//                "DESC 4"));
-
         final ViewPager viewPager = dialog.findViewById(R.id.viewPager);
         Button buttonNext = dialog.findViewById(R.id.button_next);
         Button buttonSkip = dialog.findViewById(R.id.button_skip);
