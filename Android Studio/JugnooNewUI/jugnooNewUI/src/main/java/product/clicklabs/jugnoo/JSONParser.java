@@ -690,6 +690,8 @@ public class JSONParser implements Constants {
             //current_user_status = 1 driver or 2 user
             parseDriversToShow(autos.getDrivers());
 
+            Data.autoData.setServiceTypes(autos.getServiceTypes());
+
             Data.autoData.setFareFactor(1);
             if(autos.getFareFactor() != null) {
                 Data.autoData.setFareFactor(autos.getFareFactor());

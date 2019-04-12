@@ -139,6 +139,9 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     @SerializedName("show_region_specific_fare")
     @Expose
     private int showRegionSpecificFare;
+    @SerializedName("services")
+    @Expose
+    private ArrayList<ServiceType> serviceTypes;
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -520,5 +523,16 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
 
     public int getShowRegionSpecificFare() {
         return showRegionSpecificFare;
+    }
+
+    public ArrayList<ServiceType> getServiceTypes() {
+        if(serviceTypes == null){
+            serviceTypes = new ArrayList<>();
+        }
+        return serviceTypes;
+    }
+
+    public void setServiceTypes(ArrayList<ServiceType> serviceTypes) {
+        this.serviceTypes = serviceTypes;
     }
 }

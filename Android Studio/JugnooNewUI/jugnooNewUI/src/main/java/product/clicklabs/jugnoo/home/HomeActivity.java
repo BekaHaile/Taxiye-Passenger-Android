@@ -26,6 +26,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -114,6 +115,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.Target;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -150,6 +152,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.BidsPlacedAdapter;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
+import product.clicklabs.jugnoo.adapters.RideTypesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
 import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
@@ -215,6 +218,8 @@ import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
+import product.clicklabs.jugnoo.retrofit.model.ServiceType;
+import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.SupportMailActivity;
@@ -263,7 +268,8 @@ import retrofit.mime.TypedByteArray;
 
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
-        GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener {
+        GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
+        RideTypesAdapter.OnSelectedCallback {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -305,6 +311,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout relativeLayoutInAppCampaignRequest;
     TextView textViewInAppCampaignRequest, textViewTotalFare, textViewTotalFareValue, textViewIncludes;
     Button buttonCancelInAppCampaignRequest;
+    RecyclerView rvRideTypes;
+    RideTypesAdapter rideTypesAdapter;
 
     RelativeLayout relativeLayoutGoogleAttr;
     ImageView imageViewGoogleAttrCross, imageViewConfirmDropLocationEdit;
@@ -564,6 +572,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private double tipSelected;
     private TextWatcher textWatcherOtherTip;
 
+    private ConstraintLayout constraintLayoutRideTypeConfirm;
+    private ImageView ivRideTypeImage;
+    private TextView tvRideTypeInfo, tvRideTypeRateInfo;
+    private Button buttonConfirmRideType;
+    private ServiceType serviceTypeSelected;
+
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -705,6 +719,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewInAppCampaignRequest.setTypeface(Fonts.mavenLight(this));
         buttonCancelInAppCampaignRequest = (Button) findViewById(R.id.buttonCancelInAppCampaignRequest);
         buttonCancelInAppCampaignRequest.setTypeface(Fonts.mavenRegular(this));
+
+        serviceTypeSelected = new ServiceType(ServiceTypeValue.NORMAL.getType(), getString(R.string.on_demand), "", "", 1, true);
+		rvRideTypes = findViewById(R.id.rvRideTypes);
+		rvRideTypes.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(this,
+				LinearLayoutManager.HORIZONTAL, false));
+        setServiceTypeAdapter();
 
         relativeLayoutSearchContainer = (RelativeLayout) findViewById(R.id.relativeLayoutSearchContainer);
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
@@ -1197,6 +1217,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         //relativeLayoutFABTest = (RelativeLayout)findViewById(R.id.relativeLayoutFABTest);
         relativeLayoutSlidingBottomParent = (RelativeLayout) findViewById(R.id.relativeLayoutSlidingBottomParent);
         viewSlidingExtra = (View) findViewById(R.id.viewSlidingExtra);
+
+        constraintLayoutRideTypeConfirm = findViewById(R.id.constraintLayoutRideTypeConfirm);
+        ivRideTypeImage = findViewById(R.id.ivRideTypeImage);
+        tvRideTypeInfo = findViewById(R.id.tvRideTypeInfo);
+        tvRideTypeInfo.setTypeface(Fonts.mavenRegular(this));
+        tvRideTypeRateInfo = findViewById(R.id.tvRideTypeRateInfo);
+        tvRideTypeRateInfo.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+        ((TextView)findViewById(R.id.tvHourlyPackage)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView)findViewById(R.id.tvMultipleStops)).setTypeface(Fonts.mavenMedium(this));
+        ((TextView)findViewById(R.id.tvSafe)).setTypeface(Fonts.mavenMedium(this));
+        buttonConfirmRideType = findViewById(R.id.buttonConfirmRideType);
+        buttonConfirmRideType.setTypeface(Fonts.mavenMedium(this));
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -2065,6 +2097,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+    }
+
+    public void setServiceTypeAdapter() {
+        if(Data.autoData != null) {
+            for(ServiceType st: Data.autoData.getServiceTypes()){
+                if(st.getRideType() == serviceTypeSelected.getRideType()){
+                    st.setSelected(true);
+                }
+            }
+            if(rideTypesAdapter == null) {
+                rideTypesAdapter = new RideTypesAdapter(Data.autoData.getServiceTypes(), rvRideTypes, Fonts.mavenMedium(this), this);
+                rvRideTypes.setAdapter(rideTypesAdapter);
+            } else {
+                rideTypesAdapter.setList(Data.autoData.getServiceTypes());
+            }
+        }
     }
 
     public void openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode mode) {
@@ -5649,6 +5697,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     zoomToCurrentLocationWithOneDriver(getDeviceLocation());
                 }
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
+                    setServiceTypeAdapter();
+                    setServiceTypeUI();
                     showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
                     homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
                     dontCallRefreshDriver = false;
@@ -10918,4 +10968,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 });
     }
 
+    @Override
+    public void onServiceTypeSelected(@NotNull ServiceType serviceType) {
+        serviceTypeSelected = serviceType;
+        setServiceTypeUI();
+    }
+
+    private void setServiceTypeUI(){
+        if(serviceTypeSelected.getRideType() == ServiceTypeValue.RENTAL.getType()
+                || serviceTypeSelected.getRideType() == ServiceTypeValue.OUTSTATION.getType()){
+            constraintLayoutRideTypeConfirm.setVisibility(View.VISIBLE);
+        } else {
+            constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
+        }
+    }
 }

@@ -10,6 +10,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
+import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.utils.MapUtils;
 
 /**
@@ -62,6 +63,7 @@ public class AutoData {
     private int showRegionSpecificFare;
 
     private ArrayList<Corporate> corporatesFetched;
+    private ArrayList<ServiceType> serviceTypes;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -581,5 +583,16 @@ public class AutoData {
 
     public void setCorporatesFetched(ArrayList<Corporate> corporates){
         this.corporatesFetched = corporates;
+    }
+
+    public ArrayList<ServiceType> getServiceTypes() {
+        if(serviceTypes == null){
+            serviceTypes = new ArrayList<>();
+        }
+        return serviceTypes;
+    }
+
+    public void setServiceTypes(ArrayList<ServiceType> serviceTypes) {
+        this.serviceTypes = serviceTypes;
     }
 }

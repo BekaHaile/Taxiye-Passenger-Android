@@ -172,6 +172,8 @@ public class ApiFindADriver {
 				}
 			}
 
+			Data.autoData.setServiceTypes(findADriverResponse.getServiceTypes());
+
 			Data.autoData.setFareFactor(1);
 			if(findADriverResponse.getFareFactor() != null) {
 				Data.autoData.setFareFactor(findADriverResponse.getFareFactor());
