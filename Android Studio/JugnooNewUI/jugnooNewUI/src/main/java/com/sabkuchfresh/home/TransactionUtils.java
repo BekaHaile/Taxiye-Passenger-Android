@@ -41,6 +41,7 @@ import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.fragments.ScheduleRideFragment;
+import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.tutorials.NewUserCompleteProfileFragment;
 import product.clicklabs.jugnoo.tutorials.NewUserReferralFragment;
 import product.clicklabs.jugnoo.tutorials.NewUserWalletFragment;
@@ -381,10 +382,10 @@ public class TransactionUtils {
                     .commitAllowingStateLoss();
         }
     }
-    public void openScheduleRideFragment(FragmentActivity activity, View container) {
+    public void openScheduleRideFragment(FragmentActivity activity, View container, ServiceType serviceType) {
         if (!checkIfFragmentAdded(activity, ScheduleRideFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .add(container.getId(), ScheduleRideFragment.Companion.newInstance(),
+                    .add(container.getId(), ScheduleRideFragment.Companion.newInstance(serviceType),
                             ScheduleRideFragment.class.getName())
                     .addToBackStack(ScheduleRideFragment.class.getName())
                     .commit();

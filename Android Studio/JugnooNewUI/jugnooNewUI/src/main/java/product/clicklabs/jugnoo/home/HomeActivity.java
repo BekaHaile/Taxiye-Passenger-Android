@@ -576,7 +576,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private ImageView ivRideTypeImage;
     private TextView tvRideTypeInfo, tvRideTypeRateInfo;
     private Button buttonConfirmRideType;
-    private ServiceType serviceTypeSelected;
 
     @SuppressLint("NewApi")
     @Override
@@ -720,7 +719,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonCancelInAppCampaignRequest = (Button) findViewById(R.id.buttonCancelInAppCampaignRequest);
         buttonCancelInAppCampaignRequest.setTypeface(Fonts.mavenRegular(this));
 
-        serviceTypeSelected = new ServiceType(ServiceTypeValue.NORMAL.getType(), getString(R.string.on_demand), "", "", 1, true);
 		rvRideTypes = findViewById(R.id.rvRideTypes);
 		rvRideTypes.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(this,
 				LinearLayoutManager.HORIZONTAL, false));
@@ -1229,6 +1227,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         ((TextView)findViewById(R.id.tvSafe)).setTypeface(Fonts.mavenMedium(this));
         buttonConfirmRideType = findViewById(R.id.buttonConfirmRideType);
         buttonConfirmRideType.setTypeface(Fonts.mavenMedium(this));
+        buttonConfirmRideType.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                topBar.openScheduleFragment(Data.autoData.getServiceTypeSelected());
+            }
+        });
 
 
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
@@ -2102,8 +2106,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void setServiceTypeAdapter() {
         if(Data.autoData != null) {
             for(ServiceType st: Data.autoData.getServiceTypes()){
-                if(st.getRideType() == serviceTypeSelected.getRideType()){
-                    st.setSelected(true);
+                if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null && st.getSupportedRideTypes() != null
+                        && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().size() == st.getSupportedRideTypes().size()) {
+                    boolean matched = true;
+                    for (int rideType : Data.autoData.getServiceTypeSelected().getSupportedRideTypes()) {
+                        if (!st.getSupportedRideTypes().contains(rideType)) {
+                            matched = false;
+                            break;
+                        }
+                    }
+                    if(matched){
+                        st.setSelected(true);
+                    }
                 }
             }
             if(rideTypesAdapter == null) {
@@ -3372,7 +3386,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 rlSpecialPickup.setVisibility(View.GONE);
                 rlChatDriver.setVisibility(View.GONE);
                 scheduleRideContainer.setVisibility(View.GONE);
-
+                constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
 
                 switch (mode) {
 
@@ -10970,16 +10984,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onServiceTypeSelected(@NotNull ServiceType serviceType) {
-        serviceTypeSelected = serviceType;
+        Data.autoData.setServiceTypeSelected(serviceType);
         setServiceTypeUI();
     }
 
     private void setServiceTypeUI(){
-        if(serviceTypeSelected.getRideType() == ServiceTypeValue.RENTAL.getType()
-                || serviceTypeSelected.getRideType() == ServiceTypeValue.OUTSTATION.getType()){
+        if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
+                && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
+                || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))){
             constraintLayoutRideTypeConfirm.setVisibility(View.VISIBLE);
+            if(!TextUtils.isEmpty(Data.autoData.getServiceTypeSelected().getImages())) {
+                Picasso.with(this).load(Data.autoData.getServiceTypeSelected().getImages()).into(ivRideTypeImage);
+            }
+            tvRideTypeInfo.setText(Data.autoData.getServiceTypeSelected().getInfo());
+            slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
         } else {
             constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
+            slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
         }
     }
 }

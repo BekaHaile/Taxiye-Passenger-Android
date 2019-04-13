@@ -6,10 +6,13 @@ import android.graphics.drawable.StateListDrawable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -80,6 +83,9 @@ public class Region {
 	@SerializedName("fare_mandatory")
 	@Expose
 	private int fareMandatory;
+	@SerializedName("packages")
+	@Expose
+	private ArrayList<Package> packages;
 
 	private boolean isDefault = false;
 
@@ -133,6 +139,14 @@ public class Region {
 
 	public RegionFare getRegionFare() {
 		return regionFare;
+	}
+
+	public ArrayList<Package> getPackages() {
+		return packages;
+	}
+
+	public void setPackages(ArrayList<Package> packages) {
+		this.packages = packages;
 	}
 
 	public class OfferTexts {

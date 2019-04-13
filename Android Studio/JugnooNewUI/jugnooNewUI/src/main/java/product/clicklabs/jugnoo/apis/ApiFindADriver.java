@@ -212,14 +212,14 @@ public class ApiFindADriver {
 			if(Data.autoData.getRegions() == null){
 				Data.autoData.setRegions(new ArrayList<Region>());
 			} else{
-				Data.autoData.getRegions().clear();
+				Data.autoData.clearRegions();
 			}
 			if(findADriverResponse.getRegions() != null) {
 				HomeUtil homeUtil = new HomeUtil();
 				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
 					region.setIsDefault(false);
-					Data.autoData.getRegions().add(region);
+					Data.autoData.addRegion(region);
 				}
 			}
 		} catch(Exception e){

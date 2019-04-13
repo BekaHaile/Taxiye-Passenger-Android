@@ -3,11 +3,12 @@ package product.clicklabs.jugnoo.retrofit.model
 import com.google.gson.annotations.SerializedName
 
 class ServiceType(
-        @SerializedName("ride_type") val rideType:Int,
-        @SerializedName("name") val name:String,
-        @SerializedName("images") val images:String,
-        @SerializedName("info") val info:String,
-        @SerializedName("is_visible") val isVisible:Int,
+        @SerializedName("name") var name:String,
+        @SerializedName("images") var images:String,
+        @SerializedName("info") var info:String,
+        @SerializedName("is_visible") var isVisible:Int,
+        @SerializedName("supported_ride_type") var supportedRideTypes:MutableList<Int>?,
+        @SerializedName("tags") var tags:MutableList<String>?,
         var selected:Boolean
 ){}
 

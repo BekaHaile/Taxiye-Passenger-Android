@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.gson.Gson
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GACategory
 import com.sabkuchfresh.analytics.GAUtils
@@ -29,6 +30,7 @@ import product.clicklabs.jugnoo.home.HomeUtil
 import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog
 import product.clicklabs.jugnoo.home.models.Region
+import product.clicklabs.jugnoo.retrofit.model.ServiceType
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Prefs
@@ -64,6 +66,7 @@ class ScheduleRideFragment : Fragment(), Constants {
     }
 
     private var interactionListener: InteractionListener? = null
+    private var serviceType:ServiceType? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -83,6 +86,12 @@ class ScheduleRideFragment : Fragment(), Constants {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_schedule_ride, container, false)
 
+        if(arguments != null
+                && arguments!!.containsKey(Constants.KEY_SERVICE_TYPE)){
+            val str = arguments?.getString(Constants.KEY_SERVICE_TYPE)
+            val gson = Gson()
+            serviceType = gson.fromJson(str, ServiceType::class.java)
+        }
 
 
         return rootView
@@ -300,9 +309,13 @@ class ScheduleRideFragment : Fragment(), Constants {
 
         val BUFFER_TIME_TO_SELECT_MINS = 5
 
-        fun newInstance(): ScheduleRideFragment {
+        fun newInstance(serviceType: ServiceType?): ScheduleRideFragment {
             val bundle = Bundle()
+            val gson = Gson()
             val fragment = ScheduleRideFragment()
+            if(serviceType != null) {
+                bundle.putString(Constants.KEY_SERVICE_TYPE, gson.toJson(serviceType, ServiceType::class.java))
+            }
             fragment.arguments = bundle
             return fragment
         }
