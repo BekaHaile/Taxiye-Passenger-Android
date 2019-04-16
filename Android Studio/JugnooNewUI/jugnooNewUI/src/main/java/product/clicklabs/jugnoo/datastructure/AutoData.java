@@ -10,6 +10,7 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
+import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -67,6 +68,7 @@ public class AutoData {
     private ArrayList<Corporate> corporatesFetched;
     private ArrayList<ServiceType> serviceTypes;
     private ServiceType serviceTypeSelected;
+    private Package selectedPackage;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -638,5 +640,13 @@ public class AutoData {
 
     public void setServiceTypeSelected(ServiceType serviceTypeSelected) {
         this.serviceTypeSelected = serviceTypeSelected;
+    }
+
+    public Package getSelectedPackage() {
+        return selectedPackage;
+    }
+
+    public void setSelectedPackage(Package selectedPackage) {
+        this.selectedPackage = selectedPackage;
     }
 }

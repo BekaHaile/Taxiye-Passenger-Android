@@ -83,11 +83,11 @@
         android:padding="5dp"
         android:text="@string/hourly_package"
         android:drawablePadding="5dp"
-        android:drawableStart="@drawable/ic_clock_grey"
+        android:drawableStart="@drawable/ic_hourly_package"
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
         android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="@+id/viewSepRideType"
+        app:layout_constraintEnd_toEndOf="@+id/viewSepRideType"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
         app:layout_constraintBottom_toTopOf="@+id/viewSepRideType"/>
 
@@ -99,7 +99,7 @@
         android:padding="5dp"
         android:text="@string/multiple_stops"
         android:drawablePadding="5dp"
-        android:drawableStart="@drawable/ic_clock_grey"
+        android:drawableStart="@drawable/ic_multiple_stops"
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
         android:textSize="14sp"
@@ -114,15 +114,15 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:padding="5dp"
-        android:drawableStart="@drawable/ic_otp_call"
+        android:drawableStart="@drawable/ic_always_available"
         android:focusable="true"
-        android:text="@string/safe"
+        android:text="@string/always_available"
         android:drawablePadding="5dp"
         android:textColor="@color/text_color"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
         app:layout_constraintBottom_toTopOf="@+id/viewSepRideType"
-        app:layout_constraintEnd_toEndOf="@+id/viewSepRideType"
+        app:layout_constraintStart_toStartOf="@+id/viewSepRideType"
         />
 
     <Button

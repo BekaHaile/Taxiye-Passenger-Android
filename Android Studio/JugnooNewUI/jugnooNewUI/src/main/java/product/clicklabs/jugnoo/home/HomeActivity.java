@@ -116,6 +116,7 @@ import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.Target;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -217,6 +218,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
+import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
@@ -5043,6 +5045,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     boolean ignoreTimeCheckFetchWalletBalance = true;
 
+    Runnable runnableFindADriver = new Runnable() {
+        @Override
+        public void run() {
+            if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                callMapTouchedRefreshDrivers();
+            }
+        }
+    };
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -5083,6 +5094,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else {
                             initiateTimersForStates(passengerScreenMode);
                         }
+                        getHandler().postDelayed(runnableFindADriver, 200);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -8010,6 +8022,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(regionSelected.getVehicleType()));
                                 nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(regionSelected.getReverseBid()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(regionSelected.getRegionId()));
+                                if(Data.autoData.getSelectedPackage() != null) {
+                                    nameValuePairs.put(Constants.KEY_PACKAGE_ID, String.valueOf(Data.autoData.getSelectedPackage().getPackageId()));
+                                }
 
                                 if (regionSelected.getRideType() == RideTypeValue.POOL.getOrdinal()) {
                                     nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + jugnooPoolFareId);
@@ -10993,6 +11008,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
                 || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))){
             constraintLayoutRideTypeConfirm.setVisibility(View.VISIBLE);
+            linearLayoutRequestMain.setVisibility(View.GONE);
             if(!TextUtils.isEmpty(Data.autoData.getServiceTypeSelected().getImages())) {
                 Picasso.with(this).load(Data.autoData.getServiceTypeSelected().getImages()).into(ivRideTypeImage);
             }
@@ -11000,7 +11016,26 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
         } else {
             constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
+            linearLayoutRequestMain.setVisibility(View.VISIBLE);
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
+        }
+    }
+
+    @Override
+    public void callRentalOutstationRequestRide(@Nullable ServiceType serviceType, @NotNull Region region,
+                                                @Nullable Package selectedPackage, @NotNull SearchResult searchResultPickup,
+                                                @Nullable SearchResult searchResultDestination, @NotNull String dateTime) {
+        if(serviceType != null){
+            Data.autoData.setServiceTypeSelected(serviceType);
+            if(serviceType.getSupportedRideTypes() != null
+                    && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())){
+                Data.autoData.setPickupLatLng(searchResultPickup.getLatLng());
+                Data.autoData.setPickupAddress(searchResultPickup.getAddress(), searchResultPickup.getLatLng());
+                Data.autoData.setSelectedPackage(selectedPackage);
+                slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(region);
+                finalRequestRideTimerStart();
+                performBackpressed();
+            }
         }
     }
 }

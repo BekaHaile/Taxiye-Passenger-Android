@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import java.text.DecimalFormat;
 
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -119,6 +120,9 @@ public class FareStructure {
     }
 
     public String getCurrency() {
+        if(currency == null){
+            currency = MyApplication.getInstance().getResources().getString(R.string.default_currency);
+        }
         return currency;
     }
 
@@ -127,6 +131,7 @@ public class FareStructure {
     }
 
     public String getDistanceUnit() {
+        distanceUnit = Utils.getDistanceUnit(distanceUnit);
         return distanceUnit;
     }
 

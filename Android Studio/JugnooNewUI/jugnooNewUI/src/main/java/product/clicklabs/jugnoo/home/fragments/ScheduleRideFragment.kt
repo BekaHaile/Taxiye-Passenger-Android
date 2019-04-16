@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.fragment_schedule_ride.*
 import product.clicklabs.jugnoo.*
 import product.clicklabs.jugnoo.Constants.SCHEDULE_CURRENT_TIME_DIFF
 import product.clicklabs.jugnoo.Constants.SCHEDULE_DAYS_LIMIT
+import product.clicklabs.jugnoo.adapters.RentalPackagesAdapter
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
 import product.clicklabs.jugnoo.home.HomeActivity
@@ -30,14 +31,16 @@ import product.clicklabs.jugnoo.home.HomeUtil
 import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog
 import product.clicklabs.jugnoo.home.models.Region
+import product.clicklabs.jugnoo.retrofit.model.Package
 import product.clicklabs.jugnoo.retrofit.model.ServiceType
+import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Prefs
 import java.util.*
 
 
-class ScheduleRideFragment : Fragment(), Constants {
+class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapter.OnSelectedCallback{
 
     private val TAG = ScheduleRideFragment::class.java.simpleName
 
@@ -47,9 +50,11 @@ class ScheduleRideFragment : Fragment(), Constants {
     private var timePickerFragment: TimePickerFragment? = null
     private var selectedDate: String? = null
     private var selectedTime: String? = null
-    private val scheduleRideVehicleListAdapter by lazy{ ScheduleRideVehicleListAdapter(getActivity() as HomeActivity, Data.autoData.regions) }
+    private val scheduleRideVehicleListAdapter by lazy{ ScheduleRideVehicleListAdapter(getActivity() as HomeActivity, Data.autoData.regions, this) }
+    private var packagesAdapter: RentalPackagesAdapter? = null
     internal var searchResultPickup: SearchResult? = null
     internal var searchResultDestination: SearchResult? = null
+    var selectedPackage:Package? = null
     var minBufferTimeCurrent = 30
     var scheduleDaysLimit = 2
     private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
@@ -112,6 +117,10 @@ class ScheduleRideFragment : Fragment(), Constants {
             btSchedule.typeface = Fonts.mavenRegular(activity)
             tvSelectPayment.setTypeface(Fonts.mavenRegular(activity),BOLD)
             textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
+            tvSelectPackage.typeface = Fonts.mavenRegular(activity)
+            tvSelectVehicleType.typeface = Fonts.mavenRegular(activity)
+            rvPackages.layoutManager = LinearLayoutManager(activity)
+            rvPackages.isNestedScrollingEnabled = false
 
             tvPickup.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.PICKUP) }
             tvDestination.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP) }
@@ -131,13 +140,16 @@ class ScheduleRideFragment : Fragment(), Constants {
                     if (TextUtils.isEmpty(tvPickup.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_pickup))
                         throw Exception()
-                    } else if (TextUtils.isEmpty(tvDestination.text.toString())) {
+                    } else if (serviceTypeNotRental()
+                            && TextUtils.isEmpty(tvDestination.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_destination))
                         throw Exception()
-                    } else if (TextUtils.isEmpty(selectedDate)) {
+                    } else if (serviceTypeNotRental()
+                            && TextUtils.isEmpty(selectedDate)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_date))
                         throw Exception()
-                    } else if (TextUtils.isEmpty(selectedTime)) {
+                    } else if (serviceTypeNotRental()
+                            && TextUtils.isEmpty(selectedTime)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_time))
                         throw Exception()
                     } else if (!TextUtils.isEmpty(Data.autoData.getFarAwayCity())) {
@@ -170,9 +182,46 @@ class ScheduleRideFragment : Fragment(), Constants {
             setSelectedRegionData()
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
+
+            val visibilityNotRental = if (serviceTypeNotRental()) View.VISIBLE else View.GONE
+            tvDestination.visibility = visibilityNotRental
+            tvPickupDateTime.visibility = visibilityNotRental
+            tvSelectDateTime.visibility = visibilityNotRental
+            tvSelectPackage.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
+            rvPackages.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
+            updatePackagesAccRegionSelected()
+
         }
 
         updatePaymentOption()
+    }
+
+    private fun updatePackagesAccRegionSelected() {
+        if (!serviceTypeNotRental()) {
+            (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.setRegionSelected(0)
+            val region = (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected
+            if(region.packages != null
+                    && region.packages.size > 0){
+                for(pc in region.packages){
+                    pc.selected = false
+                }
+                region.packages[0].selected = true;
+            }
+            if (packagesAdapter == null) {
+                packagesAdapter = RentalPackagesAdapter(activity as Context,
+                        region.packages, region.fareStructure.currency, region.fareStructure.distanceUnit,
+                        rvPackages,
+                        Fonts.mavenMedium(activity),
+                        object : RentalPackagesAdapter.OnSelectedCallback {
+                            override fun onItemSelected(selectedPackage: Package) {
+                                this@ScheduleRideFragment.selectedPackage = selectedPackage
+                            }
+                        })
+                rvPackages.adapter = packagesAdapter
+            } else {
+                packagesAdapter!!.setList(region.packages, region.fareStructure.currency, region.fareStructure.distanceUnit)
+            }
+        }
     }
 
     private fun setPickupAndDropAddress() {
@@ -277,16 +326,26 @@ class ScheduleRideFragment : Fragment(), Constants {
         fun onAttachScheduleRide()
 
         fun onDestroyScheduleRide()
+
+        fun callRentalOutstationRequestRide(serviceType: ServiceType?, region: Region, selectedPackage:Package?, searchResultPickup:SearchResult,
+                                            searchResultDestination:SearchResult?, dateTime:String?)
     }
 
     fun openFareEstimate() {
         if (searchResultPickup == null) {
             product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_pickup_location))
             return
-        } else if (searchResultDestination == null) {
+        } else if ((serviceTypeNotRental() && searchResultDestination == null)) {
             product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_destination_location))
             return
         }
+        if(serviceType != null && interactionListener != null){
+            interactionListener!!.callRentalOutstationRequestRide(serviceType, (getActivity() as HomeActivity).selectedRegionForScheduleRide,
+                    selectedPackage,
+                    searchResultPickup!!, null, null)
+            return
+        }
+
         val intent = Intent(activity, FareEstimateActivity::class.java)
         intent.putExtra(Constants.KEY_REGION, (getActivity() as HomeActivity).gson.toJson((getActivity() as HomeActivity).selectedRegionForScheduleRide, Region::class.java))
         //        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
@@ -304,6 +363,9 @@ class ScheduleRideFragment : Fragment(), Constants {
         (activity as HomeActivity).startActivityForResult(intent, (activity as HomeActivity).FARE_ESTIMATE)
         activity!!.overridePendingTransition(R.anim.right_in, R.anim.right_out)
     }
+
+    private fun serviceTypeNotRental() =
+            (serviceType == null || serviceType!!.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))
 
     companion object {
 
@@ -403,6 +465,10 @@ class ScheduleRideFragment : Fragment(), Constants {
             (activity as HomeActivity).selectedRideTypeForScheduleRide = -1
             (activity as HomeActivity).selectedRegionForScheduleRide = null
         }
+    }
+
+    override fun onItemSelected(selectedRegion: Region) {
+        updatePackagesAccRegionSelected()
     }
 
 

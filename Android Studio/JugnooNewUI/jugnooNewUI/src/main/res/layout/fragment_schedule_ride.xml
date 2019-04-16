@@ -84,6 +84,43 @@
         android:textColor="@color/text_color"
         android:layout_marginTop="@dimen/dp_9"/>
 
+
+
+    <TextView
+        android:id="@+id/tvSelectPackage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/select_package"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectDateTime"
+        android:textSize="@dimen/sp_13"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="@dimen/dp_20"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvPackages"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectPackage"
+        android:layout_marginTop="@dimen/dp_9"/>
+
+
+    <TextView
+        android:id="@+id/tvSelectVehicleType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/select_vehicle_type"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@+id/rvPackages"
+        android:textSize="@dimen/sp_13"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="@dimen/dp_20"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvVehiclesList"
         android:layout_width="0dp"
@@ -91,7 +128,7 @@
         app:layout_constraintEnd_toStartOf="@id/glEnd"
         android:gravity="center_vertical"
         app:layout_constraintStart_toEndOf="@id/glsStart"
-        app:layout_constraintTop_toBottomOf="@+id/tvSelectDateTime"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectVehicleType"
         android:layout_marginTop="@dimen/dp_9"/>
 
 

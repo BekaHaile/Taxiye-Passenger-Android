@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.list_item_fare_detail_vehicle.view.*
 import kotlinx.android.synthetic.main.list_item_schedule_ride_vehicles.view.*
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.HomeActivity
@@ -15,7 +14,7 @@ import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
 
-class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList: ArrayList<Region>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList: ArrayList<Region>, val selectedCallback: OnSelectedCallback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun getItemCount(): Int {
@@ -69,11 +68,17 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
                     activity.selectedIdForScheduleRide = regionId!!
                     activity.selectedRideTypeForScheduleRide = rideType!!
                     activity.selectedRegionForScheduleRide = this
+                        selectedCallback.onItemSelected(this)
                     notifyDataSetChanged()
                 }
 
             }
         }
+    }
+
+
+    interface OnSelectedCallback{
+        fun onItemSelected(selectedRegion: Region)
     }
 }
 

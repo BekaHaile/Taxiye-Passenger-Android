@@ -521,6 +521,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         recyclerViewVehicles.getLayoutManager().scrollToPosition(position);
         updateFareStructureUI();
     }
+    public void setRegionSelected(Region region) {
+        regionSelected = region;
+    }
 
 
     private FareDetailsDialog fareDetailsDialog;

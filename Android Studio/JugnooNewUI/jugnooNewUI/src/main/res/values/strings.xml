@@ -1945,7 +1945,7 @@
     <string name="action_add_tip">Add Tip</string>
     <string name="cannot_apply_offer_during_ride">Cannot apply offer during ride</string>
     <string name="set_your_pickup_location">Set your pickup location</string>
-    <string name="set_your_destination_location">Set your pickup location</string>
+    <string name="set_your_destination_location">Set your destination location</string>
     <string name="tip">Tip</string>
     <string name="per_wait_min">Per Wait Min</string>
     <string name="paystack_add_card_success">Card added successfully</string>
@@ -1994,4 +1994,10 @@
     <string name="hired_vehicle_at_hourly_rate">Hired vehicle at hourly rate</string>
     <string name="package_starting_at_format">Package starting at %s</string>
     <string name="on_demand">On Demand</string>
+    <string name="always_available">Always\nAvailable</string>
+    <string name="select_package">Select Package</string>
+    <string name="select_vehicle_type">Select Vehicle Type</string>
+    <string name="fare_fixed">Fare Fixed</string>
+    <string name="for_str">For</string>
+    <string name="then">then</string>
 </resources>
