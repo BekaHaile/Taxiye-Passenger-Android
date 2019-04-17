@@ -5883,7 +5883,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     //Our service is not available in this area
-    private void setServiceAvailablityUI(String farAwayCity) {
+    public void setServiceAvailablityUI(String farAwayCity) {
         if (PassengerScreenMode.P_INITIAL == passengerScreenMode
                 && relativeLayoutLocationError.getVisibility() == View.GONE) {
             if (!"".equalsIgnoreCase(farAwayCity)) {
@@ -11011,6 +11011,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onServiceTypeSelected(@NotNull ServiceType serviceType) {
         Data.autoData.setServiceTypeSelected(serviceType);
         setServiceTypeUI();
+        slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
     }
 
     private void setServiceTypeUI(){
@@ -11022,7 +11023,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(!TextUtils.isEmpty(Data.autoData.getServiceTypeSelected().getImages())) {
                 Picasso.with(this).load(Data.autoData.getServiceTypeSelected().getImages()).into(ivRideTypeImage);
             }
-            tvRideTypeInfo.setText(Data.autoData.getServiceTypeSelected().getInfo());
+            tvRideTypeInfo.setText(Utils.trimHTML(Utils.fromHtml(Data.autoData.getServiceTypeSelected().getDescription())));
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
 
             tvRideTypeRateInfo.setText(null);

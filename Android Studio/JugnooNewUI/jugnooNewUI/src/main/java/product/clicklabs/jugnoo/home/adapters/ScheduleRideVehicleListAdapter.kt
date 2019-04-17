@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_schedule_ride_vehicles.view.*
+import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.models.Region
+import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
 
@@ -52,10 +54,19 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
                 }
             }
             itemView.tvVehicleName?.text = vehicleList[position].regionName
-            itemView.tvBaseFare?.text = activity.getString(R.string.base_fare_format, " " + Utils.formatCurrencyValue(vehicleList[position].fareStructure.currency,
-                    vehicleList[position].fareStructure.getDisplayBaseFare(activity)))
-            itemView.tvFarePerMinute?.text = "Per Min: " + Utils.formatCurrencyValue(vehicleList[position].fareStructure.currency, vehicleList[position].fareStructure.farePerMin, false)
-            itemView.tvFarePerMile?.text = activity.getString(R.string.per_format, Utils.getDistanceUnit(vehicleList[position].fareStructure.distanceUnit)) + ": " + Utils.formatCurrencyValue(vehicleList[position].fareStructure.currency, vehicleList[position].fareStructure.farePerKm, false)
+            if(vehicleList[position].rideType == ServiceTypeValue.RENTAL.type
+                    && vehicleList[position].packages != null
+                    && vehicleList[position].packages.size > 0){
+                itemView.tvBaseFare?.text = activity.getString(R.string.base_fare_format, " " + Utils.formatCurrencyValue(Data.autoData.currency,
+                        vehicleList[position].packages[0].fareMinimum!!))
+                itemView.tvFarePerMinute?.text = activity.getString(R.string.nl_per_min) + ": " + Utils.formatCurrencyValue(Data.autoData.currency, vehicleList[position].packages[0].farePerMin!!, false)
+                itemView.tvFarePerMile?.text = activity.getString(R.string.per_format, Utils.getDistanceUnit(Data.autoData.distanceUnit)) + ": " + Utils.formatCurrencyValue(Data.autoData.currency, vehicleList[position].packages[0].farePerKmAfterThreshold!!, false)
+            } else {
+                itemView.tvBaseFare?.text = activity.getString(R.string.base_fare_format, " " + Utils.formatCurrencyValue(vehicleList[position].fareStructure.currency,
+                        vehicleList[position].fareStructure.getDisplayBaseFare(activity)))
+                itemView.tvFarePerMinute?.text = activity.getString(R.string.nl_per_min) + ": " + Utils.formatCurrencyValue(vehicleList[position].fareStructure.currency, vehicleList[position].fareStructure.farePerMin, false)
+                itemView.tvFarePerMile?.text = activity.getString(R.string.per_format, Utils.getDistanceUnit(vehicleList[position].fareStructure.distanceUnit)) + ": " + Utils.formatCurrencyValue(vehicleList[position].fareStructure.currency, vehicleList[position].fareStructure.farePerKm, false)
+            }
 
             Picasso.with(activity)
                     .load(vehicleList[position].images.rideNowNormal)

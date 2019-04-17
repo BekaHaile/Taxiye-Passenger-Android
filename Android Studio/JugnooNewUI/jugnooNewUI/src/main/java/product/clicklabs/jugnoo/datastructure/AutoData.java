@@ -69,6 +69,7 @@ public class AutoData {
     private ArrayList<ServiceType> serviceTypes;
     private ServiceType serviceTypeSelected;
     private Package selectedPackage;
+    private String currency;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -107,7 +108,7 @@ public class AutoData {
         ArrayList<Integer> rideTypes = new ArrayList<>();
         rideTypes.add(ServiceTypeValue.NORMAL.getType());
         rideTypes.add(ServiceTypeValue.POOL.getType());
-        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, null, true);
+        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, null, "", true);
     }
 
     public String getDestinationHelpText() {
@@ -648,5 +649,13 @@ public class AutoData {
 
     public void setSelectedPackage(Package selectedPackage) {
         this.selectedPackage = selectedPackage;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

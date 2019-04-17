@@ -9,6 +9,7 @@ class ServiceType(
         @SerializedName("is_visible") var isVisible:Int,
         @SerializedName("supported_ride_type") var supportedRideTypes:MutableList<Int>?,
         @SerializedName("tags") var tags:MutableList<String>?,
+        @SerializedName("description") var description:String?,
         var selected:Boolean
 ){}
 

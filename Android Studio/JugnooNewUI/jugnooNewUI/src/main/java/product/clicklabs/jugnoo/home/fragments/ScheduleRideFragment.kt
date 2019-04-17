@@ -191,6 +191,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             rvPackages.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
             updatePackagesAccRegionSelected()
             btSchedule.setText(if(!serviceTypeNotRental()) R.string.book else R.string.schedule)
+            tvScheduleMessage.text = if(serviceType != null) serviceType!!.info else requireActivity().getString(R.string.schedule_ride_alert)
         }
 
         updatePaymentOption()
@@ -209,7 +210,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             }
             if (packagesAdapter == null) {
                 packagesAdapter = RentalPackagesAdapter(activity as Context,
-                        region.packages, region.fareStructure.currency, region.fareStructure.distanceUnit,
+                        region.packages, Data.autoData.currency, Data.autoData.distanceUnit,
                         rvPackages,
                         Fonts.mavenRegular(activity),
                         object : RentalPackagesAdapter.OnSelectedCallback {
@@ -219,7 +220,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         })
                 rvPackages.adapter = packagesAdapter
             } else {
-                packagesAdapter!!.setList(region.packages, region.fareStructure.currency, region.fareStructure.distanceUnit)
+                packagesAdapter!!.setList(region.packages, Data.autoData.currency, Data.autoData.distanceUnit)
             }
         }
     }
