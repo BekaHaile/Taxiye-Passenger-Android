@@ -8644,7 +8644,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else if (getStarSubscriptionCheckoutFragment() != null) {
                     topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
                 } else {
-                    topBar.textViewTitle.setText(getResources().getString(scheduleRideOpen?R.string.schedule_a_ride:R.string.rides));
+                    if(scheduleRideOpen) {
+                        if (Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
+                                && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+                            topBar.textViewTitle.setText(R.string.rentals);
+                        } else {
+                            topBar.textViewTitle.setText(R.string.schedule_a_ride);
+                        }
+                    } else {
+                        topBar.textViewTitle.setText(R.string.rides);
+                    }
+
                 }
 
                 localModeEnabled = 0;
@@ -11014,6 +11024,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             tvRideTypeInfo.setText(Data.autoData.getServiceTypeSelected().getInfo());
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
+
+            tvRideTypeRateInfo.setText(null);
+            if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())){
+                if(Data.autoData != null
+                        && Data.autoData.getRegions().size() > 0
+                        && Data.autoData.getRegions().get(0).getPackages() != null
+                        && Data.autoData.getRegions().get(0).getPackages().size() > 0) {
+                    Region region = Data.autoData.getRegions().get(0);
+                    tvRideTypeRateInfo.setText(getString(R.string.package_starting_at_format, Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
+                            region.getPackages().get(0).getFareMinimum())));
+                }
+            } else if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())){
+                if(Data.autoData != null
+                        && Data.autoData.getRegions().size() > 0
+                        && Data.autoData.getRegions().get(0).getFareStructure() != null) {
+                    Region region = Data.autoData.getRegions().get(0);
+                    tvRideTypeRateInfo.setText(getString(R.string.package_starting_at_format, Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
+                            region.getFareStructure().getFixedFare())));
+                }
+            }
+
         } else {
             constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
             linearLayoutRequestMain.setVisibility(View.VISIBLE);

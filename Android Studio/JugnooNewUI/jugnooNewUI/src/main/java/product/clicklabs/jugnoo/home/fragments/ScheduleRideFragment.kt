@@ -117,8 +117,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             btSchedule.typeface = Fonts.mavenRegular(activity)
             tvSelectPayment.setTypeface(Fonts.mavenRegular(activity),BOLD)
             textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
-            tvSelectPackage.typeface = Fonts.mavenRegular(activity)
-            tvSelectVehicleType.typeface = Fonts.mavenRegular(activity)
+            tvSelectPackage.setTypeface(Fonts.mavenRegular(activity),BOLD)
+            tvSelectVehicleType.setTypeface(Fonts.mavenRegular(activity),BOLD)
             rvPackages.layoutManager = LinearLayoutManager(activity)
             rvPackages.isNestedScrollingEnabled = false
 
@@ -190,7 +190,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvSelectPackage.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
             rvPackages.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
             updatePackagesAccRegionSelected()
-
+            btSchedule.setText(if(!serviceTypeNotRental()) R.string.book else R.string.schedule)
         }
 
         updatePaymentOption()
@@ -211,7 +211,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 packagesAdapter = RentalPackagesAdapter(activity as Context,
                         region.packages, region.fareStructure.currency, region.fareStructure.distanceUnit,
                         rvPackages,
-                        Fonts.mavenMedium(activity),
+                        Fonts.mavenRegular(activity),
                         object : RentalPackagesAdapter.OnSelectedCallback {
                             override fun onItemSelected(selectedPackage: Package) {
                                 this@ScheduleRideFragment.selectedPackage = selectedPackage

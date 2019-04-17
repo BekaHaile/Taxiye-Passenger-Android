@@ -17,6 +17,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
+import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -139,7 +140,11 @@ public class TopBar implements GACategory, GAAction {
         imageViewBack.setVisibility(View.VISIBLE);
         imageViewMenu.setVisibility(View.GONE);
         tvScheduleRidePopup.setVisibility(View.GONE);
-        textViewTitle.setText(activity.getString(R.string.schedule_a_ride));
+        if(serviceType.getSupportedRideTypes() != null && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+            textViewTitle.setText(activity.getString(R.string.rentals));
+        } else {
+            textViewTitle.setText(activity.getString(R.string.schedule_a_ride));
+        }
     }
 
 

@@ -2000,4 +2000,6 @@
     <string name="fare_fixed">Fare Fixed</string>
     <string name="for_str">For</string>
     <string name="then">then</string>
+    <string name="rentals">Rentals</string>
+    <string name="book">Book</string>
 </resources>
