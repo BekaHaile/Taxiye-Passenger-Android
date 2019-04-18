@@ -9,11 +9,10 @@ import android.view.ViewGroup
 import com.sabkuchfresh.adapters.ItemListener
 import kotlinx.android.synthetic.main.list_item_rental_package.view.*
 import product.clicklabs.jugnoo.R
-import product.clicklabs.jugnoo.retrofit.model.Corporate
 import product.clicklabs.jugnoo.retrofit.model.Package
 
 class RentalPackagesAdapter(private var context:Context, private var packages: ArrayList<Package>?,
-                            private var currency:String, private var distanceUnit:String,
+                            private var currency:String?, private var distanceUnit:String?,
                             val recyclerView:RecyclerView
                             , private val typeface: Typeface?, private  val onSelectedCallback: OnSelectedCallback) :
         RecyclerView.Adapter<RentalPackagesAdapter.ViewHolderCorporate>(),ItemListener {
@@ -22,7 +21,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
     companion object {
         var selectedPackageId :Int? = -1
     }
-    fun setList(packages: ArrayList<Package>, currency:String, distanceUnit:String){
+    fun setList(packages: ArrayList<Package>, currency:String?, distanceUnit:String?){
         this.packages = packages
         this.currency = currency
         this.distanceUnit = distanceUnit

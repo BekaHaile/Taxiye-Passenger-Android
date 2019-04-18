@@ -28,10 +28,10 @@ class Package {
     @SerializedName("region_id") var regionId: Int? = null
     var selected:Boolean = false
 
-    fun getPackageName(context: Context, currency:String, distanceUnit: String):String{
+    fun getPackageName(context: Context, currency:String?, distanceUnit:String?):String{
         return context.getString(R.string.fare_fixed) + " " + Utils.formatCurrencyValue(currency, fareFixed!!, false) +
-                " " + context.getString(R.string.for_str) + " " + Utils.getDecimalFormat2Decimal().format(farePerKmThresholdDistance) + distanceUnit +
-                " " + context.getString(R.string.then) + " " + Utils.formatCurrencyValue(currency, farePerKmAfterThreshold!!, false) +
-                context.getString(R.string.per_format, distanceUnit)
+                " " + context.getString(R.string.for_str) + " " + Utils.getDecimalFormat2Decimal().format(fareThresholdDistance) + Utils.getDistanceUnit(distanceUnit) +
+                " " + context.getString(R.string.then) + " " + Utils.formatCurrencyValue(currency, farePerKmAfterThreshold!!, false) + " " +
+                context.getString(R.string.per_format, Utils.getDistanceUnit(distanceUnit))
     }
 }

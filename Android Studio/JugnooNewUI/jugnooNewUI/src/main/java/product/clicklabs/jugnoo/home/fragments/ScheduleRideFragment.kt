@@ -18,7 +18,6 @@ import com.sabkuchfresh.analytics.GACategory
 import com.sabkuchfresh.analytics.GAUtils
 import com.sabkuchfresh.pros.utils.DatePickerFragment
 import com.sabkuchfresh.pros.utils.TimePickerFragment
-import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.fragment_schedule_ride.*
 import product.clicklabs.jugnoo.*
 import product.clicklabs.jugnoo.Constants.SCHEDULE_CURRENT_TIME_DIFF
@@ -37,6 +36,7 @@ import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Prefs
+import product.clicklabs.jugnoo.utils.Utils
 import java.util.*
 
 
@@ -55,6 +55,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     internal var searchResultPickup: SearchResult? = null
     internal var searchResultDestination: SearchResult? = null
     var selectedPackage:Package? = null
+    var selectedRegion:Region? = null
     var minBufferTimeCurrent = 30
     var scheduleDaysLimit = 2
     private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
@@ -112,13 +113,14 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvPickup.typeface = Fonts.mavenRegular(activity)
             tvScheduleMessage.typeface = Fonts.mavenRegular(activity)
             tvDestination.typeface = Fonts.mavenRegular(activity)
-            tvPickupDateTime.setTypeface(Fonts.mavenRegular(activity),BOLD)
+            tvPickupDateTime.setTypeface(Fonts.mavenMedium(activity),BOLD)
             tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
             btSchedule.typeface = Fonts.mavenRegular(activity)
-            tvSelectPayment.setTypeface(Fonts.mavenRegular(activity),BOLD)
+            tvSelectPayment.setTypeface(Fonts.mavenMedium(activity),BOLD)
+            tvNote.setTypeface(Fonts.mavenMedium(activity),BOLD)
             textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
-            tvSelectPackage.setTypeface(Fonts.mavenRegular(activity),BOLD)
-            tvSelectVehicleType.setTypeface(Fonts.mavenRegular(activity),BOLD)
+            tvSelectPackage.setTypeface(Fonts.mavenMedium(activity),BOLD)
+            tvSelectVehicleType.setTypeface(Fonts.mavenMedium(activity),BOLD)
             rvPackages.layoutManager = LinearLayoutManager(activity)
             rvPackages.isNestedScrollingEnabled = false
 
@@ -189,19 +191,19 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvSelectDateTime.visibility = visibilityNotRental
             tvSelectPackage.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
             rvPackages.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
-            updatePackagesAccRegionSelected()
+            updatePackagesAccRegionSelected(null)
             btSchedule.setText(if(!serviceTypeNotRental()) R.string.book else R.string.schedule)
-            tvScheduleMessage.text = if(serviceType != null) serviceType!!.info else requireActivity().getString(R.string.schedule_ride_alert)
+            tvScheduleMessage.text = if(serviceType != null) Utils.trimHTML(Utils.fromHtml(serviceType!!.info)) else requireActivity().getString(R.string.schedule_ride_alert)
         }
 
         updatePaymentOption()
     }
 
-    private fun updatePackagesAccRegionSelected() {
+    private fun updatePackagesAccRegionSelected(regionS: Region?) {
         if (!serviceTypeNotRental()) {
             (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.setRegionSelected(0)
-            val region = (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected
-            if(region.packages != null
+            var region = if(regionS == null) (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected else regionS
+            if(region!!.packages != null
                     && region.packages.size > 0){
                 for(pc in region.packages){
                     pc.selected = false
@@ -216,6 +218,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         object : RentalPackagesAdapter.OnSelectedCallback {
                             override fun onItemSelected(selectedPackage: Package) {
                                 this@ScheduleRideFragment.selectedPackage = selectedPackage
+                                scheduleRideVehicleListAdapter.notifyDataSetChanged()
                             }
                         })
                 rvPackages.adapter = packagesAdapter
@@ -469,8 +472,17 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
 
     override fun onItemSelected(selectedRegion: Region) {
-        updatePackagesAccRegionSelected()
+        if(this.selectedRegion != null && selectedRegion.regionId != this.selectedRegion!!.regionId){
+            selectedPackage = null
+        }
+        updatePackagesAccRegionSelected(selectedRegion)
+        this.selectedRegion = selectedRegion
     }
+
+    override fun getPackageSelected(): Package? {
+        return selectedPackage
+    }
+
 
 
 }

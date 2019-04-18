@@ -1992,7 +1992,7 @@
     <string name="multiple_stops">Multiple\nStops</string>
     <string name="ride_now">Ride Now</string>
     <string name="hired_vehicle_at_hourly_rate">Hired vehicle at hourly rate</string>
-    <string name="package_starting_at_format">Package starting at %s</string>
+    <string name="package_starting_at">Package starting at</string>
     <string name="on_demand">On Demand</string>
     <string name="always_available">Always\nAvailable</string>
     <string name="select_package">Select Package</string>
@@ -2002,4 +2002,8 @@
     <string name="then">then</string>
     <string name="rentals">Rentals</string>
     <string name="book">Book</string>
+    <string name="note">Note:</string>
+    <string name="additional_per_min">Additional Per Min Fare</string>
+    <string name="additional_per_km_fare">Additional Per %s Fare</string>
+    <string name="package_rate_format">Package Rate: %s</string>
 </resources>

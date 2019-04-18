@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:background="@drawable/background_white_rounded_bordered"
+    android:background="@drawable/background_white_bottom_border"
     >
 
     <TextView
@@ -17,10 +17,10 @@
         android:background="?attr/selectableItemBackground"
         android:drawablePadding="10dp"
         android:drawableStart="@drawable/ic_radio_button_checked"
-        android:padding="10dp"
+        android:padding="14dp"
         android:text="@string/a_z"
         android:textColor="@color/text_color"
-        android:textSize="14sp"
+        android:textSize="15sp"
         android:theme="@style/GreyHighlight"
         app:typekitFont="maven"
         />

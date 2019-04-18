@@ -42,9 +42,11 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.view.Gravity;
@@ -11033,15 +11035,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         && Data.autoData.getRegions().get(0).getPackages() != null
                         && Data.autoData.getRegions().get(0).getPackages().size() > 0) {
                     Region region = Data.autoData.getRegions().get(0);
-                    tvRideTypeRateInfo.setText(getString(R.string.package_starting_at_format, Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
-                            region.getPackages().get(0).getFareMinimum())));
+                    tvRideTypeRateInfo.setText(R.string.package_starting_at);
+                    tvRideTypeRateInfo.append(" ");
+                    tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
+                            region.getPackages().get(0).getFareFixed())));
                 }
             } else if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())){
                 if(Data.autoData != null
                         && Data.autoData.getRegions().size() > 0
                         && Data.autoData.getRegions().get(0).getFareStructure() != null) {
                     Region region = Data.autoData.getRegions().get(0);
-                    tvRideTypeRateInfo.setText(getString(R.string.package_starting_at_format, Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
+                    tvRideTypeRateInfo.setText(R.string.package_starting_at);
+                    tvRideTypeRateInfo.append(" ");
+                    tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
                             region.getFareStructure().getFixedFare())));
                 }
             }
@@ -11051,6 +11057,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             linearLayoutRequestMain.setVisibility(View.VISIBLE);
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
         }
+    }
+
+    private SpannableStringBuilder getThemeColorSpannableString(String message){
+        SpannableStringBuilder ssb = new SpannableStringBuilder(message);
+        ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.theme_color)), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return ssb;
     }
 
     @Override

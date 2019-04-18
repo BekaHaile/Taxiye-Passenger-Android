@@ -12,6 +12,7 @@ import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.models.Region
+import product.clicklabs.jugnoo.retrofit.model.Package
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
@@ -40,7 +41,7 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
     inner class ViewHolderVehicle(view: View) : RecyclerView.ViewHolder(view) {
 
         init {
-            (view.findViewById(R.id.tvVehicleName) as TextView).setTypeface(Fonts.mavenRegular(activity),BOLD)
+            (view.findViewById(R.id.tvVehicleName) as TextView).setTypeface(Fonts.mavenMedium(activity),BOLD)
             (view.findViewById(R.id.tvBaseFare) as TextView).typeface = Fonts.mavenRegular(activity)
             (view.findViewById(R.id.tvFarePerMinute) as TextView).typeface = Fonts.mavenRegular(activity)
             (view.findViewById(R.id.tvFarePerMile) as TextView).typeface = Fonts.mavenRegular(activity)
@@ -57,10 +58,20 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
             if(vehicleList[position].rideType == ServiceTypeValue.RENTAL.type
                     && vehicleList[position].packages != null
                     && vehicleList[position].packages.size > 0){
-                itemView.tvBaseFare?.text = activity.getString(R.string.base_fare_format, " " + Utils.formatCurrencyValue(Data.autoData.currency,
-                        vehicleList[position].packages[0].fareMinimum!!))
-                itemView.tvFarePerMinute?.text = activity.getString(R.string.nl_per_min) + ": " + Utils.formatCurrencyValue(Data.autoData.currency, vehicleList[position].packages[0].farePerMin!!, false)
-                itemView.tvFarePerMile?.text = activity.getString(R.string.per_format, Utils.getDistanceUnit(Data.autoData.distanceUnit)) + ": " + Utils.formatCurrencyValue(Data.autoData.currency, vehicleList[position].packages[0].farePerKmAfterThreshold!!, false)
+                var packageSelected = if (selectedCallback.getPackageSelected() != null) selectedCallback.getPackageSelected() else vehicleList[position].packages[0]
+                var match = false
+                for(pc in vehicleList[position].packages){
+                    if(packageSelected!!.packageId == pc.packageId){
+                        match = true
+                        break
+                    }
+                }
+                packageSelected = if (match) packageSelected else vehicleList[position].packages[0]
+
+                itemView.tvBaseFare?.text = activity.getString(R.string.package_rate_format, " " + Utils.formatCurrencyValue(Data.autoData.currency,
+                        packageSelected!!.fareFixed!!))
+                itemView.tvFarePerMinute?.text = activity.getString(R.string.additional_per_min) + ": " + Utils.formatCurrencyValue(Data.autoData.currency, packageSelected.farePerMin!!, false)
+                itemView.tvFarePerMile?.text = activity.getString(R.string.additional_per_km_fare, Utils.getDistanceUnit(Data.autoData.distanceUnit)) + ": " + Utils.formatCurrencyValue(Data.autoData.currency, packageSelected.farePerKmAfterThreshold!!, false)
             } else {
                 itemView.tvBaseFare?.text = activity.getString(R.string.base_fare_format, " " + Utils.formatCurrencyValue(vehicleList[position].fareStructure.currency,
                         vehicleList[position].fareStructure.getDisplayBaseFare(activity)))
@@ -69,7 +80,7 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
             }
 
             Picasso.with(activity)
-                    .load(vehicleList[position].images.rideNowNormal)
+                    .load(vehicleList[position].images.tabHighlighted)
                     .into(itemView.ivVehicleImage)
 
             itemView.clRoot.tag = position
@@ -90,6 +101,7 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
 
     interface OnSelectedCallback{
         fun onItemSelected(selectedRegion: Region)
+        fun getPackageSelected(): Package?
     }
 }
 
