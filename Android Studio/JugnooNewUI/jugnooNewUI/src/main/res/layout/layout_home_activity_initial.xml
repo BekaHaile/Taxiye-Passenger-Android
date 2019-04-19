@@ -7,7 +7,23 @@
     android:splitMotionEvents="false"
     android:visibility="visible">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvRideTypes"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:tag="@string/dont_touch_me"
+        android:background="@color/white"
+        />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:tag="@string/dont_touch_me"
+        android:layout_alignBottom="@+id/rvRideTypes"
+        android:background="@color/divider_color"
+        />
+    
     <LinearLayout
+        android:layout_below="@+id/rvRideTypes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"

@@ -10,6 +10,9 @@ import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
+import product.clicklabs.jugnoo.retrofit.model.Package;
+import product.clicklabs.jugnoo.retrofit.model.ServiceType;
+import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.utils.MapUtils;
 
 /**
@@ -34,6 +37,7 @@ public class AutoData {
     private Campaigns campaigns;
     private FareStructure fareStructure;
     private ArrayList<Region> regions;
+    private ArrayList<Region> regionsTemp;
     private String farAwayCity = "";
     private int isRazorpayEnabled;
     private String cEngagementId = "", cDriverId = "", cSessionId = "";
@@ -62,6 +66,10 @@ public class AutoData {
     private int showRegionSpecificFare;
 
     private ArrayList<Corporate> corporatesFetched;
+    private ArrayList<ServiceType> serviceTypes;
+    private ServiceType serviceTypeSelected;
+    private Package selectedPackage;
+    private String currency;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -97,6 +105,10 @@ public class AutoData {
         this.isRazorpayEnabled = isRazorpayEnabled;
         this.isTipEnabled = isTipEnabled;
         this.showRegionSpecificFare = showRegionSpecificFare;
+        ArrayList<Integer> rideTypes = new ArrayList<>();
+        rideTypes.add(ServiceTypeValue.NORMAL.getType());
+        rideTypes.add(ServiceTypeValue.POOL.getType());
+        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, null, "", true);
     }
 
     public String getDestinationHelpText() {
@@ -292,8 +304,37 @@ public class AutoData {
     }
 
     public ArrayList<Region> getRegions() {
-        return regions;
+        if(regionsTemp == null){
+            regionsTemp = new ArrayList<>();
+        }
+        if(regions == null){
+            regions = new ArrayList<>();
+        }
+        regionsTemp.clear();
+        if(getServiceTypeSelected().getSupportedRideTypes() != null && getServiceTypeSelected().getSupportedRideTypes().size() > 0) {
+            for (Region region : regions){
+                if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType())){
+                    regionsTemp.add(region);
+                }
+            }
+        } else {
+            regionsTemp.addAll(regions);
+        }
+        return regionsTemp;
     }
+    public void addRegion(Region region){
+        if(regions == null){
+            regions = new ArrayList<>();
+        }
+        regions.add(region);
+    }
+    public void clearRegions(){
+        if(regions == null){
+            regions = new ArrayList<>();
+        }
+        regions.clear();
+    }
+
 
     public void setRegions(ArrayList<Region> regions) {
         this.regions = regions;
@@ -581,5 +622,40 @@ public class AutoData {
 
     public void setCorporatesFetched(ArrayList<Corporate> corporates){
         this.corporatesFetched = corporates;
+    }
+
+    public ArrayList<ServiceType> getServiceTypes() {
+        if(serviceTypes == null){
+            serviceTypes = new ArrayList<>();
+        }
+        return serviceTypes;
+    }
+
+    public void setServiceTypes(ArrayList<ServiceType> serviceTypes) {
+        this.serviceTypes = serviceTypes;
+    }
+
+    public ServiceType getServiceTypeSelected() {
+        return serviceTypeSelected;
+    }
+
+    public void setServiceTypeSelected(ServiceType serviceTypeSelected) {
+        this.serviceTypeSelected = serviceTypeSelected;
+    }
+
+    public Package getSelectedPackage() {
+        return selectedPackage;
+    }
+
+    public void setSelectedPackage(Package selectedPackage) {
+        this.selectedPackage = selectedPackage;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 }

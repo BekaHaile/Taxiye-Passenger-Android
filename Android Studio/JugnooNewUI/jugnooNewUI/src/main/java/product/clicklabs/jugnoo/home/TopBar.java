@@ -16,6 +16,8 @@ import com.sabkuchfresh.analytics.GAUtils;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.retrofit.model.ServiceType;
+import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -100,13 +102,7 @@ public class TopBar implements GACategory, GAAction {
                 case R.id.buttonCheckServer:
                     break;
                 case R.id.imageViewScheduleRide:
-                    ((HomeActivity) activity).scheduleRideContainer.setVisibility(View.VISIBLE);
-                    ((HomeActivity) activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity) activity), ((HomeActivity) activity).scheduleRideContainer);
-                    imageViewBack.setVisibility(View.VISIBLE);
-                    imageViewMenu.setVisibility(View.GONE);
-                    //imageViewScheduleRide.setVisibility(View.GONE);
-                    tvScheduleRidePopup.setVisibility(View.GONE);
-                    textViewTitle.setText(activity.getString(R.string.schedule_a_ride));
+                    openScheduleFragment(null);
                     break;
 
                 case R.id.imageViewHelp:
@@ -137,6 +133,19 @@ public class TopBar implements GACategory, GAAction {
             }
         }
     };
+
+    public void openScheduleFragment(ServiceType serviceType) {
+        ((HomeActivity) activity).scheduleRideContainer.setVisibility(View.VISIBLE);
+        ((HomeActivity) activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity) activity), ((HomeActivity) activity).scheduleRideContainer, serviceType);
+        imageViewBack.setVisibility(View.VISIBLE);
+        imageViewMenu.setVisibility(View.GONE);
+        tvScheduleRidePopup.setVisibility(View.GONE);
+        if(serviceType != null && serviceType.getSupportedRideTypes() != null && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+            textViewTitle.setText(activity.getString(R.string.rentals));
+        } else {
+            textViewTitle.setText(activity.getString(R.string.schedule_a_ride));
+        }
+    }
 
 
     public void setTopBarState(boolean defaultState, String title) {

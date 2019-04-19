@@ -418,6 +418,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         }
         activity.getSlidingBottomPanel().updateBottomPanel(supplyCount);
         activity.setDestinationBarPlaceholderText(regionSelected.getRideType());
+        if(supplyCount > 0){
+            Data.autoData.setFarAwayCity("");
+        }
+        activity.setServiceAvailablityUI(Data.autoData.getFarAwayCity());
     }
 
     public void updateFareStructureUI(){
@@ -520,6 +524,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         vehiclesTabAdapter.notifyDataSetChanged();
         recyclerViewVehicles.getLayoutManager().scrollToPosition(position);
         updateFareStructureUI();
+    }
+    public void setRegionSelected(Region region) {
+        regionSelected = region;
     }
 
 

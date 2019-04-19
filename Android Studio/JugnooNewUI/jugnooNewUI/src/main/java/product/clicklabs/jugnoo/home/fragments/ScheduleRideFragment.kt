@@ -12,16 +12,17 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.gson.Gson
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GACategory
 import com.sabkuchfresh.analytics.GAUtils
 import com.sabkuchfresh.pros.utils.DatePickerFragment
 import com.sabkuchfresh.pros.utils.TimePickerFragment
-import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.fragment_schedule_ride.*
 import product.clicklabs.jugnoo.*
 import product.clicklabs.jugnoo.Constants.SCHEDULE_CURRENT_TIME_DIFF
 import product.clicklabs.jugnoo.Constants.SCHEDULE_DAYS_LIMIT
+import product.clicklabs.jugnoo.adapters.RentalPackagesAdapter
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
 import product.clicklabs.jugnoo.home.HomeActivity
@@ -29,13 +30,17 @@ import product.clicklabs.jugnoo.home.HomeUtil
 import product.clicklabs.jugnoo.home.adapters.ScheduleRideVehicleListAdapter
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog
 import product.clicklabs.jugnoo.home.models.Region
+import product.clicklabs.jugnoo.retrofit.model.Package
+import product.clicklabs.jugnoo.retrofit.model.ServiceType
+import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Prefs
+import product.clicklabs.jugnoo.utils.Utils
 import java.util.*
 
 
-class ScheduleRideFragment : Fragment(), Constants {
+class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapter.OnSelectedCallback{
 
     private val TAG = ScheduleRideFragment::class.java.simpleName
 
@@ -45,9 +50,12 @@ class ScheduleRideFragment : Fragment(), Constants {
     private var timePickerFragment: TimePickerFragment? = null
     private var selectedDate: String? = null
     private var selectedTime: String? = null
-    private val scheduleRideVehicleListAdapter by lazy{ ScheduleRideVehicleListAdapter(getActivity() as HomeActivity, Data.autoData.regions) }
+    private val scheduleRideVehicleListAdapter by lazy{ ScheduleRideVehicleListAdapter(getActivity() as HomeActivity, Data.autoData.regions, this) }
+    private var packagesAdapter: RentalPackagesAdapter? = null
     internal var searchResultPickup: SearchResult? = null
     internal var searchResultDestination: SearchResult? = null
+    var selectedPackage:Package? = null
+    var selectedRegion:Region? = null
     var minBufferTimeCurrent = 30
     var scheduleDaysLimit = 2
     private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
@@ -64,6 +72,7 @@ class ScheduleRideFragment : Fragment(), Constants {
     }
 
     private var interactionListener: InteractionListener? = null
+    private var serviceType:ServiceType? = null
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -83,6 +92,12 @@ class ScheduleRideFragment : Fragment(), Constants {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_schedule_ride, container, false)
 
+        if(arguments != null
+                && arguments!!.containsKey(Constants.KEY_SERVICE_TYPE)){
+            val str = arguments?.getString(Constants.KEY_SERVICE_TYPE)
+            val gson = Gson()
+            serviceType = gson.fromJson(str, ServiceType::class.java)
+        }
 
 
         return rootView
@@ -98,11 +113,16 @@ class ScheduleRideFragment : Fragment(), Constants {
             tvPickup.typeface = Fonts.mavenRegular(activity)
             tvScheduleMessage.typeface = Fonts.mavenRegular(activity)
             tvDestination.typeface = Fonts.mavenRegular(activity)
-            tvPickupDateTime.setTypeface(Fonts.mavenRegular(activity),BOLD)
+            tvPickupDateTime.setTypeface(Fonts.mavenMedium(activity),BOLD)
             tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
             btSchedule.typeface = Fonts.mavenRegular(activity)
-            tvSelectPayment.setTypeface(Fonts.mavenRegular(activity),BOLD)
+            tvSelectPayment.setTypeface(Fonts.mavenMedium(activity),BOLD)
+            tvNote.setTypeface(Fonts.mavenMedium(activity),BOLD)
             textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
+            tvSelectPackage.setTypeface(Fonts.mavenMedium(activity),BOLD)
+            tvSelectVehicleType.setTypeface(Fonts.mavenMedium(activity),BOLD)
+            rvPackages.layoutManager = LinearLayoutManager(activity)
+            rvPackages.isNestedScrollingEnabled = false
 
             tvPickup.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.PICKUP) }
             tvDestination.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP) }
@@ -122,13 +142,16 @@ class ScheduleRideFragment : Fragment(), Constants {
                     if (TextUtils.isEmpty(tvPickup.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_pickup))
                         throw Exception()
-                    } else if (TextUtils.isEmpty(tvDestination.text.toString())) {
+                    } else if (serviceTypeNotRental()
+                            && TextUtils.isEmpty(tvDestination.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_destination))
                         throw Exception()
-                    } else if (TextUtils.isEmpty(selectedDate)) {
+                    } else if (serviceTypeNotRental()
+                            && TextUtils.isEmpty(selectedDate)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_date))
                         throw Exception()
-                    } else if (TextUtils.isEmpty(selectedTime)) {
+                    } else if (serviceTypeNotRental()
+                            && TextUtils.isEmpty(selectedTime)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_time))
                         throw Exception()
                     } else if (!TextUtils.isEmpty(Data.autoData.getFarAwayCity())) {
@@ -161,9 +184,48 @@ class ScheduleRideFragment : Fragment(), Constants {
             setSelectedRegionData()
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
+
+            val visibilityNotRental = if (serviceTypeNotRental()) View.VISIBLE else View.GONE
+            tvDestination.visibility = visibilityNotRental
+            tvPickupDateTime.visibility = visibilityNotRental
+            tvSelectDateTime.visibility = visibilityNotRental
+            tvSelectPackage.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
+            rvPackages.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
+            updatePackagesAccRegionSelected(null)
+            btSchedule.setText(if(!serviceTypeNotRental()) R.string.book else R.string.schedule)
+            tvScheduleMessage.text = if(serviceType != null) Utils.trimHTML(Utils.fromHtml(serviceType!!.info)) else requireActivity().getString(R.string.schedule_ride_alert)
         }
 
         updatePaymentOption()
+    }
+
+    private fun updatePackagesAccRegionSelected(regionS: Region?) {
+        if (!serviceTypeNotRental()) {
+            (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.setRegionSelected(0)
+            var region = if(regionS == null) (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected else regionS
+            if(region!!.packages != null
+                    && region.packages.size > 0){
+                for(pc in region.packages){
+                    pc.selected = false
+                }
+                region.packages[0].selected = true;
+            }
+            if (packagesAdapter == null) {
+                packagesAdapter = RentalPackagesAdapter(activity as Context,
+                        region.packages, Data.autoData.currency, Data.autoData.distanceUnit,
+                        rvPackages,
+                        Fonts.mavenRegular(activity),
+                        object : RentalPackagesAdapter.OnSelectedCallback {
+                            override fun onItemSelected(selectedPackage: Package) {
+                                this@ScheduleRideFragment.selectedPackage = selectedPackage
+                                scheduleRideVehicleListAdapter.notifyDataSetChanged()
+                            }
+                        })
+                rvPackages.adapter = packagesAdapter
+            } else {
+                packagesAdapter!!.setList(region.packages, Data.autoData.currency, Data.autoData.distanceUnit)
+            }
+        }
     }
 
     private fun setPickupAndDropAddress() {
@@ -268,16 +330,26 @@ class ScheduleRideFragment : Fragment(), Constants {
         fun onAttachScheduleRide()
 
         fun onDestroyScheduleRide()
+
+        fun callRentalOutstationRequestRide(serviceType: ServiceType?, region: Region, selectedPackage:Package?, searchResultPickup:SearchResult,
+                                            searchResultDestination:SearchResult?, dateTime:String?)
     }
 
     fun openFareEstimate() {
         if (searchResultPickup == null) {
             product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_pickup_location))
             return
-        } else if (searchResultDestination == null) {
+        } else if ((serviceTypeNotRental() && searchResultDestination == null)) {
             product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_destination_location))
             return
         }
+        if(serviceType != null && interactionListener != null){
+            interactionListener!!.callRentalOutstationRequestRide(serviceType, (getActivity() as HomeActivity).selectedRegionForScheduleRide,
+                    selectedPackage,
+                    searchResultPickup!!, null, null)
+            return
+        }
+
         val intent = Intent(activity, FareEstimateActivity::class.java)
         intent.putExtra(Constants.KEY_REGION, (getActivity() as HomeActivity).gson.toJson((getActivity() as HomeActivity).selectedRegionForScheduleRide, Region::class.java))
         //        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
@@ -296,13 +368,20 @@ class ScheduleRideFragment : Fragment(), Constants {
         activity!!.overridePendingTransition(R.anim.right_in, R.anim.right_out)
     }
 
+    private fun serviceTypeNotRental() =
+            (serviceType == null || serviceType!!.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))
+
     companion object {
 
         val BUFFER_TIME_TO_SELECT_MINS = 5
 
-        fun newInstance(): ScheduleRideFragment {
+        fun newInstance(serviceType: ServiceType?): ScheduleRideFragment {
             val bundle = Bundle()
+            val gson = Gson()
             val fragment = ScheduleRideFragment()
+            if(serviceType != null) {
+                bundle.putString(Constants.KEY_SERVICE_TYPE, gson.toJson(serviceType, ServiceType::class.java))
+            }
             fragment.arguments = bundle
             return fragment
         }
@@ -391,6 +470,19 @@ class ScheduleRideFragment : Fragment(), Constants {
             (activity as HomeActivity).selectedRegionForScheduleRide = null
         }
     }
+
+    override fun onItemSelected(selectedRegion: Region) {
+        if(this.selectedRegion != null && selectedRegion.regionId != this.selectedRegion!!.regionId){
+            selectedPackage = null
+        }
+        updatePackagesAccRegionSelected(selectedRegion)
+        this.selectedRegion = selectedRegion
+    }
+
+    override fun getPackageSelected(): Package? {
+        return selectedPackage
+    }
+
 
 
 }

@@ -172,11 +172,14 @@ public class ApiFindADriver {
 				}
 			}
 
+			Data.autoData.setServiceTypes(findADriverResponse.getServiceTypes());
+
 			Data.autoData.setFareFactor(1);
 			if(findADriverResponse.getFareFactor() != null) {
 				Data.autoData.setFareFactor(findADriverResponse.getFareFactor());
 			}
 			Data.autoData.setDistanceUnit(findADriverResponse.getDistanceUnit());
+			Data.autoData.setCurrency(findADriverResponse.getCurrency());
 
 			Data.autoData.setDriverFareFactor(1);
 			if(findADriverResponse.getDriverFareFactor() != null) {
@@ -210,14 +213,14 @@ public class ApiFindADriver {
 			if(Data.autoData.getRegions() == null){
 				Data.autoData.setRegions(new ArrayList<Region>());
 			} else{
-				Data.autoData.getRegions().clear();
+				Data.autoData.clearRegions();
 			}
 			if(findADriverResponse.getRegions() != null) {
 				HomeUtil homeUtil = new HomeUtil();
 				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
 					region.setIsDefault(false);
-					Data.autoData.getRegions().add(region);
+					Data.autoData.addRegion(region);
 				}
 			}
 		} catch(Exception e){

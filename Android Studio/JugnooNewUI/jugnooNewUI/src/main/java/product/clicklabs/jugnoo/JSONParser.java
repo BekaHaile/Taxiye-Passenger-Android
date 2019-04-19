@@ -690,11 +690,14 @@ public class JSONParser implements Constants {
             //current_user_status = 1 driver or 2 user
             parseDriversToShow(autos.getDrivers());
 
+            Data.autoData.setServiceTypes(autos.getServiceTypes());
+
             Data.autoData.setFareFactor(1);
             if(autos.getFareFactor() != null) {
                 Data.autoData.setFareFactor(autos.getFareFactor());
             }
             Data.autoData.setDistanceUnit(autos.getDistanceUnit());
+            Data.autoData.setCurrency(autos.getCurrency());
 
             Data.autoData.setDriverFareFactor(1);
             if(autos.getDriverFareFactor() != null) {
@@ -718,14 +721,14 @@ public class JSONParser implements Constants {
             if(Data.autoData.getRegions() == null){
                 Data.autoData.setRegions(new ArrayList<Region>());
             } else{
-                Data.autoData.getRegions().clear();
+                Data.autoData.clearRegions();
             }
             if(autos.getRegions() != null) {
                 HomeUtil homeUtil = new HomeUtil();
                 for (Region region : autos.getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
                     region.setIsDefault(false);
-                    Data.autoData.getRegions().add(region);
+                    Data.autoData.addRegion(region);
                 }
             }
         } catch(Exception e){

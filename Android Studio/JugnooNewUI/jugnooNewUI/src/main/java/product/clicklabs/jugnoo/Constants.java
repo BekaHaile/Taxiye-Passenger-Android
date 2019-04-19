@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo;
 
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created by socomo20 on 12/11/15.
  */
@@ -1024,4 +1026,6 @@ public interface Constants {
     String KEY_CUSTOMER_REQUEST_RIDE_BID_FAST_INTERVAL = "customer_request_ride_bid_fast_interval";
     String KEY_PAID_USING_POS = "paid_using_pos";
     String KEY_CUSTOMER_ARRIVED_BEEP_ENABLED = "customer_arrived_beep_enabled";
+	String KEY_SERVICE_TYPE = "service_type";
+    String KEY_PACKAGE_ID = "package_id";
 }

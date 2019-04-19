@@ -846,6 +846,9 @@ public class LoginResponse {
 		@SerializedName("show_region_specific_fare")
 		@Expose
 		private int showRegionSpecificFare;
+		@SerializedName("services")
+		@Expose
+		private ArrayList<ServiceType> serviceTypes;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -1028,6 +1031,14 @@ public class LoginResponse {
 
 		public int getShowRegionSpecificFare() {
 			return showRegionSpecificFare;
+		}
+
+		public ArrayList<ServiceType> getServiceTypes() {
+			return serviceTypes;
+		}
+
+		public void setServiceTypes(ArrayList<ServiceType> serviceTypes) {
+			this.serviceTypes = serviceTypes;
 		}
 	}
 

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
     android:paddingBottom="10dp"
-    android:background="@drawable/background_white_rounded_bordered"
+    android:background="@drawable/background_white_bottom_border"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ImageView
@@ -15,7 +15,7 @@
         android:layout_height="@dimen/dp_40"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="14dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,9 +28,9 @@
         android:layout_marginStart="@dimen/dp_10"
         android:layout_marginTop="@dimen/dp_15"
         android:gravity="center_vertical"
-        android:hint="@string/select"
+        tools:text="@string/select"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/sp_13"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/ivVehicleImage"
         app:layout_constraintTop_toTopOf="parent" />
     <TextView
@@ -38,11 +38,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="Base Fare: $30"
-        android:textSize="@dimen/sp_10"
-        android:layout_marginTop="5dp"
+        tools:text="Base Fare: $30"
+        android:textSize="12sp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/text_color"
-        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginStart="10dp"
         app:layout_constraintTop_toBottomOf="@+id/tvVehicleName"
         app:layout_constraintStart_toEndOf="@id/ivVehicleImage"/>
     <TextView
@@ -50,11 +50,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="Per Minute: $3"
+        tools:text="Per Minute: $3"
         android:layout_marginTop="5dp"
-        android:textSize="@dimen/sp_10"
+        android:textSize="12sp"
         android:textColor="@color/text_color"
-        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginStart="10dp"
         app:layout_constraintTop_toBottomOf="@+id/tvBaseFare"
         app:layout_constraintStart_toEndOf="@id/ivVehicleImage"/>
 
@@ -63,18 +63,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="Per Mile: $10"
-        android:textSize="@dimen/sp_10"
+        tools:text="Per Mile: $10"
+        android:textSize="12sp"
         android:layout_marginTop="5dp"
         android:textColor="@color/text_color"
-        android:layout_marginStart="@dimen/dp_10"
+        android:layout_marginStart="10dp"
         app:layout_constraintTop_toBottomOf="@+id/tvFarePerMinute"
         app:layout_constraintStart_toEndOf="@id/ivVehicleImage"/>
 
     <ImageView
         android:id="@+id/ivSelected"
-        android:layout_width="@dimen/dp_20"
-        android:layout_height="@dimen/dp_20"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_marginStart="10dp"
@@ -82,6 +82,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:src="@drawable/tick" />
 </android.support.constraint.ConstraintLayout>

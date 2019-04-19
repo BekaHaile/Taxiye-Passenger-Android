@@ -152,6 +152,15 @@
             <!-- end ride layout -->
             <include layout="@layout/layout_ride_summary_new" />
 
+            <!-- rental outstation layout -->
+            <include
+                layout="@layout/layout_initial_rental_outstation_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                />
+
+
             <include
                 android:id="@+id/fabViewFinal"
                 layout="@layout/layout_home_activity_fab_test" />
