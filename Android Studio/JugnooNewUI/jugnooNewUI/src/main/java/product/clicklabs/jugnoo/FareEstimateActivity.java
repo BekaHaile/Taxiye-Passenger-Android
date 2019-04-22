@@ -543,9 +543,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         } else {
             params.put(KEY_DROP_LOCATION_ADDRESS, "");
         }
+
         params.put("op_drop_latitude", String.valueOf(dropLatLng.latitude));
         params.put("op_drop_longitude", String.valueOf(dropLatLng.longitude));
         params.put("vehicle_type", String.valueOf(region.getVehicleType()));
+        if(Data.autoData.getSelectedPackage() != null){
+            params.put(Constants.KEY_PACKAGE_ID, String.valueOf(Data.autoData.getSelectedPackage().getPackageId()));
+        }
         params.put(Constants.KEY_PREFERRED_PAYMENT_MODE, "" + Data.autoData.getPickupPaymentOption());
 
 

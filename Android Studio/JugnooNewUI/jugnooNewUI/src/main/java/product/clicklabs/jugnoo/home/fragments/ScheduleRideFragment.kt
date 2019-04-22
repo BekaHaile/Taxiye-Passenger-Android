@@ -189,8 +189,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvDestination.visibility = visibilityNotRental
             tvPickupDateTime.visibility = visibilityNotRental
             tvSelectDateTime.visibility = visibilityNotRental
-            tvSelectPackage.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
-            rvPackages.visibility = if(visibilityNotRental == View.VISIBLE) View.GONE else View.VISIBLE
+            tvSelectPackage.visibility = if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)||Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
+            rvPackages.visibility = if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)||Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
             updatePackagesAccRegionSelected(null)
             btSchedule.setText(if(!serviceTypeNotRental()) R.string.book else R.string.schedule)
             tvScheduleMessage.text = if(serviceType != null) Utils.trimHTML(Utils.fromHtml(serviceType!!.info)) else requireActivity().getString(R.string.schedule_ride_alert)
@@ -200,7 +200,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
 
     private fun updatePackagesAccRegionSelected(regionS: Region?) {
-        if (!serviceTypeNotRental()) {
+//        if (!serviceTypeNotRental()) {
             (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.setRegionSelected(0)
             var region = if(regionS == null) (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected else regionS
             if(region!!.packages != null
@@ -226,7 +226,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             } else {
                 packagesAdapter!!.setList(region.packages, Data.autoData.currency, Data.autoData.distanceUnit)
             }
-        }
+//        }
     }
 
     private fun setPickupAndDropAddress() {
@@ -350,7 +350,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     searchResultPickup!!, null, null)
             return
         }
-
+        Data.autoData.selectedPackage = selectedPackage
         val intent = Intent(activity, FareEstimateActivity::class.java)
         intent.putExtra(Constants.KEY_REGION, (getActivity() as HomeActivity).gson.toJson((getActivity() as HomeActivity).selectedRegionForScheduleRide, Region::class.java))
         //        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
