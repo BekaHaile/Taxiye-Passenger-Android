@@ -209,6 +209,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     pc.selected = false
                 }
                 region.packages[0].selected = true;
+                this@ScheduleRideFragment.selectedPackage = region.packages[0]
             }
             if (packagesAdapter == null) {
                 packagesAdapter = RentalPackagesAdapter(activity as Context,

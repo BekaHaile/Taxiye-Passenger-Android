@@ -17,12 +17,12 @@ class RideTypesAdapter(private var serviceTypes: ArrayList<ServiceType>, val rec
         RecyclerView.Adapter<RideTypesAdapter.ViewHolderService>(),ItemListener {
 
     init{
-        recyclerView.visibility = if(serviceTypes.size == 0) View.GONE else View.VISIBLE
+        recyclerView.visibility = if(serviceTypes.size == 0||serviceTypes.size == 1) View.GONE else View.VISIBLE
     }
 
     fun setList(corporates: ArrayList<ServiceType>){
         this.serviceTypes = corporates
-        recyclerView.visibility = if(serviceTypes.size == 0) View.GONE else View.VISIBLE
+        recyclerView.visibility = if(serviceTypes.size == 0||serviceTypes.size == 1) View.GONE else View.VISIBLE
         notifyDataSetChanged()
     }
 
