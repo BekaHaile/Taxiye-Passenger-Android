@@ -11017,7 +11017,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void setServiceTypeUI(){
-        if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
+        if(Data.autoData.getServiceTypes().size() > 0
+                && Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
                 && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
                 || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))){
             constraintLayoutRideTypeConfirm.setVisibility(View.VISIBLE);
