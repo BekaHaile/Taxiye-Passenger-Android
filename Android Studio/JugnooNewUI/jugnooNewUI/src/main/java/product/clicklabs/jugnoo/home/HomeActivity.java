@@ -11072,7 +11072,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(serviceType != null){
             Data.autoData.setServiceTypeSelected(serviceType);
             if(serviceType.getSupportedRideTypes() != null
-                    && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())){
+                    && (serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())||serviceType.getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))){
                 Data.autoData.setPickupLatLng(searchResultPickup.getLatLng());
                 Data.autoData.setPickupAddress(searchResultPickup.getAddress(), searchResultPickup.getLatLng());
                 Data.autoData.setSelectedPackage(selectedPackage);
@@ -11081,5 +11081,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 performBackpressed();
             }
         }
+    }
+    public void setServiceTypeTextIconsChanges(boolean isRental){
+    if(isRental){
+
+    }
     }
 }

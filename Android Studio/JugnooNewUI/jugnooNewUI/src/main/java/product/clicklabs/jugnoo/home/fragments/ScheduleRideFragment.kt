@@ -45,6 +45,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     private val TAG = ScheduleRideFragment::class.java.simpleName
 
 
+    internal var oneWayPackages = ArrayList<Package>()
+    internal var roundTripPackages = ArrayList<Package>()
     private var rootView: View? = null
     private var datePickerFragment: DatePickerFragment? = null
     private var timePickerFragment: TimePickerFragment? = null
@@ -107,7 +109,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         super.onViewCreated(view, savedInstanceState)
 
         with(rootView) {
-
+            (activity as HomeActivity).selectedIdForScheduleRide=0
+            (activity as HomeActivity).selectedRegionForScheduleRide=null
             rvVehiclesList.layoutManager = LinearLayoutManager(activity)
             rvVehiclesList.isNestedScrollingEnabled = false
             tvPickup.typeface = Fonts.mavenRegular(activity)
@@ -115,11 +118,14 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvDestination.typeface = Fonts.mavenRegular(activity)
             tvPickupDateTime.setTypeface(Fonts.mavenMedium(activity),BOLD)
             tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
+            tvOneWay.typeface = Fonts.mavenMedium(activity)
+            tvRoundTrip.typeface = Fonts.mavenMedium(activity)
             btSchedule.typeface = Fonts.mavenRegular(activity)
             tvSelectPayment.setTypeface(Fonts.mavenMedium(activity),BOLD)
             tvNote.setTypeface(Fonts.mavenMedium(activity),BOLD)
             textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
             tvSelectPackage.setTypeface(Fonts.mavenMedium(activity),BOLD)
+            tvSelectRoute.setTypeface(Fonts.mavenMedium(activity),BOLD)
             tvSelectVehicleType.setTypeface(Fonts.mavenMedium(activity),BOLD)
             rvPackages.layoutManager = LinearLayoutManager(activity)
             rvPackages.isNestedScrollingEnabled = false
@@ -136,6 +142,90 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             llPaymentOption.setOnClickListener {
                 getPaymentOptionDialog()?.show()
             }
+
+            tvOneWay.setOnClickListener{
+                oneWayPackages.clear()
+                for (i in 0 until selectedRegion!!.packages.size) {
+                    if(selectedRegion!!.packages.get(i).returnTrip==0) {
+                        val pck = Package()
+
+                        pck.packageId = selectedRegion!!.packages.get(i).packageId
+                        pck.fareFixed = selectedRegion!!.packages.get(i).fareFixed
+                        pck.farePerKm = selectedRegion!!.packages.get(i).farePerKm
+                        pck.fareThresholdDistance = selectedRegion!!.packages.get(i).fareThresholdDistance
+                        pck.farePerKmThresholdDistance = selectedRegion!!.packages.get(i).farePerKmThresholdDistance
+                        pck.farePerKmAfterThreshold = selectedRegion!!.packages.get(i).farePerKmAfterThreshold
+                        pck.farePerKmBeforeThreshold = selectedRegion!!.packages.get(i).farePerKmBeforeThreshold
+                        pck.farePerMin = selectedRegion!!.packages.get(i).farePerMin
+                        pck.fareThresholdTime = selectedRegion!!.packages.get(i).fareThresholdTime
+                        pck.farePerWaitingMin = selectedRegion!!.packages.get(i).farePerWaitingMin
+                        pck.fareThresholdWaitingTime = selectedRegion!!.packages.get(i).fareThresholdWaitingTime
+                        pck.startTime = selectedRegion!!.packages.get(i).startTime
+                        pck.endTime = selectedRegion!!.packages.get(i).endTime
+                        pck.vehicleType = selectedRegion!!.packages.get(i).vehicleType
+                        pck.rideType = selectedRegion!!.packages.get(i).rideType
+                        pck.fareMinimum = selectedRegion!!.packages.get(i).fareMinimum
+                        pck.operatorId = selectedRegion!!.packages.get(i).operatorId
+                        pck.farePerBaggage = selectedRegion!!.packages.get(i).farePerBaggage
+                        pck.regionId = selectedRegion!!.packages.get(i).regionId
+                        pck.cityName = selectedRegion!!.packages.get(i).cityName
+                        pck.cityId = selectedRegion!!.packages.get(i).cityId
+                        pck.returnTrip = selectedRegion!!.packages.get(i).returnTrip
+
+                        oneWayPackages.add(pck)
+                    }
+                }
+                tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                      R.drawable.ic_radio_button_checked,
+                        0, 0, 0)
+                tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                      R.drawable.ic_radio_button_unchecked,
+                        0, 0, 0)
+                packagesAdapter!!.setList(oneWayPackages, Data.autoData.currency, Data.autoData.distanceUnit)
+//                updatePackagesAccRegionSelected(selectedRegion)
+            }
+
+            tvRoundTrip.setOnClickListener{
+                roundTripPackages.clear()
+                for (i in 0 until selectedRegion!!.packages.size) {
+                    if(selectedRegion!!.packages.get(i).returnTrip==1) {
+                        val pck = Package()
+
+                        pck.packageId = selectedRegion!!.packages.get(i).packageId
+                        pck.fareFixed = selectedRegion!!.packages.get(i).fareFixed
+                        pck.farePerKm = selectedRegion!!.packages.get(i).farePerKm
+                        pck.fareThresholdDistance = selectedRegion!!.packages.get(i).fareThresholdDistance
+                        pck.farePerKmThresholdDistance = selectedRegion!!.packages.get(i).farePerKmThresholdDistance
+                        pck.farePerKmAfterThreshold = selectedRegion!!.packages.get(i).farePerKmAfterThreshold
+                        pck.farePerKmBeforeThreshold = selectedRegion!!.packages.get(i).farePerKmBeforeThreshold
+                        pck.farePerMin = selectedRegion!!.packages.get(i).farePerMin
+                        pck.fareThresholdTime = selectedRegion!!.packages.get(i).fareThresholdTime
+                        pck.farePerWaitingMin = selectedRegion!!.packages.get(i).farePerWaitingMin
+                        pck.fareThresholdWaitingTime = selectedRegion!!.packages.get(i).fareThresholdWaitingTime
+                        pck.startTime = selectedRegion!!.packages.get(i).startTime
+                        pck.endTime = selectedRegion!!.packages.get(i).endTime
+                        pck.vehicleType = selectedRegion!!.packages.get(i).vehicleType
+                        pck.rideType = selectedRegion!!.packages.get(i).rideType
+                        pck.fareMinimum = selectedRegion!!.packages.get(i).fareMinimum
+                        pck.operatorId = selectedRegion!!.packages.get(i).operatorId
+                        pck.farePerBaggage = selectedRegion!!.packages.get(i).farePerBaggage
+                        pck.regionId = selectedRegion!!.packages.get(i).regionId
+                        pck.cityName = selectedRegion!!.packages.get(i).cityName
+                        pck.cityId = selectedRegion!!.packages.get(i).cityId
+                        pck.returnTrip = selectedRegion!!.packages.get(i).returnTrip
+
+                        roundTripPackages.add(pck)
+                    }
+                }
+                tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_radio_button_unchecked,
+                        0, 0, 0)
+                tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.ic_radio_button_checked,
+                        0, 0, 0)
+                packagesAdapter!!.setList(roundTripPackages, Data.autoData.currency, Data.autoData.distanceUnit)
+            }
+
             btSchedule.setOnClickListener {
                 try {
 
@@ -189,6 +279,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvDestination.visibility = visibilityNotRental
             tvPickupDateTime.visibility = visibilityNotRental
             tvSelectDateTime.visibility = visibilityNotRental
+            tvSelectRoute.visibility = if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
+            tvOneWay.visibility = if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
+            tvRoundTrip.visibility = if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
             tvSelectPackage.visibility = if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)||Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
             rvPackages.visibility = if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)||Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
             updatePackagesAccRegionSelected(null)
@@ -370,7 +463,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
 
     private fun serviceTypeNotRental() =
-            (serviceType == null || serviceType!!.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))
+//            (serviceType == null || serviceType!!.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))
+            (serviceType == null)
 
     companion object {
 
@@ -478,6 +572,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         }
         updatePackagesAccRegionSelected(selectedRegion)
         this.selectedRegion = selectedRegion
+        if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)){
+            tvOneWay.performClick()
+        }
     }
 
     override fun getPackageSelected(): Package? {

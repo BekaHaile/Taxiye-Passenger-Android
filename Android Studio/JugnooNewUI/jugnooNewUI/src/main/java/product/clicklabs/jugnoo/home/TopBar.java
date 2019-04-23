@@ -140,8 +140,10 @@ public class TopBar implements GACategory, GAAction {
         imageViewBack.setVisibility(View.VISIBLE);
         imageViewMenu.setVisibility(View.GONE);
         tvScheduleRidePopup.setVisibility(View.GONE);
-        if(serviceType != null && serviceType.getSupportedRideTypes() != null && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+        if (serviceType != null && serviceType.getSupportedRideTypes() != null && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
             textViewTitle.setText(activity.getString(R.string.rentals));
+        } else if (serviceType != null && serviceType.getSupportedRideTypes() != null && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())) {
+            textViewTitle.setText(activity.getString(R.string.out_station));
         } else {
             textViewTitle.setText(activity.getString(R.string.schedule_a_ride));
         }
