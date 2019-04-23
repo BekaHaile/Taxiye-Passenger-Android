@@ -1234,6 +1234,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonConfirmRideType.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(getFilteredDrivers() == 0){
+                    noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
+                    return;
+                }
                 topBar.openScheduleFragment(Data.autoData.getServiceTypeSelected());
             }
         });
@@ -2130,6 +2134,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else {
                 rideTypesAdapter.setList(Data.autoData.getServiceTypes());
             }
+            rvRideTypes.setVisibility(Data.autoData.getServiceTypes().size() > 1 ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -11017,8 +11022,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void setServiceTypeUI(){
-        if(Data.autoData.getServiceTypes().size() > 0
-                && Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
+        if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
                 && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
                 || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))){
             constraintLayoutRideTypeConfirm.setVisibility(View.VISIBLE);
