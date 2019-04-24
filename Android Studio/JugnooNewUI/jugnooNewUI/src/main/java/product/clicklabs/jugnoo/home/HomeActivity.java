@@ -580,6 +580,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private ImageView ivRideTypeImage;
     private TextView tvRideTypeInfo, tvRideTypeRateInfo;
     private Button buttonConfirmRideType;
+    private TextView tvHourlyPackage,tvMultipleStops,tvSafe,tvOneWayTrip,tvRoundTrips,tvAdvanceBookings;
 
     @SuppressLint("NewApi")
     @Override
@@ -1226,9 +1227,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvRideTypeInfo.setTypeface(Fonts.mavenRegular(this));
         tvRideTypeRateInfo = findViewById(R.id.tvRideTypeRateInfo);
         tvRideTypeRateInfo.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
-        ((TextView)findViewById(R.id.tvHourlyPackage)).setTypeface(Fonts.mavenMedium(this));
-        ((TextView)findViewById(R.id.tvMultipleStops)).setTypeface(Fonts.mavenMedium(this));
-        ((TextView)findViewById(R.id.tvSafe)).setTypeface(Fonts.mavenMedium(this));
+
+        tvHourlyPackage = findViewById(R.id.buttonConfirmRideType);
+        tvHourlyPackage.setTypeface(Fonts.mavenMedium(this));
+        tvMultipleStops = findViewById(R.id.buttonConfirmRideType);
+        tvMultipleStops.setTypeface(Fonts.mavenMedium(this));
+        tvSafe = findViewById(R.id.buttonConfirmRideType);
+        tvSafe.setTypeface(Fonts.mavenMedium(this));
+        tvAdvanceBookings = findViewById(R.id.buttonConfirmRideType);
+        tvAdvanceBookings.setTypeface(Fonts.mavenMedium(this));
+        tvRoundTrips = findViewById(R.id.buttonConfirmRideType);
+        tvRoundTrips.setTypeface(Fonts.mavenMedium(this));
+        tvOneWayTrip = findViewById(R.id.buttonConfirmRideType);
+        tvOneWayTrip.setTypeface(Fonts.mavenMedium(this));
+
         buttonConfirmRideType = findViewById(R.id.buttonConfirmRideType);
         buttonConfirmRideType.setTypeface(Fonts.mavenMedium(this));
         buttonConfirmRideType.setOnClickListener(new OnClickListener() {
@@ -11014,6 +11026,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Data.autoData.setServiceTypeSelected(serviceType);
         setServiceTypeUI();
         slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
+//        setServiceTypeTextIconsChanges(serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()));
     }
 
     private void setServiceTypeUI(){
@@ -11084,7 +11097,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
     public void setServiceTypeTextIconsChanges(boolean isRental){
     if(isRental){
-
+        tvHourlyPackage.setVisibility(View.VISIBLE);
+        tvMultipleStops.setVisibility(View.VISIBLE);
+        tvSafe.setVisibility(View.VISIBLE);
+        tvOneWayTrip.setVisibility(View.GONE);
+        tvRoundTrips.setVisibility(View.GONE);
+        tvAdvanceBookings.setVisibility(View.GONE);
+    }
+    else{
+        tvHourlyPackage.setVisibility(View.GONE);
+        tvMultipleStops.setVisibility(View.GONE);
+        tvSafe.setVisibility(View.GONE);
+        tvOneWayTrip.setVisibility(View.VISIBLE);
+        tvRoundTrips.setVisibility(View.VISIBLE);
+        tvAdvanceBookings.setVisibility(View.VISIBLE);
     }
     }
 }

@@ -2010,7 +2010,7 @@
     <string name="select_route">Select Route</string>
     <string name="one_way">One Way</string>
     <string name="round_trip">Round Trip</string>
-    <string name="advance_booking">Advance Booking</string>
-    <string name="round_trips">Round Trips</string>
-    <string name="one_way_trips">One Way Trips</string>
+    <string name="advance_booking">Advance\nBooking</string>
+    <string name="round_trips">Round\nTrips</string>
+    <string name="one_way_trips">One Way\nTrips</string>
 </resources>
