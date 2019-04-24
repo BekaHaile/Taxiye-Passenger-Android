@@ -1228,24 +1228,30 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvRideTypeRateInfo = findViewById(R.id.tvRideTypeRateInfo);
         tvRideTypeRateInfo.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 
-        tvHourlyPackage = findViewById(R.id.buttonConfirmRideType);
+        tvHourlyPackage = findViewById(R.id.tvHourlyPackage);
         tvHourlyPackage.setTypeface(Fonts.mavenMedium(this));
-        tvMultipleStops = findViewById(R.id.buttonConfirmRideType);
+        tvMultipleStops = findViewById(R.id.tvMultipleStops);
         tvMultipleStops.setTypeface(Fonts.mavenMedium(this));
-        tvSafe = findViewById(R.id.buttonConfirmRideType);
+        tvSafe = findViewById(R.id.tvSafe);
         tvSafe.setTypeface(Fonts.mavenMedium(this));
-        tvAdvanceBookings = findViewById(R.id.buttonConfirmRideType);
+        tvAdvanceBookings = findViewById(R.id.tvAdvanceBookings);
         tvAdvanceBookings.setTypeface(Fonts.mavenMedium(this));
-        tvRoundTrips = findViewById(R.id.buttonConfirmRideType);
+        tvRoundTrips = findViewById(R.id.tvRoundTrips);
         tvRoundTrips.setTypeface(Fonts.mavenMedium(this));
-        tvOneWayTrip = findViewById(R.id.buttonConfirmRideType);
+        tvOneWayTrip = findViewById(R.id.tvOneWayTrip);
         tvOneWayTrip.setTypeface(Fonts.mavenMedium(this));
 
         buttonConfirmRideType = findViewById(R.id.buttonConfirmRideType);
         buttonConfirmRideType.setTypeface(Fonts.mavenMedium(this));
-        buttonConfirmRideType.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        buttonConfirmRideType.setOnClickListener(v -> {
+            if (getFilteredDrivers() == 0) {
+                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
+            } else {
+                if (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())
+                        && Data.autoData.getDropLatLng() == null) {
+                    destinationRequiredShake();
+                    return;
+                }
                 topBar.openScheduleFragment(Data.autoData.getServiceTypeSelected());
             }
         });
@@ -11026,7 +11032,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Data.autoData.setServiceTypeSelected(serviceType);
         setServiceTypeUI();
         slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
-//        setServiceTypeTextIconsChanges(serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()));
+        setServiceTypeTextIconsChanges(serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()));
+        showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
     }
 
     private void setServiceTypeUI(){
