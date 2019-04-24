@@ -55,7 +55,7 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
                 }
             }
             itemView.tvVehicleName?.text = vehicleList[position].regionName
-            if(vehicleList[position].rideType == ServiceTypeValue.RENTAL.type
+            if((vehicleList[position].rideType == ServiceTypeValue.RENTAL.type||vehicleList[position].rideType == ServiceTypeValue.OUTSTATION.type)
                     && vehicleList[position].packages != null
                     && vehicleList[position].packages.size > 0){
                 var packageSelected = if (selectedCallback.getPackageSelected() != null) selectedCallback.getPackageSelected() else vehicleList[position].packages[0]

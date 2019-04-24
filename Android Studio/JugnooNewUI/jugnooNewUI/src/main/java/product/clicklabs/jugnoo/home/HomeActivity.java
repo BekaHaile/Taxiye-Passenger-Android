@@ -11068,7 +11068,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     tvRideTypeRateInfo.setText(R.string.package_starting_at);
                     tvRideTypeRateInfo.append(" ");
                     tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
-                            region.getFareStructure().getFixedFare())));
+                            region.getPackages().get(0).getFareFixed())));
                 }
             }
 

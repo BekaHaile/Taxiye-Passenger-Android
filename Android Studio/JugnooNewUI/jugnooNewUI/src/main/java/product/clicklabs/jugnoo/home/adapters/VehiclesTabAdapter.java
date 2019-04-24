@@ -119,7 +119,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 int position = (int) v.getTag();
                 boolean changed = activity.setVehicleTypeSelected(position, true);
                 if(showRegionFares && !changed){
-//                    estimateDialog.show(activity, regions.get(position));
+                    estimateDialog.show(activity, regions.get(position));
                 }
                 try {
                     GAUtils.event(RIDES, HOME, regions.get(position).getRegionName()+" "+CLICKED);
