@@ -155,7 +155,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_radio_button_unchecked,
                         0, 0, 0)
-                packagesAdapter!!.setList(getOneWayPackages(), Data.autoData.currency, Data.autoData.distanceUnit)
+                packagesAdapter!!.setList(getOneWayPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
 //                updatePackagesAccRegionSelected(selectedRegion)
             }
 
@@ -167,7 +167,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_radio_button_checked,
                         0, 0, 0)
-                packagesAdapter!!.setList(getRoundTripPackages(), Data.autoData.currency, Data.autoData.distanceUnit)
+                packagesAdapter!!.setList(getRoundTripPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
             }
 
             btSchedule.setOnClickListener {
@@ -214,6 +214,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             minBufferTimeCurrent = Prefs.with(requireContext()).getInt(SCHEDULE_CURRENT_TIME_DIFF, 30);
             scheduleDaysLimit = Prefs.with(requireContext()).getInt(SCHEDULE_DAYS_LIMIT, 2);
 
+            if(Data.autoData != null && Data.autoData.regions.size > 0) {
+                selectedRegion = Data.autoData.regions[0]
+            }
             setSelectedRegionData()
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
@@ -249,7 +252,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         }
         if (packagesAdapter == null) {
             packagesAdapter = RentalPackagesAdapter(activity as Context,
-                    region.packages, Data.autoData.currency, Data.autoData.distanceUnit,
+                    getOneWayPackages(region), Data.autoData.currency, Data.autoData.distanceUnit,
                     rvPackages,
                     Fonts.mavenRegular(activity),
                     object : RentalPackagesAdapter.OnSelectedCallback {
@@ -522,9 +525,6 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         }
         updatePackagesAccRegionSelected(selectedRegion)
         this.selectedRegion = selectedRegion
-        if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) {
-            tvOneWay.performClick()
-        }
     }
 
     override fun getPackageSelected(): Package? {
@@ -573,71 +573,81 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     }
 
-    fun getOneWayPackages(): ArrayList<Package> {
+    fun getOneWayPackages(selectedRegion:Region?): ArrayList<Package> {
         oneWayPackages.clear()
-        for (i in 0 until selectedRegion!!.packages.size) {
-            if (selectedRegion!!.packages.get(i).returnTrip == 0) {
-                val pck = Package()
+        if(selectedRegion != null) {
+            for (i in 0 until selectedRegion!!.packages.size) {
+                if (selectedRegion!!.packages.get(i).returnTrip == 0) {
+                    val pck = Package()
 
-                pck.packageId = selectedRegion!!.packages.get(i).packageId
-                pck.fareFixed = selectedRegion!!.packages.get(i).fareFixed
-                pck.farePerKm = selectedRegion!!.packages.get(i).farePerKm
-                pck.fareThresholdDistance = selectedRegion!!.packages.get(i).fareThresholdDistance
-                pck.farePerKmThresholdDistance = selectedRegion!!.packages.get(i).farePerKmThresholdDistance
-                pck.farePerKmAfterThreshold = selectedRegion!!.packages.get(i).farePerKmAfterThreshold
-                pck.farePerKmBeforeThreshold = selectedRegion!!.packages.get(i).farePerKmBeforeThreshold
-                pck.farePerMin = selectedRegion!!.packages.get(i).farePerMin
-                pck.fareThresholdTime = selectedRegion!!.packages.get(i).fareThresholdTime
-                pck.farePerWaitingMin = selectedRegion!!.packages.get(i).farePerWaitingMin
-                pck.fareThresholdWaitingTime = selectedRegion!!.packages.get(i).fareThresholdWaitingTime
-                pck.startTime = selectedRegion!!.packages.get(i).startTime
-                pck.endTime = selectedRegion!!.packages.get(i).endTime
-                pck.vehicleType = selectedRegion!!.packages.get(i).vehicleType
-                pck.rideType = selectedRegion!!.packages.get(i).rideType
-                pck.fareMinimum = selectedRegion!!.packages.get(i).fareMinimum
-                pck.operatorId = selectedRegion!!.packages.get(i).operatorId
-                pck.farePerBaggage = selectedRegion!!.packages.get(i).farePerBaggage
-                pck.regionId = selectedRegion!!.packages.get(i).regionId
-                pck.cityName = selectedRegion!!.packages.get(i).cityName
-                pck.cityId = selectedRegion!!.packages.get(i).cityId
-                pck.returnTrip = selectedRegion!!.packages.get(i).returnTrip
+                    pck.packageId = selectedRegion!!.packages.get(i).packageId
+                    pck.fareFixed = selectedRegion!!.packages.get(i).fareFixed
+                    pck.farePerKm = selectedRegion!!.packages.get(i).farePerKm
+                    pck.fareThresholdDistance = selectedRegion!!.packages.get(i).fareThresholdDistance
+                    pck.farePerKmThresholdDistance = selectedRegion!!.packages.get(i).farePerKmThresholdDistance
+                    pck.farePerKmAfterThreshold = selectedRegion!!.packages.get(i).farePerKmAfterThreshold
+                    pck.farePerKmBeforeThreshold = selectedRegion!!.packages.get(i).farePerKmBeforeThreshold
+                    pck.farePerMin = selectedRegion!!.packages.get(i).farePerMin
+                    pck.fareThresholdTime = selectedRegion!!.packages.get(i).fareThresholdTime
+                    pck.farePerWaitingMin = selectedRegion!!.packages.get(i).farePerWaitingMin
+                    pck.fareThresholdWaitingTime = selectedRegion!!.packages.get(i).fareThresholdWaitingTime
+                    pck.startTime = selectedRegion!!.packages.get(i).startTime
+                    pck.endTime = selectedRegion!!.packages.get(i).endTime
+                    pck.vehicleType = selectedRegion!!.packages.get(i).vehicleType
+                    pck.rideType = selectedRegion!!.packages.get(i).rideType
+                    pck.fareMinimum = selectedRegion!!.packages.get(i).fareMinimum
+                    pck.operatorId = selectedRegion!!.packages.get(i).operatorId
+                    pck.farePerBaggage = selectedRegion!!.packages.get(i).farePerBaggage
+                    pck.regionId = selectedRegion!!.packages.get(i).regionId
+                    pck.cityName = selectedRegion!!.packages.get(i).cityName
+                    pck.cityId = selectedRegion!!.packages.get(i).cityId
+                    pck.returnTrip = selectedRegion!!.packages.get(i).returnTrip
 
-                oneWayPackages.add(pck)
+                    oneWayPackages.add(pck)
+                }
             }
+        }
+        if(oneWayPackages.size > 0){
+            oneWayPackages[0].selected = true
         }
         return oneWayPackages
     }
-    fun getRoundTripPackages(): ArrayList<Package> {
+    fun getRoundTripPackages(selectedRegion:Region?): ArrayList<Package> {
         roundTripPackages.clear()
-        for (i in 0 until selectedRegion!!.packages.size) {
-            if (selectedRegion!!.packages.get(i).returnTrip == 1) {
-                val pck = Package()
+        if(selectedRegion != null) {
+            for (i in 0 until selectedRegion!!.packages.size) {
+                if (selectedRegion!!.packages.get(i).returnTrip == 1) {
+                    val pck = Package()
 
-                pck.packageId = selectedRegion!!.packages.get(i).packageId
-                pck.fareFixed = selectedRegion!!.packages.get(i).fareFixed
-                pck.farePerKm = selectedRegion!!.packages.get(i).farePerKm
-                pck.fareThresholdDistance = selectedRegion!!.packages.get(i).fareThresholdDistance
-                pck.farePerKmThresholdDistance = selectedRegion!!.packages.get(i).farePerKmThresholdDistance
-                pck.farePerKmAfterThreshold = selectedRegion!!.packages.get(i).farePerKmAfterThreshold
-                pck.farePerKmBeforeThreshold = selectedRegion!!.packages.get(i).farePerKmBeforeThreshold
-                pck.farePerMin = selectedRegion!!.packages.get(i).farePerMin
-                pck.fareThresholdTime = selectedRegion!!.packages.get(i).fareThresholdTime
-                pck.farePerWaitingMin = selectedRegion!!.packages.get(i).farePerWaitingMin
-                pck.fareThresholdWaitingTime = selectedRegion!!.packages.get(i).fareThresholdWaitingTime
-                pck.startTime = selectedRegion!!.packages.get(i).startTime
-                pck.endTime = selectedRegion!!.packages.get(i).endTime
-                pck.vehicleType = selectedRegion!!.packages.get(i).vehicleType
-                pck.rideType = selectedRegion!!.packages.get(i).rideType
-                pck.fareMinimum = selectedRegion!!.packages.get(i).fareMinimum
-                pck.operatorId = selectedRegion!!.packages.get(i).operatorId
-                pck.farePerBaggage = selectedRegion!!.packages.get(i).farePerBaggage
-                pck.regionId = selectedRegion!!.packages.get(i).regionId
-                pck.cityName = selectedRegion!!.packages.get(i).cityName
-                pck.cityId = selectedRegion!!.packages.get(i).cityId
-                pck.returnTrip = selectedRegion!!.packages.get(i).returnTrip
+                    pck.packageId = selectedRegion!!.packages.get(i).packageId
+                    pck.fareFixed = selectedRegion!!.packages.get(i).fareFixed
+                    pck.farePerKm = selectedRegion!!.packages.get(i).farePerKm
+                    pck.fareThresholdDistance = selectedRegion!!.packages.get(i).fareThresholdDistance
+                    pck.farePerKmThresholdDistance = selectedRegion!!.packages.get(i).farePerKmThresholdDistance
+                    pck.farePerKmAfterThreshold = selectedRegion!!.packages.get(i).farePerKmAfterThreshold
+                    pck.farePerKmBeforeThreshold = selectedRegion!!.packages.get(i).farePerKmBeforeThreshold
+                    pck.farePerMin = selectedRegion!!.packages.get(i).farePerMin
+                    pck.fareThresholdTime = selectedRegion!!.packages.get(i).fareThresholdTime
+                    pck.farePerWaitingMin = selectedRegion!!.packages.get(i).farePerWaitingMin
+                    pck.fareThresholdWaitingTime = selectedRegion!!.packages.get(i).fareThresholdWaitingTime
+                    pck.startTime = selectedRegion!!.packages.get(i).startTime
+                    pck.endTime = selectedRegion!!.packages.get(i).endTime
+                    pck.vehicleType = selectedRegion!!.packages.get(i).vehicleType
+                    pck.rideType = selectedRegion!!.packages.get(i).rideType
+                    pck.fareMinimum = selectedRegion!!.packages.get(i).fareMinimum
+                    pck.operatorId = selectedRegion!!.packages.get(i).operatorId
+                    pck.farePerBaggage = selectedRegion!!.packages.get(i).farePerBaggage
+                    pck.regionId = selectedRegion!!.packages.get(i).regionId
+                    pck.cityName = selectedRegion!!.packages.get(i).cityName
+                    pck.cityId = selectedRegion!!.packages.get(i).cityId
+                    pck.returnTrip = selectedRegion!!.packages.get(i).returnTrip
 
-                roundTripPackages.add(pck)
+                    roundTripPackages.add(pck)
+                }
             }
+        }
+        if(roundTripPackages.size > 0){
+            roundTripPackages[0].selected = true
         }
         return roundTripPackages
     }

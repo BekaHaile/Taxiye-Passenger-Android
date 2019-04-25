@@ -5915,6 +5915,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 imageViewRideNow.setVisibility(View.GONE);
                 textViewShowFareEstimate.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
+                constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
@@ -8668,6 +8669,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if (Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
                                 && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
                             topBar.textViewTitle.setText(R.string.rentals);
+                        } else if (Data.autoData.getServiceTypeSelected() != null && Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())) {
+                            topBar.textViewTitle.setText(R.string.out_station);
                         } else {
                             topBar.textViewTitle.setText(R.string.schedule_a_ride);
                         }
