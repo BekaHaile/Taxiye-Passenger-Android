@@ -1244,16 +1244,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonConfirmRideType = findViewById(R.id.buttonConfirmRideType);
         buttonConfirmRideType.setTypeface(Fonts.mavenMedium(this));
         buttonConfirmRideType.setOnClickListener(v -> {
-            if (getFilteredDrivers() == 0) {
-                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
-            } else {
+//            if (getFilteredDrivers() == 0) {
+//                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
+//            } else {
                 if (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())
                         && Data.autoData.getDropLatLng() == null) {
                     destinationRequiredShake();
                     return;
                 }
                 topBar.openScheduleFragment(Data.autoData.getServiceTypeSelected());
-            }
+//            }
         });
 
 
@@ -11089,10 +11089,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void callRentalOutstationRequestRide(@Nullable ServiceType serviceType, @NotNull Region region,
                                                 @Nullable Package selectedPackage, @NotNull SearchResult searchResultPickup,
                                                 @Nullable SearchResult searchResultDestination, @NotNull String dateTime) {
-        if(serviceType != null){
+        if(serviceType != null) {
+            if (getFilteredDrivers() == 0) {
+                performBackpressed();
+                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
+            } else {
             Data.autoData.setServiceTypeSelected(serviceType);
-            if(serviceType.getSupportedRideTypes() != null
-                    && (serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())||serviceType.getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))){
+            if (serviceType.getSupportedRideTypes() != null
+                    && (serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()) || serviceType.getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))) {
                 Data.autoData.setPickupLatLng(searchResultPickup.getLatLng());
                 Data.autoData.setPickupAddress(searchResultPickup.getAddress(), searchResultPickup.getLatLng());
                 Data.autoData.setSelectedPackage(selectedPackage);
@@ -11100,6 +11104,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 finalRequestRideTimerStart();
                 performBackpressed();
             }
+        }
         }
     }
     public void setServiceTypeTextIconsChanges(boolean isRental){
