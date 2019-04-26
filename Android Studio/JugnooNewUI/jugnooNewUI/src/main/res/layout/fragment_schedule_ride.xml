@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<ScrollView xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageViewShadow"
         android:textColor="@color/text_color"
         android:textColorHint="@color/text_color_hint"
-        android:textSize="15sp"/>
+        android:textSize="14sp"/>
     <TextView
         android:id="@+id/tvDestination"
         android:layout_width="0dp"
@@ -53,7 +53,7 @@
         app:layout_constraintTop_toBottomOf="@id/tvPickup"
         android:textColor="@color/text_color"
         android:textColorHint="@color/text_color_hint"
-        android:textSize="15sp"/>
+        android:textSize="14sp"/>
 
     <TextView
         android:id="@+id/tvPickupDateTime"
@@ -86,6 +86,49 @@
         android:layout_marginTop="@dimen/dp_9"/>
 
 
+    <TextView
+        android:id="@+id/tvSelectRoute"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/select_route"
+        app:layout_constraintEnd_toStartOf="@id/glEnd"
+        app:layout_constraintStart_toEndOf="@id/glsStart"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectDateTime"
+        android:textSize="14sp"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="@dimen/dp_20"/>
+
+    <TextView
+        android:id="@+id/tvOneWay"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:background="@color/white"
+        android:drawableStart="@drawable/ic_radio_button_checked"
+        android:drawablePadding="10dp"
+        android:padding="14dp"
+        android:text="@string/one_way"
+        android:textColor="@color/text_color"
+        android:textSize="15sp"
+        android:theme="@style/GreyHighlight"
+        app:layout_constraintTop_toBottomOf="@+id/tvSelectRoute"
+        android:layout_marginTop="@dimen/dp_9"
+        app:typekitFont="maven" />
+    <TextView
+        android:id="@+id/tvRoundTrip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:drawablePadding="10dp"
+        android:padding="14dp"
+        android:text="@string/round_trip"
+        android:textColor="@color/text_color"
+        android:textSize="15sp"
+        android:drawableStart="@drawable/ic_radio_button_unchecked"
+        android:layout_marginTop="@dimen/dp_9"
+        android:theme="@style/GreyHighlight"
+        app:layout_constraintTop_toBottomOf="@+id/tvOneWay"
+        app:typekitFont="maven"
+        />
 
 
     <TextView
@@ -95,7 +138,7 @@
         android:text="@string/select_vehicle_type"
         app:layout_constraintEnd_toStartOf="@id/glEnd"
         app:layout_constraintStart_toEndOf="@id/glsStart"
-        app:layout_constraintTop_toBottomOf="@+id/tvSelectDateTime"
+        app:layout_constraintTop_toBottomOf="@+id/tvRoundTrip"
         android:textSize="14sp"
         android:textColor="@color/text_color"
         android:layout_marginTop="@dimen/dp_20"/>

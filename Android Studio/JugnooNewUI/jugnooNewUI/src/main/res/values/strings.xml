@@ -2001,9 +2001,16 @@
     <string name="for_str">For</string>
     <string name="then">then</string>
     <string name="rentals">Rentals</string>
+    <string name="out_station">Out Station</string>
     <string name="book">Book</string>
     <string name="note">Note:</string>
     <string name="additional_per_min">Additional Per Min Fare</string>
     <string name="additional_per_km_fare">Additional Per %s Fare</string>
     <string name="package_rate_format">Package Rate: %s</string>
+    <string name="select_route">Select Route</string>
+    <string name="one_way">One Way</string>
+    <string name="round_trip">Round Trip</string>
+    <string name="advance_booking">Advance\nBooking</string>
+    <string name="round_trips">Round\nTrips</string>
+    <string name="one_way_trips">One Way\nTrips</string>
 </resources>

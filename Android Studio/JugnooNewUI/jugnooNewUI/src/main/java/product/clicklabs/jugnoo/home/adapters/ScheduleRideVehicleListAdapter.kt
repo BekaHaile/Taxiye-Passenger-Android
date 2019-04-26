@@ -50,12 +50,18 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
             for (i in vehicleList.indices) {
                 if (activity.selectedIdForScheduleRide == vehicleList[position].regionId) {
                     itemView.ivSelected?.visibility = View.VISIBLE
+                    itemView.tvBaseFare?.visibility = View.VISIBLE
+                    itemView.tvFarePerMinute?.visibility = View.VISIBLE
+                    itemView.tvFarePerMile?.visibility = View.VISIBLE
                 } else {
                     itemView.ivSelected?.visibility = View.GONE
+                    itemView.tvBaseFare?.visibility = View.GONE
+                    itemView.tvFarePerMinute?.visibility = View.GONE
+                    itemView.tvFarePerMile?.visibility = View.GONE
                 }
             }
             itemView.tvVehicleName?.text = vehicleList[position].regionName
-            if(vehicleList[position].rideType == ServiceTypeValue.RENTAL.type
+            if((vehicleList[position].rideType == ServiceTypeValue.RENTAL.type||vehicleList[position].rideType == ServiceTypeValue.OUTSTATION.type)
                     && vehicleList[position].packages != null
                     && vehicleList[position].packages.size > 0){
                 var packageSelected = if (selectedCallback.getPackageSelected() != null) selectedCallback.getPackageSelected() else vehicleList[position].packages[0]

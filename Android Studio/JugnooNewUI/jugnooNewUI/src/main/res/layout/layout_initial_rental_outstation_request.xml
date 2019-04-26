@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="12dp"
         />
 
     <TextView
@@ -82,7 +82,6 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="@string/hourly_package"
-        android:drawablePadding="5dp"
         android:drawableStart="@drawable/ic_hourly_package"
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
@@ -98,7 +97,6 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:text="@string/multiple_stops"
-        android:drawablePadding="5dp"
         android:drawableStart="@drawable/ic_multiple_stops"
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
@@ -117,7 +115,52 @@
         android:drawableStart="@drawable/ic_always_available"
         android:focusable="true"
         android:text="@string/always_available"
-        android:drawablePadding="5dp"
+        android:textColor="@color/text_color"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
+        app:layout_constraintBottom_toTopOf="@+id/viewSepRideType"
+        app:layout_constraintEnd_toEndOf="@+id/viewSepRideType"
+        />
+
+    <TextView
+        android:id="@+id/tvAdvanceBookings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/advance_booking"
+        android:drawableStart="@drawable/ic_advance_booking"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_color"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/viewSepRideType"
+        app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
+        app:layout_constraintBottom_toTopOf="@+id/viewSepRideType"/>
+
+
+    <TextView
+        android:id="@+id/tvRoundTrips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="@string/multiple_stops"
+        android:drawableStart="@drawable/ic_round_trips"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_color"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/viewSepRideType"
+        app:layout_constraintStart_toEndOf="@+id/viewSepRideType"
+        app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
+        app:layout_constraintBottom_toTopOf="@+id/viewSepRideType" />
+
+    <TextView
+        android:id="@+id/tvOneWayTrip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:padding="5dp"
+        android:drawableStart="@drawable/ic_oneway_trip"
+        android:focusable="true"
+        android:text="@string/always_available"
         android:textColor="@color/text_color"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
@@ -136,7 +179,7 @@
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
         app:layout_constraintEnd_toStartOf="@+id/viewSepRideType"
         app:layout_constraintStart_toEndOf="@+id/viewSepRideType"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="28dp"
         android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:text="@string/ride_now" />

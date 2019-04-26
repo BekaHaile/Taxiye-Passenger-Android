@@ -1028,4 +1028,6 @@ public interface Constants {
     String KEY_CUSTOMER_ARRIVED_BEEP_ENABLED = "customer_arrived_beep_enabled";
 	String KEY_SERVICE_TYPE = "service_type";
     String KEY_PACKAGE_ID = "package_id";
+    String KEY_CUSTOMER_NOTE = "customer_note";
+
 }
