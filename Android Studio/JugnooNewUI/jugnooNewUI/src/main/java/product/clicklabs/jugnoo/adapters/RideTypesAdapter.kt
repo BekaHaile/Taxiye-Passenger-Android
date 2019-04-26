@@ -32,9 +32,11 @@ class RideTypesAdapter(private var serviceTypes: ArrayList<ServiceType>, val rec
             for(corp in serviceTypes){
                 corp.selected = false
             }
-            serviceTypes[pos].selected = true
-            onSelectedCallback.onServiceTypeSelected(serviceTypes[pos])
-            notifyDataSetChanged()
+            if(!serviceTypes.isNullOrEmpty()) {
+                serviceTypes[pos].selected = true
+                onSelectedCallback.onServiceTypeSelected(serviceTypes[pos])
+                notifyDataSetChanged()
+            }
 
         }
     }

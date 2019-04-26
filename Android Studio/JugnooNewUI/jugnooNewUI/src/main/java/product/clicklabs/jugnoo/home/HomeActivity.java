@@ -400,6 +400,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
     private LinearLayout llPayOnline;
     private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate;
+    private boolean isFromConfirmToOther;
 
 
     // data variables declaration
@@ -581,6 +582,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TextView tvRideTypeInfo, tvRideTypeRateInfo;
     private Button buttonConfirmRideType;
     private TextView tvHourlyPackage,tvMultipleStops,tvSafe,tvOneWayTrip,tvRoundTrips,tvAdvanceBookings;
+    private String mNotes = "";
 
     @SuppressLint("NewApi")
     @Override
@@ -2137,8 +2139,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             break;
                         }
                     }
-                    if(matched){
+                    if(matched && !isFromConfirmToOther){
                         st.setSelected(true);
+                    }
+                    if(isFromConfirmToOther) {
+                        isFromConfirmToOther = false;
                     }
                 }
             }
@@ -3210,6 +3215,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         switchPassengerScreen(passengerScreenMode);
     }
 
+    public void setNotes(final String notes) {
+        mNotes = notes;
+    }
 
     OnClickListener mapMyLocationClick = new OnClickListener() {
         @Override
@@ -5916,6 +5924,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewShowFareEstimate.setVisibility(View.GONE);
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
                 constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
+                topBar.imageViewScheduleRide.setVisibility(View.GONE);
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
@@ -8043,6 +8052,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put(KEY_VEHICLE_TYPE, String.valueOf(regionSelected.getVehicleType()));
                                 nameValuePairs.put(KEY_REVERSE_BID, String.valueOf(regionSelected.getReverseBid()));
                                 nameValuePairs.put(KEY_REGION_ID, String.valueOf(regionSelected.getRegionId()));
+                                if(mNotes != null && !mNotes.isEmpty()) {
+                                    nameValuePairs.put(Constants.KEY_CUSTOMER_NOTE, mNotes + "");
+                                }
                                 if(Data.autoData.getSelectedPackage() != null) {
                                     nameValuePairs.put(Constants.KEY_PACKAGE_ID, String.valueOf(Data.autoData.getSelectedPackage().getPackageId()));
                                 }
@@ -8221,6 +8233,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         e.printStackTrace();
                                     }
                                 }
+                                mNotes = "";
                                 updateCancelButtonUI();
                             }
                         }
@@ -11032,7 +11045,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onServiceTypeSelected(@NotNull ServiceType serviceType) {
+        Data.autoData.setSelectedPackage(null);
+        if (confirmedScreenOpened) {
+            confirmedScreenOpened = false;
+            isFromConfirmToOther = true;
+            if (Data.autoData.getDropLatLng() != null) {
+                imageViewDropCross.setVisibility(View.VISIBLE);
+                setLikeDropVisibilityAndBG();
+            }
+            passengerScreenMode = PassengerScreenMode.P_INITIAL;
+            switchPassengerScreen(passengerScreenMode);
+            if (Data.autoData != null) {
+                map.animateCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()), MAP_ANIMATE_DURATION, null);
+            }
+        }
         Data.autoData.setServiceTypeSelected(serviceType);
+        if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null
+         && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
+          || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))) {
+            slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
+            promoCouponSelectedForRide = null;
+            showPoolInforBar(false);
+        }
         setServiceTypeUI();
         slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
         setServiceTypeTextIconsChanges(serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()));
@@ -11061,7 +11095,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     tvRideTypeRateInfo.setText(R.string.package_starting_at);
                     tvRideTypeRateInfo.append(" ");
                     tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
-                            region.getPackages().get(0).getFareFixed())));
+                            (region.getPackages() != null && !region.getPackages().isEmpty() && region.getPackages().get(0).getFareFixed() != null) ? region.getPackages().get(0).getFareFixed() : 0)));
                 }
             } else if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())){
                 if(Data.autoData != null
@@ -11071,7 +11105,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     tvRideTypeRateInfo.setText(R.string.package_starting_at);
                     tvRideTypeRateInfo.append(" ");
                     tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
-                            region.getPackages().get(0).getFareFixed())));
+                            (region.getPackages() != null && !region.getPackages().isEmpty() && region.getPackages().get(0).getFareFixed() != null) ? region.getPackages().get(0).getFareFixed() : 0)));
                 }
             }
 

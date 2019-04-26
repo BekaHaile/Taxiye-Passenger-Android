@@ -50,8 +50,14 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
             for (i in vehicleList.indices) {
                 if (activity.selectedIdForScheduleRide == vehicleList[position].regionId) {
                     itemView.ivSelected?.visibility = View.VISIBLE
+                    itemView.tvBaseFare?.visibility = View.VISIBLE
+                    itemView.tvFarePerMinute?.visibility = View.VISIBLE
+                    itemView.tvFarePerMile?.visibility = View.VISIBLE
                 } else {
                     itemView.ivSelected?.visibility = View.GONE
+                    itemView.tvBaseFare?.visibility = View.GONE
+                    itemView.tvFarePerMinute?.visibility = View.GONE
+                    itemView.tvFarePerMile?.visibility = View.GONE
                 }
             }
             itemView.tvVehicleName?.text = vehicleList[position].regionName

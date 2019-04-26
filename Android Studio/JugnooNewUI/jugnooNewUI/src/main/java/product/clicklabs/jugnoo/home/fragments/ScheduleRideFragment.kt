@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Prefs
 import product.clicklabs.jugnoo.utils.Utils
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapter.OnSelectedCallback {
@@ -64,6 +65,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     var selectedRegion: Region? = null
     var minBufferTimeCurrent = 30
     var scheduleDaysLimit = 2
+    private var isOneWay : Int = -1
     private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
     private val onDateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
         val date = year.toString() + "-" + (month + 1) + "-" + dayOfMonth
@@ -148,6 +150,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             }
 
             tvOneWay.setOnClickListener {
+                isOneWay = 1
 
                 tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_radio_button_checked,
@@ -161,6 +164,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
             tvRoundTrip.setOnClickListener {
 
+                isOneWay = 0
                 tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
                         R.drawable.ic_radio_button_unchecked,
                         0, 0, 0)
@@ -195,6 +199,13 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_vehicle))
                         throw Exception()
                     } else {
+                        if(isOneWay == 1) {
+                            (activity as HomeActivity).setNotes("One Way")
+                        } else if(isOneWay == 0) {
+                            (activity as HomeActivity).setNotes("Round Trip")
+                        } else {
+                            (activity as HomeActivity).setNotes("")
+                        }
                         val proceed = (activity as HomeActivity).slidingBottomPanel.getRequestRideOptionsFragment()
                                 .displayAlertAndCheckForSelectedWalletCoupon()
                         if (proceed) {
@@ -227,6 +238,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvSelectDateTime.visibility = visibilityNotRental
             tvSelectRoute.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
             tvOneWay.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
+            isOneWay = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) 1 else -1
             tvRoundTrip.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
             tvSelectPackage.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type) || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
             rvPackages.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type) || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
@@ -240,14 +252,14 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     private fun updatePackagesAccRegionSelected(regionS: Region?) {
 //        if (!serviceTypeNotRental()) {
-        (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.setRegionSelected(0)
+        (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected = selectedRegion
         var region = if (regionS == null) (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected else regionS
         if (region!!.packages != null
                 && region.packages.size > 0) {
             for (pc in region.packages) {
                 pc.selected = false
             }
-            region.packages[0].selected = true;
+            region.packages[0].selected = true
             this@ScheduleRideFragment.selectedPackage = region.packages[0]
         }
         if (packagesAdapter == null) {
@@ -263,9 +275,16 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     })
             rvPackages.adapter = packagesAdapter
         } else {
-            packagesAdapter!!.setList(region.packages, Data.autoData.currency, Data.autoData.distanceUnit)
+            val package1 : List<Package>
+            if(isOneWay == 1){
+                 package1 = getOneWayPackages(region)
+            }else if(isOneWay == 0) {
+                package1 = getRoundTripPackages(region)
+            } else {
+                package1 = region.packages
+            }
+            packagesAdapter!!.setList(package1 as ArrayList<Package>, Data.autoData.currency, Data.autoData.distanceUnit)
         }
-//        }
     }
 
     private fun setPickupAndDropAddress() {
@@ -523,8 +542,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         if (this.selectedRegion != null && selectedRegion.regionId != this.selectedRegion!!.regionId) {
             selectedPackage = null
         }
-        updatePackagesAccRegionSelected(selectedRegion)
         this.selectedRegion = selectedRegion
+        updatePackagesAccRegionSelected(selectedRegion)
     }
 
     override fun getPackageSelected(): Package? {
@@ -609,6 +628,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         }
         if(oneWayPackages.size > 0){
             oneWayPackages[0].selected = true
+            selectedPackage = oneWayPackages[0]
+            scheduleRideVehicleListAdapter.notifyDataSetChanged()
         }
         return oneWayPackages
     }
@@ -648,6 +669,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         }
         if(roundTripPackages.size > 0){
             roundTripPackages[0].selected = true
+            selectedPackage = roundTripPackages[0]
+            scheduleRideVehicleListAdapter.notifyDataSetChanged()
         }
         return roundTripPackages
     }
