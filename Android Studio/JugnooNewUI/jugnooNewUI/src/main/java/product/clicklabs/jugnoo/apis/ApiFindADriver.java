@@ -91,6 +91,9 @@ public class ApiFindADriver {
 				@Override
 				public void success(FindADriverResponse findADriverResponse, Response response) {
 					try {
+						if(Data.autoData != null) {
+							Data.autoData.setLock(1);
+						}
 						String resp = new String(((TypedByteArray) response.getBody()).getBytes());
 
 						MyApplication.getInstance().getWalletCore().updatePaymentModeConfigDatas(new JSONObject(resp));

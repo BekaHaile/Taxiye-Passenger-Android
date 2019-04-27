@@ -10,6 +10,7 @@ class ServiceType(
         @SerializedName("supported_ride_type") var supportedRideTypes:MutableList<Int>?,
         @SerializedName("tags") var tags:MutableList<String>?,
         @SerializedName("description") var description:String?,
+        @SerializedName("schedule_available") var scheduleAvailable:Int = 0,
         var selected:Boolean
 ){}
 

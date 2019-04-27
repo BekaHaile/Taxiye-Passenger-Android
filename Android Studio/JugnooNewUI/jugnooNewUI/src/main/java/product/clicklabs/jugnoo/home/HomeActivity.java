@@ -5087,6 +5087,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         super.onResume();
 
         try {
+            if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null) {
+                isScheduleRideEnabled = Data.autoData.getServiceTypeSelected().getScheduleAvailable() == 1;
+            } else if(Data.autoData != null && Data.autoData.getServiceTypes() != null && Data.autoData.getServiceTypes().size() > 0
+                    && Data.autoData.getServiceTypes().get(0) != null){
+                isScheduleRideEnabled = Data.autoData.getServiceTypes().get(0).getScheduleAvailable() == 1;
+            }
+            setScheduleIcon();
+
             enableMapMyLocation();
             Data.setLastActivityOnForeground(HomeActivity.this);
 
@@ -5514,7 +5522,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     scheduleRideContainer.setVisibility(View.GONE);
                     topBar.imageViewBack.setVisibility(View.GONE);
                     topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                    topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
+                    setScheduleIcon();
                     topBar.textViewTitle.setText(getResources().getString(R.string.rides));
                     super.onBackPressed();
 //                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -5630,9 +5638,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             try {
 
                                 if(getScheduleRideFragment()!=null){
-                                    getScheduleRideFragment().updateVehicleAdapter();
-                                    if(isScheduleRideEnabled && !TextUtils.isEmpty(Data.autoData.getFarAwayCity())){
-                                        DialogPopup.alertPopup(HomeActivity.this,"",Data.autoData.getFarAwayCity());
+                                    ServiceType serviceTypeSel = Data.autoData.getServiceTypeSelected();
+                                    if(Data.autoData != null && !Data.autoData.getIsServiceAvailable()){
+                                        DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.this_service_not_available, Data.autoData.getPreviousSelService()));
+                                        isScheduleRideEnabled = false;
+                                        performBackpressed();
+                                    }else {
+                                        getScheduleRideFragment().updateVehicleAdapter();
+                                        if(Data.autoData != null && serviceTypeSel != null) {
+                                            isScheduleRideEnabled = serviceTypeSel.getScheduleAvailable() == 1;
+                                        }
+                                        if (isScheduleRideEnabled && !TextUtils.isEmpty(Data.autoData.getFarAwayCity())) {
+                                            DialogPopup.alertPopup(HomeActivity.this, "", Data.autoData.getFarAwayCity());
+                                            performBackpressed();
+                                        }
                                     }
                                 }
 
@@ -11001,7 +11020,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onDestroyScheduleRide() {
         scheduleRideOpen = false;
-        topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
+        setScheduleIcon();
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.START);
     }
 
@@ -11046,6 +11065,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onServiceTypeSelected(@NotNull ServiceType serviceType) {
         Data.autoData.setSelectedPackage(null);
+        isScheduleRideEnabled = serviceType.getScheduleAvailable() == 1;
+        setScheduleIcon();
         if (confirmedScreenOpened) {
             confirmedScreenOpened = false;
             isFromConfirmToOther = true;
@@ -11071,6 +11092,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
         setServiceTypeTextIconsChanges(serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()));
         showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+    }
+
+    private void setScheduleIcon() {
+        if(isScheduleRideEnabled) {
+            topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
+        } else {
+            topBar.imageViewScheduleRide.setVisibility(View.GONE);
+        }
     }
 
     private void setServiceTypeUI(){
