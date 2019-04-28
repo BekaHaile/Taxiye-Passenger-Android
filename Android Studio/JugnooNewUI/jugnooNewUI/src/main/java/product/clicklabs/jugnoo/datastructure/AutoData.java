@@ -4,7 +4,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
@@ -70,6 +73,9 @@ public class AutoData {
     private ServiceType serviceTypeSelected;
     private Package selectedPackage;
     private String currency;
+    private boolean isServiceAv;
+    private int lock = 0;
+    private String  previousSelService = "";
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -108,7 +114,7 @@ public class AutoData {
         ArrayList<Integer> rideTypes = new ArrayList<>();
         rideTypes.add(ServiceTypeValue.NORMAL.getType());
         rideTypes.add(ServiceTypeValue.POOL.getType());
-        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, null, "", true);
+        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, null, "", 0, true);
     }
 
     public String getDestinationHelpText() {
@@ -311,6 +317,56 @@ public class AutoData {
             regions = new ArrayList<>();
         }
         regionsTemp.clear();
+
+//  ***********************************************************************************************************************
+//            if last selected service type is Rental or Outstation and if
+//            app location refreshed from An available service type(like rental or outstation)location to
+//            An unavailable service type location where these service types are not available.
+//            In this, we have to check for the selected service type is available for the new location or not
+//
+//            if yes, then used selected ServiceType  otherwise  set selected ServiceType to the 0th serviceType
+
+//              lock = logic only works on find a driver response
+
+        if(lock == 1) {
+            boolean isSelectedTypeAvailable = false;
+            if (Data.autoData != null && Data.autoData.getServiceTypes() != null && Data.autoData.getServiceTypes().size() > 0) {
+
+                if (getServiceTypeSelected().getSupportedRideTypes() != null && getServiceTypeSelected().getSupportedRideTypes().size() > 0) {
+
+                    for (int i = 0; i < Data.autoData.getServiceTypes().size(); i++) {
+                        List<Integer> allServiceType = Data.autoData.getServiceTypes().get(i).getSupportedRideTypes();
+
+                        if (allServiceType != null && allServiceType.size() > 0) {
+                            List<Integer> selectedServiceType = getServiceTypeSelected().getSupportedRideTypes();
+
+                            for (int j = 0; j < selectedServiceType.size(); j++) {
+                                int selRideType = selectedServiceType.get(j);
+                                if (allServiceType.contains(selRideType)) {
+                                    isSelectedTypeAvailable = true;
+                                    break;
+                                }
+                            }
+
+                            if (isSelectedTypeAvailable) {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (!isSelectedTypeAvailable) {
+                if (getServiceTypes() != null && getServiceTypes().size() > 0) {
+                    previousSelService = "" + getServiceTypeSelected().getName();
+                    setServiceTypeSelected(getServiceTypes().get(0));
+                } else {
+//                    getServiceTypeSelected().setSupportedRideTypes(null);
+                }
+            }
+            setIsServiceAvailable(isSelectedTypeAvailable);
+        }
+// *****************************************************************************************************************************
+
         if(getServiceTypeSelected().getSupportedRideTypes() != null && getServiceTypeSelected().getSupportedRideTypes().size() > 0) {
             for (Region region : regions){
                 if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType())){
@@ -321,6 +377,10 @@ public class AutoData {
             regionsTemp.addAll(regions);
         }
         return regionsTemp;
+    }
+
+    public String getPreviousSelService(){
+        return previousSelService;
     }
     public void addRegion(Region region){
         if(regions == null){
@@ -335,6 +395,19 @@ public class AutoData {
         regions.clear();
     }
 
+    private void setIsServiceAvailable(final boolean isServiceAv){
+        if(lock == 1) {
+            this.isServiceAv = isServiceAv;
+            setLock(0);
+        }
+    }
+    public boolean getIsServiceAvailable(){
+        return  isServiceAv;
+    }
+
+    public void setLock(final int lockVal){
+        this.lock = lockVal;
+    }
 
     public void setRegions(ArrayList<Region> regions) {
         this.regions = regions;
