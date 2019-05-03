@@ -8082,6 +8082,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if (regionSelected.getRideType() == RideTypeValue.POOL.getOrdinal()) {
                                     nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + jugnooPoolFareId);
                                 }
+                                else if (regionSelected.getRegionFare() != null && regionSelected.getRegionFare().getPoolFareId() > 0) {
+                                    nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + regionSelected.getRegionFare().getPoolFareId());
+                                }
+
                                 if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
                                     nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
 
@@ -9035,18 +9039,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     public void callFindADriverAfterCouponSelect(){
-        if(confirmedScreenOpened && Data.autoData.showRegionSpecificFare()) {
-            HashMap<String, String> params = new HashMap<>();
-            if (getApiFindADriver().getParams() != null) {
-                params.put(KEY_RIDE_DISTANCE, getApiFindADriver().getParams().get(KEY_RIDE_DISTANCE));
-                params.put(KEY_RIDE_TIME, getApiFindADriver().getParams().get(KEY_RIDE_TIME));
+        if(confirmedScreenOpened) {
+            if (Data.autoData.showRegionSpecificFare()) {
+                HashMap<String, String> params = new HashMap<>();
+                if (getApiFindADriver().getParams() != null) {
+                    params.put(KEY_RIDE_DISTANCE, getApiFindADriver().getParams().get(KEY_RIDE_DISTANCE));
+                    params.put(KEY_RIDE_TIME, getApiFindADriver().getParams().get(KEY_RIDE_TIME));
+                }
+                PromoCoupon pc = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
+                if (pc != null && pc.getId() > 0) {
+                    params.put(pc instanceof CouponInfo ? Constants.KEY_COUPON_TO_APPLY : Constants.KEY_PROMO_TO_APPLY, String.valueOf(pc.getId()));
+                }
+                DialogPopup.showLoadingDialog(this, getString(R.string.loading));
+                findDriversETACall(false, false, false, params);
+            } else {
+                fareEstimateForPool();
             }
-            PromoCoupon pc = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
-            if (pc != null && pc.getId() > 0) {
-                params.put(pc instanceof CouponInfo ? Constants.KEY_COUPON_TO_APPLY : Constants.KEY_PROMO_TO_APPLY, String.valueOf(pc.getId()));
-            }
-            DialogPopup.showLoadingDialog(this, getString(R.string.loading));
-            findDriversETACall(false, false, false, params);
         }
     }
 

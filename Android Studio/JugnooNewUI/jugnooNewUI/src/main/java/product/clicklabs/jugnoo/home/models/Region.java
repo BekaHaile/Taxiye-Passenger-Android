@@ -215,6 +215,9 @@ public class Region {
 		@SerializedName("fare_text")
 		@Expose
 		private String fareText;
+		@SerializedName("pool_fare_id")
+		@Expose
+		private int poolFareId;
 
 		public double getFare() {
 			return fare;
@@ -244,6 +247,13 @@ public class Region {
 //			}
 		}
 
+		public int getPoolFareId() {
+			return poolFareId;
+		}
+
+		public void setPoolFareId(int poolFareId) {
+			this.poolFareId = poolFareId;
+		}
 	}
 
 
