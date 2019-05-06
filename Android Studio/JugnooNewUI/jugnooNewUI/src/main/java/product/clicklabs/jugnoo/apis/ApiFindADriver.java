@@ -55,7 +55,7 @@ public class ApiFindADriver {
 		this.callback = callback;
 	}
 
-	public void hit(String accessToken, final LatLng latLng, final int showAllDrivers, int showDriverInfo,
+	public void hit(String accessToken, final LatLng latLng, final LatLng dropLatLng, final int showAllDrivers, int showDriverInfo,
 					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened,
 					final boolean savedAddressUsed, HashMap<String, String> params){
 		this.regionSelected = regionSelected;
@@ -70,6 +70,10 @@ public class ApiFindADriver {
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			params.put(Constants.KEY_LATITUDE, String.valueOf(latLng.latitude));
 			params.put(Constants.KEY_LONGITUDE, String.valueOf(latLng.longitude));
+			if(dropLatLng != null) {
+				params.put(Constants.KEY_OP_DROP_LATITUDE, String.valueOf(dropLatLng.latitude));
+				params.put(Constants.KEY_OP_DROP_LONGITUDE, String.valueOf(dropLatLng.longitude));
+			}
 			if(Data.userData.getSubscriptionData().getUserSubscriptions() != null && Data.userData.getSubscriptionData().getUserSubscriptions().size() > 0) {
 				params.put(Constants.KEY_AUTOS_BENEFIT_ID, String.valueOf(Data.userData.getSubscriptionData().getUserSubscriptions().get(0).getBenefitIdAutos()));
 			}
