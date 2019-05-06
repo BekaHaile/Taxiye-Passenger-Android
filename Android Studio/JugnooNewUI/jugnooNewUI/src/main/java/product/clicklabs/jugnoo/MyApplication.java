@@ -24,6 +24,7 @@ import com.google.android.gms.analytics.Tracker;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.razorpay.Checkout;
 import com.sabkuchfresh.fatafatchatpay.ChatCustomActionBroadCastReceiver;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -97,6 +98,9 @@ public class MyApplication extends MultiDexApplication {
         super.onCreate();
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
+        Checkout.clearUserData(getApplicationContext());
+        Checkout.preload(getApplicationContext());
+
 
 //		if (LeakCanary.isInAnalyzerProcess(this)) {
 //			// This process is dedicated to LeakCanary for heap analysis.
