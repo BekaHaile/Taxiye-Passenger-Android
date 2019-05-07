@@ -79,6 +79,15 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 	@SerializedName("promo_name")
 	@Expose
 	private String promoName;
+	@SerializedName("promo_type")
+	@Expose
+	private int type;
+	@SerializedName("drop_radius")
+	@Expose
+	private double dropRadius;
+	@SerializedName("drop_location_coordinates")
+	@Expose
+	private ArrayList<LatLngCoordinates> dropLocationCoordinates;
 
 	@Override
 	public String getPromoName() {
@@ -297,5 +306,32 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 
 	public void setOperatorId(int operatorId) {
 		this.operatorId = operatorId;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public double getDropRadius() {
+		return dropRadius;
+	}
+
+	public void setDropRadius(double dropRadius) {
+		this.dropRadius = dropRadius;
+	}
+
+	public ArrayList<LatLngCoordinates> getDropLocationCoordinates() {
+		if(dropLocationCoordinates == null){
+			dropLocationCoordinates = new ArrayList<>();
+		}
+		return dropLocationCoordinates;
+	}
+
+	public void setDropLocationCoordinates(ArrayList<LatLngCoordinates> dropLocationCoordinates) {
+		this.dropLocationCoordinates = dropLocationCoordinates;
 	}
 }

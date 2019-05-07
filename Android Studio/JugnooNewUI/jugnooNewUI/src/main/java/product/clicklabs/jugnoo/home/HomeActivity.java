@@ -173,6 +173,7 @@ import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
+import product.clicklabs.jugnoo.datastructure.LatLngCoordinates;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -218,6 +219,7 @@ import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
+import product.clicklabs.jugnoo.retrofit.model.CouponType;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
@@ -1391,7 +1393,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                   todo     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                     }
                     if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                        findDriversETACall(true, true, false, null);
+                        findDriversETACall(true, true, false, getApiFindADriver().getParams());
                     } else {
                         requestRideClick();
                     }
@@ -1594,7 +1596,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     locationGotNow();
                     setServiceAvailablityUI(Data.autoData.getFarAwayCity());
 
-                    callMapTouchedRefreshDrivers();
+                    callMapTouchedRefreshDrivers(null);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -2950,13 +2952,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    public void callMapTouchedRefreshDrivers() {
+    public void callMapTouchedRefreshDrivers(HashMap<String, String> params) {
         try {
             if (Data.userData != null) {
                 if ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
                         map != null && !confirmedScreenOpened) {
                     if (!dontCallRefreshDriver && Data.autoData.getPickupLatLng() != null) {
-                        findDriversETACall(false, false, false, null);
+                        findDriversETACall(false, false, false, params);
                     }
                 }
             }
@@ -3070,7 +3072,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
             addUserCurrentLocationAddressMarker();
             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                findDriversETACall(true, false, true, null);
+                findDriversETACall(true, false, true, getApiFindADriver().getParams());
             } else {
                 requestRideDriverCheck();
             }
@@ -5076,7 +5078,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         @Override
         public void run() {
             if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                callMapTouchedRefreshDrivers();
+                callMapTouchedRefreshDrivers(getApiFindADriver().getParams());
             }
         }
     };
@@ -5106,7 +5108,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 try {
                     if (activityResumed) {
                         saveDriverBearing();
-                        if (!intentFired && PassengerScreenMode.P_INITIAL == passengerScreenMode
+                        if (!intentFired
+                                && PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened
                                 && map != null && myLocation != null && !isSpecialPickupScreenOpened()
                                 && PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)
                                 && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1) {
@@ -5701,6 +5704,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         @Override
                         public void onFinish() {
+                            stopDefaultCoupon = false;
                             progressBarInitialSearch.stopSpinning();
                             progressBarInitialSearch.setVisibility(View.GONE);
                             imageViewRideNow.setEnabled(true);
@@ -5753,7 +5757,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         //fabViewTest.setFABButtons();
         if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
             try {
-                if (slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation) {
+                if (!stopDefaultCoupon && (slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation)) {
                     defaultCouponSelection();
                 }
                 if(vehiclesTabAdapterConfirmRide!=null){
@@ -5807,6 +5811,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void defaultCouponSelection() {
 
         PromoCoupon lasSelectedCustomCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
+        if(lasSelectedCustomCoupon != null
+                && lasSelectedCustomCoupon.getType() == CouponType.DROP_BASED.getType()
+                && lasSelectedCustomCoupon.getDropRadius() > 0){
+            boolean matched = false;
+            for(LatLngCoordinates llc : lasSelectedCustomCoupon.getDropLocationCoordinates()){
+                if(MapUtils.distance(llc.getLatLng(), Data.autoData.getDropLatLng()) <= lasSelectedCustomCoupon.getDropRadius()){
+                    matched = true;
+                    break;
+                }
+            }
+            if(!matched){
+                lasSelectedCustomCoupon = null;
+            }
+        }
         boolean lastSelectedCouponExits = false;
         if (lasSelectedCustomCoupon != null) {
             for (PromoCoupon promoCoupon : Data.autoData.getPromoCoupons()) {
@@ -6430,7 +6448,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
         dontCallRefreshDriver = false;
-        callMapTouchedRefreshDrivers();
+        callMapTouchedRefreshDrivers(null);
 
     }
 
@@ -7495,7 +7513,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void run() {
                 try {
                     if (!isSpecialPickupScreenOpened() && !scheduleRideOpen) {
-                        callMapTouchedRefreshDrivers();
+                        callMapTouchedRefreshDrivers(getApiFindADriver().getParams());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -8085,14 +8103,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + regionSelected.getRegionFare().getPoolFareId());
                                 }
 
-                                if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
-                                    nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
-
-                                    if(getApiFindADriver() != null && getApiFindADriver().getParams() != null){
-                                        nameValuePairs.put(KEY_RIDE_DISTANCE, getApiFindADriver().getParams().get(KEY_RIDE_DISTANCE));
-                                        nameValuePairs.put(KEY_RIDE_TIME, getApiFindADriver().getParams().get(KEY_RIDE_TIME));
-                                    }
-                                }
+//                                if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
+//                                    nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
+//
+//                                    if(getApiFindADriver() != null && getApiFindADriver().getParams() != null){
+//                                        nameValuePairs.put(KEY_RIDE_DISTANCE, getApiFindADriver().getParams().get(KEY_RIDE_DISTANCE));
+//                                        nameValuePairs.put(KEY_RIDE_TIME, getApiFindADriver().getParams().get(KEY_RIDE_TIME));
+//                                    }
+//                                }
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
                                 try {
@@ -9037,6 +9055,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
+    private boolean stopDefaultCoupon = false;
     public void callFindADriverAfterCouponSelect(){
         if(confirmedScreenOpened) {
             if (Data.autoData.showRegionSpecificFare()) {
@@ -9047,6 +9066,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 PromoCoupon pc = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
                 if (pc != null && pc.getId() > 0) {
+                    stopDefaultCoupon = true;
                     params.put(pc instanceof CouponInfo ? Constants.KEY_COUPON_TO_APPLY : Constants.KEY_PROMO_TO_APPLY, String.valueOf(pc.getId()));
                 }
                 DialogPopup.showLoadingDialog(this, getString(R.string.loading));
@@ -9640,7 +9660,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
                 addressPopulatedFromDifferentOffering = false;
-                callMapTouchedRefreshDrivers();
+                callMapTouchedRefreshDrivers(null);
             }
         }
         return refresh;

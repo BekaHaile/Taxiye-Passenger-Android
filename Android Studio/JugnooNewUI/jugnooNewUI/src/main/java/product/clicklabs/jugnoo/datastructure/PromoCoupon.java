@@ -12,6 +12,9 @@ public abstract class PromoCoupon implements Serializable {
 	public abstract boolean equals(Object o);
 	public abstract Integer getIsSelected();
 	public abstract Integer getIsValid();
+	public abstract int getType();
+	public abstract double getDropRadius();
+	public abstract ArrayList<LatLngCoordinates> getDropLocationCoordinates();
 
 	public abstract Integer getAutos();
 	public abstract Integer getFresh();
