@@ -1,11 +1,12 @@
 package product.clicklabs.jugnoo.datastructure
 
 import com.google.android.gms.maps.model.LatLng
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 class LatLngCoordinates(
-        @SerializedName("latitude") val latitude:Double,
-        @SerializedName("longitude") val longitude:Double
+        @Expose @SerializedName("latitude") var latitude:Double,
+        @Expose @SerializedName("longitude") var longitude:Double
 ){
 
     fun getLatLng() : LatLng{

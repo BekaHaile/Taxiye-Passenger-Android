@@ -497,8 +497,6 @@ public class JSONParser implements Constants {
                 context.getResources().getInteger(R.integer.customer_request_ride_fast_interval)));
         Prefs.with(context).save(KEY_CUSTOMER_ARRIVED_BEEP_ENABLED, autoData.optInt(KEY_CUSTOMER_ARRIVED_BEEP_ENABLED,
                 context.getResources().getInteger(R.integer.customer_arrived_beep_enabled)));
-        Prefs.with(context).save(KEY_CUSTOMER_VEHICLE_FARE_ESTIMATE_ALERT, autoData.optString(KEY_CUSTOMER_VEHICLE_FARE_ESTIMATE_ALERT,
-                context.getString(R.string.vehicle_fare_estimate_alert)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

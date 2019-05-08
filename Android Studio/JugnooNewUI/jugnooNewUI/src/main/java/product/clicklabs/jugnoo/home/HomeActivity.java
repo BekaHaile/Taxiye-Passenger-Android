@@ -433,7 +433,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ArrayList<PolylineOptions> polylineOptionsInRideDriverPath = new ArrayList<>();
 
     public static AppInterruptHandler appInterruptHandler;
-    public boolean promoSelectionLastOperation = true;
+    public boolean promoSelectionLastOperation = false;
     boolean loggedOut = false,
             zoomedToMyLocation = false,
             mapTouchedOnce = false;

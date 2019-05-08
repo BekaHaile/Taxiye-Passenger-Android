@@ -1027,6 +1027,5 @@ public interface Constants {
 	String KEY_SERVICE_TYPE = "service_type";
     String KEY_PACKAGE_ID = "package_id";
     String KEY_CUSTOMER_NOTE = "customer_note";
-    String KEY_CUSTOMER_VEHICLE_FARE_ESTIMATE_ALERT = "customer_vehicle_fare_estimate_alert";
 
 }

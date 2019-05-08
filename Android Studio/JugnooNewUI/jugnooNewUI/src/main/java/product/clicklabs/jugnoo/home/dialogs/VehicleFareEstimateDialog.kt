@@ -7,13 +7,11 @@ import android.graphics.Typeface
 import android.view.View
 import android.view.WindowManager
 import kotlinx.android.synthetic.main.dialog_vehicle_fare_estimate.*
-import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.home.models.RideTypeValue
 import product.clicklabs.jugnoo.utils.Fonts
-import product.clicklabs.jugnoo.utils.Prefs
 import product.clicklabs.jugnoo.utils.SelectorBitmapLoader
 import product.clicklabs.jugnoo.utils.Utils
 
@@ -54,8 +52,8 @@ class VehicleFareEstimateDialog {
 
                 tvVehicle.text = region.regionName
                 tvEstimate.text = region.regionFare.getFareText(region.fareMandatory)
-                tvInfo.text = Prefs.with(activity).getString(Constants.KEY_CUSTOMER_VEHICLE_FARE_ESTIMATE_ALERT,
-                        activity.getString(R.string.vehicle_fare_estimate_alert))
+                tvInfo.text = if(region.description.isNullOrEmpty()) activity.getString(R.string.vehicle_fare_estimate_alert) else region.description
+                tvInfo.visibility = if(tvInfo.text.isNullOrEmpty()) View.GONE else View.VISIBLE
                 tvBaseFareValue.text = Utils.fromHtml(region.fareStructure.getDisplayBaseFare(activity))
                 tvPerKmValue.text = Utils.formatCurrencyValue(region.fareStructure.currency,
                         region.fareStructure.farePerKm, false)
