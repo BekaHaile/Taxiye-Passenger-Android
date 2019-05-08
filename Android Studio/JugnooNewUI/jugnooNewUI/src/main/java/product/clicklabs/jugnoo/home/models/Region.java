@@ -83,6 +83,9 @@ public class Region {
 	@SerializedName("fare_mandatory")
 	@Expose
 	private int fareMandatory;
+	@SerializedName("description")
+	@Expose
+	private String description;
 	@SerializedName("packages")
 	@Expose
 	private ArrayList<Package> packages;
@@ -147,6 +150,17 @@ public class Region {
 
 	public void setPackages(ArrayList<Package> packages) {
 		this.packages = packages;
+	}
+
+	public String getDescription() {
+		if(description == null){
+			description = "";
+		}
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public class OfferTexts {

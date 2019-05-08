@@ -27,7 +27,6 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
-import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
@@ -59,7 +58,7 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 		this.callback = callback;
 	}
 
-	public PromoCouponsDialog show(ProductType productType, final ArrayList<PromoCoupon> promoCoupons) {
+	public PromoCouponsDialog show(final ArrayList<PromoCoupon> promoCoupons) {
 		try {
 			onDialogOpenPromoSelectOperation = ((HomeActivity)activity).promoSelectionLastOperation;
 			couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();

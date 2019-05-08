@@ -229,11 +229,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 getPaymentOptionDialog().show();
                 GAUtils.event(RIDES, HOME, WALLET+CLICKED);
             } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
-                if(getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-                    getFareDetailsDialog().show();
-                } else{
-                    getFareDetailsDialog().show();
-                }
+                getFareDetailsDialog().show();
                 GAUtils.event(RIDES, HOME, FARE_DETAILS+CLICKED);
 
 
@@ -244,7 +240,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             } else if(v.getId() == R.id.textViewOffers || v.getId() == R.id.textViewOffersMode){
                 if(Data.userData.getCoupons(ProductType.AUTO, activity, false).size() > 0
                         || Data.userData.getShowOfferDialog() == 1) {
-                    getPromoCouponsDialog().show(ProductType.AUTO, Data.userData.getCoupons(ProductType.AUTO, activity, false));
+                    getPromoCouponsDialog().show(Data.userData.getCoupons(ProductType.AUTO, activity, false));
                 }
                 GAUtils.event(RIDES, HOME, OFFER+CLICKED);
             }

@@ -1,7 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import org.jetbrains.annotations.Nullable;
-
 /**
  * Created by socomo20 on 12/11/15.
  */
