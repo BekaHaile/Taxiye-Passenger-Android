@@ -8,6 +8,7 @@ class ServiceType(
         @SerializedName("info") var info:String,
         @SerializedName("is_visible") var isVisible:Int,
         @SerializedName("supported_ride_type") var supportedRideTypes:MutableList<Int>?,
+        @SerializedName("supported_vehicle_types") var supportedVehicleTypes:MutableList<Int>?,
         @SerializedName("tags") var tags:MutableList<String>?,
         @SerializedName("description") var description:String?,
         @SerializedName("schedule_available") var scheduleAvailable:Int = 0,

@@ -2134,7 +2134,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void setServiceTypeAdapter() {
         if(Data.autoData != null) {
+            ArrayList<ServiceType> serviceTypesEligible = new ArrayList<>();
+            boolean nomatch = true;
             for(ServiceType st: Data.autoData.getServiceTypes()){
+                if(st.getSupportedVehicleTypes() == null
+                        || st.getSupportedVehicleTypes().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType())){
+
                 if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null && st.getSupportedRideTypes() != null
                         && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().size() == st.getSupportedRideTypes().size()) {
                     boolean matched = true;
@@ -2146,19 +2151,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                     if(matched && !isFromConfirmToOther){
                         st.setSelected(true);
+                        nomatch = false;
                     }
                     if(isFromConfirmToOther) {
                         isFromConfirmToOther = false;
                     }
                 }
+                    serviceTypesEligible.add(st);
+                }
+            }
+            if(nomatch && serviceTypesEligible.size() > 0){
+                serviceTypesEligible.get(0).setSelected(true);
             }
             if(rideTypesAdapter == null) {
-                rideTypesAdapter = new RideTypesAdapter(Data.autoData.getServiceTypes(), rvRideTypes, Fonts.mavenMedium(this), this);
+                rideTypesAdapter = new RideTypesAdapter(serviceTypesEligible, rvRideTypes, Fonts.mavenMedium(this), this);
                 rvRideTypes.setAdapter(rideTypesAdapter);
             } else {
-                rideTypesAdapter.setList(Data.autoData.getServiceTypes());
+                rideTypesAdapter.setList(serviceTypesEligible);
             }
-            rvRideTypes.setVisibility(Data.autoData.getServiceTypes().size() > 1 ? View.VISIBLE : View.GONE);
+            rvRideTypes.setVisibility(serviceTypesEligible.size() > 1 ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -9940,6 +9951,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
         }
+
+        //update service types patti as it depends on region selected
+        setServiceTypeAdapter();
 
         addUserCurrentLocationAddressMarker();
         updateFareEstimateHoverButton();
