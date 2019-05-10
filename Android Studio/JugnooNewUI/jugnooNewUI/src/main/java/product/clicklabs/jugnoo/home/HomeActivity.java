@@ -198,6 +198,7 @@ import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
+import product.clicklabs.jugnoo.home.dialogs.PartnerWithJugnooDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
@@ -5945,6 +5946,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
+    private PartnerWithJugnooDialog partnerWithJugnooDialog = null;
+    private PartnerWithJugnooDialog.Callback callbackPartner = null;
+    private boolean openedPartnerLinkOnce = false;
 
     //Our service is not available in this area
     public void setServiceAvailablityUI(String farAwayCity) {
@@ -5961,6 +5965,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 initialMyLocationBtn.setVisibility(View.VISIBLE);
                 constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
                 topBar.imageViewScheduleRide.setVisibility(View.GONE);
+
+                if(!openedPartnerLinkOnce && Prefs.with(this).getInt(KEY_CUSTOMER_OPEN_PARTNER_DIALOG, 0) == 1) {
+                    if (partnerWithJugnooDialog == null) {
+                        partnerWithJugnooDialog = new PartnerWithJugnooDialog();
+                        callbackPartner = () -> {
+                            openedPartnerLinkOnce = true;
+                        };
+                    }
+                    partnerWithJugnooDialog.show(this, callbackPartner);
+                }
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();

@@ -1028,4 +1028,7 @@ public interface Constants {
     String KEY_PACKAGE_ID = "package_id";
     String KEY_CUSTOMER_NOTE = "customer_note";
 
+    String KEY_CUSTOMER_PARTNER_URL = "customer_partner_url";
+    String KEY_CUSTOMER_OPEN_PARTNER_DIALOG = "customer_open_partner_dialog";
+
 }

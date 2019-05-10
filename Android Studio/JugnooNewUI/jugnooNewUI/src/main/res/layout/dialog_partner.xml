@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/relative"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/linearLayoutInner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_rounded"
+        android:orientation="vertical"
+        android:splitMotionEvents="false"
+        android:layout_centerInParent="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_margin="20dp"
+        >
+
+        <ImageView
+            android:id="@+id/imageViewBanner"
+            android:layout_width="112dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_partner_map"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="10dp"
+            />
+
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="@string/service_unavailable_in_this_area"
+            android:textColor="@color/text_color_light_less"
+            android:textSize="14sp"
+            app:typekitFont="@string/maven_r"
+            />
+
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:gravity="center"
+            android:text="@string/want_to_earn_money_from_transport_business"
+            android:textColor="@color/text_color"
+            android:textSize="12sp"
+            app:typekitFont="@string/maven_r"
+            />
+
+        <Button
+            android:id="@+id/bPartnerWithJugnoo"
+            android:layout_width="200dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:text="@string/partner_with_jugnoo"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/capsule_theme_color_selector"
+            app:typekitFont="@string/maven"
+            />
+
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/ivClose"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:alpha="0.8"
+        android:src="@drawable/ic_cross_grey_selector"
+        android:layout_alignTop="@+id/linearLayoutInner"
+        android:layout_alignEnd="@+id/linearLayoutInner"/>
+
+
+</RelativeLayout>

@@ -2014,4 +2014,7 @@
     <string name="round_trips">Round\nTrips</string>
     <string name="one_way_trips">One Way\nTrips</string>
     <string name="this_service_not_available">%s service is not available in this area</string>
+    <string name="service_unavailable_in_this_area">Service unavailable in this area</string>
+    <string name="want_to_earn_money_from_transport_business">Want to Earn Money from transport business in your city?</string>
+    <string name="partner_with_jugnoo">Partner with Jugnoo</string>
 </resources>
