@@ -5961,7 +5961,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private PartnerWithJugnooDialog partnerWithJugnooDialog = null;
     private PartnerWithJugnooDialog.Callback callbackPartner = null;
-    private boolean openedPartnerLinkOnce = false;
+    private int partnerDialogCount = 0;
 
     //Our service is not available in this area
     public void setServiceAvailablityUI(String farAwayCity) {
@@ -5979,11 +5979,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
                 topBar.imageViewScheduleRide.setVisibility(View.GONE);
 
-                if(!openedPartnerLinkOnce && Prefs.with(this).getInt(KEY_CUSTOMER_OPEN_PARTNER_DIALOG, 0) == 1) {
+                if(partnerDialogCount < Prefs.with(this).getInt(KEY_CUSTOMER_PARTNER_DIALOG_VIEW_COUNT, 5)
+                        && Prefs.with(this).getInt(KEY_CUSTOMER_OPEN_PARTNER_DIALOG, 0) == 1) {
                     if (partnerWithJugnooDialog == null) {
                         partnerWithJugnooDialog = new PartnerWithJugnooDialog();
                         callbackPartner = () -> {
-                            openedPartnerLinkOnce = true;
+                            partnerDialogCount++;
                         };
                     }
                     partnerWithJugnooDialog.show(this, callbackPartner);
