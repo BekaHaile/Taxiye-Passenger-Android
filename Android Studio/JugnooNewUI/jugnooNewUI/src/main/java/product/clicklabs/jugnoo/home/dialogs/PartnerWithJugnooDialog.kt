@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.home.dialogs
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.DialogInterface
 import android.view.WindowManager
 import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.dialog_partner.*
@@ -36,13 +37,16 @@ class PartnerWithJugnooDialog {
                     try {
                         Utils.openUrl(activity, Prefs.with(activity)
                                 .getString(Constants.KEY_CUSTOMER_PARTNER_URL, "https://www.jugnoo.in/franchise/"))
-                        callback.clickedConfirm()
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
                     dialog!!.dismiss()
                 }
                 relative.setOnClickListener { dialog!!.dismiss() }
+
+                setOnDismissListener(DialogInterface.OnDismissListener {
+                    callback.dialogDismissed()
+                })
             }
             dialog!!.show()
         } catch (e: Exception) {
@@ -51,7 +55,7 @@ class PartnerWithJugnooDialog {
     }
 
     interface Callback{
-        fun clickedConfirm()
+        fun dialogDismissed()
     }
 
 }
