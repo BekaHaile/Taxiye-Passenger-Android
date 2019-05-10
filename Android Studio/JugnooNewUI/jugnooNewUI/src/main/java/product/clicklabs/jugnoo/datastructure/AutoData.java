@@ -5,7 +5,6 @@ import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -112,9 +111,10 @@ public class AutoData {
         this.isTipEnabled = isTipEnabled;
         this.showRegionSpecificFare = showRegionSpecificFare;
         ArrayList<Integer> rideTypes = new ArrayList<>();
+        ArrayList<Integer> regionIds = new ArrayList<>();
         rideTypes.add(ServiceTypeValue.NORMAL.getType());
         rideTypes.add(ServiceTypeValue.POOL.getType());
-        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, null, "", 0, true);
+        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
     }
 
     public String getDestinationHelpText() {

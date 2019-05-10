@@ -524,4 +524,8 @@ public class Region {
 		this.deepindex = deepindex;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof Region && ((Region) obj).regionId.equals(regionId));
+	}
 }

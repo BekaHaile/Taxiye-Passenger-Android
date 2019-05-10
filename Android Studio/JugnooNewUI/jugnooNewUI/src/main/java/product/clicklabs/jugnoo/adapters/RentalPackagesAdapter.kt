@@ -58,7 +58,11 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
     }
 
     override fun onBindViewHolder(holder: RentalPackagesAdapter.ViewHolderCorporate, position: Int) {
-        holder.bind(if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) packages!![position].getCity()!! else packages!![position].getPackageName(context, currency, distanceUnit), packages!![position].selected, position)
+        holder.bind(if(Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))
+            packages!![position].getCity()!!
+        else
+            packages!![position].getPackageName(context, currency, distanceUnit),
+                packages!![position].selected, position)
     }
 
     inner class ViewHolderCorporate(view : View, listener:ItemListener) : RecyclerView.ViewHolder(view){

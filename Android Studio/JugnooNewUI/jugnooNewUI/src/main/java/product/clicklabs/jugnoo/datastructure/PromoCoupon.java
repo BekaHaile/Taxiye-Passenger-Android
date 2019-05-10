@@ -1,7 +1,12 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.R;
 
 public abstract class PromoCoupon implements Serializable {
 
@@ -78,6 +83,26 @@ public abstract class PromoCoupon implements Serializable {
 
 	public void setRepeatedCount(int repeatedCount) {
 		this.repeatedCount = repeatedCount;
+	}
+
+	public String getCanBeUsedAndApplicableOn(Context context){
+		String text = "";
+		if(this instanceof CouponInfo){
+			text = context.getString(R.string.can_be_used_format, String.valueOf(getRepeatedCount()));
+			if(!TextUtils.isEmpty(((CouponInfo)this).getApplicableOn())) {
+				text = text + "\n" + ((CouponInfo) this).getApplicableOn();
+			}
+		} else if(this instanceof  PromotionInfo) {
+			if(!TextUtils.isEmpty(((PromotionInfo)this).getPromoText())) {
+				text = ((PromotionInfo) this).getPromoText();
+			} else {
+				text = context.getString(R.string.can_be_used_format, String.valueOf(getRepeatedCount()));
+			}
+			if(!TextUtils.isEmpty(((PromotionInfo)this).getApplicableOn())) {
+				text = text + "\n" + ((PromotionInfo) this).getApplicableOn();
+			}
+		}
+		return text;
 	}
 
 
