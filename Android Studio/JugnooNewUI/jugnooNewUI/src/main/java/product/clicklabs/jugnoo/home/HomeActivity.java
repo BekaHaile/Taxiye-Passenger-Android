@@ -732,7 +732,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		rvRideTypes = findViewById(R.id.rvRideTypes);
 		rvRideTypes.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(this,
 				LinearLayoutManager.HORIZONTAL, false));
-        setServiceTypeAdapter();
+        setServiceTypeAdapter(true);
 
         relativeLayoutSearchContainer = (RelativeLayout) findViewById(R.id.relativeLayoutSearchContainer);
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
@@ -2132,7 +2132,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
-    public void setServiceTypeAdapter() {
+    public void setServiceTypeAdapter(boolean setAdapter) {
         if(Data.autoData != null) {
             ArrayList<ServiceType> serviceTypesEligible = new ArrayList<>();
             boolean nomatch = true;
@@ -2163,11 +2163,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(nomatch && serviceTypesEligible.size() > 0){
                 serviceTypesEligible.get(0).setSelected(true);
             }
-            if(rideTypesAdapter == null) {
-                rideTypesAdapter = new RideTypesAdapter(serviceTypesEligible, rvRideTypes, Fonts.mavenMedium(this), this);
-                rvRideTypes.setAdapter(rideTypesAdapter);
-            } else {
-                rideTypesAdapter.setList(serviceTypesEligible);
+            if(setAdapter) {
+                if (rideTypesAdapter == null) {
+                    rideTypesAdapter = new RideTypesAdapter(serviceTypesEligible, rvRideTypes, Fonts.mavenMedium(this), this);
+                    rvRideTypes.setAdapter(rideTypesAdapter);
+                } else {
+                    rideTypesAdapter.setList(serviceTypesEligible);
+                }
             }
             rvRideTypes.setVisibility(serviceTypesEligible.size() > 1 ? View.VISIBLE : View.GONE);
         }
@@ -5785,7 +5787,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     zoomToCurrentLocationWithOneDriver(getDeviceLocation());
                 }
                 if (relativeLayoutLocationError.getVisibility() == View.GONE) {
-                    setServiceTypeAdapter();
+                    setServiceTypeAdapter(true);
                     setServiceTypeUI();
                     showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
                     homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
@@ -9953,7 +9955,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
         //update service types patti as it depends on region selected
-        setServiceTypeAdapter();
+        setServiceTypeAdapter(true);
 
         addUserCurrentLocationAddressMarker();
         updateFareEstimateHoverButton();
@@ -11199,6 +11201,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
             linearLayoutRequestMain.setVisibility(View.VISIBLE);
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
+            constraintLayoutRideTypeConfirm.postDelayed(() -> {
+                setServiceTypeAdapter(false);
+            }, 200);
         }
     }
 
