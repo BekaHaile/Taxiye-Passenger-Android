@@ -90,6 +90,9 @@ public class CouponInfo extends PromoCoupon implements Serializable{
 	@SerializedName("drop_radius")
 	@Expose
 	private double dropRadius;
+	@SerializedName("applicable_on")
+	@Expose
+	private String applicableOn;
 	@SerializedName("drop_location_coordinates")
 	@Expose
 	private ArrayList<LatLngCoordinates> dropLocationCoordinates;
@@ -374,5 +377,13 @@ public class CouponInfo extends PromoCoupon implements Serializable{
 
 	public void setDropLocationCoordinates(ArrayList<LatLngCoordinates> dropLocationCoordinates) {
 		this.dropLocationCoordinates = dropLocationCoordinates;
+	}
+
+	public String getApplicableOn() {
+		return applicableOn;
+	}
+
+	public void setApplicableOn(String applicableOn) {
+		this.applicableOn = applicableOn;
 	}
 }

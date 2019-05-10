@@ -88,6 +88,12 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 	@SerializedName("drop_location_coordinates")
 	@Expose
 	private ArrayList<LatLngCoordinates> dropLocationCoordinates;
+	@SerializedName("promo_text")
+	@Expose
+	private String promoText;
+	@SerializedName("applicable_on")
+	@Expose
+	private String applicableOn;
 
 	@Override
 	public String getPromoName() {
@@ -333,5 +339,21 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 
 	public void setDropLocationCoordinates(ArrayList<LatLngCoordinates> dropLocationCoordinates) {
 		this.dropLocationCoordinates = dropLocationCoordinates;
+	}
+
+	public String getApplicableOn() {
+		return applicableOn;
+	}
+
+	public void setApplicableOn(String applicableOn) {
+		this.applicableOn = applicableOn;
+	}
+
+	public String getPromoText() {
+		return promoText;
+	}
+
+	public void setPromoText(String promoText) {
+		this.promoText = promoText;
 	}
 }

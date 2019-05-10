@@ -6,6 +6,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,19 +55,20 @@ public class PromoAdapter extends RecyclerView.Adapter<PromoAdapter.ViewHolder> 
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position) {
 		Promo promo = promosList.get(position);
+		String text = promo.getPromoCoupon().getCanBeUsedAndApplicableOn(activity);
 		if(promo.getLineColorRes() == -1){
 			holder.ivOfferingLine.setBackgroundResource(R.drawable.ic_promo_all_line);
 			holder.tvOfferingName.setTextColor(activity.getResources().getBoolean(R.bool.show_jugnoo_promo_icon)?ContextCompat.getColor(activity, R.color.promo_all_text_color):ContextCompat.getColor(activity, R.color.fresh_promotions_green));
 			holder.tvPromoInfo.setVisibility(View.VISIBLE);
 			holder.tvPromoInfo.setText(R.string.applied_on_all_offerings);
-			if(promo.getPromoCoupon().getRepeatedCount() > 1){
-				holder.tvPromoInfo.append(", "+activity.getString(R.string.can_be_used_format, String.valueOf(promo.getPromoCoupon().getRepeatedCount())));
+			if(!TextUtils.isEmpty(text)){
+				holder.tvPromoInfo.append(", "+text);
 			}
 		} else {
 			holder.ivOfferingLine.setBackgroundColor(ContextCompat.getColor(activity, promo.getLineColorRes()));
 			holder.tvOfferingName.setTextColor(activity.getResources().getBoolean(R.bool.show_jugnoo_promo_icon)?ContextCompat.getColor(activity, promo.getLineColorRes()):ContextCompat.getColor(activity, R.color.fresh_promotions_green));
-			holder.tvPromoInfo.setText(activity.getString(R.string.can_be_used_format, String.valueOf(promo.getPromoCoupon().getRepeatedCount())));
-			holder.tvPromoInfo.setVisibility(promo.getPromoCoupon().getRepeatedCount() > 1 ? View.VISIBLE : View.GONE);
+			holder.tvPromoInfo.setText(text);
+			holder.tvPromoInfo.setVisibility(!TextUtils.isEmpty(text) ? View.VISIBLE : View.GONE);
 		}
 		holder.ivOfferingIcon.setImageResource(activity.getResources().getBoolean(R.bool.show_jugnoo_promo_icon)?promo.getIconRes():R.drawable.ic_promotion);
 		holder.tvOfferingName.setText(promo.getName());
