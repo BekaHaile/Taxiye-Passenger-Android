@@ -172,6 +172,17 @@
                 android:background="@color/white">
 
                 <ImageView
+                    android:id="@+id/imageViewVehicle"
+                    android:layout_width="110px"
+                    android:layout_height="110px"
+                    android:layout_marginTop="20px"
+                    android:tag="mwar"
+                    android:layout_marginStart="-55px"
+                    android:layout_toEndOf="@id/imageViewInRideDriver"
+                    android:src="@drawable/ic_driver_placeholder"
+                    />
+
+                <ImageView
                     android:id="@+id/imageViewInRideDriver"
                     android:layout_width="65dp"
                     android:layout_height="65dp"
@@ -244,6 +255,19 @@
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/textViewVehicleName"
+                        android:layout_width="240px"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:layout_marginTop="3dp"
+                        android:text="driver car"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24" />
 
                     <TextView
                         android:id="@+id/textViewInRideDriverCarNumber"

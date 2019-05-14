@@ -1572,6 +1572,8 @@ public class JSONParser implements Constants {
             double tipBeforeRequestRide = 0.0;
             String userIdentifier = "";
 
+            String vehicleImage ="";
+            String vehicleName = "";
 
             HomeActivity.userMode = UserMode.PASSENGER;
 
@@ -1670,8 +1672,18 @@ public class JSONParser implements Constants {
                             if (jObject.has("driver_car_no")) {
                                 driverCarNumber = jObject.getString("driver_car_no");
                             }
+                            vehicleImage = jObject.optString("vehicle_image");
                             if (jObject.has("free_ride")) {
                                 freeRide = jObject.getInt("free_ride");
+                            }
+                            if(jObject.has("vehicle_color")) {
+                                vehicleName = vehicleName.concat(jObject.optString("vehicle_color") + " ");
+                            }
+                            if(jObject.has("vehicle_brand")) {
+                                vehicleName = vehicleName.concat(jObject.optString("vehicle_brand") + " ");
+                            }
+                            if(jObject.has("vehicle_model")) {
+                                vehicleName = vehicleName.concat(jObject.optString("vehicle_model"));
                             }
 
                             promoName = getPromoName(context, jObject);
@@ -1810,7 +1822,7 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier,vehicleImage,vehicleName));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

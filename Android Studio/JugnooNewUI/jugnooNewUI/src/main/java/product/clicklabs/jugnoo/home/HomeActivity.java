@@ -466,7 +466,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     TextView textViewIRPaymentOptionValue, textViewRupee, tvFreeRidesForLife;
     ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm, imageViewNotes;
     PopupMenu popupInRide;
-
+    TextView textViewVehicleName;
+    ImageView imageViewVehicle;
 
     //Search Layout
     RelativeLayout relativeLayoutSearchContainer, relativeLayoutSearch, relativeLayoutPoolSharing;
@@ -1160,6 +1161,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         etTipOtherValue.clearFocus();
 
 		llPayViaUpi = findViewById(R.id.llPayViaUpi);
+
+        textViewVehicleName = (TextView) findViewById(R.id.textViewVehicleName);
+        textViewVehicleName.setTypeface(Fonts.mavenRegular(this));
+        imageViewVehicle = (ImageView) findViewById(R.id.imageViewVehicle);
 
         tvTipFirst.setOnClickListener(new OnClickListener() {
             @Override
@@ -5687,6 +5692,26 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else {
                 textViewInRideDriverCarNumber.setText("");
             }
+            if (Data.autoData.getAssignedDriverInfo().getVehicleImage()!=null && !"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().getVehicleImage())) {
+                try {
+                    imageViewVehicle.setVisibility(View.VISIBLE);
+                    float minRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
+                    Picasso.with(this).load(Data.autoData.getAssignedDriverInfo().getVehicleImage())
+                            .placeholder(R.drawable.ic_driver_placeholder)
+                            .transform(new CircleTransform())
+                            .resize((int) (110f * minRatio), (int) (110f * minRatio)).centerCrop()
+                            .into(imageViewVehicle);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                imageViewVehicle.setVisibility(View.GONE);
+            }
+            if(!"".equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().getVehicleName())) {
+                textViewVehicleName.setText(Data.autoData.getAssignedDriverInfo().getVehicleName());
+            } else {
+                textViewVehicleName.setVisibility(View.GONE);
+            }
 
             if (!getString(R.string.no_promo_code_applied).equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
                 relativeLayoutInRideInfo.setVisibility(View.VISIBLE);
@@ -5731,7 +5756,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Picasso.with(HomeActivity.this).load(Data.autoData.getAssignedDriverInfo().image)
                             .placeholder(R.drawable.ic_driver_placeholder)
                             .transform(new CircleTransform())
-                            .resize((int) (130f * minRatio), (int) (130f * minRatio)).centerCrop()
+                            .resize((int) (110f * minRatio), (int) (110f * minRatio)).centerCrop()
                             .into(imageViewInRideDriver);
                 }
             } catch (Exception e) {
@@ -9161,10 +9186,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             String driverPhone = jObj.getString("phone_no");
             String driverImage = jObj.getString("user_image");
             String driverCarImage = jObj.getString("driver_car_image");
+            String vehicleImage = jObj.optString("vehicle_image");
             double latitude = jObj.getDouble("current_location_latitude");
             double longitude = jObj.getDouble("current_location_longitude");
             int chatEnabled = jObj.optInt("chat_enabled", 0);
             double pickupLatitude, pickupLongitude;
+            String vehicleName = "";
             if (jObj.has("pickup_latitude")) {
                 pickupLatitude = jObj.getDouble("pickup_latitude");
                 pickupLongitude = jObj.getDouble("pickup_longitude");
@@ -9181,6 +9208,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (jObj.has("driver_car_no")) {
                 carNumber = jObj.getString("driver_car_no");
             }
+            if(jObj.has("vehicle_color")) {
+                vehicleName = vehicleName.concat(jObj.optString("vehicle_color") + " ");
+            }
+            if(jObj.has("vehicle_brand")) {
+                vehicleName = vehicleName.concat(jObj.optString("vehicle_brand") + " ");
+            }
+            if(jObj.has("vehicle_model")) {
+                vehicleName = vehicleName.concat(jObj.optString("vehicle_model"));
+            }
+
             int freeRide = 0;
             if (jObj.has("free_ride")) {
                 freeRide = jObj.getInt("free_ride");
@@ -9242,7 +9279,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
+                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier,vehicleImage,vehicleName));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
