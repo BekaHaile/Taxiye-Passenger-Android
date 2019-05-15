@@ -1,19 +1,18 @@
 package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
+import android.os.Handler;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.CameraPosition;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public abstract class MapStateListener {
 
     private boolean mMapTouched = false;
     private boolean mMapSettled = false;
-    private Timer mTimer;
+//    private Timer mTimer;
+    private Handler handler;
     private static final int SETTLE_TIME = 500;
 
     private GoogleMap mMap;
@@ -23,7 +22,7 @@ public abstract class MapStateListener {
     public MapStateListener(GoogleMap map, TouchableMapFragment touchableMapFragment, Activity activity) {
         this.mMap = map;
         this.mActivity = activity;
-
+        handler = new Handler();
         
         
         map.setOnCameraChangeListener(new GoogleMap.OnCameraChangeListener() {
@@ -50,7 +49,13 @@ public abstract class MapStateListener {
                 releaseMap();
                 runSettleTimer();
             }
-            
+
+            @Override
+            public void onCancel() {
+                mMapTouched = false;
+                mMapSettled = true;
+            }
+
             @Override
             public void onDoubleTap() {
             	mMap.animateCamera(CameraUpdateFactory.zoomIn());
@@ -63,12 +68,12 @@ public abstract class MapStateListener {
             
             @Override
             public void pinchIn() {
-            	mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom-0.04f));
+            	mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom-0.1f));
             }
             
             @Override
             public void pinchOut() {
-            	mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom+0.04f));
+            	mMap.moveCamera(CameraUpdateFactory.zoomTo(mMap.getCameraPosition().zoom+0.1f));
             }
             
         });
@@ -88,26 +93,28 @@ public abstract class MapStateListener {
     private void runSettleTimer() {
         updateLastPosition();
 
-        if(mTimer != null) {
-            mTimer.cancel();
-            mTimer.purge();
+        if(handler != null) {
+            cancelRunnable = true;
+            handler.removeCallbacks(runnable);
         }
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        CameraPosition currentPosition = MapStateListener.this.mMap.getCameraPosition();
-                        if (currentPosition.equals(mLastPosition)) {
-                            settleMap();
-                        }
-                    }
-                });
-            }
-        }, SETTLE_TIME);
+        cancelRunnable = false;
+        handler.postDelayed(runnable, SETTLE_TIME);
     }
+
+    private boolean cancelRunnable = false;
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if(cancelRunnable){
+                cancelRunnable = false;
+                return;
+            }
+            CameraPosition currentPosition = MapStateListener.this.mMap.getCameraPosition();
+            if (currentPosition.equals(mLastPosition)) {
+                settleMap();
+            }
+        }
+    };
 
     private synchronized void releaseMap() {
         if(mMapTouched) {
@@ -123,9 +130,9 @@ public abstract class MapStateListener {
 
     private void touchMap() {
         if(!mMapTouched) {
-            if(mTimer != null) {
-                mTimer.cancel();
-                mTimer.purge();
+            if(handler != null) {
+                cancelRunnable = true;
+                handler.removeCallbacks(runnable);
             }
             mMapTouched = true;
             onMapTouched();
@@ -134,9 +141,9 @@ public abstract class MapStateListener {
 
     public void unsettleMap() {
         if(mMapSettled) {
-            if(mTimer != null) {
-                mTimer.cancel();
-                mTimer.purge();
+            if(handler != null) {
+                cancelRunnable = true;
+                handler.removeCallbacks(runnable);
             }
             mMapSettled = false;
             mLastPosition = null;

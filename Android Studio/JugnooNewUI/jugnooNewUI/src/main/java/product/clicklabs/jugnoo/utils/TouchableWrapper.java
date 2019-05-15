@@ -49,6 +49,9 @@ public class TouchableWrapper extends FrameLayout {
                 case MotionEvent.ACTION_UP:
                     onTouchListener.onRelease();
                     break;
+                case MotionEvent.ACTION_CANCEL:
+                    onTouchListener.onCancel();
+                    break;
             }
         } catch(Exception e){
             e.printStackTrace();
@@ -60,6 +63,7 @@ public class TouchableWrapper extends FrameLayout {
 		public void onTouch();
 
 		public void onRelease();
+		public void onCancel();
 
 		public void onDoubleTap();
 
