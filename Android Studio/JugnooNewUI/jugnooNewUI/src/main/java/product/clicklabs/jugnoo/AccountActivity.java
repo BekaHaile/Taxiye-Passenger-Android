@@ -58,6 +58,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.fragments.AddressBookFragment;
+import product.clicklabs.jugnoo.fragments.ProfileVerificationFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
@@ -145,6 +146,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private Picker picker;
     private ImageCompression imageCompressionTask;
 
+    private RelativeLayout relativeLayoutProfileVerification;
+    private TextView textViewProfileVerification;
+    private ImageView ivProfileVerifyStatus;
+
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,7 +218,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         viewStarIcon = (View) findViewById(R.id.viewStarIcon); viewStarIcon.setVisibility(View.GONE);
         //imageViewChangePassword.setRotation(270f);
 
-
+        relativeLayoutProfileVerification = findViewById(R.id.relativeLayoutProfileVerification);
+        textViewProfileVerification = findViewById(R.id.textViewProfileVerification);
+        textViewProfileVerification.setTypeface(Fonts.mavenMedium(this));
+        ivProfileVerifyStatus = findViewById(R.id.ivProfileVerifyStatus);
 
 
 		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
@@ -806,7 +814,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 return false;
             }
         });
-
+        relativeLayoutProfileVerification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProfileVerificationFragment(AccountActivity.this,relativeLayoutContainer,true);
+            }
+        });
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         GAUtils.trackScreenView(PROFILE_SCREEN);
@@ -945,7 +958,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     public void performBackPressed(){
         if(getSupportFragmentManager().getBackStackEntryCount() > 0){
-            openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
+            if(getSupportFragmentManager()
+                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(AddressBookFragment.class.getName())) {
+                openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
+            } else {
+                openProfileVerificationFragment(AccountActivity.this,relativeLayoutContainer,false);
+            }
         }
         else if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
             if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
@@ -1195,7 +1213,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 
 
-	void logoutAsync(final Activity activity) {
+	public void logoutAsync(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
 
 			DialogPopup.showLoadingDialog(activity, getString(R.string.please_wait));
@@ -1648,5 +1666,34 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     @Override
     public void onSelectCountry(Country country) {
         tvCountryCode.setText(country.getDialCode());
+    }
+
+    public void openProfileVerificationFragment(FragmentActivity activity, View container, boolean addFrag) {
+        if(addFrag) {
+            if(transactionUtils.checkIfFragmentAdded(activity, ProfileVerificationFragment.class.getName())){
+                activity.getSupportFragmentManager().popBackStack();
+            }
+            if (!transactionUtils.checkIfFragmentAdded(activity, ProfileVerificationFragment.class.getName())) {
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                        .add(container.getId(), ProfileVerificationFragment.newInstance(),
+                                ProfileVerificationFragment.class.getName())
+                        .addToBackStack(ProfileVerificationFragment.class.getName());
+                if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                    transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+                }
+                transaction.commitAllowingStateLoss();
+
+                textViewTitle.setText(R.string.verification_status);
+                rlMain.setVisibility(View.GONE);
+                tvAbout.setVisibility(View.GONE);
+            }
+        } else{
+            super.onBackPressed();
+            textViewTitle.setText(R.string.title_my_profile);
+            rlMain.setVisibility(View.VISIBLE);
+            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
+        }
     }
 }
