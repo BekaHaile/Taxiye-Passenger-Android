@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -53,7 +55,7 @@ public class MenuBar {
 
 	public MenuAdapter menuAdapter;
 	private ImageView imageViewProfile;
-	private TextView textViewUserName,textViewViewPhone;
+	private TextView textViewUserName,textViewViewPhone,tvVerificationNote;
 	private View viewStarIcon;
 	private RelativeLayout relativeLayout;
 
@@ -74,7 +76,10 @@ public class MenuBar {
 		recyclerViewMenu.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewMenu.setHasFixedSize(false);
 		imageViewProfile = (ImageView) drawerLayout.findViewById(R.id.imageViewProfile);//textViewUserName
-
+		tvVerificationNote = drawerLayout.findViewById(R.id.tvVerificationNote);
+		tvVerificationNote.setTypeface(Fonts.mavenRegular(activity));
+		Animation animation = AnimationUtils.loadAnimation(activity,R.anim.blink);
+		tvVerificationNote.setAnimation(animation);
 		textViewUserName = (TextView) drawerLayout.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(activity));
 		textViewViewPhone = (TextView) drawerLayout.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.mavenRegular(activity));
 		viewStarIcon = (View) drawerLayout.findViewById(R.id.viewStarIcon);

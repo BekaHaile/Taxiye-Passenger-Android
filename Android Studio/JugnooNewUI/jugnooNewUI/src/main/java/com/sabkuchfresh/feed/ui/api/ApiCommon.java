@@ -312,7 +312,10 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 RestClient.getApiService().fetchUserCorporates(params, callback);
                 break;
             case UPLOAD_VERICATION_DOCUMENTS:
-                RestClient.getApiService().uploadVerificationDocuments(typedFile,params,callback);
+                RestClient.getApiService().uploadVerificationDocuments(multipartTypedOutput,callback);
+                break;
+            case FETCH_DOCUMENTS:
+                RestClient.getApiService().fetchDocuments(params,callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

@@ -118,7 +118,7 @@
             android:layout_toEndOf="@+id/tvDocStatus"
             android:src="@drawable/orange_cross"
             android:tag="mwar"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
     </RelativeLayout>
 

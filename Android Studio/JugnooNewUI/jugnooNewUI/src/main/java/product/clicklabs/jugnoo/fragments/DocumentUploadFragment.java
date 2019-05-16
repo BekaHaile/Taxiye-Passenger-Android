@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -35,9 +36,10 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
+import product.clicklabs.jugnoo.retrofit.model.DocumentData;
 import product.clicklabs.jugnoo.retrofit.model.UploadDocumentResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Log;
+import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
@@ -48,12 +50,12 @@ public class DocumentUploadFragment extends Fragment {
     private static final int REQUEST_CODE_SELECT_IMAGES = 99;
     private static final int REQ_CODE_IMAGE_PERMISSION = 1001;
     private AccountActivity activity;
-    private String docId;
+    private DocumentData documentData;
+
     private PermissionCommon mPermissionCommon;
     private Picker picker;
     private ImageCompression imageCompressionTask;
     private ArrayList<Object> imageObjectList = new ArrayList<>();
-    private int maxNoImages = 2;
     private ImageView ivSetCapturedImage, ivSetCapturedImage2, imageViewUploadDoc;
     private ImageView deleteImage1, deleteImage2;
     private RelativeLayout relativeLayoutImageStatus;
@@ -61,10 +63,10 @@ public class DocumentUploadFragment extends Fragment {
     private RelativeLayout rlAddImage1, rlAddImage2;
     private TextView tvDocStatus;
 
-    public static DocumentUploadFragment newInstance(String docId) {
+    public static DocumentUploadFragment newInstance(DocumentData documentData) {
         DocumentUploadFragment fragment = new DocumentUploadFragment();
         Bundle args = new Bundle();
-        args.putString("doc_id", docId);
+        args.putParcelable("documentData",documentData);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,7 +74,7 @@ public class DocumentUploadFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        docId = getArguments().getString("doc_id", "");
+        this.documentData = getArguments().getParcelable("documentData");
     }
 
     @Override
@@ -106,6 +108,11 @@ public class DocumentUploadFragment extends Fragment {
         tvDocStatus = rootView.findViewById(R.id.tvDocStatus);
         imageViewUploadDoc = rootView.findViewById(R.id.imageViewUploadDoc);
 
+        if(documentData.getImagesList()!=null && documentData.getImagesList().size() > 0) {
+            imageObjectList.addAll(documentData.getImagesList());
+            refreshImageUI();
+        }
+
         deleteImage1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,7 +137,11 @@ public class DocumentUploadFragment extends Fragment {
         btSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImages();
+                if(imageObjectList.size() == documentData.getNumImagesRequired()) {
+                    activity.onBackPressed();
+                } else {
+                    Snackbar.make(rootView,getString(R.string.min_documents_required,String.valueOf(documentData.getNumImagesRequired())),Snackbar.LENGTH_SHORT).show();
+                }
             }
         });
         return rootView;
@@ -146,11 +157,9 @@ public class DocumentUploadFragment extends Fragment {
 
     private void pickImages() {
 
-        int alreadyPresent = imageObjectList == null ? 0 : imageObjectList.size();
         if (picker == null) {
-            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.MULTIPLE_IMAGES).build();
+            picker = new Picker.Builder(activity, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.SINGLE_IMAGE).build();
         }
-        picker.setLimit(maxNoImages - alreadyPresent);
         picker.startActivity(DocumentUploadFragment.this, activity, REQUEST_CODE_SELECT_IMAGES);
 
     }
@@ -165,6 +174,7 @@ public class DocumentUploadFragment extends Fragment {
                     imageObjectList.addAll(images);
                     tvDocStatus.setText(getString(R.string.uploaded));
                     refreshImageUI();
+                    addImage(imageObjectList.size()-1);
                 }
             }
         }
@@ -178,16 +188,32 @@ public class DocumentUploadFragment extends Fragment {
                 rlAddImage2.setVisibility(View.VISIBLE);
                 rlAddImage1.setVisibility(View.VISIBLE);
                 imageViewUploadDoc.setVisibility(View.GONE);
-                Picasso.with(activity).load(new File(((ImageEntry) imageObjectList.get(0)).path))
-                        .transform(new RoundBorderTransform(6, 0))
-                        .resize(300, 300)
-                        .centerCrop()
-                        .into(ivSetCapturedImage);
-                Picasso.with(activity).load(new File(((ImageEntry) imageObjectList.get(1)).path))
-                        .transform(new RoundBorderTransform(6, 0))
-                        .resize(300, 300)
-                        .centerCrop()
-                        .into(ivSetCapturedImage2);
+                if(imageObjectList.get(0) instanceof ImageEntry) {
+                    Picasso.with(activity).load(new File(((ImageEntry) imageObjectList.get(0)).path))
+                            .transform(new RoundBorderTransform(6, 0))
+                            .resize(300, 300)
+                            .centerCrop()
+                            .into(ivSetCapturedImage);
+                } else {
+                    Picasso.with(activity).load((String) imageObjectList.get(0))
+                            .transform(new RoundBorderTransform(6, 0))
+                            .resize(300, 300)
+                            .centerCrop()
+                            .into(ivSetCapturedImage);
+                }
+                if(imageObjectList.get(1) instanceof ImageEntry) {
+                    Picasso.with(activity).load(new File(((ImageEntry) imageObjectList.get(1)).path))
+                            .transform(new RoundBorderTransform(6, 0))
+                            .resize(300, 300)
+                            .centerCrop()
+                            .into(ivSetCapturedImage2);
+                } else {
+                    Picasso.with(activity).load((String) imageObjectList.get(1))
+                            .transform(new RoundBorderTransform(6, 0))
+                            .resize(300, 300)
+                            .centerCrop()
+                            .into(ivSetCapturedImage2);
+                }
             } catch (Exception unhandled) {
             }
         } else if (imageObjectList.size() == 1) {
@@ -197,11 +223,19 @@ public class DocumentUploadFragment extends Fragment {
                 rlAddImage2.setVisibility(View.GONE);
                 deleteImage2.setVisibility(View.GONE);
                 imageViewUploadDoc.setVisibility(View.VISIBLE);
-                Picasso.with(activity).load(new File(((ImageEntry) imageObjectList.get(0)).path))
-                        .transform(new RoundBorderTransform(6, 0))
-                        .resize(300, 300)
-                        .centerCrop()
-                        .into(ivSetCapturedImage);
+                if(imageObjectList.get(0) instanceof ImageEntry) {
+                    Picasso.with(activity).load(new File(((ImageEntry) imageObjectList.get(0)).path))
+                            .transform(new RoundBorderTransform(6, 0))
+                            .resize(300, 300)
+                            .centerCrop()
+                            .into(ivSetCapturedImage);
+                } else {
+                    Picasso.with(activity).load((String) imageObjectList.get(0))
+                            .transform(new RoundBorderTransform(6, 0))
+                            .resize(300, 300)
+                            .centerCrop()
+                            .into(ivSetCapturedImage);
+                }
             } catch (Exception unhandled) { }
         } else {
             rlAddImage1.setVisibility(View.GONE);
@@ -210,52 +244,53 @@ public class DocumentUploadFragment extends Fragment {
             deleteImage2.setVisibility(View.GONE);
             imageViewUploadDoc.setVisibility(View.VISIBLE);
         }
+        if(documentData.getStatus() == DocStatus.UPLOADED.getI()) {
+            tvDocStatus.setText(getString(R.string.uploaded));
+        } else if(documentData.getStatus() == DocStatus.REJECTED.getI()) {
+            tvDocStatus.setText(getString(R.string.rejected));
+        } else if(documentData.getStatus() == DocStatus.APPROVAL_PENDING.getI()) {
+            tvDocStatus.setText(getString(R.string.approval_pending));
+        } else if(documentData.getStatus() == DocStatus.VERIFIED.getI()) {
+            tvDocStatus.setText(getString(R.string.verified));
+        }
     }
 
-    public void uploadImages() {
-        final HashMap<String, String> map = new HashMap<>();
+    public void uploadImage(int imagePosition,int docId,String documentType) {
         ArrayList<String> imageEntries = null;
-        for (Object image : imageObjectList) {
-            if (image instanceof ImageEntry) {
-                if (imageEntries == null)
+            if (imageObjectList.get(imagePosition) instanceof ImageEntry) {
                     imageEntries = new ArrayList<>();
+                imageEntries.add(((ImageEntry) imageObjectList.get(imagePosition)).path);
 
-                imageEntries.add(((ImageEntry) image).path);
-            }
         }
         if (imageEntries != null) {
             imageCompressionTask = new ImageCompression(new ImageCompression.AsyncResponse() {
                 @Override
                 public void processFinish(ImageCompression.CompressedImageModel[] output) {
 
+                    MultipartTypedOutput params = new MultipartTypedOutput();
                     if (output != null) {
                         for (ImageCompression.CompressedImageModel file : output) {
                             if (file != null) {
-                                TypedFile typedFile;
-                                typedFile = new TypedFile(Constants.MIME_TYPE, file.getFile());
-                                map.put("doc_id", docId);
-                                map.put("img_position", String.valueOf(0));
-//                                map.put("doc_type_num", String.valueOf(0));
-                                map.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-                                new ApiCommon<UploadDocumentResponse>(activity).showLoader(true).putDefaultParams(true).execute(typedFile, map
-                                        , ApiName.UPLOAD_VERICATION_DOCUMENTS
-                                        , new APICommonCallback<UploadDocumentResponse>() {
-                                            @Override
-                                            public void onSuccess(UploadDocumentResponse uploadDocumentResponse, String message, int flag) {
-                                                if (message != null && !TextUtils.isEmpty(message))
-                                                    Log.d("message from server", message);
-                                            }
-
-                                            @Override
-                                            public boolean onError(UploadDocumentResponse uploadDocumentResponse, String message, int flag) {
-                                                return false;
-                                            }
-                                        });
+                                    params.addPart(Constants.KEY_IMAGE, new TypedFile(Constants.MIME_TYPE, file.getFile()));
                             }
                         }
+                        params.addPart("doc_id", new TypedString(String.valueOf(docId)));
+                        params.addPart("img_position",new TypedString(String.valueOf(imagePosition)));
+                        new ApiCommon<UploadDocumentResponse>(activity).showLoader(true).putAccessToken(true).execute(params
+                                , ApiName.UPLOAD_VERICATION_DOCUMENTS
+                                , new APICommonCallback<UploadDocumentResponse>() {
+                                    @Override
+                                    public void onSuccess(UploadDocumentResponse uploadDocumentResponse, String message, int flag) {
+                                            DialogPopup.alertPopup(activity,"",message);
+                                    }
 
+                                    @Override
+                                    public boolean onError(UploadDocumentResponse uploadDocumentResponse, String message, int flag) {
+                                        DialogPopup.alertPopup(activity,"",message);
+                                        return false;
+                                    }
+                                });
                     }
-
                 }
 
                 @Override
@@ -270,9 +305,50 @@ public class DocumentUploadFragment extends Fragment {
         }
     }
 
+    public void addImage(final int column) {
+        try {
+
+            if (documentData.getStatus() == DocStatus.REJECTED.getI()) {
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity,
+                        activity.getResources().getString(R.string.rejection_reason),
+                        documentData.getReason(),
+                        activity.getResources().getString(R.string.upload_again),
+                        activity.getResources().getString(R.string.cancel),
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                uploadImage(column,documentData.getDocumentId(),documentData.getDocumentType());
+                            }
+                        },
+                        new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }, true, true);
+            } else {
+                uploadImage(column,documentData.getDocumentId(),documentData.getDocumentType());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public enum DocStatus{
+        UPLOADED(4), REJECTED(2), VERIFIED(3), APPROVAL_PENDING(1) ;
+        int i;
+        DocStatus(int i){
+            this.i = i;
+        }
+
+        public int getI(){
+            return i;
+        }
     }
 }

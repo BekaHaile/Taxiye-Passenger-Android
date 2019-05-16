@@ -67,6 +67,7 @@ import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.DocumentData;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -969,6 +970,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(DocumentUploadFragment.class.getName())){
                 textViewTitle.setText(R.string.verification_status);
                 getSupportFragmentManager().popBackStack();
+            } else {
+                getSupportFragmentManager().popBackStack();
             }
         }
         else if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
@@ -1703,11 +1706,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         }
     }
 
-    public void openDocumentUploadFragment(String docId){
+    public void openDocumentUploadFragment(DocumentData documentData){
         if (transactionUtils.checkIfFragmentAdded(this, ProfileVerificationFragment.class.getName())) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                    .add(relativeLayoutContainer.getId(), DocumentUploadFragment.newInstance(docId),
+                    .add(relativeLayoutContainer.getId(), DocumentUploadFragment.newInstance(documentData),
                             DocumentUploadFragment.class.getName())
                     .addToBackStack(DocumentUploadFragment.class.getName());
             if(getSupportFragmentManager().getBackStackEntryCount() > 0){

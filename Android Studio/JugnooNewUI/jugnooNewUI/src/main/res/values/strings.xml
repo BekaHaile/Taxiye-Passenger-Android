@@ -2020,12 +2020,17 @@
 
     <string name="profile_verification">Profile Verification</string>
     <string name="verification_status">Verification Status</string>
-    <string name="status_colon_approval">Status: %s</string>
+    <string name="status_colon_approval"><b>Status:</b> %s</string>
     <string name="please_upload_images">Please upload images before proceeding.</string>
     <string name="pending">Pending</string>
     <string name="uploaded">Uploaded</string>
     <string name="rejected">Rejected</string>
     <string name="verified">Verified</string>
     <string name="approval_pending">Approval Pending</string>
+    <string name="rejection_reason">Rejection Reason</string>
+    <string name="upload_again">Upload Again</string>
+    <string name="doc_status_rejected">Your documents are rejected. Please upload again.</string>
+    <string name="min_documents_required">Please upload %s documents before proceeding.</string>
+    <string name="tap_here_to_verify">Tap here to verify your account</string>
 
 </resources>

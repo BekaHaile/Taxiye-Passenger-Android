@@ -9,16 +9,22 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.fragments.DocumentUploadFragment;
+import product.clicklabs.jugnoo.retrofit.model.DocumentData;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 public class DocumentStatusAdapter extends RecyclerView.Adapter<DocumentStatusAdapter.ViewHolder> {
 
     private Activity activity;
     private OnDocumentClicked onDocumentClicked;
-    public DocumentStatusAdapter(Activity activity,OnDocumentClicked onDocumentClicked) {
+    List<DocumentData> documentDataList;
+    public DocumentStatusAdapter(Activity activity,List<DocumentData> documentDataList,OnDocumentClicked onDocumentClicked) {
         this.activity = activity;
         this.onDocumentClicked = onDocumentClicked;
+        this.documentDataList = documentDataList;
     }
 
     @NonNull
@@ -31,12 +37,28 @@ public class DocumentStatusAdapter extends RecyclerView.Adapter<DocumentStatusAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvDocumentName.setText("James Andrew");
+        holder.tvDocumentName.setText(documentDataList.get(position).getDocumentName());
+        if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.UPLOADED.getI()) {
+            holder.ivDocStatus.setImageResource(R.drawable.ic_upload_button);
+        } else if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.VERIFIED.getI()) {
+            holder.ivDocStatus.setImageResource(R.drawable.ic_checked);
+        } else if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.APPROVAL_PENDING.getI()) {
+            holder.ivDocStatus.setImageResource(R.drawable.ic_info_yellow);
+        } else if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.REJECTED.getI()) {
+            holder.ivDocStatus.setImageResource(R.drawable.ic_close);
+        } else {
+            holder.ivDocStatus.setImageResource(R.drawable.ic_info_yellow);
+        }
+    }
+
+    public void updateList(List<DocumentData> documentDataList) {
+        this.documentDataList = documentDataList;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return documentDataList != null? documentDataList.size() : 0;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

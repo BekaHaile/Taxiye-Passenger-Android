@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
+import product.clicklabs.jugnoo.retrofit.model.FetchDocumentResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
@@ -660,8 +661,11 @@ public interface ApiService {
     @POST("/fetch_user_corporates")
     void fetchUserCorporates(@FieldMap Map<String, String> params, Callback<FetchCorporatesResponse> callback);
 
-    @Multipart
     @POST("/customer/upload_document")
-    void uploadVerificationDocuments(@Part("image") TypedFile image,@PartMap Map<String,String> params,
+    void uploadVerificationDocuments(@Body MultipartTypedOutput params,
                            Callback<UploadDocumentResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/fetch_documents")
+    void fetchDocuments(@FieldMap Map<String,String> params,Callback<FetchDocumentResponse> callback);
 }
