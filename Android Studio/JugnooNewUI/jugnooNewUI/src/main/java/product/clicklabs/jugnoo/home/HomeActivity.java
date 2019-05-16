@@ -6787,8 +6787,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     public void run() {
                                                         try {
                                                             if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-                                                                if (map != null) {
-                                                                    if (HomeActivity.this.hasWindowFocus() && driverLocationMarker != null) {
+                                                                    if (driverLocationMarker != null) {
                                                                         MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
                                                                                 driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), new MarkerAnimation.CallbackAnim() {
                                                                                     @Override
@@ -6817,7 +6816,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                                                 }, false, null, 0, 0, 0, false);
                                                                         updateDriverETAText(passengerScreenMode);
                                                                     }
-                                                                }
                                                             }
                                                         } catch (Exception e) {
                                                             e.printStackTrace();
