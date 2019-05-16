@@ -22,6 +22,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.MultipartTypedOutput;
+import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
 /**
@@ -43,6 +44,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private boolean putAccessToken = true;
     private boolean isCancelled;
     private boolean isErrorCancellable = true;
+    private TypedFile typedFile;
 
     public boolean isInProgress() {
         return isInProgress;
@@ -105,6 +107,16 @@ public class ApiCommon<T extends FeedCommonResponse> {
         hitAPI(true);
     }
 
+    public void execute(TypedFile typedFile,HashMap<String,String> params, @NonNull ApiName apiName, APICommonCallback<T> apiCommonCallback) {
+        this.apiCommonCallback = apiCommonCallback;
+        if (multipartTypedOutput == null) {
+            multipartTypedOutput = new MultipartTypedOutput();
+        }
+        this.params = params;
+        this.apiName = apiName;
+        this.typedFile = typedFile;
+        hitAPI(true);
+    }
 
     private void hitAPI(boolean isMultiPartRequest) {
 
@@ -298,6 +310,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
             case FETCH_CORPORATES:
                 RestClient.getApiService().fetchUserCorporates(params, callback);
+                break;
+            case UPLOAD_VERICATION_DOCUMENTS:
+                RestClient.getApiService().uploadVerificationDocuments(typedFile,params,callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

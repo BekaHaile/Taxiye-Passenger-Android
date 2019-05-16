@@ -1031,5 +1031,6 @@ public interface Constants {
     String KEY_CUSTOMER_PARTNER_URL = "customer_partner_url";
     String KEY_CUSTOMER_OPEN_PARTNER_DIALOG = "customer_open_partner_dialog";
     String KEY_CUSTOMER_PARTNER_DIALOG_VIEW_COUNT = "customer_partner_dialog_view_count";
+    String MIME_TYPE = "application/octet-stream";
 
 }

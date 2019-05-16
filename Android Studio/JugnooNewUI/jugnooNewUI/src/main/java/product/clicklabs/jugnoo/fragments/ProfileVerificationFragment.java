@@ -57,7 +57,9 @@ public class ProfileVerificationFragment extends Fragment {
         documentStatusAdapter = new DocumentStatusAdapter(activity, new DocumentStatusAdapter.OnDocumentClicked() {
             @Override
             public void onDocClick(int position) {
+//                TODO IMPLEMENT THIS
                 Toast.makeText(activity,"Under Construction with position: "+position,Toast.LENGTH_SHORT).show();
+                activity.openDocumentUploadFragment("1234");
             }
         });
         rvVerificationDocs.setAdapter(documentStatusAdapter);
@@ -86,6 +88,7 @@ public class ProfileVerificationFragment extends Fragment {
 
             }
         });
+        tvStatus.setText(activity.getString(R.string.status_colon_approval,"Pending"));
         return itemView;
     }
 

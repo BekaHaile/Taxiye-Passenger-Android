@@ -2017,7 +2017,15 @@
     <string name="service_unavailable_in_this_area">Service unavailable in this area</string>
     <string name="want_to_earn_money_from_transport_business">Want to Earn Money from transport business in your city?</string>
     <string name="partner_with_jugnoo">Partner with Jugnoo</string>
+
     <string name="profile_verification">Profile Verification</string>
     <string name="verification_status">Verification Status</string>
     <string name="status_colon_approval">Status: %s</string>
+    <string name="please_upload_images">Please upload images before proceeding.</string>
+    <string name="pending">Pending</string>
+    <string name="uploaded">Uploaded</string>
+    <string name="rejected">Rejected</string>
+    <string name="verified">Verified</string>
+    <string name="approval_pending">Approval Pending</string>
+
 </resources>

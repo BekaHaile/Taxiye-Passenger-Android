@@ -58,6 +58,7 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.fragments.AddressBookFragment;
+import product.clicklabs.jugnoo.fragments.DocumentUploadFragment;
 import product.clicklabs.jugnoo.fragments.ProfileVerificationFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -961,8 +962,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             if(getSupportFragmentManager()
                     .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(AddressBookFragment.class.getName())) {
                 openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
-            } else {
+            } else if(getSupportFragmentManager()
+                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(ProfileVerificationFragment.class.getName())){
                 openProfileVerificationFragment(AccountActivity.this,relativeLayoutContainer,false);
+            } else if(getSupportFragmentManager()
+                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(DocumentUploadFragment.class.getName())){
+                textViewTitle.setText(R.string.verification_status);
+                getSupportFragmentManager().popBackStack();
             }
         }
         else if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
@@ -1694,6 +1700,23 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
             tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void openDocumentUploadFragment(String docId){
+        if (transactionUtils.checkIfFragmentAdded(this, ProfileVerificationFragment.class.getName())) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                    .add(relativeLayoutContainer.getId(), DocumentUploadFragment.newInstance(docId),
+                            DocumentUploadFragment.class.getName())
+                    .addToBackStack(DocumentUploadFragment.class.getName());
+            if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                transaction.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+            }
+            transaction.commitAllowingStateLoss();
+
+            textViewTitle.setText(R.string.profile_verification);
         }
     }
 }

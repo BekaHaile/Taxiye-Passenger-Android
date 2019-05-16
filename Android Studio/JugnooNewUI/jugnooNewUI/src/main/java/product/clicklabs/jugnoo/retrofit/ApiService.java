@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.retrofit.model.UploadDocumentResponse;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
@@ -659,4 +660,8 @@ public interface ApiService {
     @POST("/fetch_user_corporates")
     void fetchUserCorporates(@FieldMap Map<String, String> params, Callback<FetchCorporatesResponse> callback);
 
+    @Multipart
+    @POST("/customer/upload_document")
+    void uploadVerificationDocuments(@Part("image") TypedFile image,@PartMap Map<String,String> params,
+                           Callback<UploadDocumentResponse> callback);
 }
