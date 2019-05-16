@@ -5987,7 +5987,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             partnerDialogCount++;
                         };
                     }
-                    partnerWithJugnooDialog.show(this, callbackPartner);
+                    partnerWithJugnooDialog.show(this, Prefs.with(this).getString(KEY_CUSTOMER_PARTNER_DIALOG_TITLE, getString(R.string.customer_partner_dialog_title)),
+                            Prefs.with(this).getString(KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE, getString(R.string.customer_partner_dialog_message)), callbackPartner);
                 }
             } else {
                 imageViewRideNow.setVisibility(View.VISIBLE);
