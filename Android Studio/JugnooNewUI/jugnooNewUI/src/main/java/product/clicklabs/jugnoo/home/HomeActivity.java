@@ -8122,12 +8122,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put(Constants.KEY_PACKAGE_ID, String.valueOf(Data.autoData.getSelectedPackage().getPackageId()));
                                 }
 
-                                if (regionSelected.getRideType() == RideTypeValue.POOL.getOrdinal()) {
-                                    nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + jugnooPoolFareId);
-                                }
-                                else if (regionSelected.getFareMandatory() == 1
-										&& regionSelected.getRegionFare() != null && regionSelected.getRegionFare().getPoolFareId() > 0) {
-                                    nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + regionSelected.getRegionFare().getPoolFareId());
+                                if(Data.autoData.showRegionSpecificFare()){
+                                    if ((regionSelected.getRideType() == RideTypeValue.POOL.getOrdinal() || regionSelected.getFareMandatory() == 1)
+                                            && regionSelected.getRegionFare() != null && regionSelected.getRegionFare().getPoolFareId() > 0) {
+                                        nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + regionSelected.getRegionFare().getPoolFareId());
+                                    }
+                                } else {
+                                    if (regionSelected.getRideType() == RideTypeValue.POOL.getOrdinal()) {
+                                        nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + jugnooPoolFareId);
+                                    } else if(regionSelected.getFareMandatory() == 1 && jugnooPoolFareId > 0){
+                                        nameValuePairs.put(Constants.KEY_POOL_FARE_ID, "" + jugnooPoolFareId);
+                                    }
                                 }
 
 //                                if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
