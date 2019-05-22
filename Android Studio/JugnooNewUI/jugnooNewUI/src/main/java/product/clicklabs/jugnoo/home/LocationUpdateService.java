@@ -23,12 +23,10 @@ import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.rentals.models.GpsLockStatus;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
-import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import retrofit.Callback;
@@ -37,7 +35,6 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 import static product.clicklabs.jugnoo.Constants.KEY_GPS_LOCK_STATUS;
-import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
 
 public class LocationUpdateService extends Service {
 

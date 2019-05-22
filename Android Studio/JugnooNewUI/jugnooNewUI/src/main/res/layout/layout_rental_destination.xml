@@ -1,37 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_rental_destination"
     android:layout_width="match_parent"
     android:layout_margin="20dp"
     android:layout_height="match_parent"
     android:background="@color/transparent"
-    android:tag="@string/dont_touch_me">
-
-<RelativeLayout
-    app:layout_constraintBottom_toTopOf="@+id/recycler_view_rental_station"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/background_orange_tr"
-    android:visibility="visible">
+    android:orientation="vertical"
+    android:gravity="center"
+    >
 
     <TextView
         android:id="@+id/tvAvailableOffers"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_centerInParent="true"
         android:text="@string/select_drop_off_station"
         android:gravity="center"
         android:textColor="@color/white"
+        android:background="@drawable/background_orange_tr"
+        app:typekitFont="@string/maven"
         android:textSize="@dimen/sp_16" />
-</RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_rental_station"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:tag="@string/dont_touch_me"
@@ -40,5 +33,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
 

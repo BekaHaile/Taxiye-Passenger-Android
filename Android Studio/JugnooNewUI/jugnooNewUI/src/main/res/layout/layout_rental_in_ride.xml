@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
     android:id="@+id/layout_rental_in_ride"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:minHeight="120dp"
     android:splitMotionEvents="false"
-    android:visibility="visible">
+    android:tag="@string/dont_touch_me"
+    android:visibility="visible"
+    >
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
-        android:splitMotionEvents="false"
-        android:focusable="true"
         android:layout_height="wrap_content"
-        android:clickable="true"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="horizontal"
         android:padding="10dp"
-        android:visibility="visible">
+        android:splitMotionEvents="false"
+        android:visibility="visible"
+        android:background="@drawable/background_white_top_bottom_border"
+        android:minHeight="120dp"
+        >
 
         <Button
             android:id="@+id/buttonEndRide"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/dp_15"
+            android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/dp_15"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="@dimen/dp_15"
+            android:layout_weight="1"
             android:background="@drawable/capsule_theme_color_selector"
             android:gravity="center"
-            android:paddingStart="20dp"
             android:paddingEnd="20dp"
+            android:paddingStart="20dp"
             android:text="@string/end_ride"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_12"
-            app:layout_constraintEnd_toStartOf="@id/buttonLockRide"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonLockRide"
             app:layout_constraintStart_toStartOf="parent"
+            app:typekitFont="@string/maven"
 
 
             />
@@ -51,22 +57,23 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dp_15"
-            android:layout_marginEnd="10dp"
             android:layout_marginBottom="@dimen/dp_15"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_weight="1"
             android:background="@drawable/capsule_theme_color_selector"
             android:gravity="center"
-            android:paddingStart="20dp"
             android:paddingEnd="20dp"
+            android:paddingStart="20dp"
             android:text="@string/lock_ride"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_12"
-            app:layout_constraintStart_toEndOf="@id/buttonEndRide"
+            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-
-           />
+            app:layout_constraintStart_toEndOf="@id/buttonEndRide"
+            app:typekitFont="@string/maven"
+            />
 
 
         <Button
@@ -74,35 +81,38 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/dp_15"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/dp_15"
-            android:layout_marginBottom="@dimen/dp_15"
+            android:layout_weight="1"
             android:background="@drawable/capsule_theme_color_selector"
             android:gravity="center"
-            android:visibility="invisible"
-            android:paddingStart="20dp"
             android:paddingEnd="20dp"
+            android:paddingStart="20dp"
             android:text="@string/unlock_ride"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_12"
-            app:layout_constraintStart_toEndOf="@id/buttonEndRide"
+            android:textSize="15sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/buttonEndRide"
+            app:typekitFont="@string/maven"
+            />
 
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/customerLocation"
-        android:layout_width="45dp"
-        android:layout_height="35dp"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
         android:layout_above="@+id/constraint_layout"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/mylocation_btn_selector" />
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/mylocation_btn_selector"/>
 
 
 </RelativeLayout>

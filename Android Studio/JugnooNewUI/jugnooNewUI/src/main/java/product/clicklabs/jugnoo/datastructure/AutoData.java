@@ -118,6 +118,7 @@ public class AutoData {
         ArrayList<Integer> regionIds = new ArrayList<>();
         rideTypes.add(ServiceTypeValue.NORMAL.getType());
         rideTypes.add(ServiceTypeValue.POOL.getType());
+        rideTypes.add(ServiceTypeValue.BIKE_RENTAL.getType());
         serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
     }
 

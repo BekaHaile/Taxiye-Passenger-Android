@@ -616,7 +616,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TextView textViewEndRide;
 
 
-    private ConstraintLayout rentalDestinationLayout;
     private View endRideJugnooAnimation;
     private AnimationDrawable rentalJugnooAnimation;
     private Button customerLocation;
@@ -1405,7 +1404,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         rentalEndRideLayout = findViewById(R.id.layout_rental_end_ride);
         textViewEndRide = findViewById(R.id.textViewEndRide);
 
-        rentalDestinationLayout = findViewById(R.id.layout_rental_destination);
         customerLocation = findViewById(R.id.customerLocation);
         endRideJugnooAnimation = findViewById(R.id.jugnoo_animation);
         if (endRideJugnooAnimation instanceof ImageView) {
@@ -3544,7 +3542,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     case P_INITIAL:
 
                         Log.d("HomeActivityResult" , " P_INITIAL");
-
                         fabViewTest = new FABViewTest(this, fabViewIntial);
                         getHandler().postDelayed(new Runnable() {
                             @Override
@@ -3584,7 +3581,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         rentalInRideLayout.setVisibility(View.GONE);
                         rentalEndRideLayout.setVisibility(View.GONE);
-                        rentalDestinationLayout.setVisibility(View.GONE);
 
 
                         cancelTimerRequestRide();
@@ -3720,7 +3716,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()
                                 == RideTypeValue.BIKE_RENTAL.getOrdinal())
                         {
-                            damageReportButton.setVisibility(View.VISIBLE);
+                            damageReportButton.setVisibility(View.GONE);
                             Log.d("HomeActivityResult" , " Rental");
                         }
 
@@ -3739,7 +3735,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         rentalInRideLayout.setVisibility(View.GONE);
                         rentalEndRideLayout.setVisibility(View.GONE);
-                        rentalDestinationLayout.setVisibility(View.GONE);
 
                         damageReportButton.setVisibility(View.GONE);
 
@@ -3777,7 +3772,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         rentalInRideLayout.setVisibility(View.GONE);
                         rentalEndRideLayout.setVisibility(View.GONE);
-                        rentalDestinationLayout.setVisibility(View.GONE);
                         damageReportButton.setVisibility(View.GONE);
 
 
@@ -3944,7 +3938,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                        }
 
                         rentalEndRideLayout.setVisibility(View.GONE);
-                        rentalDestinationLayout.setVisibility(View.GONE);
 
                         hideCenterPickupPin();
 
@@ -4040,7 +4033,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                         rentalEndRideLayout.setVisibility(View.GONE);
-                        rentalDestinationLayout.setVisibility(View.GONE);
 
 
                         hideCenterPickupPin();
@@ -4178,7 +4170,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         damageReportButton.setVisibility(View.GONE);
 
 
-                        rentalDestinationLayout.setVisibility(View.GONE);
 
                         // todo remove rentalEndRideLayout
 //                        rentalEndRideLayout.setVisibility(View.GONE);
@@ -4289,7 +4280,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         rentalInRideLayout.setVisibility(View.GONE);
                         rentalEndRideLayout.setVisibility(View.GONE);
-                        rentalDestinationLayout.setVisibility(View.GONE);
                         damageReportButton.setVisibility(View.GONE);
 
 
@@ -5602,16 +5592,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 openChatScreen();
                 break;
             case R.id.buttonEndRide: // 8
-                textViewEndRide.setText(R.string.ending_ride);
-                updateLockStatusApi(String.valueOf(RentalInRideValue.END_RIDE.getOrdinal()));
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, getString(R.string.please_lock_the_bike_and_proceed), v1 -> {
+                    textViewEndRide.setText(R.string.ending_ride);
+                    updateLockStatusApi(String.valueOf(RentalInRideValue.END_RIDE.getOrdinal()));
+                });
                 break;
             case R.id.buttonUnlockRide: // 6
                 textViewEndRide.setText(R.string.unlocking_ride);
                 updateLockStatusApi(String.valueOf(RentalInRideValue.UNLOCK_RIDE.getOrdinal()));
                 break;
             case R.id.buttonLockRide: // 4
-                textViewEndRide.setText(R.string.locking_ride);
-                updateLockStatusApi(String.valueOf(RentalInRideValue.LOCK_RIDE.getOrdinal()));
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, getString(R.string.please_lock_the_bike_and_proceed), v1 -> {
+                    textViewEndRide.setText(R.string.locking_ride);
+                    updateLockStatusApi(String.valueOf(RentalInRideValue.LOCK_RIDE.getOrdinal()));
+                });
                 break;
         }
     }
@@ -10447,7 +10441,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
                     RideTypeValue.BIKE_RENTAL.getOrdinal())
         {
-            damageReportButton.setVisibility(View.VISIBLE);
+            damageReportButton.setVisibility(View.GONE);
         }
         else
         {
@@ -11883,16 +11877,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 switchPassengerScreen(passengerScreenMode);
                                             }
 
-                                            if(checkLockStatus == true)
+                                            if(checkLockStatus)
                                             {
                                                 buttonLockRide.setVisibility(View.VISIBLE);
-                                                buttonUnlockRide.setVisibility(View.INVISIBLE);
+                                                buttonUnlockRide.setVisibility(View.GONE);
                                                 checkLockStatus = false;
                                             }
                                             else
                                             {
                                                 buttonUnlockRide.setVisibility(View.VISIBLE);
-                                                buttonLockRide.setVisibility(View.INVISIBLE);
+                                                buttonLockRide.setVisibility(View.GONE);
                                                 checkLockStatus = true;
                                             }
 
@@ -12051,7 +12045,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void openRentalStationList()
     {
-//        rentalDestinationLayout.setVisibility(View.VISIBLE);
 //
 //        List<Region> region = Data.autoData.getRegions();
 //        List<Region.Stations> stations = new ArrayList<>();
@@ -12115,7 +12108,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
        Log.d("RentalStationClick" , " OnStationClick");
 
-        rentalDestinationLayout.setVisibility(View.GONE);
         dialogRentalStations.dismiss();
         placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
 
@@ -12140,12 +12132,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         || gpsLockStatus == GpsLockStatus.REQ_IN_RIDE_UNLOCK.getOrdinal()
                         || gpsLockStatus == GpsLockStatus.UNLOCK_FAILED.getOrdinal()) {
             buttonUnlockRide.setVisibility(View.VISIBLE);
-            buttonLockRide.setVisibility(View.INVISIBLE);
+            buttonLockRide.setVisibility(View.GONE);
 //            checkLockStatus = true;
         }
         else {
             buttonLockRide.setVisibility(View.VISIBLE);
-            buttonUnlockRide.setVisibility(View.INVISIBLE);
+            buttonUnlockRide.setVisibility(View.GONE);
 
 //            checkLockStatus = false;
         }
