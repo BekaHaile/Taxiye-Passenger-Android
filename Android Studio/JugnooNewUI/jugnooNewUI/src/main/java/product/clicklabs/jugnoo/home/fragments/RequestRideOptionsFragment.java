@@ -209,8 +209,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 @Override
                 public void run() {
                     if(Data.autoData != null && Data.autoData.getRegions().size() > 1) {
-                        setRegionSelected(0);
-                        activity.setRegionUI(true);
+                        activity.setVehicleTypeSelected(0, false, true);
                     }
                 }
             }, 500);
@@ -381,12 +380,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 updateSupplyUI(Data.autoData.getRegions().size());
                 //updatePoolInfoText();
             } else if(Data.autoData.getRegions().size() > 0){
-                activity.setVehicleTypeSelected(0, false);
+                activity.setVehicleTypeSelected(0, false, false);
                 regionSelected = Data.autoData.getRegions().get(0);
                 updateSupplyUI(Data.autoData.getRegions().size());
             } else{
                 activity.forceFarAwayCity();
             }
+            activity.updateFareEstimateHoverButton();
         } catch(Exception e){
         }
     }
@@ -668,7 +668,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                                     && !pc.isVehicleTypeExists(getRegionSelected().getVehicleType(), getRegionSelected().getOperatorId())){
                                 for(int j=0; j<Data.autoData.getRegions().size(); j++){
                                     if(Data.autoData.getRegions().get(j).getVehicleType().equals(pc.getAllowedVehicles().get(0))){
-                                        activity.setVehicleTypeSelected(j, false);
+                                        activity.setVehicleTypeSelected(j, false, false);
                                         break;
                                     }
                                 }

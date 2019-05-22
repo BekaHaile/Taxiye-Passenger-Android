@@ -117,7 +117,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             @Override
             public void onClick(View v) {
                 int position = (int) v.getTag();
-                boolean changed = activity.setVehicleTypeSelected(position, true);
+                boolean changed = activity.setVehicleTypeSelected(position, true, false);
                 if(showRegionFares && !changed){
                     estimateDialog.show(activity, regions.get(position));
                 }

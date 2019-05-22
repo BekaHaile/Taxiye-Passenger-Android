@@ -9918,7 +9918,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return bounceScale;
     }
 
-    public boolean setVehicleTypeSelected(int position, boolean userClicked) {
+    public boolean setVehicleTypeSelected(int position, boolean userClicked, boolean firstTime) {
         boolean changed = false;
         int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         int oldOperatorId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
@@ -9946,10 +9946,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     textViewDestSearch.setText("");
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                 }
-                setRegionUI(false);
+                setRegionUI(firstTime);
                 changed = true;
             } else {
-                if(!confirmedScreenOpened){
+                if(!confirmedScreenOpened && !firstTime){
                     if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
                         getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                     } else {
