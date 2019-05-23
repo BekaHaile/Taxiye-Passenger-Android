@@ -1034,4 +1034,5 @@ public interface Constants {
     String KEY_CUSTOMER_PARTNER_DIALOG_TITLE = "customer_partner_dialog_title";
     String KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE = "customer_partner_dialog_message";
 
+    String KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE = "customer_show_convenience_charge_fare_estimate";
 }

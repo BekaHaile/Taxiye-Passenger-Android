@@ -250,6 +250,9 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             }
         });
 
+        textViewConvenienceCharge.setVisibility(Prefs.with(this)
+                .getInt(Constants.KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE, 0) == 1?View.VISIBLE:View.INVISIBLE);
+
         try {
             if (dropLatLng != null) {
                 getDirectionsAndComputeFare(pickupLatLng, pickupAddress, dropLatLng, dropAddress);

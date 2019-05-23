@@ -508,6 +508,8 @@ public class JSONParser implements Constants {
                 context.getString(R.string.customer_partner_dialog_title)));
         Prefs.with(context).save(KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE, autoData.optString(KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE,
                 context.getString(R.string.customer_partner_dialog_message)));
+        Prefs.with(context).save(KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE, autoData.optInt(KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE,
+                context.getResources().getInteger(R.integer.customer_show_convenience_charge_fare_estimate)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
