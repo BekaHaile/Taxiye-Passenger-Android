@@ -95,6 +95,7 @@ import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
+import product.clicklabs.jugnoo.rentals.InstructionDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
@@ -486,6 +487,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			}
 
 			Data.splashIntentUri = getIntent().getData();
+
+			InstructionDialog.shownInSession = false;
 
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());

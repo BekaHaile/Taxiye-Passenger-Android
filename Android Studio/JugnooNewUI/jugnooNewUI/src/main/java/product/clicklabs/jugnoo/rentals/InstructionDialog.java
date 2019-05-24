@@ -28,7 +28,14 @@ import product.clicklabs.jugnoo.rentals.qrscanner.ScannerActivity;
 
 public class InstructionDialog {
 
+    public static boolean shownInSession = false;
+
     public static void showHelpDialog(final Activity activity) {
+        if(shownInSession){
+            new IntentIntegrator(activity).setCaptureActivity(ScannerActivity.class).initiateScan();
+            return;
+        }
+
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.instruction_dialog_layout);
@@ -131,6 +138,7 @@ public class InstructionDialog {
         });
 
         dialog.show();
+        shownInSession = true;
     }
 
 }

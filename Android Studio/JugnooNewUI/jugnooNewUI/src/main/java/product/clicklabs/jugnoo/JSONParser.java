@@ -1171,7 +1171,7 @@ public class JSONParser implements Constants {
             Double tipAmount  = null;
             int isCorporateRide = 0;
             int rideType = RideTypeValue.NORMAL.getOrdinal();
-            int gpsLockStatus = GpsLockStatus.LOCK.getOrdinal();
+            int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1281,7 +1281,7 @@ public class JSONParser implements Constants {
                             vehicleType = jObject.optInt(KEY_VEHICLE_TYPE, VEHICLE_AUTO);
                             rideType = jObject.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
-                            gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.LOCK.getOrdinal());
+                            gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
 
 
                             try{

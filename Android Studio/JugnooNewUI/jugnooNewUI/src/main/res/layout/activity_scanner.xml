@@ -27,6 +27,7 @@
         android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_16"
+        app:typekitFont="@string/maven"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/flashlight_button" />
@@ -46,6 +47,7 @@
         android:textAllCaps="true"
         android:textColor="@android:color/white"
         android:textSize="@dimen/sp_16"
+        app:typekitFont="@string/maven"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/enter_number_button"
         app:layout_constraintRight_toRightOf="parent" />

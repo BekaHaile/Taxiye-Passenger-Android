@@ -4079,35 +4079,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     case P_IN_RIDE:
 
                         Log.d("HomeActivityResult" , " P_IN_RIDE");
-
-//                        if(rentalInRideStatus == RentalRideStatus.END_RIDE_REQUESTED.getOrdinal()) {
-//                            rentalEndRideLayout.setVisibility(View.VISIBLE);
-//                            rentalInRideLayout.setVisibility(View.GONE);
-//                            requestFinalLayout.setVisibility(View.GONE);
-//                            endRideJugnooAnimation.setVisibility(View.VISIBLE);
-//                            if (endRideJugnooAnimation instanceof ImageView) {
-//                                rentalJugnooAnimation.start();
-//                            }
-//                        }
-//                        else {
-//                            rentalJugnooAnimation.stop();
-//                            rentalEndRideLayout.setVisibility(View.GONE);
-//                            if(getSlidingBottomPanel().getRequestRideOptionsFragment()
-//                                    .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
-//                            {
-//                                rentalInRideLayout.setVisibility(View.VISIBLE);
-//                                Log.d("HomeActivityResult" , " Rental");
-//                            }
-//                            else
-//                            {
-//                                requestFinalLayout.setVisibility(View.VISIBLE);
-//                                Log.d("HomeActivityResult" , " RequestFinal");
-//
-//                            }
-//
-//                        }
-
-
                         if(Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
                         {
                             Log.d("HomeActivityResult" , " Rental");
@@ -4115,15 +4086,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             requestFinalLayout.setVisibility(View.GONE);
 
-                            if(gpsLockStatus == GpsLockStatus.REQ_IN_RIDE_LOCK.getOrdinal()
-                                || gpsLockStatus == GpsLockStatus.REQ_IN_RIDE_UNLOCK.getOrdinal()
-                                || gpsLockStatus == GpsLockStatus.REQ_END_RIDE_LOCK.getOrdinal())
+                            if( gpsLockStatus == GpsLockStatus.REQ_LOCK.getOrdinal()
+                                || gpsLockStatus == GpsLockStatus.REQ_UNLOCK.getOrdinal()
+                                || gpsLockStatus == GpsLockStatus.REQ_END_RIDE_LOCK.getOrdinal()
+                            )
                             {
                                 rentalEndRideLayout.setVisibility(View.VISIBLE);
                                 rentalInRideLayout.setVisibility(View.GONE);
                                 endRideJugnooAnimation.setVisibility(View.VISIBLE);
                                 if (endRideJugnooAnimation instanceof ImageView) {
                                     rentalJugnooAnimation.start();
+                                }
+                                if(gpsLockStatus == GpsLockStatus.REQ_LOCK.getOrdinal()){
+                                    textViewEndRide.setText(R.string.locking_ride);
+                                } else if(gpsLockStatus == GpsLockStatus.REQ_UNLOCK.getOrdinal()){
+                                    textViewEndRide.setText(R.string.unlocking_ride);
+                                } else if(gpsLockStatus == GpsLockStatus.REQ_END_RIDE_LOCK.getOrdinal()){
+                                    textViewEndRide.setText(R.string.ending_ride);
                                 }
                             }
                             else
@@ -6395,6 +6374,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
+                if(partnerWithJugnooDialog != null) {
+                    partnerWithJugnooDialog.dismiss();
+                }
             }
 //            setFabMarginInitial(false);
             setJeanieVisibility();
@@ -8121,7 +8103,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             int isCorporateRide= jObj.optInt(Constants.KEY_IS_CORPORATE_RIDE, 0);
             int rideType = jObj.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
 
-            int gpsLockStatus = jObj.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.LOCK.getOrdinal());
+            int gpsLockStatus = jObj.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
@@ -10978,77 +10960,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         else if (getSlidingBottomPanel().getRequestRideOptionsFragment()
                 .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-
-//            startRentalEndRideTimer();
             if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
                     .getRegionSelected().getDestinationMandatory() == 1) {
-//                    rlSpecialPickup.setVisibility(View.VISIBLE);
                 destinationRequiredShake();
             }
             else {
-                if (updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()) {
-                    // show special pickup screen
-
-                    specialPickupScreenOpened = true;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
-                    switchPassengerScreen(passengerScreenMode);
-                    showSpecialPickupMarker(specialPickups);
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
-                    spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
-
-                } else if (Data.autoData.getDropLatLng() != null
+                if (Data.autoData.getDropLatLng() != null
                         && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
                     specialPickupScreenOpened = false;
                     removeSpecialPickupMarkers();
                     rlSpecialPickup.setVisibility(View.GONE);
                     updateTopBar();
-
-                    //TODO
                     InstructionDialog.showHelpDialog(HomeActivity.this);
-
-                    // new IntentIntegrator(this).setCaptureActivity(ScannerActivity.class).initiateScan();
-                    //  openConfirmRequestView();
                 } else {
                     removeSpecialPickupMarkers();
-
-                    //TODO
                     InstructionDialog.showHelpDialog(HomeActivity.this);
-
-                    //new IntentIntegrator(this).setCaptureActivity(ScannerActivity.class).initiateScan();
-
-//                    requestRideClick();
-//                    slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
             }
-
-
-
-//            if (Data.autoData.getDropLatLng() != null ) {
-//                //requestRideClick();
-//                shakeAnim = 0;get_ride
-//                if (updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()) {
-//                    // show special pickup screen
-//                    specialPickupScreenOpened = true;
-//                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
-//                    switchPassengerScreen(passengerScreenMode);
-//                    //map.moveCamera(CameraUpdateFactory.zoomOut());
-//                    showSpecialPickupMarker(specialPickups);
-//                    map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
-//                    spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
-//                } else {
-//                    specialPickupScreenOpened = false;
-//                    removeSpecialPickupMarkers();
-//                    rlSpecialPickup.setVisibility(View.GONE);
-//                    updateTopBar();
-//
-//                    // TODO remove the intent integrator from pool and uncomment confirmrequestview
-//                    //openConfirmRequestView();
-//                    new IntentIntegrator(this).setCaptureActivity(ScannerActivity.class).initiateScan();
-//                }
-//            } else {
-////                    rlSpecialPickup.setVisibility(View.VISIBLE);
-//                destinationRequiredShake();
-//            }
         }
 
         else {
@@ -11816,40 +11744,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             Log.d("HomeActivityRentals" , "Insideif");
 
                             cancelRentalEndRideTimer();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    try {
+                            runOnUiThread(() -> {
+                                try {
 
-                                        if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_IN_RIDE) {
+                                    if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_IN_RIDE) {
 
 //                                            rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
 
-                                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.END_RIDE_FAILED.getOrdinal());
-                                            passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-                                            switchPassengerScreen(passengerScreenMode);
+                                        Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
+                                        passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
+                                        switchPassengerScreen(passengerScreenMode);
 
-                                        }
-
-//                                        DialogPopup.dialogNoInternet(HomeActivity.this, getString(R.string.connection_lost_title), getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
-//                                            @Override
-//                                            public void positiveClick(View v) {
-//                                                DialogPopup.dialog.dismiss();
-//                                            }
-//
-//                                            @Override
-//                                            public void neutralClick(View v) {
-//
-//                                            }
-//
-//                                            @Override
-//                                            public void negativeClick(View v) {
-//
-//                                            }
-//                                        });
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
                                     }
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
                             });
                        } else {
@@ -11872,7 +11781,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
 //                                                switchPassengerScreen(passengerScreenMode);
 
-                                                Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.END_RIDE_FAILED.getOrdinal());
+                                                Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
                                                 passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                                                 switchPassengerScreen(passengerScreenMode);
                                             }
@@ -11913,7 +11822,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 // todo
 //                                                rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
 
-                                                Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.END_RIDE_FAILED.getOrdinal());
+                                                Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
                                                 passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
                                                 switchPassengerScreen(passengerScreenMode);
 
@@ -12122,15 +12031,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
+    private boolean inRideCheck(){
+        return (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
+                || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED
+                || passengerScreenMode == PassengerScreenMode.P_IN_RIDE);
+    }
+
     @Override
     public void updateGpsLockStatus(int gpsLockStatus) {
         buttonEndRide.setVisibility(View.VISIBLE);
 
-        if(gpsLockStatus == GpsLockStatus.LOCK.getOrdinal()
-                        || gpsLockStatus == GpsLockStatus.REQ_START_RIDE_UNLOCK.getOrdinal()
-                        || gpsLockStatus == GpsLockStatus.IN_RIDE_LOCK.getOrdinal()
-                        || gpsLockStatus == GpsLockStatus.REQ_IN_RIDE_UNLOCK.getOrdinal()
-                        || gpsLockStatus == GpsLockStatus.UNLOCK_FAILED.getOrdinal()) {
+        if(inRideCheck()
+                && (gpsLockStatus == GpsLockStatus.LOCK.getOrdinal()
+                || gpsLockStatus == GpsLockStatus.REQ_UNLOCK.getOrdinal()
+                || gpsLockStatus == GpsLockStatus.UNLOCK_FAILED.getOrdinal())) {
             buttonUnlockRide.setVisibility(View.VISIBLE);
             buttonLockRide.setVisibility(View.GONE);
 //            checkLockStatus = true;

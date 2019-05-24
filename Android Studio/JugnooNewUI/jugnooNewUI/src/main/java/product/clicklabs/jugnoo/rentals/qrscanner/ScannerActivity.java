@@ -172,12 +172,11 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
 
             final Button btnConfirm = dialog.findViewById(R.id.btnConfirm);
             btnConfirm.setTypeface(Fonts.mavenRegular(activity));
-            final String[] bikeNumber = new String[1];
 
             btnConfirm.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    bikeNumber[0] = editTextNumber.getText().toString();
+                    String bikeNumber = editTextNumber.getText().toString();
 
 
 //                    if (bikeNumber[0].length() < 9) {
@@ -192,13 +191,13 @@ public class ScannerActivity extends AppCompatActivity implements DecoratedBarco
 //                    }
 
 
-                    if (bikeNumber[0].length() == 0 || bikeNumber[0].equals("")) {
+                    if (bikeNumber.length() == 0 || bikeNumber.equals("")) {
                         Toast.makeText(ScannerActivity.this, R.string.qr_code_too_small, Toast.LENGTH_SHORT).show();
                     } else {
                         Intent intent = getIntent();
-                        Log.d("HomeActivityResume","QR CODE SCANNER bike Number" + bikeNumber[0]);
-                        intent.putExtra("qrCode", bikeNumber[0]);
-                        intent.putExtra("qr_code_details",bikeNumber[0]);
+                        Log.d("HomeActivityResume","QR CODE SCANNER bike Number" + bikeNumber);
+                        intent.putExtra("qrCode", bikeNumber);
+                        intent.putExtra("qr_code_details",bikeNumber);
                         setResult(RESULT_OK, intent);
                         dialog.dismiss();
                         finish();
