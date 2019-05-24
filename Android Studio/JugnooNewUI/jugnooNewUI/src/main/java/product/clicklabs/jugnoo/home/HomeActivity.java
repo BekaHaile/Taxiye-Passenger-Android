@@ -11771,8 +11771,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         @Override
                         public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
                             Log.d("HomeActivityRental"," Flag Update Lock Status Success " + String.valueOf(flag));
+                            apiGetGpsLockStatus(true, false, Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
                             switchRentalInRideUI(gpsLockStatus);
-                            apiGetGpsLockStatus(true, false);
                         }
 
                         @Override
@@ -11785,30 +11785,39 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void apiGetGpsLockStatus(final boolean actionPerformed, final boolean repeatHandler){
+    private void apiGetGpsLockStatus(final boolean actionPerformed, final boolean repeatHandler, final int gpsLockStatusOld){
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
-        new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true)
+        new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true).showLoader(false)
                 .execute(params, ApiName.RENTALS_GET_LOCK_STATUS, new APICommonCallback<GetLockStatusResponse>() {
                     @Override
                     public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
-                        Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
-                        rentalStateUIHandling(passengerScreenMode);
-                        if(actionPerformed){
-                            DialogPopup.alertPopup(HomeActivity.this,"","Request is successful");
+                        if(feedCommonResponse.getGpsLockStatus() != -1) {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
+                            if (actionPerformed) {
+                                DialogPopup.alertPopup(HomeActivity.this, "", "Request is successful");
+                            }
+                        } else {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatusOld);
+                            if (actionPerformed) {
+                                DialogPopup.alertPopup(HomeActivity.this, "", "Request failed");
+                            }
                         }
+                        rentalStateUIHandling(passengerScreenMode);
                     }
 
                     @Override
                     public boolean onError(GetLockStatusResponse feedCommonResponse, String message, int flag) {
                         if(actionPerformed){
-                            if(flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()) {
+                            if(flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()
+                                    && gpsLockStatusOld != GpsLockStatus.LOCK.getOrdinal()) {
                                 DialogPopup.dialogRentalLock(HomeActivity.this);
                                 Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
                                 rentalStateUIHandling(passengerScreenMode);
                             }
+                            return true;
                         }
-                        return true;
+                        return false;
                     }
 
                     @Override
@@ -11826,7 +11835,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private Runnable runnableGetGPSLockStatus = new Runnable() {
         @Override
         public void run() {
-            apiGetGpsLockStatus(false, true);
+            if(inRideCheck() && Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
+                apiGetGpsLockStatus(false, true, Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
+            }
         }
     };
 
