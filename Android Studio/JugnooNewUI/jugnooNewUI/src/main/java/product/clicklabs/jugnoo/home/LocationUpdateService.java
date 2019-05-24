@@ -205,7 +205,7 @@ public class LocationUpdateService extends Service {
 									String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
 									Log.i(TAG, "updateCustomerLocation responseStr=" + responseStr);
 
-									updateLockStatus(responseStr);
+//									updateLockStatus(responseStr);
 								}
 
 								@Override

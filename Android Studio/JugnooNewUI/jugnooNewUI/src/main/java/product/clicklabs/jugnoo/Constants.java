@@ -1049,4 +1049,5 @@ public interface Constants {
     String KEY_DAMAGE_IMAGE = "damage_image";
 
 
+    String KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL = "customer_gps_lock_status_polling_interval";
 }

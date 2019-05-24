@@ -9,6 +9,7 @@ import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRideResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
@@ -667,7 +668,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/app_get_lock_status")
     void getLockStatus(@FieldMap Map<String,String>params,
-                          Callback<FeedCommonResponse> callback);
+                          Callback<GetLockStatusResponse> callback);
 
     @FormUrlEncoded
     @POST("/app_get_lock_status")
