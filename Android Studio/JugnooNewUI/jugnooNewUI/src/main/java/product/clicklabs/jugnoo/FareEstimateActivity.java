@@ -41,7 +41,9 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -112,7 +114,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 isPooled = 1;
             }
             if (getIntent().hasExtra(Constants.KEY_COUPON_SELECTED)) {
-                promoCoupon = (PromoCoupon) getIntent().getSerializableExtra(Constants.KEY_COUPON_SELECTED);
+                boolean isCoupon = getIntent().getBooleanExtra(Constants.KEY_IS_COUPON, true);
+                promoCoupon = gson.fromJson(getIntent().getStringExtra(Constants.KEY_COUPON_SELECTED), isCoupon ? CouponInfo.class : PromotionInfo.class);
 
             }
             if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE)) {

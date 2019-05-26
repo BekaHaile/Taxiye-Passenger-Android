@@ -418,7 +418,6 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         Data.autoData.selectedPackage = selectedPackage
         val intent = Intent(activity, FareEstimateActivity::class.java)
         intent.putExtra(Constants.KEY_REGION, (getActivity() as HomeActivity).gson.toJson((getActivity() as HomeActivity).selectedRegionForScheduleRide, Region::class.java))
-        //        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
         intent.putExtra(Constants.KEY_RIDE_TYPE, (getActivity() as HomeActivity).selectedRideTypeForScheduleRide)
         intent.putExtra(Constants.KEY_PICKUP_LATITUDE, searchResultPickup!!.latitude)
         intent.putExtra(Constants.KEY_PICKUP_LONGITUDE, searchResultPickup!!.longitude)

@@ -302,6 +302,7 @@ public interface Constants {
 
     String SP_REFERRAL_CODE = "sp_referral_code";
     String KEY_COUPON_SELECTED = "coupon_selected";
+    String KEY_IS_COUPON = "is_coupon";
 
     String SP_PUSH_DIALOG_CONTENT = "push_dialog_content";
     String KEY_SHOW_DIALOG = "show_dialog";

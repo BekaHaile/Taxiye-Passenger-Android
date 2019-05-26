@@ -2189,7 +2189,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         Intent intent = new Intent(HomeActivity.this, FareEstimateActivity.class);
         intent.putExtra(Constants.KEY_REGION, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), Region.class));
-        intent.putExtra(Constants.KEY_COUPON_SELECTED, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon());
+        intent.putExtra(Constants.KEY_COUPON_SELECTED, gson.toJson(getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon()));
+        intent.putExtra(Constants.KEY_IS_COUPON, getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon() instanceof CouponInfo);
         intent.putExtra(KEY_RIDE_TYPE, slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
         intent.putExtra(KEY_PICKUP_LATITUDE, Data.autoData.getPickupLatLng().latitude);
         intent.putExtra(KEY_PICKUP_LONGITUDE, Data.autoData.getPickupLatLng().longitude);
