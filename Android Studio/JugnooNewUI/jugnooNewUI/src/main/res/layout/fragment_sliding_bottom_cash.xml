@@ -518,10 +518,10 @@
                 />
 
             <ImageView
-                style="@style/payment_option_icon_small"
-                android:layout_marginStart="10px"
-                android:src="@drawable/ic_pos"
-                android:layout_height="45px"
+                android:layout_width="51dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_corporate"
+                android:layout_height="18dp"
                 />
 
             <TextView
