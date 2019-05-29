@@ -609,7 +609,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     // Rental End Ride Layout
-    private RelativeLayout rentalEndRideLayout;
+    private LinearLayout rentalEndRideLayout;
     private TextView textViewEndRide;
 
 
@@ -8088,6 +8088,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     @Override
                     public void run() {
+                        //dismiss rental dialogs if any
+                        DialogPopup.dismissAlertPopup();
+                        if(rentalLockDialog != null){
+                            rentalLockDialog.dismiss();
+                        }
+
                         getRideSummaryAPI(HomeActivity.this, engagementId);
                         if(driverTipInteractor != null) {
 							driverTipInteractor.dismissDialog();
@@ -11591,170 +11597,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         ssb.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.theme_color)), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         return ssb;
     }
-    Timer timerRentalEndRide;
-    TimerTask timerTaskRentalEndRide;
-    long rentalEndRideLifeTime;
-    long serverRequestRentalStartTime = 0;
-    long serverRequestRentalEndTime = 0;
-    long rentalEndRideRequestPeriod = 5000;
-
-
-    public void cancelRentalEndRideTimer() {
-        try {
-            if (timerTaskRentalEndRide != null) {
-                timerTaskRentalEndRide.cancel();
-                timerTaskRentalEndRide = null;
-            }
-
-            if (timerRentalEndRide != null) {
-                timerRentalEndRide.cancel();
-                timerRentalEndRide.purge();
-                timerRentalEndRide = null;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void startRentalEndRideTimer() {
-        Log.d("HomeActivityRentals" , " startRentalEndRideTimer");
-
-        cancelRentalEndRideTimer();
-        try {
-
-            rentalEndRideLifeTime = ((2 * 60 * 1000));
-            serverRequestRentalStartTime = System.currentTimeMillis();
-            serverRequestRentalEndTime = serverRequestRentalStartTime + rentalEndRideLifeTime;
-            executionTime = -10;
-            rentalEndRideRequestPeriod = 5000;
-
-            timerRentalEndRide = new Timer();
-            timerTaskRentalEndRide = new TimerTask() {
-                @Override
-                public void run() {
-
-                    long startTime = System.currentTimeMillis();
-                    try {
-                        Log.d("HomeActivityRentals execution", "=" + (serverRequestRentalEndTime - executionTime));
-                        if (executionTime >= serverRequestRentalEndTime) {
-                            Log.d("HomeActivityRentals" , "Insideif");
-
-                            cancelRentalEndRideTimer();
-                            runOnUiThread(() -> {
-                                try {
-
-                                    if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_IN_RIDE) {
-                                        Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
-                                        passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-                                        switchPassengerScreen(passengerScreenMode);
-                                    }
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                       } else {
-
-                            HashMap<String, String> params = new HashMap<>();
-
-                            params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
-                            new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true)
-                                    .execute(params, ApiName.RENTALS_GET_LOCK_STATUS, new APICommonCallback<GetLockStatusResponse>() {
-                                        @Override
-                                        public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
-
-                                            Log.d("HomeActivityRental"," Flag getlockstatus Success" +  String.valueOf(flag));
-                                            cancelRentalEndRideTimer();
-
-                                            if(rentalEndRideLayout.getVisibility() == View.VISIBLE)
-                                            {
-                                                // todo success is received but push is not yet received then also show the loading screen
-//                                                rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
-//                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-//                                                switchPassengerScreen(passengerScreenMode);
-
-                                                Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
-                                                passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-                                                switchPassengerScreen(passengerScreenMode);
-                                            }
-
-                                            if(checkLockStatus)
-                                            {
-                                                buttonLockRide.setVisibility(View.VISIBLE);
-                                                buttonUnlockRide.setVisibility(View.GONE);
-                                                checkLockStatus = false;
-                                            }
-                                            else
-                                            {
-                                                buttonUnlockRide.setVisibility(View.VISIBLE);
-                                                buttonLockRide.setVisibility(View.GONE);
-                                                checkLockStatus = true;
-                                            }
-
-                                            if(rentalInRideLayout.getVisibility() == View.VISIBLE)
-                                            {
-                                                DialogPopup.alertPopup(HomeActivity.this,"Success","Request is successful");
-
-                                            }
-                                        }
-
-                                        @Override
-                                        public boolean onError(GetLockStatusResponse feedCommonResponse, String message, int flag) {
-                                            Log.d("HomeActivityRental"," Flag getlockstatus Success" +  String.valueOf(flag));
-
-                                            if(flag == ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal())
-                                            {
-
-                                            }
-                                            else if(flag == ApiResponseFlags.ACTION_FAILED.getOrdinal())
-                                            {
-                                                cancelRentalEndRideTimer();
-                                                DialogPopup.dialogRentalLock(HomeActivity.this);
-
-                                                // todo
-//                                                rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
-
-                                                Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
-                                                passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
-                                                switchPassengerScreen(passengerScreenMode);
-
-                                            }
-                                            return true;
-                                        }
-
-                                    });
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    long stopTime = System.currentTimeMillis();
-                    long elapsedTime = stopTime - startTime;
-
-                    if (executionTime < 0) {
-                        executionTime = serverRequestRentalStartTime + elapsedTime;
-                    }
-                    if (executionTime > 0) {
-                        if (elapsedTime >= requestPeriod) {
-                            executionTime = executionTime + elapsedTime;
-                        } else {
-                            executionTime = executionTime + rentalEndRideRequestPeriod;
-                        }
-                    }
-
-                    Log.i("request_ride execution", "=" + (serverRequestRentalEndTime - executionTime));
-
-                }
-            };
-
-
-            timerRentalEndRide.scheduleAtFixedRate(timerTaskRentalEndRide, 0, rentalEndRideRequestPeriod);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     private void updateLockStatusApi(final GpsLockStatus gpsLockStatus) {
@@ -11771,8 +11613,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         @Override
                         public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
                             Log.d("HomeActivityRental"," Flag Update Lock Status Success " + String.valueOf(flag));
-                            apiGetGpsLockStatus(true, false, Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
                             switchRentalInRideUI(gpsLockStatus);
+                            rentalInRideLayout.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    apiGetGpsLockStatus(true, false, Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
+                                }
+                            }, 2000);
                         }
 
                         @Override
@@ -11794,14 +11641,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
                         if(feedCommonResponse.getGpsLockStatus() != -1) {
                             Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
-                            if (actionPerformed) {
-                                DialogPopup.alertPopup(HomeActivity.this, "", "Request is successful");
-                            }
                         } else {
                             Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatusOld);
-                            if (actionPerformed) {
-                                DialogPopup.alertPopup(HomeActivity.this, "", "Request failed");
-                            }
                         }
                         rentalStateUIHandling(passengerScreenMode);
                     }
@@ -11811,20 +11652,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if(actionPerformed){
                             if(flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()
                                     && gpsLockStatusOld != GpsLockStatus.LOCK.getOrdinal()) {
-                                DialogPopup.dialogRentalLock(HomeActivity.this);
                                 Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
                                 rentalStateUIHandling(passengerScreenMode);
+                                rentalInRideLayout.postDelayed(() -> {
+                                    dialogRentalLock(HomeActivity.this);
+
+                                }, 200);
+                                return true;
+                            } else {
+                                return false;
                             }
-                            return true;
                         }
-                        return false;
+                        return true;
                     }
 
                     @Override
                     public void onFinish() {
                         super.onFinish();
                         if(repeatHandler && pollingGetGPSLockStatus) {
-                            getHandler().postDelayed(runnableGetGPSLockStatus, Prefs.with(HomeActivity.this).getLong(Constants.KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, 10000));
+                            getHandler().postDelayed(runnableGetGPSLockStatus, Prefs.with(HomeActivity.this).getLong(Constants.KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, 30000));
                         }
                     }
                 });
@@ -12020,6 +11866,37 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else {
             buttonLockRide.setVisibility(View.VISIBLE);
             buttonUnlockRide.setVisibility(View.GONE);
+        }
+
+    }
+
+
+    Dialog rentalLockDialog;
+    private void dialogRentalLock(Activity activity) {
+        try {
+            rentalLockDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+            rentalLockDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+            rentalLockDialog.setContentView(R.layout.dialog_rentals_lock);
+
+            RelativeLayout relative = (RelativeLayout) rentalLockDialog.findViewById(R.id.relative);
+
+            WindowManager.LayoutParams layoutParams = rentalLockDialog.getWindow().getAttributes();
+            layoutParams.dimAmount = 0.6f;
+            rentalLockDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            rentalLockDialog.setCancelable(true);
+            rentalLockDialog.setCanceledOnTouchOutside(true);
+
+
+            Button buttonOk = rentalLockDialog.findViewById(R.id.bOk);
+            ImageView imageViewClose = rentalLockDialog.findViewById(R.id.ivClose);
+
+            imageViewClose.setOnClickListener(v -> rentalLockDialog.dismiss());
+            buttonOk.setOnClickListener(v -> rentalLockDialog.dismiss());
+            relative.setOnClickListener(v -> rentalLockDialog.dismiss());
+
+            rentalLockDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

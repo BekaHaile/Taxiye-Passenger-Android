@@ -2086,6 +2086,7 @@
     <string name="no_nearby_drop_off_stations">No nearby drop off stations available</string>
     <string name="qr_code_too_small">QR Number too small</string>
     <string name="please_lock_the_bike_and_proceed">Please lock the bike and proceed</string>
+    <string name="bike_lock_alert_message">Make sure the bike is locked and parked safely</string>
 
 
 </resources>

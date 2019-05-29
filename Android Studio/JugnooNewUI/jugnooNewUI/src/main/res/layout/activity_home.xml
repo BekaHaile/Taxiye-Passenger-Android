@@ -153,7 +153,11 @@
             <include layout="@layout/layout_rental_in_ride"/>
 
             <!-- rental end ride layout -->
-            <include layout="@layout/layout_rental_end_ride"/>
+            <include layout="@layout/layout_rental_end_ride"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentBottom="true"
+                />
 
             <!-- rental destination layout -->
             <!--<include-->

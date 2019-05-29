@@ -1,74 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:id="@+id/layout_rental_end_ride"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/layout_rental_end_ride"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/transparent"
+    android:background="@color/white"
+    android:clickable="true"
     android:focusable="true"
+    android:gravity="center_horizontal"
     android:minHeight="112dp"
-    android:splitMotionEvents="false">
+    android:orientation="vertical"
+    android:tag="@string/dont_touch_me">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayoutEndRide"
+    <ProgressBar
+        android:id="@+id/pbAssigning"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
+        android:layout_height="12dp"
+        android:layout_marginTop="-5dp"
+        android:indeterminate="true"
+        android:indeterminateBehavior="cycle"
+        android:progressDrawable="@drawable/progressbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+
+    <TextView
+        android:id="@+id/textViewEndRide"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="112dp"
-        android:splitMotionEvents="false">
-
-        <ProgressBar
-            android:id="@+id/pbAssigning"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="11dp"
-            android:layout_marginTop="-6dp"
-            android:indeterminate="true"
-            android:indeterminateBehavior="cycle"
-            android:progressDrawable="@drawable/progressbar"
-            android:tag="@string/dont_touch_me"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textColor="@color/text_color"
+        android:textSize="20sp"
+        app:typekitFont="@string/maven"
+        tools:text="@string/ending_ride"
+        />
 
 
-        <TextView
-            android:id="@+id/textViewEndRide"
-            android:layout_width="77dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/ending_ride"
-            android:textColor="@color/text_color"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pbAssigning"
-            app:typekitFont="@string/maven"
-            />
+    <ImageView
+        android:id="@+id/jugnoo_animation"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/loader_new_frame_anim"/>
 
-
-        <ImageView
-            android:id="@+id/jugnoo_animation"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/loader_new_frame_anim"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewEndRide" />
-
-    </android.support.constraint.ConstraintLayout>
-
-
-</RelativeLayout>
+</LinearLayout>
 
 
 

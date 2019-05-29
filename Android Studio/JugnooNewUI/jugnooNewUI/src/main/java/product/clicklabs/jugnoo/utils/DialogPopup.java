@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Handler;
@@ -1027,48 +1026,6 @@ public class DialogPopup {
         }
     }
 
-	public static void dialogRentalLock(Activity activity)
-	{
-		try{
-			if (isDialogShowing()) {
-				dismissLoadingDialog();
-			}
-
-			dialog = new Dialog(activity,android.R.style.Theme_Translucent_NoTitleBar);
-			dialog.setContentView(R.layout.dialog_rentals_lock);
-			dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-			dialog.getWindow().setGravity(Gravity.CENTER);
-			dialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT,
-					WindowManager.LayoutParams.WRAP_CONTENT);
-
-			Button buttonOk = dialog.findViewById(R.id.button_ok);
-			TextView textViewHead = dialog.findViewById(R.id.text_view_head);
-			TextView textViewMessage = dialog.findViewById(R.id.text_view_message);
-			ImageView imageViewLock = dialog.findViewById(R.id.image_view_lock);
-			ImageView imageViewClose = dialog.findViewById(R.id.image_view_close);
-
-			imageViewClose.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-
-			buttonOk.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					dialog.dismiss();
-				}
-			});
-
-			dialog.show();
-
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-
-	}
 
 
 
