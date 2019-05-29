@@ -508,7 +508,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private T20Ops t20Ops = new T20Ops();
     private PlaceSearchListFragment.PlaceSearchMode placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
     private LatLngBounds.Builder latLngBoundsBuilderPool;
-    private ArrayList<SearchResult> lastPickUp = new ArrayList<SearchResult>();
     private ArrayList<SearchResult> lastDestination = new ArrayList<SearchResult>();
     private long thumbsUpGifStartTime = 0;
     private int shakeAnim = 0;
@@ -1422,13 +1421,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         imageViewRideNow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //fabView.menuLabelsRight.close(true);
-                //imageViewFabFake.setVisibility(View.GONE);
                 try {
                     topBar.tvScheduleRidePopup.setVisibility(View.GONE);
                     if (map != null) {
                         if (!rideNowClicked) {
-//                       todo     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
                                 findDriversETACall(true, false, false, null);
                             } else {
@@ -1454,13 +1450,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if (!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
-//                   todo     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
-                    }
                     if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
                         findDriversETACall(true, true, false, getApiFindADriver().getParams());
                     } else {
-                        requestRideClick();
+                        if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                                .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                            openBikeRentalScan();
+                        } else {
+                            requestRideClick();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1602,7 +1600,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if(getSlidingBottomPanel().getRequestRideOptionsFragment()
                                 .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()){
 
-                            // todo check for no stations
                             openRentalStationList();
                             checkFareEstimate = false;
                         }
@@ -3193,7 +3190,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void requestRideClick() {
-        try {
             try {
                 if (map != null) {
                     if (MyApplication.getInstance().isOnline()) {
@@ -3209,7 +3205,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
                                 if (!specialPickupScreenOpened && Data.autoData.getUseRecentLocAtRequest() == 1) {
-                                    SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
+                                    SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
                                             CHOOSE_SAVED_PICKUP_ADDRESS, true);
                                     if (searchResult != null) {
                                         if (MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
@@ -3266,42 +3262,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            if (!textViewInitialSearch.getText().toString().equalsIgnoreCase("")) {
-                lastPickUp.clear();
-                lastPickUp.addAll(fetchLastLocations(SPLabels.LAST_PICK_UP));
-                if (lastPickUp.size() == 0) {
-                    if (!addressMatchedWithSavedAddresses(textViewInitialSearch.getText().toString())) {
-                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), ""
-                                , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
-                    }
-                } else {
-                    boolean isSame = false;
-                    for (int i = 0; i < lastPickUp.size(); i++) {
-                        if (textViewInitialSearch.getText().toString().equalsIgnoreCase(lastPickUp.get(i).getName())
-                                && Data.autoData.getPickupAddress(lastPickUp.get(i).getLatLng()).equalsIgnoreCase(lastPickUp.get(i).getAddress())) {
-                            isSame = true;
-                            break;
-                        }
-                    }
-                    if (!isSame) {
-                        if (!addressMatchedWithSavedAddresses(textViewInitialSearch.getText().toString())) {
-                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), ""
-                                    , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
-                        }
-                    }
-                    if (lastPickUp.size() > 3) {
-                        lastPickUp.remove(3);
-                    }
-                    Log.v("size of last pickup", "---> " + lastPickUp.size());
-                }
-                String tempPickup = new Gson().toJson(lastPickUp);
-                Prefs.with(HomeActivity.this).save(SPLabels.LAST_PICK_UP, tempPickup);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private boolean addressMatchedWithSavedAddresses(String address) {
@@ -5618,45 +5578,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             bikeNumber = extractQRCode(result.getContents());
                             if (!bikeNumber.equals("error")) {
                                 qrCode = bikeNumber;
-
-                                // todo
-                            if(Data.autoData.getDropLatLng() != null
-                                    && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
-                            {
-                                openConfirmRequestView();
-                            }
-                            else
-                            {
                                 requestRideClick();
-                                Log.d("HomeActivityResume","ActivityResult after RequestRide " + passengerScreenMode.toString());
-
                                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                            }
-                                Log.d("AssigningActivity","ActivityResult Initial " + passengerScreenMode.toString());
-
                             } else {
                                 Toast.makeText(this, getString(R.string.incorrect_qr_code), Toast.LENGTH_SHORT).show();
                             }
-                        } else if(data != null){
+                        } else if (data != null) {
                             qrCode = data.getStringExtra("qrCode");
                             qrCodeDetails = data.getStringExtra("qr_code_details");
-
-                            Log.d("HomeActivityResume","QR CODE HOME " + qrCode);
-
-                            if(Data.autoData.getDropLatLng() != null
-                                    && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1)
-                            {
-                                Log.d("HomeActivityResume","ActivityResult after Confirm Request " + passengerScreenMode.toString());
-
-                                openConfirmRequestView();
-                            }
-                            else
-                            {
-                                requestRideClick();
-                                Log.d("HomeActivityResume","ActivityResult after RequestRide ");
-
-                                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-                            }
+                            requestRideClick();
+                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         }
                     }
                 } else {
@@ -5974,7 +5905,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if (savedAddressUsed) {
                                 requestRideDriverCheck();
                             } else if (confirmedScreenOpened) {
-                                requestRideClick();
+                                if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                                        .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                                    openBikeRentalScan();
+                                } else {
+                                    requestRideClick();
+                                }
                             } else {
                                 imageViewRideNowPoolCheck();
                             }
@@ -10863,23 +10799,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         else if (getSlidingBottomPanel().getRequestRideOptionsFragment()
                 .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-            if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
-                    .getRegionSelected().getDestinationMandatory() == 1) {
-                destinationRequiredShake();
-            }
-            else {
-                if (Data.autoData.getDropLatLng() != null
-                        && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1) {
-                    specialPickupScreenOpened = false;
-                    removeSpecialPickupMarkers();
-                    rlSpecialPickup.setVisibility(View.GONE);
-                    updateTopBar();
-                    InstructionDialog.showHelpDialog(HomeActivity.this);
-                } else {
-                    removeSpecialPickupMarkers();
-                    InstructionDialog.showHelpDialog(HomeActivity.this);
-                }
-            }
+            openBikeRentalScan();
         }
 
         else {
@@ -10912,6 +10832,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
             }
+        }
+    }
+
+    public void openBikeRentalScan() {
+        if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
+                .getRegionSelected().getDestinationMandatory() == 1) {
+            destinationRequiredShake();
+        }
+        else {
+            //old functions as it is
+            specialPickupScreenOpened = false;
+            removeSpecialPickupMarkers();
+            rlSpecialPickup.setVisibility(View.GONE);
+            updateTopBar();
+
+            InstructionDialog.showHelpDialog(HomeActivity.this);
         }
     }
 

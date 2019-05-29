@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.sabkuchfresh.utils.Utils;
+
 import java.util.List;
 
 import product.clicklabs.jugnoo.R;
@@ -55,7 +57,7 @@ public class RentalStationAdapter extends RecyclerView.Adapter<RentalStationAdap
 
         viewHolder.textViewName.setText(name);
         viewHolder.textViewAddress.setText(address);
-        viewHolder.textViewDistance.setText(String.valueOf(distance));
+        viewHolder.textViewDistance.setText(Utils.getDecimalFormat2Decimal().format(distance / 1000.0)+" Km");
         final SearchResult autoCompleteSearchResult = new SearchResult(name, address, "", latitude, longitude, 0, 1, 0);
 
         viewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
