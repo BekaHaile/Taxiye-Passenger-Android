@@ -3308,15 +3308,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void checkForFareAvailablity() {
-        try {
-            if (Data.autoData.getFareStructure() != null && !Data.autoData.getFareStructure().getIsFromServer()) {
-                forceFarAwayCity();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     public void switchUserScreen() {
 
@@ -3519,7 +3510,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             showCenterPickupPin(true);
                         }
 
-                        checkForFareAvailablity();
                         findADriverFinishing(false, !switchUICalledFromStateRestore);
 
                         linearLayoutRequestMain.setVisibility(View.VISIBLE);
@@ -5687,7 +5677,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     textViewCentrePinETA.setText("-");
                                     noDriverNearbyToast(getResources().getString(R.string.couldnt_find_drivers_nearby));
                                 }
-                                setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
