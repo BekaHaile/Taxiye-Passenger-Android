@@ -466,7 +466,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public static final double MIN_DISTANCE_FOR_PICKUP_POINT_UPDATE = 50; // in meters
 
     public static final float MAX_ZOOM = 16;
-    private static final int MAP_ANIMATE_DURATION = 500;
+    private static final int MAP_ANIMATE_DURATION = 400;
 
     public static final double FIX_ZOOM_DIAGONAL = 100;
     private final float MAP_PADDING = 100f;
@@ -9641,7 +9641,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                 textViewInitialSearch.setText(searchResult.getNameForText());
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM));
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                 setPickupAddressZoomedOnce = true;
                 mapTouched = true;
                 updateSavedAddressLikeButton(searchResult.getLatLng(), true);
@@ -10489,7 +10489,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     specialPickupScreenOpened = true;
                     passengerScreenMode = PassengerScreenMode.P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
-                    //map.moveCamera(CameraUpdateFactory.zoomOut());
                     showSpecialPickupMarker(specialPickups);
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
                     spin.setSelection(getIndex(spin, Data.autoData.getNearbyPickupRegionses().getDefaultLocation().getText()));
