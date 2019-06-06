@@ -416,6 +416,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         activity.setDestinationBarPlaceholderText(regionSelected.getRideType());
         if(supplyCount > 0){
             Data.autoData.setFarAwayCity("");
+            activity.setServiceAvailablityUI(Data.autoData.getFarAwayCity());
         }
     }
 

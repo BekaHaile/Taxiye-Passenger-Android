@@ -382,10 +382,10 @@ public class TransactionUtils {
                     .commitAllowingStateLoss();
         }
     }
-    public void openScheduleRideFragment(FragmentActivity activity, View container, ServiceType serviceType) {
+    public void openScheduleRideFragment(FragmentActivity activity, View container, ServiceType serviceType, boolean openSchedule) {
         if (!checkIfFragmentAdded(activity, ScheduleRideFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
-                    .add(container.getId(), ScheduleRideFragment.Companion.newInstance(serviceType),
+                    .add(container.getId(), ScheduleRideFragment.Companion.newInstance(serviceType, openSchedule),
                             ScheduleRideFragment.class.getName())
                     .addToBackStack(ScheduleRideFragment.class.getName())
                     .commit();

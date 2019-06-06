@@ -1257,7 +1257,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     destinationRequiredShake();
                     return;
                 }
-                topBar.openScheduleFragment(Data.autoData.getServiceTypeSelected());
+                topBar.openScheduleFragment(Data.autoData.getServiceTypeSelected(), false);
 //            }
         });
 
@@ -5789,7 +5789,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Log.e(TAG, "findADriverFinishing");
                     fabViewTest = new FABViewTest(this, fabViewIntial);
                     setJeanieVisibility();
-                    setServiceAvailablityUI(Data.autoData.getFarAwayCity());
                     showPoolInforBar(false);
                     if (showPoolIntro) {
 //                        showPoolIntroDialog();

@@ -74,19 +74,20 @@
 
                 <Button
                     android:id="@+id/initialCancelRideBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button_theme"
+                    android:layout_width="240dp"
+                    android:layout_height="48dp"
+                    style="@style/ButtonThemeCapsule"
                     android:minWidth="200dp"
+                    android:tag="@string/dont_touch_me"
                     android:textColor="@color/white"
-                    android:textAllCaps="true"
-                    android:textSize="28px"
-                    android:paddingLeft="10px"
-                    android:paddingRight="10px"
+                    android:textAllCaps="false"
+                    android:textSize="19dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15px"
-                    android:layout_marginBottom="10px"
+                    android:layout_marginTop="7dp"
+                    android:layout_marginBottom="5dp"
                     android:text="@string/cancel_request"/>
 
             </LinearLayout>

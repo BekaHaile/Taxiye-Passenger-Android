@@ -13,6 +13,7 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -102,7 +103,7 @@ public class TopBar implements GACategory, GAAction {
                 case R.id.buttonCheckServer:
                     break;
                 case R.id.imageViewScheduleRide:
-                    openScheduleFragment(null);
+                    openScheduleFragment(Data.autoData.getServiceTypeSelected(), true);
                     break;
 
                 case R.id.imageViewHelp:
@@ -134,9 +135,9 @@ public class TopBar implements GACategory, GAAction {
         }
     };
 
-    public void openScheduleFragment(ServiceType serviceType) {
+    public void openScheduleFragment(ServiceType serviceType, boolean openSchedule) {
         ((HomeActivity) activity).scheduleRideContainer.setVisibility(View.VISIBLE);
-        ((HomeActivity) activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity) activity), ((HomeActivity) activity).scheduleRideContainer, serviceType);
+        ((HomeActivity) activity).getTransactionUtils().openScheduleRideFragment(((HomeActivity) activity), ((HomeActivity) activity).scheduleRideContainer, serviceType, openSchedule);
         imageViewBack.setVisibility(View.VISIBLE);
         imageViewMenu.setVisibility(View.GONE);
         tvScheduleRidePopup.setVisibility(View.GONE);

@@ -37,10 +37,7 @@ import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.retrofit.model.Package
 import product.clicklabs.jugnoo.retrofit.model.ServiceType
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue
-import product.clicklabs.jugnoo.utils.DateOperations
-import product.clicklabs.jugnoo.utils.Fonts
-import product.clicklabs.jugnoo.utils.Prefs
-import product.clicklabs.jugnoo.utils.Utils
+import product.clicklabs.jugnoo.utils.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -81,6 +78,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     private var interactionListener: InteractionListener? = null
     private var serviceType: ServiceType? = null
+    private var openSchedule:Boolean = false
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -106,7 +104,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             val gson = Gson()
             serviceType = gson.fromJson(str, ServiceType::class.java)
         }
-
+        if(arguments != null) {
+            openSchedule = arguments!!.getBoolean(Constants.KEY_SCHEDULE_RIDE, false)
+        }
 
         return rootView
     }
@@ -126,7 +126,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
             tvOneWay.typeface = Fonts.mavenMedium(activity)
             tvRoundTrip.typeface = Fonts.mavenMedium(activity)
-            btSchedule.typeface = Fonts.mavenRegular(activity)
+            btSchedule.typeface = Fonts.mavenMedium(activity)
             tvSelectPayment.setTypeface(Fonts.mavenMedium(activity), BOLD)
             tvNote.setTypeface(Fonts.mavenMedium(activity), BOLD)
             textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
@@ -184,11 +184,11 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                             && TextUtils.isEmpty(tvDestination.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_destination))
                         throw Exception()
-                    } else if (serviceTypeNotRental()
+                    } else if (openSchedule
                             && TextUtils.isEmpty(selectedDate)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_date))
                         throw Exception()
-                    } else if (serviceTypeNotRental()
+                    } else if (openSchedule
                             && TextUtils.isEmpty(selectedTime)) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_time))
                         throw Exception()
@@ -219,7 +219,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         }
                     }
                 } catch (e: Exception) {
-
+                    e.printStackTrace()
                 }
             }
             minBufferTimeCurrent = Prefs.with(requireContext()).getInt(SCHEDULE_CURRENT_TIME_DIFF, 30);
@@ -232,7 +232,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
 
-            val visibilityNotRental = if (serviceTypeNotRental()) View.VISIBLE else View.GONE
+            val visibilityNotRental = if (openSchedule) View.VISIBLE else View.GONE
             tvDestination.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
             tvPickupDateTime.visibility = visibilityNotRental
             tvSelectDateTime.visibility = visibilityNotRental
@@ -243,7 +243,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvSelectPackage.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type) || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
             rvPackages.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type) || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
             updatePackagesAccRegionSelected(null)
-            btSchedule.setText(if (!serviceTypeNotRental()) R.string.book else R.string.schedule)
+            btSchedule.setText(if (!openSchedule) R.string.book else R.string.schedule)
             tvScheduleMessage.text = if (serviceType != null) Utils.trimHTML(Utils.fromHtml(serviceType!!.info)) else requireActivity().getString(R.string.schedule_ride_alert)
         }
 
@@ -395,6 +395,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
 
     fun openFareEstimate() {
+        Data.autoData.selectedPackage = selectedPackage
+
         if (searchResultPickup == null) {
             product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_pickup_location))
             return
@@ -402,20 +404,20 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_destination_location))
             return
         }
-        if (serviceType != null && interactionListener != null) {
+        if (!openSchedule && interactionListener != null) {
             interactionListener!!.callRentalOutstationRequestRide(serviceType, (getActivity() as HomeActivity).selectedRegionForScheduleRide,
                     selectedPackage,
                     searchResultPickup!!, null, null)
             return
         }
 //        if (serviceType == null && (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type) || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type))) {
-        if (serviceType == null && ( Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type))) {
+        if (openSchedule && (Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
+                        || Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))) {
 
-            scheduleRide((getActivity() as HomeActivity).selectedRegionForScheduleRide)
+            scheduleRide((activity as HomeActivity).selectedRegionForScheduleRide)
 
             return
         }
-        Data.autoData.selectedPackage = selectedPackage
         val intent = Intent(activity, FareEstimateActivity::class.java)
         intent.putExtra(Constants.KEY_REGION, (getActivity() as HomeActivity).gson.toJson((getActivity() as HomeActivity).selectedRegionForScheduleRide, Region::class.java))
         intent.putExtra(Constants.KEY_RIDE_TYPE, (getActivity() as HomeActivity).selectedRideTypeForScheduleRide)
@@ -441,13 +443,14 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
         val BUFFER_TIME_TO_SELECT_MINS = 5
 
-        fun newInstance(serviceType: ServiceType?): ScheduleRideFragment {
+        fun newInstance(serviceType: ServiceType?, openSchedule:Boolean): ScheduleRideFragment {
             val bundle = Bundle()
             val gson = Gson()
             val fragment = ScheduleRideFragment()
             if (serviceType != null) {
                 bundle.putString(Constants.KEY_SERVICE_TYPE, gson.toJson(serviceType, ServiceType::class.java))
             }
+            bundle.putBoolean(Constants.KEY_SCHEDULE_RIDE, openSchedule)
             fragment.arguments = bundle
             return fragment
         }
@@ -553,6 +556,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         val params = HashMap<String, String>()
         params[Constants.KEY_REGION_ID] = region.regionId.toString() + ""
         params[Constants.KEY_PICKUP_TIME] = DateOperations.localToUTC(getFormattedDateTime(selectedDate, selectedTime, true))
+        params[Constants.KEY_CUSTOMER_NOTE] = Data.autoData.serviceTypeSelected!!.info
         params[Constants.KEY_LATITUDE] = searchResultPickup!!.latitude.toString()
         params[Constants.KEY_LONGITUDE] = searchResultPickup!!.longitude.toString()
         if (!searchResultPickup!!.address.equals(Constants.UNNAMED)) {
@@ -578,11 +582,15 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         ApiCommon<FeedCommonResponse>(activity).showLoader(true).execute(params, ApiName.SCHEDULE_RIDE,
                 object : APICommonCallback<FeedCommonResponse>() {
 
-                    override fun onSuccess(response: FeedCommonResponse, message: String, flag: Int) {
-                        (activity as HomeActivity).onBackPressed()
+                    override fun onSuccess(response: FeedCommonResponse, message: String?, flag: Int) {
+                        if(!message.isNullOrBlank()){
+                            DialogPopup.alertPopupWithListener(activity, "", message) { (activity as HomeActivity).onBackPressed() }
+                        } else {
+                            (activity as HomeActivity).onBackPressed()
+                        }
                     }
 
-                    override fun onError(feedCommonResponse: FeedCommonResponse, message: String, flag: Int): Boolean {
+                    override fun onError(feedCommonResponse: FeedCommonResponse, message: String?, flag: Int): Boolean {
                         return false
                     }
 
