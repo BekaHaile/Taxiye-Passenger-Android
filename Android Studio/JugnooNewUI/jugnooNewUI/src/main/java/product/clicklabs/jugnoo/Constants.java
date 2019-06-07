@@ -1036,4 +1036,7 @@ public interface Constants {
     String KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE = "customer_partner_dialog_message";
 
     String KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE = "customer_show_convenience_charge_fare_estimate";
+    String KEY_REG_AS = "reg_as";
+    String KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT = "customer_reg_as_driver_phone_edit_alert";
+    String KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE = "customer_reg_as_driver_phone_edit_alert_message";
 }

@@ -235,6 +235,7 @@ public class JSONParser implements Constants {
         int showJeanieHelpText = userData.optInt(KEY_SHOW_JEANIE_HELP_TEXT, 0);
         int showOfferDialog = userData.optInt(KEY_SHOW_OFFER_DIALOG, 1);
         int showTutorial = userData.optInt(KEY_SHOW_TUTORIAL, 0);
+        int regAs = userData.optInt(Constants.KEY_REG_AS, 0);
 
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
@@ -251,7 +252,7 @@ public class JSONParser implements Constants {
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled, prosEnabled,
                 deliveryCustomerEnabled,inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
-                showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode);
+                showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode, regAs);
 
         Prefs.with(context).save(Constants.SP_LAST_PHONE_NUMBER_SAVED, phoneNo);
         Prefs.with(context).save(Constants.SP_LAST_COUNTRY_CODE_SAVED, countryCode);
@@ -510,6 +511,10 @@ public class JSONParser implements Constants {
                 context.getString(R.string.customer_partner_dialog_message)));
         Prefs.with(context).save(KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE, autoData.optInt(KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE,
                 context.getResources().getInteger(R.integer.customer_show_convenience_charge_fare_estimate)));
+        Prefs.with(context).save(KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT, autoData.optInt(KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT,
+                context.getResources().getInteger(R.integer.customer_reg_as_driver_phone_edit_alert)));
+        Prefs.with(context).save(KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE, autoData.optString(KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE,
+                context.getString(R.string.registered_as_driver_phone_number_will_be_edited)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

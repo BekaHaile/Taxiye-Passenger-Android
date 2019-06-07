@@ -369,6 +369,23 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             @Override
             public void onClick(View v) {
                 Log.v("phone click", "phone click");
+                if(Data.userData.getRegAs() == 1
+                        && Prefs.with(AccountActivity.this).getInt(Constants.KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT, 0) == 1){
+                    DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this,
+                            Prefs.with(AccountActivity.this).getString(Constants.KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE,
+                                    getString(R.string.registered_as_driver_phone_number_will_be_edited)),
+                            new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    editPhoneFBAccountKIt();
+                                }
+                            });
+                } else {
+                    editPhoneFBAccountKIt();
+                }
+            }
+
+            void editPhoneFBAccountKIt() {
                 PhoneNumber phoneNumber = new PhoneNumber(Data.userData.getCountryCode(),
                         Utils.retrievePhoneNumberTenChars(Data.userData.phoneNo, Data.userData.getCountryCode()),
                         Utils.getCountryIsoFromCode(AccountActivity.this, Data.userData.getCountryCode()));
@@ -480,8 +497,24 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 z&& Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
                             Utils.showToast(AccountActivity.this, getString(R.string.nothing_changed));
                         }*/ else {
-                            updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, countryCode + phoneNoChanged,
-                                    !Data.userData.phoneNo.equalsIgnoreCase(countryCode + phoneNoChanged), countryCode);
+                            String finalPhoneNoChanged = phoneNoChanged;
+                            boolean phoneEdited = !Data.userData.phoneNo.equalsIgnoreCase(countryCode + finalPhoneNoChanged);
+                            if(phoneEdited && Data.userData.getRegAs() == 1
+                                    && Prefs.with(AccountActivity.this).getInt(Constants.KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT, 0) == 1){
+                                DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this,
+                                        Prefs.with(AccountActivity.this).getString(Constants.KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE,
+                                                getString(R.string.registered_as_driver_phone_number_will_be_edited)),
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, countryCode + finalPhoneNoChanged,
+                                                        phoneEdited, countryCode);
+                                            }
+                                        });
+                            } else {
+                                updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, countryCode + phoneNoChanged,
+                                        phoneEdited, countryCode);
+                            }
                         }
                     } else {
                         toggleProfileOptions(false);

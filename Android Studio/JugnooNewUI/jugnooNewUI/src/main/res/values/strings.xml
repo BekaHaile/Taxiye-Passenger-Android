@@ -2015,4 +2015,5 @@
     <string name="one_way_trips">One Way\nTrips</string>
     <string name="this_service_not_available">%s service is not available in this area</string>
     <string name="partner_with_format">Partner with %s</string>
+    <string name="registered_as_driver_phone_number_will_be_edited">You are registered as Driver,\nBy editing this account\'s phone number, Driver app account will also get linked to the edited phone number.\nAre you sure you want to edit phone number?</string>
 </resources>
