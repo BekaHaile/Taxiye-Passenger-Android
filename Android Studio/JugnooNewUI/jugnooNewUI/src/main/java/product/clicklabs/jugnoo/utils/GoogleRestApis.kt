@@ -34,6 +34,9 @@ object GoogleRestApis {
     private fun MAPS_PRIVATE_KEY(): String {
         return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_PRIVATE_KEY, BuildConfig.MAPS_PRIVATE_KEY)
     }
+    private fun CHANNEL(): String {
+        return BuildConfig.FLAVOR + "-android-customer"
+    }
 
     /**
      * for driver animation, and path animation
@@ -49,7 +52,8 @@ object GoogleRestApis {
                     + "&mode=" + mode
                     + "&alternatives=" + alternatives
                     + "&units=" + units
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
@@ -57,7 +61,7 @@ object GoogleRestApis {
             }
 
             response = RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-                    sensor, mode, alternatives, units, MAPS_CLIENT(), googleSignature)
+                    sensor, mode, alternatives, units, MAPS_CLIENT(), CHANNEL(), googleSignature)
         } else {
             response = RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
                     sensor, mode, alternatives, units, MAPS_BROWSER_KEY())
@@ -81,7 +85,8 @@ object GoogleRestApis {
                     + "&mode=" + mode
                     + "&alternatives=" + alternatives
                     + "&units=" + units
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
@@ -89,7 +94,7 @@ object GoogleRestApis {
             }
 
             RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-                    sensor, mode, alternatives, units, MAPS_CLIENT(), googleSignature, callback)
+                    sensor, mode, alternatives, units, MAPS_CLIENT(), CHANNEL(), googleSignature, callback)
         } else {
             RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
                     sensor, mode, alternatives, units, MAPS_BROWSER_KEY(), callback)
@@ -109,7 +114,8 @@ object GoogleRestApis {
                     + "&language=" + language
                     + "&sensor=" + sensor
                     + "&alternatives=" + alternatives
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
@@ -117,7 +123,7 @@ object GoogleRestApis {
             }
 
             response = RestClient.getGoogleApiService().getDistanceMatrix(originLatLng, destLatLng, language,
-                    sensor, alternatives, MAPS_CLIENT(), googleSignature)
+                    sensor, alternatives, MAPS_CLIENT(), CHANNEL(), googleSignature)
         } else {
             response = RestClient.getGoogleApiService().getDistanceMatrix(originLatLng, destLatLng, language,
                     sensor, alternatives, MAPS_BROWSER_KEY())
@@ -136,14 +142,15 @@ object GoogleRestApis {
                     "latlng=" + latLng
                     + "&language=" + language
                     + "&sensor=" + false
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
             } catch (ignored: Exception) {
             }
 
-            response = RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), googleSignature)
+            response = RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), CHANNEL(), googleSignature)
         } else {
             response = RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_BROWSER_KEY())
         }
@@ -162,14 +169,15 @@ object GoogleRestApis {
                     "latlng=" + latLng
                     + "&language=" + language
                     + "&sensor=" + false
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
             } catch (ignored: Exception) {
             }
 
-            RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), googleSignature, callback)
+            RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), CHANNEL(), googleSignature, callback)
         } else {
             RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_BROWSER_KEY(), callback)
         }
@@ -214,7 +222,8 @@ object GoogleRestApis {
                     "origin=" + strOrigin
                     + "&destination=" + strDestination
                     + "&waypoints=" + strWaypoints
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
@@ -223,7 +232,7 @@ object GoogleRestApis {
 
 
             response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination,
-                    strWaypoints, MAPS_CLIENT(), googleSignature)
+                    strWaypoints, MAPS_CLIENT(), CHANNEL(), googleSignature)
         } else {
             response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination,
                     strWaypoints, MAPS_BROWSER_KEY())

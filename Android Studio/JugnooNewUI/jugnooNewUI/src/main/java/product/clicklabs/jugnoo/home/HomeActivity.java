@@ -10190,7 +10190,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewPoolInfo1.setText(textToShow);
                 relativeLayoutPoolInfoBar.setBackgroundResource(R.drawable.background_pool_info);
                 textViewPoolInfo1.setTextColor(getResources().getColor(R.color.text_color));
-                mapBottomPadding = relativeLayoutPoolInfoBar.getMeasuredHeight();
+                mapBottomPadding = 72f;
                 //setGoogleMapPadding(70);
             } else if ((getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) &&
                     (!TextUtils.isEmpty(textToShow))) {
@@ -10209,7 +10209,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     textViewPoolInfo1.append(sb);
                 }
-                mapBottomPadding = relativeLayoutPoolInfoBar.getMeasuredHeight();
+                mapBottomPadding = 72f;
                 //setGoogleMapPadding(70);
             } else {
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
