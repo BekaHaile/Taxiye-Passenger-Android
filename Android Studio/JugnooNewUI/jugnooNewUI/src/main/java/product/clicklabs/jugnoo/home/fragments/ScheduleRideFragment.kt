@@ -586,7 +586,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         if(!message.isNullOrBlank()){
                             DialogPopup.alertPopupWithListener(activity, "", message) { (activity as HomeActivity).onBackPressed() }
                         } else {
-                            (activity as HomeActivity).onBackPressed()
+                            DialogPopup.alertPopupWithListener(activity, "", getString(R.string.booking_scheduled_successfully)) { (activity as HomeActivity).onBackPressed() }
                         }
                     }
 

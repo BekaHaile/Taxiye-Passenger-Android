@@ -95,7 +95,9 @@
                 android:text="@{upcomingRide.destinationAddress}"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_pickup_address"
-                tools:text="Patiala" />
+                tools:text="Patiala"
+                android:visibility="@{TextUtils.isEmpty(upcomingRide.destinationAddress) ? View.GONE : View.VISIBLE}"
+                />
 
             <View
                 android:id="@+id/divider_address"
