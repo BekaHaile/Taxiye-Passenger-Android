@@ -1157,7 +1157,7 @@ public class UserData {
 	}
 
 	public int getRegAs() {
-		return 1;
+		return regAs;
 	}
 
 	public void setRegAs(int regAs) {
