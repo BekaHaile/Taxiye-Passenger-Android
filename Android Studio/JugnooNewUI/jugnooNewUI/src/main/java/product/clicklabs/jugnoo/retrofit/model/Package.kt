@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.retrofit.model
 
 import android.content.Context
+import android.text.TextUtils
 import com.google.gson.annotations.SerializedName
 import product.clicklabs.jugnoo.utils.Utils
 import kotlin.math.roundToInt
@@ -29,6 +30,8 @@ class Package {
     var farePerWaitingMin: Double? = null
     @SerializedName("fare_threshold_waiting_time")
     var fareThresholdWaitingTime: Double? = null
+    @SerializedName("package_name")
+    var packageNameF: String? = null
     @SerializedName("start_time")
     var startTime: String? = null
     @SerializedName("end_time")
@@ -60,6 +63,9 @@ class Package {
 //                context.getString(R.string.per_format, Utils.getDistanceUnit(distanceUnit))
 //    }
     fun getPackageName(context: Context, currency: String?, distanceUnit: String?): String {
+        if(!TextUtils.isEmpty(packageNameF)){
+            return packageNameF!!;
+        }
         val fareThrTime: String
         if (fareThresholdTime!!.roundToInt() >= 60) {
             if (fareThresholdTime!!.roundToInt() == 60) {
