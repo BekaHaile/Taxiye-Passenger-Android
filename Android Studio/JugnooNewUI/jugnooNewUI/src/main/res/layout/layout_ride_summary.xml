@@ -1023,12 +1023,30 @@
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/buttonEndRideOk"
-        style="@style/ButtonThemeCapsule"
+    <LinearLayout
+        android:layout_width="660px"
         android:layout_below="@+id/linearLayoutReceipt"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:layout_marginTop="15px"
-        android:text="@string/ok" />
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="320px"
+            android:id="@+id/buttonEndRideOk"
+            style="@style/ButtonThemeCapsule"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="30px"
+            android:text="@string/ok" />
+
+        <Button
+            android:id="@+id/btnSendInvoice"
+            style="@style/ButtonThemeCapsule"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_width="320px"
+            android:textSize="30px"
+            android:text="@string/send_invoice" />
+    </LinearLayout>
 
 </RelativeLayout>

@@ -299,6 +299,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case FETCH_CORPORATES:
                 RestClient.getApiService().fetchUserCorporates(params, callback);
                 break;
+            case SEND_EMAIL_INVOICE:
+                RestClient.getApiService().sendEmailInvoice(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

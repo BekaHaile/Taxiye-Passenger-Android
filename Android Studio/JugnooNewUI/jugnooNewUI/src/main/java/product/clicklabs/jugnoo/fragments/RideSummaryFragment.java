@@ -26,12 +26,20 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
+import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
@@ -51,6 +59,8 @@ import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -88,7 +98,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             tvIncludeToll, tvEndRideRazorpay,tvEndRideStripeCard, tvEndRideTaxNet, tvEndRideRazorpayValue,tvEndRideStripeCardValue, tvEndRideTaxNetValue,textViewEndRideMpesaValue;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue,
             tvEndRideCorporate, tvEndRideCorporateValue, tvEndRidePOS, tvEndRidePOSValue;
-    Button buttonEndRideOk;
+    Button buttonEndRideOk, btnSendInvoice;
     EndRideDiscountsAdapter endRideDiscountsAdapter;
 
     RelativeLayout rlLuggageChargesNew;
@@ -282,6 +292,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
             buttonEndRideOk = (Button) rootView.findViewById(R.id.buttonEndRideOk);
             buttonEndRideOk.setTypeface(Fonts.mavenRegular(activity));
+            btnSendInvoice = (Button) rootView.findViewById(R.id.btnSendInvoice);
+            btnSendInvoice.setTypeface(Fonts.mavenRegular(activity));
 
             rlLuggageChargesNew = (RelativeLayout) rootView.findViewById(R.id.rlLuggageChargesNew);
             tvLuggageChargesNewValue = (TextView) rootView.findViewById(R.id.tvLuggageChargesNewValue);
@@ -338,6 +350,18 @@ public class RideSummaryFragment extends Fragment implements Constants {
 					}
 				}
 			});
+            if(Data.autoData.getResendEmailInvoiceEnabled() == 1) {
+                btnSendInvoice.setVisibility(View.VISIBLE);
+            } else {
+                btnSendInvoice.setVisibility(View.GONE);
+            }
+            btnSendInvoice.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+				    sendEmailInvoice();
+				}
+			});
 
             try {
 				if (engagementId == -1 && Data.autoData.getEndRideData() != null) {
@@ -374,6 +398,33 @@ public class RideSummaryFragment extends Fragment implements Constants {
         return rootView;
     }
 
+    private void sendEmailInvoice() {
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
+
+        new ApiCommon<>(activity).showLoader(true).execute(params, ApiName.SEND_EMAIL_INVOICE,
+                new APICommonCallback<FeedCommonResponse>() {
+
+                    @Override
+                    public void onSuccess(final FeedCommonResponse response, String message, int flag) {
+
+                        DialogPopup.alertPopupWithListener(activity,"",
+                                message, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
+
+
+    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {

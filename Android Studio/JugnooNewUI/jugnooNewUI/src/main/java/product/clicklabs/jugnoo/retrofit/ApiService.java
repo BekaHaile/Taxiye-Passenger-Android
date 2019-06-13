@@ -659,4 +659,8 @@ public interface ApiService {
     @POST("/fetch_user_corporates")
     void fetchUserCorporates(@FieldMap Map<String, String> params, Callback<FetchCorporatesResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/send_email_invoice")
+    void sendEmailInvoice(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
 }

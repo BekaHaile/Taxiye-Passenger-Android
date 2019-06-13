@@ -75,6 +75,7 @@ public class AutoData {
     private boolean isServiceAv;
     private int lock = 0;
     private String  previousSelService = "";
+    private int resendEmailInvoiceEnabled;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -83,7 +84,7 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare, int resendEmailInvoiceEnabled) {
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -110,6 +111,7 @@ public class AutoData {
         this.isRazorpayEnabled = isRazorpayEnabled;
         this.isTipEnabled = isTipEnabled;
         this.showRegionSpecificFare = showRegionSpecificFare;
+        this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
         ArrayList<Integer> rideTypes = new ArrayList<>();
         ArrayList<Integer> regionIds = new ArrayList<>();
         rideTypes.add(ServiceTypeValue.NORMAL.getType());
@@ -730,5 +732,13 @@ public class AutoData {
 
     public void setCurrency(String currency) {
         this.currency = currency;
+    }
+
+    public int getResendEmailInvoiceEnabled() {
+        return resendEmailInvoiceEnabled;
+    }
+
+    public void setResendEmailInvoiceEnabled(int resendEmailInvoiceEnabled) {
+        this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
     }
 }
