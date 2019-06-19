@@ -8124,6 +8124,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     }
                                 }
 
+                                if(Data.autoData.getPickupPaymentOption()==9) {
+                                    SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+                                    int cardPos = sharedPref.getInt(Constants.STRIPE_SELECTED_POS, 0);
+                                    String card_id = MyApplication.getInstance().getWalletCore().getConfigData(9).getCardsData().get(cardPos).getCardId();
+                                    nameValuePairs.put("card_id", card_id);
+                                }
 //                                if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
 //                                    nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
 //
@@ -8132,6 +8138,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                                        nameValuePairs.put(KEY_RIDE_TIME, getApiFindADriver().getParams().get(KEY_RIDE_TIME));
 //                                    }
 //                                }
+
+
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
                                 try {
@@ -11003,6 +11011,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private CallbackPaymentOptionSelector callbackPaymentOptionSelector = new CallbackPaymentOptionSelector() {
         @Override
         public void onPaymentOptionSelected(PaymentOption paymentOption) {
+
             Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
             getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
             getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();

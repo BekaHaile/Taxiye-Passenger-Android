@@ -327,7 +327,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 				}else{
 					paymentActivity.getSupportFragmentManager().beginTransaction()
 							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-							.add(R.id.fragLayout,  StripeViewCardFragment.newInstance(configData.getCardsData().get(0),paymentOption),
+							.add(R.id.fragLayout,  StripeViewCardFragment.newInstance(configData.getCardsData(),paymentOption),
 									StripeViewCardFragment.class.getName()).addToBackStack(StripeViewCardFragment.class.getName())
 							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
 									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))

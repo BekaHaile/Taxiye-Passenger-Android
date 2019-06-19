@@ -78,6 +78,7 @@ public class StripeAddCardFragment extends Fragment {
     EditText edtCardHolderName;
 
     private StripeCardsStateListener stripeCardsStateListener;
+
     private Unbinder unbinder;
     private boolean isCardNameMandatory;
 
@@ -93,7 +94,6 @@ public class StripeAddCardFragment extends Fragment {
         if(context instanceof StripeCardsStateListener){
             stripeCardsStateListener = (StripeCardsStateListener) context;
         }
-
 
     }
 

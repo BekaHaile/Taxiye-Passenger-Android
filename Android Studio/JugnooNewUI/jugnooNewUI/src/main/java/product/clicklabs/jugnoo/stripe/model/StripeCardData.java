@@ -33,6 +33,8 @@ public class StripeCardData  implements Parcelable {
     @SerializedName("brand")
     private String brand;
 
+    public Boolean selected;
+
     public StripeCardData(String cardId, String last4, String brand) {
         this.cardId = cardId;
         this.last4 = last4;

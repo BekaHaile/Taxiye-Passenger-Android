@@ -559,6 +559,7 @@
     <string name="contacts">Contacts</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="add_card">Add Card</string>
     <string name="send">Send</string>
     <string name="send_invites">Send invites</string>
     <string name="send_invites_2">to friends who haven\'t tried %s</string>

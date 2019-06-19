@@ -1047,15 +1047,15 @@ public class WalletCore {
                 if (configData == null) return;
 
 
-                if (configData.getCardsData() == null || configData.getCardsData().size() == 0) {
+               // if (configData.getCardsData() == null || configData.getCardsData().size() == 0) {
                     try {
                         addCardIntent(activity,paymentOption.getOrdinal());
                         callbackPaymentOptionSelector.onWalletAdd(paymentOption);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    return;
-                }
+                   // return;
+              //  }
 
                 callbackPaymentOptionSelector.onPaymentOptionSelected(paymentOption);
 

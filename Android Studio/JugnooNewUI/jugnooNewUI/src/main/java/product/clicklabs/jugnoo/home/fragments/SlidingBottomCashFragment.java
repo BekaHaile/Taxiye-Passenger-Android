@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.home.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,13 +23,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
+import product.clicklabs.jugnoo.adapters.StripeCardAdapter;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
+import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.wallet.WalletCore;
@@ -50,8 +55,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard,relativeLayoutAcceptCard,relativeLayoutPayStack,
             relativeLayoutMpesa, relativeLayoutMobikwik, relativeLayoutFreeCharge;
     private HomeActivity activity;
-    private RecyclerView rvCorporates;
+    private RecyclerView rvCorporates,rvStripeCards;
     private CorporatesAdapter corporatesAdapter;
+    private StripeCardAdapter stripeCardAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,6 +88,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         rvCorporates = rootView.findViewById(R.id.rvCorporates);
         rvCorporates.setLayoutManager(new LinearLayoutManager(activity));
         rvCorporates.setHasFixedSize(false);
+        rvStripeCards = rootView.findViewById(R.id.rvStripeCardsSlidingBottom);
+        rvStripeCards.setLayoutManager(new LinearLayoutManager(activity));
+        rvStripeCards.setHasFixedSize(false);
         textViewPaytmValue = (TextView) rootView.findViewById(R.id.textViewPaytmValue);
         textViewPaytmValue.setTypeface(Fonts.mavenMedium(getActivity()));
         textViewPaytm = (TextView) rootView.findViewById(R.id.textViewPaytm);
@@ -208,6 +217,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             if(corporatesAdapter!=null){
                 corporatesAdapter.unSelectAll();
             }
+            if(stripeCardAdapter!=null){
+                stripeCardAdapter.unSelectAll();
+            }
             if (PaymentOption.PAYTM.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioPaytm, imageViewRadioMpesa, imageViewRadioMobikwik, imageViewRadioCash,
                         imageViewRadioFreeCharge, ivOtherModesToPay,imageViewRadioStripeCard,imageViewRadioAcceptCard,imageViewRadioPayStack, ivCorporate, ivPos);
@@ -226,6 +238,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             }else if (PaymentOption.STRIPE_CARDS.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioStripeCard,imageViewRadioAcceptCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
                         imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioPayStack, ivCorporate, ivPos);
+                if(stripeCardAdapter!=null){
+                    stripeCardAdapter.selectDefault();
+                }
             } else if (PaymentOption.ACCEPT_CARD.getOrdinal() == Data.autoData.getPickupPaymentOption()) {
                 paymentSelection(imageViewRadioAcceptCard,imageViewRadioStripeCard, imageViewRadioMpesa, imageViewRadioFreeCharge,
                         imageViewRadioMobikwik, imageViewRadioPaytm, imageViewRadioCash,ivOtherModesToPay,imageViewRadioPayStack, ivCorporate, ivPos);
@@ -367,12 +382,29 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 
                         }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
-                            if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
+                            linearLayoutWalletContainer.addView(rvStripeCards);
+                            if (stripeCardAdapter==null) {
+                                stripeCardAdapter = new StripeCardAdapter(paymentModeConfigData.getCardsData(),
+                                        rvStripeCards,  Fonts.mavenLight(activity), new StripeCardAdapter.OnSelectedCallback() {
+                                    @Override
+                                    public void onItemSelected(@NotNull StripeCardData stripeCards, int pos) {
+                                        if(Data.autoData.getPickupPaymentOption()!=PaymentOption.STRIPE_CARDS.getOrdinal()){
+                                            onClick(relativeLayoutStripeCard);
+                                            SharedPreferences sharedPref = activity.getPreferences(Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPref.edit();
+                                            editor.putInt(Constants.STRIPE_SELECTED_POS,pos);
+                                            editor.commit();
+                                        }
+                                    }
+                                },activity);
+                            }
+                            rvStripeCards.setAdapter(stripeCardAdapter);
+                            /*if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
                                 WalletCore.getStripeCardDisplayString(getActivity(),paymentModeConfigData.getCardsData().get(0),textViewStripeCard,ivStripeCardIcon);
                             }else{
                                 textViewStripeCard.setText(getString(R.string.add_card_payments));
                                 ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
-                            }
+                            }*/
                         }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutAcceptCard);
                             if(paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0){
