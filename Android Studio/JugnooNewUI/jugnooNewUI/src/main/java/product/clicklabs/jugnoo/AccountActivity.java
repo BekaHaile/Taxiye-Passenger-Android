@@ -1685,7 +1685,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             if (!transactionUtils.checkIfFragmentAdded(activity, ProfileVerificationFragment.class.getName())) {
                 FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                        .add(container.getId(), ProfileVerificationFragment.newInstance(),
+                        .add(container.getId(), ProfileVerificationFragment.Companion.newInstance(),
                                 ProfileVerificationFragment.class.getName())
                         .addToBackStack(ProfileVerificationFragment.class.getName());
                 if(getSupportFragmentManager().getBackStackEntryCount() > 0){
@@ -1710,7 +1710,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         if (transactionUtils.checkIfFragmentAdded(this, ProfileVerificationFragment.class.getName())) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
-                    .add(relativeLayoutContainer.getId(), DocumentUploadFragment.newInstance(documentData),
+                    .add(relativeLayoutContainer.getId(), DocumentUploadFragment.Companion.newInstance(documentData),
                             DocumentUploadFragment.class.getName())
                     .addToBackStack(DocumentUploadFragment.class.getName());
             if(getSupportFragmentManager().getBackStackEntryCount() > 0){

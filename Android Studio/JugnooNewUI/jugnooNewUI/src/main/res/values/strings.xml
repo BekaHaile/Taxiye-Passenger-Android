@@ -2028,9 +2028,12 @@
     <string name="verified">Verified</string>
     <string name="approval_pending">Approval Pending</string>
     <string name="rejection_reason">Rejection Reason</string>
+    <string name="upload_pending">Upload Pending</string>
     <string name="upload_again">Upload Again</string>
     <string name="doc_status_rejected">Your documents are rejected. Please upload again.</string>
     <string name="min_documents_required">Please upload %s documents before proceeding.</string>
     <string name="tap_here_to_verify">Tap here to verify your account</string>
+    <string name="are_you_sure_to_delete_document">Are you sure to delete this document?</string>
+    <string name="your_documents_are_rejected_upload_again">Your documents are rejected due to certain reasons.</string>
 
 </resources>

@@ -317,6 +317,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case FETCH_DOCUMENTS:
                 RestClient.getApiService().fetchDocuments(params,callback);
                 break;
+            case DELETE_DOCUMENT:
+                RestClient.getApiService().deleteDocument(params,callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

@@ -668,4 +668,8 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/customer/fetch_documents")
     void fetchDocuments(@FieldMap Map<String,String> params,Callback<FetchDocumentResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/delete_document")
+    void deleteDocument(@FieldMap Map<String,String> params, Callback<UploadDocumentResponse> callback);
 }
