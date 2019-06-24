@@ -1041,4 +1041,5 @@ public interface Constants {
     String KEY_REG_AS = "reg_as";
     String KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT = "customer_reg_as_driver_phone_edit_alert";
     String KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE = "customer_reg_as_driver_phone_edit_alert_message";
+    String KEY_CARD_ID = "card_id";
 }

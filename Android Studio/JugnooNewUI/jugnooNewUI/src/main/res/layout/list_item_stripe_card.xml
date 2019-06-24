@@ -1,42 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout
     android:id="@+id/linearStripe"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:theme="@style/GreyHighlight">
 
     <TextView
         android:id="@+id/tvStripeCardName"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_43"
-        android:layout_marginStart="18dp"
         android:layout_marginEnd="18dp"
-        android:textColor="@color/text_color"
-        android:textSize="34px"
-        android:gravity="center_vertical"
+        android:layout_marginStart="18dp"
         android:drawablePadding="10dp"
         android:drawableStart="@drawable/ic_radio_button_checked"
-        app:typekitFont="maven"
-        android:theme="@style/GreyHighlight"
-        android:background="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:textColor="@color/text_color"
+        android:textSize="17sp"
+        app:typekitFont="@string/maven_l"
         />
+
     <TextView
         android:id="@+id/tvStripeCardNumber"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_43"
+        android:layout_marginStart="-10dp"
+        android:drawablePadding="10dp"
+        android:gravity="center_vertical"
         android:text="@string/a_z"
         android:textColor="@color/text_color"
-        android:textSize="34px"
-        android:layout_marginLeft="-10dp"
-        android:gravity="center_vertical"
-        android:drawablePadding="10dp"
-        app:typekitFont="maven"
-        android:theme="@style/GreyHighlight"
-        android:background="?attr/selectableItemBackground"
+        android:textSize="17sp"
+        app:typekitFont="@string/maven_l"
         />
-
 
 
 </LinearLayout>

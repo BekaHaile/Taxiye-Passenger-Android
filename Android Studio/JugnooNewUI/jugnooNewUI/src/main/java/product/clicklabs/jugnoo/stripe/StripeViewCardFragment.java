@@ -28,6 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
@@ -172,7 +173,7 @@ public class StripeViewCardFragment extends Fragment implements callback {
 
     private void deleteCardApi(String card_id) {
         HashMap<String, String> params = new HashMap<>();
-        params.put("card_id", card_id);
+        params.put(Constants.KEY_CARD_ID, card_id);
         params.put("is_delete", "1");
         params.put("payment_option", String.valueOf(paymentOption.getOrdinal()));
 

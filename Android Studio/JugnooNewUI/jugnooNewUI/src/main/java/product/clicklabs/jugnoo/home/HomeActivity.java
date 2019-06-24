@@ -8124,12 +8124,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     }
                                 }
 
-                                if(Data.autoData.getPickupPaymentOption()==9) {
-                                    SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-                                    int cardPos = sharedPref.getInt(Constants.STRIPE_SELECTED_POS, 0);
-                                    String card_id = MyApplication.getInstance().getWalletCore().getConfigData(9).getCardsData().get(cardPos).getCardId();
-                                    nameValuePairs.put("card_id", card_id);
+                                if(Data.autoData.getPickupPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                                    String cardId = Prefs.with(HomeActivity.this).getString(Constants.STRIPE_SELECTED_POS, "0");
+                                    if(!cardId.equalsIgnoreCase("0")) {
+                                        nameValuePairs.put(Constants.KEY_CARD_ID, cardId);
+                                    }
                                 }
+                                Prefs.with(HomeActivity.this).save(Constants.STRIPE_SELECTED_POS, "0");
 //                                if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
 //                                    nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
 //

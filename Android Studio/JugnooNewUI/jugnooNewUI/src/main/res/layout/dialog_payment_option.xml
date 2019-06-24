@@ -46,46 +46,6 @@
                 android:paddingTop="20px"
                 android:paddingBottom="20px">
 
-                <LinearLayout
-                    android:id="@+id/llStripeCards"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_43"
-                    android:layout_marginStart="18dp"
-                    android:layout_marginEnd="18dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:tag="@string/dont_touch_me"
-                    android:theme="@style/GreyHighlight"
-                    android:visibility="gone"
-
-                    >
-
-                    <ImageView
-                        android:id="@+id/ivStripeCards"
-                        android:layout_width="16.5dp"
-                        android:layout_height="16.5dp"
-                        android:src="@drawable/ic_radio_button_normal" />
-
-                    <ImageView
-                        android:layout_width="51dp"
-                        android:layout_height="18dp"
-                        android:layout_marginStart="5dp"
-                        android:src="@drawable/ic_card_default" />
-
-                    <TextView
-                        android:id="@+id/tvStripeCards"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="5dp"
-                        android:text="@string/add_card_title"
-                        android:textColor="@color/text_color"
-                        android:textSize="17sp"
-                        app:typekitFont="@string/maven_l" />
-
-
-                </LinearLayout>
-
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rvStripeCards"
                     android:layout_width="match_parent"
