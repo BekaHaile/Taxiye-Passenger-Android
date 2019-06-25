@@ -4,12 +4,10 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -36,7 +34,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
-import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -93,7 +90,7 @@ public class StripeViewCardFragment extends Fragment implements callback {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey(ARGS_CARD_DATA)) {
             Gson gson = new Gson();
-            stripeCardData = gson.fromJson(getArguments().getString(ARGS_CARD_DATA), new TypeToken<List<ShowPanelResponse.Item>>(){}.getType());
+            stripeCardData = gson.fromJson(getArguments().getString(ARGS_CARD_DATA), new TypeToken<List<StripeCardData>>(){}.getType());
             paymentOption = (PaymentOption) getArguments().getSerializable(ARGS_PAYMENT_OPTION);
         }
     }
@@ -136,32 +133,41 @@ public class StripeViewCardFragment extends Fragment implements callback {
                 getActivity().onBackPressed();
                 break;
             case R.id.ivMore:
-                if (popupMenu == null) {
 
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                        .add(R.id.fragLayout, StripeAddCardFragment.newInstance(paymentOption), StripeAddCardFragment.class.getName())
+                        .addToBackStack(StripeAddCardFragment.class.getName())
+                        .hide(getActivity().getSupportFragmentManager().findFragmentByTag(getActivity().getSupportFragmentManager()
+                                .getBackStackEntryAt(getActivity().getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                        .commit();
 
-                    ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.PopupMenu);
-                    popupMenu = new PopupMenu(ctw, view);
-                    //Inflating the Popup using xml file
-                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_stripe_card, popupMenu.getMenu());
-
-                    //registering popup with OnMenuItemClickListener
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        public boolean onMenuItemClick(MenuItem item) {
-                            if (item.getItemId() == R.id.item_add_card) {
-                                getActivity().getSupportFragmentManager().beginTransaction()
-                                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                                        .add(R.id.fragLayout, StripeAddCardFragment.newInstance(paymentOption), StripeAddCardFragment.class.getName())
-                                        .addToBackStack(StripeAddCardFragment.class.getName())
-                                        .hide(getActivity().getSupportFragmentManager().findFragmentByTag(getActivity().getSupportFragmentManager()
-                                                .getBackStackEntryAt(getActivity().getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
-                                        .commit();
-                                return true;
-                            }
-                            return false;
-                        }
-                    });
-                }
-                popupMenu.show();
+//                if (popupMenu == null) {
+//
+//
+//                    ContextThemeWrapper ctw = new ContextThemeWrapper(getActivity(), R.style.PopupMenu);
+//                    popupMenu = new PopupMenu(ctw, view);
+//                    //Inflating the Popup using xml file
+//                    popupMenu.getMenuInflater().inflate(R.menu.popup_menu_stripe_card, popupMenu.getMenu());
+//
+//                    //registering popup with OnMenuItemClickListener
+//                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                        public boolean onMenuItemClick(MenuItem item) {
+//                            if (item.getItemId() == R.id.item_add_card) {
+//                                getActivity().getSupportFragmentManager().beginTransaction()
+//                                        .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+//                                        .add(R.id.fragLayout, StripeAddCardFragment.newInstance(paymentOption), StripeAddCardFragment.class.getName())
+//                                        .addToBackStack(StripeAddCardFragment.class.getName())
+//                                        .hide(getActivity().getSupportFragmentManager().findFragmentByTag(getActivity().getSupportFragmentManager()
+//                                                .getBackStackEntryAt(getActivity().getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+//                                        .commit();
+//                                return true;
+//                            }
+//                            return false;
+//                        }
+//                    });
+//                }
+//                popupMenu.show();
 
                 break;
         }

@@ -9,17 +9,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.daimajia.swipe.SimpleSwipeListener;
-import com.daimajia.swipe.SwipeLayout;
-import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
-
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 
-class StripeCardsAdapter extends RecyclerSwipeAdapter<StripeCardsAdapter.ViewHolder> {
+class StripeCardsAdapter extends RecyclerView.Adapter<StripeCardsAdapter.ViewHolder> {
 
     private ArrayList<StripeCardData> stripeCardData;
     private Activity activity;
@@ -39,20 +35,6 @@ class StripeCardsAdapter extends RecyclerSwipeAdapter<StripeCardsAdapter.ViewHol
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        viewHolder.swipeLayout.close();
-        viewHolder.swipeLayout.setShowMode(SwipeLayout.ShowMode.LayDown);
-        viewHolder.swipeLayout.addSwipeListener(new SimpleSwipeListener() {
-            @Override
-            public void onOpen(SwipeLayout layout) {
-
-            }
-        });
-        viewHolder.swipeLayout.setOnDoubleClickListener(new SwipeLayout.DoubleClickListener() {
-            @Override
-            public void onDoubleClick(SwipeLayout layout, boolean surface) {
-
-            }
-        });
         viewHolder.delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,7 +43,6 @@ class StripeCardsAdapter extends RecyclerSwipeAdapter<StripeCardsAdapter.ViewHol
         });
         viewHolder.textView.setText(WalletCore.getStripeCardDisplayString(activity, stripeCardData.get(position).getLast4()));
         viewHolder.textView.setCompoundDrawablesWithIntrinsicBounds(WalletCore.getBrandImage(stripeCardData.get(position).getBrand()), 0, 0, 0);
-        mItemManger.bindView(viewHolder.itemView, position);
     }
 
 
@@ -73,21 +54,15 @@ class StripeCardsAdapter extends RecyclerSwipeAdapter<StripeCardsAdapter.ViewHol
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public ImageView delete;
-        public RelativeLayout viewBackground, viewForeground;
-        public SwipeLayout swipeLayout;
+        public RelativeLayout viewForeground;
 
         public ViewHolder(View itemView) {
             super(itemView);
             this.textView = (TextView) itemView.findViewById(R.id.tv_card);
             this.delete = itemView.findViewById(R.id.delete);
             this.viewForeground = (RelativeLayout) itemView.findViewById(R.id.cards_view_foreground);
-            this.swipeLayout = (SwipeLayout) itemView.findViewById(R.id.swipe);
 
         }
     }
 
-    @Override
-    public int getSwipeLayoutResourceId(int position) {
-        return R.id.swipe;
-    }
 }

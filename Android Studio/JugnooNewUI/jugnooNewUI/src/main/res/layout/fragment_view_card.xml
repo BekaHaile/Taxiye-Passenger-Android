@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="@string/view_card_title"
+            android:text="@string/cards"
             android:textSize="18sp"
             app:typekitFont="@string/maven_r"
             style="@style/title"/>
@@ -40,11 +40,13 @@
             android:layout_width="wrap_content"
             android:id="@+id/ivMore"
             android:padding="10dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:visibility="gone"
-            android:layout_marginEnd="10dp"
             android:layout_centerVertical="true"
-           android:src="@drawable/ic_more_vert"/>
+            android:src="@drawable/ic_add"
+            android:background="?attr/selectableItemBackground"
+            android:theme="@style/GreyHighlight"
+            />
 
 
     </RelativeLayout>
