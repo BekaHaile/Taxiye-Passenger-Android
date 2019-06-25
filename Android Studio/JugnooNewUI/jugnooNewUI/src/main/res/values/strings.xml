@@ -2018,4 +2018,5 @@
     <string name="partner_with_format">Partner with %s</string>
     <string name="registered_as_driver_phone_number_will_be_edited">You are registered as Driver,\nBy editing this account\'s phone number, Driver app account will also get linked to the edited phone number.\nAre you sure you want to edit phone number?</string>
     <string name="send_invoice">Send Invoice</string>
+    <string name="please_select_a_card">Please select a card</string>
 </resources>

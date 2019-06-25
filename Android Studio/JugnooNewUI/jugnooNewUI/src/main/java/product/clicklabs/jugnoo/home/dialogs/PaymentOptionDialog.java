@@ -241,7 +241,6 @@ public class PaymentOptionDialog implements View.OnClickListener {
                     break;
                 case R.id.relativeLayoutStripeCard:
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.STRIPE_CARDS, callbackPaymentOptionSelector);
-                    callback.onPaymentModeUpdated();
                     break;
                 case R.id.relativeLayoutAcceptCard:
                     MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.ACCEPT_CARD, callbackPaymentOptionSelector);

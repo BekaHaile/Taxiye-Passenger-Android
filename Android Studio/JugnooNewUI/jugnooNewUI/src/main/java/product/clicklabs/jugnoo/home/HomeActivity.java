@@ -8130,7 +8130,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         nameValuePairs.put(Constants.KEY_CARD_ID, cardId);
                                     }
                                 }
-                                Prefs.with(HomeActivity.this).save(Constants.STRIPE_SELECTED_POS, "0");
 //                                if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
 //                                    nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
 //

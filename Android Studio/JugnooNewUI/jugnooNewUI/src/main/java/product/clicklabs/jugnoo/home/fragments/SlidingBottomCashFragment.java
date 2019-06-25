@@ -396,10 +396,8 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
                                         rvStripeCards,  Fonts.mavenLight(activity), new StripeCardAdapter.OnSelectedCallback() {
                                     @Override
                                     public void onItemSelected(@NotNull StripeCardData stripeCards, int pos) {
-                                        if(Data.autoData.getPickupPaymentOption()!=PaymentOption.STRIPE_CARDS.getOrdinal()){
                                             Prefs.with(activity).save(Constants.STRIPE_SELECTED_POS, stripeCards.getCardId());
                                             activity.getCallbackPaymentOptionSelector().onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
-                                        }
                                     }
                                 },activity);
                                 rvStripeCards.setAdapter(stripeCardAdapter);

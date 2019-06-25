@@ -17,12 +17,15 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,9 +36,10 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
+import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by Parminder Saini on 10/05/18.
@@ -75,8 +79,9 @@ public class StripeViewCardFragment extends Fragment implements callback {
 
     public static <T extends StripeCardData> StripeViewCardFragment newInstance(ArrayList<StripeCardData> stripeData, PaymentOption paymentOption) {
         StripeViewCardFragment stripeViewCardFragment = new StripeViewCardFragment();
+        Gson gson = new Gson();
         Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(ARGS_CARD_DATA, stripeData);
+        bundle.putString(ARGS_CARD_DATA, gson.toJsonTree(stripeData, new TypeToken<List<StripeCardData>>() {}.getType()).getAsJsonArray().toString());
         bundle.putSerializable(ARGS_PAYMENT_OPTION, paymentOption);
         stripeViewCardFragment.setArguments(bundle);
         return stripeViewCardFragment;
@@ -87,7 +92,8 @@ public class StripeViewCardFragment extends Fragment implements callback {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey(ARGS_CARD_DATA)) {
-            stripeCardData = getArguments().getParcelableArrayList(ARGS_CARD_DATA);
+            Gson gson = new Gson();
+            stripeCardData = gson.fromJson(getArguments().getString(ARGS_CARD_DATA), new TypeToken<List<ShowPanelResponse.Item>>(){}.getType());
             paymentOption = (PaymentOption) getArguments().getSerializable(ARGS_PAYMENT_OPTION);
         }
     }
@@ -183,6 +189,9 @@ public class StripeViewCardFragment extends Fragment implements callback {
                     @Override
                     public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
 
+                        if(Prefs.with(requireActivity()).getString(Constants.STRIPE_SELECTED_POS, "0").equalsIgnoreCase(card_id)){
+                            Prefs.with(requireActivity()).save(Constants.STRIPE_SELECTED_POS, "0");
+                        }
                         if (stripeCardsStateListener != null) {
                             stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(), message, false, paymentOption);
                         }

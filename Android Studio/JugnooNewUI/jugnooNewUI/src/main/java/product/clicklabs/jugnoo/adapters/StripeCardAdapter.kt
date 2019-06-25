@@ -8,8 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import com.sabkuchfresh.adapters.ItemListener
 import kotlinx.android.synthetic.main.list_item_stripe_card.view.*
+import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.stripe.model.StripeCardData
+import product.clicklabs.jugnoo.utils.Prefs
 import product.clicklabs.jugnoo.wallet.WalletCore
 
 
@@ -18,9 +20,6 @@ class StripeCardAdapter (private var stripeData: ArrayList<StripeCardData>?, val
         RecyclerView.Adapter<StripeCardAdapter.ViewHolderStripeCards>(), ItemListener {
 
 
-    companion object {
-        var selectedStripeCardId :Int = -1
-    }
     fun setList(stripeCards: ArrayList<StripeCardData >){
         this.stripeData = stripeCards
         notifyDataSetChanged()
@@ -33,7 +32,6 @@ class StripeCardAdapter (private var stripeData: ArrayList<StripeCardData>?, val
                 corp.selected = false
             }
             stripeData!![pos].selected = true
-            selectedStripeCardId = Integer.parseInt(stripeData!![pos].cardId);
             onSelectedCallback.onItemSelected(stripeData!![pos],pos)
             notifyDataSetChanged()
 
@@ -62,8 +60,9 @@ class StripeCardAdapter (private var stripeData: ArrayList<StripeCardData>?, val
 
     fun selectDefault(){
         if(stripeData != null) {
+            val cardId = Prefs.with(activity).getString(Constants.STRIPE_SELECTED_POS, "0")
             for (i in 0 until stripeData!!.size) {
-                stripeData!![i].selected = Integer.parseInt(stripeData!![i].cardId) == selectedStripeCardId
+                stripeData!![i].selected = stripeData!![i].cardId == cardId
             }
             notifyDataSetChanged()
         }
