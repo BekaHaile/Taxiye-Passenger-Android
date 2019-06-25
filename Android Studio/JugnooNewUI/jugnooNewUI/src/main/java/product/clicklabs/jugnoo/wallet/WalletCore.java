@@ -318,13 +318,13 @@ public class WalletCore {
                 if (requestRideOptionsFragment.getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()) {
                     homeActivity.slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
                     if (Data.autoData.getRegions().size() > 1) {
-                        requestRideOptionsFragment.getPaymentOptionDialog().show();
+                        requestRideOptionsFragment.getPaymentOptionDialog().show(-1);
                     } else {
                         homeActivity.slidingBottomPanel.getViewPager().setCurrentItem(0);
                     }
 
                 } else {
-                    requestRideOptionsFragment.getPaymentOptionDialog().show();
+                    requestRideOptionsFragment.getPaymentOptionDialog().show(-1);
                 }
 
 

@@ -146,7 +146,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 }
             }
             llPaymentOption.setOnClickListener {
-                getPaymentOptionDialog()?.show()
+                getPaymentOptionDialog()?.show(-1)
             }
 
             tvOneWay.setOnClickListener {

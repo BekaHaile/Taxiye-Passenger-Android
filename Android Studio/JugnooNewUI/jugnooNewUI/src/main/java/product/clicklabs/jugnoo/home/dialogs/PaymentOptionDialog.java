@@ -73,7 +73,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
     }
 
 
-    public PaymentOptionDialog show() {
+    public PaymentOptionDialog show(int paymentOption) {
         try {
             dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
             dialog.setContentView(R.layout.dialog_payment_option);
@@ -161,7 +161,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             llCorporate.setOnClickListener(this);
             llPos.setOnClickListener(this);
 
-            orderPaymentModes();
+            orderPaymentModes(paymentOption);
 
             updatePreferredPaymentOptionUI();
 
@@ -386,13 +386,18 @@ public class PaymentOptionDialog implements View.OnClickListener {
         }
     }
 
-    public void orderPaymentModes() {
+    public void orderPaymentModes(int paymentOption) {
         try {
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
                 linearLayoutWalletContainer.removeAllViews();
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
+
+                        if(paymentOption != 1 && paymentOption != paymentModeConfigData.getPaymentOption()){
+                            continue;
+                        }
+
                         if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
                             linearLayoutWalletContainer.addView(relativeLayoutPaytm);
                         } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
@@ -468,6 +473,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
                                 ivPayStackIcon.setImageResource(R.drawable.ic_card_default);
                                 textViewPayStack.setText(activity.getString(R.string.action_add_card_pay_stack));
                             }
+                        }
+
+                        if(paymentOption == paymentModeConfigData.getPaymentOption()){
+                            break;
                         }
                     }
                 }

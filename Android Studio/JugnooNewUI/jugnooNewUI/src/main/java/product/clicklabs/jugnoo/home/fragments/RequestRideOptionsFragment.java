@@ -225,7 +225,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         @Override
         public void onClick(View v) {
             if(v.getId() == R.id.linearLayoutPaymentMode || v.getId() == R.id.linearLayoutPaymentModeMS){
-                getPaymentOptionDialog().show();
+                getPaymentOptionDialog().show(-1);
                 GAUtils.event(RIDES, HOME, WALLET+CLICKED);
             } else if(v.getId() == R.id.linearLayoutFare || v.getId() == R.id.linearLayoutMinFareMS){
                 getFareDetailsDialog().show();

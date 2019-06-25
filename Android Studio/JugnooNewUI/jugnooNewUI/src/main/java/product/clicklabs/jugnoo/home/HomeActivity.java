@@ -199,6 +199,7 @@ import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PartnerWithJugnooDialog;
+import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
@@ -1020,7 +1021,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         bPayTip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDriverTipInteractor().addTip(tipSelected);
+                if(Data.autoData != null && Data.autoData.getEndRideData() != null) {
+                    if (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                        getPaymentOptionDialogForTip().show(Data.autoData.getEndRideData().getPaymentOption());
+                    } else {
+                        getDriverTipInteractor().addTip(tipSelected, -1);
+                    }
+                }
             }
         });
         textWatcherOtherTip = new TextWatcher() {
@@ -1341,7 +1348,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         linearLayoutPaymentModeConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show();
+                slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show(-1);
             }
         });
 
@@ -11057,6 +11064,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             return Data.autoData != null && Data.autoData.isRazorpayEnabled();
         }
     };
+
+
+    private PaymentOptionDialog paymentOptionDialogTip;
+    public PaymentOptionDialog getPaymentOptionDialogForTip(){
+        if(paymentOptionDialogTip == null){
+            paymentOptionDialogTip = new PaymentOptionDialog(this, getCallbackPaymentOptionSelector(), new PaymentOptionDialog.Callback() {
+                @Override
+                public void onDialogDismiss() {
+
+                }
+
+                @Override
+                public void onPaymentModeUpdated() {
+                    getDriverTipInteractor().addTip(tipSelected, Data.autoData.getEndRideData().getPaymentOption());
+                }
+            });
+        }
+        return paymentOptionDialogTip;
+    }
 
     private Integer likePickupDropVisibility = null;
     private Integer getLikePickupDropVisibility(){
