@@ -76,6 +76,7 @@ public class AutoData {
     private int lock = 0;
     private String  previousSelService = "";
     private int resendEmailInvoiceEnabled;
+    private int customerNotes;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -740,5 +741,13 @@ public class AutoData {
 
     public void setResendEmailInvoiceEnabled(int resendEmailInvoiceEnabled) {
         this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
+    }
+
+    public int getCustomerNotes() {
+        return customerNotes;
+    }
+
+    public void setCustomerNotes(int customerNotes) {
+        this.customerNotes = customerNotes;
     }
 }

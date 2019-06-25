@@ -187,6 +187,7 @@ public class ApiFindADriver {
 			}
 			Data.autoData.setDistanceUnit(findADriverResponse.getDistanceUnit());
 			Data.autoData.setCurrency(findADriverResponse.getCurrency());
+			Data.autoData.setCustomerNotes(findADriverResponse.getCustomerNotes());
 
 			Data.autoData.setDriverFareFactor(1);
 			if(findADriverResponse.getDriverFareFactor() != null) {
