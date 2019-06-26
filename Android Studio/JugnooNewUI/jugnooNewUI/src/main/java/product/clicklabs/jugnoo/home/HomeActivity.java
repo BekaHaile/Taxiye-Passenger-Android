@@ -1023,7 +1023,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 if(Data.autoData != null && Data.autoData.getEndRideData() != null) {
                     if (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
-                        getPaymentOptionDialogForTip().show(Data.autoData.getEndRideData().getPaymentOption());
+                        getPaymentOptionDialogForTip().show(Data.autoData.getEndRideData().getPaymentOption(), getString(R.string.pay_for_tip_using));
                     } else {
                         getDriverTipInteractor().addTip(tipSelected, -1);
                     }
@@ -1348,7 +1348,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         linearLayoutPaymentModeConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show(-1);
+                slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show(-1, null);
             }
         });
 
@@ -11037,6 +11037,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(getScheduleRideFragment()!=null){
                 getScheduleRideFragment().dismissPaymentDialog();
             }
+            if(passengerScreenMode == PassengerScreenMode.P_RIDE_END){
+                getPaymentOptionDialogForTip().dismiss();
+            }
         }
 
         @Override
@@ -11077,7 +11080,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 @Override
                 public void onPaymentModeUpdated() {
-                    getDriverTipInteractor().addTip(tipSelected, Data.autoData.getEndRideData().getPaymentOption());
+                    DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
+                            getString(R.string.confirm_payment_via_card_ending_format,
+                                    MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(HomeActivity.this, Data.autoData.getPickupPaymentOption())),
+                            v -> getDriverTipInteractor().addTip(tipSelected, Data.autoData.getEndRideData().getPaymentOption()));
                 }
             });
         }

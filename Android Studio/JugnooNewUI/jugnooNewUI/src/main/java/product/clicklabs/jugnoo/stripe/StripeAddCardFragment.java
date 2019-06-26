@@ -44,6 +44,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -293,6 +294,11 @@ public class StripeAddCardFragment extends Fragment {
 
                 if(stripeCardsStateListener!=null){
                     stripeCardsStateListener.onCardsUpdated(stripeCardResponse.getStripeCardData(),message,true,paymentOption);
+                    for(StripeCardData scd : stripeCardResponse.getStripeCardData()){
+                        if(scd.getLast4().equalsIgnoreCase(token.getLast4())){
+                            Prefs.with(requireActivity()).save(Constants.STRIPE_SELECTED_POS, scd.getCardId());
+                        }
+                    }
                 }
                 if(Data.userData != null
                         && Prefs.with(requireActivity()).getInt(Constants.KEY_CUSTOMER_SETTLE_DEBT_AFTER_ADD_CARD, 0) == 1) {

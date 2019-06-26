@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -59,7 +60,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             imageViewRadioMpesa, imageViewRadioStripeCard, ivStripeCardIcon, imageViewRadioAcceptCard, ivAcceptCardIcon,
             imageViewRadioPayStack, ivPayStackIcon, ivCorporate, ivPos;
 
-    private TextView textViewPaytm, textViewStripeCard, textViewAcceptCard, textViewPayStack, textViewPaytmValue, textViewMobikwik,
+    private TextView textViewPayForRides, textViewPaytm, textViewStripeCard, textViewAcceptCard, textViewPayStack, textViewPaytmValue, textViewMobikwik,
             textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay, textViewMpesa,
             textViewMpesaValue;
     private RecyclerView rvCorporates, rvStripeCards;
@@ -73,7 +74,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
     }
 
 
-    public PaymentOptionDialog show(int paymentOption) {
+    public PaymentOptionDialog show(int paymentOption, String title) {
         try {
             dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
             dialog.setContentView(R.layout.dialog_payment_option);
@@ -88,7 +89,11 @@ public class PaymentOptionDialog implements View.OnClickListener {
             dialog.setCanceledOnTouchOutside(true);
 
             LinearLayout linearLayoutInner = (LinearLayout) dialog.findViewById(R.id.linearLayoutInner);
-            ((TextView) dialog.findViewById(R.id.textViewPayForRides)).setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+            textViewPayForRides = (TextView) dialog.findViewById(R.id.textViewPayForRides);
+            textViewPayForRides.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
+            if(!TextUtils.isEmpty(title)){
+                textViewPayForRides.setText(title);
+            }
 
             linearLayoutWalletContainer = (LinearLayout) dialog.findViewById(R.id.linearLayoutWalletContainer);
             relativeLayoutPaytm = (RelativeLayout) dialog.findViewById(R.id.relativeLayoutPaytm);
@@ -394,7 +399,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
 
-                        if(paymentOption != 1 && paymentOption != paymentModeConfigData.getPaymentOption()){
+                        if(paymentOption != -1 && paymentOption != paymentModeConfigData.getPaymentOption()){
                             continue;
                         }
 

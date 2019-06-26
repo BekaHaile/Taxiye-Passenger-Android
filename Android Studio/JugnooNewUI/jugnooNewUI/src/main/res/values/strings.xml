@@ -2020,4 +2020,6 @@
     <string name="send_invoice">Send Invoice</string>
     <string name="please_select_a_card">Please select a card</string>
     <string name="cards">Cards</string>
+    <string name="pay_for_tip_using">Pay for tip using</string>
+    <string name="confirm_payment_via_card_ending_format">Confirm payment via card ending with %s</string>
 </resources>
