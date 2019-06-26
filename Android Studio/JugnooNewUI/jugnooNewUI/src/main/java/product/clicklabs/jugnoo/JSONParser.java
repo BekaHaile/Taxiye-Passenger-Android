@@ -73,6 +73,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
@@ -1041,6 +1042,19 @@ public class JSONParser implements Constants {
         int showTipOption = jLastRideData.optInt(Constants.KEY_SHOW_TIP_OPTION, 1);
         double paidUsingPOS = jLastRideData.optDouble(Constants.KEY_PAID_USING_POS, 0);
 
+        JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
+        ArrayList<DiscountType> stripeCardsAmount = new ArrayList<>();
+        if(jCardDetails != null) {
+            for (int i = 0; i < jCardDetails.length(); i++) {
+                DiscountType discountType = new DiscountType(WalletCore.getStripeCardDisplayString(MyApplication.getInstance(),
+                        jCardDetails.getJSONObject(i).getString(Constants.KEY_LAST_4)),
+                        jCardDetails.getJSONObject(i).getDouble(Constants.KEY_AMOUNT_PAID), 0);
+                if (discountType.value > 0) {
+                    stripeCardsAmount.add(discountType);
+                }
+            }
+        }
+
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
 				jLastRideData.getString("drop_address"),
@@ -1059,7 +1073,8 @@ public class JSONParser implements Constants {
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
-                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide, partnerName, showTipOption, paidUsingPOS);
+                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount);
 	}
 
 

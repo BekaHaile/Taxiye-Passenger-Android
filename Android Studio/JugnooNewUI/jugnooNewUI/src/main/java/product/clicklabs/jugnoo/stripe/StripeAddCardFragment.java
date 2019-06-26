@@ -297,6 +297,7 @@ public class StripeAddCardFragment extends Fragment {
                     for(StripeCardData scd : stripeCardResponse.getStripeCardData()){
                         if(scd.getLast4().equalsIgnoreCase(token.getLast4())){
                             Prefs.with(requireActivity()).save(Constants.STRIPE_SELECTED_POS, scd.getCardId());
+                            break;
                         }
                     }
                 }
