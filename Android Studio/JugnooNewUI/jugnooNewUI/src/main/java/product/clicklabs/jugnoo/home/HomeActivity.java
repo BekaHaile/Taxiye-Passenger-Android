@@ -1022,6 +1022,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 if(Data.autoData != null && Data.autoData.getEndRideData() != null) {
+                    if(tipSelected <= 0){
+                        Utils.showToast(HomeActivity.this, getString(R.string.please_select_some_amount));
+                        return;
+                    }
                     if (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
                         getPaymentOptionDialogForTip().show(Data.autoData.getEndRideData().getPaymentOption(), getString(R.string.pay_for_tip_using));
                     } else {
@@ -3424,7 +3428,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
                     mapLayout.setVisibility(View.VISIBLE);
                     endRideReviewRl.setVisibility(View.GONE);
-                    tipSelected = 0;
+                    if(tipSelected != 0) {
+                        tipSelected = 0;
+                        onTipSelected(true);
+                    }
                 }
 
 

@@ -1048,9 +1048,15 @@ public class JSONParser implements Constants {
             for (int i = 0; i < jCardDetails.length(); i++) {
                 DiscountType discountType = new DiscountType(WalletCore.getStripeCardDisplayString(MyApplication.getInstance(),
                         jCardDetails.getJSONObject(i).getString(Constants.KEY_LAST_4)),
-                        jCardDetails.getJSONObject(i).getDouble(Constants.KEY_AMOUNT_PAID), 0);
+                        jCardDetails.getJSONObject(i).getDouble(Constants.KEY_AMOUNT_PAID),
+                        jCardDetails.getJSONObject(i).getInt(Constants.KEY_ID));
                 if (discountType.value > 0) {
-                    stripeCardsAmount.add(discountType);
+                    int index = stripeCardsAmount.indexOf(discountType);
+                    if(index > -1){
+                        stripeCardsAmount.get(index).setValue(stripeCardsAmount.get(index).getValue() + discountType.value);
+                    } else {
+                        stripeCardsAmount.add(discountType);
+                    }
                 }
             }
         }

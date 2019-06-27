@@ -617,7 +617,11 @@ public class RideSummaryFragment extends Fragment implements Constants {
                         discountTypes.add(new DiscountType(WalletCore.getStripeCardDisplayString(activity,endRideData.getLast_4()),
                                 endRideData.getPaidUsingStripe(), 0));
                     }else{
-                        discountTypes.add(new DiscountType(MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(activity, PaymentOption.STRIPE_CARDS.getOrdinal()),
+                        String card = MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(activity, PaymentOption.STRIPE_CARDS.getOrdinal());
+                        if(TextUtils.isDigitsOnly(card)){
+                            card = WalletCore.getStripeCardDisplayString(activity, card);
+                        }
+                        discountTypes.add(new DiscountType(card,
                                 endRideData.getPaidUsingStripe(), 0));
 
                     }

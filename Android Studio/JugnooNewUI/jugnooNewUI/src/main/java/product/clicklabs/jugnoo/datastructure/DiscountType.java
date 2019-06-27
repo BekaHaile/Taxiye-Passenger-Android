@@ -35,4 +35,9 @@ public class DiscountType {
 	public void setReferenceId(int referenceId) {
 		this.referenceId = referenceId;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof DiscountType && ((DiscountType) obj).referenceId == referenceId;
+	}
 }

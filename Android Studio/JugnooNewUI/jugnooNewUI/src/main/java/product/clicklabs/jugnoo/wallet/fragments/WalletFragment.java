@@ -110,30 +110,12 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		}
 	}
 
-	@Override
-    public void onStart() {
-        super.onStart();
-//        FlurryAgent.init(paymentActivity, Config.getFlurryKey());
-//        FlurryAgent.onStartSession(paymentActivity, Config.getFlurryKey());
-//        FlurryAgent.onEvent("Register started");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//        FlurryAgent.onEndSession(paymentActivity);
-    }
-
-	private void parseArguments(){
-	}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_wallet, container, false);
 
         paymentActivity = (PaymentActivity) getActivity();
-
-		parseArguments();
 
 		GAUtils.trackScreenView(WALLET);
 
@@ -504,7 +486,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 			this.stripeConfigData = paymentModeConfigData;
 
 			if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
-				textViewStripeCard.setText(getString(R.string.view_card_wallet));
+				textViewStripeCard.setText(getString(R.string.view_cards));
 			} else {
 				textViewStripeCard.setText(getString(R.string.action_add_card_stripe));
 			}
