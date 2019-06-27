@@ -105,6 +105,7 @@ class DocumentUploadFragment : Fragment() {
         if (picker == null) {
             picker = Picker.Builder(activity!!, R.style.AppThemePicker_NoActionBar).setPickMode(Picker.PickMode.SINGLE_IMAGE).build()
         }
+        picker?.limit = 1
         picker!!.startActivity(this@DocumentUploadFragment, activity, REQUEST_CODE_SELECT_IMAGES)
 
     }
