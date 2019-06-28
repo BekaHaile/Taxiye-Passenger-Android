@@ -20,7 +20,7 @@ public class EndRideData {
 		distance, rideTime, waitTime, baseFare, fareFactor, finalFare, sumAdditionalCharges;
 	public double paidUsingPaytm, paidUsingMobikwik, paidUsingFreeCharge,paidUsingMpesa, paidUsingRazorpay;
 	public int waitingChargesApplicable;
-	public ArrayList<DiscountType> discountTypes;
+	public ArrayList<DiscountType> discountTypes, stripeCardsAmount;
 	private String rideDate, phoneNumber, tripTotal, engagementDate, invoiceAdditionalTextCabs;
 	private int vehicleType, isPooled;
 	private VehicleIconSet vehicleIconSet;
@@ -54,7 +54,8 @@ public class EndRideData {
 					   double paidUsingStripe, String last_4, int totalRide, int status, String supportNumber, String invoiceAdditionalTextCabs,
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
 					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge, double driverTipAmount,
-					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide, String partnerName, int showTipOption,double paidUsingPOS){
+					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide,
+					   String partnerName, int showTipOption,double paidUsingPOS, ArrayList<DiscountType> stripeCardsAmount){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -135,6 +136,7 @@ public class EndRideData {
 		this.taxPercentage = taxPercentage;
 		this.reverseBid = reverseBid;
 		this.paidUsingPOS = paidUsingPOS;
+		this.stripeCardsAmount = stripeCardsAmount;
 
 		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges
 				+ this.tollCharge + this.driverTipAmount + this.netCustomerTax;
@@ -192,6 +194,17 @@ public class EndRideData {
 
 	public void setDiscountTypes(ArrayList<DiscountType> discountTypes) {
 		this.discountTypes = discountTypes;
+	}
+
+	public ArrayList<DiscountType> getStripeCardsAmount() {
+		if(stripeCardsAmount == null){
+			stripeCardsAmount = new ArrayList<>();
+		}
+		return stripeCardsAmount;
+	}
+
+	public void setStripeCardsAmount(ArrayList<DiscountType> stripeCardsAmount) {
+		this.stripeCardsAmount = stripeCardsAmount;
 	}
 
 	public String getEngagementDate() {

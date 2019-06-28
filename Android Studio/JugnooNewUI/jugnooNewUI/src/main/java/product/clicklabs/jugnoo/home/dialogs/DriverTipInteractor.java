@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.picker.image.util.Util;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
@@ -29,6 +28,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
@@ -86,7 +86,7 @@ public class DriverTipInteractor {
                             actionButton.setText(activity.getString(R.string.done));
                       }else{
                             try{
-                                addTip(Double.parseDouble(edtAmount.getText().toString().trim()));
+                                addTip(Double.parseDouble(edtAmount.getText().toString().trim()), -1);
                             } catch (NumberFormatException e) {
                                 e.printStackTrace();
                             }
@@ -150,11 +150,11 @@ public class DriverTipInteractor {
         }
     }
 
-    public void addTip(double tipAmount) {
+    public void addTip(double tipAmount, int paymentOption) {
         PaymentModeConfigData stripePaymentData =   MyApplication.getInstance().getWalletCore().getConfigData(PaymentOption.STRIPE_CARDS.getOrdinal());
         if(!activity.getResources().getBoolean(R.bool.is_card_mandatory_for_driver_tip) ||
            (stripePaymentData!=null &&  stripePaymentData.getCardsData()!=null && stripePaymentData.getCardsData().size()>0)){
-            editTip(tipAmount);
+            editTip(tipAmount, paymentOption);
        }else{
 
             DialogPopup.alertPopupWithListener(activity, "", activity.getString(R.string.please_add_card_to_proceed), new View.OnClickListener() {
@@ -231,12 +231,17 @@ public class DriverTipInteractor {
     }
 
 
-    private void editTip(final Double amount){
+    private void editTip(final Double amount, final int paymentOption){
         final HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
         params.put(Constants.KEY_TIP_AMOUNT, String.valueOf(amount));
         if(HomeActivity.passengerScreenMode== PassengerScreenMode.P_RIDE_END) {
             params.put(Constants.KEY_PAY_VIA_STRIPE, String.valueOf(activity.getResources().getBoolean(R.bool.is_card_mandatory_for_driver_tip) ? 1 : 0));
+
+            String cardId = Prefs.with(activity).getString(Constants.STRIPE_SELECTED_POS, "0");
+            if(paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal() && !cardId.equalsIgnoreCase("0")){
+                params.put(Constants.KEY_CARD_ID, cardId);
+            }
         }
 
         new ApiCommon<>(activity).showLoader(true).execute(params, ApiName.EDIT_TIP,

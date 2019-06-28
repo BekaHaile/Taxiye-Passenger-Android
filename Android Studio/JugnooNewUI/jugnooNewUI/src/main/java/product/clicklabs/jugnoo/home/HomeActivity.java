@@ -199,6 +199,7 @@ import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.PartnerWithJugnooDialog;
+import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
@@ -1020,7 +1021,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         bPayTip.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getDriverTipInteractor().addTip(tipSelected);
+                if(Data.autoData != null && Data.autoData.getEndRideData() != null) {
+                    if(tipSelected <= 0){
+                        Utils.showToast(HomeActivity.this, getString(R.string.please_select_some_amount));
+                        return;
+                    }
+                    if (Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                        getPaymentOptionDialogForTip().show(Data.autoData.getEndRideData().getPaymentOption(), getString(R.string.pay_for_tip_using));
+                    } else {
+                        getDriverTipInteractor().addTip(tipSelected, -1);
+                    }
+                }
             }
         });
         textWatcherOtherTip = new TextWatcher() {
@@ -1341,7 +1352,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         linearLayoutPaymentModeConfirm.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show();
+                slidingBottomPanel.getRequestRideOptionsFragment().getPaymentOptionDialog().show(-1, null);
             }
         });
 
@@ -3417,7 +3428,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
                     mapLayout.setVisibility(View.VISIBLE);
                     endRideReviewRl.setVisibility(View.GONE);
-                    tipSelected = 0;
+                    if(tipSelected != 0) {
+                        tipSelected = 0;
+                        onTipSelected(true);
+                    }
                 }
 
 
@@ -7690,11 +7704,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             String vehicleIconUrl = jObj.optString(Constants.KEY_MARKER_ICON);
             Prefs.with(this).save(Constants.KEY_EMERGENCY_NO, jObj.optString(KEY_EMERGENCY_NO, getString(R.string.police_number)));
             int isCorporateRide= jObj.optInt(Constants.KEY_IS_CORPORATE_RIDE, 0);
+            String cardId= jObj.optString(Constants.KEY_CARD_ID, "0");
 
-            Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), latitude, longitude, userName,
+            Data.autoData.setAssignedDriverInfo(new DriverInfo(this, Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
-                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount, isCorporateRide));
+                    cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
+                    isCorporateRide, cardId));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -8124,6 +8140,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     }
                                 }
 
+                                if(Data.autoData.getPickupPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                                    String cardId = Prefs.with(HomeActivity.this).getString(Constants.STRIPE_SELECTED_POS, "0");
+                                    if(!cardId.equalsIgnoreCase("0")) {
+                                        nameValuePairs.put(Constants.KEY_CARD_ID, cardId);
+                                    }
+                                }
 //                                if(regionSelected.getRegionFare() != null && regionSelected.getFareMandatory() == 1){
 //                                    nameValuePairs.put(Constants.KEY_FARE, "" + regionSelected.getRegionFare().getFare());
 //
@@ -8132,6 +8154,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                                        nameValuePairs.put(KEY_RIDE_TIME, getApiFindADriver().getParams().get(KEY_RIDE_TIME));
 //                                    }
 //                                }
+
+
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
                                 try {
@@ -11003,6 +11027,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private CallbackPaymentOptionSelector callbackPaymentOptionSelector = new CallbackPaymentOptionSelector() {
         @Override
         public void onPaymentOptionSelected(PaymentOption paymentOption) {
+
             Data.autoData.setPickupPaymentOption(paymentOption.getOrdinal());
             getSlidingBottomPanel().getRequestRideOptionsFragment().updatePaymentOption();
             getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
@@ -11018,6 +11043,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             getSlidingBottomPanel().getRequestRideOptionsFragment().dismissPaymentDialog();
             if(getScheduleRideFragment()!=null){
                 getScheduleRideFragment().dismissPaymentDialog();
+            }
+            if(passengerScreenMode == PassengerScreenMode.P_RIDE_END){
+                getPaymentOptionDialogForTip().dismiss();
             }
         }
 
@@ -11046,6 +11074,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             return Data.autoData != null && Data.autoData.isRazorpayEnabled();
         }
     };
+
+
+    private PaymentOptionDialog paymentOptionDialogTip;
+    public PaymentOptionDialog getPaymentOptionDialogForTip(){
+        if(paymentOptionDialogTip == null){
+            paymentOptionDialogTip = new PaymentOptionDialog(this, getCallbackPaymentOptionSelector(), new PaymentOptionDialog.Callback() {
+                @Override
+                public void onDialogDismiss() {
+
+                }
+
+                @Override
+                public void onPaymentModeUpdated() {
+                    DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this,
+                            getString(R.string.confirm_payment_via_card_ending_format,
+                                    MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(HomeActivity.this, Data.autoData.getPickupPaymentOption())),
+                            v -> getDriverTipInteractor().addTip(tipSelected, Data.autoData.getEndRideData().getPaymentOption()));
+                }
+            });
+        }
+        return paymentOptionDialogTip;
+    }
 
     private Integer likePickupDropVisibility = null;
     private Integer getLikePickupDropVisibility(){

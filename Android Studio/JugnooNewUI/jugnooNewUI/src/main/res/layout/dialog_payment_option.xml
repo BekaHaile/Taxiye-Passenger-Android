@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/relative"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_gravity="center_vertical">
 
     <LinearLayout
         android:id="@+id/linearLayoutInner"
@@ -15,532 +15,521 @@
         android:layout_margin="40px"
         android:background="@drawable/background_white_rounded"
         android:orientation="vertical"
-        android:splitMotionEvents="false"
-        >
+        android:splitMotionEvents="false">
 
         <TextView
             android:id="@+id/textViewPayForRides"
             android:layout_width="match_parent"
             android:layout_height="108px"
             android:background="@drawable/bg_menu_item_selector_tlrr"
+            android:gravity="center"
             android:text="@string/pay_for_your_rides_using"
             android:textAllCaps="true"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
-            android:gravity="center"
-            />
+            android:textSize="@dimen/text_size_34" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="2px"
-            android:background="@color/text_color_light"
-            />
+            android:background="@color/text_color_light" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/linearLayoutWalletContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="20px"
-            android:paddingBottom="20px"
-            android:animateLayoutChanges="true"
-            >
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutPaytm"
+            <LinearLayout
+                android:id="@+id/linearLayoutWalletContainer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:layout_marginStart="36px"
-                android:layout_marginEnd="36px"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
-                >
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                android:paddingTop="20px"
+                android:paddingBottom="20px">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="100px"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvStripeCards"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-                    <ImageView
-                        android:id="@+id/radio_paytm"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"/>
 
-                    <ImageView
-                        style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_paytm_small"
-                        android:layout_marginStart="10px"
-                        />
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutPaytm"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:layout_marginStart="36px"
+                    android:layout_marginEnd="36px"
+                    android:background="?attr/selectableItemBackground"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="100px"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/radio_paytm"
+                            android:layout_width="33px"
+                            android:layout_height="33px"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            style="@style/payment_option_icon_small"
+                            android:layout_marginStart="10px"
+                            android:src="@drawable/ic_paytm_small" />
+
+                        <TextView
+                            android:id="@+id/textViewPaytm"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10px"
+                            android:text="@string/paytm_wallet"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_34" />
+
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/textViewPaytm"
+                        android:id="@+id/textViewPaytmValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10px"
-                        android:text="@string/paytm_wallet"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:text="200"
+                        android:textColor="@color/theme_green_color"
+                        android:textSize="@dimen/text_size_34" />
 
-                </LinearLayout>
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/textViewPaytmValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="200"
-                    android:textColor="@color/theme_green_color"
-                    android:textSize="@dimen/text_size_34"/>
+                <LinearLayout
+                    android:id="@+id/relativeLayoutStripeCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:layout_marginStart="36px"
+                    android:layout_marginEnd="36px"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible"
 
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/relativeLayoutStripeCard"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginStart="36px"
-                android:layout_marginEnd="36px"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
-
-                >
+                    >
 
                     <ImageView
                         android:id="@+id/imageViewRadioStripeCard"
                         android:layout_width="33px"
                         android:layout_height="33px"
                         android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"/>
+                        android:tag="mwar" />
 
                     <ImageView
                         android:id="@+id/ivStripeCardIcon"
                         style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_card_default"
                         android:layout_marginStart="10px"
-                        />
+                        android:src="@drawable/ic_card_default" />
 
                     <TextView
                         android:id="@+id/textViewStripeCard"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10px"
-                        tools:text="**** **** **** ****"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34"
+                        tools:text="**** **** **** ****" />
 
 
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/relativeLayoutAcceptCard"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginStart="36px"
-                android:layout_marginEnd="36px"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
+                </LinearLayout>
 
-                >
+                <LinearLayout
+                    android:id="@+id/relativeLayoutAcceptCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:layout_marginStart="36px"
+                    android:layout_marginEnd="36px"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible"
+
+                    >
 
                     <ImageView
                         android:id="@+id/imageViewRadioAcceptCard"
                         android:layout_width="33px"
                         android:layout_height="33px"
                         android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"/>
+                        android:tag="mwar" />
 
                     <ImageView
                         android:id="@+id/ivAcceptCardIcon"
                         style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_card_default"
                         android:layout_marginStart="10px"
-                        />
+                        android:src="@drawable/ic_card_default" />
 
                     <TextView
                         android:id="@+id/textViewAcceptCard"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10px"
-                        tools:text="**** **** **** ****"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34"
+                        tools:text="**** **** **** ****" />
 
 
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/relativeLayoutPayStack"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_marginStart="36px"
-                android:layout_marginEnd="36px"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
+                </LinearLayout>
 
-                >
+                <LinearLayout
+                    android:id="@+id/relativeLayoutPayStack"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:layout_marginStart="36px"
+                    android:layout_marginEnd="36px"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible"
+
+                    >
 
                     <ImageView
                         android:id="@+id/imageViewRadioPayStack"
                         android:layout_width="33px"
                         android:layout_height="33px"
                         android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"/>
+                        android:tag="mwar" />
 
                     <ImageView
                         android:id="@+id/ivPayStackIcon"
                         style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_card_default"
                         android:layout_marginStart="10px"
-                        />
+                        android:src="@drawable/ic_card_default" />
 
                     <TextView
                         android:id="@+id/textViewPayStack"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10px"
-                        tools:text="**** **** **** ****"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34"
+                        tools:text="**** **** **** ****" />
 
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayoutMobikwik"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:layout_marginStart="36px"
-                android:layout_marginEnd="36px"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
-
-                >
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="100px"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/imageViewRadioMobikwik"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"/>
-
-                    <ImageView
-                        style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_mobikwik_small"
-                        android:layout_marginStart="10px"
-                        />
-
-                    <TextView
-                        android:id="@+id/textViewMobikwik"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10px"
-                        android:text="@string/mobikwik_wallet"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textViewMobikwikValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="200"
-                    android:textColor="@color/theme_green_color"
-                    android:textSize="@dimen/text_size_34"/>
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutMobikwik"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:layout_marginStart="36px"
+                    android:layout_marginEnd="36px"
+                    android:background="?attr/selectableItemBackground"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible"
 
-            </RelativeLayout>
+                    >
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutFreeCharge"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:layout_marginStart="36px"
-                android:layout_marginEnd="36px"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="100px"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                >
+                        <ImageView
+                            android:id="@+id/imageViewRadioMobikwik"
+                            android:layout_width="33px"
+                            android:layout_height="33px"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            style="@style/payment_option_icon_small"
+                            android:layout_marginStart="10px"
+                            android:src="@drawable/ic_mobikwik_small" />
+
+                        <TextView
+                            android:id="@+id/textViewMobikwik"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10px"
+                            android:text="@string/mobikwik_wallet"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_34" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textViewMobikwikValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:text="200"
+                        android:textColor="@color/theme_green_color"
+                        android:textSize="@dimen/text_size_34" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutFreeCharge"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:layout_marginStart="36px"
+                    android:layout_marginEnd="36px"
+                    android:background="?attr/selectableItemBackground"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible"
+
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="100px"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageViewRadioFreeCharge"
+                            android:layout_width="33px"
+                            android:layout_height="33px"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            style="@style/payment_option_icon_small"
+                            android:layout_marginStart="10px"
+                            android:src="@drawable/ic_freecharge_small" />
+
+                        <TextView
+                            android:id="@+id/textViewFreeCharge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10px"
+                            android:text="@string/freecharge_wallet"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_34" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textViewFreeChargeValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:text="200"
+                        android:textColor="@color/theme_green_color"
+                        android:textSize="@dimen/text_size_34" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayoutMpesa"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:layout_marginStart="36px"
+                    android:layout_marginEnd="36px"
+                    android:background="?attr/selectableItemBackground"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible"
+
+                    >
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="100px"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/imageViewRadioMpesa"
+                            android:layout_width="33px"
+                            android:layout_height="33px"
+                            android:src="@drawable/ic_radio_button_normal"
+                            android:tag="mwar" />
+
+                        <ImageView
+                            style="@style/payment_option_icon_small"
+                            android:layout_marginStart="10px"
+                            android:src="@drawable/ic_mpesa_small" />
+
+                        <TextView
+                            android:id="@+id/textViewMpesa"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10px"
+                            android:text="@string/mpesa_wallet"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/text_size_34" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textViewMpesaValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:textColor="@color/theme_green_color"
+                        android:textSize="@dimen/text_size_34" />
+
+                </RelativeLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="100px"
+                    android:id="@+id/linearLayoutCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/nl_button_size"
+                    android:layout_marginStart="36px"
+                    android:layout_marginEnd="36px"
+                    android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible">
 
                     <ImageView
-                        android:id="@+id/imageViewRadioFreeCharge"
+                        android:id="@+id/radio_cash"
                         android:layout_width="33px"
                         android:layout_height="33px"
                         android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"/>
+                        android:tag="mwar" />
 
                     <ImageView
                         style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_freecharge_small"
-                        android:layout_marginStart="10px"
-                        />
+                        android:layout_marginStart="10px" />
 
                     <TextView
-                        android:id="@+id/textViewFreeCharge"
+                        android:id="@+id/textViewCash"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10px"
-                        android:text="@string/freecharge_wallet"
+                        android:text="@string/cash"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/text_size_34" />
 
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/textViewFreeChargeValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="200"
-                    android:textColor="@color/theme_green_color"
-                    android:textSize="@dimen/text_size_34"/>
-
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/relativeLayoutMpesa"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:layout_marginStart="36px"
-                android:layout_marginEnd="36px"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
-
-                >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="100px"
+                    android:id="@+id/llOtherModesToPay"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_43"
+                    android:layout_marginStart="@dimen/dp_18"
+                    android:layout_marginEnd="@dimen/dp_18"
+                    android:background="?attr/selectableItemBackground"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:tag="@string/dont_touch_me"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible">
 
                     <ImageView
-                        android:id="@+id/imageViewRadioMpesa"
-                        android:layout_width="33px"
-                        android:layout_height="33px"
-                        android:src="@drawable/ic_radio_button_normal"
-                        android:tag="mwar"/>
-
-                    <ImageView
-                        style="@style/payment_option_icon_small"
-                        android:src="@drawable/ic_mpesa_small"
-                        android:layout_marginStart="10px"
-                        />
+                        android:id="@+id/ivOtherModesToPay"
+                        android:layout_width="@dimen/dp_17"
+                        android:layout_height="@dimen/dp_17"
+                        android:src="@drawable/ic_radio_button_normal" />
 
                     <TextView
-                        android:id="@+id/textViewMpesa"
+                        android:id="@+id/tvOtherModesToPay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10px"
-                        android:text="@string/mpesa_wallet"
+                        android:layout_marginStart="@dimen/dp_15"
+                        android:text="@string/cash"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_34"/>
+                        android:textSize="@dimen/sp_17"
+                        app:typekitFont="@string/maven_l" />
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textViewMpesaValue"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/llCorporate"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_43"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="18dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:tag="@string/dont_touch_me"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible"
+
+                    >
+
+                    <ImageView
+                        android:id="@+id/ivCorporate"
+                        android:layout_width="16.5dp"
+                        android:layout_height="16.5dp"
+                        android:src="@drawable/ic_radio_button_normal" />
+
+                    <ImageView
+                        android:layout_width="51dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="5dp"
+                        android:src="@drawable/ic_corporate" />
+
+                    <TextView
+                        android:id="@+id/tvCorporate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="@string/corporate"
+                        android:textColor="@color/text_color"
+                        android:textSize="17sp"
+                        app:typekitFont="@string/maven_l" />
+
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rvCorporates"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/theme_green_color"
-                    android:textSize="@dimen/text_size_34"/>
+                    android:nestedScrollingEnabled="false" />
 
-            </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/llPos"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_43"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginEnd="18dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:tag="@string/dont_touch_me"
+                    android:theme="@style/GreyHighlight"
+                    android:visibility="visible"
 
-            <LinearLayout
-                android:id="@+id/linearLayoutCash"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/nl_button_size"
-                android:layout_marginStart="36px"
-                android:layout_marginEnd="36px"
-                android:gravity="center_vertical"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                    >
 
-                <ImageView
-                    android:id="@+id/radio_cash"
-                    android:layout_width="33px"
-                    android:layout_height="33px"
-                    android:src="@drawable/ic_radio_button_normal"
-                    android:tag="mwar"/>
+                    <ImageView
+                        android:id="@+id/ivPos"
+                        android:layout_width="16.5dp"
+                        android:layout_height="16.5dp"
+                        android:src="@drawable/ic_radio_button_normal" />
 
-                <ImageView
-                    style="@style/payment_option_icon_small"
-                    android:layout_marginStart="10px"
-                    />
+                    <ImageView
+                        style="@style/payment_option_icon_small"
+                        android:layout_height="45px"
+                        android:layout_marginStart="10px"
+                        android:src="@drawable/ic_pos" />
 
-                <TextView
-                    android:id="@+id/textViewCash"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10px"
-                    android:text="@string/cash"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/text_size_34"/>
+                    <TextView
+                        android:id="@+id/tvPos"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:text="@string/pos"
+                        android:textColor="@color/text_color"
+                        android:textSize="17sp"
+                        app:typekitFont="@string/maven_l" />
+
+
+                </LinearLayout>
 
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llOtherModesToPay"
-                android:layout_width="match_parent"
-                android:tag="@string/dont_touch_me"
-                android:layout_height="@dimen/dp_43"
-                android:layout_marginStart="@dimen/dp_18"
-                android:layout_marginEnd="@dimen/dp_18"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <ImageView
-                    android:id="@+id/ivOtherModesToPay"
-                    android:layout_width="@dimen/dp_17"
-                    android:layout_height="@dimen/dp_17"
-                    android:src="@drawable/ic_radio_button_normal"
-                    />
-
-                <TextView
-                    android:id="@+id/tvOtherModesToPay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/dp_15"
-                    android:text="@string/cash"
-                    android:textColor="@color/text_color"
-                    android:textSize="@dimen/sp_17"
-                    app:typekitFont="@string/maven_l"
-                    />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/llCorporate"
-                android:layout_width="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:tag="@string/dont_touch_me"
-                android:layout_height="@dimen/dp_43"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
-
-                >
-
-                <ImageView
-                    android:id="@+id/ivCorporate"
-                    android:layout_width="16.5dp"
-                    android:layout_height="16.5dp"
-                    android:src="@drawable/ic_radio_button_normal"
-                    />
-
-                <ImageView
-                    android:layout_width="51dp"
-                    android:layout_marginStart="5dp"
-                    android:src="@drawable/ic_corporate"
-                    android:layout_height="18dp"
-                    />
-
-                <TextView
-                    android:id="@+id/tvCorporate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/corporate"
-                    android:textColor="@color/text_color"
-                    android:textSize="17sp"
-                    app:typekitFont="@string/maven_l"/>
-
-
-            </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rvCorporates"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:nestedScrollingEnabled="false"
-                />
-
-            <LinearLayout
-                android:id="@+id/llPos"
-                android:layout_width="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:tag="@string/dont_touch_me"
-                android:layout_height="@dimen/dp_43"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
-                android:visibility="visible"
-                android:theme="@style/GreyHighlight"
-                android:background="?attr/selectableItemBackground"
-
-                >
-
-                <ImageView
-                    android:id="@+id/ivPos"
-                    android:layout_width="16.5dp"
-                    android:layout_height="16.5dp"
-                    android:src="@drawable/ic_radio_button_normal"
-                    />
-
-                <ImageView
-                    style="@style/payment_option_icon_small"
-                    android:layout_marginStart="10px"
-                    android:src="@drawable/ic_pos"
-                    android:layout_height="45px"
-                    />
-
-                <TextView
-                    android:id="@+id/tvPos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:text="@string/pos"
-                    android:textColor="@color/text_color"
-                    android:textSize="17sp"
-                    app:typekitFont="@string/maven_l"/>
-
-
-            </LinearLayout>
-
-        </LinearLayout>
 
         </ScrollView>
 
@@ -550,7 +539,7 @@
     <ImageView
         android:id="@+id/imageViewClose"
         style="@style/cross_popup"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 
 </RelativeLayout>

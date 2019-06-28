@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -26,6 +28,7 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.BitmapUtils;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class DriverInfo {
@@ -78,12 +81,12 @@ public class DriverInfo {
 	}
 
 	//for engagement
-	public DriverInfo(String userId, double latitude, double longitude,
-			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
+	public DriverInfo(Context context, String userId, double latitude, double longitude,
+					  String name, String image, String carImage, String phoneNumber, String rating, String carNumber,
+					  int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
-					  String currency, String markerUrl,Double tipAmount, int isCorporateRide){
+					  String currency, String markerUrl, Double tipAmount, int isCorporateRide, String cardId){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -116,6 +119,7 @@ public class DriverInfo {
 		this.markerUrl = markerUrl;
 		this.tipAmount = tipAmount;
 		this.isCorporateRide = isCorporateRide;
+		Prefs.with(context).save(Constants.STRIPE_SELECTED_POS, cardId);
 	}
 
 	//for last ride data

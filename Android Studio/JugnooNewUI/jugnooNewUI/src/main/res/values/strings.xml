@@ -559,6 +559,7 @@
     <string name="contacts">Contacts</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="add_card">Add Card</string>
     <string name="send">Send</string>
     <string name="send_invites">Send invites</string>
     <string name="send_invites_2">to friends who haven\'t tried %s</string>
@@ -1846,10 +1847,11 @@
     <string name="select_a_bid">Select a bid</string>
     <string name="stripe">Stripe</string>
     <string name="view_card_title">CREDIT CARD</string>
-    <string name="action_add_card_stripe">Add Card</string>
+    <string name="action_add_card_stripe">Add Cards</string>
     <string name="action_add_card_accept_card">Add Card</string>
     <string name="action_add_card_pay_stack">Add Card</string>
     <string name="view_card_wallet">View Card</string>
+    <string name="view_cards">View Cards</string>
     <string name="add_card_payments">Add Card</string>
     <string name="tap_a_bid">Tap a bid</string>
     <string name="ride_in_progress">Ride in progress</string>
@@ -2017,4 +2019,9 @@
     <string name="partner_with_format">Partner with %s</string>
     <string name="registered_as_driver_phone_number_will_be_edited">You are registered as Driver,\nBy editing this account\'s phone number, Driver app account will also get linked to the edited phone number.\nAre you sure you want to edit phone number?</string>
     <string name="send_invoice">Send Invoice</string>
+    <string name="please_select_a_card">Please select a card</string>
+    <string name="cards">Cards</string>
+    <string name="pay_for_tip_using">Pay for tip using</string>
+    <string name="confirm_payment_via_card_ending_format">Confirm payment via card ending with %s</string>
+    <string name="please_select_some_amount">Please select some amount</string>
 </resources>

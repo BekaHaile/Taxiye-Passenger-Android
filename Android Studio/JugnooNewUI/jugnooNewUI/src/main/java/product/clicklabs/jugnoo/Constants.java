@@ -231,6 +231,7 @@ public interface Constants {
     String KEY_EMERGENCY_LOC = "emergency_loc";
     String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
     String SP_CONTACTS_SYNCED="contacts_syned";
+    String STRIPE_SELECTED_POS ="selected_stripe_card";
 
     String KEY_URL = "url";
     String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
@@ -1040,4 +1041,7 @@ public interface Constants {
     String KEY_REG_AS = "reg_as";
     String KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT = "customer_reg_as_driver_phone_edit_alert";
     String KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE = "customer_reg_as_driver_phone_edit_alert_message";
+    String KEY_CARD_ID = "card_id";
+    String KEY_CARD_DETAILS = "card_details";
+    String KEY_AMOUNT_PAID = "amount_paid";
 }

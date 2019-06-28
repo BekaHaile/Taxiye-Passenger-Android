@@ -73,6 +73,7 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
@@ -1041,6 +1042,25 @@ public class JSONParser implements Constants {
         int showTipOption = jLastRideData.optInt(Constants.KEY_SHOW_TIP_OPTION, 1);
         double paidUsingPOS = jLastRideData.optDouble(Constants.KEY_PAID_USING_POS, 0);
 
+        JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
+        ArrayList<DiscountType> stripeCardsAmount = new ArrayList<>();
+        if(jCardDetails != null) {
+            for (int i = 0; i < jCardDetails.length(); i++) {
+                DiscountType discountType = new DiscountType(WalletCore.getStripeCardDisplayString(MyApplication.getInstance(),
+                        jCardDetails.getJSONObject(i).getString(Constants.KEY_LAST_4)),
+                        jCardDetails.getJSONObject(i).getDouble(Constants.KEY_AMOUNT_PAID),
+                        jCardDetails.getJSONObject(i).getInt(Constants.KEY_ID));
+                if (discountType.value > 0) {
+                    int index = stripeCardsAmount.indexOf(discountType);
+                    if(index > -1){
+                        stripeCardsAmount.get(index).setValue(stripeCardsAmount.get(index).getValue() + discountType.value);
+                    } else {
+                        stripeCardsAmount.add(discountType);
+                    }
+                }
+            }
+        }
+
 		return new EndRideData(engagementId, driverName, driverCarNumber, driverImage,
 				jLastRideData.getString("pickup_address"),
 				jLastRideData.getString("drop_address"),
@@ -1059,7 +1079,8 @@ public class JSONParser implements Constants {
                 ,jLastRideData.optString("invoice_additional_text_cabs", ""),
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
-                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide, partnerName, showTipOption, paidUsingPOS);
+                driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount);
 	}
 
 
@@ -1157,6 +1178,7 @@ public class JSONParser implements Constants {
             String vehicleIconUrl = null;
             Double tipAmount  = null;
             int isCorporateRide = 0;
+            String cardId = "0";
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1225,6 +1247,7 @@ public class JSONParser implements Constants {
                             vehicleIconUrl = jObject.optString(Constants.KEY_MARKER_ICON);
                             tipAmount= jObject.optDouble(Constants.KEY_TIP_AMOUNT);
                             isCorporateRide= jObject.optInt(Constants.KEY_IS_CORPORATE_RIDE, 0);
+                            cardId= jObject.optString(Constants.KEY_CARD_ID, "0");
                             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
                             try {
@@ -1346,10 +1369,11 @@ public class JSONParser implements Constants {
 
 
 
-                Data.autoData.setAssignedDriverInfo(new DriverInfo(userId, dLatitude, dLongitude, driverName,
+                Data.autoData.setAssignedDriverInfo(new DriverInfo(context, userId, dLatitude, dLongitude, driverName,
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
-                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount, isCorporateRide));
+                        isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
+                        isCorporateRide, cardId));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
