@@ -198,6 +198,7 @@ import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
+import product.clicklabs.jugnoo.home.dialogs.NotesDialog;
 import product.clicklabs.jugnoo.home.dialogs.PartnerWithJugnooDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
@@ -357,13 +358,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
     TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
-    RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm,layoutAddedTip;
+    RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm,layoutAddedTip, rlNotes;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver,buttonAddTipEndRide;
     ImageView ivMoreOptions;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat;
     LinearLayout relativeLayoutTotalFare;
     TextView textViewIRPaymentOptionValue;
-    ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm;
+    ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm, imageViewNotes;
     PopupMenu popupInRide;
 
 
@@ -787,8 +788,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textVieGetFareEstimateConfirm = (TextView) findViewById(R.id.textVieGetFareEstimateConfirm);
         textVieGetFareEstimateConfirm.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         imageViewOfferConfirm = (ImageView) findViewById(R.id.imageViewOfferConfirm);
+        imageViewNotes = (ImageView) findViewById(R.id.imageViewNotes);
         imageViewOfferConfirm.setVisibility(View.GONE);
+        imageViewNotes.setVisibility(View.GONE);
         relativeLayoutOfferConfirm = (RelativeLayout) findViewById(R.id.linearLayoutOfferConfirm);
+        rlNotes = findViewById(R.id.rlNotes);
         relativeLayoutPoolInfoBar = (RelativeLayout) findViewById(R.id.relativeLayoutPoolInfoBar);
         viewPoolInfoBarAnim = findViewById(R.id.viewPoolInfoBarAnim);
         viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
@@ -1346,6 +1350,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        rlNotes.setOnClickListener(v -> {
+            try {
+                NotesDialog notesDialog = new NotesDialog(HomeActivity.this, mNotes, notes -> {
+                    mNotes = notes;
+                    if(notes != null && !notes.isEmpty()) {
+                        imageViewNotes.setVisibility(View.VISIBLE);
+                    } else {
+                        imageViewNotes.setVisibility(View.GONE);
+                    }
+                });
+                notesDialog.show(ProductType.AUTO);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
@@ -3561,6 +3581,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if(!selectPickUpdropAtOnce){
                                 relativeLayoutInitialSearchBar.setEnabled(false);
                             }
+
+                            if(mNotes != null && !mNotes.isEmpty()) {
+                                imageViewNotes.setVisibility(View.VISIBLE);
+                            } else {
+                                imageViewNotes.setVisibility(View.GONE);
+                            }
+
                             imageViewDropCross.setVisibility(View.GONE);
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
@@ -3586,6 +3613,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             }else{
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.GONE);
                                 updateConfirmedStateFare();
+                            }
+                            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerNotesEnabled() == 1) {
+                                rlNotes.setVisibility(View.VISIBLE);
+                                findViewById(R.id.ivNotes).setVisibility(View.VISIBLE);
+                            } else {
+                                rlNotes.setVisibility(View.GONE);
+                                findViewById(R.id.ivNotes).setVisibility(View.GONE);
                             }
                         } else {
                             if (!specialPickupScreenOpened && map != null) {
@@ -9942,6 +9976,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(confirmedScreenOpened) {
             pickupLocationEtaMarker();
         }
+        if(oldRegionId != slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
+            mNotes = "";
+        }
         if(confirmedScreenOpened && vehiclesTabAdapterConfirmRide!=null){
             vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
         }
@@ -11191,6 +11228,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             showPoolInforBar(false);
         }
         setServiceTypeUI();
+        mNotes = "";
         slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
         setServiceTypeTextIconsChanges(serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()));
         showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());

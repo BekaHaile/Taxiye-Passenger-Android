@@ -535,4 +535,5 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     public void setServiceTypes(ArrayList<ServiceType> serviceTypes) {
         this.serviceTypes = serviceTypes;
     }
+
 }
