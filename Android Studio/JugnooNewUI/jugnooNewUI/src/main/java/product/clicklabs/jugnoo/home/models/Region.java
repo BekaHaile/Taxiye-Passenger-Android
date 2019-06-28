@@ -90,6 +90,10 @@ public class Region {
 	@Expose
 	private ArrayList<Package> packages;
 
+	@SerializedName("customer_notes_enabled")
+	@Expose
+	private int customerNotes;
+
 	private boolean isDefault = false;
 
 	public Region(){
@@ -527,5 +531,13 @@ public class Region {
 	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof Region && ((Region) obj).regionId.equals(regionId));
+	}
+
+	public int getCustomerNotesEnabled() {
+		return customerNotes;
+	}
+
+	public void setCustomerNotesEnabled(int customerNotes) {
+		this.customerNotes = customerNotes;
 	}
 }

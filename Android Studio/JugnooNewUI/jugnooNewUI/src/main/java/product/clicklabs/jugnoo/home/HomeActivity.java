@@ -3567,6 +3567,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if(!selectPickUpdropAtOnce){
                                 relativeLayoutInitialSearchBar.setEnabled(false);
                             }
+
+                            if(mNotes != null && !mNotes.isEmpty()) {
+                                imageViewNotes.setVisibility(View.VISIBLE);
+                            } else {
+                                imageViewNotes.setVisibility(View.GONE);
+                            }
+
                             imageViewDropCross.setVisibility(View.GONE);
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
@@ -3593,7 +3600,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.GONE);
                                 updateConfirmedStateFare();
                             }
-                            if (Data.autoData.getCustomerNotes() == 1) {
+                            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerNotesEnabled() == 1) {
                                 rlNotes.setVisibility(View.VISIBLE);
                                 findViewById(R.id.ivNotes).setVisibility(View.VISIBLE);
                             } else {
@@ -9945,6 +9952,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(confirmedScreenOpened) {
             pickupLocationEtaMarker();
         }
+        if(oldRegionId != slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
+            mNotes = "";
+        }
         if(confirmedScreenOpened && vehiclesTabAdapterConfirmRide!=null){
             vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
         }
@@ -11168,6 +11178,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             showPoolInforBar(false);
         }
         setServiceTypeUI();
+        mNotes = "";
         slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
         setServiceTypeTextIconsChanges(serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()));
         showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());

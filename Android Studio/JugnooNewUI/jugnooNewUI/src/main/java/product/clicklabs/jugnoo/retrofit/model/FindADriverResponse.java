@@ -142,9 +142,6 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     @SerializedName("services")
     @Expose
     private ArrayList<ServiceType> serviceTypes;
-    @SerializedName("customer_notes")
-    @Expose
-    private int customerNotes;
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -539,7 +536,4 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
         this.serviceTypes = serviceTypes;
     }
 
-    public int getCustomerNotes() {
-        return customerNotes;
-    }
 }

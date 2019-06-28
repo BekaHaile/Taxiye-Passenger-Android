@@ -65,10 +65,11 @@
             tools:ignore="TextFields" />
         <Button
             style="@style/ButtonTheme"
-            android:textSize="28px"
+            android:textSize="13sp"
+            android:tag="@string/dont_touch_me"
             android:id="@+id/btnSaveNotes"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:text="@string/save_notes" />
     </LinearLayout>
 </RelativeLayout>
