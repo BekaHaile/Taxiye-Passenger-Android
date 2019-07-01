@@ -3614,7 +3614,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.GONE);
                                 updateConfirmedStateFare();
                             }
-                            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerNotesEnabled() == 1) {
+                            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerNotesEnabled() == 1 ||
+                                getResources().getBoolean(R.bool.show_add_notes)) {
                                 rlNotes.setVisibility(View.VISIBLE);
                                 findViewById(R.id.ivNotes).setVisibility(View.VISIBLE);
                             } else {
