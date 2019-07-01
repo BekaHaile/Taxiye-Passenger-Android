@@ -75,10 +75,6 @@ class ProfileVerificationFragment : Fragment(), GAAction, GACategory {
             activity!!.startActivity(Intent(activity, SupportActivity::class.java))
             activity!!.overridePendingTransition(R.anim.right_in, R.anim.right_out)
         }
-        val spannableText = SpannableStringBuilder(getString(R.string.status_colon_approval, getString(R.string.pending)))
-        spannableText.setSpan(android.text.style.StyleSpan(Typeface.BOLD), 0, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-        tvStatus!!.text = spannableText
-
     }
 
     fun fetchAllDocuments() {
@@ -94,13 +90,31 @@ class ProfileVerificationFragment : Fragment(), GAAction, GACategory {
                 } else {
                     documentStatusAdapter!!.updateList(documentDataList)
                 }
+                documentDataList?.let { setStatusText() }
             }
 
             override fun onError(fetchDocumentResponse: FetchDocumentResponse, message: String, flag: Int): Boolean {
                 return false
             }
         })
+    }
 
+    fun setStatusText() {
+        var match = true;
+        for(documentData in documentDataList!!) {
+            if(documentData.status != DocumentUploadFragment.DocStatus.VERIFIED.i) {
+                match = false;
+            }
+        }
+        if(match) {
+            val spannableText = SpannableStringBuilder(getString(R.string.status_colon_approval, getString(R.string.verified)))
+            spannableText.setSpan(android.text.style.StyleSpan(Typeface.BOLD), 0, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            tvStatus!!.text = spannableText
+        } else {
+            val spannableText = SpannableStringBuilder(getString(R.string.status_colon_approval, getString(R.string.pending)))
+            spannableText.setSpan(android.text.style.StyleSpan(Typeface.BOLD), 0, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            tvStatus!!.text = spannableText
+        }
     }
 
     override fun onHiddenChanged(hidden: Boolean) {

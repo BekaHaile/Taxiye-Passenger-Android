@@ -29,7 +29,7 @@
         android:textSize="@dimen/sp_14"
         app:layout_constraintStart_toStartOf="@id/viewCornered"
         app:layout_constraintTop_toTopOf="@id/viewCornered"
-        android:text="@string/status_colon_approval"
+        android:text="Status:"
         />
 
     <android.support.v7.widget.RecyclerView

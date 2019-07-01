@@ -78,8 +78,14 @@ public class MenuBar {
 		imageViewProfile = (ImageView) drawerLayout.findViewById(R.id.imageViewProfile);//textViewUserName
 		tvVerificationNote = drawerLayout.findViewById(R.id.tvVerificationNote);
 		tvVerificationNote.setTypeface(Fonts.mavenRegular(activity));
-		Animation animation = AnimationUtils.loadAnimation(activity,R.anim.blink);
-		tvVerificationNote.setAnimation(animation);
+		if(Data.autoData.getCanRequest() == 0) {
+			tvVerificationNote.setVisibility(View.VISIBLE);
+			Animation animation = AnimationUtils.loadAnimation(activity, R.anim.blink);
+			tvVerificationNote.setAnimation(animation);
+		} else {
+			tvVerificationNote.setVisibility(View.GONE);
+			tvVerificationNote.clearAnimation();
+		}
 		textViewUserName = (TextView) drawerLayout.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(activity));
 		textViewViewPhone = (TextView) drawerLayout.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.mavenRegular(activity));
 		viewStarIcon = (View) drawerLayout.findViewById(R.id.viewStarIcon);

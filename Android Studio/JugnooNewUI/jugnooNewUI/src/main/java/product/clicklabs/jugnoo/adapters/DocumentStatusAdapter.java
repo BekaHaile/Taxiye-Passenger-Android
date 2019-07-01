@@ -38,15 +38,15 @@ public class DocumentStatusAdapter extends RecyclerView.Adapter<DocumentStatusAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.tvDocumentName.setText(documentDataList.get(position).getDocumentName());
-        if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.UPLOADED.getI()) {
+        if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.NOT_UPLOADED.getI()) {
             holder.ivDocStatus.setImageResource(R.drawable.ic_upload_button);
         } else if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.VERIFIED.getI()) {
             holder.ivDocStatus.setImageResource(R.drawable.ic_checked);
         } else if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.APPROVAL_PENDING.getI()) {
-            holder.ivDocStatus.setImageResource(R.drawable.ic_info_yellow);
+            holder.ivDocStatus.setImageResource(R.drawable.ic_sand_glass);
         } else if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.REJECTED.getI()) {
-            holder.ivDocStatus.setImageResource(R.drawable.ic_close);
-        } else {
+            holder.ivDocStatus.setImageResource(R.drawable.ic_cancel_red);
+        } else if(documentDataList.get(position).getStatus() == DocumentUploadFragment.DocStatus.UPLOADED.getI()) {
             holder.ivDocStatus.setImageResource(R.drawable.ic_info_yellow);
         }
     }

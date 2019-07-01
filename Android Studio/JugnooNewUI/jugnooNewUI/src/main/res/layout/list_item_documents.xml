@@ -27,7 +27,7 @@
             android:layout_marginEnd="14dp"
             android:layout_marginStart="22dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/add_img_selector"
+            android:background="@drawable/placeholder"
             android:orientation="vertical"
             android:padding="0dp"
             android:visibility="gone">
@@ -45,8 +45,8 @@
             android:id="@+id/deleteImage1"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_marginStart="95dp"
-            android:src="@drawable/orange_cross"
+            android:layout_marginStart="100dp"
+            android:src="@drawable/ic_cross_popup_selector"
             android:tag="mwar"
             android:visibility="gone"/>
 
@@ -58,7 +58,7 @@
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/rlAddImage1"
-            android:background="@drawable/add_img_selector"
+            android:background="@drawable/placeholder"
             android:tag="mwar">
 
             <ImageView
@@ -75,7 +75,7 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="216dp"
-            android:src="@drawable/orange_cross"
+            android:src="@drawable/ic_cross_popup_selector"
             android:tag="mwar"
             android:visibility="gone"/>
 

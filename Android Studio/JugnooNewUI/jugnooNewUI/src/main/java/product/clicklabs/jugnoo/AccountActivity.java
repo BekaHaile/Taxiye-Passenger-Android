@@ -224,6 +224,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         textViewProfileVerification = findViewById(R.id.textViewProfileVerification);
         textViewProfileVerification.setTypeface(Fonts.mavenMedium(this));
         ivProfileVerifyStatus = findViewById(R.id.ivProfileVerifyStatus);
+        if(Data.autoData.getCanRequest() == 1) {
+            ivProfileVerifyStatus.setVisibility(View.GONE);
+        } else {
+            ivProfileVerifyStatus.setVisibility(View.VISIBLE);
+        }
 
 
 		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
