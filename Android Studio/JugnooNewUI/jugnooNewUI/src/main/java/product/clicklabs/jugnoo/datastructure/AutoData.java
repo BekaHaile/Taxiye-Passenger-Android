@@ -75,7 +75,7 @@ public class AutoData {
     private boolean isServiceAv;
     private int lock = 0;
     private String  previousSelService = "";
-    private int canRequest = 1;
+    private int customerVerificationStatus = 0;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -84,7 +84,7 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare,int canRequest) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare,int customerVerificationStatus) {
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -116,7 +116,7 @@ public class AutoData {
         rideTypes.add(ServiceTypeValue.NORMAL.getType());
         rideTypes.add(ServiceTypeValue.POOL.getType());
         serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
-        this.canRequest = canRequest;
+        this.customerVerificationStatus = customerVerificationStatus;
     }
 
     public String getDestinationHelpText() {
@@ -734,11 +734,11 @@ public class AutoData {
         this.currency = currency;
     }
 
-    public int getCanRequest() {
-        return canRequest;
+    public int getCustomerVerificationStatus() {
+        return customerVerificationStatus;
     }
 
-    public void setCanRequest(int canRequest) {
-        this.canRequest = canRequest;
+    public void setCustomerVerificationStatus(int customerVerificationStatus) {
+        this.customerVerificationStatus = customerVerificationStatus;
     }
 }

@@ -78,7 +78,7 @@ public class MenuBar {
 		imageViewProfile = (ImageView) drawerLayout.findViewById(R.id.imageViewProfile);//textViewUserName
 		tvVerificationNote = drawerLayout.findViewById(R.id.tvVerificationNote);
 		tvVerificationNote.setTypeface(Fonts.mavenRegular(activity));
-		if(Data.autoData.getCanRequest() == 0) {
+		if(Data.autoData.getCustomerVerificationStatus() == 2) {
 			tvVerificationNote.setVisibility(View.VISIBLE);
 			Animation animation = AnimationUtils.loadAnimation(activity, R.anim.blink);
 			tvVerificationNote.setAnimation(animation);

@@ -43,10 +43,10 @@ public class UniqueIMEIID {
 		String suffix = BuildConfig.DEBUG ? BuildConfig.FLAVOR:"";
 
 		androidSecureId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		if(!TextUtils.isEmpty(imei))return imei+suffix;
-		if(!TextUtils.isEmpty(serial))return serial+suffix;
+		if(!TextUtils.isEmpty(imei))return imei+suffix+"lkj";
+		if(!TextUtils.isEmpty(serial))return serial+suffix+"lkj";
 
-		return androidSecureId+suffix;
+		return androidSecureId+suffix+"lkj";
 
 
 

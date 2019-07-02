@@ -535,8 +535,8 @@
                             android:textSize="@dimen/sp_14"/>
                         <ImageView
                             android:id="@+id/ivProfileVerifyStatus"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:src="@drawable/ic_info_yellow"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"

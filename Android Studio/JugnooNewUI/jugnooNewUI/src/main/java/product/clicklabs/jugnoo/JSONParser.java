@@ -331,7 +331,7 @@ public class JSONParser implements Constants {
             int rideEndGoodFeedbackViewType = autoData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             String rideEndGoodFeedbackText = autoData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getString(R.string.end_ride_with_image_text, context.getString(R.string.app_name)));
             String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
-            int canRequest = autoData.optInt("can_request",1);
+            int customerVerificationStatus = autoData.optInt("customer_verification_status",0);
 
             Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
             Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, autoData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
@@ -359,7 +359,7 @@ public class JSONParser implements Constants {
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
                     , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2,
-                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare(),canRequest);
+                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare(),customerVerificationStatus);
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());

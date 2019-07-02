@@ -224,10 +224,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         textViewProfileVerification = findViewById(R.id.textViewProfileVerification);
         textViewProfileVerification.setTypeface(Fonts.mavenMedium(this));
         ivProfileVerifyStatus = findViewById(R.id.ivProfileVerifyStatus);
-        if(Data.autoData.getCanRequest() == 1) {
-            ivProfileVerifyStatus.setVisibility(View.GONE);
-        } else {
+        if(Data.autoData.getCustomerVerificationStatus() == 2) {
             ivProfileVerifyStatus.setVisibility(View.VISIBLE);
+            ivProfileVerifyStatus.setImageResource(R.drawable.ic_info_yellow);
+        } else if (Data.autoData.getCustomerVerificationStatus() == 1) {
+            ivProfileVerifyStatus.setVisibility(View.VISIBLE);
+            ivProfileVerifyStatus.setImageResource(R.drawable.ic_checked);
+        } else {
+            ivProfileVerifyStatus.setVisibility(View.GONE);
         }
 
 
