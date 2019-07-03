@@ -7,10 +7,26 @@
     android:splitMotionEvents="false"
     android:visibility="visible">
 
+
+    <TextView
+        android:id="@+id/tvSnackUserNotVerified"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/user_not_verified_snack"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:visibility="gone"
+        android:paddingTop="@dimen/dp_12"
+        android:paddingBottom="@dimen/dp_12"
+        android:tag="@string/dont_touch_me"
+        android:background="@color/yellow_auto"/>
+
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvRideTypes"
         android:layout_width="match_parent"
         android:layout_height="45dp"
+        android:layout_below="@id/tvSnackUserNotVerified"
         android:tag="@string/dont_touch_me"
         android:background="@color/white"
         />

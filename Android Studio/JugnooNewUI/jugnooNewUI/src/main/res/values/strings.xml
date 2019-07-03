@@ -2035,5 +2035,6 @@
     <string name="tap_here_to_verify">Tap here to verify your account</string>
     <string name="are_you_sure_to_delete_document">Are you sure to delete this document?</string>
     <string name="your_documents_are_rejected_upload_again">Your documents are rejected due to certain reasons.</string>
+    <string name="user_not_verified_snack">You are not verified yet. Please verify your account.</string>
 
 </resources>

@@ -58,6 +58,7 @@ public class MenuBar {
 	private TextView textViewUserName,textViewViewPhone,tvVerificationNote;
 	private View viewStarIcon;
 	private RelativeLayout relativeLayout;
+	private ImageView viewVerifiedIcon;
 
 	public MenuBar(Activity activity, DrawerLayout rootView){
 		this.activity = activity;
@@ -77,12 +78,19 @@ public class MenuBar {
 		recyclerViewMenu.setHasFixedSize(false);
 		imageViewProfile = (ImageView) drawerLayout.findViewById(R.id.imageViewProfile);//textViewUserName
 		tvVerificationNote = drawerLayout.findViewById(R.id.tvVerificationNote);
+		viewVerifiedIcon= drawerLayout.findViewById(R.id.viewVerifiedIcon);
 		tvVerificationNote.setTypeface(Fonts.mavenRegular(activity));
 		if(Data.autoData.getCustomerVerificationStatus() == 2) {
 			tvVerificationNote.setVisibility(View.VISIBLE);
 			Animation animation = AnimationUtils.loadAnimation(activity, R.anim.blink);
 			tvVerificationNote.setAnimation(animation);
+			viewVerifiedIcon.setVisibility(View.GONE);
+		} else if (Data.autoData.getCustomerVerificationStatus() == 1) {
+			viewVerifiedIcon.setVisibility(View.VISIBLE);
+			tvVerificationNote.setVisibility(View.GONE);
+			tvVerificationNote.clearAnimation();
 		} else {
+			viewVerifiedIcon.setVisibility(View.GONE);
 			tvVerificationNote.setVisibility(View.GONE);
 			tvVerificationNote.clearAnimation();
 		}
