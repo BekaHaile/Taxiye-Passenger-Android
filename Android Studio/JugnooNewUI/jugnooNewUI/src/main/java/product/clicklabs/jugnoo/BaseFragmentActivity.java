@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.LocalBroadcastManager;
+
+import com.fugu.FuguConfig;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -101,4 +104,26 @@ public class BaseFragmentActivity extends FragmentActivity {
 	protected void attachBaseContext(Context newBase) {
 		super.attachBaseContext(TypekitContextWrapper.wrap(LocaleHelper.onAttach(newBase, LocaleHelper.getLanguage(newBase))));
 	}
+
+    private boolean openingFugu;
+
+    private void fuguShowConversations() {
+        FuguConfig.getInstance().showConversations(this, getString(R.string.fugu_support_title));
+    }
+
+    public Handler mHandler;
+
+    public void openFugu() {
+        if (!openingFugu) {
+            fuguShowConversations();
+            openingFugu = true;
+            mHandler = new Handler();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    openingFugu = false;
+                }
+            }, 1000);
+        }
+    }
 }

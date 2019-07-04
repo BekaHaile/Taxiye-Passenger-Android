@@ -224,14 +224,16 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         textViewProfileVerification = findViewById(R.id.textViewProfileVerification);
         textViewProfileVerification.setTypeface(Fonts.mavenMedium(this));
         ivProfileVerifyStatus = findViewById(R.id.ivProfileVerifyStatus);
-        if(Data.autoData.getCustomerVerificationStatus() == 2) {
+        if (Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.REJECTED.ordinal()) {
             ivProfileVerifyStatus.setVisibility(View.VISIBLE);
-            ivProfileVerifyStatus.setImageResource(R.drawable.ic_info_yellow);
-        } else if (Data.autoData.getCustomerVerificationStatus() == 1) {
+            ivProfileVerifyStatus.setImageResource(R.drawable.ic_cancel_red);
+        } else if (Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.VERIFIED.ordinal()) {
             ivProfileVerifyStatus.setVisibility(View.VISIBLE);
             ivProfileVerifyStatus.setImageResource(R.drawable.ic_checked);
         } else {
-            ivProfileVerifyStatus.setVisibility(View.GONE);
+            //ivProfileVerifyStatus.setVisibility(View.GONE);
+            ivProfileVerifyStatus.setVisibility(View.VISIBLE);
+            ivProfileVerifyStatus.setImageResource(R.drawable.ic_info_yellow);
         }
 
 
@@ -557,7 +559,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         });
 
 
-
         imageViewChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -838,8 +839,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         setMenuItemsAdapter();
 
         getAllowedAuthChannels();
-
-	}
+        /* check and Show the profile fragment */
+        if (getIntent().hasExtra(ProfileVerificationFragment.class.getSimpleName())) {
+            if (getIntent().getBooleanExtra(ProfileVerificationFragment.class.getSimpleName(), false)) {
+                openProfileVerificationFragment(AccountActivity.this, relativeLayoutContainer, true);
+            }
+        }
+    }
 
 	private AccountMenuItemsAdapter accountMenuItemsAdapter;
     private void setMenuItemsAdapter() {
@@ -1034,9 +1040,27 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
 
             scrollView.scrollTo(0, 0);
-            textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.profile_saved_location_text);
+            if (!getIntent().hasExtra(ProfileVerificationFragment.class.getSimpleName())) {
+                textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.profile_saved_location_text);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0 && getSupportFragmentManager().findFragmentByTag(ProfileVerificationFragment.class.getName()) instanceof ProfileVerificationFragment) {
+            ProfileVerificationFragment fragment = (ProfileVerificationFragment) getSupportFragmentManager().findFragmentByTag(ProfileVerificationFragment.class.getName());
+            if (!isFinishing() && fragment != null && fragment.isAdded()) {
+                textViewTitle.setText(R.string.verification_status);
+            } else {
+                textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.profile_saved_location_text);
+            }
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0 && getSupportFragmentManager().findFragmentByTag(DocumentUploadFragment.class.getName()) instanceof DocumentUploadFragment) {
+            DocumentUploadFragment fragment = (DocumentUploadFragment) getSupportFragmentManager().findFragmentByTag(DocumentUploadFragment.class.getName());
+            if (!isFinishing() && fragment != null && fragment.isAdded()) {
+                if (documentData != null) {
+                    textViewTitle.setText(documentData.getDocumentName());
+                }
+            }
         }
     }
 
@@ -1467,8 +1491,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private TransactionUtils transactionUtils = new TransactionUtils();
 
     public void openAddressBookFragment(FragmentActivity activity, View container, boolean addFrag) {
-        if(addFrag) {
-            if(transactionUtils.checkIfFragmentAdded(activity, AddressBookFragment.class.getName())){
+        if (addFrag) {
+            if (transactionUtils.checkIfFragmentAdded(activity, AddressBookFragment.class.getName())) {
                 activity.getSupportFragmentManager().popBackStack();
             }
             if (!transactionUtils.checkIfFragmentAdded(activity, AddressBookFragment.class.getName())) {
@@ -1477,7 +1501,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         .add(container.getId(), new AddressBookFragment(),
                                 AddressBookFragment.class.getName())
                         .addToBackStack(AddressBookFragment.class.getName());
-                if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
                 }
@@ -1487,7 +1511,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 rlMain.setVisibility(View.GONE);
                 tvAbout.setVisibility(View.GONE);
             }
-        } else{
+        } else {
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
@@ -1495,7 +1519,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         }
     }
 
-    public AddressBookFragment getAddressBookFragment(){
+    public AddressBookFragment getAddressBookFragment() {
         return (AddressBookFragment) getSupportFragmentManager().findFragmentByTag(AddressBookFragment.class.getName());
     }
 
@@ -1687,8 +1711,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     }
 
     public void openProfileVerificationFragment(FragmentActivity activity, View container, boolean addFrag) {
-        if(addFrag) {
-            if(transactionUtils.checkIfFragmentAdded(activity, ProfileVerificationFragment.class.getName())){
+        if (addFrag) {
+            if (transactionUtils.checkIfFragmentAdded(activity, ProfileVerificationFragment.class.getName())) {
                 activity.getSupportFragmentManager().popBackStack();
             }
             if (!transactionUtils.checkIfFragmentAdded(activity, ProfileVerificationFragment.class.getName())) {
@@ -1697,7 +1721,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         .add(container.getId(), ProfileVerificationFragment.Companion.newInstance(),
                                 ProfileVerificationFragment.class.getName())
                         .addToBackStack(ProfileVerificationFragment.class.getName());
-                if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
                 }
@@ -1707,7 +1731,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 rlMain.setVisibility(View.GONE);
                 tvAbout.setVisibility(View.GONE);
             }
-        } else{
+        } else {
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
@@ -1715,20 +1739,23 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         }
     }
 
-    public void openDocumentUploadFragment(DocumentData documentData){
+    private DocumentData documentData = null;
+
+    public void openDocumentUploadFragment(DocumentData documentData) {
+        this.documentData = documentData;
         if (transactionUtils.checkIfFragmentAdded(this, ProfileVerificationFragment.class.getName())) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                     .add(relativeLayoutContainer.getId(), DocumentUploadFragment.Companion.newInstance(documentData),
                             DocumentUploadFragment.class.getName())
                     .addToBackStack(DocumentUploadFragment.class.getName());
-            if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                 transaction.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
                         .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
             }
             transaction.commitAllowingStateLoss();
-
-            textViewTitle.setText(R.string.profile_verification);
+            //textViewTitle.setText(R.string.profile_verification);
+            textViewTitle.setText(documentData.getDocumentName());
         }
     }
 }

@@ -1,7 +1,5 @@
 package product.clicklabs.jugnoo.fragments
 
-import android.content.Context
-import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,7 +10,6 @@ import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GAAction.PROFILE
 import com.sabkuchfresh.analytics.GAAction.USER
@@ -22,18 +19,16 @@ import com.sabkuchfresh.analytics.GAUtils
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
 import com.sabkuchfresh.feed.ui.api.ApiName
-
-import java.util.HashMap
-
+import kotlinx.android.synthetic.main.fragment_profile_verification.*
 import product.clicklabs.jugnoo.AccountActivity
+import product.clicklabs.jugnoo.BaseFragmentActivity
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.adapters.DocumentStatusAdapter
 import product.clicklabs.jugnoo.retrofit.model.DocumentData
 import product.clicklabs.jugnoo.retrofit.model.FetchDocumentResponse
-import product.clicklabs.jugnoo.support.SupportActivity
 import product.clicklabs.jugnoo.utils.DialogPopup
 import product.clicklabs.jugnoo.utils.Fonts
-import kotlinx.android.synthetic.main.fragment_profile_verification.*
+import java.util.*
 
 class ProfileVerificationFragment : Fragment(), GAAction, GACategory {
 
@@ -71,9 +66,7 @@ class ProfileVerificationFragment : Fragment(), GAAction, GACategory {
         }
 
         tvNeedHelp.setOnClickListener {
-            GAUtils.event(GACategory.PROFILE_SCREEN, GAAction.SUPPORT + GAAction.CLICKED, "")
-            activity!!.startActivity(Intent(activity, SupportActivity::class.java))
-            activity!!.overridePendingTransition(R.anim.right_in, R.anim.right_out)
+            (activity as BaseFragmentActivity).openFugu()
         }
     }
 
@@ -83,8 +76,11 @@ class ProfileVerificationFragment : Fragment(), GAAction, GACategory {
             override fun onSuccess(fetchDocumentResponse: FetchDocumentResponse, message: String, flag: Int) {
                 documentDataList = fetchDocumentResponse.documentDataList
                 if (rvVerificationDocs.adapter == null) {
-                    documentStatusAdapter = DocumentStatusAdapter(activity, documentDataList, DocumentStatusAdapter.OnDocumentClicked { position ->
-                        addImage(documentDataList!![position]) })
+                    documentStatusAdapter = DocumentStatusAdapter(activity, documentDataList, object : DocumentStatusAdapter.OnDocumentClicked {
+                        override fun onDocClick(position: Int) {
+                            addImage(documentDataList!![position])
+                        }
+                    })
                     rvVerificationDocs.adapter = documentStatusAdapter
 
                 } else {
@@ -101,12 +97,12 @@ class ProfileVerificationFragment : Fragment(), GAAction, GACategory {
 
     fun setStatusText() {
         var match = true;
-        for(documentData in documentDataList!!) {
-            if(documentData.status != DocumentUploadFragment.DocStatus.VERIFIED.i) {
+        for (documentData in documentDataList!!) {
+            if (documentData.status != DocumentUploadFragment.DocStatus.VERIFIED.i) {
                 match = false;
             }
         }
-        if(match) {
+        if (match) {
             val spannableText = SpannableStringBuilder(getString(R.string.status_colon_approval, getString(R.string.verified)))
             spannableText.setSpan(android.text.style.StyleSpan(Typeface.BOLD), 0, 7, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             tvStatus!!.text = spannableText
@@ -147,6 +143,5 @@ class ProfileVerificationFragment : Fragment(), GAAction, GACategory {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-
     }
 }

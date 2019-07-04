@@ -190,6 +190,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.fragments.ProfileVerificationFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
@@ -2136,12 +2137,34 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         tvSnackUserNotVerified = findViewById(R.id.tvSnackUserNotVerified);
         tvSnackUserNotVerified.setTypeface(Fonts.mavenMedium(this));
-        if(Data.userData != null && Data.autoData.getCustomerVerificationStatus() == 2) {
+        if (Data.userData != null && (Data.autoData.getCustomerVerificationStatus() == DocStatuses.REJECTED.getStatus() || Data.autoData.getCustomerVerificationStatus() == DocStatuses.NOT_UPLOADED.getStatus())) {
             tvSnackUserNotVerified.setVisibility(VISIBLE);
+            tvSnackUserNotVerified.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomeActivity.this, AccountActivity.class);
+                    intent.putExtra(ProfileVerificationFragment.class.getSimpleName(), true);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+            });
         } else {
             tvSnackUserNotVerified.setVisibility(GONE);
         }
-
+        if (Data.userData != null && (Data.autoData.getCustomerVerificationStatus() == DocStatuses.REJECTED.getStatus() || Data.autoData.getCustomerVerificationStatus() == DocStatuses.NOT_UPLOADED.getStatus())) {
+            tvSnackUserNotVerified.setVisibility(VISIBLE);
+            tvSnackUserNotVerified.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomeActivity.this, AccountActivity.class);
+                    intent.putExtra(ProfileVerificationFragment.class.getSimpleName(), true);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+            });
+        } else {
+            tvSnackUserNotVerified.setVisibility(GONE);
+        }
     }
 
     public void setServiceTypeAdapter(boolean setAdapter) {

@@ -1033,4 +1033,16 @@ public interface Constants {
     String KEY_CUSTOMER_PARTNER_DIALOG_VIEW_COUNT = "customer_partner_dialog_view_count";
     String MIME_TYPE = "application/octet-stream";
 
+    enum DocStatuses {
+        UPLOADED(4), VERIFIED(3), REJECTED(2), APPROVAL_PENDING(1), NOT_UPLOADED(0);
+        int i;
+
+        DocStatuses(int i) {
+            this.i = i;
+        }
+
+        public int getStatus() {
+            return this.i;
+        }
+    }
 }

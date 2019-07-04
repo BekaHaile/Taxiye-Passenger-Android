@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.fragments
 
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -9,7 +10,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.picker.image.model.ImageEntry
 import com.picker.image.util.Picker
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
@@ -19,12 +19,11 @@ import com.sabkuchfresh.utils.ImageCompression
 import com.sabkuchfresh.utils.Utils
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.RoundBorderTransform
-
-import java.io.File
-import java.util.ArrayList
-
+import kotlinx.android.synthetic.main.fragment_document_upload.*
+import kotlinx.android.synthetic.main.list_item_documents.*
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.R
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags
 import product.clicklabs.jugnoo.permission.PermissionCommon
 import product.clicklabs.jugnoo.retrofit.model.DocumentData
 import product.clicklabs.jugnoo.retrofit.model.UploadDocumentResponse
@@ -32,12 +31,8 @@ import product.clicklabs.jugnoo.utils.DialogPopup
 import retrofit.mime.MultipartTypedOutput
 import retrofit.mime.TypedFile
 import retrofit.mime.TypedString
-
-import android.app.Activity.RESULT_OK
-import com.sabkuchfresh.feed.models.FeedCommonResponse
-import kotlinx.android.synthetic.main.fragment_document_upload.*
-import kotlinx.android.synthetic.main.list_item_documents.*
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags
+import java.io.File
+import java.util.*
 
 class DocumentUploadFragment : Fragment() {
     private var documentData: DocumentData? = null
@@ -90,9 +85,8 @@ class DocumentUploadFragment : Fragment() {
         }
 
         imageViewUploadDoc.setOnClickListener { mPermissionCommon!!.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE) }
-
         btSubmit.setOnClickListener {
-            if (imageObjectList.size == documentData!!.numImagesRequired) {
+            if (imageObjectList.size == documentData!!.numImagesRequired || documentData!!.status == DocStatus.VERIFIED.i) {
                 activity?.onBackPressed()
             } else {
                 Snackbar.make(view, getString(R.string.min_documents_required, documentData!!.numImagesRequired.toString()), Snackbar.LENGTH_SHORT).show()
@@ -128,7 +122,7 @@ class DocumentUploadFragment : Fragment() {
     fun refreshImageUI() {
         if (imageObjectList.size == 2) {
             try {
-                if(documentData?.status == DocStatus.UPLOADED.i) {
+                if (documentData?.status == DocStatus.UPLOADED.i) {
                     deleteImage1!!.visibility = View.VISIBLE
                     deleteImage2!!.visibility = View.VISIBLE
                 } else {
@@ -170,14 +164,18 @@ class DocumentUploadFragment : Fragment() {
         } else if (imageObjectList.size == 1) {
             try {
                 rlAddImage1!!.visibility = View.VISIBLE
-                if(documentData?.status == DocStatus.UPLOADED.i) {
+                if (documentData?.status == DocStatus.UPLOADED.i) {
                     deleteImage1!!.visibility = View.VISIBLE
                 } else {
                     deleteImage1!!.visibility = View.GONE
                 }
                 rlAddImage2!!.visibility = View.GONE
                 deleteImage2!!.visibility = View.GONE
-                imageViewUploadDoc!!.visibility = View.VISIBLE
+                if (documentData?.numImagesRequired!! == 1) {
+                    imageViewUploadDoc!!.visibility = View.GONE
+                } else {
+                    imageViewUploadDoc!!.visibility = View.VISIBLE
+                }
                 if (imageObjectList[0] is ImageEntry) {
                     Picasso.with(activity).load(File((imageObjectList[0] as ImageEntry).path))
                             .transform(RoundBorderTransform(6, 0))
@@ -209,8 +207,24 @@ class DocumentUploadFragment : Fragment() {
             tvDocStatus.text = getString(R.string.approval_pending)
         } else if (documentData!!.status == DocStatus.VERIFIED.i) {
             tvDocStatus.text = getString(R.string.verified)
-        } else if (documentData!!.status == DocStatus.NOT_UPLOADED.i){
+        } else if (documentData!!.status == DocStatus.NOT_UPLOADED.i) {
             tvDocStatus.text = getString(R.string.upload_pending)
+        }
+
+        if (documentData?.status == DocStatus.VERIFIED.i) {
+            if (documentData?.imagesList!!.size == 2) {
+                deleteImage1.visibility = View.GONE
+                rlAddImage1.visibility = View.VISIBLE
+                deleteImage2.visibility = View.GONE
+                rlAddImage2.visibility = View.VISIBLE
+                imageViewUploadDoc.visibility = View.GONE
+            } else if (documentData?.imagesList!!.size == 1) {
+                deleteImage1.visibility = View.GONE
+                rlAddImage1.visibility = View.VISIBLE
+                deleteImage2.visibility = View.GONE
+                rlAddImage2.visibility = View.GONE
+                imageViewUploadDoc.visibility = View.GONE
+            }
         }
     }
 
@@ -242,7 +256,7 @@ class DocumentUploadFragment : Fragment() {
                                     documentData?.status = uploadDocumentResponse.status
                                     refreshImageUI()
                                 } else {
-                                    if(imageObjectList[imagePosition] != null) {
+                                    if (imageObjectList[imagePosition] != null) {
                                         imageObjectList.removeAt(imagePosition)
                                     }
                                 }
@@ -252,7 +266,7 @@ class DocumentUploadFragment : Fragment() {
                             override fun onError(uploadDocumentResponse: UploadDocumentResponse, message: String, flag: Int): Boolean {
                                 DialogPopup.dismissLoadingDialog()
                                 DialogPopup.alertPopup(activity, "", uploadDocumentResponse.getError())
-                                if(imageObjectList[imagePosition] != null) {
+                                if (imageObjectList[imagePosition] != null) {
                                     imageObjectList.removeAt(imagePosition)
                                 }
                                 return false
@@ -317,16 +331,15 @@ class DocumentUploadFragment : Fragment() {
         }
     }
 
-    private fun deleteDocumentApi(docId: Int,imagePosition: Int) {
+    private fun deleteDocumentApi(docId: Int, imagePosition: Int) {
         val params = hashMapOf(
                 "doc_id" to docId.toString(),
                 "img_position" to imagePosition.toString()
         )
-        ApiCommon<UploadDocumentResponse>(activity).putAccessToken(true).
-                putDefaultParams(true).showLoader(true).execute(params,ApiName.DELETE_DOCUMENT,object : APICommonCallback<UploadDocumentResponse>() {
+        ApiCommon<UploadDocumentResponse>(activity).putAccessToken(true).putDefaultParams(true).showLoader(true).execute(params, ApiName.DELETE_DOCUMENT, object : APICommonCallback<UploadDocumentResponse>() {
 
             override fun onSuccess(t: UploadDocumentResponse?, message: String?, flag: Int) {
-                if(t?.flag==ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                if (t?.flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                     DialogPopup.alertPopup(activity, "", message)
                     imageObjectList.removeAt(imagePosition)
                     documentData?.status = t.status
@@ -335,23 +348,23 @@ class DocumentUploadFragment : Fragment() {
             }
 
             override fun onError(t: UploadDocumentResponse?, message: String?, flag: Int): Boolean {
-                DialogPopup.alertPopup(activity,"", t?.error)
+                DialogPopup.alertPopup(activity, "", t?.error)
                 return false
             }
 
         })
     }
 
-    private fun deleteDocDialog(imagePosition: Int){
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity,""
-                ,getString(R.string.are_you_sure_to_delete_document)
-                ,getString(R.string.confirm),getString(R.string.cancel)
-                ,object : View.OnClickListener{
-                    override fun onClick(v: View?) {
-                        deleteDocumentApi(documentData!!.getDocumentId(),imagePosition)
-                    }
-                }
-                ,null,false,false)
+    private fun deleteDocDialog(imagePosition: Int) {
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, ""
+                , getString(R.string.are_you_sure_to_delete_document)
+                    , getString(R.string.confirm), getString(R.string.cancel)
+                , object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                deleteDocumentApi(documentData!!.getDocumentId(), imagePosition)
+            }
+        }
+                , null, false, false)
 
     }
 
@@ -359,6 +372,7 @@ class DocumentUploadFragment : Fragment() {
         UPLOADED(4), VERIFIED(3), REJECTED(2), APPROVAL_PENDING(1), NOT_UPLOADED(0);
 
         var i: Int = 0
+
         init {
             this.i = i
         }
