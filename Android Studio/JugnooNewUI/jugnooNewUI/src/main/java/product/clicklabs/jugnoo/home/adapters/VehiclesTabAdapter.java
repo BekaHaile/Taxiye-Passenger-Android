@@ -54,6 +54,9 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
     @Override
     public void onBindViewHolder(VehiclesTabAdapter.ViewHolder holder, int position) {
+        if(position >= regions.size()){
+            return;
+        }
         Region region = regions.get(position);
 
         boolean selected = region.getOperatorId() == activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getOperatorId()

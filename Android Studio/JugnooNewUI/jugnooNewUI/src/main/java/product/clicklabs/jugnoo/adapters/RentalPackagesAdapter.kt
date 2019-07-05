@@ -8,10 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.sabkuchfresh.adapters.ItemListener
 import kotlinx.android.synthetic.main.list_item_rental_package.view.*
-import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.retrofit.model.Package
-import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue
 
 class RentalPackagesAdapter(private var context:Context, private var packages: ArrayList<Package>?,
                             private var currency:String?, private var distanceUnit:String?,
@@ -58,11 +56,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
     }
 
     override fun onBindViewHolder(holder: RentalPackagesAdapter.ViewHolderCorporate, position: Int) {
-        holder.bind(if(Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))
-            packages!![position].getCity()!!
-        else
-            packages!![position].getPackageName(context, currency, distanceUnit),
-                packages!![position].selected, position)
+        holder.bind(packages!![position].getPackageName(distanceUnit), packages!![position].selected, position)
     }
 
     inner class ViewHolderCorporate(view : View, listener:ItemListener) : RecyclerView.ViewHolder(view){

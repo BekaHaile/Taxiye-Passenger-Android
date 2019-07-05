@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.retrofit.model
 
-import android.content.Context
 import android.text.TextUtils
 import com.google.gson.annotations.SerializedName
 import product.clicklabs.jugnoo.utils.Utils
@@ -62,7 +61,7 @@ class Package {
 //                " " + context.getString(R.string.then) + " " + Utils.formatCurrencyValue(currency, farePerKmAfterThreshold!!, false) + " " +
 //                context.getString(R.string.per_format, Utils.getDistanceUnit(distanceUnit))
 //    }
-    fun getPackageName(context: Context, currency: String?, distanceUnit: String?): String {
+    fun getPackageName(distanceUnit: String?): String {
         if(!TextUtils.isEmpty(packageNameF)){
             return packageNameF!!;
         }
