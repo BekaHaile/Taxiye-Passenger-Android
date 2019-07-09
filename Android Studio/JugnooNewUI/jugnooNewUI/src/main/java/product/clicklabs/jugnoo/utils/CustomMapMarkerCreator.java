@@ -9,7 +9,12 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -312,5 +317,25 @@ public class CustomMapMarkerCreator {
 
 		return marker;
 	}
+	public static Bitmap createCustomMarkerWithSavedLocation(final Context context, final boolean isPickup) {
 
+		View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.layout_save_location_marker, null);
+
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		marker.setLayoutParams(new ViewGroup.LayoutParams(180, ViewGroup.LayoutParams.WRAP_CONTENT));
+		marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+		marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+		marker.buildDrawingCache();
+		ImageView ivMarker = marker.findViewById(R.id.ivMarker);
+
+		if(isPickup) {
+			ivMarker.setImageResource(R.drawable.pin_ball_start);
+		}
+
+		Bitmap bitmap = Bitmap.createBitmap(marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		marker.draw(canvas);
+		return bitmap;
+	}
 }
