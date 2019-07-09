@@ -1044,4 +1044,8 @@ public interface Constants {
     String KEY_CARD_ID = "card_id";
     String KEY_CARD_DETAILS = "card_details";
     String KEY_AMOUNT_PAID = "amount_paid";
+
+//    save location
+    String SKIP_SAVE_PICKUP_LOCATION = "skip_save_pickup_location";
+    String SKIP_SAVE_DROP_LOCATION = "skip_save_drop_location";
 }

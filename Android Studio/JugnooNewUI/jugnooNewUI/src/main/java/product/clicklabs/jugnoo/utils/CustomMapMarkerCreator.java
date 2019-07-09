@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -328,9 +329,13 @@ public class CustomMapMarkerCreator {
 		marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
 		marker.buildDrawingCache();
 		ImageView ivMarker = marker.findViewById(R.id.ivMarker);
+		AppCompatTextView tvSavedLocation = marker.findViewById(R.id.tvSavedLocation);
 
 		if(isPickup) {
 			ivMarker.setImageResource(R.drawable.pin_ball_start);
+			tvSavedLocation.setText(context.getString(R.string.save_your_pickup_location));
+		} else {
+			tvSavedLocation.setText(context.getString(R.string.save_your_drop_location));
 		}
 
 		Bitmap bitmap = Bitmap.createBitmap(marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);

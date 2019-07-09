@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.home.dialogs
 
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -17,10 +16,7 @@ class SaveLocationDialog : DialogFragment() {
     private var address : String? = ""
     private var isPickup : Boolean? = false
     private lateinit var rootView : View
-
-    override fun onAttach(context: Context?) {
-        super.onAttach(context)
-    }
+    private var finalViewHeight : Int? = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,13 +25,14 @@ class SaveLocationDialog : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(lat : Double, lng : Double, address : String, isPickup : Boolean): SaveLocationDialog {
+        fun newInstance(lat : Double, lng : Double, address : String, isPickup : Boolean, finalViewHeight : Int): SaveLocationDialog {
             val itemImageDialog = SaveLocationDialog()
             val bundle = Bundle()
             bundle.putString("address", address)
             bundle.putDouble("lat", lat)
             bundle.putDouble("lng", lng)
             bundle.putBoolean("isPickup", isPickup)
+            bundle.putInt("finalViewHeight", finalViewHeight)
             itemImageDialog.arguments = bundle
             return itemImageDialog
         }
@@ -48,6 +45,7 @@ class SaveLocationDialog : DialogFragment() {
             val width = ViewGroup.LayoutParams.MATCH_PARENT
             val height = ViewGroup.LayoutParams.MATCH_PARENT
             dialog.window?.setLayout(width, height)
+            dialog.setCancelable(false)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
         }
     }
@@ -55,23 +53,8 @@ class SaveLocationDialog : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.dialog_save_location, container, false)
-        initView(rootView)
         setData()
         return rootView
-    }
-
-    /**
-     *
-     * @param view View
-     */
-    private fun initView(view: View) {
-        setFonts()
-    }
-
-    /**
-     *
-     */
-    private fun setFonts() {
     }
 
     /**
@@ -83,9 +66,15 @@ class SaveLocationDialog : DialogFragment() {
             lng = arguments?.getDouble("lng")
             address = arguments?.getString("address")
             isPickup = arguments?.getBoolean("isPickup")
+            finalViewHeight = arguments?.getInt("finalViewHeight")
+            rootView.setPadding(80, 0, 80, finalViewHeight!!)
         }
         rootView.ivSkip.setOnClickListener {
             (context as SaveLocationListener).onSkipClicked(isPickup!!)
+            dismiss()
+        }
+        rootView.ivSaveLocation.setOnClickListener {
+            (context as SaveLocationListener).onSaveLocationClick(isPickup!!)
             dismiss()
         }
     }
