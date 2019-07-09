@@ -35,7 +35,12 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,11 +61,13 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -68,8 +75,10 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
+import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 public class PlaceSearchListFragment extends Fragment implements  Constants {
@@ -875,45 +884,33 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			lastLatFetched = latLng.latitude;
 			lastLngFetched = latLng.longitude;
 
-			GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, LocaleHelper.getLanguage(activity), new GeocodeCallback(geoDataClient) {
-				@Override
-				public void onSuccess(GoogleGeocodeResponse geocodeResponse, Response response) {
-					try {
-						if (geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
-							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(geocodeResponse);
+			RestClient.getMapsCachingService().getReverseGeocode(latLng.latitude, latLng.longitude, 2
+					, Data.userData.getUserId(), new Callback<FeedCommonResponse>() {
+						@Override
+						public void success(FeedCommonResponse feedCommonResponse, Response respo) {
+							String response = new String(((TypedByteArray)respo.getBody()).getBytes());
+							try {
+								JSONObject jsonObject = null;
+								jsonObject = new JSONObject(response);
 
-							if(setSearchResult){
-								getFocussedProgressBar().setVisibility(View.GONE);
-								SearchResult searchResult  = new SearchResult("",gapiAddress.getSearchableAddress(),
-										"", lastLatFetched, lastLngFetched,0,1,0 );
-								setFocusedSearchResult(searchResult, true);
-
-							}else{
-								setFetchedAddressToTextView(gapiAddress.getSearchableAddress(), false, false);
-
+								JSONArray dataArr = jsonObject.getJSONArray("data");
+								if(dataArr != null && dataArr.length() > 0) {
+//									JSONObject addressObj = dataArr.getJSONObject(0);
+//									Log.e("address-fetched ====",addressObj.getString(Constants.KEY_ADDRESS));
+								} else {
+									callGoogleGeocodeAndInsertData(latLng,setSearchResult);
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
 							}
-							mapSettledCanForward = true;
-						} else {
-							Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-							setFetchedAddressToTextView("", false, false);
 						}
 
-					} catch (Exception e) {
-						e.printStackTrace();
-						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-						setFetchedAddressToTextView("", false, false);
-					}
-					getFocussedProgressBar().setVisibility(View.GONE);
-				}
+						@Override
+						public void failure(RetrofitError retrofitError) {
 
-				@Override
-				public void failure(RetrofitError error) {
-					product.clicklabs.jugnoo.utils.Log.e("DeliveryAddressFragment", "error=" + error.toString());
-					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-					getFocussedProgressBar().setVisibility(View.GONE);
-					setFetchedAddressToTextView("", false, false);
-				}
-			});
+						}
+					});
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1085,4 +1082,45 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
+	private void callGoogleGeocodeAndInsertData(final LatLng latLng, final boolean setSearchResult) {
+		GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, LocaleHelper.getLanguage(activity), new GeocodeCallback(geoDataClient) {
+			@Override
+			public void onSuccess(GoogleGeocodeResponse geocodeResponse, Response response) {
+				try {
+					if (geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
+						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(geocodeResponse);
+
+						if(setSearchResult){
+							getFocussedProgressBar().setVisibility(View.GONE);
+							SearchResult searchResult  = new SearchResult("",gapiAddress.getSearchableAddress(),
+									"", lastLatFetched, lastLngFetched,0,1,0 );
+							setFocusedSearchResult(searchResult, true);
+
+						}else{
+							setFetchedAddressToTextView(gapiAddress.getSearchableAddress(), false, false);
+
+						}
+						mapSettledCanForward = true;
+					} else {
+						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+						setFetchedAddressToTextView("", false, false);
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+					setFetchedAddressToTextView("", false, false);
+				}
+				getFocussedProgressBar().setVisibility(View.GONE);
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+				product.clicklabs.jugnoo.utils.Log.e("DeliveryAddressFragment", "error=" + error.toString());
+				Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+				getFocussedProgressBar().setVisibility(View.GONE);
+				setFetchedAddressToTextView("", false, false);
+			}
+		});
+	}
 }

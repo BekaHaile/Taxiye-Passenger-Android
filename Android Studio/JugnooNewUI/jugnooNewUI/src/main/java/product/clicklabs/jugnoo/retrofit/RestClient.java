@@ -32,6 +32,7 @@ public class RestClient {
     private static PayApiService PAY_API_SERVICE = null;
     private static FeedApiService FEED_API_SERVICE = null;
     private static ProsApi PROS_API = null;
+    private static MapsCachingApiService MAPS_CACHING_API = null;
 
     static {
         setupRestClient();
@@ -43,6 +44,7 @@ public class RestClient {
         setupPayApiRestClient();
         setupFeedApiRestClient();
         setupProsApiRestClient();
+        setupMapsCachingRestClient();
     }
 
     private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){
@@ -115,6 +117,7 @@ public class RestClient {
         setupPayApiRestClient();
         setupFeedApiRestClient();
         setupProsApiRestClient();
+        setupMapsCachingRestClient();
     }
 
 
@@ -287,4 +290,23 @@ public class RestClient {
     public static ProsApi getProsApiService() {
         return PROS_API;
     }
+
+    public static void setupMapsCachingRestClient() {
+        if(MAPS_CACHING_API == null) {
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getMapsCachingServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient(true)))
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+            setLogger(builder);
+
+            RestAdapter restAdapter = builder.build();
+            MAPS_CACHING_API = restAdapter.create(MapsCachingApiService.class);
+        }
+    }
+
+    public static MapsCachingApiService getMapsCachingService() {
+        return MAPS_CACHING_API;
+    }
+
+
 }
