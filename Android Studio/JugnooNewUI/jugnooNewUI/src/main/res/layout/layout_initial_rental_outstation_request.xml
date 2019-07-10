@@ -132,6 +132,7 @@
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/viewSepRideType"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
         app:layout_constraintBottom_toTopOf="@+id/viewSepRideType"/>
@@ -147,6 +148,7 @@
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/viewSepRideType"
         app:layout_constraintStart_toEndOf="@+id/viewSepRideType"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
@@ -163,6 +165,7 @@
         android:text="@string/always_available"
         android:textColor="@color/text_color"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
         app:layout_constraintBottom_toTopOf="@+id/viewSepRideType"
         app:layout_constraintEnd_toEndOf="@+id/viewSepRideType"
