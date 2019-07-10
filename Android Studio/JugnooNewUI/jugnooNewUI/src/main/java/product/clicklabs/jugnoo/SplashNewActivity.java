@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +24,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.TextViewCompat;
+import android.support.v7.widget.AppCompatTextView;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -122,6 +125,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static com.fugu.FuguConfig.*;
 
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
@@ -319,7 +324,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private int nextPermissionsRequestCode = 4000;
 	private FBAccountKit fbAccountKit;
 	private EditText editTextPhoneNumber;
-	private TextView textViewPhoneNumberRequired;
+	private AppCompatTextView textViewPhoneNumberRequired;
+
 	private static final int REQUEST_CODE_RECIEVE_SMS = 0x123;
 	private static final int REQUEST_CODE_LOCATION = 0x124;
 
@@ -463,7 +469,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
-					FuguConfig.clearFuguData(SplashNewActivity.this);
+					clearFuguData(SplashNewActivity.this);
 					Prefs.with(this).save(FUGU_CACHE_CLEARED,true);
 					Log.e("Splash","Fugu Data cleared on startup");
 				} catch (Exception e) {
@@ -1433,32 +1439,35 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				}
 			}));
 		}
+        if(llLoginContainer!=null) {
+			llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+				@SuppressLint("NewApi")
+				@SuppressWarnings("deprecation")
+				@Override
+				public void keyboardOpened() {
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
+					params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+					params.setMargins(0, (int) (ASSL.Yscale() * 150), 0, 0);
+					params.setMarginStart(0);
+					params.setMarginEnd(0);
+					llLoginContainer.setLayoutParams(params);
+				}
 
-		llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
-				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
-				params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-				params.setMargins(0, (int)(ASSL.Yscale()*150), 0, 0);
-				params.setMarginStart(0);
-				params.setMarginEnd(0);
-				llLoginContainer.setLayoutParams(params);
-			}
-
-			@Override
-			public void keyBoardClosed() {
-				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
-				params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
-				params.setMargins(0, 0, 0, 0);
-				params.setMarginStart(0);
-				params.setMarginEnd(0);
-				llLoginContainer.setLayoutParams(params);
-			}
-		}));
+				@Override
+				public void keyBoardClosed() {
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
+					params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+					params.setMargins(0, 0, 0, 0);
+					params.setMarginStart(0);
+					params.setMarginEnd(0);
+					llLoginContainer.setLayoutParams(params);
+				}
+			}));
+		}
 		Prefs.with(this).save(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,true);
 
 
-		textViewPhoneNumberRequired = (TextView) findViewById(R.id.textViewPhoneNumberRequired);
+		textViewPhoneNumberRequired = findViewById(R.id.textViewPhoneNumberRequired);
 		editTextPhoneNumber.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
