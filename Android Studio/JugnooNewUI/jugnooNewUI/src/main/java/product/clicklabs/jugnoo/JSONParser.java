@@ -1819,6 +1819,7 @@ public class JSONParser implements Constants {
                 SearchResult searchResultLastFMM = gson.fromJson(Prefs.with(context)
                         .getString(Constants.SP_FRESH_LAST_ADDRESS_OBJ, Constants.EMPTY_JSON_OBJECT), SearchResult.class);
                 SearchResult searchResultMatched = null;
+                int otherLocationCount = 0;
                 for (int i = 0; i < addressResponse.getAddresses().size(); i++) {
                     FetchUserAddressResponse.Address address = addressResponse.getAddresses().get(i);
                     SearchResult searchResult = new SearchResult(address.getType(), address.getAddr(), address.getPlaceId(),
@@ -1841,7 +1842,13 @@ public class JSONParser implements Constants {
                     } else if (!TextUtils.isEmpty(searchResult.getAddress())
                             && !TextUtils.isEmpty(address.getType())
                             && address.getId() > 0) {
+                        String[] addType = address.getType().split(" ");
+                        if(addType[0].equalsIgnoreCase("Other")) {
+                            otherLocationCount += 1;
+                            searchResult.setName(context.getString(R.string.favourite,  String.valueOf(otherLocationCount)));
+                        }
                         Data.userData.getSearchResults().add(searchResult);
+
                     } else if (!TextUtils.isEmpty(searchResult.getAddress())
                             && TextUtils.isEmpty(address.getType())) {
                         searchResult.setType(SearchResult.Type.RECENT);

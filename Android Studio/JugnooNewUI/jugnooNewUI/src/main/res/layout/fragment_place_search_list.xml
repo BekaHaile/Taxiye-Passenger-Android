@@ -29,6 +29,7 @@
           >
 
             <ImageView
+                android:id="@+id/ivLocationMarker"
                 android:layout_width="33dp"
                 android:layout_height="54dp"
                 android:layout_above="@+id/ivPivot"

@@ -18,6 +18,15 @@
         android:textColor="@color/white"
         android:textSize="22sp"
         android:paddingBottom="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ivLocationMarker"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivLocationMarker"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/pin_ball_start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

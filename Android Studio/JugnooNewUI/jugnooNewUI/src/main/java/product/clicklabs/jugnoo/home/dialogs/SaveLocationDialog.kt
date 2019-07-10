@@ -68,6 +68,11 @@ class SaveLocationDialog : DialogFragment() {
             isPickup = arguments?.getBoolean("isPickup")
             finalViewHeight = arguments?.getInt("finalViewHeight")
             rootView.setPadding(80, 0, 80, finalViewHeight!!)
+            if(isPickup!!) {
+                rootView.ivLocationMarker.setImageResource(R.drawable.pin_ball_start)
+            } else {
+                rootView.ivLocationMarker.setImageResource(R.drawable.pin_ball_end)
+            }
         }
         rootView.ivSkip.setOnClickListener {
             (context as SaveLocationListener).onSkipClicked(isPickup!!)

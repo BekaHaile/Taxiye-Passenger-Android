@@ -2412,7 +2412,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         map.setInfoWindowAdapter(customIW);
 
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
-                        && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+                        && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), 0, false) == null) {
                             openSaveLocationDialog(true);
                             pickupLocationMarker.remove();
                             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
@@ -2473,7 +2473,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         return true;
                     } else if(arg0.getTitle().equalsIgnoreCase("End Location")) {
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
-                                && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+                                && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), 0, false) == null) {
                             openSaveLocationDialog(false);
                             dropLocationMarker.remove();
                             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getDropLatLng()));
@@ -4727,7 +4727,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 dropLocationMarker.remove();
             }
             boolean savedLocationView = false;
-            if((PassengerScreenMode.P_IN_RIDE == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+            if((PassengerScreenMode.P_IN_RIDE == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), 0, false) == null) {
                 savedLocationView = true;
             }
             dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
@@ -6096,7 +6096,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         markerOptions.position(latLng);
         markerOptions.zIndex(HOME_MARKER_ZINDEX);
         if (inRide) {
-            if(Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false) || HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) != null) {
+            if(Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false) || HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), 0, false) != null) {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
                                 .createPinMarkerBitmapStart(HomeActivity.this)));

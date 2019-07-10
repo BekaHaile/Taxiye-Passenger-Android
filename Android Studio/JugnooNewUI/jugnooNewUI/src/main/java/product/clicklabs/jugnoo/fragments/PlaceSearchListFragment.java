@@ -17,6 +17,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -111,6 +113,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private EditText editTextSearchDest;
 	private ProgressWheel progressBarSearchDest;
 	private SearchResult searchResultPickup,searchResultDestination;
+	private ImageView ivLocationMarker;
 	private SearchListAdapter.SearchListActionsHandler searchAdapterListener = new SearchListAdapter.SearchListActionsHandler() {
 
 		@Override
@@ -277,6 +280,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		scrollViewSearch.setVisibility(View.GONE);
 		cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
 
+		ivLocationMarker = rootView.findViewById(R.id.ivLocationMarker);
+
+		ivLocationMarker.setOnClickListener(view -> {
+			stopAnimation();
+			if(bottomSheetBehaviour.getState()==BottomSheetBehavior.STATE_COLLAPSED)
+				fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target,false);
+		});
 
 		scrollViewSuggestions = (NestedScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
 		textViewSavedPlaces = (TextView) rootView.findViewById(R.id.textViewSavedPlaces); textViewSavedPlaces.setTypeface(Fonts.mavenMedium(activity));
@@ -784,15 +794,16 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						@Override
 						public void onMapUnsettled() {
 							mapSettledCanForward=false;
-							setFetchedAddressToTextView("", true, true);
+							startAnimation();
+//							setFetchedAddressToTextView("loading...", true, true);
 							/*mapSettledCanForward = false;
 							searchResultNearPin = null;*/
 						}
 
 						@Override
 						public void onMapSettled() {
-						if(bottomSheetBehaviour.getState()==BottomSheetBehavior.STATE_COLLAPSED)
-						  fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target,false);
+//						if(bottomSheetBehaviour.getState()==BottomSheetBehavior.STATE_COLLAPSED)
+//						  fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target,false);
 //							autoCompleteResultClicked = false;
 						}
 
@@ -991,13 +1002,25 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
 			}
 			rlMarkerPin.setVisibility(View.VISIBLE);
-			if(googleMap != null) {
-				fillAddressDetails(googleMap.getCameraPosition().target, false);
-			}
+			startAnimation();
+//			if(googleMap != null) {
+//				fillAddressDetails(googleMap.getCameraPosition().target, false);
+//			}
 			Utils.hideSoftKeyboard(activity,editTextSearch);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void startAnimation() {
+		setFetchedAddressToTextView(getString(R.string.tap_on_pin), true, true);
+		ivLocationMarker.clearAnimation();
+		final Animation anim = AnimationUtils.loadAnimation(activity, R.anim.bounce_view);
+		ivLocationMarker.startAnimation(anim);
+	}
+
+	private void stopAnimation() {
+		ivLocationMarker.clearAnimation();
 	}
 
 	public void openBottomSheetMode(){
