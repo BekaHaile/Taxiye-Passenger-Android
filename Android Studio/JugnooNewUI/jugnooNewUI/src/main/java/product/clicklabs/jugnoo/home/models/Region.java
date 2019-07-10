@@ -413,13 +413,13 @@ public class Region {
 		private String address;
 		@SerializedName("distance")
 		@Expose
-		private Double distance;
+		private double distance;
 		@SerializedName("latitude")
 		@Expose
-		private Double latitude;
+		private double latitude;
 		@SerializedName("longitude")
 		@Expose
-		private Double longitude;
+		private double longitude;
 		@SerializedName("id")
 		@Expose
 		private int location_id;
@@ -432,15 +432,15 @@ public class Region {
 			return address;
 		}
 
-		public Double getDistance() {
+		public double getDistance() {
 			return distance;
 		}
 
-		public Double getLatitude() {
+		public double getLatitude() {
 			return latitude;
 		}
 
-		public Double getLongitude() {
+		public double getLongitude() {
 			return longitude;
 		}
 
@@ -452,7 +452,7 @@ public class Region {
 			this.address = address;
 		}
 
-		public void setDistance(Double distance) {
+		public void setDistance(double distance) {
 			this.distance = distance;
 		}
 

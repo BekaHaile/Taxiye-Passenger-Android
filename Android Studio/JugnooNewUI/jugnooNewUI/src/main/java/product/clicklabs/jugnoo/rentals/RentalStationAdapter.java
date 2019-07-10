@@ -47,12 +47,12 @@ public class RentalStationAdapter extends RecyclerView.Adapter<RentalStationAdap
 
         final String name = list.get(i).getName();
         final String address = list.get(i).getAddress();
-        final Double latitude = list.get(i).getLatitude();
-        final Double longitude = list.get(i).getLongitude();
-        final Double distance = list.get(i).getDistance();
+        final double latitude = list.get(i).getLatitude();
+        final double longitude = list.get(i).getLongitude();
+        final double distance = list.get(i).getDistance();
 
         if (i == list.size() - 1) {
-            viewHolder.imageViewSeparator.setVisibility(View.GONE);
+            viewHolder.imageViewSeparator.setVisibility(View.INVISIBLE);
         }
 
         viewHolder.textViewName.setText(name);
