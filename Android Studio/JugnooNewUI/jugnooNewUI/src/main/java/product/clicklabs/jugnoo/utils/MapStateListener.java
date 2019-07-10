@@ -58,11 +58,18 @@ public abstract class MapStateListener {
 
             @Override
             public void onDoubleTap() {
+                moveMap();
             	mMap.animateCamera(CameraUpdateFactory.zoomIn());
             }
-            
+
+            @Override
+            public void onMoveMap() {
+                moveMap();
+            }
+
             @Override
             public void onTwoFingerDoubleTap() {
+                moveMap();
             	mMap.animateCamera(CameraUpdateFactory.zoomOut());
             }
             
@@ -165,6 +172,7 @@ public abstract class MapStateListener {
     public abstract void onMapTouched();
     public abstract void onMapReleased();
     public abstract void onMapUnsettled();
+    public abstract void moveMap();
     public abstract void onMapSettled();
     public abstract void onCameraPositionChanged(CameraPosition cameraPosition);
 }

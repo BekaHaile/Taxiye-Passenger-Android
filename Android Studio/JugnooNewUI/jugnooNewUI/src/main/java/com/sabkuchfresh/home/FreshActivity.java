@@ -3408,7 +3408,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (apiAddHomeWorkAddress == null) {
             apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
                 @Override
-                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, final String serverMsg) {
                     try {
                         Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
                         if (deliveryAddressesFragment != null) {

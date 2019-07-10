@@ -1842,8 +1842,7 @@ public class JSONParser implements Constants {
                     } else if (!TextUtils.isEmpty(searchResult.getAddress())
                             && !TextUtils.isEmpty(address.getType())
                             && address.getId() > 0) {
-                        String[] addType = address.getType().split(" ");
-                        if(addType[0].equalsIgnoreCase("Other")) {
+                        if(address.getType().startsWith("Other")) {
                             otherLocationCount += 1;
                             searchResult.setName(context.getString(R.string.favourite,  String.valueOf(otherLocationCount)));
                         }

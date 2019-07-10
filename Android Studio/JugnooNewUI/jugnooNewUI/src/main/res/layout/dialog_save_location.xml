@@ -14,9 +14,9 @@
         android:gravity="center"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/saved_location"
+        android:text="@string/save_your_pickup_location"
         android:textColor="@color/white"
-        android:textSize="22sp"
+        android:textSize="16sp"
         android:paddingBottom="6dp"
         app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintEnd_toEndOf="parent"
@@ -24,8 +24,8 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/ivLocationMarker"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/pin_ball_start"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

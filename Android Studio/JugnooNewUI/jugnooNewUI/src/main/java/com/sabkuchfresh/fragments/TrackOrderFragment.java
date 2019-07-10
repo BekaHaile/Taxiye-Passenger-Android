@@ -251,6 +251,11 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 						}
 
 						@Override
+						public void moveMap() {
+
+						}
+
+						@Override
 						public void onMapSettled() {
 
 						}

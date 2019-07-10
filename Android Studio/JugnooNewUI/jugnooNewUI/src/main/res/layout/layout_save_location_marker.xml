@@ -15,7 +15,7 @@
 
     <RelativeLayout
         android:id="@+id/llSavedLocation"
-        android:layout_width="200dp"
+        android:layout_width="220dp"
         android:layout_height="45dp"
         android:background="@drawable/bg_saved_location_marker"
         android:orientation="horizontal">
@@ -33,6 +33,7 @@
             android:layout_width="35dp"
             android:src="@drawable/ic_save_location_heart"
             android:layout_centerVertical="true"
+            android:paddingEnd="2dp"
             android:layout_marginEnd="5dp"
             android:layout_height="@dimen/dp_35"
             android:layout_alignParentEnd="true"/>

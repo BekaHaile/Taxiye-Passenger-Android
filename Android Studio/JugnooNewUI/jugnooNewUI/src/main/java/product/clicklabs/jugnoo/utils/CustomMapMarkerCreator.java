@@ -324,7 +324,7 @@ public class CustomMapMarkerCreator {
 
 		DisplayMetrics displayMetrics = new DisplayMetrics();
 		((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-		marker.setLayoutParams(new ViewGroup.LayoutParams(180, ViewGroup.LayoutParams.WRAP_CONTENT));
+		marker.setLayoutParams(new ViewGroup.LayoutParams(220, ViewGroup.LayoutParams.WRAP_CONTENT));
 		marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
 		marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
 		marker.buildDrawingCache();

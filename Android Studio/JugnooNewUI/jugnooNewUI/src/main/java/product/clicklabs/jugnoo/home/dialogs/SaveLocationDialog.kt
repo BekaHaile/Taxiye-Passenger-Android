@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.dialog_save_location.view.*
 import product.clicklabs.jugnoo.R
+import product.clicklabs.jugnoo.utils.ASSL
 
 class SaveLocationDialog : DialogFragment() {
     private var lat : Double? = 0.0
@@ -16,7 +17,7 @@ class SaveLocationDialog : DialogFragment() {
     private var address : String? = ""
     private var isPickup : Boolean? = false
     private lateinit var rootView : View
-    private var finalViewHeight : Int? = 0
+    private var finalViewHeight : Float? = 0f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,14 +26,14 @@ class SaveLocationDialog : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(lat : Double, lng : Double, address : String, isPickup : Boolean, finalViewHeight : Int): SaveLocationDialog {
+        fun newInstance(lat : Double, lng : Double, address : String, isPickup : Boolean, finalViewHeight : Float): SaveLocationDialog {
             val itemImageDialog = SaveLocationDialog()
             val bundle = Bundle()
             bundle.putString("address", address)
             bundle.putDouble("lat", lat)
             bundle.putDouble("lng", lng)
             bundle.putBoolean("isPickup", isPickup)
-            bundle.putInt("finalViewHeight", finalViewHeight)
+            bundle.putFloat("finalViewHeight", finalViewHeight)
             itemImageDialog.arguments = bundle
             return itemImageDialog
         }
@@ -66,12 +67,14 @@ class SaveLocationDialog : DialogFragment() {
             lng = arguments?.getDouble("lng")
             address = arguments?.getString("address")
             isPickup = arguments?.getBoolean("isPickup")
-            finalViewHeight = arguments?.getInt("finalViewHeight")
-            rootView.setPadding(80, 0, 80, finalViewHeight!!)
+            finalViewHeight = arguments?.getFloat("finalViewHeight")
+            rootView.setPadding(80, 0, 80, (ASSL.Yscale() * finalViewHeight!!).toInt())
             if(isPickup!!) {
                 rootView.ivLocationMarker.setImageResource(R.drawable.pin_ball_start)
+                rootView.tvSaveAddress.setText(R.string.save_your_pickup_location)
             } else {
                 rootView.ivLocationMarker.setImageResource(R.drawable.pin_ball_end)
+                rootView.tvSaveAddress.setText(R.string.save_your_drop_location)
             }
         }
         rootView.ivSkip.setOnClickListener {

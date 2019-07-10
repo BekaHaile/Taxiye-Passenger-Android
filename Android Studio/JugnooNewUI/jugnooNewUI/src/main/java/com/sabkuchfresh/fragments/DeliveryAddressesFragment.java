@@ -494,6 +494,11 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
                         }
 
                         @Override
+                        public void moveMap() {
+
+                        }
+
+                        @Override
                         public void onMapSettled() {
                             autoCompleteResultClicked = false;
                             if(scrollViewSuggestions.getVisibility()== View.GONE || getBottomSheetBehaviour()==null || getBottomSheetBehaviour().getState()==BottomSheetBehavior.STATE_COLLAPSED){

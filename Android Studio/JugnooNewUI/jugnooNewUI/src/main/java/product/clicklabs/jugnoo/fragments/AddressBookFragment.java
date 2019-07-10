@@ -257,7 +257,7 @@ public class AddressBookFragment extends Fragment {
 		if(apiAddHomeWorkAddress == null){
 			apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(activity, new ApiAddHomeWorkAddress.Callback() {
 				@Override
-				public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+				public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, final String serverMsg) {
 					setSavedPlaces();
 				}
 

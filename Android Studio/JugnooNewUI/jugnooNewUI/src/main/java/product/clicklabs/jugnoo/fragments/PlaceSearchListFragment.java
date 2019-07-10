@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -59,6 +61,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.CustomInterpolator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.GoogleRestApis;
@@ -114,6 +117,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private ProgressWheel progressBarSearchDest;
 	private SearchResult searchResultPickup,searchResultDestination;
 	private ImageView ivLocationMarker;
+	private boolean isMarkerSet = false;
 	private SearchListAdapter.SearchListActionsHandler searchAdapterListener = new SearchListAdapter.SearchListActionsHandler() {
 
 		@Override
@@ -283,9 +287,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		ivLocationMarker = rootView.findViewById(R.id.ivLocationMarker);
 
 		ivLocationMarker.setOnClickListener(view -> {
-			stopAnimation();
-			if(bottomSheetBehaviour.getState()==BottomSheetBehavior.STATE_COLLAPSED)
+			if(bottomSheetBehaviour.getState()==BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet)
 				fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target,false);
+			stopAnimation();
 		});
 
 		scrollViewSuggestions = (NestedScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
@@ -794,10 +798,15 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						@Override
 						public void onMapUnsettled() {
 							mapSettledCanForward=false;
-							startAnimation();
+//							startAnimation();
 //							setFetchedAddressToTextView("loading...", true, true);
 							/*mapSettledCanForward = false;
 							searchResultNearPin = null;*/
+						}
+
+						@Override
+						public void moveMap() {
+							startAnimation();
 						}
 
 						@Override
@@ -1017,10 +1026,12 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		ivLocationMarker.clearAnimation();
 		final Animation anim = AnimationUtils.loadAnimation(activity, R.anim.bounce_view);
 		ivLocationMarker.startAnimation(anim);
+		isMarkerSet = false;
 	}
 
 	private void stopAnimation() {
 		ivLocationMarker.clearAnimation();
+		isMarkerSet = true;
 	}
 
 	public void openBottomSheetMode(){
@@ -1075,7 +1086,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		if(apiAddHomeWorkAddress == null){
 			apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(activity, new ApiAddHomeWorkAddress.Callback() {
 				@Override
-				public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+				public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, final String serverMsg) {
 					updateSavedPlacesLists();
 					showSearchLayout();
 				}
