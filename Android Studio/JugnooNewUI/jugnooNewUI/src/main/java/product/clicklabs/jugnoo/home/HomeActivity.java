@@ -1402,9 +1402,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         customerLocation = findViewById(R.id.customerLocation);
         endRideJugnooAnimation = findViewById(R.id.jugnoo_animation);
-        if (endRideJugnooAnimation instanceof ImageView) {
-            rentalJugnooAnimation = (AnimationDrawable) endRideJugnooAnimation.getBackground();
-        }
+//        if (endRideJugnooAnimation instanceof ImageView) {
+//            rentalJugnooAnimation = (AnimationDrawable) endRideJugnooAnimation.getBackground();
+//        }
 
 
         damageReportButton = findViewById(R.id.damage_button);
@@ -11541,13 +11541,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         params.put(Constants.KEY_LOCK_STATUS, String.valueOf(gpsLockStatus.getOrdinal()));
         params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
 
-
+        rentalEndRideLayout.setVisibility(View.VISIBLE);
         Log.i(TAG, String.valueOf(params));
 
-            new ApiCommon<>(this).showLoader(true).putAccessToken(true)
+            new ApiCommon<>(this).showLoader(false).putAccessToken(true)
                     .execute(params, ApiName.RENTALS_UPDATE_LOCK_STATUS, new APICommonCallback<FeedCommonResponse>() {
                         @Override
                         public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                            rentalEndRideLayout.setVisibility(View.GONE);
                             Log.d("HomeActivityRental"," Flag Update Lock Status Success " + String.valueOf(flag));
                             switchRentalInRideUI(gpsLockStatus);
                             rentalInRideLayout.postDelayed(new Runnable() {
@@ -11561,6 +11562,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         @Override
                         public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
                             Log.d("HomeActivityRental"," Flag Update Lock Status Error " + String.valueOf(flag));
+                            rentalEndRideLayout.setVisibility(View.GONE);
                             return false;
                         }
                     });
@@ -11605,6 +11607,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 .execute(params, ApiName.RENTALS_GET_LOCK_STATUS, new APICommonCallback<GetLockStatusResponse>() {
                     @Override
                     public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
+                        rentalEndRideLayout.setVisibility(View.GONE);
                         if(feedCommonResponse.getGpsLockStatus() != -1) {
                             Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
                         } else {
@@ -11678,10 +11681,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     rentalEndRideLayout.setVisibility(View.VISIBLE);
                     rentalInRideLayout.setVisibility(View.GONE);
                     endRideJugnooAnimation.setVisibility(View.VISIBLE);
-                    if (endRideJugnooAnimation instanceof ImageView) {
-                        rentalJugnooAnimation.stop();
-                        rentalJugnooAnimation.start();
-                    }
+//                    if (endRideJugnooAnimation instanceof ImageView) {
+//                        rentalJugnooAnimation.stop();
+//                        rentalJugnooAnimation.start();
+//                    }
                     if (gpsLockStatus == GpsLockStatus.REQ_LOCK.getOrdinal()) {
                         textViewEndRide.setText(R.string.locking_ride);
                     } else if (gpsLockStatus == GpsLockStatus.REQ_UNLOCK.getOrdinal()) {
@@ -11690,13 +11693,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         textViewEndRide.setText(R.string.ending_ride);
                     }
                 } else {
-                    rentalJugnooAnimation.stop();
+//                    rentalJugnooAnimation.stop();
                     rentalEndRideLayout.setVisibility(View.GONE);
                     rentalInRideLayout.setVisibility(View.VISIBLE);
                     updateGpsLockStatus(gpsLockStatus);
                 }
             } else {
-                rentalJugnooAnimation.stop();
+//                rentalJugnooAnimation.stop();
                 rentalEndRideLayout.setVisibility(View.GONE);
                 rentalInRideLayout.setVisibility(View.GONE);
                 requestFinalLayout.setVisibility(View.VISIBLE);
