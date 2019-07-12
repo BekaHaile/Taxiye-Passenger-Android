@@ -11553,7 +11553,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             rentalInRideLayout.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    apiGetGpsLockStatus(true, false, Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
+                                    apiGetGpsLockStatusAP(Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
                                 }
                             }, 2000);
                         }
@@ -11568,7 +11568,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void apiGetGpsLockStatus(final boolean actionPerformed, final boolean repeatHandler, final int gpsLockStatusOld){
+    private void apiGetGpsLockStatusRH(final int gpsLockStatusOld){
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
         new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true).showLoader(false)
@@ -11585,7 +11585,36 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     @Override
                     public boolean onError(GetLockStatusResponse feedCommonResponse, String message, int flag) {
-                        if(actionPerformed){
+                        return true;
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        if(pollingGetGPSLockStatus) {
+                            getHandler().postDelayed(runnableGetGPSLockStatus, Prefs.with(HomeActivity.this).getLong(Constants.KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, 30000));
+                        }
+                    }
+                });
+    }
+
+    private void apiGetGpsLockStatusAP(final int gpsLockStatusOld){
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
+        new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true).showLoader(false)
+                .execute(params, ApiName.RENTALS_GET_LOCK_STATUS, new APICommonCallback<GetLockStatusResponse>() {
+                    @Override
+                    public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
+                        if(feedCommonResponse.getGpsLockStatus() != -1) {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
+                        } else {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatusOld);
+                        }
+                        rentalStateUIHandling(passengerScreenMode);
+                    }
+
+                    @Override
+                    public boolean onError(GetLockStatusResponse feedCommonResponse, String message, int flag) {
                             if(flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()
                                     && gpsLockStatusOld != GpsLockStatus.LOCK.getOrdinal()) {
                                 Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
@@ -11598,16 +11627,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else {
                                 return false;
                             }
-                        }
-                        return true;
                     }
 
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        if(repeatHandler && pollingGetGPSLockStatus) {
-                            getHandler().postDelayed(runnableGetGPSLockStatus, Prefs.with(HomeActivity.this).getLong(Constants.KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, 30000));
-                        }
                     }
                 });
     }
@@ -11618,7 +11642,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         @Override
         public void run() {
             if(inRideCheck() && Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
-                apiGetGpsLockStatus(false, true, Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
+                apiGetGpsLockStatusRH(Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
             }
         }
     };
