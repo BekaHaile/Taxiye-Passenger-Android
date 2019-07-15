@@ -577,7 +577,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 		@Override
 		public void run() {
-			if (System.currentTimeMillis() > (last_text_edit + delay - 200)) {
+			if (System.currentTimeMillis() > (last_text_edit + delay - 200) && textToSearch.length() > 2) {
 				getSearchResults(textToSearch, SearchListAdapter.this.getPivotLatLng(),editText);
 			}
 		}
