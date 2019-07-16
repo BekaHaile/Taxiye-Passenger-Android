@@ -85,7 +85,7 @@ public class SearchListAdapter extends BaseAdapter{
         public void afterTextChanged(Editable s) {
             try {
                 SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
-                if (s.length() > 0) {
+                if (s.length() > 2) {
 					last_text_edit = System.currentTimeMillis();
 					handler.postDelayed(input_finish_checker.setTextToSearch(s.toString().trim()), delay);
                 } else {
@@ -105,7 +105,7 @@ public class SearchListAdapter extends BaseAdapter{
         int id;
     }
 
-	long delay = 700; // 1 seconds after user stops typing
+	long delay = 1000; // 1 seconds after user stops typing
 	long last_text_edit = 0;
 	Handler handler = new Handler();
 

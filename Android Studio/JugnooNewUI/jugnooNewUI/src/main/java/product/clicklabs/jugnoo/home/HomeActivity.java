@@ -5917,12 +5917,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private LatLng getDeviceLocation(){
-        if(Data.autoData != null && Data.autoData.getPickupLatLng() != null
-                && Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0){
-            return Data.autoData.getPickupLatLng();
-        } else {
+//        if(Data.autoData != null && Data.autoData.getPickupLatLng() != null
+//                && Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0){
+//            return Data.autoData.getPickupLatLng();
+//        } else {
             return new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        }
+//        }
     }
 
     private void defaultCouponSelection() {
@@ -9042,12 +9042,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, final String serverMsg) {
                     DialogPopup.alertPopup(HomeActivity.this, "", serverMsg);
-                    if(mIsPickup) {
-                        pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(),
-                                passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_IN_RIDE));
-                    } else {
-                        setDropLocationMarker();
+                    if(pickupLocationMarker != null) {
+                        pickupLocationMarker.remove();
                     }
+                    pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(),
+                            passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_IN_RIDE));
+                    setDropLocationMarker();
                 }
 
                 @Override
