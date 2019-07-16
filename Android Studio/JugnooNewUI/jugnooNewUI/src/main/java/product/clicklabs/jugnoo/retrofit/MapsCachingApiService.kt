@@ -1,19 +1,21 @@
 package product.clicklabs.jugnoo.retrofit
 
-import com.sabkuchfresh.feed.models.FeedCommonResponse
-import retrofit.Callback
 import retrofit.client.Response
-import retrofit.http.*
+import retrofit.http.Field
+import retrofit.http.FieldMap
+import retrofit.http.FormUrlEncoded
+import retrofit.http.POST
 
 interface MapsCachingApiService {
 
+    @FormUrlEncoded
     @POST("/maps/insert")
-    fun insertMapData(@QueryMap params: HashMap<String,String>): Response
+    fun insert(@FieldMap params: HashMap<String, Any>): Response
 
     @FormUrlEncoded
     @POST("/maps/get_reverse_geocoding_data")
     fun getReverseGeocode(@Field("lat") lat: Double,
                           @Field("lng") lng: Double,
                           @Field("product_id") productId: Int,
-                          @Field("user_id") userId: String,callback: Callback<FeedCommonResponse>)
+                          @Field("user_id") userId: String): Response
 }

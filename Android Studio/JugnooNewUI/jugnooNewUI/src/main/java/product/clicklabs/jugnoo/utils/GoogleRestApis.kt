@@ -134,7 +134,9 @@ object GoogleRestApis {
         return response
     }
 
-    fun geocode(latLng: String, language: String): Response {
+    fun geocode(latLng: String, language: String): Response? {
+        if (checkApiLimit(null)) return null
+
         Log.i("GoogleRestApi", "geocode")
         val response:Response
         if (MAPS_APIS_SIGN()) {
@@ -186,7 +188,7 @@ object GoogleRestApis {
         }
     }
 
-    private fun checkApiLimit(callback: Callback<GoogleGeocodeResponse>): Boolean {
+    private fun checkApiLimit(callback: Callback<GoogleGeocodeResponse>?): Boolean {
         if(Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED, 0) == 0){
             return false
         }
@@ -202,7 +204,7 @@ object GoogleRestApis {
             val t = GoogleGeocodeResponse()
             t.status = "DENIED"
             t.results = arrayListOf()
-            callback.success(t, null)
+            callback?.success(t, null)
             return true
         } else if (firstTime == 0L || timeDIff >= timeLimitMillis) {
             Prefs.with(MyApplication.getInstance()).save(Constants.SP_FIRST_GEOCODE_TIMESTAMP, currentTime)
