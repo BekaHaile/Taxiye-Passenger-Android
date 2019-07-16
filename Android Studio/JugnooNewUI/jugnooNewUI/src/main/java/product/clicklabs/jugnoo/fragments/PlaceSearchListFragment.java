@@ -34,10 +34,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
 import java.util.ArrayList;
+import java.util.concurrent.CancellationException;
 
+import kotlinx.coroutines.Job;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -46,6 +49,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
+import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -579,6 +583,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(linearLayoutRoot);
+		if(jobGeocode != null){
+			jobGeocode.cancel(new CancellationException());
+		}
         System.gc();
 	}
 
@@ -841,7 +848,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 	}
 
-
+	private Job jobGeocode = null;
 	private Double lastLatFetched ;
 	private Double lastLngFetched ;
 	private void fillAddressDetails(LatLng latLng, final boolean setSearchResult) {
@@ -851,7 +858,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			lastLatFetched = latLng.latitude;
 			lastLngFetched = latLng.longitude;
 
-			PlaceSearchKT.INSTANCE.hitGeocode(latLng, address -> setAddressToUI(address, setSearchResult));
+			if(jobGeocode != null){
+				jobGeocode.cancel(new CancellationException());
+			}
+			jobGeocode = GoogleCachingApiKT.INSTANCE.hitGeocode(latLng, address -> setAddressToUI(address, setSearchResult));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1025,16 +1035,20 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 
-	private void setAddressToUI(String address, boolean setSearchResult) {
-		Log.i("PlaceSearchListFragment", "setAddressToUI address="+address);
-		if (!TextUtils.isEmpty(address)) {
+	private void setAddressToUI(GoogleGeocodeResponse address, boolean setSearchResult) {
+		Log.i("PlaceSearchListFragment", "setAddressToUI address=" + address);
+		GAPIAddress gapiAddress = null;
+		if (address != null) {
+			gapiAddress = MapUtils.parseGAPIIAddress(address);
+		}
+		if (gapiAddress != null && !TextUtils.isEmpty(gapiAddress.formattedAddress)) {
 			if (setSearchResult) {
-				SearchResult searchResult = new SearchResult("", address,
+				SearchResult searchResult = new SearchResult("", gapiAddress.formattedAddress,
 						"", lastLatFetched, lastLngFetched, 0, 1, 0);
 				setFocusedSearchResult(searchResult, true);
 
 			} else {
-				setFetchedAddressToTextView(address, false, false);
+				setFetchedAddressToTextView(gapiAddress.formattedAddress, false, false);
 
 			}
 			mapSettledCanForward = true;

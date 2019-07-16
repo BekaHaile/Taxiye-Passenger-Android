@@ -88,7 +88,6 @@ import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
-import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.dialogs.FreshSortDialog;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
@@ -180,7 +179,6 @@ import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.DeleteCacheIntentService;
-import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.OrderStatusFragment;
@@ -199,6 +197,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.fragments.GoogleCachingApiKT;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -218,14 +217,10 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
-import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -3931,32 +3926,23 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType) {
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-            GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                    LocaleHelper.getLanguage(this), new GeocodeCallback(mGeoDataClient) {
-                        @Override
-                        public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
-                            try {
-                                DialogPopup.dismissLoadingDialog();
-                                GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-                                String address = gapiAddress.getSearchableAddress();
-                                setSelectedAddress(address);
-                                setSelectedLatLng(currentLatLng);
-                                setSelectedAddressId(0);
-                                setSelectedAddressType("");
-                                setAddressAndFetchOfferingData(appType);
+			GoogleCachingApiKT.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+				Log.i(TAG, "getAddressAndFetchOfferingData address="+settleUserDebt);
+				try {
+					DialogPopup.dismissLoadingDialog();
+					GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
+					String address = gapiAddress.getSearchableAddress();
+					setSelectedAddress(address);
+					setSelectedLatLng(currentLatLng);
+					setSelectedAddressId(0);
+					setSelectedAddressType("");
+					setAddressAndFetchOfferingData(appType);
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                retryDialogLocationFetch(DialogErrorType.SERVER_ERROR, currentLatLng, appType);
-                            }
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            DialogPopup.dismissLoadingDialog();
-                            retryDialogLocationFetch(DialogErrorType.CONNECTION_LOST, currentLatLng, appType);
-                        }
-                    });
+				} catch (Exception e) {
+					e.printStackTrace();
+					retryDialogLocationFetch(DialogErrorType.SERVER_ERROR, currentLatLng, appType);
+				}
+			});
         } catch (Exception e) {
             e.printStackTrace();
             DialogPopup.dismissLoadingDialog();

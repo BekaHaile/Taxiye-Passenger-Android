@@ -8,6 +8,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
+import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.MapUtils
@@ -20,10 +21,10 @@ object CachedApis {
     private const val TYPE_REVERSE_GEOCODING = "reverse_geocoding"
 
 
-    suspend fun geocode(latLng: LatLng, userId: String) : String?{
+    suspend fun geocode(latLng: LatLng, userId: String) : GoogleGeocodeResponse?{
 
         return withContext(Dispatchers.Main) {
-            var address: String? = null
+            var address: GoogleGeocodeResponse? = null
             try {
                 val response = hitCachingGeocode(latLng, userId)
                 if(response != null) {
@@ -33,8 +34,7 @@ object CachedApis {
                     val responseCached = jsonObject.getJSONArray("data").getJSONObject(0).getString("json_data")
                     val googleGeocodeResponse = gson.fromJson(JSONObject(responseCached).toString(), GoogleGeocodeResponse::class.java)
                     if (googleGeocodeResponse.results != null && googleGeocodeResponse.results.size > 0) {
-                        val gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse)
-                        address = gapiAddress.formattedAddress
+                        address = googleGeocodeResponse
                     }
                 }
             } catch (e: Exception) {
@@ -46,17 +46,17 @@ object CachedApis {
                     val googleGeocodeResponse = gson.fromJson(responseStr, GoogleGeocodeResponse::class.java)
                     if (googleGeocodeResponse.results != null && googleGeocodeResponse.results.size > 0) {
                         val gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse)
-                        address = gapiAddress.formattedAddress
+                        address = googleGeocodeResponse
 
                         val params = HashMap<String, Any>()
-                        params["product_id"] = JUNGOO_APP_PRODUCT_ID
-                        params["type"] = TYPE_REVERSE_GEOCODING
+                        params[Constants.KEY_PRODUCT_ID] = JUNGOO_APP_PRODUCT_ID
+                        params[Constants.KEY_TYPE] = TYPE_REVERSE_GEOCODING
 
-                        params["address"] = gapiAddress.formattedAddress
-                        params["jsonData"] = jsonObject
-                        params["user_id"] = userId
-                        params["lat"] = latLng.latitude
-                        params["lng"] = latLng.longitude
+                        params[Constants.KEY_ADDRESS] = gapiAddress.formattedAddress
+                        params[Constants.KEY_JSONDATA] = jsonObject
+                        params[Constants.KEY_USER_ID] = userId
+                        params[Constants.KEY_LAT] = latLng.latitude
+                        params[Constants.KEY_LNG] = latLng.longitude
 
                         insertCache(params)
                     }
@@ -72,7 +72,7 @@ object CachedApis {
     private suspend fun hitCachingGeocode(latLng: LatLng, userId:String): retrofit.client.Response?{
         return withContext(Dispatchers.IO) {
             try {
-                RestClient.getMapsCachingService().getReverseGeocode(latLng.latitude, latLng.longitude, 2, userId)
+                RestClient.getMapsCachingService().getReverseGeocode(latLng.latitude, latLng.longitude, JUNGOO_APP_PRODUCT_ID, userId)
             } catch (e: Exception) {
                 null
             }

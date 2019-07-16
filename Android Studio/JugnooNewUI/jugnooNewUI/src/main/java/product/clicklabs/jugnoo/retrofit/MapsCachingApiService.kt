@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.retrofit
 
+import product.clicklabs.jugnoo.Constants
 import retrofit.client.Response
 import retrofit.http.Field
 import retrofit.http.FieldMap
@@ -14,8 +15,8 @@ interface MapsCachingApiService {
 
     @FormUrlEncoded
     @POST("/maps/get_reverse_geocoding_data")
-    fun getReverseGeocode(@Field("lat") lat: Double,
-                          @Field("lng") lng: Double,
-                          @Field("product_id") productId: Int,
-                          @Field("user_id") userId: String): Response
+    fun getReverseGeocode(@Field(Constants.KEY_LAT) lat: Double,
+                          @Field(Constants.KEY_LNG) lng: Double,
+                          @Field(Constants.KEY_PRODUCT_ID) productId: Int,
+                          @Field(Constants.KEY_USER_ID) userId: String): Response
 }

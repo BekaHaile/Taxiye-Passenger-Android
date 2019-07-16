@@ -1044,4 +1044,6 @@ public interface Constants {
     String KEY_CARD_ID = "card_id";
     String KEY_CARD_DETAILS = "card_details";
     String KEY_AMOUNT_PAID = "amount_paid";
+    String KEY_LNG = "lng";
+	String KEY_JSONDATA = "jsonData";
 }

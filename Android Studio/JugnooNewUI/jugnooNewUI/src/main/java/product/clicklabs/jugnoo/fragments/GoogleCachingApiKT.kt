@@ -1,18 +1,20 @@
 package product.clicklabs.jugnoo.fragments
 
 import com.google.android.gms.maps.model.LatLng
+import com.sabkuchfresh.datastructure.GoogleGeocodeResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.apis.CachedApis
 
-object PlaceSearchKT {
+object GoogleCachingApiKT {
 
 
-    fun hitGeocode(latLng: LatLng, callback: PlaceSearchCallback){
+    fun hitGeocode(latLng: LatLng, callback: GeocodeCachingCallback): Job {
 
-        GlobalScope.launch(Dispatchers.Main) {
+        return GlobalScope.launch(Dispatchers.Main) {
             val address = CachedApis.geocode(latLng, Data.userData.userId)
             callback.geocodeAddressFetched(address)
         }
@@ -21,6 +23,6 @@ object PlaceSearchKT {
 
 
 }
-interface PlaceSearchCallback{
-    fun geocodeAddressFetched(address:String?)
+interface GeocodeCachingCallback{
+    fun geocodeAddressFetched(address:GoogleGeocodeResponse?)
 }

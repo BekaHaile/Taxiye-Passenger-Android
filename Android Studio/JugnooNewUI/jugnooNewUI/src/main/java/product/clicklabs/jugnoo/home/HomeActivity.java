@@ -100,7 +100,6 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
-import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
@@ -144,7 +143,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.DeleteCacheIntentService;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
-import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
@@ -189,6 +187,7 @@ import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
+import product.clicklabs.jugnoo.fragments.GoogleCachingApiKT;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
@@ -6375,39 +6374,29 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Data.autoData.setPickupLatLng(currentLatLng);
                 }
                 textView.setHint(R.string.getting_address);
-                GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        LocaleHelper.getLanguage(this), new GeocodeCallback(mGeoDataClient) {
-                            @Override
-                            public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
-                                try {
-                                    GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-                                    String address = gapiAddress.getSearchableAddress();
-                                    if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                                        textView.setHint(getResources().getString(R.string.getting_address));
-                                        textView.setText(address);
-                                        Data.autoData.setPickupAddress(address, currentLatLng);
-                                    } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
-                                            || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-                                            || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                                            || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                                        textView.setHint(getResources().getString(R.string.enter_your_destination));
-                                        textView.setText(address);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                if (progressBar != null) {
-                                    progressBar.setVisibility(View.GONE);
-                                }
-                            }
 
-                            @Override
-                            public void failure(RetrofitError error) {
-                                if (progressBar != null) {
-                                    progressBar.setVisibility(View.GONE);
-                                }
-                            }
-                        });
+				GoogleCachingApiKT.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+					try {
+						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
+						String address = gapiAddress.getSearchableAddress();
+						if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+							textView.setHint(getResources().getString(R.string.getting_address));
+							textView.setText(address);
+							Data.autoData.setPickupAddress(address, currentLatLng);
+						} else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+								|| PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+								|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+								|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+							textView.setHint(getResources().getString(R.string.enter_your_destination));
+							textView.setText(address);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					if (progressBar != null) {
+						progressBar.setVisibility(View.GONE);
+					}
+				});
             } else {
                 if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
                     Data.autoData.setPickupLatLng(currentLatLng);
