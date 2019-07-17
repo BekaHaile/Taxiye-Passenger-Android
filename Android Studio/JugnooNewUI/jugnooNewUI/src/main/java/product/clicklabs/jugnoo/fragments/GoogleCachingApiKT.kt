@@ -13,12 +13,10 @@ object GoogleCachingApiKT {
 
 
     fun hitGeocode(latLng: LatLng, callback: GeocodeCachingCallback): Job {
-
         return GlobalScope.launch(Dispatchers.Main) {
             val address = CachedApis.geocode(latLng, Data.userData.userId)
             callback.geocodeAddressFetched(address)
         }
-
     }
 
 
