@@ -349,7 +349,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
     ProgressWheel progressBarAssigningDropLocation;
     ImageView imageViewAssigningDropLocationEdit;
-    boolean cancelTouchHold = false, placeAdded, zoomAfterFindADriver;
+    boolean cancelTouchHold = false, placeAdded, zoomAfterFindADriver, fromNaviCurrentLocation;
 
 
     //Request Final Layout
@@ -2530,7 +2530,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     boolean refresh = false;
                     try {
                         checkForMyLocationButtonVisibility();
-                        if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1) {
+                        if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1 || fromNaviCurrentLocation) {
+                            fromNaviCurrentLocation = false;
                             refresh = findADriverAndGeocode(map.getCameraPosition().target, mapTouched, touchCalled, releaseCalled);
                         }
                     } catch (Exception e) {
@@ -3347,6 +3348,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else {
             if (myLocation != null) {
                 try {
+                    fromNaviCurrentLocation = true;
                     setCentrePinAccToGoogleMapPadding();
                     mapStateListener.touchMapExplicit();
                     zoomAfterFindADriver = true;
@@ -5465,19 +5467,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }else if (requestCode == Constants.REQUEST_CODE_ADD_HOME
                         || requestCode == Constants.REQUEST_CODE_ADD_WORK
                         || requestCode == REQUEST_CODE_ADD_NEW_LOCATION) {
-                    String strResult = data.getStringExtra("PLACE");
-                    SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
-                    if (searchResult != null) {
-                        placeAdded = true;
-                        if(passengerScreenMode == PassengerScreenMode.P_INITIAL) {
-                            if (likeClicked == 1) {
-                                textViewInitialSearch.setText(searchResult.getName());
-                                ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
-                                ivLikePickup.setTag("liked");
-                            } else if (likeClicked == 2) {
-                                textViewDestSearch.setText(searchResult.getName());
-                                ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
-                                ivLikeDrop.setTag("liked");
+                    if(likeClicked == 0) {   // likeClicked == 0 come from save Location UI
+                        if(pickupLocationMarker != null) {
+                            pickupLocationMarker.remove();
+                        }
+                        pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(),
+                                passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_IN_RIDE));
+                        setDropLocationMarker();
+                    } else {
+                        String strResult = data.getStringExtra("PLACE");
+                        SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
+                        if (searchResult != null) {
+                            placeAdded = true;
+                            if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                                if (likeClicked == 1) {
+                                    textViewInitialSearch.setText(searchResult.getName());
+                                    ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
+                                    ivLikePickup.setTag("liked");
+                                } else if (likeClicked == 2) {
+                                    textViewDestSearch.setText(searchResult.getName());
+                                    ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
+                                    ivLikeDrop.setTag("liked");
+                                }
                             }
                         }
                     }
@@ -9025,53 +9036,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onSaveLocationClick(boolean isPickup) {
         if(isPickup) {
             mIsPickup = true;
-            SearchResult searchResult = new SearchResult("Other #".concat(String.valueOf(new Date().getTime())), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
+            SearchResult searchResult = new SearchResult("", Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
                     "", Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude);
-            hitApiAddHomeWorkAddress(searchResult, isPickup);
+            openAddAddressActivity(searchResult);
         } else {
             mIsPickup = false;
-            SearchResult searchResult = new SearchResult("Other #".concat(String.valueOf(new Date().getTime())), Data.autoData.getDropAddress(),
+            SearchResult searchResult = new SearchResult("", Data.autoData.getDropAddress(),
                     "", Data.autoData.getDropLatLng().latitude, Data.autoData.getDropLatLng().longitude);
-            hitApiAddHomeWorkAddress(searchResult, isPickup);
+            openAddAddressActivity(searchResult);
         }
     }
 
-    public void hitApiAddHomeWorkAddress(final SearchResult searchResult, final boolean isPickup){
-        if(apiAddHomeWorkAddress == null){
-            apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
-                @Override
-                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, final String serverMsg) {
-                    DialogPopup.alertPopup(HomeActivity.this, "", serverMsg);
-                    if(pickupLocationMarker != null) {
-                        pickupLocationMarker.remove();
-                    }
-                    pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(),
-                            passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_IN_RIDE));
-                    setDropLocationMarker();
-                }
-
-                @Override
-                public void onFailure() {
-                    if(mIsPickup) {
-                        pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(),
-                                passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_IN_RIDE));
-                    } else {
-                        setDropLocationMarker();
-                    }
-                }
-
-                @Override
-                public void onRetry(View view) {
-
-                }
-
-                @Override
-                public void onNoRetry(View view) {
-
-                }
-            });
-        }
-        apiAddHomeWorkAddress.addHomeAndWorkAddress(searchResult, false, 0, false, 0);
+    /**
+     *
+     */
+    private void openAddAddressActivity(final SearchResult searchResult) {
+        Intent intent = new Intent(HomeActivity.this, AddPlaceActivity.class);
+        intent.putExtra(Constants.KEY_ADDRESS, new Gson().toJson(searchResult, SearchResult.class));
+        intent.putExtra(Constants.KEY_DIRECT_CONFIRM, true);
+        intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
+        startActivityForResult(intent, searchResult.getPlaceRequestCode());
+        overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
     class CheckForGPSAccuracyTimer {
