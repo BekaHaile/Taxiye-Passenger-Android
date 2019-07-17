@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -237,6 +238,8 @@ import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.smartlock.callbacks.SmartlockCallbacks;
+import product.clicklabs.jugnoo.smartlock.controller.SmartLockController;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -291,6 +294,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
     private final String TAG = "Home Screen";
+    private String macId ="C4A8280829C6";
 
     public DrawerLayout drawerLayout;                                                                        // views declaration
 
@@ -2398,14 +2402,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             map.getUiSettings().setTiltGesturesEnabled(false);
             map.getUiSettings().setMyLocationButtonEnabled(false);
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            if(Prefs.with(this).getInt(KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED, 0) == 1) {
+            if (Prefs.with(this).getInt(KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED, 0) == 1) {
                 map.setTrafficEnabled(true);
             }
 
             //30.7500, 76.7800
             //22.971723, 78.754263
-
-
             try {
 
 
@@ -5586,7 +5588,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else if (data != null) {
                             qrCode = data.getStringExtra("qrCode");
                             qrCodeDetails = data.getStringExtra("qr_code_details");
-                            requestRideClick();
+                            //smartlocat initialization
+                            smartLockObj.intializeBle(HomeActivity.this);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                // Android M Permission check
+                                if (HomeActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1008);
+                                } else {
+                                    smartLockObj.makePair(macId);
+                                }
+                            } else {
+                                smartLockObj.makePair(macId);
+                            }
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         }
                     }
@@ -5623,6 +5636,37 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             bikeNumber = result;
         }
         return bikeNumber;
+    }
+
+
+    SmartLockController smartLockObj = new SmartLockController(new SmartlockCallbacks() {
+        @Override
+        public void makePair(boolean status) {
+            Log.d(TAG,"bluetooth device connected"+status);
+            requestRideClick();
+        }
+
+        @Override
+        public void updateStatus(int status) {
+
+        }
+
+        @Override
+        public void checkForBluetoth(){
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent,188);
+        }
+    });
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {//The three parameters are the request code with the same custom, the permission array, the authorization result, and the permission array
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1008) {
+            //PERMISSION_GRANTED代表授权，PERMISSION_DENIED代表拒绝授权
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                smartLockObj.makePair(macId);
+            }
+        }
     }
 
 

@@ -22,6 +22,9 @@
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 
 
 
