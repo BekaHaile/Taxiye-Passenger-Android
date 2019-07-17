@@ -1406,9 +1406,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         customerLocation = findViewById(R.id.customerLocation);
         endRideJugnooAnimation = findViewById(R.id.jugnoo_animation);
-        if (endRideJugnooAnimation instanceof ImageView) {
-            rentalJugnooAnimation = (AnimationDrawable) endRideJugnooAnimation.getBackground();
-        }
+//        if (endRideJugnooAnimation instanceof ImageView) {
+//            rentalJugnooAnimation = (AnimationDrawable) endRideJugnooAnimation.getBackground();
+//        }
 
 
         damageReportButton = findViewById(R.id.damage_button);
@@ -11585,19 +11585,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         params.put(Constants.KEY_LOCK_STATUS, String.valueOf(gpsLockStatus.getOrdinal()));
         params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
 
-
+        rentalEndRideLayout.setVisibility(View.VISIBLE);
         Log.i(TAG, String.valueOf(params));
 
-            new ApiCommon<>(this).showLoader(true).putAccessToken(true)
+            new ApiCommon<>(this).showLoader(false).putAccessToken(true)
                     .execute(params, ApiName.RENTALS_UPDATE_LOCK_STATUS, new APICommonCallback<FeedCommonResponse>() {
                         @Override
                         public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                            rentalEndRideLayout.setVisibility(View.GONE);
                             Log.d("HomeActivityRental"," Flag Update Lock Status Success " + String.valueOf(flag));
                             switchRentalInRideUI(gpsLockStatus);
                             rentalInRideLayout.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    apiGetGpsLockStatus(true, false, Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
+                                    apiGetGpsLockStatusAP(Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
                                 }
                             }, 2000);
                         }
@@ -11605,6 +11606,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         @Override
                         public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
                             Log.d("HomeActivityRental"," Flag Update Lock Status Error " + String.valueOf(flag));
+                            rentalEndRideLayout.setVisibility(View.GONE);
                             return false;
                         }
                     });
@@ -11612,7 +11614,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void apiGetGpsLockStatus(final boolean actionPerformed, final boolean repeatHandler, final int gpsLockStatusOld){
+    private void apiGetGpsLockStatusRH(final int gpsLockStatusOld){
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
         new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true).showLoader(false)
@@ -11629,7 +11631,37 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     @Override
                     public boolean onError(GetLockStatusResponse feedCommonResponse, String message, int flag) {
-                        if(actionPerformed){
+                        return true;
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        if(pollingGetGPSLockStatus) {
+                            getHandler().postDelayed(runnableGetGPSLockStatus, Prefs.with(HomeActivity.this).getLong(Constants.KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, 30000));
+                        }
+                    }
+                });
+    }
+
+    private void apiGetGpsLockStatusAP(final int gpsLockStatusOld){
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
+        new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true).showLoader(false)
+                .execute(params, ApiName.RENTALS_GET_LOCK_STATUS, new APICommonCallback<GetLockStatusResponse>() {
+                    @Override
+                    public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
+                        rentalEndRideLayout.setVisibility(View.GONE);
+                        if(feedCommonResponse.getGpsLockStatus() != -1) {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
+                        } else {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatusOld);
+                        }
+                        rentalStateUIHandling(passengerScreenMode);
+                    }
+
+                    @Override
+                    public boolean onError(GetLockStatusResponse feedCommonResponse, String message, int flag) {
                             if(flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()
                                     && gpsLockStatusOld != GpsLockStatus.LOCK.getOrdinal()) {
                                 Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
@@ -11642,16 +11674,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else {
                                 return false;
                             }
-                        }
-                        return true;
                     }
 
                     @Override
                     public void onFinish() {
                         super.onFinish();
-                        if(repeatHandler && pollingGetGPSLockStatus) {
-                            getHandler().postDelayed(runnableGetGPSLockStatus, Prefs.with(HomeActivity.this).getLong(Constants.KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, 30000));
-                        }
                     }
                 });
     }
@@ -11662,7 +11689,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         @Override
         public void run() {
             if(inRideCheck() && Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
-                apiGetGpsLockStatus(false, true, Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
+                apiGetGpsLockStatusRH(Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
             }
         }
     };
@@ -11698,10 +11725,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     rentalEndRideLayout.setVisibility(View.VISIBLE);
                     rentalInRideLayout.setVisibility(View.GONE);
                     endRideJugnooAnimation.setVisibility(View.VISIBLE);
-                    if (endRideJugnooAnimation instanceof ImageView) {
-                        rentalJugnooAnimation.stop();
-                        rentalJugnooAnimation.start();
-                    }
+//                    if (endRideJugnooAnimation instanceof ImageView) {
+//                        rentalJugnooAnimation.stop();
+//                        rentalJugnooAnimation.start();
+//                    }
                     if (gpsLockStatus == GpsLockStatus.REQ_LOCK.getOrdinal()) {
                         textViewEndRide.setText(R.string.locking_ride);
                     } else if (gpsLockStatus == GpsLockStatus.REQ_UNLOCK.getOrdinal()) {
@@ -11710,13 +11737,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         textViewEndRide.setText(R.string.ending_ride);
                     }
                 } else {
-                    rentalJugnooAnimation.stop();
+//                    rentalJugnooAnimation.stop();
                     rentalEndRideLayout.setVisibility(View.GONE);
                     rentalInRideLayout.setVisibility(View.VISIBLE);
                     updateGpsLockStatus(gpsLockStatus);
                 }
             } else {
-                rentalJugnooAnimation.stop();
+//                rentalJugnooAnimation.stop();
                 rentalEndRideLayout.setVisibility(View.GONE);
                 rentalInRideLayout.setVisibility(View.GONE);
                 requestFinalLayout.setVisibility(View.VISIBLE);
