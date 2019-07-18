@@ -326,6 +326,7 @@ public class JSONParser implements Constants {
             String inRideSendInviteTextBoldV2 = autoData.optString("in_ride_send_invite_text_bold_v2", "");
             String inRideSendInviteTextNormalV2 = autoData.optString("in_ride_send_invite_text_normal_v2", "");
             int rideStartInviteTextDeepIndexV2 = autoData.optInt("ride_start_invite_text_deep_index_v2", 0);
+            int isBluetoothEnabled = autoData.optInt("bluetooth_tracker_enabled", 0);
             String confirmScreenFareEstimateEnable = autoData.optString("confirm_screen_fare_estimate_enabled", "0");
             String poolDestinationPopupText1 = autoData.optString("pool_destination_popup_text1", context.getResources().getString(R.string.pool_rides_offer_guaranteed_fares));
             String poolDestinationPopupText2 = autoData.optString("pool_destination_popup_text2", context.getResources().getString(R.string.please_provide_pickup_and_dest));
@@ -376,7 +377,7 @@ public class JSONParser implements Constants {
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
                     , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2,
-                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare());
+                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare(),isBluetoothEnabled);
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -1497,7 +1498,7 @@ public class JSONParser implements Constants {
                     String brandingStatus = driver.getBrandingStatus();
                     Data.autoData.getDriverInfos().add(new DriverInfo(userId, latitude, longitude, userName, userImage, driverCarImage,
                             phoneNo, rating, carNumber, 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(),
-                            brandingStatus, driver.getOperatorId(), driver.getPaymentMethod()));
+                            brandingStatus, driver.getOperatorId(), driver.getPaymentMethod(),driver.getDeviceToken(),driver.getExternalId()));
                 }
             }
         } catch (Exception e) {

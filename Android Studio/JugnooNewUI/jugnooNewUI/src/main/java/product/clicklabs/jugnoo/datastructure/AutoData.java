@@ -74,6 +74,7 @@ public class AutoData {
     private String currency;
     private boolean isServiceAv;
     private int lock = 0;
+    private int bluetoothEnabled =0;
     private String  previousSelService = "";
 
     // RENTAL
@@ -87,7 +88,8 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare,int bluetoothEnabled) {
+        this.bluetoothEnabled = bluetoothEnabled;
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -136,6 +138,14 @@ public class AutoData {
 
     public void setRideSummaryBadText(String rideSummaryBadText) {
         this.rideSummaryBadText = rideSummaryBadText;
+    }
+
+    public int getBluetoothEnabled() {
+        return bluetoothEnabled;
+    }
+
+    public void setBluetoothEnabled(int bluetoothEnabled) {
+        this.bluetoothEnabled = bluetoothEnabled;
     }
 
     public String getCancellationChargesPopupTextLine1() {

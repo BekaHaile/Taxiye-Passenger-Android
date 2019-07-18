@@ -231,6 +231,7 @@ import product.clicklabs.jugnoo.rentals.models.GpsLockStatus;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
+import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
@@ -5266,6 +5267,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 && PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)
                                 && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1) {
                             try {
+
                                 LatLng currLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                                 Data.setLatLngOfJeanieLastShown(currLatLng);
                                 Data.autoData.setLastRefreshLatLng(currLatLng);
@@ -5433,6 +5435,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, getString(R.string.please_lock_the_bike_and_proceed), v1 -> {
                     textViewEndRide.setText(R.string.ending_ride);
                     updateLockStatusApi(GpsLockStatus.REQ_END_RIDE_LOCK);
+
                 });
                 break;
             case R.id.buttonUnlockRide: // 6
@@ -5443,6 +5446,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, getString(R.string.please_lock_the_bike_and_proceed), v1 -> {
                     textViewEndRide.setText(R.string.locking_ride);
                     updateLockStatusApi(GpsLockStatus.REQ_LOCK);
+
                 });
                 break;
         }
@@ -5580,7 +5584,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             bikeNumber = extractQRCode(result.getContents());
                             if (!bikeNumber.equals("error")) {
                                 qrCode = bikeNumber;
-                                requestRideClick();
+                                Log.e(TAG,"bluetooth enabled"+ Data.autoData.getBluetoothEnabled());
+                                if(Data.autoData.getBluetoothEnabled()==1){
+                                    initiateBleProcess();
+                                }else{
+                                    requestRideClick();
+                                }
                                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             } else {
                                 Toast.makeText(this, getString(R.string.incorrect_qr_code), Toast.LENGTH_SHORT).show();
@@ -5588,17 +5597,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else if (data != null) {
                             qrCode = data.getStringExtra("qrCode");
                             qrCodeDetails = data.getStringExtra("qr_code_details");
-                            //smartlocat initialization
-                            smartLockObj.intializeBle(HomeActivity.this);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                                // Android M Permission check
-                                if (HomeActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1008);
-                                } else {
-                                    smartLockObj.makePair(macId);
-                                }
-                            } else {
-                                smartLockObj.makePair(macId);
+                            if(Data.autoData.getBluetoothEnabled()==1){
+                                initiateBleProcess();
+                            }else{
+                                requestRideClick();
                             }
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         }
@@ -5613,6 +5615,38 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
         likeClicked = 0;
+    }
+
+    private void initiateBleProcess(){
+        //smartlocat initialization
+        Log.e(TAG,"process initiated");
+        smartLockObj.intializeBle(HomeActivity.this);
+        Log.e(TAG,"device token default"+macId);
+        Log.e(TAG,"qrcode default"+qrCode);
+        Log.e(TAG, "device token api size : " + Data.autoData.getDriverInfos().size());
+        for (int i=0; i< Data.autoData.getDriverInfos().size();i++ ) {
+            if (Data.autoData.getDriverInfos().get(i).getExternalId()!=null && Data.autoData.getDriverInfos().get(i).getExternalId().equals(qrCode)) {
+               if(Data.autoData.getDriverInfos().get(i).getDeviceToken()!=null) {
+                   macId = Data.autoData.getDriverInfos().get(i).getDeviceToken();
+               break;
+               }
+                Log.e(TAG, "device token" + macId);
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android M Permission check
+            if (HomeActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1008);
+            } else {
+                Log.e(TAG, "make pair called" + macId);
+                smartLockObj.makePair(macId);
+            }
+        } else {
+            Log.e(TAG, "make pair called" + macId);
+            smartLockObj.makePair(macId);
+        }
+
     }
 
     // Extracting Bike number from the scan
@@ -5643,12 +5677,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         @Override
         public void makePair(boolean status) {
             Log.d(TAG,"bluetooth device connected"+status);
-            requestRideClick();
+            if(status){
+                requestRideClick();
+            }
+
         }
 
         @Override
         public void updateStatus(int status) {
-
+            //0 for lock device
+            //1 for device unlocked
+            Log.e(TAG,"bluetooth device unlocked"+status);
+            callUpdateServerApi(status);
         }
 
         @Override
@@ -5657,6 +5697,33 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             startActivityForResult(enableBtIntent,188);
         }
     });
+
+    private void callUpdateServerApi(int lockStatus) {
+        HashMap<String, String> nameValuePairs = new HashMap<>();
+        nameValuePairs.put("access_token", Data.userData.accessToken);
+        nameValuePairs.put("engagement_id", "" + Data.autoData.getcEngagementId());
+        nameValuePairs.put("lock_status", "" + lockStatus);
+        nameValuePairs.put("latitude", "" + Data.autoData.getPickupLatLng().latitude);
+        nameValuePairs.put("longitude", "" + Data.autoData.getPickupLatLng().longitude);
+
+        new HomeUtil().putDefaultParams(nameValuePairs);
+        Response responseRetro = RestClient.getApiService().updateLockStatus(nameValuePairs);
+        String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
+        Log.e(TAG, "update to server result=" + response);
+        try {
+            JSONObject jObj = new JSONObject(response);
+            int flag = jObj.getInt("gps_lock_status");
+            Log.e("TAG","gps lock status "+flag);
+            if(flag==GpsLockStatus.END_RIDE_LOCK.getOrdinal()){
+                smartLockObj.disconnectDevice();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {//The three parameters are the request code with the same custom, the permission array, the authorization result, and the permission array
@@ -6363,9 +6430,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         int regionDriversCount = 0;
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
                             DriverInfo driver = Data.autoData.getDriverInfos().get(i);
-                            if (driver.getOperatorId() == region.getOperatorId()
-                                    && driver.getRegionIds().contains(region.getRegionId())
-                                    && (driver.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driver.getPaymentMethod() == 0
+                            if (driver.getOperatorId() == region.getOperatorId() && driver.getRegionIds().contains(region.getRegionId()) && (driver.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driver.getPaymentMethod() == 0
                                     || Data.autoData.getPickupPaymentOption() == PaymentOption.CASH.getOrdinal())
                                     ) {
                                 driver.setVehicleIconSet(region.getVehicleIconSet().getName());
@@ -8266,6 +8331,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             centreLocationRl.setVisibility(View.GONE);
         }
     }
+
     private void hideCenterPickupPin(){
         centreLocationRl.setVisibility(View.GONE);
         if (currentLocationMarker != null) {
@@ -8441,6 +8507,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("ride_type", String.valueOf(RideTypeValue.BIKE_RENTAL.getOrdinal()));
                                     nameValuePairs.put("qr_code_details",qrCodeDetails);
                                 }
+                                nameValuePairs.put("is_bluetooth_tracker",""+Data.autoData.getBluetoothEnabled());
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
                                 try {
@@ -8503,6 +8570,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                             int flag = jObj.getInt("flag");
                                             if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
+                                                final int lockStatus = jObj.getInt("gps_lock_status");
+                                                if(lockStatus==3){
+                                                    smartLockObj.downDevice();
+                                                }
                                                 Log.e("ASSIGNING_DRIVERS log", "=" + log);
                                                 final String start_time = jObj.getString("start_time");
                                                 if (executionTime < 0) {
@@ -11069,6 +11140,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 String message = intent.getStringExtra(KEY_MESSAGE);
                                 Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
                                 openPaytmRechargeDialog();
+                            }else if (PushFlags.UNLOCK_BLE_DEVICE.getOrdinal() == flag){
+                                smartLockObj.downDevice();
                             } else if (PushFlags.CHAT_MESSAGE.getOrdinal() == flag) {
                                 tvChatCount.setVisibility(View.VISIBLE);
                                 tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
@@ -11594,6 +11667,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
                             rentalEndRideLayout.setVisibility(View.GONE);
                             Log.d("HomeActivityRental"," Flag Update Lock Status Success " + String.valueOf(flag));
+                            if(Data.autoData.getBluetoothEnabled()==1){
+                                if(gpsLockStatus==GpsLockStatus.REQ_UNLOCK){
+                                    smartLockObj.downDevice();
+                                }else {
+                                    smartLockObj.upDevice();
+                                }
+                            }
                             switchRentalInRideUI(gpsLockStatus);
                             rentalInRideLayout.postDelayed(new Runnable() {
                                 @Override
@@ -11623,7 +11703,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
                         if(feedCommonResponse.getGpsLockStatus() != -1) {
                             Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
-                        } else {
+                        } else if(feedCommonResponse.getGpsLockStatus()==GpsLockStatus.END_RIDE_LOCK.getOrdinal()){
+                            if(Data.autoData.getBluetoothEnabled()==1){
+                                smartLockObj.disconnectDevice();
+                            }
+                        }else{
                             Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatusOld);
                         }
                         rentalStateUIHandling(passengerScreenMode);

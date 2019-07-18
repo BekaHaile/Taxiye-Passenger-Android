@@ -75,15 +75,7 @@ public class SmartLockController {
 
     byte[] gettoken = {0x06, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-    volatile String m_nowMac = "";
 
-    private TextView info;
-    private TextView info_state;
-    private TextView str_inhex;
-    private TextView str_outhex;
-    private Button buttonConnection;
-    private Button buttonDisConnection;
-    private Button buttonDown, buttonUp, buttonPair;
     private ProgressDialog dialog;
 
     SmartlockCallbacks mSmartlockCallbacks;
@@ -94,8 +86,16 @@ public class SmartLockController {
 
     public void makePair(String macId) {
 
-        mac = macId;
-        pairDevice();
+        if(m_myData!=null){
+            // = null;
+        }
+       /* if(m_myData.device.getAddress().equals(macId)){
+            mSmartlockCallbacks.makePair(true);
+        }else{*/
+            mac = macId;
+            pairDevice();
+        //}
+
     }
 
     public void intializeBle(Context mContext) {
@@ -202,14 +202,14 @@ public class SmartLockController {
             return;
         }
 
-        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+       // mBluetoothAdapter.stopLeScan(mLeScanCallback);
 
         if (mBluetoothGatt == null) {
             mBluetoothGatt = m_myData.device.connectGatt(context, false, mGattCallback);
         }
     }
 
-    private void disconnectDevice(){
+    public void disconnectDevice(){
 
         if (m_myData.device == null) {
             dispNotFindDeviceToast();
@@ -242,7 +242,7 @@ public class SmartLockController {
         }*/
     }
 
-    private void downDevice(){
+    public void downDevice(){
         if (m_myData.device == null) {
             dispNotFindDeviceToast();
             return;
@@ -258,7 +258,7 @@ public class SmartLockController {
         }
     }
 
-    private void upDevice(){
+    public void upDevice(){
         if (m_myData.device == null) {
             dispNotFindDeviceToast();
             return;
@@ -286,16 +286,17 @@ public class SmartLockController {
                   //  info.setText("Equipment name:" + m_myData.name + "\r\n" + "Signal strength:" + String.valueOf(m_myData.rssi) + "\r\n" + "Operation frequency:" + String.valueOf(m_myData.count) + "\r\n" + "Bluetooth address:" + m_myData.address);
 
 
-                    Toast toast = Toast.makeText(context, "successful",
+                  /*  Toast toast = Toast.makeText(context, "successful",
                             Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    toast.show();*/
                     break;
                 } case 2: {
-                    Toast toast = Toast.makeText(context, mes.obj.toString(),
+                   /* Toast toast = Toast.makeText(context, mes.obj.toString(),
                             Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();                    break;
+                    toast.show();*/
+                    break;
                 }
 
                 case 3: {
@@ -303,7 +304,7 @@ public class SmartLockController {
                     break;
                 }
                 case 4: {
-                    info.setText((String) mes.obj);
+                    //info.setText((String) mes.obj);
                     break;
                 }
 
@@ -315,6 +316,7 @@ public class SmartLockController {
                 }
                 case 6: {
                     mSmartlockCallbacks.makePair(false);
+                    coneectDevice();
                    // info_state.setText("Disconnected");
                    // info_state.setTextColor(getResources().getColor(R.color.red));
                     break;
@@ -358,7 +360,6 @@ public class SmartLockController {
                         mBluetoothAdapter.stopLeScan(mLeScanCallback);
                         coneectDevice();
 
-
                     }
                     Log.i("TAG","devices"+device.getAddress().replace(":", ""));
 
@@ -374,7 +375,7 @@ public class SmartLockController {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             super.onConnectionStateChange(gatt, status, newState);
 
-            Log.w("TAG", "onConnectionStateChange");
+            Log.e("TAG", "onConnectionStateChange");
 
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 gatt.discoverServices();
@@ -447,6 +448,7 @@ public class SmartLockController {
                         Message msg = m_myHandler.obtainMessage(1, 1, 1,
                                 gatt.getDevice().getAddress());
                         m_myHandler.sendMessage(msg);
+                        mSmartlockCallbacks.updateStatus(1);
                     } else {//The lock failure
                         Message msg = m_myHandler.obtainMessage(2, 1, 1,
                                 "failure");
@@ -457,26 +459,31 @@ public class SmartLockController {
                         Message msg = m_myHandler.obtainMessage(1, 1, 1,
                                 gatt.getDevice().getAddress());
                         m_myHandler.sendMessage(msg);
+                        mSmartlockCallbacks.updateStatus(0);
                     } else if (mingwen[3] == 0x01)  {  //You failed
                         Message msg = m_myHandler.obtainMessage(2, 1, 1,
                                 "Unable to lock Device");
                         m_myHandler.sendMessage(msg);
+                        mSmartlockCallbacks.updateStatus(1);
                     }
                 }else if (mingwen[0] == 0x05 && mingwen[1] == 0x02  && mingwen[2] == 0x01) {
                     if (mingwen[3] == 0x00) { //You success
                         Message msg = m_myHandler.obtainMessage(1, 1, 1,
                                 gatt.getDevice().getAddress());
                         m_myHandler.sendMessage(msg);
+                        mSmartlockCallbacks.updateStatus(1);
                     } else   if (mingwen[3] == 0x01) {  //You failed
                         Message msg = m_myHandler.obtainMessage(2, 1, 1,
                                 "Unable to Unlock device");
                         m_myHandler.sendMessage(msg);
+                        mSmartlockCallbacks.updateStatus(0);
                     }
                 }else if (mingwen[0] == 0x05 && mingwen[1] == 0x0f  && mingwen[2] == 0x01) {
                     if (mingwen[3] == 0x01) { //You success
                         Message msg = m_myHandler.obtainMessage(2, 1, 1,
                                 "Device locked manually");
                         m_myHandler.sendMessage(msg);
+                        mSmartlockCallbacks.updateStatus(0);
                     }
                 }
 

@@ -167,6 +167,7 @@ public class ApiFindADriver {
 			Data.autoData.getDriverInfos().clear();
 			if(findADriverResponse.getDrivers() != null) {
 				for (Driver driver : findADriverResponse.getDrivers()) {
+					//Log.e(TAG,"device token api parsing: "+driver.getExternalId());
 					double bearing = 0;
 					if (driver.getBearing() != null) {
 						bearing = driver.getBearing();
@@ -175,8 +176,11 @@ public class ApiFindADriver {
 					String brandingStatus = driver.getBrandingStatus();
 					Data.autoData.getDriverInfos().add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
 							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus,
-							driver.getOperatorId(), driver.getPaymentMethod()));
+							driver.getOperatorId(), driver.getPaymentMethod(),driver.getDeviceToken(),driver.getExternalId()));
 				}
+				/*for(DriverInfo dInfo: Data.autoData.getDriverInfos()){
+					Log.e(TAG,"device token api parsing after inserting: "+dInfo.getExternalId());
+				}*/
 			}
 
 			Data.autoData.setServiceTypes(findADriverResponse.getServiceTypes());

@@ -54,6 +54,27 @@ public class DriverInfo {
 	private int rideType;
 	private int gpsLockStatus;
 
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+	private String deviceToken;
+	private String externalId;
+
+
+
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -62,7 +83,7 @@ public class DriverInfo {
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds, String brandingStatus, int operatorId,
-					  int paymentMethod){
+					  int paymentMethod,String deviceToken,String externalId){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -78,6 +99,8 @@ public class DriverInfo {
 		this.brandingStatus = brandingStatus;
 		this.operatorId = operatorId;
 		this.paymentMethod = paymentMethod;
+		this.externalId=externalId;
+		this.deviceToken=deviceToken;
 	}
 
 	//for engagement

@@ -179,6 +179,9 @@ public interface ApiService {
     @POST("/request_ride")
     Response requestRide(@FieldMap Map<String, String> params);
 
+    @FormUrlEncoded
+    @POST("/update_lock_status")
+    Response updateLockStatus(@FieldMap Map<String, String> params);
 
 
     @FormUrlEncoded
