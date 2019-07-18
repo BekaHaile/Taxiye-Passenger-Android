@@ -116,4 +116,27 @@ public interface GoogleAPIServices {
 									@Query(value = "waypoints", encodeValue = false) String waypoints,
 									@Query("key") String key);
 
+	@GET("/maps/api/place/autocomplete/json")
+	Response autocompletePredictions(@Query(value = "input") String input,
+									 @Query(value = "sessiontoken") String sessiontoken,
+									 @Query(value = "components") String components,
+									 @Query(value = "location", encodeValue = false) String location,
+									 @Query(value = "radius") String radius,
+									 @Query(value = "key") String key);
+	@GET("/maps/api/place/autocomplete/json")
+	Response autocompletePredictions(@Query(value = "input") String input,
+									 @Query(value = "sessiontoken") String sessiontoken,
+									 @Query(value = "components") String components,
+									 @Query(value = "location", encodeValue = false) String location,
+									 @Query(value = "radius") String radius,
+									 @Query("client") String client,
+									 @Query("channel") String  channel,
+									 @Query(value = "signature", encodeValue = false) String signature);
+
+
+	@GET("/maps/api/place/details/json?fields=geometry")
+	Response placeDetails(@Query(value = "placeid") String placeId,
+									 @Query(value = "sessiontoken") String sessiontoken,
+									 @Query(value = "key") String key);
+
 }

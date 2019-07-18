@@ -243,6 +243,37 @@ object GoogleRestApis {
         return response
     }
 
+    fun getAutoCompletePredictions(input:String, sessiontoken:String, components:String, location:String, radius:String): Response {
+        val response:Response
+//        if (MAPS_APIS_SIGN()) {
+//            val urlToSign = ("/maps/api/place/autocomplete/json?" +
+//                    "input=" + input
+//                    + "&sessiontoken=" + sessiontoken
+//                    + "&components=" + components
+//                    + "&location=" + location
+//                    + "&radius=" + radius
+//                    + "&client=" + MAPS_CLIENT()
+//                    + "&channel=" + CHANNEL())
+//            var googleSignature: String? = null
+//            try {
+//                googleSignature = generateGoogleSignature(urlToSign)
+//            } catch (ignored: Exception) {
+//            }
+//
+//
+//            response = RestClient.getGoogleApiService().autocompletePredictions(input, sessiontoken, components, location, radius, MAPS_CLIENT(), CHANNEL(), googleSignature)
+//        } else {
+            response = RestClient.getGoogleApiService().autocompletePredictions(input, sessiontoken, components, location, radius, MAPS_BROWSER_KEY())
+//        }
+        logGoogleRestAPI("0", "0", API_NAME_AUTOCOMPLETE)
+        return response
+    }
+    fun getPlaceDetails(placeId:String, sessiontoken:String): Response {
+        val response = RestClient.getGoogleApiService().placeDetails(placeId, sessiontoken, MAPS_BROWSER_KEY())
+        logGoogleRestAPI("0", "0", API_NAME_PLACES)
+        return response
+    }
+
     @Throws(NoSuchAlgorithmException::class, InvalidKeyException::class)
     private fun generateGoogleSignature(urlToSign: String): String {
 

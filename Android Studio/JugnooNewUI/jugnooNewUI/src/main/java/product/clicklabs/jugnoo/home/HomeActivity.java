@@ -9708,7 +9708,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 try {
                     Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
-                    if (searchResult.getThirdPartyAttributions() == null) {
+                    if (TextUtils.isEmpty(searchResult.getThirdPartyAttributions())) {
                         relativeLayoutGoogleAttr.setVisibility(View.GONE);
                     } else {
                         relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);

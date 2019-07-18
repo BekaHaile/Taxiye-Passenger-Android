@@ -171,7 +171,10 @@
             android:id="@+id/relativeLayoutGoogleAttr"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/background_white_rounded_bordered"
             android:paddingBottom="10px"
+            android:layout_marginStart="20px"
+            android:layout_marginEnd="20px"
             android:visibility="gone">
 
             <ImageView
