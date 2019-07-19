@@ -1,17 +1,21 @@
 package product.clicklabs.jugnoo.retrofit
 
 import product.clicklabs.jugnoo.Constants
+import product.clicklabs.jugnoo.apis.InsertAutocomplete
+import product.clicklabs.jugnoo.apis.InsertGeocode
 import retrofit.client.Response
+import retrofit.http.Body
 import retrofit.http.Field
-import retrofit.http.FieldMap
 import retrofit.http.FormUrlEncoded
 import retrofit.http.POST
 
 interface MapsCachingApiService {
 
-    @FormUrlEncoded
     @POST("/maps/insert")
-    fun insert(@FieldMap params: HashMap<String, Any>): Response
+    fun insertGeocode(@Body body: InsertGeocode): Response
+
+    @POST("/maps/insert")
+    fun insertAutoComplete(@Body body: InsertAutocomplete): Response
 
     @FormUrlEncoded
     @POST("/maps/get_reverse_geocoding_data")
@@ -25,6 +29,12 @@ interface MapsCachingApiService {
     fun getAutocompleteData(@Field(Constants.KEY_ADDRESS) address: String,
                             @Field(Constants.KEY_LAT) lat: Double,
                             @Field(Constants.KEY_LNG) lng: Double,
+                            @Field(Constants.KEY_PRODUCT_ID) productId: Int,
+                            @Field(Constants.KEY_USER_ID) userId: String): Response
+
+    @FormUrlEncoded
+    @POST("/maps/get_geocoding_data")
+    fun getGeocodingData(@Field(Constants.KEY_PLACEID) placeId: String,
                             @Field(Constants.KEY_PRODUCT_ID) productId: Int,
                             @Field(Constants.KEY_USER_ID) userId: String): Response
 }

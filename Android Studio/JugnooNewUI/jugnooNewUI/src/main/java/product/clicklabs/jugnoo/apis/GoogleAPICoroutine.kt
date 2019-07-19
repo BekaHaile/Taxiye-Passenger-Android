@@ -2,6 +2,8 @@ package product.clicklabs.jugnoo.apis
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -29,16 +31,41 @@ object GoogleAPICoroutine {
     //Api for text input autocomplete Place search
     fun getAutoCompletePredictions(input:String, sessiontoken:String, components:String, location:String, radius:String, callback:PlacesCallback): Job{
         return GlobalScope.launch(Dispatchers.Main){
-            val response:Response? = withContext(Dispatchers.IO) {
-                try { GoogleRestApis.getAutoCompletePredictions(input, sessiontoken, components, location, radius) } catch (e: Exception) { null }
-            }
-            try {
-                val responseStr = String((response!!.body as TypedByteArray).bytes)
-                val placesResponse: PlacesAutocompleteResponse? = gson.fromJson(responseStr, PlacesAutocompleteResponse::class.java)
-                callback.onAutocompletePredictionsReceived(placesResponse!!.predictions!!)
+            var predictions: MutableList<Prediction>? = null
+            val arr = location.split(",")
+            try{
+                try {
+                    if (!isGoogleCachingEnabled()) {
+                        throw Exception()
+                    }
+                    val response = withContext(Dispatchers.IO) {
+                        try { RestClient.getMapsCachingService().getAutocompleteData(input, arr[0].toDouble(), arr[1].toDouble(),
+                                    JUNGOO_APP_PRODUCT_ID, Data.userData.userId) } catch (e: Exception) { null }
+                    }
+                    val responseStr = String((response!!.body as TypedByteArray).bytes)
+                    val jsonObject = JSONObject(responseStr)
+                    val responseCached = jsonObject.getJSONArray("data").toString()
+                    predictions = gson.fromJson(responseCached, object : TypeToken<MutableList<Prediction>>() {}.type)
+                } catch (e: Exception) {
+                    val response: Response? = withContext(Dispatchers.IO) {
+                        try { GoogleRestApis.getAutoCompletePredictions(input, sessiontoken, components, location, radius) } catch (e: Exception) { null }
+                    }
+                    val responseStr = String((response!!.body as TypedByteArray).bytes)
+                    val placesResponse = gson.fromJson(responseStr, PlacesAutocompleteResponse::class.java)
+                    predictions = placesResponse.predictions
+
+                    if(isGoogleCachingEnabled()) {
+                        val param = InsertAutocomplete(JUNGOO_APP_PRODUCT_ID, TYPE_AUTO_COMPLETE, input, Data.userData.userId,
+                                arr[0].toDouble(), arr[1].toDouble(), placesResponse)
+                        insertPlaceAutocompleteCache(param)
+                    }
+
+                }
+                callback.onAutocompletePredictionsReceived(predictions!!)
             } catch (e: Exception) {
                 callback.onAutocompleteError()
             }
+
         }
     }
 
@@ -46,12 +73,18 @@ object GoogleAPICoroutine {
     //Ai for finding place details by place Id
     fun getPlaceById(input:String, sessiontoken:String, callback: PlaceDetailCallback): Job{
         return GlobalScope.launch(Dispatchers.Main){
-            val response:Response? = withContext(Dispatchers.IO){
-                try { GoogleRestApis.getPlaceDetails(input, sessiontoken) } catch (e: Exception) { null }
-            }
+            var placesResponse: PlaceDetailsResponse? = null
             try {
-                val responseStr = String((response!!.body as TypedByteArray).bytes)
-                val placesResponse: PlaceDetailsResponse? = gson.fromJson(responseStr, PlaceDetailsResponse::class.java)
+                try{
+
+                } catch(e:Exception){
+                    val response:Response? = withContext(Dispatchers.IO){
+                        try { GoogleRestApis.getPlaceDetails(input, sessiontoken) } catch (e: Exception) { null }
+                    }
+                    val responseStr = String((response!!.body as TypedByteArray).bytes)
+                    placesResponse = gson.fromJson(responseStr, PlaceDetailsResponse::class.java)
+
+                }
                 callback.onPlaceDetailReceived(placesResponse!!)
             } catch (e: Exception) {
                 callback.onPlaceDetailError()
@@ -59,6 +92,8 @@ object GoogleAPICoroutine {
         }
     }
 
+
+    //api for address from LatLng
     fun hitGeocode(latLng: LatLng, callback: GeocodeCachingCallback): Job {
         return GlobalScope.launch(Dispatchers.Main) {
             var address: GoogleGeocodeResponse? = null
@@ -70,38 +105,27 @@ object GoogleAPICoroutine {
                     try {RestClient.getMapsCachingService().getReverseGeocode(latLng.latitude, latLng.longitude,
                             JUNGOO_APP_PRODUCT_ID, Data.userData.userId) } catch (e: Exception) {null}
                 }
-                if(response != null) {
-                    val responseStr = String((response.body as TypedByteArray).bytes)
-                    val jsonObject = JSONObject(responseStr)
+                val responseStr = String((response!!.body as TypedByteArray).bytes)
+                val jsonObject = JSONObject(responseStr)
 
-                    val responseCached = jsonObject.getJSONArray("data").getJSONObject(0).getString("json_data")
-                    val googleGeocodeResponse = gson.fromJson(JSONObject(responseCached).toString(), GoogleGeocodeResponse::class.java)
-                    if (googleGeocodeResponse.results != null && googleGeocodeResponse.results.size > 0) {
-                        address = googleGeocodeResponse
-                    }
-                }
+                val responseCached = jsonObject.getJSONArray("data").getJSONObject(0).getString("json_data")
+                val googleGeocodeResponse = gson.fromJson(responseCached, GoogleGeocodeResponse::class.java)
+                address = googleGeocodeResponse
             } catch (e: Exception) {
                 val response = withContext(Dispatchers.IO) {
                     try {GoogleRestApis.geocode(latLng.latitude.toString()+","+latLng.longitude, "EN")} catch (e: Exception) {null}
                 }
                 if (response != null) {
                     val responseStr = String((response.body as TypedByteArray).bytes)
-                    val jsonObject = JSONObject(responseStr)
                     val googleGeocodeResponse = gson.fromJson(responseStr, GoogleGeocodeResponse::class.java)
                     if (googleGeocodeResponse.results != null && googleGeocodeResponse.results.size > 0) {
-                        val gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse)
                         address = googleGeocodeResponse
 
                         if(isGoogleCachingEnabled()) {
-                            val params = HashMap<String, Any>()
-                            params[Constants.KEY_PRODUCT_ID] = JUNGOO_APP_PRODUCT_ID
-                            params[Constants.KEY_TYPE] = TYPE_REVERSE_GEOCODING
-                            params[Constants.KEY_ADDRESS] = gapiAddress.formattedAddress
-                            params[Constants.KEY_JSONDATA] = jsonObject
-                            params[Constants.KEY_USER_ID] = Data.userData.userId
-                            params[Constants.KEY_LAT] = latLng.latitude
-                            params[Constants.KEY_LNG] = latLng.longitude
-                            insertCache(params)
+                            val gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse)
+                            val body = InsertGeocode(JUNGOO_APP_PRODUCT_ID, TYPE_REVERSE_GEOCODING, gapiAddress.formattedAddress, Data.userData.userId,
+                                    latLng.latitude, latLng.longitude, googleGeocodeResponse)
+                            insertGeocodeCache(body)
                         }
                     }
                 }
@@ -116,12 +140,18 @@ object GoogleAPICoroutine {
 
     private const val JUNGOO_APP_PRODUCT_ID = 2
     private const val TYPE_REVERSE_GEOCODING = "reverse_geocoding"
+    private const val TYPE_AUTO_COMPLETE = "auto_complete"
 
 
 
-    private fun insertCache(params: HashMap<String, Any>){
+    private fun insertGeocodeCache(params: InsertGeocode){
         GlobalScope.launch(Dispatchers.IO) {
-            try {RestClient.getMapsCachingService().insert(params)} catch (ignored: Exception) {}
+            try {RestClient.getMapsCachingService().insertGeocode(params)} catch (ignored: Exception) {}
+        }
+    }
+    private fun insertPlaceAutocompleteCache(params: InsertAutocomplete){
+        GlobalScope.launch(Dispatchers.IO) {
+            try {RestClient.getMapsCachingService().insertAutoComplete(params)} catch (ignored: Exception) {}
         }
     }
 }
@@ -137,3 +167,36 @@ interface PlaceDetailCallback{
 interface GeocodeCachingCallback{
     fun geocodeAddressFetched(address: GoogleGeocodeResponse?)
 }
+
+class InsertGeocode(
+        @SerializedName(Constants.KEY_PRODUCT_ID)
+        val productId:Int,
+        @SerializedName(Constants.KEY_TYPE)
+        val type:String,
+        @SerializedName(Constants.KEY_ADDRESS)
+        val address:String,
+        @SerializedName(Constants.KEY_USER_ID)
+        val userId:String,
+        @SerializedName(Constants.KEY_LAT)
+        val lat:Double,
+        @SerializedName(Constants.KEY_LNG)
+        val lng:Double,
+        @SerializedName(Constants.KEY_JSONDATA)
+        val jsonData:GoogleGeocodeResponse
+)
+class InsertAutocomplete(
+        @SerializedName(Constants.KEY_PRODUCT_ID)
+        val productId:Int,
+        @SerializedName(Constants.KEY_TYPE)
+        val type:String,
+        @SerializedName(Constants.KEY_ADDRESS)
+        val address:String,
+        @SerializedName(Constants.KEY_USER_ID)
+        val userId:String,
+        @SerializedName(Constants.KEY_LAT)
+        val lat:Double,
+        @SerializedName(Constants.KEY_LNG)
+        val lng:Double,
+        @SerializedName(Constants.KEY_JSONDATA)
+        val jsonData:PlacesAutocompleteResponse
+)
