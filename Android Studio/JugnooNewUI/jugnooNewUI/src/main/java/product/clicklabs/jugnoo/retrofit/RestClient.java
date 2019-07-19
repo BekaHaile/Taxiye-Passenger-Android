@@ -47,7 +47,10 @@ public class RestClient {
         setupMapsCachingRestClient();
     }
 
-    private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){
+	private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){
+    	return getOkHttpClient(retryOnConnectionFailure, 30);
+	}
+    private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure, long timeoutSeconds){
 
         ArrayList<Protocol> protocolList = new ArrayList<>();
         protocolList.add(Protocol.HTTP_2);
@@ -58,9 +61,9 @@ public class RestClient {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectionPool(connectionPool);
-        builder.readTimeout(30, TimeUnit.SECONDS);
-        builder.connectTimeout(30, TimeUnit.SECONDS);
-        builder.writeTimeout(30, TimeUnit.SECONDS);
+        builder.readTimeout(timeoutSeconds, TimeUnit.SECONDS);
+        builder.connectTimeout(timeoutSeconds, TimeUnit.SECONDS);
+        builder.writeTimeout(timeoutSeconds, TimeUnit.SECONDS);
         builder.retryOnConnectionFailure(retryOnConnectionFailure);
         builder.protocols(protocolList);
 
@@ -295,7 +298,7 @@ public class RestClient {
         if(MAPS_CACHING_API == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getMapsCachingServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient(true)))
+                    .setClient(new Ok3Client(getOkHttpClient(true, 3)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 

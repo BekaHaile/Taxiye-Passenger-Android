@@ -162,6 +162,7 @@ import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
+import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
@@ -6375,7 +6376,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 textView.setHint(R.string.getting_address);
 
-				GoogleCachingApiKT.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
 					try {
 						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
 						String address = gapiAddress.getSearchableAddress();

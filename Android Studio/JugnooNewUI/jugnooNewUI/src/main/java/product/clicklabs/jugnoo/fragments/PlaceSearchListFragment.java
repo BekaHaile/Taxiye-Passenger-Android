@@ -49,6 +49,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
+import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -861,7 +862,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			if(jobGeocode != null){
 				jobGeocode.cancel(new CancellationException());
 			}
-			jobGeocode = GoogleCachingApiKT.INSTANCE.hitGeocode(latLng, address -> setAddressToUI(address, setSearchResult));
+			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, address -> setAddressToUI(address, setSearchResult));
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -187,6 +187,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
+import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -197,7 +198,6 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.fragments.GoogleCachingApiKT;
 import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -3926,7 +3926,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType) {
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-			GoogleCachingApiKT.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+			GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
 				Log.i(TAG, "getAddressAndFetchOfferingData address="+settleUserDebt);
 				try {
 					DialogPopup.dismissLoadingDialog();

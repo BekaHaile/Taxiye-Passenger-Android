@@ -390,6 +390,7 @@ public class SearchListAdapter extends BaseAdapter{
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
+							searchListActionsHandler.onSearchPost();
 						}
 					}
 
@@ -400,6 +401,7 @@ public class SearchListAdapter extends BaseAdapter{
 						if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
 							recallSearch(editText.getText().toString().trim(),editText);
 						}
+						searchListActionsHandler.onSearchPost();
 					}
 				});
 			}
@@ -525,6 +527,7 @@ public class SearchListAdapter extends BaseAdapter{
 						sendSearchResult(searchResult);
 					} catch (Exception e) {
 						e.printStackTrace();
+						searchListActionsHandler.onPlaceSearchError();
 					}
 					DialogPopup.dismissLoadingDialog();
 				}
@@ -532,6 +535,7 @@ public class SearchListAdapter extends BaseAdapter{
 				@Override
 				public void onPlaceDetailError() {
 					DialogPopup.dismissLoadingDialog();
+					searchListActionsHandler.onPlaceSearchError();
 				}
 			});
 

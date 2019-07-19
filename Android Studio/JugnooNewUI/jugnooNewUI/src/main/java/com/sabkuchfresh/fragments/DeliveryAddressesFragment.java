@@ -746,7 +746,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 			if(jobGeocode != null){
 				jobGeocode.cancel(new CancellationException());
 			}
-			jobGeocode = GoogleCachingApiKT.INSTANCE.hitGeocode(latLng, geocodeResponse -> {
+			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, geocodeResponse -> {
 				try {
 					Log.e("DeliveryAddressFrag", "GoogleCachingApiKT success address received");
 					if (geocodeResponse != null && geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
