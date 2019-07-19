@@ -1046,4 +1046,5 @@ public interface Constants {
     String KEY_AMOUNT_PAID = "amount_paid";
     String KEY_LNG = "lng";
 	String KEY_JSONDATA = "jsonData";
+	String KEY_CUSTOMER_GOOGLE_CACHING_ENABLED = "customer_google_caching_enabled";
 }

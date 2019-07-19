@@ -7,12 +7,14 @@ import kotlinx.coroutines.*
 import org.json.JSONObject
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.Data
+import product.clicklabs.jugnoo.MyApplication
 import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
 import product.clicklabs.jugnoo.retrofit.model.Prediction
 import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.MapUtils
+import product.clicklabs.jugnoo.utils.Prefs
 import retrofit.client.Response
 import retrofit.mime.TypedByteArray
 
@@ -20,10 +22,13 @@ object GoogleAPICoroutine {
 
     private val gson = Gson()
 
+    private fun isGoogleCachingEnabled():Boolean{
+        return Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_GOOGLE_CACHING_ENABLED, 1) == 1
+    }
 
     //Api for text input autocomplete Place search
-    fun getAutoCompletePredictions(input:String, sessiontoken:String, components:String, location:String, radius:String, callback:PlacesCallback){
-        GlobalScope.launch(Dispatchers.Main){
+    fun getAutoCompletePredictions(input:String, sessiontoken:String, components:String, location:String, radius:String, callback:PlacesCallback): Job{
+        return GlobalScope.launch(Dispatchers.Main){
             val response:Response? = withContext(Dispatchers.IO) {
                 try { GoogleRestApis.getAutoCompletePredictions(input, sessiontoken, components, location, radius) } catch (e: Exception) { null }
             }
@@ -39,8 +44,8 @@ object GoogleAPICoroutine {
 
 
     //Ai for finding place details by place Id
-    fun getPlaceById(input:String, sessiontoken:String, callback: PlaceDetailCallback){
-        GlobalScope.launch(Dispatchers.Main){
+    fun getPlaceById(input:String, sessiontoken:String, callback: PlaceDetailCallback): Job{
+        return GlobalScope.launch(Dispatchers.Main){
             val response:Response? = withContext(Dispatchers.IO){
                 try { GoogleRestApis.getPlaceDetails(input, sessiontoken) } catch (e: Exception) { null }
             }
@@ -58,6 +63,9 @@ object GoogleAPICoroutine {
         return GlobalScope.launch(Dispatchers.Main) {
             var address: GoogleGeocodeResponse? = null
             try {
+                if(!isGoogleCachingEnabled()){
+                    throw Exception()
+                }
                 val response = withContext(Dispatchers.IO) {
                     try {RestClient.getMapsCachingService().getReverseGeocode(latLng.latitude, latLng.longitude,
                             JUNGOO_APP_PRODUCT_ID, Data.userData.userId) } catch (e: Exception) {null}
@@ -73,7 +81,6 @@ object GoogleAPICoroutine {
                     }
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
                 val response = withContext(Dispatchers.IO) {
                     try {GoogleRestApis.geocode(latLng.latitude.toString()+","+latLng.longitude, "EN")} catch (e: Exception) {null}
                 }
@@ -85,17 +92,17 @@ object GoogleAPICoroutine {
                         val gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse)
                         address = googleGeocodeResponse
 
-                        val params = HashMap<String, Any>()
-                        params[Constants.KEY_PRODUCT_ID] = JUNGOO_APP_PRODUCT_ID
-                        params[Constants.KEY_TYPE] = TYPE_REVERSE_GEOCODING
-
-                        params[Constants.KEY_ADDRESS] = gapiAddress.formattedAddress
-                        params[Constants.KEY_JSONDATA] = jsonObject
-                        params[Constants.KEY_USER_ID] = Data.userData.userId
-                        params[Constants.KEY_LAT] = latLng.latitude
-                        params[Constants.KEY_LNG] = latLng.longitude
-
-                        insertCache(params)
+                        if(isGoogleCachingEnabled()) {
+                            val params = HashMap<String, Any>()
+                            params[Constants.KEY_PRODUCT_ID] = JUNGOO_APP_PRODUCT_ID
+                            params[Constants.KEY_TYPE] = TYPE_REVERSE_GEOCODING
+                            params[Constants.KEY_ADDRESS] = gapiAddress.formattedAddress
+                            params[Constants.KEY_JSONDATA] = jsonObject
+                            params[Constants.KEY_USER_ID] = Data.userData.userId
+                            params[Constants.KEY_LAT] = latLng.latitude
+                            params[Constants.KEY_LNG] = latLng.longitude
+                            insertCache(params)
+                        }
                     }
                 }
             }
