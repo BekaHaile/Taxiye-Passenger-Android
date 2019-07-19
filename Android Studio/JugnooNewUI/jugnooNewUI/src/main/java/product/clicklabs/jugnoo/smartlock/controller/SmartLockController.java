@@ -117,10 +117,10 @@ public class SmartLockController {
             //finish();
             return;
         }
-
+/*
         if (!mBluetoothAdapter.isEnabled()) {
             mSmartlockCallbacks.checkForBluetoth();
-        }
+        }*/
 
 
     }
@@ -202,9 +202,13 @@ public class SmartLockController {
             return;
         }
 
-       // mBluetoothAdapter.stopLeScan(mLeScanCallback);
-
         if (mBluetoothGatt == null) {
+            mBluetoothGatt = m_myData.device.connectGatt(context, false, mGattCallback);
+        }else{
+            Log.e("TAG","device already connected");
+            mBluetoothGatt.disconnect();
+            mBluetoothGatt.close();
+            mBluetoothGatt = null;
             mBluetoothGatt = m_myData.device.connectGatt(context, false, mGattCallback);
         }
     }
@@ -225,21 +229,10 @@ public class SmartLockController {
 
     }
 
-
     private void pairDevice(){
         dialog.setMessage("Pairing with device, please wait.");
         dialog.show();
         mBluetoothAdapter.startLeScan(mLeScanCallback);
-        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Android M Permission check
-            if (context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-            } else {
-                mBluetoothAdapter.startLeScan(mLeScanCallback);
-            }
-        } else {
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
-        }*/
     }
 
     public void downDevice(){
@@ -281,15 +274,7 @@ public class SmartLockController {
         public boolean handleMessage(Message mes) {
             switch (mes.what) {
                 case 1: {
-                    //开锁成功
                     m_myData.count++;
-                  //  info.setText("Equipment name:" + m_myData.name + "\r\n" + "Signal strength:" + String.valueOf(m_myData.rssi) + "\r\n" + "Operation frequency:" + String.valueOf(m_myData.count) + "\r\n" + "Bluetooth address:" + m_myData.address);
-
-
-                  /*  Toast toast = Toast.makeText(context, "successful",
-                            Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();*/
                     break;
                 } case 2: {
                    /* Toast toast = Toast.makeText(context, mes.obj.toString(),
@@ -309,16 +294,12 @@ public class SmartLockController {
                 }
 
                 case 5: {
-                   // info_state.setText("Connected");
-                   // info_state.setTextColor(getResources().getColor(R.color.green));
                     mSmartlockCallbacks.makePair(true);
                     break;
                 }
                 case 6: {
                     mSmartlockCallbacks.makePair(false);
                     coneectDevice();
-                   // info_state.setText("Disconnected");
-                   // info_state.setTextColor(getResources().getColor(R.color.red));
                     break;
                 }
                 case 8: {
@@ -361,7 +342,7 @@ public class SmartLockController {
                         coneectDevice();
 
                     }
-                    Log.i("TAG","devices"+device.getAddress().replace(":", ""));
+                    Log.e("TAG","DISCOVERABLE devices FOUND"+device.getAddress().replace(":", ""));
 
                 }
 

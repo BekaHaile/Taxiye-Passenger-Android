@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -295,9 +296,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
     private final String TAG = "Home Screen";
-    private String macId ="C4A8280829C6";
+    private String macId ="";
 
-    public DrawerLayout drawerLayout;                                                                        // views declaration
+    public DrawerLayout drawerLayout;
+
+    private BluetoothAdapter mBluetoothAdapter;// views declaration
 
 
     MenuBar menuBar;
@@ -568,6 +571,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private LinearLayout llRatingFeedbackType;
     private TextView tvTipAmountLabel,tvEditTip,tvRemoveTip;
     public static final int REQ_CODE_ADD_CARD_DRIVER_TIP = 0x167;
+    public static final int REQ_BLE_ENABLE = 188;
     public boolean scheduleRideOpen;
     public int selectedIdForScheduleRide,selectedRideTypeForScheduleRide;
     public Region selectedRegionForScheduleRide = null;
@@ -5514,7 +5518,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if (resultCode == RESULT_OK) {
-                if(requestCode==REQ_CODE_ADD_CARD_DRIVER_TIP){
+                if(requestCode==REQ_BLE_ENABLE){
+                 Log.e(TAG,"bluetooth permission result");
+                 initiateBleProcess();
+                }else if(requestCode==REQ_CODE_ADD_CARD_DRIVER_TIP){
                     if(driverTipInteractor!=null && driverTipInteractor.actionButton!=null){
                         driverTipInteractor.actionButton.performClick();
                     }
@@ -5609,6 +5616,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
                 }
+            }else{
+                if(requestCode==REQ_BLE_ENABLE){
+                    Log.e(TAG,"bluetooth permission result failed");
+                    Data.autoData.setBluetoothEnabled(0);
+                    requestRideClick();
+
+                }
             }
 
         } catch (Exception e) {
@@ -5618,22 +5632,42 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void initiateBleProcess(){
-        //smartlocat initialization
-        Log.e(TAG,"process initiated");
-        smartLockObj.intializeBle(HomeActivity.this);
-        Log.e(TAG,"device token default"+macId);
-        Log.e(TAG,"qrcode default"+qrCode);
-        Log.e(TAG, "device token api size : " + Data.autoData.getDriverInfos().size());
-        for (int i=0; i< Data.autoData.getDriverInfos().size();i++ ) {
-            if (Data.autoData.getDriverInfos().get(i).getExternalId()!=null && Data.autoData.getDriverInfos().get(i).getExternalId().equals(qrCode)) {
-               if(Data.autoData.getDriverInfos().get(i).getDeviceToken()!=null) {
-                   macId = Data.autoData.getDriverInfos().get(i).getDeviceToken();
-               break;
-               }
-                Log.e(TAG, "device token" + macId);
-            }
+        BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "Failed to acquire bluetooth", Toast.LENGTH_SHORT).show();
+            return;
         }
 
+        if (mBluetoothAdapter.isEnabled()) {
+            Log.e(TAG, "process initiated");
+            smartLockObj.intializeBle(HomeActivity.this);
+            Log.e(TAG, "device token default" + macId);
+            Log.e(TAG, "qrcode default" + qrCode);
+            Log.e(TAG, "device token api size : " + Data.autoData.getDriverInfos().size());
+            boolean isDeviceFound = false;
+            for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
+                if (Data.autoData.getDriverInfos().get(i).getExternalId() != null && Data.autoData.getDriverInfos().get(i).getExternalId().equals(qrCode)) {
+                    if (Data.autoData.getDriverInfos().get(i).getDeviceToken() != null) {
+                        macId = Data.autoData.getDriverInfos().get(i).getDeviceToken();
+                        isDeviceFound = true;
+                        startPairing();
+                        break;
+                    }
+                }
+                Log.e(TAG, "device token" + macId);
+            }
+            if (isDeviceFound==false){
+                DialogPopup.alertPopup(HomeActivity.this, "", "You are not authorised to use this device");
+            }
+        }else{
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent,188);
+        }
+    }
+
+    private void startPairing() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Android M Permission check
             if (HomeActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -5642,11 +5676,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Log.e(TAG, "make pair called" + macId);
                 smartLockObj.makePair(macId);
             }
-        } else {
-            Log.e(TAG, "make pair called" + macId);
-            smartLockObj.makePair(macId);
         }
-
     }
 
     // Extracting Bike number from the scan
@@ -5693,8 +5723,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         @Override
         public void checkForBluetoth(){
+            Log.e(TAG,"bluetooth enable popup called");
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent,188);
+            startActivityForResult(enableBtIntent,REQ_BLE_ENABLE);
         }
     });
 
@@ -5728,11 +5759,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {//The three parameters are the request code with the same custom, the permission array, the authorization result, and the permission array
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 1008) {
-            //PERMISSION_GRANTED代表授权，PERMISSION_DENIED代表拒绝授权
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                smartLockObj.makePair(macId);
-            }
+        Log.e(TAG,"bluetooth permission result"+requestCode);
+        if (requestCode == 1) {
+            smartLockObj.makePair(macId);
         }
     }
 
