@@ -511,7 +511,7 @@ public class SearchListAdapter extends BaseAdapter{
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 			Log.v("after call back", "after call back");
 
-			GoogleAPICoroutine.INSTANCE.getPlaceById(placeId, uuidVal, new PlaceDetailCallback() {
+			GoogleAPICoroutine.INSTANCE.getPlaceById(placeId, placeAddress, uuidVal, new PlaceDetailCallback() {
 				@Override
 				public void onPlaceDetailReceived(@NotNull PlaceDetailsResponse placeDetailsResponse) {
 					try {

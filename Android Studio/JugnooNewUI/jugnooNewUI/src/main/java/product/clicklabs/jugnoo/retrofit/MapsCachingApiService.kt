@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.retrofit
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.apis.InsertAutocomplete
 import product.clicklabs.jugnoo.apis.InsertGeocode
+import product.clicklabs.jugnoo.apis.InsertPlaceDetail
 import retrofit.client.Response
 import retrofit.http.Body
 import retrofit.http.Field
@@ -16,6 +17,9 @@ interface MapsCachingApiService {
 
     @POST("/maps/insert")
     fun insertAutoComplete(@Body body: InsertAutocomplete): Response
+
+    @POST("/maps/insert")
+    fun insertPlaceDetail(@Body body: InsertPlaceDetail): Response
 
     @FormUrlEncoded
     @POST("/maps/get_reverse_geocoding_data")

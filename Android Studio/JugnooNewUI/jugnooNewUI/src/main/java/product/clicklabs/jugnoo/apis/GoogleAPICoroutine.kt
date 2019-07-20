@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
 import product.clicklabs.jugnoo.retrofit.model.Prediction
+import product.clicklabs.jugnoo.retrofit.model.Result
 import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Prefs
@@ -71,19 +72,35 @@ object GoogleAPICoroutine {
 
 
     //Ai for finding place details by place Id
-    fun getPlaceById(input:String, sessiontoken:String, callback: PlaceDetailCallback): Job{
+    fun getPlaceById(placeId:String, placeAddress:String, sessiontoken:String, callback: PlaceDetailCallback): Job{
         return GlobalScope.launch(Dispatchers.Main){
             var placesResponse: PlaceDetailsResponse? = null
             try {
                 try{
-
+                    if (!isGoogleCachingEnabled()) {
+                        throw Exception()
+                    }
+                    val response = withContext(Dispatchers.IO) {
+                        try { RestClient.getMapsCachingService().getGeocodingData(placeId, JUNGOO_APP_PRODUCT_ID, Data.userData.userId) } catch (e: Exception) { null }
+                    }
+                    val responseStr = String((response!!.body as TypedByteArray).bytes)
+                    val jsonObject = JSONObject(responseStr)
+                    val responseCached = jsonObject.getJSONArray("data").getJSONObject(0).getJSONArray("results").getJSONObject(0).toString()
+                    val result: Result = gson.fromJson(responseCached, Result::class.java)
+                    placesResponse = PlaceDetailsResponse()
+                    placesResponse.result = result
                 } catch(e:Exception){
                     val response:Response? = withContext(Dispatchers.IO){
-                        try { GoogleRestApis.getPlaceDetails(input, sessiontoken) } catch (e: Exception) { null }
+                        try { GoogleRestApis.getPlaceDetails(placeId, sessiontoken) } catch (e: Exception) { null }
                     }
                     val responseStr = String((response!!.body as TypedByteArray).bytes)
                     placesResponse = gson.fromJson(responseStr, PlaceDetailsResponse::class.java)
 
+                    if(isGoogleCachingEnabled()) {
+                        val param = InsertPlaceDetail(JUNGOO_APP_PRODUCT_ID, TYPE_GEOCODING, placeAddress, Data.userData.userId,
+                                placeId, placesResponse)
+                        insertPlaceDetailCache(param)
+                    }
                 }
                 callback.onPlaceDetailReceived(placesResponse!!)
             } catch (e: Exception) {
@@ -141,6 +158,7 @@ object GoogleAPICoroutine {
     private const val JUNGOO_APP_PRODUCT_ID = 2
     private const val TYPE_REVERSE_GEOCODING = "reverse_geocoding"
     private const val TYPE_AUTO_COMPLETE = "auto_complete"
+    private const val TYPE_GEOCODING = "geocoding"
 
 
 
@@ -152,6 +170,11 @@ object GoogleAPICoroutine {
     private fun insertPlaceAutocompleteCache(params: InsertAutocomplete){
         GlobalScope.launch(Dispatchers.IO) {
             try {RestClient.getMapsCachingService().insertAutoComplete(params)} catch (ignored: Exception) {}
+        }
+    }
+    private fun insertPlaceDetailCache(params: InsertPlaceDetail){
+        GlobalScope.launch(Dispatchers.IO) {
+            try {RestClient.getMapsCachingService().insertPlaceDetail(params)} catch (ignored: Exception) {}
         }
     }
 }
@@ -199,4 +222,18 @@ class InsertAutocomplete(
         val lng:Double,
         @SerializedName(Constants.KEY_JSONDATA)
         val jsonData:PlacesAutocompleteResponse
+)
+class InsertPlaceDetail(
+        @SerializedName(Constants.KEY_PRODUCT_ID)
+        val productId:Int,
+        @SerializedName(Constants.KEY_TYPE)
+        val type:String,
+        @SerializedName(Constants.KEY_ADDRESS)
+        val address:String,
+        @SerializedName(Constants.KEY_USER_ID)
+        val userId:String,
+        @SerializedName(Constants.KEY_PLACEID)
+        val placeId:String,
+        @SerializedName(Constants.KEY_JSONDATA)
+        val jsonData:PlaceDetailsResponse
 )

@@ -134,7 +134,7 @@ public interface GoogleAPIServices {
 									 @Query(value = "signature", encodeValue = false) String signature);
 
 
-	@GET("/maps/api/place/details/json?fields=geometry")
+	@GET("/maps/api/place/details/json?fields=geometry,address_component,formatted_address,place_id,type")
 	Response placeDetails(@Query(value = "placeid") String placeId,
 									 @Query(value = "sessiontoken") String sessiontoken,
 									 @Query(value = "key") String key);
