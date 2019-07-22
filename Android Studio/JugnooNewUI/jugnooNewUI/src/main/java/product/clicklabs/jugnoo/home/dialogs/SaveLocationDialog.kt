@@ -81,7 +81,11 @@ class SaveLocationDialog : DialogFragment() {
             (context as SaveLocationListener).onSkipClicked(isPickup!!)
             dismiss()
         }
-        rootView.setOnClickListener {
+        rootView.tvSaveAddress.setOnClickListener {
+            (context as SaveLocationListener).onSaveLocationClick(isPickup!!)
+            dismiss()
+        }
+        rootView.ivSaveLocation.setOnClickListener {
             (context as SaveLocationListener).onSaveLocationClick(isPickup!!)
             dismiss()
         }
