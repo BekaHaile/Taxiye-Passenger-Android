@@ -183,8 +183,8 @@ public class MapUtils {
 		try {
 			String formatStr = MyApplication.getInstance().getString(R.string.geocode_address_format);
 			StringBuilder addressSB = new StringBuilder();
-			if(googleGeocodeResponse.getStatus().equalsIgnoreCase("OK")
-					&& googleGeocodeResponse.results != null && googleGeocodeResponse.results.size() > 0) {
+			if((googleGeocodeResponse.getStatus() != null && googleGeocodeResponse.getStatus().equalsIgnoreCase("OK"))
+					|| (googleGeocodeResponse.results != null && googleGeocodeResponse.results.size() > 0)) {
 				String addressComparator = "";
 				for (int i = googleGeocodeResponse.results.get(0).addressComponents.size()-1; i >= 0; i--) {
 					GoogleGeocodeResponse.AddressComponent addressComponent = googleGeocodeResponse.results.get(0).addressComponents.get(i);

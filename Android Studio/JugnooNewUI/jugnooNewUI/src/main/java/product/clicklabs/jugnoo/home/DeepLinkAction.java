@@ -117,6 +117,9 @@ public class DeepLinkAction {
 					MenuAdapter.onClickAction(MenuInfoTags.PROS.getTag(),0,0,activity,latlng);
 				}
 			}
+			else if(AppLinkIndex.FUGU_SUPPORT.getOrdinal() == Data.deepLinkIndex){
+				MenuAdapter.onClickAction(MenuInfoTags.FUGU_SUPPORT.getTag(),0,0,activity,latlng);
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();

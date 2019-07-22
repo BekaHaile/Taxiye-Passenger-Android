@@ -517,6 +517,8 @@ public class JSONParser implements Constants {
                 context.getResources().getInteger(R.integer.customer_reg_as_driver_phone_edit_alert)));
         Prefs.with(context).save(KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE, autoData.optString(KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE,
                 context.getString(R.string.registered_as_driver_phone_number_will_be_edited)));
+        Prefs.with(context).save(KEY_CUSTOMER_GOOGLE_CACHING_ENABLED, autoData.optInt(KEY_CUSTOMER_GOOGLE_CACHING_ENABLED,
+                context.getResources().getInteger(R.integer.customer_google_caching_enabled)));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

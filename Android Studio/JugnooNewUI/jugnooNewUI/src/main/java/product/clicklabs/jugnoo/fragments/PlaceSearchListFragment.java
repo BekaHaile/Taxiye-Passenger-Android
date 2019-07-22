@@ -42,19 +42,18 @@ import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.concurrent.CancellationException;
 
+import kotlinx.coroutines.Job;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareEstimateActivity;
-import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
+import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -64,8 +63,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomInterpolator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
-import product.clicklabs.jugnoo.utils.LocaleHelper;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
@@ -73,8 +71,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 public class PlaceSearchListFragment extends Fragment implements  Constants {
@@ -602,6 +598,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	public void onDestroy() {
 		super.onDestroy();
         ASSL.closeActivity(linearLayoutRoot);
+		if(jobGeocode != null){
+			jobGeocode.cancel(new CancellationException());
+		}
         System.gc();
 	}
 
@@ -870,70 +869,21 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 	}
 
-
+	private Job jobGeocode = null;
 	private Double lastLatFetched ;
 	private Double lastLngFetched ;
-	private void fillAddressDetails(final LatLng latLng, final boolean setSearchResult) {
+	private void fillAddressDetails(LatLng latLng, final boolean setSearchResult) {
 		try {
-		/*
-			// we need to check if the autoCompleteResult clicked latLng is near some saved place,
-			// if yes this case will also behave like map pan near saved location case
-			if(autoCompleteResultClicked) {
-				mapSettledCanForward = true;
-				return;
-			}
-*/
-			/*if(isVisible() && !isRemoving()) {
-				progressWheelDeliveryAddressPin.setVisibility(View.VISIBLE);
-			}*/
 			getFocussedProgressBar().setVisibility(View.VISIBLE);
-			final Map<String, String> params = new HashMap<String, String>(6);
 
-			params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
-			params.put("language", Locale.getDefault().getCountry());
-			params.put("sensor", "false");
 			lastLatFetched = latLng.latitude;
 			lastLngFetched = latLng.longitude;
 
-			GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, LocaleHelper.getLanguage(activity), new GeocodeCallback(geoDataClient) {
-				@Override
-				public void onSuccess(GoogleGeocodeResponse geocodeResponse, Response response) {
-					try {
-						if (geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
-							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(geocodeResponse);
+			if(jobGeocode != null){
+				jobGeocode.cancel(new CancellationException());
+			}
+			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, address -> setAddressToUI(address, setSearchResult));
 
-							if(setSearchResult){
-								getFocussedProgressBar().setVisibility(View.GONE);
-								SearchResult searchResult  = new SearchResult("",gapiAddress.getSearchableAddress(),
-										"", lastLatFetched, lastLngFetched,0,1,0 );
-								setFocusedSearchResult(searchResult, true);
-
-							}else{
-								setFetchedAddressToTextView(gapiAddress.getSearchableAddress(), false, false);
-
-							}
-							mapSettledCanForward = true;
-						} else {
-							Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-							setFetchedAddressToTextView("", false, false);
-						}
-
-					} catch (Exception e) {
-						e.printStackTrace();
-						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-						setFetchedAddressToTextView("", false, false);
-					}
-					getFocussedProgressBar().setVisibility(View.GONE);
-				}
-
-				@Override
-				public void failure(RetrofitError error) {
-					product.clicklabs.jugnoo.utils.Log.e("DeliveryAddressFragment", "error=" + error.toString());
-					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-					getFocussedProgressBar().setVisibility(View.GONE);
-					setFetchedAddressToTextView("", false, false);
-				}
-			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1119,4 +1069,28 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 	}
 
+
+	private void setAddressToUI(GoogleGeocodeResponse address, boolean setSearchResult) {
+		Log.i("PlaceSearchListFragment", "setAddressToUI address=" + address);
+		GAPIAddress gapiAddress = null;
+		if (address != null) {
+			gapiAddress = MapUtils.parseGAPIIAddress(address);
+		}
+		if (gapiAddress != null && !TextUtils.isEmpty(gapiAddress.formattedAddress)) {
+			if (setSearchResult) {
+				SearchResult searchResult = new SearchResult("", gapiAddress.formattedAddress,
+						"", lastLatFetched, lastLngFetched, 0, 1, 0);
+				setFocusedSearchResult(searchResult, true);
+
+			} else {
+				setFetchedAddressToTextView(gapiAddress.formattedAddress, false, false);
+
+			}
+			mapSettledCanForward = true;
+		} else {
+			Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+			setFetchedAddressToTextView("", false, false);
+		}
+		getFocussedProgressBar().setVisibility(View.GONE);
+	}
 }

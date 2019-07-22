@@ -102,13 +102,11 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
-import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
-import com.sabkuchfresh.fragments.DeliveryAddressesFragment;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.TransactionUtils;
@@ -148,7 +146,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.DeleteCacheIntentService;
 import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
-import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.MyApplication;
@@ -169,6 +166,7 @@ import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
+import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
@@ -6457,39 +6455,29 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Data.autoData.setPickupLatLng(currentLatLng);
                 }
                 textView.setHint(R.string.getting_address);
-                GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                        LocaleHelper.getLanguage(this), new GeocodeCallback(mGeoDataClient) {
-                            @Override
-                            public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
-                                try {
-                                    GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-                                    String address = gapiAddress.getSearchableAddress();
-                                    if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
-                                        textView.setHint(getResources().getString(R.string.getting_address));
-                                        textView.setText(address);
-                                        Data.autoData.setPickupAddress(address, currentLatLng);
-                                    } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
-                                            || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-                                            || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-                                            || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                                        textView.setHint(getResources().getString(R.string.enter_your_destination));
-                                        textView.setText(address);
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                if (progressBar != null) {
-                                    progressBar.setVisibility(View.GONE);
-                                }
-                            }
 
-                            @Override
-                            public void failure(RetrofitError error) {
-                                if (progressBar != null) {
-                                    progressBar.setVisibility(View.GONE);
-                                }
-                            }
-                        });
+				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+					try {
+						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
+						String address = gapiAddress.getSearchableAddress();
+						if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+							textView.setHint(getResources().getString(R.string.getting_address));
+							textView.setText(address);
+							Data.autoData.setPickupAddress(address, currentLatLng);
+						} else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+								|| PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+								|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+								|| PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+							textView.setHint(getResources().getString(R.string.enter_your_destination));
+							textView.setText(address);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					if (progressBar != null) {
+						progressBar.setVisibility(View.GONE);
+					}
+				});
             } else {
                 if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
                     Data.autoData.setPickupLatLng(currentLatLng);
@@ -9833,7 +9821,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 try {
                     Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
-                    if (searchResult.getThirdPartyAttributions() == null) {
+                    if (TextUtils.isEmpty(searchResult.getThirdPartyAttributions())) {
                         relativeLayoutGoogleAttr.setVisibility(View.GONE);
                     } else {
                         relativeLayoutGoogleAttr.setVisibility(View.VISIBLE);

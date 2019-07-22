@@ -134,7 +134,9 @@ object GoogleRestApis {
         return response
     }
 
-    fun geocode(latLng: String, language: String): Response {
+    fun geocode(latLng: String, language: String): Response? {
+        if (checkApiLimit(null)) return null
+
         Log.i("GoogleRestApi", "geocode")
         val response:Response
         if (MAPS_APIS_SIGN()) {
@@ -186,7 +188,7 @@ object GoogleRestApis {
         }
     }
 
-    private fun checkApiLimit(callback: Callback<GoogleGeocodeResponse>): Boolean {
+    private fun checkApiLimit(callback: Callback<GoogleGeocodeResponse>?): Boolean {
         if(Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED, 0) == 0){
             return false
         }
@@ -202,7 +204,7 @@ object GoogleRestApis {
             val t = GoogleGeocodeResponse()
             t.status = "DENIED"
             t.results = arrayListOf()
-            callback.success(t, null)
+            callback?.success(t, null)
             return true
         } else if (firstTime == 0L || timeDIff >= timeLimitMillis) {
             Prefs.with(MyApplication.getInstance()).save(Constants.SP_FIRST_GEOCODE_TIMESTAMP, currentTime)
@@ -240,6 +242,54 @@ object GoogleRestApis {
         if(strOrigin.contains(",")) {
             logGoogleRestAPI(strOrigin.split(",")[0], strOrigin.split(",")[1], API_NAME_DIRECTIONS)
         }
+        return response
+    }
+
+    fun getAutoCompletePredictions(input:String, sessiontoken:String, components:String, location:String, radius:String): Response {
+        val response:Response
+//        if (MAPS_APIS_SIGN()) {
+//            val urlToSign = ("/maps/api/place/autocomplete/json?" +
+//                    "input=" + input
+//                    + "&sessiontoken=" + sessiontoken
+//                    + "&components=" + components
+//                    + "&location=" + location
+//                    + "&radius=" + radius
+//                    + "&client=" + MAPS_CLIENT()
+//                    + "&channel=" + CHANNEL())
+//            var googleSignature: String? = null
+//            try {
+//                googleSignature = generateGoogleSignature(urlToSign)
+//            } catch (ignored: Exception) {
+//            }
+//
+//
+//            response = RestClient.getGoogleApiService().autocompletePredictions(input, sessiontoken, components, location, radius, MAPS_CLIENT(), CHANNEL(), googleSignature)
+//        } else {
+            response = RestClient.getGoogleApiService().autocompletePredictions(input, sessiontoken, components, location, radius, MAPS_BROWSER_KEY())
+//        }
+        logGoogleRestAPI("0", "0", API_NAME_AUTOCOMPLETE)
+        return response
+    }
+    fun getPlaceDetails(placeId:String): Response {
+        val response:Response
+        if (MAPS_APIS_SIGN()) {
+            val urlToSign = ("/maps/api/geocode/json?" +
+                    "place_id=" + placeId
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
+            var googleSignature: String? = null
+            try {
+                googleSignature = generateGoogleSignature(urlToSign)
+            } catch (ignored: Exception) {
+            }
+
+
+            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_CLIENT(), CHANNEL(), googleSignature)
+        } else {
+            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_BROWSER_KEY())
+        }
+
+        logGoogleRestAPI("0", "0", API_NAME_PLACES)
         return response
     }
 
