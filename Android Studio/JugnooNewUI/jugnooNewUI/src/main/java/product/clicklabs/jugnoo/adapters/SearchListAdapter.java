@@ -511,19 +511,14 @@ public class SearchListAdapter extends BaseAdapter{
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 			Log.v("after call back", "after call back");
 
-			GoogleAPICoroutine.INSTANCE.getPlaceById(placeId, placeAddress, uuidVal, new PlaceDetailCallback() {
+			GoogleAPICoroutine.INSTANCE.getPlaceById(placeId, placeAddress, new PlaceDetailCallback() {
 				@Override
 				public void onPlaceDetailReceived(@NotNull PlaceDetailsResponse placeDetailsResponse) {
 					try {
 						Log.e("SearchListAdapter", "getPlaceById response=" + placeDetailsResponse);
 						SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
-								placeDetailsResponse.getResult().getGeometry().getLocation().getLat(),
-								placeDetailsResponse.getResult().getGeometry().getLocation().getLng());
-						final String thirdPartyAttributions = (placeDetailsResponse.getHtmlAttributions() != null
-								&& placeDetailsResponse.getHtmlAttributions().size() > 0)
-								? placeDetailsResponse.getHtmlAttributions().toString()
-								.substring(1, placeDetailsResponse.getHtmlAttributions().toString().length() - 1) : "";
-						searchResult.setThirdPartyAttributions(thirdPartyAttributions);
+								placeDetailsResponse.getResults().get(0).getGeometry().getLocation().getLat(),
+								placeDetailsResponse.getResults().get(0).getGeometry().getLocation().getLng());
 						sendSearchResult(searchResult);
 					} catch (Exception e) {
 						e.printStackTrace();

@@ -14,7 +14,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
 import product.clicklabs.jugnoo.retrofit.model.Prediction
-import product.clicklabs.jugnoo.retrofit.model.Result
 import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Prefs
@@ -55,7 +54,8 @@ object GoogleAPICoroutine {
                     val placesResponse = gson.fromJson(responseStr, PlacesAutocompleteResponse::class.java)
                     predictions = placesResponse.predictions
 
-                    if(isGoogleCachingEnabled()) {
+                    if(isGoogleCachingEnabled()
+                            && placesResponse.predictions != null && placesResponse.predictions!!.size > 0) {
                         val param = InsertAutocomplete(JUNGOO_APP_PRODUCT_ID, TYPE_AUTO_COMPLETE, input, Data.userData.userId,
                                 arr[0].toDouble(), arr[1].toDouble(), placesResponse)
                         insertPlaceAutocompleteCache(param)
@@ -72,7 +72,7 @@ object GoogleAPICoroutine {
 
 
     //Ai for finding place details by place Id
-    fun getPlaceById(placeId:String, placeAddress:String, sessiontoken:String, callback: PlaceDetailCallback): Job{
+    fun getPlaceById(placeId:String, placeAddress:String, callback: PlaceDetailCallback): Job{
         return GlobalScope.launch(Dispatchers.Main){
             var placesResponse: PlaceDetailsResponse? = null
             try {
@@ -85,18 +85,18 @@ object GoogleAPICoroutine {
                     }
                     val responseStr = String((response!!.body as TypedByteArray).bytes)
                     val jsonObject = JSONObject(responseStr)
-                    val responseCached = jsonObject.getJSONArray("data").getJSONObject(0).getJSONArray("results").getJSONObject(0).toString()
-                    val result: Result = gson.fromJson(responseCached, Result::class.java)
-                    placesResponse = PlaceDetailsResponse()
-                    placesResponse.result = result
+                    val responseCached = jsonObject.getJSONArray("data").getJSONObject(0).toString()
+                    val results: PlaceDetailsResponse = gson.fromJson(responseCached, PlaceDetailsResponse::class.java)
+                    placesResponse = results
                 } catch(e:Exception){
                     val response:Response? = withContext(Dispatchers.IO){
-                        try { GoogleRestApis.getPlaceDetails(placeId, sessiontoken) } catch (e: Exception) { null }
+                        try { GoogleRestApis.getPlaceDetails(placeId) } catch (e: Exception) { null }
                     }
                     val responseStr = String((response!!.body as TypedByteArray).bytes)
                     placesResponse = gson.fromJson(responseStr, PlaceDetailsResponse::class.java)
 
-                    if(isGoogleCachingEnabled()) {
+                    if(isGoogleCachingEnabled()
+                            && placesResponse.results != null && placesResponse.results!!.size > 0) {
                         val param = InsertPlaceDetail(JUNGOO_APP_PRODUCT_ID, TYPE_GEOCODING, placeAddress, Data.userData.userId,
                                 placeId, placesResponse)
                         insertPlaceDetailCache(param)

@@ -270,8 +270,25 @@ object GoogleRestApis {
         logGoogleRestAPI("0", "0", API_NAME_AUTOCOMPLETE)
         return response
     }
-    fun getPlaceDetails(placeId:String, sessiontoken:String): Response {
-        val response = RestClient.getGoogleApiService().placeDetails(placeId, sessiontoken, MAPS_BROWSER_KEY())
+    fun getPlaceDetails(placeId:String): Response {
+        val response:Response
+        if (MAPS_APIS_SIGN()) {
+            val urlToSign = ("/maps/api/geocode/json?" +
+                    "place_id=" + placeId
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
+            var googleSignature: String? = null
+            try {
+                googleSignature = generateGoogleSignature(urlToSign)
+            } catch (ignored: Exception) {
+            }
+
+
+            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_CLIENT(), CHANNEL(), googleSignature)
+        } else {
+            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_BROWSER_KEY())
+        }
+
         logGoogleRestAPI("0", "0", API_NAME_PLACES)
         return response
     }

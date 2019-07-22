@@ -5,12 +5,9 @@ import com.google.gson.annotations.SerializedName
 
 class PlaceDetailsResponse {
 
-    @SerializedName("html_attributions")
+    @SerializedName("results")
     @Expose
-    var htmlAttributions: List<Any>? = null
-    @SerializedName("result")
-    @Expose
-    var result: Result? = null
+    var results: List<Result>? = null
     @SerializedName("status")
     @Expose
     var status: String? = null
@@ -40,6 +37,9 @@ class Geometry {
     @SerializedName("location")
     @Expose
     var location: Location? = null
+    @SerializedName("location_type")
+    @Expose
+    var locationType: String? = null
     @SerializedName("viewport")
     @Expose
     var viewport: Viewport? = null
