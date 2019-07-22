@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,17 +18,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBufferResponse;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +43,6 @@ import product.clicklabs.jugnoo.retrofit.model.Prediction;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -93,8 +82,8 @@ public class SearchListAdapter extends BaseAdapter{
         @Override
         public void afterTextChanged(Editable s) {
             try {
-                SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
-                if (s.length() > 2) {
+                SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString().trim());
+                if (s.toString().trim().length() > 2) {
 					last_text_edit = System.currentTimeMillis();
 					handler.postDelayed(input_finish_checker.setTextToSearch(s.toString().trim()), delay);
                 } else {
