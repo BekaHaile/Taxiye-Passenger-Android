@@ -653,6 +653,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
         isScheduleRideEnabled = Prefs.with(this).getBoolean(Constants.SCHEDULE_RIDE_ENABLED, false);
+        if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null) {
+            Data.autoData.getServiceTypeSelected().setScheduleAvailable(isScheduleRideEnabled ? 1 : 0);
+        }
         showScheduleRideTut = Prefs.with(this).getBoolean(Constants.SHOW_TUT_SCHEDULE_RIDE, true);
         activityResumed = false;
         dropLocationSearched = false;

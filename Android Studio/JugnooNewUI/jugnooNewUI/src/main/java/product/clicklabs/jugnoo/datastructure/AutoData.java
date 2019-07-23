@@ -357,6 +357,9 @@ public class AutoData {
                     }
                 }
             }
+            if(!isSelectedTypeAvailable && Data.autoData != null && (Data.autoData.getServiceTypes() == null || Data.autoData.getServiceTypes().isEmpty())) {
+                isSelectedTypeAvailable = true;
+            }
             if (!isSelectedTypeAvailable) {
                 if (getServiceTypes() != null && getServiceTypes().size() > 0) {
                     previousSelService = "" + getServiceTypeSelected().getName();
