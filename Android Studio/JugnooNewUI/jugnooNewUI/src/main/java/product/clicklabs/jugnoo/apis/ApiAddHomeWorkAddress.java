@@ -161,7 +161,7 @@ public class ApiAddHomeWorkAddress {
 
 									new JSONParser().parseSavedAddressesFromNew(activity, fetchUserAddressResponse);
 
-									callback.onSuccess(searchResult, strResult, deleteAddress);
+									callback.onSuccess(searchResult, strResult, deleteAddress, message);
 								}
 
 							} else{
@@ -214,7 +214,7 @@ public class ApiAddHomeWorkAddress {
 
 
 	public interface Callback{
-		void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted);
+		void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, String serverMsg);
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);

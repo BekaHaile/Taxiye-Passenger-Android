@@ -32,6 +32,7 @@ public class RestClient {
     private static PayApiService PAY_API_SERVICE = null;
     private static FeedApiService FEED_API_SERVICE = null;
     private static ProsApi PROS_API = null;
+    private static MapsCachingApiService MAPS_CACHING_API = null;
 
     static {
         setupRestClient();
@@ -43,9 +44,13 @@ public class RestClient {
         setupPayApiRestClient();
         setupFeedApiRestClient();
         setupProsApiRestClient();
+        setupMapsCachingRestClient();
     }
 
-    private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){
+	private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){
+    	return getOkHttpClient(retryOnConnectionFailure, 30);
+	}
+    private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure, long timeoutSeconds){
 
         ArrayList<Protocol> protocolList = new ArrayList<>();
         protocolList.add(Protocol.HTTP_2);
@@ -56,9 +61,9 @@ public class RestClient {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectionPool(connectionPool);
-        builder.readTimeout(30, TimeUnit.SECONDS);
-        builder.connectTimeout(30, TimeUnit.SECONDS);
-        builder.writeTimeout(30, TimeUnit.SECONDS);
+        builder.readTimeout(timeoutSeconds, TimeUnit.SECONDS);
+        builder.connectTimeout(timeoutSeconds, TimeUnit.SECONDS);
+        builder.writeTimeout(timeoutSeconds, TimeUnit.SECONDS);
         builder.retryOnConnectionFailure(retryOnConnectionFailure);
         builder.protocols(protocolList);
 
@@ -115,6 +120,7 @@ public class RestClient {
         setupPayApiRestClient();
         setupFeedApiRestClient();
         setupProsApiRestClient();
+        setupMapsCachingRestClient();
     }
 
 
@@ -287,4 +293,23 @@ public class RestClient {
     public static ProsApi getProsApiService() {
         return PROS_API;
     }
+
+    public static void setupMapsCachingRestClient() {
+        if(MAPS_CACHING_API == null) {
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getMapsCachingServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient(true, 3)))
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+            setLogger(builder);
+
+            RestAdapter restAdapter = builder.build();
+            MAPS_CACHING_API = restAdapter.create(MapsCachingApiService.class);
+        }
+    }
+
+    public static MapsCachingApiService getMapsCachingService() {
+        return MAPS_CACHING_API;
+    }
+
+
 }

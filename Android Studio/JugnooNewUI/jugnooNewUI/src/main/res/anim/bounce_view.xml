@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:repeatMode="reverse"
+    android:repeatCount="infinite">
+
+    <!-- Use your working translate animation here-->
+    <translate
+        android:duration="400"
+        android:fromYDelta="-3%p"
+        android:toYDelta="0%p"
+        android:repeatCount="infinite"/>
+</set>

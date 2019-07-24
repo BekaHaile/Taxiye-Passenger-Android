@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,32 +18,31 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.AutocompletePrediction;
-import com.google.android.gms.location.places.AutocompletePredictionBufferResponse;
 import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBufferResponse;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
+import product.clicklabs.jugnoo.apis.PlaceDetailCallback;
+import product.clicklabs.jugnoo.apis.PlacesCallback;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse;
+import product.clicklabs.jugnoo.retrofit.model.Prediction;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -84,8 +82,8 @@ public class SearchListAdapter extends BaseAdapter{
         @Override
         public void afterTextChanged(Editable s) {
             try {
-                SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString());
-                if (s.length() > 0) {
+                SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString().trim());
+                if (s.toString().trim().length() > 2) {
 					last_text_edit = System.currentTimeMillis();
 					handler.postDelayed(input_finish_checker.setTextToSearch(s.toString().trim()), delay);
                 } else {
@@ -105,7 +103,7 @@ public class SearchListAdapter extends BaseAdapter{
         int id;
     }
 
-	long delay = 700; // 1 seconds after user stops typing
+	long delay = 1000; // 1 seconds after user stops typing
 	long last_text_edit = 0;
 	Handler handler = new Handler();
 
@@ -125,6 +123,8 @@ public class SearchListAdapter extends BaseAdapter{
     private int searchMode;
 	private int favLocationsCount = 0;
 
+	private String uuidVal = "";
+
     /**
      * Constructor for initializing search base adapter
      *
@@ -132,7 +132,6 @@ public class SearchListAdapter extends BaseAdapter{
      * @param editTextForSearch edittext object whose text change will trigger autocomplete list
      * @param searchPivotLatLng LatLng for searching autocomplete results
      * @param searchListActionsHandler handler for custom actions
-     * @throws IllegalStateException
      */
     public SearchListAdapter(final Context context,LatLng searchPivotLatLng,
 							 GeoDataClient geoDataClient, int searchMode, SearchListActionsHandler searchListActionsHandler,
@@ -167,6 +166,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 
             this.showSavedPlaces = showSavedPlaces;
+			uuidVal = UUID.randomUUID().toString();
         }
         else{
             throw new IllegalStateException("context passed is not of Activity type");
@@ -353,25 +353,22 @@ public class SearchListAdapter extends BaseAdapter{
 				refreshingAutoComplete = true;
 				searchListActionsHandler.onSearchPre();
 				String specifiedCountry = Prefs.with(context).getString(Constants.KEY_SPECIFIED_COUNTRY_PLACES_SEARCH, "");
-                AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder()
-						.setCountry(specifiedCountry)
-						.build();
-                geoDataClient.getAutocompletePredictions(searchText,
-						new LatLngBounds.Builder().include(latLng).build(),
-						!TextUtils.isEmpty(specifiedCountry) ? autocompleteFilter : null)
-						.addOnCompleteListener(new OnCompleteListener<AutocompletePredictionBufferResponse>() {
+
+                String components = !TextUtils.isEmpty(specifiedCountry)? "country:"+specifiedCountry:"";
+                String location = latLng.latitude+","+latLng.longitude;
+                String radius = searchText.length() <= 3 ? "50" : (searchText.length() <= 5 ? "100": (searchText.length() <= 8 ? "1000" : "10000"));
+
+				GoogleAPICoroutine.INSTANCE.getAutoCompletePredictions(searchText, uuidVal, components, location, radius, new PlacesCallback() {
 					@Override
-					public void onComplete(@NonNull Task<AutocompletePredictionBufferResponse> task) {
+					public void onAutocompletePredictionsReceived(@NotNull List<Prediction> predictions) {
 						try {
 							searchResultsForSearch.clear();
-							for (AutocompletePrediction autocompletePrediction : task.getResult()) {
-								String name = autocompletePrediction.getFullText(null).toString().split(",")[0];
+							for (Prediction autocompletePrediction : predictions) {
+								String name = autocompletePrediction.getDescription().split(",")[0];
 								searchResultsForSearch.add(new SearchResult(name,
-										autocompletePrediction.getFullText(null).toString(),
+										autocompletePrediction.getDescription(),
 										autocompletePrediction.getPlaceId(), 0, 0));
 							}
-							task.getResult().release();
-
 							addFavoriteLocations(searchText,editText);
 
 							setSearchResultsToList(editText);
@@ -380,19 +377,20 @@ public class SearchListAdapter extends BaseAdapter{
 							if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
 								recallSearch(editText.getText().toString().trim(),editText);
 							}
-							GoogleRestApis.INSTANCE.logGoogleRestAPIC("0", "0", GoogleRestApis.API_NAME_AUTOCOMPLETE);
 						} catch (Exception e) {
 							e.printStackTrace();
+							searchListActionsHandler.onSearchPost();
 						}
 					}
-				}).addOnFailureListener(new OnFailureListener() {
+
 					@Override
-					public void onFailure(@NonNull Exception e) {
+					public void onAutocompleteError() {
 						refreshingAutoComplete = false;
 
 						if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
 							recallSearch(editText.getText().toString().trim(),editText);
 						}
+						searchListActionsHandler.onSearchPost();
 					}
 				});
 			}
@@ -500,35 +498,32 @@ public class SearchListAdapter extends BaseAdapter{
 			searchListActionsHandler.onPlaceSearchPre();
 			DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
-			geoDataClient.getPlaceById(placeId).addOnCompleteListener(new OnCompleteListener<PlaceBufferResponse>() {
+			Log.v("after call back", "after call back");
+
+			GoogleAPICoroutine.INSTANCE.getPlaceById(placeId, placeAddress, new PlaceDetailCallback() {
 				@Override
-				public void onComplete(@NonNull Task<PlaceBufferResponse> task) {
+				public void onPlaceDetailReceived(@NotNull PlaceDetailsResponse placeDetailsResponse) {
 					try {
-						Log.e("SearchListAdapter", "getPlaceById response=" + task.getResult());
-						if (task.isSuccessful()) {
-							final Place myPlace = task.getResult().get(0);
-							final CharSequence thirdPartyAttributions = task.getResult().getAttributions();
-							SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
-									myPlace.getLatLng().latitude, myPlace.getLatLng().longitude);
-							searchResult.setThirdPartyAttributions(thirdPartyAttributions);
-							sendSearchResult(searchResult);
-							if(myPlace != null && myPlace.getLatLng() != null) {
-								GoogleRestApis.INSTANCE.logGoogleRestAPIC(String.valueOf(myPlace.getLatLng().latitude), String.valueOf(myPlace.getLatLng().longitude), GoogleRestApis.API_NAME_PLACES);
-							}
-						}
-						task.getResult().release();
+						Log.e("SearchListAdapter", "getPlaceById response=" + placeDetailsResponse);
+						SearchResult searchResult = new SearchResult(placeName, placeAddress, placeId,
+								placeDetailsResponse.getResults().get(0).getGeometry().getLocation().getLat(),
+								placeDetailsResponse.getResults().get(0).getGeometry().getLocation().getLng());
+						sendSearchResult(searchResult);
 					} catch (Exception e) {
 						e.printStackTrace();
+						searchListActionsHandler.onPlaceSearchError();
 					}
 					DialogPopup.dismissLoadingDialog();
 				}
-			}).addOnFailureListener(new OnFailureListener() {
+
 				@Override
-				public void onFailure(@NonNull Exception e) {
+				public void onPlaceDetailError() {
 					DialogPopup.dismissLoadingDialog();
+					searchListActionsHandler.onPlaceSearchError();
 				}
 			});
-			Log.v("after call back", "after call back");
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -577,7 +572,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 		@Override
 		public void run() {
-			if (System.currentTimeMillis() > (last_text_edit + delay - 200)) {
+			if (System.currentTimeMillis() > (last_text_edit + delay - 200) && textToSearch.length() > 2) {
 				getSearchResults(textToSearch, SearchListAdapter.this.getPivotLatLng(),editText);
 			}
 		}

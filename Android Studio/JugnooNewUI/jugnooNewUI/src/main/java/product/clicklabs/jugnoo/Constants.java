@@ -1044,4 +1044,11 @@ public interface Constants {
     String KEY_CARD_ID = "card_id";
     String KEY_CARD_DETAILS = "card_details";
     String KEY_AMOUNT_PAID = "amount_paid";
+    String KEY_LNG = "lng";
+	String KEY_JSONDATA = "jsonData";
+	String KEY_CUSTOMER_GOOGLE_CACHING_ENABLED = "customer_google_caching_enabled";
+
+//    save location
+    String SKIP_SAVE_PICKUP_LOCATION = "skip_save_pickup_location";
+    String SKIP_SAVE_DROP_LOCATION = "skip_save_drop_location";
 }

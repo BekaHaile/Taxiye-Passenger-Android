@@ -2030,4 +2030,11 @@
     <string name="write_notes_here">Write notes here...</string>
     <string name="save_notes">Save notes</string>
     <string name="alert_provide_some_notes">Please add some notes</string>
+
+
+    <!--save location-->
+    <string name="save_your_pickup_location">Save your pickup location</string>
+    <string name="save_your_drop_location">Save your drop location</string>
+    <string name="tap_on_pin">Tap on pin...</string>
+    <string name="favourite">Favourite%s</string>
 </resources>
