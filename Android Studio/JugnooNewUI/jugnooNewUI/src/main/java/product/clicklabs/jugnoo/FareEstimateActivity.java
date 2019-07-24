@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -81,7 +79,6 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     private SearchResult searchResultGlobal;
     private Region region;
     private PromoCoupon promoCoupon;
-    private GeoDataClient geoDataClient;
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress, dropAddress;
     private boolean isScheduleRide;
@@ -136,7 +133,6 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         }
 
 
-        geoDataClient = Places.getGeoDataClient(this, null);
 
         relative = findViewById(R.id.relative);
         assl = new ASSL(this, relative, 1134, 720, false);
@@ -529,9 +525,6 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
-    public GeoDataClient getGeoDataClient(){
-        return geoDataClient;
-    }
 
     private void scheduleRide(int regionId, String finalDateTime) {
         final HashMap<String, String> params = new HashMap<>();

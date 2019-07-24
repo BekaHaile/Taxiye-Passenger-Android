@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,7 +45,6 @@ import kotlinx.coroutines.Job;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -235,7 +233,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		fragment.setArguments(bundle);
 		return fragment;
 	}
-	private GeoDataClient geoDataClient;
 	private int searchMode,searchModeClicked;
 
 	@Override
@@ -243,11 +240,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		super.onAttach(context);
 		try{
 			this.searchListActionsHandler = (SearchListAdapter.SearchListActionsHandler) context;
-			if(context instanceof FareEstimateActivity){
-				geoDataClient = ((FareEstimateActivity)context).getGeoDataClient();
-			} else {
-				geoDataClient = ((HomeActivity)context).getmGeoDataClient();
-			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -327,7 +319,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		}
 
-		searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), geoDataClient, searchMode,
+		searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), searchMode,
 				searchAdapterListener, true,editTextsForAdapter);
 
 

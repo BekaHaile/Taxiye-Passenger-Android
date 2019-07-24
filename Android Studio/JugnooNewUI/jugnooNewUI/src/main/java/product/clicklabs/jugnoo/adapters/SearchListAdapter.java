@@ -18,7 +18,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 
@@ -118,7 +117,6 @@ public class SearchListAdapter extends BaseAdapter{
     ArrayList<SearchResult> searchResultsForSearch;
     ArrayList<SearchResult> searchResults;
 
-	private GeoDataClient geoDataClient;
     private boolean showSavedPlaces;
     private int searchMode;
 	private int favLocationsCount = 0;
@@ -134,7 +132,7 @@ public class SearchListAdapter extends BaseAdapter{
      * @param searchListActionsHandler handler for custom actions
      */
     public SearchListAdapter(final Context context,LatLng searchPivotLatLng,
-							 GeoDataClient geoDataClient, int searchMode, SearchListActionsHandler searchListActionsHandler,
+							 int searchMode, SearchListActionsHandler searchListActionsHandler,
                              boolean showSavedPlaces,EditText... editTextForSearch)
             throws IllegalStateException{
         if(context instanceof Activity) {
@@ -146,7 +144,6 @@ public class SearchListAdapter extends BaseAdapter{
             this.editTextForSearch = editTextForSearch[0];
             this.defaultSearchPivotLatLng = searchPivotLatLng;
             this.searchListActionsHandler = searchListActionsHandler;
-			this.geoDataClient = geoDataClient;
             this.searchMode = searchMode;
 
             for(final EditText editText: editTextForSearch){

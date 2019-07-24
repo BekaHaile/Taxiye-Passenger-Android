@@ -81,8 +81,6 @@ import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -572,7 +570,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     };
 
-    private GeoDataClient mGeoDataClient;
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
     private boolean selectPickUpdropAtOnce = false;
@@ -649,7 +646,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Data.latitude = Data.loginLatitude;
         Data.longitude = Data.loginLongitude;
 
-        mGeoDataClient = Places.getGeoDataClient(this, null);
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -11054,9 +11050,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private HomeUtil homeUtil = new HomeUtil();
 
 
-    public GeoDataClient getmGeoDataClient() {
-        return mGeoDataClient;
-    }
 
     private HomeUtil.SavedAddressState savedAddressState = HomeUtil.SavedAddressState.BLANK;
 
