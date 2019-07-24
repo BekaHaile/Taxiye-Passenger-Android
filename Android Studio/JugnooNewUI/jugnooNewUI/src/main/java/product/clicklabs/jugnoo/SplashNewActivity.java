@@ -2097,6 +2097,13 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	protected void onResume() {
 		super.onResume();
 
+		//hack for entering operator token
+		/*if(Prefs.with(this).getString(Constants.KEY_OPERATOR_TOKEN, "not_here").equalsIgnoreCase("not_here")) {
+			ActivityCompat.finishAffinity(this);
+			startActivity(new Intent(this, EnterOperatorActivity.class));
+			return;
+		}*/
+
 		requestLocationUpdatesExplicit();
 
 		retryAccessTokenLogin();
