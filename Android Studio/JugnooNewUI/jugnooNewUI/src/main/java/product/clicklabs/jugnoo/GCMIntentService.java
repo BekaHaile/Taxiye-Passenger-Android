@@ -490,6 +490,12 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							notificationManager(this, title, message1, playSound);
 						}
 
+					}else if (PushFlags.UNLOCK_BLE_DEVICE.getOrdinal() == flag){
+						Log.e(TAG,"push arrived");
+						Intent intent = new Intent(Data.LOCAL_BROADCAST);
+						intent.putExtra(Constants.KEY_FLAG, flag);
+						intent.putExtra(Constants.KEY_MESSAGE, message);
+						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					} else if (PushFlags.DRIVER_ARRIVED.getOrdinal() == flag) {
 						//Prefs.with(this).save(KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);

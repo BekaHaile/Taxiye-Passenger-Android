@@ -6,6 +6,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +22,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -98,6 +101,8 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -133,6 +138,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -224,9 +230,15 @@ import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.rentals.InstructionDialog;
+import product.clicklabs.jugnoo.rentals.RentalStationAdapter;
+import product.clicklabs.jugnoo.rentals.damagereport.DamageReportActivity;
+import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
+import product.clicklabs.jugnoo.rentals.models.GpsLockStatus;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
+import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
@@ -234,6 +246,8 @@ import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.smartlock.callbacks.SmartlockCallbacks;
+import product.clicklabs.jugnoo.smartlock.controller.SmartLockController;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -282,14 +296,17 @@ import retrofit.mime.TypedByteArray;
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
-        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener {
+        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
     private final String TAG = "Home Screen";
+    private String macId ="";
 
-    public DrawerLayout drawerLayout;                                                                        // views declaration
+    public DrawerLayout drawerLayout;
+
+    private BluetoothAdapter mBluetoothAdapter;// views declaration
 
 
     MenuBar menuBar;
@@ -505,7 +522,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private T20Ops t20Ops = new T20Ops();
     private PlaceSearchListFragment.PlaceSearchMode placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.PICKUP;
     private LatLngBounds.Builder latLngBoundsBuilderPool;
-    private ArrayList<SearchResult> lastPickUp = new ArrayList<SearchResult>();
     private ArrayList<SearchResult> lastDestination = new ArrayList<SearchResult>();
     private long thumbsUpGifStartTime = 0;
     private int shakeAnim = 0;
@@ -561,6 +577,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private LinearLayout llRatingFeedbackType;
     private TextView tvTipAmountLabel,tvEditTip,tvRemoveTip;
     public static final int REQ_CODE_ADD_CARD_DRIVER_TIP = 0x167;
+    public static final int REQ_BLE_ENABLE = 188;
     public boolean scheduleRideOpen;
     public int selectedIdForScheduleRide,selectedRideTypeForScheduleRide;
     public Region selectedRegionForScheduleRide = null;
@@ -595,6 +612,32 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private boolean mIsPickup = false;
 
     private  ApiAddHomeWorkAddress apiAddHomeWorkAddress;
+
+
+    // RENTALS
+
+    private boolean checkLockStatus = false; // true -> lock , false -> unlock
+    private String qrCode = "";
+    private String qrCodeDetails = "";
+
+    private Button buttonEndRide, buttonLockRide, buttonUnlockRide;
+    Button damageReportButton;
+    private RelativeLayout rentalInRideLayout;
+
+
+    // Rental End Ride Layout
+    private LinearLayout rentalEndRideLayout;
+    private TextView textViewEndRide;
+
+
+    private View endRideJugnooAnimation;
+    private AnimationDrawable rentalJugnooAnimation;
+    private Button customerLocation;
+//    public static int rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
+    Dialog dialogRentalStations;
+
+
+
 
     @SuppressLint("NewApi")
     @Override
@@ -1393,19 +1436,45 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
+        // RENTALS
+
+        buttonEndRide = findViewById(R.id.buttonEndRide);
+        buttonLockRide = findViewById(R.id.buttonLockRide);
+        buttonUnlockRide = findViewById(R.id.buttonUnlockRide);
+        buttonEndRide.setOnClickListener(this);
+        buttonUnlockRide.setOnClickListener(this);
+        buttonLockRide.setOnClickListener(this);
+
+        rentalInRideLayout = findViewById(R.id.layout_rental_in_ride);
+
+        rentalEndRideLayout = findViewById(R.id.layout_rental_end_ride);
+        textViewEndRide = findViewById(R.id.textViewEndRide);
+
+        customerLocation = findViewById(R.id.customerLocation);
+        endRideJugnooAnimation = findViewById(R.id.jugnoo_animation);
+//        if (endRideJugnooAnimation instanceof ImageView) {
+//            rentalJugnooAnimation = (AnimationDrawable) endRideJugnooAnimation.getBackground();
+//        }
+
+
+        damageReportButton = findViewById(R.id.damage_button);
+        damageReportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, DamageReportActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Customer initial layout events
         rideNowClicked = false;
         imageViewRideNow.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //fabView.menuLabelsRight.close(true);
-                //imageViewFabFake.setVisibility(View.GONE);
                 try {
                     topBar.tvScheduleRidePopup.setVisibility(View.GONE);
                     if (map != null) {
                         if (!rideNowClicked) {
-//                       todo     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
                             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
                                 findDriversETACall(true, false, false, null);
                             } else {
@@ -1431,13 +1500,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if (!isPoolRideAtConfirmation() && !isNormalRideWithDropAtConfirmation()) {
-//                   todo     Data.autoData.setPickupLatLng(map.getCameraPosition().target);
-                    }
                     if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
                         findDriversETACall(true, true, false, getApiFindADriver().getParams());
                     } else {
-                        requestRideClick();
+                        if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                                .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                            openBikeRentalScan();
+                        } else {
+                            requestRideClick();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1576,7 +1647,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         translateViewBottom(viewGroup, relativeLayoutDestSearchBar, true, true);
                         translateViewTop(viewGroup, relativeLayoutInitialSearchBar, false, true);
                     } else {
-                        openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP);
+                        if(getSlidingBottomPanel().getRequestRideOptionsFragment()
+                                .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()){
+
+                            openRentalStationList();
+                            checkFareEstimate = false;
+                        }
+                        else{
+                            openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2223,6 +2302,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         switchPassengerScreen(passengerScreenMode);
     }
 
+    public boolean checkFareEstimate = false;
+
     public void openFareEstimate() {
         if(Data.autoData == null || Data.autoData.getPickupLatLng() == null){
             Utils.showToast(this, getString(R.string.set_your_pickup_location));
@@ -2240,8 +2321,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             intent.putExtra(KEY_DROP_LATITUDE, Data.autoData.getDropLatLng().latitude);
             intent.putExtra(KEY_DROP_LONGITUDE, Data.autoData.getDropLatLng().longitude);
             intent.putExtra(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
+            startActivityForResult(intent, FARE_ESTIMATE);
+
+        } else {
+            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                    RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+
+                if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
+                    getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                }
+                checkFareEstimate = true;
+                openRentalStationList();
+            }
+            else{
+                startActivityForResult(intent, FARE_ESTIMATE);
+            }
         }
-        startActivityForResult(intent, FARE_ESTIMATE);
+
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
@@ -2352,14 +2448,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             map.getUiSettings().setTiltGesturesEnabled(false);
             map.getUiSettings().setMyLocationButtonEnabled(false);
             map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            if(Prefs.with(this).getInt(KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED, 0) == 1) {
+            if (Prefs.with(this).getInt(KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED, 0) == 1) {
                 map.setTrafficEnabled(true);
             }
 
             //30.7500, 76.7800
             //22.971723, 78.754263
-
-
             try {
 
 
@@ -2577,6 +2671,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             buttonChangeLocalityMyLocation.setOnClickListener(mapMyLocationClick);
             customerInRideMyLocationBtn.setOnClickListener(mapMyLocationClick);
             specialPickupLocationBtn.setOnClickListener(mapMyLocationClick);
+
+            customerLocation.setOnClickListener(mapMyLocationClick);
 
 
             pokestopHelper = new PokestopHelper(this, map, assl);
@@ -2865,6 +2961,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (callNextAnim) {
                     translateViewBottomTop(mView, viewExchange);
                 }
+
             }
 
             @Override
@@ -2898,6 +2995,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
                 params.topMargin = (int) (ASSL.Yscale() * 80f);
                 mView.setLayoutParams(params);
+
             }
 
             @Override
@@ -2933,6 +3031,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (callNextAnim) {
                     translateViewTopBottom(mView, viewExchange);
                 }
+
             }
 
             @Override
@@ -2965,6 +3064,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mView.getLayoutParams();
                 params.topMargin = (int) (ASSL.Yscale() * 20f);
                 mView.setLayoutParams(params);
+
             }
 
             @Override
@@ -3175,7 +3275,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void requestRideClick() {
-        try {
             try {
                 if (map != null) {
                     if (MyApplication.getInstance().isOnline()) {
@@ -3191,7 +3290,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 promoCouponSelectedForRide = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
                                 if (!specialPickupScreenOpened && Data.autoData.getUseRecentLocAtRequest() == 1) {
-                                    SearchResult searchResult = homeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
+                                    SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
                                             CHOOSE_SAVED_PICKUP_ADDRESS, true);
                                     if (searchResult != null) {
                                         if (MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
@@ -3248,42 +3347,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            if (!textViewInitialSearch.getText().toString().equalsIgnoreCase("")) {
-                lastPickUp.clear();
-                lastPickUp.addAll(fetchLastLocations(SPLabels.LAST_PICK_UP));
-                if (lastPickUp.size() == 0) {
-                    if (!addressMatchedWithSavedAddresses(textViewInitialSearch.getText().toString())) {
-                        lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), ""
-                                , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
-                    }
-                } else {
-                    boolean isSame = false;
-                    for (int i = 0; i < lastPickUp.size(); i++) {
-                        if (textViewInitialSearch.getText().toString().equalsIgnoreCase(lastPickUp.get(i).getName())
-                                && Data.autoData.getPickupAddress(lastPickUp.get(i).getLatLng()).equalsIgnoreCase(lastPickUp.get(i).getAddress())) {
-                            isSame = true;
-                            break;
-                        }
-                    }
-                    if (!isSame) {
-                        if (!addressMatchedWithSavedAddresses(textViewInitialSearch.getText().toString())) {
-                            lastPickUp.add(0, new SearchResult(textViewInitialSearch.getText().toString(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), ""
-                                    , Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude));
-                        }
-                    }
-                    if (lastPickUp.size() > 3) {
-                        lastPickUp.remove(3);
-                    }
-                    Log.v("size of last pickup", "---> " + lastPickUp.size());
-                }
-                String tempPickup = new Gson().toJson(lastPickUp);
-                Prefs.with(HomeActivity.this).save(SPLabels.LAST_PICK_UP, tempPickup);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private boolean addressMatchedWithSavedAddresses(String address) {
@@ -3513,10 +3576,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 scheduleRideContainer.setVisibility(View.GONE);
                 constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
 
+                if(inRideCheck()
+                        && Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null
+                        && Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                    startPollingGetGPSLockStatus();
+                } else {
+                    cancelPollingGetGPSLockStatus();
+                }
+
                 switch (mode) {
 
                     case P_INITIAL:
 
+                        Log.d("HomeActivityResult" , " P_INITIAL");
                         fabViewTest = new FABViewTest(this, fabViewIntial);
                         getHandler().postDelayed(new Runnable() {
                             @Override
@@ -3547,10 +3619,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
+
                         relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
                         changeLocalityLayout.setVisibility(View.GONE);
+
+
+                        rentalInRideLayout.setVisibility(View.GONE);
+                        rentalEndRideLayout.setVisibility(View.GONE);
+
 
                         cancelTimerRequestRide();
 
@@ -3695,16 +3773,32 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         initAndClearInRidePath();
                         getTrackingLogHelper().uploadAllTrackLogs();
 
+
+                        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()
+                                == RideTypeValue.BIKE_RENTAL.getOrdinal())
+                        {
+                            damageReportButton.setVisibility(View.GONE);
+                            Log.d("HomeActivityResult" , " Rental");
+                        }
+
                         break;
 
 
                     case P_SEARCH:
+
+                        Log.d("HomeActivityResult" , " P_SEARCH");
 
 
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.VISIBLE);
                         requestFinalLayout.setVisibility(View.GONE);
+
+                        rentalInRideLayout.setVisibility(View.GONE);
+                        rentalEndRideLayout.setVisibility(View.GONE);
+
+                        damageReportButton.setVisibility(View.GONE);
+
                         hideCenterPickupPin();
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
@@ -3721,6 +3815,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                     case P_ASSIGNING:
+                        Log.d("HomeActivityResult" , " P_ASSIGNING");
+
                         Log.e(TAG, "P_ASSIGNING");
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
@@ -3734,6 +3830,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         rvBidsIncoming.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
+
+                        rentalInRideLayout.setVisibility(View.GONE);
+                        rentalEndRideLayout.setVisibility(View.GONE);
+                        damageReportButton.setVisibility(View.GONE);
+
+
                         hideCenterPickupPin();
 
 //                        if (Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")) {
@@ -3742,15 +3844,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         textViewFindingDriver.setText(R.string.finding_a_driver);
                         findViewById(R.id.vBidTimer).setVisibility(View.GONE);
+                        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                                RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                            textViewFindingDriver.setText(R.string.booking_a_bike);
+                        } else {
+                            textViewFindingDriver.setText(R.string.finding_a_driver);
+                        }
+
                         pwBidTimer.setVisibility(View.GONE);
                         tvBidTimer.setVisibility(View.GONE);
-                        updateBidsView();
                         initialCancelRideBtn.setVisibility(View.GONE);
                         try {
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        updateBidsView();
 
                         getHandler().postDelayed(new Runnable() {
                             @Override
@@ -3828,6 +3937,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                     case P_REQUEST_FINAL:
+
+                        Log.d("HomeActivityResult" , " P_REQUEST_FINAL");
+
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
@@ -3854,7 +3966,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
-                        requestFinalLayout.setVisibility(View.VISIBLE);
+                        damageReportButton.setVisibility(View.GONE);
+
+
+
+                        rentalStateUIHandling(mode);
+
                         hideCenterPickupPin();
 
                         setAssignedDriverData(mode);
@@ -3896,6 +4013,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         break;
 
                     case P_DRIVER_ARRIVED:
+
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
@@ -3930,7 +4048,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
-                        requestFinalLayout.setVisibility(View.VISIBLE);
+//                        requestFinalLayout.setVisibility(View.VISIBLE);
+                        damageReportButton.setVisibility(View.GONE);
+
+
+                        rentalStateUIHandling(mode);
+
+
                         hideCenterPickupPin();
 
                         if (dropLocationSearched) {
@@ -3973,6 +4097,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                     case P_IN_RIDE:
+
+                        rentalStateUIHandling(mode);
+
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
@@ -3995,7 +4122,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         ivMoreOptions.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
-                        requestFinalLayout.setVisibility(View.VISIBLE);
+
+                        damageReportButton.setVisibility(View.GONE);
+
+
+
+
+
                         hideCenterPickupPin();
 
 
@@ -4039,7 +4172,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setFabViewAtRide(mode);
 
 
-//                        genieLayout.setVisibility(View.GONE);
 
                         try {
                             getTrackingLogHelper().uploadAllTrackLogs();
@@ -4069,11 +4201,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         break;
 
                     case P_RIDE_END:
+
+                        Log.d("HomeActivityResult" , " P_RIDE_END");
+
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         initialLayout.setVisibility(View.GONE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
+
+                        rentalInRideLayout.setVisibility(View.GONE);
+                        rentalEndRideLayout.setVisibility(View.GONE);
+                        damageReportButton.setVisibility(View.GONE);
+
+
                         hideCenterPickupPin();
 
                         topBar.imageViewHelp.setVisibility(View.VISIBLE);
@@ -5196,6 +5337,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     protected void onResume() {
         super.onResume();
 
+
         try {
 
             removeSaveLocationDialog();
@@ -5226,6 +5368,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 && PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)
                                 && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1) {
                             try {
+
                                 LatLng currLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                                 Data.setLatLngOfJeanieLastShown(currLatLng);
                                 Data.autoData.setLastRefreshLatLng(currLatLng);
@@ -5239,7 +5382,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 && PassengerScreenMode.P_SEARCH != passengerScreenMode
                                 && !isPoolRideAtConfirmation()
                                 && !isNormalRideWithDropAtConfirmation()
-                                && !isSpecialPickupScreenOpened()) {
+                                && !isSpecialPickupScreenOpened()
+                                && !rentalCaseResume) {
                             callAndHandleStateRestoreAPI(false);
                         } else {
                             initiateTimersForStates(passengerScreenMode);
@@ -5249,6 +5393,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                rentalCaseResume = false;
 
                 try {
                     fetchWalletBalance(this, ignoreTimeCheckFetchWalletBalance);
@@ -5397,6 +5542,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             case R.id.bChatDriver:
                 openChatScreen();
                 break;
+            case R.id.buttonEndRide: // 8
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, getString(R.string.please_lock_the_bike_and_proceed), v1 -> {
+                    textViewEndRide.setText(R.string.ending_ride);
+                    updateLockStatusApi(GpsLockStatus.REQ_END_RIDE_LOCK);
+
+                });
+                break;
+            case R.id.buttonUnlockRide: // 6
+                textViewEndRide.setText(R.string.unlocking_ride);
+                updateLockStatusApi(GpsLockStatus.REQ_UNLOCK);
+                break;
+            case R.id.buttonLockRide: // 4
+                DialogPopup.alertPopupTwoButtonsWithListeners(this, getString(R.string.please_lock_the_bike_and_proceed), v1 -> {
+                    textViewEndRide.setText(R.string.locking_ride);
+                    updateLockStatusApi(GpsLockStatus.REQ_LOCK);
+
+                });
+                break;
         }
     }
 
@@ -5455,12 +5618,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         super.startActivityForResult(intent, requestCode, options);
     }
 
+    boolean rentalCaseResume = false;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if (resultCode == RESULT_OK) {
-                if(requestCode==REQ_CODE_ADD_CARD_DRIVER_TIP){
+                if(requestCode==REQ_BLE_ENABLE){
+                 Log.e(TAG,"bluetooth permission result");
+                 initiateBleProcess();
+                }else if(requestCode==REQ_CODE_ADD_CARD_DRIVER_TIP){
                     if(driverTipInteractor!=null && driverTipInteractor.actionButton!=null){
                         driverTipInteractor.actionButton.performClick();
                     }
@@ -5522,9 +5690,54 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+                // Request Code for IntentItegrator -> 49374
+
+                else if (requestCode == IntentIntegrator.REQUEST_CODE) {
+
+                    IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+                    rentalCaseResume = true;
+
+                    if (result != null) {
+                        if (result.getContents() != null) {
+                            String bikeNumber = "";
+                            qrCodeDetails = result.getContents();
+
+                            bikeNumber = extractQRCode(result.getContents());
+                            if (!bikeNumber.equals("error")) {
+                                qrCode = bikeNumber;
+                                Log.e(TAG,"bluetooth enabled"+ Data.autoData.getBluetoothEnabled());
+                                if(Data.autoData.getBluetoothEnabled()==1){
+                                    initiateBleProcess();
+                                }else{
+                                    requestRideClick();
+                                }
+                                slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                            } else {
+                                Toast.makeText(this, getString(R.string.incorrect_qr_code), Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (data != null) {
+                            qrCode = data.getStringExtra("qrCode");
+                            qrCodeDetails = data.getStringExtra("qr_code_details");
+                            if(Data.autoData.getBluetoothEnabled()==1){
+                                initiateBleProcess();
+                            }else{
+                                requestRideClick();
+                            }
+                            slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+                        }
+                    }
                 } else {
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
+                }
+            }else{
+                if(requestCode==REQ_BLE_ENABLE){
+                    Log.e(TAG,"bluetooth permission result failed");
+                    Data.autoData.setBluetoothEnabled(0);
+                    requestRideClick();
+
                 }
             }
 
@@ -5532,6 +5745,140 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
         likeClicked = 0;
+    }
+
+    private void initiateBleProcess(){
+        BluetoothManager bluetoothManager =
+                (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this, "Failed to acquire bluetooth", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (mBluetoothAdapter.isEnabled()) {
+            Log.e(TAG, "process initiated");
+            smartLockObj.intializeBle(HomeActivity.this);
+            Log.e(TAG, "device token default" + macId);
+            Log.e(TAG, "qrcode default" + qrCode);
+            Log.e(TAG, "device token api size : " + Data.autoData.getDriverInfos().size());
+            boolean isDeviceFound = false;
+            for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
+                if (Data.autoData.getDriverInfos().get(i).getExternalId() != null && Data.autoData.getDriverInfos().get(i).getExternalId().equals(qrCode)) {
+                    if (Data.autoData.getDriverInfos().get(i).getDeviceToken() != null) {
+                        macId = Data.autoData.getDriverInfos().get(i).getDeviceToken();
+                        isDeviceFound = true;
+                        startPairing();
+                        break;
+                    }
+                }
+                Log.e(TAG, "device token" + macId);
+            }
+            if (isDeviceFound==false){
+                DialogPopup.alertPopup(HomeActivity.this, "", "You are not authorised to use this device");
+            }
+        }else{
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent,188);
+        }
+    }
+
+    private void startPairing() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android M Permission check
+            if (HomeActivity.this.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1008);
+            } else {
+                Log.e(TAG, "make pair called" + macId);
+                smartLockObj.makePair(macId);
+            }
+        }
+    }
+
+    // Extracting Bike number from the scan
+    public String extractQRCode(final String result) {
+
+//        String bikeNumber;
+//        if (result.indexOf("no=") > 0 && result.indexOf("no=") + 10 < result.length()) {
+//            bikeNumber = result.substring(result.indexOf("no=") + 3, result.indexOf("no=") + 13);
+//        } else if (result.length() == 11) {
+//            // TODO apply the check that all 11 digits must be numbers
+//            bikeNumber = result;
+//        } else {
+//            bikeNumber = "error";
+//        }
+//        return bikeNumber;
+
+        String bikeNumber = "";
+        if (result.indexOf("no=") > 0 && result.indexOf("no=") + 10 < result.length()) {
+            bikeNumber = result.substring(result.indexOf("no=") + 3, result.indexOf("no=") + 13);
+        } else {
+            bikeNumber = result;
+        }
+        return bikeNumber;
+    }
+
+
+    SmartLockController smartLockObj = new SmartLockController(new SmartlockCallbacks() {
+        @Override
+        public void makePair(boolean status) {
+            Log.d(TAG,"bluetooth device connected"+status);
+            if(status){
+                requestRideClick();
+            }
+
+        }
+
+        @Override
+        public void updateStatus(int status) {
+            //0 for lock device
+            //1 for device unlocked
+            Log.e(TAG,"bluetooth device unlocked"+status);
+            callUpdateServerApi(status);
+        }
+
+        @Override
+        public void checkForBluetoth(){
+            Log.e(TAG,"bluetooth enable popup called");
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent,REQ_BLE_ENABLE);
+        }
+    });
+
+    private void callUpdateServerApi(int lockStatus) {
+        HashMap<String, String> nameValuePairs = new HashMap<>();
+        nameValuePairs.put("access_token", Data.userData.accessToken);
+        nameValuePairs.put("engagement_id", "" + Data.autoData.getcEngagementId());
+        nameValuePairs.put("lock_status", "" + lockStatus);
+        nameValuePairs.put("latitude", "" + Data.autoData.getPickupLatLng().latitude);
+        nameValuePairs.put("longitude", "" + Data.autoData.getPickupLatLng().longitude);
+
+        new HomeUtil().putDefaultParams(nameValuePairs);
+        Response responseRetro = RestClient.getApiService().updateLockStatus(nameValuePairs);
+        String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
+        Log.e(TAG, "update to server result=" + response);
+        try {
+            JSONObject jObj = new JSONObject(response);
+            int flag = jObj.getInt("gps_lock_status");
+            Log.e("TAG","gps lock status "+flag);
+            if(flag==GpsLockStatus.END_RIDE_LOCK.getOrdinal()){
+                smartLockObj.disconnectDevice();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {//The three parameters are the request code with the same custom, the permission array, the authorization result, and the permission array
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.e(TAG,"bluetooth permission result"+requestCode);
+        if (requestCode == 1) {
+            smartLockObj.makePair(macId);
+        }
     }
 
 
@@ -5813,7 +6160,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if (savedAddressUsed) {
                                 requestRideDriverCheck();
                             } else if (confirmedScreenOpened) {
-                                requestRideClick();
+                                if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                                        .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                                    openBikeRentalScan();
+                                } else {
+                                    requestRideClick();
+                                }
                             } else {
                                 imageViewRideNowPoolCheck();
                             }
@@ -6109,6 +6461,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 imageViewRideNow.setVisibility(View.VISIBLE);
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
+                if(partnerWithJugnooDialog != null) {
+                    partnerWithJugnooDialog.dismiss();
+                }
             }
 //            setFabMarginInitial(false);
             setJeanieVisibility();
@@ -6224,9 +6579,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         int regionDriversCount = 0;
                         for (int i = 0; i < Data.autoData.getDriverInfos().size(); i++) {
                             DriverInfo driver = Data.autoData.getDriverInfos().get(i);
-                            if (driver.getOperatorId() == region.getOperatorId()
-                                    && driver.getRegionIds().contains(region.getRegionId())
-                                    && (driver.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driver.getPaymentMethod() == 0
+                            if (driver.getOperatorId() == region.getOperatorId() && driver.getRegionIds().contains(region.getRegionId()) && (driver.getPaymentMethod() == DriverInfo.PaymentMethod.BOTH.getOrdinal() || driver.getPaymentMethod() == 0
                                     || Data.autoData.getPickupPaymentOption() == PaymentOption.CASH.getOrdinal())
                                     ) {
                                 driver.setVehicleIconSet(region.getVehicleIconSet().getName());
@@ -6682,6 +7035,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void getRideSummaryAPI(final Activity activity, final String engagementId) {
         if (!checkIfUserDataNull(activity)) {
             if (MyApplication.getInstance().isOnline()) {
+
+                Log.d("HomeActivityRental","GetRideSummmary online");
+
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
                 HashMap<String, String> params = new HashMap<>();
                 params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -6722,17 +7078,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     setUserData();
 
                                 } else {
+                                    Log.d("HomeActivityRental","GetRideSummmary Offline 1");
+
                                     endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
+                            Log.d("HomeActivityRental","GetRideSummmary offline 2");
+
                             endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
                         }
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
+                        Log.d("HomeActivityRental","GetRideSummmary offline 3");
+
                         Log.e(TAG, "getRideSummary error=" + error);
                         DialogPopup.dismissLoadingDialog();
                         endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
@@ -7525,6 +7887,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private int getFilteredDrivers() {
         int driversCount = 0;
+
+        // todo
+        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                            RideTypeValue.BIKE_RENTAL.getOrdinal())
+        {
+            return 1;
+        }
+
         for (DriverInfo driverInfo : Data.autoData.getDriverInfos()) {
             if (driverInfo.getOperatorId() == slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
                     && driverInfo.getRegionIds() != null
@@ -7814,12 +8184,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Prefs.with(this).save(Constants.KEY_EMERGENCY_NO, jObj.optString(KEY_EMERGENCY_NO, getString(R.string.police_number)));
             int isCorporateRide= jObj.optInt(Constants.KEY_IS_CORPORATE_RIDE, 0);
             String cardId= jObj.optString(Constants.KEY_CARD_ID, "0");
+            int rideType = jObj.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
+
+            int gpsLockStatus = jObj.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(this, Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                    isCorporateRide, cardId));
+                    isCorporateRide, cardId, rideType, gpsLockStatus));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -7836,6 +8209,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
             } else if (ApiResponseFlags.RIDE_ARRIVED.getOrdinal() == flag) {
                 passengerScreenMode = PassengerScreenMode.P_DRIVER_ARRIVED;
+            }
+            if(rideType == RideTypeValue.BIKE_RENTAL.getOrdinal()){
+                HomeActivity.passengerScreenMode = PassengerScreenMode.P_IN_RIDE;
             }
             runOnUiThread(new Runnable() {
                 @Override
@@ -7892,12 +8268,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void customerEndRideInterrupt(final String engagementId) {
         try {
+            Log.d("HomeActivityRental","CustomerEndRIde");
             if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.autoData.getcEngagementId())) {
                 closeCancelActivity();
                 runOnUiThread(new Runnable() {
 
                     @Override
                     public void run() {
+                        //dismiss rental dialogs if any
+                        DialogPopup.dismissAlertPopup();
+                        if(rentalLockDialog != null){
+                            rentalLockDialog.dismiss();
+                        }
+
                         getRideSummaryAPI(HomeActivity.this, engagementId);
                         if(driverTipInteractor != null) {
 							driverTipInteractor.dismissDialog();
@@ -8090,6 +8473,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             centreLocationRl.setVisibility(View.GONE);
         }
     }
+
     private void hideCenterPickupPin(){
         centreLocationRl.setVisibility(View.GONE);
         if (currentLocationMarker != null) {
@@ -8268,6 +8652,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
 
+                                // TODO  if() delete the taxi one And unComment the bikeRental one
+
+                                if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                                    nameValuePairs.put("qr_code", qrCode);
+                                    nameValuePairs.put("ride_type", String.valueOf(RideTypeValue.BIKE_RENTAL.getOrdinal()));
+                                    nameValuePairs.put("qr_code_details",qrCodeDetails);
+                                }
+                                nameValuePairs.put("is_bluetooth_tracker",""+Data.autoData.getBluetoothEnabled());
+
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
                                 try {
                                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -8329,6 +8722,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                             int flag = jObj.getInt("flag");
                                             if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
+                                                final int lockStatus = jObj.getInt("gps_lock_status");
+                                                if(lockStatus==3){
+                                                    smartLockObj.downDevice();
+                                                }
                                                 Log.e("ASSIGNING_DRIVERS log", "=" + log);
                                                 final String start_time = jObj.getString("start_time");
                                                 if (executionTime < 0) {
@@ -9769,6 +10166,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onPlaceClick(SearchResult autoCompleteSearchResult) {
+        Log.d("RentalStationClick" , " onPlaceClick");
+
         if (PassengerScreenMode.P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
             if(scheduleRideOpen){
@@ -10154,6 +10553,32 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         showPoolInforBar(false);
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
+
+        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            if (textViewDestSearch.getText().toString().isEmpty()
+                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.enter_destination))
+                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.destination_required))
+                    || oldRideType == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+
+            }
+            else
+            {
+                imageViewDropCross.performClick();
+
+            }
+        }
+
+        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                    RideTypeValue.BIKE_RENTAL.getOrdinal())
+        {
+            damageReportButton.setVisibility(View.GONE);
+        }
+        else
+        {
+            damageReportButton.setVisibility(View.GONE);
+        }
+
         return changed;
     }
 
@@ -10679,7 +11104,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else {
                 destinationRequiredShake();
             }
-        } else {
+        }
+
+        else if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            openBikeRentalScan();
+        }
+
+        else {
+
             if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
                     .getRegionSelected().getDestinationMandatory() == 1) {
                 destinationRequiredShake();
@@ -10708,6 +11141,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 }
             }
+        }
+    }
+
+    public void openBikeRentalScan() {
+        if (Data.autoData.getDropLatLng() == null && getSlidingBottomPanel().getRequestRideOptionsFragment()
+                .getRegionSelected().getDestinationMandatory() == 1) {
+            destinationRequiredShake();
+        }
+        else {
+            //old functions as it is
+            specialPickupScreenOpened = false;
+            removeSpecialPickupMarkers();
+            rlSpecialPickup.setVisibility(View.GONE);
+            updateTopBar();
+
+            InstructionDialog.showHelpDialog(HomeActivity.this);
         }
     }
 
@@ -10885,6 +11334,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 String message = intent.getStringExtra(KEY_MESSAGE);
                                 Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
                                 openPaytmRechargeDialog();
+                            }else if (PushFlags.UNLOCK_BLE_DEVICE.getOrdinal() == flag){
+                                smartLockObj.downDevice();
                             } else if (PushFlags.CHAT_MESSAGE.getOrdinal() == flag) {
                                 tvChatCount.setVisibility(View.VISIBLE);
                                 tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
@@ -10917,7 +11368,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void updateBidsView() {
         bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
-        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
+//        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
+
+
+        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+                RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.booking_a_bike : R.string.tap_a_bid);
+        } else {
+            textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
+        }
+
+
         long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
         if (diff <= 0) {
             getHandler().removeCallbacks(runnableBidTimer);
@@ -11411,6 +11872,196 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return ssb;
     }
 
+
+    private void updateLockStatusApi(final GpsLockStatus gpsLockStatus) {
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_LOCK_STATUS, String.valueOf(gpsLockStatus.getOrdinal()));
+        params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
+
+        rentalEndRideLayout.setVisibility(View.VISIBLE);
+        Log.i(TAG, String.valueOf(params));
+
+            new ApiCommon<>(this).showLoader(false).putAccessToken(true)
+                    .execute(params, ApiName.RENTALS_UPDATE_LOCK_STATUS, new APICommonCallback<FeedCommonResponse>() {
+                        @Override
+                        public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                            rentalEndRideLayout.setVisibility(View.GONE);
+                            Log.d("HomeActivityRental"," Flag Update Lock Status Success " + String.valueOf(flag));
+                            if(Data.autoData.getBluetoothEnabled()==1){
+                                if(gpsLockStatus==GpsLockStatus.REQ_UNLOCK){
+                                    smartLockObj.downDevice();
+                                }else {
+                                    smartLockObj.upDevice();
+                                }
+                            }
+                            switchRentalInRideUI(gpsLockStatus);
+                            rentalInRideLayout.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    apiGetGpsLockStatusAP(Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
+                                }
+                            }, 2000);
+                        }
+
+                        @Override
+                        public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                            Log.d("HomeActivityRental"," Flag Update Lock Status Error " + String.valueOf(flag));
+                            rentalEndRideLayout.setVisibility(View.GONE);
+                            return false;
+                        }
+                    });
+
+    }
+
+
+    private void apiGetGpsLockStatusRH(final int gpsLockStatusOld){
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
+        new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true).showLoader(false)
+                .execute(params, ApiName.RENTALS_GET_LOCK_STATUS, new APICommonCallback<GetLockStatusResponse>() {
+                    @Override
+                    public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
+                        if(feedCommonResponse.getGpsLockStatus() != -1) {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
+                        } else if(feedCommonResponse.getGpsLockStatus()==GpsLockStatus.END_RIDE_LOCK.getOrdinal()){
+                            if(Data.autoData.getBluetoothEnabled()==1){
+                                smartLockObj.disconnectDevice();
+                            }
+                        }else{
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatusOld);
+                        }
+                        rentalStateUIHandling(passengerScreenMode);
+                    }
+
+                    @Override
+                    public boolean onError(GetLockStatusResponse feedCommonResponse, String message, int flag) {
+                        return true;
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        if(pollingGetGPSLockStatus) {
+                            getHandler().postDelayed(runnableGetGPSLockStatus, Prefs.with(HomeActivity.this).getLong(Constants.KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, 30000));
+                        }
+                    }
+                });
+    }
+
+    private void apiGetGpsLockStatusAP(final int gpsLockStatusOld){
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
+        new ApiCommon<GetLockStatusResponse>(HomeActivity.this).putAccessToken(true).showLoader(false)
+                .execute(params, ApiName.RENTALS_GET_LOCK_STATUS, new APICommonCallback<GetLockStatusResponse>() {
+                    @Override
+                    public void onSuccess(GetLockStatusResponse feedCommonResponse, String message, int flag) {
+                        rentalEndRideLayout.setVisibility(View.GONE);
+                        if(feedCommonResponse.getGpsLockStatus() != -1) {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
+                        } else {
+                            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatusOld);
+                        }
+                        rentalStateUIHandling(passengerScreenMode);
+                    }
+
+                    @Override
+                    public boolean onError(GetLockStatusResponse feedCommonResponse, String message, int flag) {
+                            if(flag == ApiResponseFlags.ACTION_FAILED.getOrdinal()
+                                    && gpsLockStatusOld != GpsLockStatus.LOCK.getOrdinal()) {
+                                Data.autoData.getAssignedDriverInfo().setGpsLockStatus(GpsLockStatus.UNLOCK.getOrdinal());
+                                rentalStateUIHandling(passengerScreenMode);
+                                rentalInRideLayout.postDelayed(() -> {
+                                    dialogRentalLock(HomeActivity.this);
+
+                                }, 200);
+                                return true;
+                            } else {
+                                return false;
+                            }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                    }
+                });
+    }
+
+
+    private boolean pollingGetGPSLockStatus = false;
+    private Runnable runnableGetGPSLockStatus = new Runnable() {
+        @Override
+        public void run() {
+            if(inRideCheck() && Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
+                apiGetGpsLockStatusRH(Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
+            }
+        }
+    };
+
+    private void startPollingGetGPSLockStatus(){
+        getHandler().removeCallbacks(runnableGetGPSLockStatus);
+        pollingGetGPSLockStatus = true;
+        getHandler().postDelayed(runnableGetGPSLockStatus, 200);
+    }
+
+    private void cancelPollingGetGPSLockStatus(){
+        pollingGetGPSLockStatus = false;
+        getHandler().removeCallbacks(runnableGetGPSLockStatus);
+    }
+
+    private void rentalStateUIHandling(PassengerScreenMode mode){
+        if(mode == PassengerScreenMode.P_REQUEST_FINAL || mode == PassengerScreenMode.P_DRIVER_ARRIVED) {
+            if (Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                rentalInRideLayout.setVisibility(View.VISIBLE);
+                requestFinalLayout.setVisibility(View.GONE);
+            } else {
+                rentalInRideLayout.setVisibility(View.GONE);
+                requestFinalLayout.setVisibility(View.VISIBLE);
+            }
+            rentalEndRideLayout.setVisibility(View.GONE);
+        } else if(mode == PassengerScreenMode.P_IN_RIDE) {
+            if (Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                int gpsLockStatus = Data.autoData.getAssignedDriverInfo().getGpsLockStatus();
+                requestFinalLayout.setVisibility(View.GONE);
+                if (gpsLockStatus == GpsLockStatus.REQ_LOCK.getOrdinal()
+                        || gpsLockStatus == GpsLockStatus.REQ_UNLOCK.getOrdinal()
+                        || gpsLockStatus == GpsLockStatus.REQ_END_RIDE_LOCK.getOrdinal()) {
+                    rentalEndRideLayout.setVisibility(View.VISIBLE);
+                    rentalInRideLayout.setVisibility(View.GONE);
+                    endRideJugnooAnimation.setVisibility(View.VISIBLE);
+//                    if (endRideJugnooAnimation instanceof ImageView) {
+//                        rentalJugnooAnimation.stop();
+//                        rentalJugnooAnimation.start();
+//                    }
+                    if (gpsLockStatus == GpsLockStatus.REQ_LOCK.getOrdinal()) {
+                        textViewEndRide.setText(R.string.locking_ride);
+                    } else if (gpsLockStatus == GpsLockStatus.REQ_UNLOCK.getOrdinal()) {
+                        textViewEndRide.setText(R.string.unlocking_ride);
+                    } else if (gpsLockStatus == GpsLockStatus.REQ_END_RIDE_LOCK.getOrdinal()) {
+                        textViewEndRide.setText(R.string.ending_ride);
+                    }
+                } else {
+//                    rentalJugnooAnimation.stop();
+                    rentalEndRideLayout.setVisibility(View.GONE);
+                    rentalInRideLayout.setVisibility(View.VISIBLE);
+                    updateGpsLockStatus(gpsLockStatus);
+                }
+            } else {
+//                rentalJugnooAnimation.stop();
+                rentalEndRideLayout.setVisibility(View.GONE);
+                rentalInRideLayout.setVisibility(View.GONE);
+                requestFinalLayout.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+
+
+
+
+
+
     @Override
     public void callRentalOutstationRequestRide(@Nullable ServiceType serviceType, @NotNull Region region,
                                                 @Nullable Package selectedPackage, @NotNull SearchResult searchResultPickup,
@@ -11451,4 +12102,115 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvAdvanceBookings.setVisibility(View.VISIBLE);
     }
     }
+
+
+    public void switchRentalInRideUI(GpsLockStatus gpsLockStatus) {
+        if(inRideCheck() && Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
+            Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatus.getOrdinal());
+            rentalStateUIHandling(passengerScreenMode);
+        }
+    }
+
+    private void openRentalStationList() {
+        dialogRentalStations = new Dialog(HomeActivity.this);
+        dialogRentalStations.setTitle(R.string.drop_stations);
+        dialogRentalStations.setContentView(R.layout.layout_rental_destination);
+        RecyclerView recyclerView = dialogRentalStations.findViewById(R.id.recycler_view_rental_station);
+
+        LinearLayoutManager linearLayoutManagerRentalDestination = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManagerRentalDestination);
+
+        List<Region> region = Data.autoData.getRegions();
+        List<Region.Stations> stations = new ArrayList<>();
+
+        for (int i = 0; i < region.size(); i++) {
+            if (region.get(i).getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                stations = region.get(i).getStations();
+            }
+        }
+
+        if (stations.size() <= 0) {
+            Utils.showToast(HomeActivity.this, getString(R.string.no_nearby_drop_off_stations));
+        } else {
+            RentalStationAdapter adapter = new RentalStationAdapter(HomeActivity.this, stations);
+            recyclerView.setAdapter(adapter);
+
+            Objects.requireNonNull(dialogRentalStations.getWindow()).setGravity(Gravity.CENTER);
+            Objects.requireNonNull(dialogRentalStations.getWindow()).setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT);
+            dialogRentalStations.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialogRentalStations.show();
+        }
+    }
+
+    @Override
+    public void onStationClick(SearchResult autoCompleteSearchResult){
+       Log.d("RentalStationClick" , " OnStationClick");
+        dialogRentalStations.dismiss();
+        placeSearchMode = PlaceSearchListFragment.PlaceSearchMode.DROP;
+
+        onPlaceClick(autoCompleteSearchResult);
+        onPlaceSearchPre();
+        onPlaceSearchPost(autoCompleteSearchResult, placeSearchMode);
+
+        if(checkFareEstimate) {
+            openFareEstimate();
+        }
+
+    }
+
+    private boolean inRideCheck(){
+        return (passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
+                || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED
+                || passengerScreenMode == PassengerScreenMode.P_IN_RIDE);
+    }
+
+    @Override
+    public void updateGpsLockStatus(int gpsLockStatus) {
+        buttonEndRide.setVisibility(View.VISIBLE);
+
+        if(inRideCheck()
+                && (gpsLockStatus == GpsLockStatus.LOCK.getOrdinal()
+                || gpsLockStatus == GpsLockStatus.REQ_UNLOCK.getOrdinal()
+                || gpsLockStatus == GpsLockStatus.UNLOCK_FAILED.getOrdinal())) {
+            buttonUnlockRide.setVisibility(View.VISIBLE);
+            buttonLockRide.setVisibility(View.GONE);
+        } else {
+            buttonLockRide.setVisibility(View.VISIBLE);
+            buttonUnlockRide.setVisibility(View.GONE);
+        }
+
+    }
+
+
+    Dialog rentalLockDialog;
+    private void dialogRentalLock(Activity activity) {
+        try {
+            rentalLockDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+            rentalLockDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+            rentalLockDialog.setContentView(R.layout.dialog_rentals_lock);
+
+            RelativeLayout relative = (RelativeLayout) rentalLockDialog.findViewById(R.id.relative);
+
+            WindowManager.LayoutParams layoutParams = rentalLockDialog.getWindow().getAttributes();
+            layoutParams.dimAmount = 0.6f;
+            rentalLockDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            rentalLockDialog.setCancelable(true);
+            rentalLockDialog.setCanceledOnTouchOutside(true);
+
+
+            Button buttonOk = rentalLockDialog.findViewById(R.id.bOk);
+            ImageView imageViewClose = rentalLockDialog.findViewById(R.id.ivClose);
+
+            imageViewClose.setOnClickListener(v -> rentalLockDialog.dismiss());
+            buttonOk.setOnClickListener(v -> rentalLockDialog.dismiss());
+            relative.setOnClickListener(v -> rentalLockDialog.dismiss());
+
+            rentalLockDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
+

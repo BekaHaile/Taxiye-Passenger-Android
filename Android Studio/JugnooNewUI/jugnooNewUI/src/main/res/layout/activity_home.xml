@@ -149,6 +149,20 @@
             <!-- request final layout -->
             <include layout="@layout/layout_home_activity_request_final" />
 
+            <!--rental in ride layout -->
+            <include layout="@layout/layout_rental_in_ride"/>
+
+            <!-- rental end ride layout -->
+            <include layout="@layout/layout_rental_end_ride"
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_alignParentBottom="true"
+                />
+
+            <!-- rental destination layout -->
+            <!--<include-->
+                <!--layout="@layout/layout_rental_destination"/>-->
+
             <!-- end ride layout -->
             <include layout="@layout/layout_ride_summary_new" />
 

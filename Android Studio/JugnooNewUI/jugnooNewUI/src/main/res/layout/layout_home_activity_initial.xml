@@ -27,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
+        android:id="@+id/ll"
         android:background="@color/transparent"
         android:orientation="vertical">
 
@@ -211,8 +212,19 @@
 
         </RelativeLayout>
 
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/damage_button"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/ll"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10px"
+        android:text="Damage Report"
+        android:tag="@string/dont_touch_me"
+        android:visibility="gone"/>
+
 
     <LinearLayout
         android:id="@+id/linearLayoutRequestMain"
