@@ -77,5 +77,10 @@
     <integer name="customer_show_include_toll_in_summary">1</integer>
     <string name="label_add_store_text"><b>Suggest a missing store to %s</b></string>
     <integer name="customer_request_ride_fast_interval">1</integer>
+    <!--Save location -->
+    <bool name="show_save_location_dialog">true</bool>
+
+    <!--marker animation-->
+    <bool name="show_bouncing_marker">true</bool>
 
 </resources>
