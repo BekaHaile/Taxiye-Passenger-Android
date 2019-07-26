@@ -47,6 +47,7 @@ public class SmartLockController {
         public int count = 0;
         public String address;
     }
+    private boolean isPaired =false;
 
     private DataClass m_myData = new DataClass();
 
@@ -196,7 +197,7 @@ public class SmartLockController {
 
     }
 
-    private void coneectDevice(){
+    private void conectDevice(){
         if (m_myData.device == null) {
             dispNotFindDeviceToast();
             return;
@@ -299,7 +300,7 @@ public class SmartLockController {
                 }
                 case 6: {
                     mSmartlockCallbacks.makePair(false);
-                    coneectDevice();
+                    conectDevice();
                     break;
                 }
                 case 8: {
@@ -325,8 +326,7 @@ public class SmartLockController {
 
                 @Override
                 public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-
-
+                   initializeHandler();
                     if (device.getAddress().replace(":", "").equals(mac)) {
                         String nowAddress = device.getAddress();
                         if (dialog!=null&&dialog.isShowing()) {
@@ -339,7 +339,8 @@ public class SmartLockController {
                         m_myData.count = 0;
                         m_myHandler.sendEmptyMessage(3);
                         mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                        coneectDevice();
+                        isPaired = true;
+                        conectDevice();
 
                     }
                     Log.e("TAG","DISCOVERABLE devices FOUND"+device.getAddress().replace(":", ""));
@@ -347,6 +348,20 @@ public class SmartLockController {
                 }
 
             };
+
+    private void initializeHandler() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (dialog!=null&&dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                mSmartlockCallbacks.unableToPair(isPaired);
+            }
+        }, 5000);
+
+    }
 
 
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {

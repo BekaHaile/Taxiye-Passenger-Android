@@ -5775,7 +5775,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Log.e(TAG, "device token" + macId);
             }
             if (isDeviceFound==false){
-                DialogPopup.alertPopup(HomeActivity.this, "", "You are not authorised to use this device");
+               // DialogPopup.alertPopup(HomeActivity.this, "", "You are not authorised to use this device");
+                Log.e("ble data", "device not found in api data , switched to server flow ");
+                Data.autoData.setBluetoothEnabled(0);
+                requestRideClick();
+
             }
         }else{
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -5843,6 +5847,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent,REQ_BLE_ENABLE);
         }
+
+        @Override
+        public void unableToPair(boolean status) {
+          if(status==false){
+              Log.e("ble data", "unable to pair with device going with server flow");
+              Data.autoData.setBluetoothEnabled(0);
+              requestRideClick();
+          }
+        }
+
+
+
     });
 
     private void callUpdateServerApi(int lockStatus) {
@@ -10572,7 +10588,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
                     RideTypeValue.BIKE_RENTAL.getOrdinal())
         {
-            damageReportButton.setVisibility(View.GONE);
+            damageReportButton.setVisibility(View.VISIBLE);
         }
         else
         {
@@ -10676,6 +10692,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             slidingBottomPanel.getRequestRideOptionsFragment()
                     .updateBottomMultipleView(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType());
+
 
             getHandler().postDelayed(new Runnable() {
                 @Override
@@ -11891,7 +11908,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if(Data.autoData.getBluetoothEnabled()==1){
                                 if(gpsLockStatus==GpsLockStatus.REQ_UNLOCK){
                                     smartLockObj.downDevice();
-                                }else {
+                                }else if(gpsLockStatus==GpsLockStatus.END_RIDE_LOCK){
                                     smartLockObj.upDevice();
                                 }
                             }
