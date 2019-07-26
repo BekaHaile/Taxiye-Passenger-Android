@@ -190,11 +190,12 @@ public class SmartLockController {
 
 
     private void dispNotFindDeviceToast() {
-        Toast toast = Toast.makeText(context, "No equipment",
-                Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-
+        if(context!=null) {
+            Toast toast = Toast.makeText(context, "No equipment",
+                    Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     private void conectDevice(){
@@ -234,9 +235,11 @@ public class SmartLockController {
         dialog.setMessage("Pairing with device, please wait.");
         dialog.show();
         mBluetoothAdapter.startLeScan(mLeScanCallback);
+        initializeHandler();
     }
 
     public void downDevice(){
+        Log.e("down device", "called");
         if (m_myData.device == null) {
             dispNotFindDeviceToast();
             return;
@@ -278,10 +281,10 @@ public class SmartLockController {
                     m_myData.count++;
                     break;
                 } case 2: {
-                   /* Toast toast = Toast.makeText(context, mes.obj.toString(),
+                    Toast toast = Toast.makeText(context, mes.obj.toString(),
                             Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();*/
+                    toast.show();
                     break;
                 }
 
@@ -305,11 +308,13 @@ public class SmartLockController {
                 }
                 case 8: {
                 //    str_outhex.setText((String) mes.obj);
+                    Log.e("device data return",(String) mes.obj);
                     break;
                 }
 
                 case 9: {
-                  //  str_inhex.setText((String) mes.obj);
+                    //str_inhex.setText((String) mes.obj);
+                  Log.e("device data",(String) mes.obj);
                     break;
                 }
                 default:
@@ -326,7 +331,6 @@ public class SmartLockController {
 
                 @Override
                 public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                   initializeHandler();
                     if (device.getAddress().replace(":", "").equals(mac)) {
                         String nowAddress = device.getAddress();
                         if (dialog!=null&&dialog.isShowing()) {
@@ -459,6 +463,7 @@ public class SmartLockController {
                     } else if (mingwen[3] == 0x01)  {  //You failed
                         Message msg = m_myHandler.obtainMessage(2, 1, 1,
                                 "Unable to lock Device");
+                        Log.e("device data","unable to unlock device");
                         m_myHandler.sendMessage(msg);
                         mSmartlockCallbacks.updateStatus(1);
                     }

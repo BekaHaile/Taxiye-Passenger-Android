@@ -225,6 +225,7 @@ import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
+import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
@@ -4665,8 +4666,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void relativeLayoutAssigningDropLocationParentSetVisibility(int visiblity) {
         if (View.VISIBLE == visiblity) {
+
             fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
             relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if (frag == null || frag.isRemoving()) {
                 Bundle bundle = new Bundle();
@@ -4804,13 +4807,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
                     if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
 
-                        relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+                        if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                            relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+                        } else {
+                            relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+                        }
                         try {
                             Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
                             topInAnimation.setAnimationListener(new Animation.AnimationListener() {
                                 @Override
                                 public void onAnimationStart(Animation animation) {
-                                    relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+                                    if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                                        relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+                                    } else {
+                                        relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+                                    }
                                 }
 
                                 @Override
@@ -4841,7 +4852,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else {
                 relativeLayoutDestinationHelp.setVisibility(View.GONE);
                 if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
-                    relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+                    if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                        relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+                    } else {
+                        relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+                    }
                     try {
                         Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
                         relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
@@ -5543,22 +5558,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 openChatScreen();
                 break;
             case R.id.buttonEndRide: // 8
+/*
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, getString(R.string.please_lock_the_bike_and_proceed), v1 -> {
-                    textViewEndRide.setText(R.string.ending_ride);
-                    updateLockStatusApi(GpsLockStatus.REQ_END_RIDE_LOCK);
 
                 });
+*/
+                textViewEndRide.setText(R.string.ending_ride);
+                updateLockStatusApi(GpsLockStatus.REQ_END_RIDE_LOCK);
+
                 break;
             case R.id.buttonUnlockRide: // 6
                 textViewEndRide.setText(R.string.unlocking_ride);
                 updateLockStatusApi(GpsLockStatus.REQ_UNLOCK);
                 break;
             case R.id.buttonLockRide: // 4
+/*
                 DialogPopup.alertPopupTwoButtonsWithListeners(this, getString(R.string.please_lock_the_bike_and_proceed), v1 -> {
-                    textViewEndRide.setText(R.string.locking_ride);
-                    updateLockStatusApi(GpsLockStatus.REQ_LOCK);
 
                 });
+*/
+                textViewEndRide.setText(R.string.locking_ride);
+                updateLockStatusApi(GpsLockStatus.REQ_LOCK);
+
                 break;
         }
     }
@@ -5837,8 +5858,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         public void updateStatus(int status) {
             //0 for lock device
             //1 for device unlocked
-            Log.e(TAG,"bluetooth device unlocked"+status);
-            callUpdateServerApi(status);
+            Log.e(TAG, "bluetooth device unlocked" + status);
+            if (status == 3) {
+                dialogRentalLock(HomeActivity.this);
+            } else {
+                callUpdateServerApi(status);
+            }
         }
 
         @Override
@@ -5856,7 +5881,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
               requestRideClick();
           }
         }
-
 
 
     });
@@ -10499,12 +10523,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public boolean setVehicleTypeSelected(int position, boolean userClicked, boolean firstTime) {
         boolean changed = false;
+
         int oldVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         int oldOperatorId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId();
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+
+        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()== RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                relativeLayoutDestSearchBar.setVisibility(View.GONE);
+        }else{
+            relativeLayoutDestSearchBar.setVisibility(View.VISIBLE);
+        }
         if(confirmedScreenOpened) {
             pickupLocationEtaMarker();
         }
@@ -11178,6 +11209,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void destinationRequiredShake() {
+        Log.e("action","assiging driver");
         if (slidingBottomPanel.getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED) {
             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         }
@@ -11801,6 +11833,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Data.autoData.setSelectedPackage(null);
         isScheduleRideEnabled = serviceType.getScheduleAvailable() == 1;
         setScheduleIcon();
+        Log.e("onServiceTypeSelected",""+getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType());
+        if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            relativeLayoutDestSearchBar.setVisibility(View.GONE);
+        }
         if (confirmedScreenOpened) {
             confirmedScreenOpened = false;
             isFromConfirmToOther = true;
@@ -11825,6 +11861,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         setServiceTypeUI();
         mNotes = "";
         slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
+
         setServiceTypeTextIconsChanges(serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()));
         showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
     }
@@ -11908,7 +11945,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if(Data.autoData.getBluetoothEnabled()==1){
                                 if(gpsLockStatus==GpsLockStatus.REQ_UNLOCK){
                                     smartLockObj.downDevice();
-                                }else if(gpsLockStatus==GpsLockStatus.END_RIDE_LOCK){
+                                }else if(gpsLockStatus==GpsLockStatus.END_RIDE_LOCK) {
                                     smartLockObj.upDevice();
                                 }
                             }

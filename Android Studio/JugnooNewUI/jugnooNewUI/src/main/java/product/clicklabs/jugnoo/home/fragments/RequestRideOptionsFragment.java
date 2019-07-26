@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponsDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
+import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -359,6 +361,8 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
 
     public void updateRegionsUI(){
+
+
         try{
             if(Data.autoData.getRegions().size() > 1){
                 boolean matched = false;
@@ -375,6 +379,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 if(!matched){
                     regionSelected = Data.autoData.getRegions().get(0);
                 }
+
                 vehiclesTabAdapter.notifyDataSetChanged();
                 activity.updateFareEstimateHoverButton();
                 updateSupplyUI(Data.autoData.getRegions().size());
@@ -386,6 +391,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             } else{
                 activity.forceFarAwayCity();
             }
+
             activity.updateFareEstimateHoverButton();
         } catch(Exception e){
         }
