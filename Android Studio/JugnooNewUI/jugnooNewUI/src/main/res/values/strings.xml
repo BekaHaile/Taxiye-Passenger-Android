@@ -2043,8 +2043,8 @@
     <string name="enter_number">Enter Number</string>
     <string name="info_message_qr">Place a QR code inside the rectangle to scan it.</string>
 
-    <string name="turn_flashlight_off">Turn Flashlight Off</string>
-    <string name="turn_flashlight_on">Turn Flashlight On</string>
+    <string name="turn_flashlight_off">Flashlight Off</string>
+    <string name="turn_flashlight_on">Flashlight On</string>
 
 
     <!-- Enter QR Number Activity -->

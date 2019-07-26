@@ -4827,7 +4827,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     relativeLayoutAssigningDropLocationClick.clearAnimation();
                                     if (Data.userData != null && (!Data.autoData.getDestinationHelpText().equalsIgnoreCase(""))) {
                                         textViewDestHelp.setText(Data.autoData.getDestinationHelpText());
-                                        relativeLayoutDestinationHelp.setVisibility(View.VISIBLE);
+                                        if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                                            relativeLayoutDestinationHelp.setVisibility(View.GONE);
+                                        } else {
+                                            relativeLayoutDestinationHelp.setVisibility(View.VISIBLE);
+                                        }
                                     }
                                 }
 
