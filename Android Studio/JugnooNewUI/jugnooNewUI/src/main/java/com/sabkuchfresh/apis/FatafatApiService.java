@@ -4,6 +4,7 @@ import com.sabkuchfresh.feed.models.ContactResponseModel;
 import com.sabkuchfresh.feed.models.FetchOrderStatusResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
+import com.sabkuchfresh.retrofit.model.feed.NearbyDriversResponse;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
 
 import java.util.Map;
@@ -72,5 +73,8 @@ public interface FatafatApiService {
     @POST("/submit_feedback")
     void orderFeedback(@FieldMap Map<String, String> params,
                        Callback<OrderHistoryResponse> callback);
+
+    @GET("/nearby_agents")
+    void nearbyAgents(@QueryMap Map<String, String> params, Callback<NearbyDriversResponse> callback);
 
 }

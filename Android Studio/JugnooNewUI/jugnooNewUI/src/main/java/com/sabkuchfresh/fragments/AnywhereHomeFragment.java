@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
@@ -41,6 +42,7 @@ import com.fugu.FuguConfig;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.FatafatImageAdapter;
+import com.sabkuchfresh.adapters.VehicleTypeAdapterFeed;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -53,13 +55,18 @@ import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
 import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
+import com.sabkuchfresh.retrofit.model.feed.NearbyDriversResponse;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
+import com.sabkuchfresh.retrofit.model.feed.VehicleInfo;
 import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -77,6 +84,8 @@ import product.clicklabs.jugnoo.retrofit.model.FatafatUploadImageInfo;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.RetrofitError;
@@ -135,8 +144,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     TextView tvPromoError;
     @BindView(R.id.rvPromo)
     RelativeLayout relativeLayout;
-    @BindView(R.id.cv_promo)
-    CardView cvPromo;
     @BindView(R.id.sv_anywhere)
     ScrollView svAnywhere;
     @BindView(R.id.cvUploadImages)
@@ -149,6 +156,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     ImageView ivUploadImage;
     @BindView(R.id.svImages)
     HorizontalScrollView svImages;
+    @BindView(R.id.tvOffer) TextView tvOffer;
+    @BindView(R.id.rvVehicles) RecyclerView rvVehicles;
 
     private ForegroundColorSpan textHintColorSpan;
 
@@ -175,6 +184,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private TimePickerFragment timePickerFragment;
     private FatafatTutorialDialog mFatafatTutorialDialog;
     private DynamicDeliveryResponse.ReferalCode currentPromoApplied;
+    private VehicleTypeAdapterFeed vehicleTypeAdapterFeed;
+    private int currentVehicleTypePos = -1;
+    private boolean isPickUpSet = false;
+    private int vehicleType ;
+    private int checkCount = 0;
+    private List<VehicleInfo> vehicleInfoList;
     private TimePickerDialog.OnTimeSetListener onTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -264,6 +279,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_delivery_address));
                         throw new Exception();
                     }
+                    if(vehicleInfoList == null || vehicleInfoList.isEmpty() || currentVehicleTypePos == -1 || vehicleType == 2217) {
+                        Utils.showToast(activity, activity.getString(R.string.error_vehicle_type));
+                        throw new Exception();
+                    }
+
                     if (!isAsapSelected) {
                         if (TextUtils.isEmpty(selectedDate)) {
                             Utils.showToast(activity, activity.getString(R.string.please_select_date));
@@ -330,6 +350,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 }
             }
         };
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity,LinearLayoutManager.HORIZONTAL,false);
+
+        rvVehicles.setVisibility(View.GONE);
+        rvVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
+                LinearLayoutManager.HORIZONTAL, false));
+        rvVehicles.setItemAnimator(new DefaultItemAnimator());
 
 
         mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
@@ -414,7 +440,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         switchDeliveryTime.setChecked(true);
         fetchDynamicDeliveryCharges(false, false, false);
         tvPromoLabel.setVisibility(Data.getFeedData()!=null && Data.getFeedData().showPromoBox() ? View.VISIBLE : View.GONE);
-        cvPromo.setVisibility(Data.getFeedData()!=null && Data.getFeedData().showPromoBox() ? View.VISIBLE : View.GONE);
         promoBoxEnabled =    Data.getFeedData()!=null && Data.getFeedData().showPromoBox();
         edtPromo.addTextChangedListener(new PromoTextWatcher(tvPromoError, edtPromo));
         tvPromoError.setVisibility(View.GONE);
@@ -467,7 +492,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             textViewToSet = tvPickupAddress;
             imageViewToSet = ivPickUpAddressType;
             pickUpAddress = searchResult;
-
+            if(searchResult != null) {
+                fetchDrivers();
+                isPickUpSet = true;
+            }
         }
 
 
@@ -760,6 +788,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.addPart(Constants.CATEGORY, new TypedString("1"));
             if(orderViaChatData!=null)params.addPart(Constants.KEY_RESTAURANT_ID,new TypedString(String.valueOf(orderViaChatData.getRestaurantId())));
         }
+        if(vehicleInfoList != null && !vehicleInfoList.isEmpty() && currentVehicleTypePos != -1 && vehicleType != 2217) {
+            params.addPart(Constants.KEY_VEHICLE_TYPE, new TypedString(""+vehicleType));
+        }
+
 
         params.addPart(Constants.KEY_TO_ADDRESS, new TypedString(deliveryAddress.getAddress()));
         params.addPart(Constants.KEY_TO_LATITUDE, new TypedString(String.valueOf(deliveryAddress.getLatitude())));
@@ -894,6 +926,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         paySlider.setSlideInitial();
         selectedTime = null;
         selectedDate = null;
+        currentVehicleTypePos = -1;
+        vehicleInfoList = null;
+        vehicleTypeAdapterFeed = null;
+        vehicleType = 2217;
+        isPickUpSet = false;
+        checkCount = 0;
         edtTaskDescription.setText(null);
         switchDeliveryTime.setChecked(true);
 //        rgTimeSlot.check(R.id.rb_asap);
@@ -1143,6 +1181,73 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                     }
                 }, true, false);
+    }
+//    private void updateEstimateCost() {
+//        double newPrice = anywhereDeliveryChargesDialog.addDiscount(selectedPromo == null || selectedPromo.getDiscount() == null ? 0 : selectedPromo.getDiscount());
+//        if (selectedPromo == null) {
+//            tvOffer.setText(R.string.offers_and_coupons);
+//        } else {
+//            tvOffer.setText(getString(R.string.offers_and_coupons_applied_colon, selectedPromo.getTitle()));
+//        }
+//        labelDeliveryValue.setText(String.format(Locale.US, "%s%.2f", activity.getString(R.string.rupee), newPrice));
+//    }
+    private void fetchDrivers() {
+        HashMap<String, String> params = new HashMap<>();
+
+        if (pickUpAddress != null) {
+            params.put(Constants.KEY_LATITUDE, String.valueOf(pickUpAddress.getLatitude()));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(pickUpAddress.getLongitude()));
+        } else {
+            params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+        }
+
+        new HomeUtil().putDefaultParams(params);
+
+        new ApiCommon<NearbyDriversResponse>(activity).showLoader(false).execute(params, ApiName.NEARBY_AGENTS, new APICommonCallback<NearbyDriversResponse>() {
+            @Override
+            public void onSuccess(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
+
+                vehicleInfoList = dynamicDeliveryResponse.getVehiclesInfoList();
+                currentVehicleTypePos = 0;
+                vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+                if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
+                    if (vehicleTypeAdapterFeed == null) {
+                        vehicleTypeAdapterFeed = new VehicleTypeAdapterFeed((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterFeed.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(final VehicleInfo item, final int pos) {
+                                currentVehicleTypePos = pos;
+                                vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+                            }
+                        });
+                    }
+                    if(isPickUpSet) {
+                        if(checkCount == 0) {
+                                rvVehicles.setVisibility(View.VISIBLE);
+                                rvVehicles.setAdapter(vehicleTypeAdapterFeed);
+                            checkCount++;
+                        }
+                        else {
+                                rvVehicles.setVisibility(View.VISIBLE);
+                                vehicleTypeAdapterFeed.updateList(vehicleInfoList);
+                        }
+                    }
+                }
+                else {
+                        rvVehicles.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public boolean onFailure(final RetrofitError error) {
+                return true;
+            }
+
+            @Override
+            public boolean onError(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
+                return true;
+            }
+        });
     }
 
 

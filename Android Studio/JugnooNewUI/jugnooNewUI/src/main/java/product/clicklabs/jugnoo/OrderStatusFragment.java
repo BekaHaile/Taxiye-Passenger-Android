@@ -52,7 +52,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import product.clicklabs.jugnoo.adapters.ImageWithTextAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.config.Config;
@@ -188,6 +192,14 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
      CardView cardFeedBillSummary;
     @BindView(R.id.llFeedExtraCharges)
      LinearLayout llFeedExtraCharges;
+    @BindView(R.id.btRepeatOrderFeed)
+    Button btRepeatOrderFeed;
+    @BindView(R.id.btRateOrder) Button btRateOrderFeed;
+    @BindView(R.id.rvFeedPickupImages) RecyclerView rvFeedPickupImages;
+    @BindView(R.id.rvFeedDeliveriesImages) RecyclerView rvFeedDeliveriesImages;
+    @BindView(R.id.cardDeliveriesFeedPhotos) CardView cardDeliveriesFeedPhotos;
+    @BindView(R.id.cardPickupFeedPhotos) CardView cardPickupFeedPhotos;
+
 
 
 
@@ -595,6 +607,66 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             cardFeedBillSummary.setVisibility(View.GONE);
         }
 
+//todo delivery
+
+        if (datum1.getImages() != null) {
+            final HistoryResponse.OrderImageTypes images = datum1.getImages();
+
+            // pickup images
+            if(images.getPickupImages() != null && images.getPickupImages().size() > 0) {
+
+                ArrayList<FetchFeedbackResponse.ReviewImage> imageList = new ArrayList<>();
+
+                for (HistoryResponse.OrderImages image :images.getPickupImages()) {
+                    imageList.add(new FetchFeedbackResponse.ReviewImage(image.getImage(), image.getImage()));
+                }
+
+                setOrderImages(imageList, rvFeedPickupImages, images.getPickupImages());
+                cardPickupFeedPhotos.setVisibility(View.VISIBLE);
+            } else {
+                cardPickupFeedPhotos.setVisibility(View.GONE);
+            }
+
+            // delivery images
+
+            if(images.getDeliveryImages() != null && images.getDeliveryImages().size() > 0) {
+
+
+                ArrayList<FetchFeedbackResponse.ReviewImage> imageList = new ArrayList<>();
+
+                int deliveryId = images.getDeliveryImages().get(0).getDelivery_id();
+                int count = 1;
+
+                for (HistoryResponse.OrderImages image :images.getDeliveryImages()) {
+                    imageList.add(new FetchFeedbackResponse.ReviewImage(image.getImage(), image.getImage()));
+                    if (deliveryId != image.getDelivery_id()) {
+                        deliveryId = image.getDelivery_id();
+                        count++;
+                    }
+                    image.setDeliveryNo(count);
+                }
+
+                setOrderImages(imageList, rvFeedDeliveriesImages,images.getDeliveryImages());
+                cardDeliveriesFeedPhotos.setVisibility(View.VISIBLE);
+            } else {
+                cardDeliveriesFeedPhotos.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void setOrderImages(final ArrayList<FetchFeedbackResponse.ReviewImage> adapterImageList,
+                                final RecyclerView recyclerView, final ArrayList<HistoryResponse.OrderImages> imageList) {
+
+        if(recyclerView == null) return;
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(new ImageWithTextAdapter(imageList, new ImageWithTextAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(final HistoryResponse.OrderImages image, final int pos) {
+                ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(pos,adapterImageList);
+                dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+            }
+        }));
 
     }
 

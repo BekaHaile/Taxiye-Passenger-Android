@@ -311,6 +311,10 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case RENTALS_INSERT_DAMAGE_REPORT:
                 RestClient.getApiService().insertDamageReport(multipartTypedOutput, callback);
                 break;
+            case NEARBY_AGENTS:
+                RestClient.getFatafatApiService().nearbyAgents(params,callback);
+                break;
+
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

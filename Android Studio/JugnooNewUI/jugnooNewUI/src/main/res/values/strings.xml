@@ -2115,4 +2115,8 @@
     <string name="text_no_delivery_available">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="fatafat_text">Delivery</string>
 
+    <string name="pickup">Pickup</string>
+    <string name="rate_order">Rate Order</string>
+    <string name="offers_and_coupons">offers</string>
+    <string name="error_vehicle_type">Please choose proper vehicle type and pickup address before proceeding.</string>
 </resources>

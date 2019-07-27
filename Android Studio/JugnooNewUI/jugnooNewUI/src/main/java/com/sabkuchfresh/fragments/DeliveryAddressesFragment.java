@@ -559,6 +559,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
             getBottomSheetBehaviour().setBottomSheetCallback(null);
 
+            llSetAnywhere.setVisibility(View.GONE);
         } else {
             rootView.findViewById(R.id.divider_above_map).setVisibility(View.GONE);
             rootView.findViewById(R.id.divider_below_map).setVisibility(View.GONE);
