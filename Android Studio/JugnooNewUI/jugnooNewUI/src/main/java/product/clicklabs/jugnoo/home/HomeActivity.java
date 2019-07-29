@@ -10624,7 +10624,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
                     RideTypeValue.BIKE_RENTAL.getOrdinal())
         {
-            damageReportButton.setVisibility(View.VISIBLE);
+            damageReportButton.setVisibility(View.GONE);
         }
         else
         {
