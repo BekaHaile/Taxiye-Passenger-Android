@@ -61,8 +61,6 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -310,7 +308,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return feedHomeAddPostView;
     }
 
-    private GeoDataClient mGeoDataClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -335,7 +332,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             new ASSL(this, drawerLayout, 1134, 720, false);
             scale = getResources().getDisplayMetrics().density;
 
-            mGeoDataClient = Places.getGeoDataClient(this, null);
 
             relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 

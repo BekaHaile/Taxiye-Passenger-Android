@@ -28,7 +28,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,7 +45,6 @@ import kotlinx.coroutines.Job;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
-import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -235,7 +233,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		fragment.setArguments(bundle);
 		return fragment;
 	}
-	private GeoDataClient geoDataClient;
 	private int searchMode,searchModeClicked;
 
 	@Override
@@ -243,11 +240,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		super.onAttach(context);
 		try{
 			this.searchListActionsHandler = (SearchListAdapter.SearchListActionsHandler) context;
-			if(context instanceof FareEstimateActivity){
-				geoDataClient = ((FareEstimateActivity)context).getGeoDataClient();
-			} else {
-				geoDataClient = ((HomeActivity)context).getmGeoDataClient();
-			}
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -279,10 +271,18 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		ivLocationMarker = rootView.findViewById(R.id.ivLocationMarker);
 
+		if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+			ivLocationMarker.setImageResource(R.drawable.ic_bounce_pin);
+		} else {
+			ivLocationMarker.setImageResource(R.drawable.ic_delivery_address_map);
+		}
+
 		ivLocationMarker.setOnClickListener(view -> {
-			if(bottomSheetBehaviour.getState()==BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet)
-				fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target,false);
-			stopAnimation();
+			if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+				if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet)
+					fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false);
+				stopAnimation();
+			}
 		});
 
 		scrollViewSuggestions = (NestedScrollView) rootView.findViewById(R.id.scrollViewSuggestions);
@@ -327,7 +327,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		}
 
-		searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), geoDataClient, searchMode,
+		searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), searchMode,
 				searchAdapterListener, true,editTextsForAdapter);
 
 
@@ -794,8 +794,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						@Override
 						public void onMapUnsettled() {
 							mapSettledCanForward=false;
-//							startAnimation();
-//							setFetchedAddressToTextView("loading...", true, true);
+							if(!getResources().getBoolean(R.bool.show_bouncing_marker)) {
+								setFetchedAddressToTextView("loading...", true, true);
+							}
 							/*mapSettledCanForward = false;
 							searchResultNearPin = null;*/
 						}
@@ -807,9 +808,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 						@Override
 						public void onMapSettled() {
-//						if(bottomSheetBehaviour.getState()==BottomSheetBehavior.STATE_COLLAPSED)
-//						  fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target,false);
-//							autoCompleteResultClicked = false;
+							if (!getResources().getBoolean(R.bool.show_bouncing_marker)) {
+								if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED)
+									fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false);
+//								autoCompleteResultClicked = false;
+							}
 						}
 
 						@Override
@@ -958,10 +961,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
 			}
 			rlMarkerPin.setVisibility(View.VISIBLE);
-			startAnimation();
-//			if(googleMap != null) {
-//				fillAddressDetails(googleMap.getCameraPosition().target, false);
-//			}
+			if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+				startAnimation();
+			} else {
+				if(googleMap != null) {
+					fillAddressDetails(googleMap.getCameraPosition().target, false);
+				}
+			}
 			Utils.hideSoftKeyboard(activity,editTextSearch);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -969,11 +975,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 	private void startAnimation() {
-		setFetchedAddressToTextView(getString(R.string.tap_on_pin), true, true);
-		ivLocationMarker.clearAnimation();
-		final Animation anim = AnimationUtils.loadAnimation(activity, R.anim.bounce_view);
-		ivLocationMarker.startAnimation(anim);
-		isMarkerSet = false;
+		if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+			setFetchedAddressToTextView(getString(R.string.tap_on_pin), true, true);
+			ivLocationMarker.clearAnimation();
+			final Animation anim = AnimationUtils.loadAnimation(activity, R.anim.bounce_view);
+			ivLocationMarker.startAnimation(anim);
+			isMarkerSet = false;
+		}
 	}
 
 	private void stopAnimation() {

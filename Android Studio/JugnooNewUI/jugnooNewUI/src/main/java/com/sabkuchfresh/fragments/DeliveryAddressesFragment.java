@@ -23,8 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -131,7 +129,6 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
     private boolean autoCompleteResultClicked = false;
     private boolean canProceedWithUnsavedAddressMode;
     public static final String KEY_ARGS_PROCEED_WITHOUT_UNSAVED_ADDRESS = "key_args_proceed_without_unsaved_address";
-    private GeoDataClient geoDataClient;
 
     @OnClick(R.id.bMyLocation)
     void zoomToCurrentLocation(){
@@ -192,7 +189,6 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
         activity = getActivity();
         mBus = MyApplication.getInstance().getBus();
-        geoDataClient = Places.getGeoDataClient(getActivity(), null);
 
         if(activity instanceof FreshActivity) {
             ((FreshActivity)activity).fragmentUISetup(this);
@@ -335,7 +331,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
-        searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), geoDataClient,
+        searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78),
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 

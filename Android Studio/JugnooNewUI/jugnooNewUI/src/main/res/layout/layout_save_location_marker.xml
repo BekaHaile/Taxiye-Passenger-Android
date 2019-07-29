@@ -15,7 +15,7 @@
 
     <RelativeLayout
         android:id="@+id/llSavedLocation"
-        android:layout_width="170dp"
+        android:layout_width="175dp"
         android:layout_height="45dp"
         android:background="@drawable/bg_saved_location_marker"
         android:orientation="horizontal">

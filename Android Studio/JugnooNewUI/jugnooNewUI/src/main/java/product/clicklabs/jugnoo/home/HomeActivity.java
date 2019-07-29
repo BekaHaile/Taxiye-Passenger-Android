@@ -84,8 +84,6 @@ import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -590,7 +588,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     };
 
-    private GeoDataClient mGeoDataClient;
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
     private boolean selectPickUpdropAtOnce = false;
@@ -693,7 +690,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Data.latitude = Data.loginLatitude;
         Data.longitude = Data.loginLongitude;
 
-        mGeoDataClient = Places.getGeoDataClient(this, null);
 
 
         callbackManager = CallbackManager.Factory.create();
@@ -2509,6 +2505,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         map.setInfoWindowAdapter(customIW);
 
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
+                                && getResources().getBoolean(R.bool.show_save_location_dialog)
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
                         && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                             openSaveLocationDialog(true);
@@ -2572,6 +2569,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     } else if(arg0.getTitle().equalsIgnoreCase("End Location")) {
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED
                                 || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL)
+                                && getResources().getBoolean(R.bool.show_save_location_dialog)
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)
                                 && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                             openSaveLocationDialog(false);
@@ -4898,7 +4896,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             boolean savedLocationView = false;
             if((PassengerScreenMode.P_IN_RIDE == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
-             || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode) && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+             || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode)
+                    && getResources().getBoolean(R.bool.show_save_location_dialog)
+                    && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                 savedLocationView = true;
             }
             dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
@@ -5509,7 +5509,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void removeSaveLocationDialog() {
         // **** remove save location overlay *** //
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         DialogFragment prev = (DialogFragment) getSupportFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
             prev.dismiss();
@@ -6519,7 +6518,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         markerOptions.position(latLng);
         markerOptions.zIndex(HOME_MARKER_ZINDEX);
         if (inRide) {
-            if(Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false) || HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) != null) {
+            if(Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
+                    || !getResources().getBoolean(R.bool.show_save_location_dialog)
+                    || HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) != null) {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
                                 .createPinMarkerBitmapStart(HomeActivity.this)));
@@ -11564,9 +11565,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private HomeUtil homeUtil = new HomeUtil();
 
 
-    public GeoDataClient getmGeoDataClient() {
-        return mGeoDataClient;
-    }
 
     private HomeUtil.SavedAddressState savedAddressState = HomeUtil.SavedAddressState.BLANK;
 
