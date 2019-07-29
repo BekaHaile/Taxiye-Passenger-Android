@@ -4901,13 +4901,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                 savedLocationView = true;
             }
-            if(slidingBottomPanel.getRequestRideOptionsFragment() !=null && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()!=null&&slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()!=null) {
-                if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            if(Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                Log.e("ride type", Data.autoData.getAssignedDriverInfo().getRideType()+"");
                     dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
-                }
-            }else{
-                dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
-
             }
 
         }
@@ -11959,6 +11955,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             rentalInRideLayout.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
+                                    if(Data.autoData.getAssignedDriverInfo()!=null)
                                     apiGetGpsLockStatusAP(Data.autoData.getAssignedDriverInfo().getGpsLockStatus());
                                 }
                             }, 2000);
