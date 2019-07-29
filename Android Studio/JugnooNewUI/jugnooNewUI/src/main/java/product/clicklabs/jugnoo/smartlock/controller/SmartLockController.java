@@ -48,6 +48,7 @@ public class SmartLockController {
         public String address;
     }
     private boolean isPaired =false;
+    private boolean isUnlocked = false;
 
     private DataClass m_myData = new DataClass();
 
@@ -202,6 +203,8 @@ public class SmartLockController {
         if (m_myData.device == null) {
             dispNotFindDeviceToast();
             return;
+        }else{
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
 
         if (mBluetoothGatt == null) {
@@ -239,6 +242,8 @@ public class SmartLockController {
     }
 
     public void downDevice(){
+        //if unable to unlock device within 3 sec
+        initializeDownDeviceHandler();
         Log.e("down device", "called");
         if (m_myData.device == null) {
             dispNotFindDeviceToast();
@@ -279,12 +284,13 @@ public class SmartLockController {
             switch (mes.what) {
                 case 1: {
                     m_myData.count++;
+                    Log.e("device data 1",mes.obj.toString());
                     break;
                 } case 2: {
-                    Toast toast = Toast.makeText(context, mes.obj.toString(),
+                  /*  Toast toast = Toast.makeText(context, mes.obj.toString(),
                             Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();
+                    toast.show();*/
                     break;
                 }
 
@@ -294,6 +300,8 @@ public class SmartLockController {
                 }
                 case 4: {
                     //info.setText((String) mes.obj);
+                    Log.e("device data 4",mes.obj.toString());
+
                     break;
                 }
 
@@ -314,7 +322,7 @@ public class SmartLockController {
 
                 case 9: {
                     //str_inhex.setText((String) mes.obj);
-                  Log.e("device data",(String) mes.obj);
+                  Log.e("device data 9",(String) mes.obj);
                     break;
                 }
                 default:
@@ -366,6 +374,18 @@ public class SmartLockController {
         }, 5000);
 
     }
+
+    private void initializeDownDeviceHandler() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSmartlockCallbacks.unableToPair(isUnlocked);
+            }
+        }, 3000);
+
+    }
+
 
 
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
@@ -460,10 +480,12 @@ public class SmartLockController {
                                 gatt.getDevice().getAddress());
                         m_myHandler.sendMessage(msg);
                         mSmartlockCallbacks.updateStatus(0);
+                        isUnlocked = true;
                     } else if (mingwen[3] == 0x01)  {  //You failed
                         Message msg = m_myHandler.obtainMessage(2, 1, 1,
                                 "Unable to lock Device");
                         Log.e("device data","unable to unlock device");
+                        isUnlocked = false;
                         m_myHandler.sendMessage(msg);
                         mSmartlockCallbacks.updateStatus(1);
                     }
