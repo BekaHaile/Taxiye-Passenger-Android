@@ -12,6 +12,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -94,6 +95,8 @@ public class Region {
 	@Expose
 	private int customerNotes;
 
+	private ArrayList<Integer> availablePaymentModes;
+
 	private boolean isDefault = false;
 
 	public Region(){
@@ -110,6 +113,9 @@ public class Region {
 		this.driverFareFactor = 1.0;
 		this.priorityTipCategory = 0;
 		this.isDefault = true;
+		this.availablePaymentModes = new ArrayList<>();
+//		availablePaymentModes.add(PaymentOption.CASH.getOrdinal());
+//		availablePaymentModes.add(PaymentOption.STRIPE_CARDS.getOrdinal());
 	}
 
 	public boolean isDefault() {
@@ -150,6 +156,17 @@ public class Region {
 
 	public ArrayList<Package> getPackages() {
 		return packages;
+	}
+
+	public ArrayList<Integer> getAvailablePaymentModes() {
+		if(availablePaymentModes == null) {
+			availablePaymentModes = new ArrayList<>();
+		}
+		return availablePaymentModes;
+	}
+
+	public void setAvailablePaymentModes(ArrayList<Integer> availablePaymentModes) {
+		this.availablePaymentModes = availablePaymentModes;
 	}
 
 	public void setPackages(ArrayList<Package> packages) {

@@ -10091,6 +10091,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+        slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
         if(confirmedScreenOpened) {
             pickupLocationEtaMarker();
         }

@@ -20,6 +20,7 @@ import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -28,6 +29,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.adapters.StripeCardAdapter;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -267,6 +269,34 @@ public class PaymentOptionDialog implements View.OnClickListener {
             callbackPaymentOptionSelector.setSelectedPaymentOption(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionAccAvailability(callbackPaymentOptionSelector.getSelectedPaymentOption()));
 
+
+            int selectedPaymentOption = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(callbackPaymentOptionSelector.getSelectedPaymentOption());
+            if(Data.autoData.getRegions().size() > 1) {
+                if(((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getAvailablePaymentModes().size() > 0) {
+                    if(((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getAvailablePaymentModes().contains(selectedPaymentOption)) {
+                        callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
+                    } else {
+                        callbackPaymentOptionSelector.setSelectedPaymentOption(((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getAvailablePaymentModes().get(0));
+                    }
+                } else {
+                    callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
+                }
+            } else if(Data.autoData.getRegions().size() > 0) {
+                if((Data.autoData.getRegions().get(0).getAvailablePaymentModes().size() > 0)) {
+                    if(Data.autoData.getRegions().get(0).getAvailablePaymentModes().contains(selectedPaymentOption)) {
+                        callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
+                    } else {
+                        callbackPaymentOptionSelector.setSelectedPaymentOption(Data.autoData.getRegions().get(0).getAvailablePaymentModes().get(0));
+                    }
+                } else {
+                    callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
+                }
+            }
+
+
+
+
             if (corporatesAdapter != null) {
                 corporatesAdapter.unSelectAll();
             }
@@ -396,92 +426,103 @@ public class PaymentOptionDialog implements View.OnClickListener {
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
                 linearLayoutWalletContainer.removeAllViews();
+                List<Integer> availablePaymentModes = new ArrayList<>();
+
+                if(Data.autoData.getRegions().size() > 1) {
+                    availablePaymentModes = ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getAvailablePaymentModes();
+                } else if(Data.autoData.getRegions().size() > 0) {
+                    availablePaymentModes = Data.autoData.getRegions().get(0).getAvailablePaymentModes();
+                }
+
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
 
-                        if(paymentOption != -1 && paymentOption != paymentModeConfigData.getPaymentOption()){
-                            continue;
-                        }
+                        if ((availablePaymentModes.size() > 0 && availablePaymentModes.contains(paymentModeConfigData.getPaymentOption())) || availablePaymentModes.size() == 0) {
 
-                        if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(relativeLayoutPaytm);
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(relativeLayoutMpesa);
-                            textViewMpesa.setText(paymentModeConfigData.getDisplayName());
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(linearLayoutCash);
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.POS.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(llPos);
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CORPORATE.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(llCorporate);
-                            linearLayoutWalletContainer.addView(rvCorporates);
+                            if (paymentOption != -1 && paymentOption != paymentModeConfigData.getPaymentOption()) {
+                                continue;
+                            }
 
-                            if (corporatesAdapter == null && paymentModeConfigData.getCorporates() != null) {
-                                corporatesAdapter = new CorporatesAdapter(paymentModeConfigData.getCorporates(),
-                                        rvCorporates, Fonts.mavenLight(activity), new CorporatesAdapter.OnSelectedCallback() {
-                                    @Override
-                                    public void onItemSelected(@NotNull Corporate corporate) {
-                                        if (Data.autoData.getPickupPaymentOption() != PaymentOption.CORPORATE.getOrdinal()) {
-                                            onClick(llCorporate);
-                                        } else {
-                                            dismiss();
+                            if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(relativeLayoutFreeCharge);
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(relativeLayoutMpesa);
+                                textViewMpesa.setText(paymentModeConfigData.getDisplayName());
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(linearLayoutCash);
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.POS.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(llPos);
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CORPORATE.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(llCorporate);
+                                linearLayoutWalletContainer.addView(rvCorporates);
+
+                                if (corporatesAdapter == null && paymentModeConfigData.getCorporates() != null) {
+                                    corporatesAdapter = new CorporatesAdapter(paymentModeConfigData.getCorporates(),
+                                            rvCorporates, Fonts.mavenLight(activity), new CorporatesAdapter.OnSelectedCallback() {
+                                        @Override
+                                        public void onItemSelected(@NotNull Corporate corporate) {
+                                            if (Data.autoData.getPickupPaymentOption() != PaymentOption.CORPORATE.getOrdinal()) {
+                                                onClick(llCorporate);
+                                            } else {
+                                                dismiss();
+                                            }
                                         }
-                                    }
-                                });
-                            }
-                            rvCorporates.setAdapter(corporatesAdapter);
+                                    });
+                                }
+                                rvCorporates.setAdapter(corporatesAdapter);
 
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
-                                && callbackPaymentOptionSelector.isRazorpayEnabled()) {
-                            linearLayoutWalletContainer.addView(llOtherModesToPay);
-                            tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
+                                    && callbackPaymentOptionSelector.isRazorpayEnabled()) {
+                                linearLayoutWalletContainer.addView(llOtherModesToPay);
+                                tvOtherModesToPay.setText(paymentModeConfigData.getDisplayName());
 
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
-                            if(paymentModeConfigData.getCardsData() != null) {
-                                linearLayoutWalletContainer.addView(rvStripeCards);
-                                stripeCardAdapter = new StripeCardAdapter(paymentModeConfigData.getCardsData(),
-                                        rvStripeCards, Fonts.mavenLight(activity), new StripeCardAdapter.OnSelectedCallback() {
-                                    @Override
-                                    public void onItemSelected(@NotNull StripeCardData stripeCards, int pos) {
-                                        if (dialog != null && dialog.isShowing()) {
-                                            dialog.dismiss();
-                                            Prefs.with(activity).save(Constants.STRIPE_SELECTED_POS, stripeCards.getCardId());
-                                            callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
-                                            callback.onPaymentModeUpdated();
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                                if (paymentModeConfigData.getCardsData() != null) {
+                                    linearLayoutWalletContainer.addView(rvStripeCards);
+                                    stripeCardAdapter = new StripeCardAdapter(paymentModeConfigData.getCardsData(),
+                                            rvStripeCards, Fonts.mavenLight(activity), new StripeCardAdapter.OnSelectedCallback() {
+                                        @Override
+                                        public void onItemSelected(@NotNull StripeCardData stripeCards, int pos) {
+                                            if (dialog != null && dialog.isShowing()) {
+                                                dialog.dismiss();
+                                                Prefs.with(activity).save(Constants.STRIPE_SELECTED_POS, stripeCards.getCardId());
+                                                callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
+                                                callback.onPaymentModeUpdated();
+                                            }
+                                            Log.e("check", stripeCards.getCardId());
                                         }
-                                        Log.e("check", stripeCards.getCardId());
-                                    }
-                                }, activity);
-                                rvStripeCards.setAdapter(stripeCardAdapter);
-                                stripeCardAdapter.selectDefault();
+                                    }, activity);
+                                    rvStripeCards.setAdapter(stripeCardAdapter);
+                                    stripeCardAdapter.selectDefault();
+                                }
+                                linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
+                                ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
+                                textViewStripeCard.setText(activity.getString(R.string.action_add_card_stripe));
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(relativeLayoutAcceptCard);
+                                if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
+                                    WalletCore.getStripeCardDisplayString(activity, paymentModeConfigData.getCardsData().get(0), textViewAcceptCard, ivAcceptCardIcon);
+                                } else {
+                                    ivAcceptCardIcon.setImageResource(R.drawable.ic_card_default);
+                                    textViewAcceptCard.setText(activity.getString(R.string.action_add_card_accept_card));
+                                }
+                            } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
+                                linearLayoutWalletContainer.addView(relativeLayoutPayStack);
+                                if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
+                                    WalletCore.getStripeCardDisplayString(activity, paymentModeConfigData.getCardsData().get(0), textViewPayStack, ivPayStackIcon);
+                                } else {
+                                    ivPayStackIcon.setImageResource(R.drawable.ic_card_default);
+                                    textViewPayStack.setText(activity.getString(R.string.action_add_card_pay_stack));
+                                }
                             }
-                            linearLayoutWalletContainer.addView(relativeLayoutStripeCard);
-                            ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
-                            textViewStripeCard.setText(activity.getString(R.string.action_add_card_stripe));
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.ACCEPT_CARD.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(relativeLayoutAcceptCard);
-                            if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
-                                WalletCore.getStripeCardDisplayString(activity, paymentModeConfigData.getCardsData().get(0), textViewAcceptCard, ivAcceptCardIcon);
-                            } else {
-                                ivAcceptCardIcon.setImageResource(R.drawable.ic_card_default);
-                                textViewAcceptCard.setText(activity.getString(R.string.action_add_card_accept_card));
-                            }
-                        } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
-                            linearLayoutWalletContainer.addView(relativeLayoutPayStack);
-                            if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
-                                WalletCore.getStripeCardDisplayString(activity, paymentModeConfigData.getCardsData().get(0), textViewPayStack, ivPayStackIcon);
-                            } else {
-                                ivPayStackIcon.setImageResource(R.drawable.ic_card_default);
-                                textViewPayStack.setText(activity.getString(R.string.action_add_card_pay_stack));
-                            }
-                        }
 
-                        if(paymentOption == paymentModeConfigData.getPaymentOption()){
-                            break;
+                            if (paymentOption == paymentModeConfigData.getPaymentOption()) {
+                                break;
+                            }
                         }
                     }
                 }

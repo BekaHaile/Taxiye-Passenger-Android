@@ -330,8 +330,31 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public void updatePaymentOption() {
         try {
-            Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
+
+            int selectedPaymentOption = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption());
+            if(Data.autoData.getRegions().size() > 1) {
+                if(getRegionSelected().getAvailablePaymentModes().size() > 0) {
+                    if(getRegionSelected().getAvailablePaymentModes().contains(selectedPaymentOption)) {
+                        Data.autoData.setPickupPaymentOption(selectedPaymentOption);
+                    } else {
+                        Data.autoData.setPickupPaymentOption(getRegionSelected().getAvailablePaymentModes().get(0));
+                    }
+                } else {
+                    Data.autoData.setPickupPaymentOption(selectedPaymentOption);
+                }
+            } else if(Data.autoData.getRegions().size() > 0) {
+                if((Data.autoData.getRegions().get(0).getAvailablePaymentModes().size() > 0)) {
+                    if(Data.autoData.getRegions().get(0).getAvailablePaymentModes().contains(selectedPaymentOption)) {
+                        Data.autoData.setPickupPaymentOption(selectedPaymentOption);
+                    } else {
+                        Data.autoData.setPickupPaymentOption(Data.autoData.getRegions().get(0).getAvailablePaymentModes().get(0));
+                    }
+                } else {
+                    Data.autoData.setPickupPaymentOption(selectedPaymentOption);
+                }
+            }
+
             imageViewPaymentMode.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
             imageViewPaymentModeMS.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
             textViewPaymentModeValue.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
