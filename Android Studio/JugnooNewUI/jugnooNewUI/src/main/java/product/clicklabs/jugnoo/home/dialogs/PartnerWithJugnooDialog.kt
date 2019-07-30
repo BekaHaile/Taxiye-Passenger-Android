@@ -57,6 +57,10 @@ class PartnerWithJugnooDialog {
         }
     }
 
+    fun dismiss(){
+        dialog?.dismiss()
+    }
+
     interface Callback{
         fun dialogDismissed()
     }

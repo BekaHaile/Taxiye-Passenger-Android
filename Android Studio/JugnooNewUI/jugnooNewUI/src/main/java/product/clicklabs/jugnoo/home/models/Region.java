@@ -7,6 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.JSONParser;
@@ -76,6 +77,12 @@ public class Region {
 	@SerializedName("reverse_bidding_enabled")
 	@Expose
 	private int reverseBid;
+	@SerializedName("instructions")
+	@Expose
+	private List<Instructions> instructions;
+	@SerializedName("stations")
+	@Expose
+	private List<Stations> stations;
 
 	@SerializedName("region_fare")
 	@Expose
@@ -362,6 +369,111 @@ public class Region {
 		}
 	}
 
+	public class Instructions {
+
+		@SerializedName("title")
+		@Expose
+		private String title;
+		@SerializedName("description")
+		@Expose
+		private String description;
+		@SerializedName("image")
+		private String image;
+
+		public String getTitle() {
+			return title;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public String getImage() {
+			return image;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public void setImage(String image) {
+			this.image = image;
+		}
+	}
+
+	public class Stations{
+
+		@SerializedName("name")
+		@Expose
+		private String name;
+		@SerializedName("address")
+		@Expose
+		private String address;
+		@SerializedName("distance")
+		@Expose
+		private double distance;
+		@SerializedName("latitude")
+		@Expose
+		private double latitude;
+		@SerializedName("longitude")
+		@Expose
+		private double longitude;
+		@SerializedName("id")
+		@Expose
+		private int location_id;
+
+		public String getName() {
+			return name;
+		}
+
+		public String getAddress() {
+			return address;
+		}
+
+		public double getDistance() {
+			return distance;
+		}
+
+		public double getLatitude() {
+			return latitude;
+		}
+
+		public double getLongitude() {
+			return longitude;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public void setAddress(String address) {
+			this.address = address;
+		}
+
+		public void setDistance(double distance) {
+			this.distance = distance;
+		}
+
+		public void setLatitude(Double latitude) {
+			this.latitude = latitude;
+		}
+
+		public void setLongitude(Double longitude) {
+			this.longitude = longitude;
+		}
+
+		public int getLocation_id() {
+			return location_id;
+		}
+
+		public void setLocation_id(int location_id) {
+			this.location_id = location_id;
+		}
+	}
 
 	public Integer getVehicleType() {
 		return vehicleType;
@@ -539,5 +651,21 @@ public class Region {
 
 	public void setCustomerNotesEnabled(int customerNotes) {
 		this.customerNotes = customerNotes;
+	}
+
+	public List<Instructions> getInstructions() {
+		return instructions;
+	}
+
+	public void setInstructions(List<Instructions> instructions) {
+		this.instructions = instructions;
+	}
+
+	public List<Stations> getStations() {
+		return stations;
+	}
+
+	public void setStations(List<Stations> stations) {
+		this.stations = stations;
 	}
 }

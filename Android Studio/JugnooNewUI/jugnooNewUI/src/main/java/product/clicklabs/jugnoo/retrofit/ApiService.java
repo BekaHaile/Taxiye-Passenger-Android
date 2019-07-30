@@ -9,6 +9,7 @@ import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRideResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
@@ -178,6 +179,9 @@ public interface ApiService {
     @POST("/request_ride")
     Response requestRide(@FieldMap Map<String, String> params);
 
+    @FormUrlEncoded
+    @POST("/update_lock_status")
+    Response updateLockStatus(@FieldMap Map<String, String> params);
 
 
     @FormUrlEncoded
@@ -658,6 +662,25 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/fetch_user_corporates")
     void fetchUserCorporates(@FieldMap Map<String, String> params, Callback<FetchCorporatesResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/app_update_lock_status")
+    void updateLockStatus(@FieldMap Map<String,String>params,
+                          Callback<FeedCommonResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/app_get_lock_status")
+    void getLockStatus(@FieldMap Map<String,String>params,
+                          Callback<GetLockStatusResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/app_get_lock_status")
+    Response getLockStatus(@FieldMap Map<String,String>params);
+
+    @POST("/customer/insert_damage_report")
+    void insertDamageReport(@Body MultipartTypedOutput params,
+                           Callback<FeedCommonResponse> callback);
+
 
     @FormUrlEncoded
     @POST("/send_email_invoice")

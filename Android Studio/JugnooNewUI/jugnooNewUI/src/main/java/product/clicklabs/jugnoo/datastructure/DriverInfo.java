@@ -54,6 +54,30 @@ public class DriverInfo {
 	private String markerUrl;
 	private int paymentMethod;
 	private Double tipAmount;
+	private int rideType;
+	private int gpsLockStatus;
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+	private String deviceToken;
+	private String externalId;
+
+
+
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -62,7 +86,7 @@ public class DriverInfo {
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds, String brandingStatus, int operatorId,
-					  int paymentMethod){
+					  int paymentMethod,String deviceToken,String externalId){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -78,6 +102,8 @@ public class DriverInfo {
 		this.brandingStatus = brandingStatus;
 		this.operatorId = operatorId;
 		this.paymentMethod = paymentMethod;
+		this.externalId=externalId;
+		this.deviceToken=deviceToken;
 	}
 
 	//for engagement
@@ -86,7 +112,7 @@ public class DriverInfo {
 					  int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
-					  String currency, String markerUrl, Double tipAmount, int isCorporateRide, String cardId){
+					  String currency, String markerUrl, Double tipAmount, int isCorporateRide, String cardId, int rideType, int gpsLockStatus){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -120,6 +146,8 @@ public class DriverInfo {
 		this.tipAmount = tipAmount;
 		this.isCorporateRide = isCorporateRide;
 		Prefs.with(context).save(Constants.STRIPE_SELECTED_POS, cardId);
+		this.rideType = rideType;
+		this.gpsLockStatus = gpsLockStatus;
 	}
 
 	//for last ride data
@@ -320,6 +348,14 @@ public class DriverInfo {
 		this.isCorporateRide = isCorporateRide;
 	}
 
+	public int getRideType() {
+		return rideType;
+	}
+
+	public void setRideType(int rideType) {
+		this.rideType = rideType;
+	}
+
 	public enum PaymentMethod{
 		CASH(1),
 		BOTH(2); // default
@@ -377,6 +413,14 @@ public class DriverInfo {
 
 	public void setTipAmount(Double tipAmount) {
 		this.tipAmount = tipAmount;
+	}
+
+	public int getGpsLockStatus() {
+		return gpsLockStatus;
+	}
+
+	public void setGpsLockStatus(int gpsLockStatus) {
+		this.gpsLockStatus = gpsLockStatus;
 	}
 
 }

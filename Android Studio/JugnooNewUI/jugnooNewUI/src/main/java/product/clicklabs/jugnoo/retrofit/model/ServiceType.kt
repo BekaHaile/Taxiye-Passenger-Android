@@ -18,5 +18,5 @@ class ServiceType(
 enum class ServiceTypeValue(
         val type:Int
 ){
-    NORMAL(0), POOL(2), RENTAL(6), OUTSTATION(7)
+    NORMAL(0), POOL(2), BIKE_RENTAL(5), RENTAL(6), OUTSTATION(7)
 }
