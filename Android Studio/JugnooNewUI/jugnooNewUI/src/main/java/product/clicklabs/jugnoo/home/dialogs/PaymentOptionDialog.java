@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.adapters.StripeCardAdapter;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.stripe.model.StripeCardData;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -266,32 +267,17 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
     private void setSelectedPaymentOptionUI() {
         try {
-            callbackPaymentOptionSelector.setSelectedPaymentOption(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(callbackPaymentOptionSelector.getSelectedPaymentOption()));
-
-
-            int selectedPaymentOption = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(callbackPaymentOptionSelector.getSelectedPaymentOption());
-            if(Data.autoData.getRegions().size() > 1) {
-                if(((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getAvailablePaymentModes().size() > 0) {
-                    if(((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getAvailablePaymentModes().contains(selectedPaymentOption)) {
-                        callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
-                    } else {
-                        callbackPaymentOptionSelector.setSelectedPaymentOption(((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getAvailablePaymentModes().get(0));
-                    }
+            int selectedPaymentOption = callbackPaymentOptionSelector.getSelectedPaymentOption();
+            Region region = (Data.autoData.getRegions().size() > 1) ? ((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                    : (Data.autoData.getRegions().size() > 0 ? Data.autoData.getRegions().get(0) : null);
+            if (region != null && region.getRestrictedPaymentModes().size() > 0) {
+                if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
+                    callbackPaymentOptionSelector.setSelectedPaymentOption(chooseNextEligiblePaymentoption());
                 } else {
                     callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
                 }
-            } else if(Data.autoData.getRegions().size() > 0) {
-                if((Data.autoData.getRegions().get(0).getAvailablePaymentModes().size() > 0)) {
-                    if(Data.autoData.getRegions().get(0).getAvailablePaymentModes().contains(selectedPaymentOption)) {
-                        callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
-                    } else {
-                        callbackPaymentOptionSelector.setSelectedPaymentOption(Data.autoData.getRegions().get(0).getAvailablePaymentModes().get(0));
-                    }
-                } else {
-                    callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
-                }
+            } else {
+                callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
             }
 
 
@@ -426,18 +412,18 @@ public class PaymentOptionDialog implements View.OnClickListener {
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
                 linearLayoutWalletContainer.removeAllViews();
-                List<Integer> availablePaymentModes = new ArrayList<>();
+                List<Integer> restrictedPaymentMode = new ArrayList<>();
 
                 if(Data.autoData.getRegions().size() > 1) {
-                    availablePaymentModes = ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getAvailablePaymentModes();
+                    restrictedPaymentMode = ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
                 } else if(Data.autoData.getRegions().size() > 0) {
-                    availablePaymentModes = Data.autoData.getRegions().get(0).getAvailablePaymentModes();
+                    restrictedPaymentMode = Data.autoData.getRegions().get(0).getRestrictedPaymentModes();
                 }
 
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
 
-                        if ((availablePaymentModes.size() > 0 && availablePaymentModes.contains(paymentModeConfigData.getPaymentOption())) || availablePaymentModes.size() == 0) {
+                        if ((restrictedPaymentMode.size() > 0 && !restrictedPaymentMode.contains(paymentModeConfigData.getPaymentOption())) || restrictedPaymentMode.size() == 0) {
 
                             if (paymentOption != -1 && paymentOption != paymentModeConfigData.getPaymentOption()) {
                                 continue;
@@ -546,6 +532,28 @@ public class PaymentOptionDialog implements View.OnClickListener {
         void onDialogDismiss();
         void onPaymentModeUpdated();
 
+    }
+
+    private int chooseNextEligiblePaymentoption() {
+        int paymentOption = callbackPaymentOptionSelector.getSelectedPaymentOption();
+        ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
+        if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
+            List<Integer> restrictedPaymentMode = new ArrayList<>();
+            if (Data.autoData.getRegions().size() > 1) {
+                restrictedPaymentMode = ((HomeActivity) activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
+            } else if (Data.autoData.getRegions().size() > 0) {
+                restrictedPaymentMode = Data.autoData.getRegions().get(0).getRestrictedPaymentModes();
+            }
+            for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
+                if (paymentModeConfigData.getEnabled() == 1) {
+                    if ((restrictedPaymentMode.size() > 0 && !restrictedPaymentMode.contains(paymentModeConfigData.getPaymentOption())) || restrictedPaymentMode.size() == 0) {
+                        paymentOption = paymentModeConfigData.getPaymentOption();
+                        break;
+                    }
+                }
+            }
+        }
+        return paymentOption;
     }
 
 }

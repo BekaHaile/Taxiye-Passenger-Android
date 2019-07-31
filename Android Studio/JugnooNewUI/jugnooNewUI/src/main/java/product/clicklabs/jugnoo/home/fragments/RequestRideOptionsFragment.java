@@ -23,6 +23,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -47,6 +48,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 /**
  * Created by Shankar on 1/8/16.
@@ -333,25 +335,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
             int selectedPaymentOption = MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption());
-            if(Data.autoData.getRegions().size() > 1) {
-                if(getRegionSelected().getAvailablePaymentModes().size() > 0) {
-                    if(getRegionSelected().getAvailablePaymentModes().contains(selectedPaymentOption)) {
-                        Data.autoData.setPickupPaymentOption(selectedPaymentOption);
-                    } else {
-                        Data.autoData.setPickupPaymentOption(getRegionSelected().getAvailablePaymentModes().get(0));
-                    }
-                } else {
-                    Data.autoData.setPickupPaymentOption(selectedPaymentOption);
-                }
-            } else if(Data.autoData.getRegions().size() > 0) {
-                if((Data.autoData.getRegions().get(0).getAvailablePaymentModes().size() > 0)) {
-                    if(Data.autoData.getRegions().get(0).getAvailablePaymentModes().contains(selectedPaymentOption)) {
-                        Data.autoData.setPickupPaymentOption(selectedPaymentOption);
-                    } else {
-                        Data.autoData.setPickupPaymentOption(Data.autoData.getRegions().get(0).getAvailablePaymentModes().get(0));
-                    }
-                } else {
-                    Data.autoData.setPickupPaymentOption(selectedPaymentOption);
+            Region region = (Data.autoData.getRegions().size() > 1) ? activity.slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                    : (Data.autoData.getRegions().size() > 0 ? Data.autoData.getRegions().get(0) : null);
+            if (region != null && region.getRestrictedPaymentModes().size() > 0) {
+                if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
+                    Data.autoData.setPickupPaymentOption(chooseNextEligiblePaymentoption());
                 }
             }
 
@@ -709,6 +697,29 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, -1);
         Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, false);
         return couponSelected;
+    }
+
+    private int chooseNextEligiblePaymentoption() {
+        int selectedPaymentOption = MyApplication.getInstance().getWalletCore()
+                .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption());
+        ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
+        if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
+            List<Integer> restrictedPaymentMode = new ArrayList<>();
+            if (Data.autoData.getRegions().size() > 1) {
+                restrictedPaymentMode = ((HomeActivity) activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
+            } else if (Data.autoData.getRegions().size() > 0) {
+                restrictedPaymentMode = Data.autoData.getRegions().get(0).getRestrictedPaymentModes();
+            }
+            for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
+                if (paymentModeConfigData.getEnabled() == 1) {
+                    if ((restrictedPaymentMode.size() > 0 && !restrictedPaymentMode.contains(paymentModeConfigData.getPaymentOption())) || restrictedPaymentMode.size() == 0) {
+                        selectedPaymentOption = paymentModeConfigData.getPaymentOption();
+                        break;
+                    }
+                }
+            }
+        }
+        return selectedPaymentOption;
     }
 
 }

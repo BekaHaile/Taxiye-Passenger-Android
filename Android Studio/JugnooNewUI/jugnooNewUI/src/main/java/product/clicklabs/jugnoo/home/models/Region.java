@@ -95,7 +95,9 @@ public class Region {
 	@Expose
 	private int customerNotes;
 
-	private ArrayList<Integer> availablePaymentModes;
+    @SerializedName("restricted_payment_modes")
+    @Expose
+	private ArrayList<Integer> restrictedPaymentModes;
 
 	private boolean isDefault = false;
 
@@ -113,7 +115,7 @@ public class Region {
 		this.driverFareFactor = 1.0;
 		this.priorityTipCategory = 0;
 		this.isDefault = true;
-		this.availablePaymentModes = new ArrayList<>();
+		this.restrictedPaymentModes = new ArrayList<>();
 //		availablePaymentModes.add(PaymentOption.CASH.getOrdinal());
 //		availablePaymentModes.add(PaymentOption.STRIPE_CARDS.getOrdinal());
 	}
@@ -158,18 +160,23 @@ public class Region {
 		return packages;
 	}
 
-	public ArrayList<Integer> getAvailablePaymentModes() {
-		if(availablePaymentModes == null) {
-			availablePaymentModes = new ArrayList<>();
+
+    public ArrayList<Integer> getRestrictedPaymentModes() {
+	    if(restrictedPaymentModes == null) {
+	        restrictedPaymentModes = new ArrayList<>();
+        }
+		// TODO: 31/07/2019 revert
+		if(regionId % 2 != 0) {
+			restrictedPaymentModes.add(PaymentOption.STRIPE_CARDS.getOrdinal());
 		}
-		return availablePaymentModes;
-	}
+        return restrictedPaymentModes;
+    }
 
-	public void setAvailablePaymentModes(ArrayList<Integer> availablePaymentModes) {
-		this.availablePaymentModes = availablePaymentModes;
-	}
+    public void setRestrictedPaymentModes(ArrayList<Integer> restrictedPaymentModes) {
+        this.restrictedPaymentModes = restrictedPaymentModes;
+    }
 
-	public void setPackages(ArrayList<Package> packages) {
+    public void setPackages(ArrayList<Package> packages) {
 		this.packages = packages;
 	}
 
