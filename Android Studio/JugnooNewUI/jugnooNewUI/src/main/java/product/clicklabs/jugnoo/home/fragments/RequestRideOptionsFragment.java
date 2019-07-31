@@ -35,6 +35,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.FareDetailsDialog;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
@@ -330,8 +331,21 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public void updatePaymentOption() {
         try {
-            Data.autoData.setPickupPaymentOption(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption()));
+
+            int selectedPaymentOption = MyApplication.getInstance().getWalletCore()
+                    .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption());
+            Region region = (Data.autoData.getRegions().size() > 1) ? activity.slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                    : (Data.autoData.getRegions().size() > 0 ? Data.autoData.getRegions().get(0) : null);
+            if (region != null && region.getRestrictedPaymentModes().size() > 0) {
+                if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
+                    Data.autoData.setPickupPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(selectedPaymentOption, activity));
+                } else {
+					Data.autoData.setPickupPaymentOption(selectedPaymentOption);
+				}
+            } else {
+				Data.autoData.setPickupPaymentOption(selectedPaymentOption);
+			}
+
             imageViewPaymentMode.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
             imageViewPaymentModeMS.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
             textViewPaymentModeValue.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
