@@ -132,7 +132,6 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Currency;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -141,6 +140,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.branch.referral.Branch;
+import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
@@ -223,7 +224,6 @@ import product.clicklabs.jugnoo.home.models.RideEndFragmentMode;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
-import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
@@ -237,7 +237,6 @@ import product.clicklabs.jugnoo.rentals.models.GpsLockStatus;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
-import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
@@ -245,6 +244,10 @@ import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.SearchLocation;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.smartlock.callbacks.SmartlockCallbacks;
 import product.clicklabs.jugnoo.smartlock.controller.SmartLockController;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -295,7 +298,7 @@ import retrofit.mime.TypedByteArray;
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
-        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler {
+        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler, CoroutineScope {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -633,14 +636,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private Button customerLocation;
 //    public static int rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
     Dialog dialogRentalStations;
-
-
+    private SearchLocationDB searchLocationDB;
 
 
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        searchLocationDB = DBObject.INSTANCE.getInstance();
+        DBCoroutine.Companion.deleteLocationIfDatePassed(searchLocationDB);
 
         String languageToLoad = LocaleHelper.getLanguage(this);
         Locale locale = new Locale(languageToLoad);
@@ -6106,6 +6111,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             FacebookLoginHelper.logoutFacebook();
             LocalBroadcastManager.getInstance(this).unregisterReceiver(pushBroadcastReceiver);
             System.gc();
+            searchLocationDB.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -8547,6 +8553,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Prefs.with(HomeActivity.this).save(Constants.SKIP_SAVE_DROP_LOCATION, false);
         try {
 
+            createDataAndInsert(0);
+            createDataAndInsert(1);
             requestRideLifeTime = ((2 * 60 * 1000) + (1 * 60 * 1000));
             serverRequestStartTime = System.currentTimeMillis();
             serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
@@ -8771,7 +8779,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                             int flag = jObj.getInt("flag");
                                             if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
-                                                final int lockStatus = jObj.getInt("gps_lock_status");
+                                                final int lockStatus = jObj.optInt("gps_lock_status", 0);
                                                 if(lockStatus==3){
                                                     smartLockObj.downDevice();
                                                 }
@@ -8907,6 +8915,31 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void createDataAndInsert(final int type) {
+        SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, type == 0 ? Data.autoData.getPickupLatLng() : Data.autoData.getDropLatLng(),  Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+        if(searchResult != null) {
+            return;
+        }
+        SearchLocation searchLocation;
+        if(type == 0) {
+            searchLocation = new SearchLocation(Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude, "",
+                    Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), 0 + "", System.currentTimeMillis(), type);
+        } else {
+            searchLocation = new SearchLocation(Data.autoData.getDropLatLng().latitude, Data.autoData.getDropLatLng().longitude, "",
+                    Data.autoData.getDropAddress(), Data.autoData.getDropAddressId() + "", System.currentTimeMillis(), type);
+        }
+
+        DBCoroutine.Companion.insertLocation(searchLocationDB, searchLocation);
+        DBCoroutine.Companion.getPickupLocation(searchLocationDB, new DBCoroutine.SearchLocationCallback() {
+            @Override
+            public void onSearchLocationReceived(@NotNull List<SearchLocation> searchLocation) {
+
+                Log.w("search Location:- ", searchLocation.toString());
+            }
+        });
+
     }
 
     public void cancelTimerRequestRide() {
@@ -9494,6 +9527,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         intent.putExtra(Constants.KEY_REQUEST_CODE, Constants.REQUEST_CODE_ADD_NEW_LOCATION);
         startActivityForResult(intent, searchResult.getPlaceRequestCode());
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
+    }
+
+    @NotNull
+    @Override
+    public CoroutineContext getCoroutineContext() {
+        return null;
     }
 
     class CheckForGPSAccuracyTimer {
