@@ -30,7 +30,7 @@ class Package {
     @SerializedName("fare_threshold_waiting_time")
     var fareThresholdWaitingTime: Double? = null
     @SerializedName("package_name")
-    var packageNameF: String? = null
+    var packageName: String? = null
     @SerializedName("start_time")
     var startTime: String? = null
     @SerializedName("end_time")
@@ -55,15 +55,11 @@ class Package {
     var returnTrip: Int? = null
     var selected: Boolean = false
 
-    //    fun getPackageName(context: Context, currency:String?, distanceUnit:String?):String{
-//        return context.getString(R.string.fare_fixed) + " " + Utils.formatCurrencyValue(currency, fareFixed!!, false) +
-//                " " + context.getString(R.string.for_str) + " " + Utils.getDecimalFormat2Decimal().format(fareThresholdDistance) + Utils.getDistanceUnit(distanceUnit) +
-//                " " + context.getString(R.string.then) + " " + Utils.formatCurrencyValue(currency, farePerKmAfterThreshold!!, false) + " " +
-//                context.getString(R.string.per_format, Utils.getDistanceUnit(distanceUnit))
-//    }
+    //NOTE: remember to initialize any new member variables in ScheduleRideFragment one way and round trip functions also
+
     fun getPackageName(distanceUnit: String?): String {
-        if(!TextUtils.isEmpty(packageNameF)){
-            return packageNameF!!;
+        if(!TextUtils.isEmpty(packageName)){
+            return packageName!!;
         }
         val fareThrTime: String
         if (fareThresholdTime!!.roundToInt() >= 60) {
