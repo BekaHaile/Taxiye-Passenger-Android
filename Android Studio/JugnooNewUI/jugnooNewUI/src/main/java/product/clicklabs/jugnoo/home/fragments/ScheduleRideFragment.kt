@@ -628,6 +628,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     pck.cityName = selectedRegion!!.packages.get(i).cityName
                     pck.cityId = selectedRegion!!.packages.get(i).cityId
                     pck.returnTrip = selectedRegion!!.packages.get(i).returnTrip
+                    pck.packageName = selectedRegion!!.packages.get(i).packageName
 
                     oneWayPackages.add(pck)
                 }
@@ -669,6 +670,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     pck.cityName = selectedRegion!!.packages.get(i).cityName
                     pck.cityId = selectedRegion!!.packages.get(i).cityId
                     pck.returnTrip = selectedRegion!!.packages.get(i).returnTrip
+                    pck.packageName = selectedRegion!!.packages.get(i).packageName
 
                     roundTripPackages.add(pck)
                 }

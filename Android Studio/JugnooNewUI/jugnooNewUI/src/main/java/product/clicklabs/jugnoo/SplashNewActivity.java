@@ -144,7 +144,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								showLocationEnableDialog();
 								DialogPopup.dismissLoadingDialog();
 								Log.e("deviceToken received", "> " + MyApplication.getInstance().getDeviceToken());
-								accessTokenLogin(SplashNewActivity.this);accessTokenLogin(SplashNewActivity.this);
+								accessTokenLogin(SplashNewActivity.this);
 							} catch (Exception e) {
 								e.printStackTrace();
 							}

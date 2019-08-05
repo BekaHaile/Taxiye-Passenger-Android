@@ -6,16 +6,14 @@ import android.graphics.drawable.StateListDrawable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import java.util.ArrayList;
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.Package;
-import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -103,6 +101,10 @@ public class Region {
 	@Expose
 	private int customerNotes;
 
+    @SerializedName("restricted_payment_modes")
+    @Expose
+	private ArrayList<Integer> restrictedPaymentModes;
+
 	private boolean isDefault = false;
 
 	public Region(){
@@ -119,6 +121,9 @@ public class Region {
 		this.driverFareFactor = 1.0;
 		this.priorityTipCategory = 0;
 		this.isDefault = true;
+		this.restrictedPaymentModes = new ArrayList<>();
+//		availablePaymentModes.add(PaymentOption.CASH.getOrdinal());
+//		availablePaymentModes.add(PaymentOption.STRIPE_CARDS.getOrdinal());
 	}
 
 	public boolean isDefault() {
@@ -161,7 +166,19 @@ public class Region {
 		return packages;
 	}
 
-	public void setPackages(ArrayList<Package> packages) {
+
+    public ArrayList<Integer> getRestrictedPaymentModes() {
+	    if(restrictedPaymentModes == null) {
+	        restrictedPaymentModes = new ArrayList<>();
+        }
+        return restrictedPaymentModes;
+    }
+
+    public void setRestrictedPaymentModes(ArrayList<Integer> restrictedPaymentModes) {
+        this.restrictedPaymentModes = restrictedPaymentModes;
+    }
+
+    public void setPackages(ArrayList<Package> packages) {
 		this.packages = packages;
 	}
 
