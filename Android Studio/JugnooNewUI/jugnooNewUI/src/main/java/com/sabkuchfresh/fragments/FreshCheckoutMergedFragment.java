@@ -292,6 +292,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         layoutMinOrder =(LinearLayout)rootView.findViewById(R.id.layout_min_order);
         tvOrderViaFatafat =(TextView)rootView.findViewById(R.id.tv_order_via_fatafaat);
         tvOrderViaFatafat.setTypeface(tvOrderViaFatafat.getTypeface(),Typeface.BOLD);
+        tvOrderViaFatafat.setText(getString(R.string.action_order_via_fatafat, R.string.fatafat_text));
         tvOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

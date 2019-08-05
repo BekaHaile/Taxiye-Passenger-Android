@@ -241,7 +241,7 @@
                         android:layout_height="wrap_content"
 
                         android:gravity="top"
-                        android:text="@string/anywhere"
+                        android:text="@string/text_for_pickup_anywhre"
                         android:textColor="@color/text_color"
                         android:textSize="13sp"
                         app:typekitFont="@string/maven" />

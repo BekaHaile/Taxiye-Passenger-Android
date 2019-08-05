@@ -83,4 +83,11 @@
     <!--marker animation-->
     <bool name="show_bouncing_marker">true</bool>
 
+    <!--set preferences Inbox-->
+    <bool name="show_inbox_preferences">true</bool>
+
+    <string name="delivery_new_name">@string/text_fatafat</string>
+    <string name="no_delivery_available_your_location">@string/text_no_fatafat_available_your_location</string>
+    <string name="text_for_pickup_anywhre">@string/anywhere</string>
+
 </resources>

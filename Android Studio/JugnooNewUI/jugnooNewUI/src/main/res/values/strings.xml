@@ -773,7 +773,7 @@
     <string name="easy_and_affordable_commute">Easy and affordable commute</string>
     <string name="variety_of_quality_readymade_meals">Variety of quality readymade meals</string>
     <string name="affordable_high_quality_fruits_veggies">Affordable &amp; high Quality fruits &amp; veggies</string>
-    <string name="delivery_new_name">Fatafat</string>
+    <string name="text_fatafat">Fatafat</string>
     <string name="please_swipe_down_to_reload">Please swipe down to reload</string>
 
 
@@ -991,7 +991,7 @@
 
     <string name="no_menus_available_with_these_filters">Sorry, no results found. Try again with fewer filters.</string>
     <string name="no_menus_available_your_location">Sorry, online ordering isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
-    <string name="no_delivery_available_your_location">Sorry, fatafat isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
+    <string name="text_no_fatafat_available_your_location">Sorry, fatafat isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="oops_no_results_found">Oops, No results found</string>
     <string name="quick_filters">Quick Filters</string>
     <string name="free_delivery">Free Delivery</string>
@@ -1352,7 +1352,7 @@
 \n- Grocery/daily needs items
 \n- Pick &amp; drop documents/keys/other items</string>
     <string name="anywhere_hint_order_via_chat">Please enter item details</string>
-    <string name="action_order_via_fatafat">Order via Fatafat</string>
+    <string name="action_order_via_fatafat">Order via %s</string>
     <string name="action_create_custom_order">Custom order</string>
     <string name="label_custom_order">Get anything delivered anywhere by \n  placing a custom order.</string>
     <string name="label_fav_restaurant">Couldn’t find your \n favourite store yet?</string>
@@ -1369,8 +1369,8 @@
         <item quantity="zero">No Rating</item>
         <item quantity="other">%d Ratings</item>
     </plurals>
-    <string name="fatafat_banner_heading"><b>Get it delivered via Fatafat \n</b></string>
-    <string name="fatafat_banner_sub_heading">Your location is outside store\'s delivery area but you can get it through Fatafat</string>
+    <string name="fatafat_banner_heading"><b>Get it delivered via %s \n</b></string>
+    <string name="fatafat_banner_sub_heading">Your location is outside store\'s delivery area but you can get it through %s</string>
     <string name="estimated_delivery_charges">Estimated Delivery Charges</string>
     <string name="estimated_charges">Estimated Charges</string>
     <string name="upload_photo">Upload Photo</string>
@@ -2110,5 +2110,9 @@
     <string name="please_lock_the_bike_and_proceed">Please lock the bike and proceed</string>
     <string name="bike_lock_alert_message">Make sure the bike is locked and parked safely</string>
 
+    <string name="select_pickup_address">Select Pickup Address</string>
+
+    <string name="text_no_delivery_available">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
+    <string name="fatafat_text">Delivery</string>
 
 </resources>
