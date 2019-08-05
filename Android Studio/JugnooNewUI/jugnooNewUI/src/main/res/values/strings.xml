@@ -2110,5 +2110,8 @@
     <string name="please_lock_the_bike_and_proceed">Please lock the bike and proceed</string>
     <string name="bike_lock_alert_message">Make sure the bike is locked and parked safely</string>
 
+    <string name = "Do_you_want_add_driver_as_a_favourote">Do you want add driver \n as a favourote ?</string>
+    <string name="ride_with_favourite_driver">Do you want ride with your \n favourite driver?</string>
+
 
 </resources>
