@@ -207,8 +207,8 @@ public class ScratchView extends View {
         Rect rect = new Rect(0, 0, getWidth(), getHeight());
         mDrawable.setBounds(rect);
 
-        int startGradientColor = ContextCompat.getColor(getContext(), R.color.scratch_start_gradient);
-        int endGradientColor = ContextCompat.getColor(getContext(), R.color.scratch_end_gradient);
+        int startGradientColor = ContextCompat.getColor(getContext(), R.color.transparent);
+        int endGradientColor = ContextCompat.getColor(getContext(), R.color.transparent);
 
 
         mGradientBgPaint.setShader(new LinearGradient(0, 0, 0, getHeight(), startGradientColor, endGradientColor, Shader.TileMode.MIRROR));
@@ -274,7 +274,7 @@ public class ScratchView extends View {
             mX = x;
             mY = y;
 
-            drawPath();
+            drawPath(false);
         }
 
 
@@ -283,7 +283,7 @@ public class ScratchView extends View {
 
     }
 
-    private void drawPath() {
+    private void drawPath(final boolean isUp) {
         mErasePath.lineTo(mX, mY);
         // commit the path to our offscreen
         mCanvas.drawPath(mErasePath, mErasePaint);
@@ -292,7 +292,9 @@ public class ScratchView extends View {
         mErasePath.reset();
         mErasePath.moveTo(mX, mY);
 
-        checkRevealed();
+        if(isUp) {
+            checkRevealed();
+        }
     }
 
     public void reveal() {
@@ -307,7 +309,7 @@ public class ScratchView extends View {
     }
 
     private void touch_up() {
-        drawPath();
+        drawPath(true);
     }
 
     @Override
@@ -355,7 +357,7 @@ public class ScratchView extends View {
     }
 
     public boolean isRevealed() {
-        return mRevealPercent >= 0.50;
+        return mRevealPercent >= 0.02;
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -408,6 +410,7 @@ public class ScratchView extends View {
 
                         // if now revealed.
                         if (isRevealed()) {
+                            reveal();
                             mRevealListener.onRevealed(ScratchView.this);
                         }
                     }

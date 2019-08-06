@@ -18,8 +18,8 @@ class Fare(
         @SerializedName("fare_per_waiting_min") @Expose var farePerWaitingMin: Double
 )
 
-class Region(
+class Region @JvmOverloads constructor(
         @SerializedName("region_name") @Expose var regionName: String,
         @SerializedName("max_people") @Expose var maxPeople: Int,
-        @SerializedName("fares") @Expose var fare: Fare
+        @SerializedName("fares") @Expose var fare: Fare? = null
 )

@@ -3,13 +3,18 @@ package product.clicklabs.jugnoo.newui.dialog
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.DialogFragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.Toast
 import product.clicklabs.jugnoo.R
+import product.clicklabs.jugnoo.newui.utils.customview.ScratchView
 
 
 class RewardsDialog : DialogFragment() {
@@ -56,5 +61,24 @@ class RewardsDialog : DialogFragment() {
      *
      */
     private fun setData() {
+        val scratchView : ScratchView = rootView.findViewById(R.id.scratch_view)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            scratchView.setRevealListener(object : ScratchView.IRevealListener {
+                override fun onRevealed(scratchView: ScratchView) {
+                    Toast.makeText(context, "Revealed", Toast.LENGTH_LONG).show()
+                    Handler().postDelayed({
+                        dismiss()
+                    }, 1000)
+                }
+
+                override fun onRevealPercentChangedListener(scratchView: ScratchView, percent: Float) {
+                    if (percent >= 0.5) {
+                        Log.d("Reveal Percentage", "onRevealPercentChangedListener: $percent")
+                    }
+                }
+            })
+        }
+
     }
 }
