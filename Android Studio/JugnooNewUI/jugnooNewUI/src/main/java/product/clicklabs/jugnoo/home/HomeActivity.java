@@ -59,6 +59,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -403,11 +404,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites, linearLayoutPaymentModeConfirm;
 
     RatingBarMenuFeedback ratingBarRSFeedback;
-    TextView textViewRSWhatImprove, textViewRSOtherError;
+    TextView textViewRSWhatImprove, textViewRSOtherError,tvAddDriverFavourite;
     NonScrollGridView gridViewRSFeedbackReasons;
     FeedbackReasonsAdapter feedbackReasonsAdapter;
     EditText editTextRSFeedback;
-    Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
+    Button buttonRSSubmitFeedback, buttonRSSkipFeedback ,btnFavouriteCancle,btnFavouriteAdd;
     TextView textViewRSScroll, textViewChangeLocality;
     private TextView textViewSendInvites, textViewSendInvites2, textViewThumbsDown, textViewThumbsUp, textViewCancellation,
             textViewPaymentModeValueConfirm, textViewOffersConfirm, textVieGetFareEstimateConfirm, textViewPoolInfo1, textViewCouponApplied,
@@ -419,12 +420,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private AnimationDrawable jugnooAnimation;
     private ImageView imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
-    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
+    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends,btnRideNo,btnRideYes;
     private LinearLayout llPayOnline;
-    private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate;
+    private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate,tvRideDriverFavourite;
     private boolean isFromConfirmToOther;
 
-
+    private  float ratingCount;
     // data variables declaration
 
     DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -563,7 +564,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ;
     public Gson gson = new Gson();
     private boolean addressPopulatedFromDifferentOffering;
-
+    Dialog dialog;
 
     private RecyclerView rvBidsIncoming;
     private ImageView ivCancelRequest;
@@ -1947,6 +1948,51 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             editTextRSFeedback.setLayoutParams(layoutParams);
                         } else {
                             setZeroRatingView();
+                        }
+                        if (score >= 3 &&score <= 5 ) {
+                            ratingCount = ratingBarRSFeedback.getScore();
+                                Log.i("rating bar", "rating bar selected"+ratingCount);
+                                if(dialog==null) {
+                                    dialog = new Dialog(HomeActivity.this);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setContentView(R.layout.dialog_add_driver_favourote);
+
+                                    dialog.setCancelable(false);
+                                    dialog.setCanceledOnTouchOutside(false);
+
+                                    dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+                                    WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+                                    layoutParams.dimAmount = 0.5f;
+                                    dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                                    tvAddDriverFavourite = (TextView) dialog.findViewById(R.id.tvAddDriverFavourite);
+
+                                    btnFavouriteCancle = (Button) dialog.findViewById(R.id.btnFavouriteCancle);
+                                    btnFavouriteCancle.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+                                    btnFavouriteAdd = (Button) dialog.findViewById(R.id.btnFavouriteAdd);
+                                    btnFavouriteAdd.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+                                    tvAddDriverFavourite.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+
+                                    btnFavouriteCancle.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                                    btnFavouriteAdd.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                        }
+                                    });
+                                }
+                                if(!dialog.isShowing()) {
+                                    dialog.show();
+                                }
+
                         }
                     }
                 } catch (Exception e) {

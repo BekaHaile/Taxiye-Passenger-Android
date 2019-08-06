@@ -2,11 +2,12 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/tvAddDriverFavourite"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
@@ -14,36 +15,41 @@
         android:text="@string/Do_you_want_add_driver_as_a_favourote"
         android:textColor="@color/text_color"
         android:textSize="20sp"
+        android:tag="@string/dont_touch_me"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/tvFavouriteCancle"
+        android:id="@+id/btnFavouriteCancle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/cancel"
+        android:textSize="13sp"
         style="@style/ButtonThemeCapsule"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="@dimen/dp_16"
+        android:tag="@string/dont_touch_me"
         app:layout_constraintTop_toBottomOf="@+id/tvAddDriverFavourite"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/tvFavouriteAdd"
+        app:layout_constraintEnd_toStartOf="@id/btnFavouriteAdd"
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
     <Button
-        android:id="@+id/tvFavouriteAdd"
+        android:id="@+id/btnFavouriteAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/add"
+        android:textSize="13sp"
         style="@style/ButtonThemeCapsule"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="@dimen/dp_16"
+        android:tag="@string/dont_touch_me"
         app:layout_constraintTop_toBottomOf="@+id/tvAddDriverFavourite"
-        app:layout_constraintStart_toEndOf="@id/tvFavouriteCancle"
+        app:layout_constraintStart_toEndOf="@id/btnFavouriteCancle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         />
