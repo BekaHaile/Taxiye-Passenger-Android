@@ -280,7 +280,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		ivLocationMarker.setOnClickListener(view -> {
 			if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
 				if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet)
-					fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false);
+					fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, false);
 				stopAnimation();
 			}
 		});
@@ -437,7 +437,12 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					searchAdapterListener.onPlaceSearchPre();
 					searchAdapterListener.onPlaceSearchPost(autoCompleteSearchResult, null);
 				}else{
-					Utils.showToast(activity,activity.getString(R.string.please_wait));
+					if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+						if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet)
+							fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, true);
+						stopAnimation();
+					}
+					Utils.showToast(activity, activity.getString(R.string.please_wait));
 				}
 
 
@@ -810,7 +815,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						public void onMapSettled() {
 							if (!getResources().getBoolean(R.bool.show_bouncing_marker)) {
 								if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED)
-									fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false);
+									fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, false);
 //								autoCompleteResultClicked = false;
 							}
 						}
@@ -822,7 +827,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					};
 
 					if (PlaceSearchListFragment.this.searchMode == PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()) {
-						fillAddressDetails(googleMap.getCameraPosition().target,true);
+						fillAddressDetails(googleMap.getCameraPosition().target,true, false);
 
 					}
 
@@ -872,7 +877,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private Job jobGeocode = null;
 	private Double lastLatFetched ;
 	private Double lastLngFetched ;
-	private void fillAddressDetails(LatLng latLng, final boolean setSearchResult) {
+	private void fillAddressDetails(LatLng latLng, final boolean setSearchResult, final boolean isFromConfirm) {
 		try {
 			getFocussedProgressBar().setVisibility(View.VISIBLE);
 
@@ -882,7 +887,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			if(jobGeocode != null){
 				jobGeocode.cancel(new CancellationException());
 			}
-			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, address -> setAddressToUI(address, setSearchResult));
+			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, address -> PlaceSearchListFragment.this.setAddressToUI(address, setSearchResult, isFromConfirm));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -965,7 +970,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				startAnimation();
 			} else {
 				if(googleMap != null) {
-					fillAddressDetails(googleMap.getCameraPosition().target, false);
+					fillAddressDetails(googleMap.getCameraPosition().target, false, false);
 				}
 			}
 			Utils.hideSoftKeyboard(activity,editTextSearch);
@@ -1075,7 +1080,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 
-	private void setAddressToUI(GoogleGeocodeResponse address, boolean setSearchResult) {
+	private void setAddressToUI(GoogleGeocodeResponse address, boolean setSearchResult, final boolean isFromConfirm) {
 		Log.i("PlaceSearchListFragment", "setAddressToUI address=" + address);
 		GAPIAddress gapiAddress = null;
 		if (address != null) {
@@ -1097,5 +1102,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			setFetchedAddressToTextView("", false, false);
 		}
 		getFocussedProgressBar().setVisibility(View.GONE);
+
+		if (isFromConfirm) {
+			bNext.performClick();
+		}
 	}
 }
