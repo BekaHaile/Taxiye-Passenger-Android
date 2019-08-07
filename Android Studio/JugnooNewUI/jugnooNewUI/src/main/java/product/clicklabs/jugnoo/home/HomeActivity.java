@@ -11874,7 +11874,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void setScheduleIcon() {
-        if(isScheduleRideEnabled) {
+        if(passengerScreenMode == PassengerScreenMode.P_INITIAL && isScheduleRideEnabled) {
             topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
         } else {
             topBar.imageViewScheduleRide.setVisibility(View.GONE);
