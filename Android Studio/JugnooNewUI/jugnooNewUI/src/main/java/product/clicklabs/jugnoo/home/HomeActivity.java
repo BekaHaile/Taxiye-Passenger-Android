@@ -2502,6 +2502,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         map.setInfoWindowAdapter(customIW);
 
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
+								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
                                 && getResources().getBoolean(R.bool.show_save_location_dialog)
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
                         && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
@@ -2566,6 +2567,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     } else if(arg0.getTitle().equalsIgnoreCase("End Location")) {
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED
                                 || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL)
+								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
                                 && getResources().getBoolean(R.bool.show_save_location_dialog)
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)
                                 && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
@@ -4803,20 +4805,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
 
                         if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                            relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
+							relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
                         } else {
-                            relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
+							relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
                         }
                         try {
                             Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
                             topInAnimation.setAnimationListener(new Animation.AnimationListener() {
                                 @Override
                                 public void onAnimationStart(Animation animation) {
-                                    if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                        relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
-                                    } else {
-                                        relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
-                                    }
                                 }
 
                                 @Override
@@ -4837,7 +4834,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 }
                             });
-                            relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+							if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+								relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+							}
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -4851,14 +4850,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else {
                 relativeLayoutDestinationHelp.setVisibility(View.GONE);
                 if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
-                    if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                        relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
-                    } else {
-                        relativeLayoutAssigningDropLocationParent.setVisibility(View.VISIBLE);
-                    }
+					if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+						relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
+					} else {
+						relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
+					}
                     try {
-                        Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-                        relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+						if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+							Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
+							relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
+						}
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
