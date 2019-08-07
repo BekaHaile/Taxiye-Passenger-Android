@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/tvRideDriverFavourite"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
@@ -23,36 +23,35 @@
 
     <Button
         android:id="@+id/btnRideNo"
+        style="@style/ButtonThemeCapsule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no"
-        android:textSize="13sp"
-        style="@style/ButtonThemeCapsule"
-        android:tag="@string/dont_touch_me"
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="@dimen/dp_16"
-        app:layout_constraintTop_toBottomOf="@+id/tvRideDriverFavourite"
-        app:layout_constraintStart_toStartOf="parent"
+        android:tag="@string/dont_touch_me"
+        android:text="@string/no"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnRideYes"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRideDriverFavourite" />
 
     <Button
         android:id="@+id/btnRideYes"
+        style="@style/ButtonThemeCapsule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:tag="@string/dont_touch_me"
         android:text="@string/yes"
         android:textSize="13sp"
-        android:tag="@string/dont_touch_me"
-        style="@style/ButtonThemeCapsule"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="@dimen/dp_16"
-        app:layout_constraintTop_toBottomOf="@+id/tvRideDriverFavourite"
-        app:layout_constraintStart_toEndOf="@id/btnRideNo"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnRideNo"
+        app:layout_constraintTop_toBottomOf="@+id/tvRideDriverFavourite" />
 
 
 
