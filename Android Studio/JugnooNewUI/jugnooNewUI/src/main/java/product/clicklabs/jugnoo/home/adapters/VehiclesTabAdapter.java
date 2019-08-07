@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.home.dialogs.VehicleFareEstimateDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 
 public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> implements GAAction, GACategory{
 
@@ -119,6 +120,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("clicked main button","----------");
                 int position = (int) v.getTag();
                 boolean changed = activity.setVehicleTypeSelected(position, true, false);
                 if(showRegionFares && !changed){

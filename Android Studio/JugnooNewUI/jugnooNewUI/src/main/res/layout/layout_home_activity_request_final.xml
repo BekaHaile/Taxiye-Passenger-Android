@@ -547,7 +547,7 @@
             android:layout_alignParentEnd="true"
             android:gravity="center"
             android:layout_marginEnd="40px">
-            
+
             <RelativeLayout
                 android:id="@+id/rlChatDriver"
                 android:layout_width="wrap_content"

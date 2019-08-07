@@ -302,6 +302,15 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case SEND_EMAIL_INVOICE:
                 RestClient.getApiService().sendEmailInvoice(params, callback);
                 break;
+            case RENTALS_UPDATE_LOCK_STATUS:
+                RestClient.getApiService().updateLockStatus(params, callback);
+                break;
+            case RENTALS_GET_LOCK_STATUS:
+                RestClient.getApiService().getLockStatus(params, callback);
+                break;
+            case RENTALS_INSERT_DAMAGE_REPORT:
+                RestClient.getApiService().insertDamageReport(multipartTypedOutput, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

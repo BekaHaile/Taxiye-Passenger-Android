@@ -98,6 +98,7 @@ import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
+import product.clicklabs.jugnoo.rentals.InstructionDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
@@ -492,6 +493,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			}
 
 			Data.splashIntentUri = getIntent().getData();
+
+			InstructionDialog.shownInSession = false;
 
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
@@ -2102,6 +2105,13 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	@Override
 	protected void onResume() {
 		super.onResume();
+
+		//hack for entering operator token
+		/*if(Prefs.with(this).getString(Constants.KEY_OPERATOR_TOKEN, "not_here").equalsIgnoreCase("not_here")) {
+			ActivityCompat.finishAffinity(this);
+			startActivity(new Intent(this, EnterOperatorActivity.class));
+			return;
+		}*/
 
 		requestLocationUpdatesExplicit();
 

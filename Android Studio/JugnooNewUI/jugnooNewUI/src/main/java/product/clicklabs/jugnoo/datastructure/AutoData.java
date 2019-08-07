@@ -74,8 +74,13 @@ public class AutoData {
     private String currency;
     private boolean isServiceAv;
     private int lock = 0;
+    private int bluetoothEnabled =0;
     private String  previousSelService = "";
     private int resendEmailInvoiceEnabled;
+
+    // RENTAL
+
+    private List<String> FaultConditions;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -84,7 +89,8 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare, int resendEmailInvoiceEnabled) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare, int resendEmailInvoiceEnabled,int bluetoothEnabled) {
+        this.bluetoothEnabled = bluetoothEnabled;
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -112,14 +118,19 @@ public class AutoData {
         this.isTipEnabled = isTipEnabled;
         this.showRegionSpecificFare = showRegionSpecificFare;
         this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
-        ArrayList<Integer> rideTypes = new ArrayList<>();
-        ArrayList<Integer> regionIds = new ArrayList<>();
-        rideTypes.add(ServiceTypeValue.NORMAL.getType());
-        rideTypes.add(ServiceTypeValue.POOL.getType());
-        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
-    }
+		defaultServiceType();
+	}
 
-    public String getDestinationHelpText() {
+	public void defaultServiceType() {
+		ArrayList<Integer> rideTypes = new ArrayList<>();
+		ArrayList<Integer> regionIds = new ArrayList<>();
+		rideTypes.add(ServiceTypeValue.NORMAL.getType());
+		rideTypes.add(ServiceTypeValue.POOL.getType());
+		rideTypes.add(ServiceTypeValue.BIKE_RENTAL.getType());
+		serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
+	}
+
+	public String getDestinationHelpText() {
         return destinationHelpText;
     }
 
@@ -133,6 +144,14 @@ public class AutoData {
 
     public void setRideSummaryBadText(String rideSummaryBadText) {
         this.rideSummaryBadText = rideSummaryBadText;
+    }
+
+    public int getBluetoothEnabled() {
+        return bluetoothEnabled;
+    }
+
+    public void setBluetoothEnabled(int bluetoothEnabled) {
+        this.bluetoothEnabled = bluetoothEnabled;
     }
 
     public String getCancellationChargesPopupTextLine1() {
@@ -359,6 +378,7 @@ public class AutoData {
             }
             if(!isSelectedTypeAvailable && Data.autoData != null && (Data.autoData.getServiceTypes() == null || Data.autoData.getServiceTypes().isEmpty())) {
                 isSelectedTypeAvailable = true;
+				defaultServiceType();
             }
             if (!isSelectedTypeAvailable) {
                 if (getServiceTypes() != null && getServiceTypes().size() > 0) {
@@ -743,5 +763,14 @@ public class AutoData {
 
     public void setResendEmailInvoiceEnabled(int resendEmailInvoiceEnabled) {
         this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
+    }
+
+
+    public List<String> getFaultConditions() {
+        return FaultConditions;
+    }
+
+    public void setFaultConditions(List<String> faultConditions) {
+        FaultConditions = faultConditions;
     }
 }

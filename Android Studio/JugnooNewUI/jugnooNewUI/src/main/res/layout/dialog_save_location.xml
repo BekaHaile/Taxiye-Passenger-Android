@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:tag="@string/dont_touch_me"
     android:background="@color/transparent"
     android:padding="50dp">
 
@@ -16,7 +17,7 @@
         android:paddingEnd="20dp"
         android:text="@string/save_your_pickup_location"
         android:textColor="@color/white"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:paddingBottom="6dp"
         app:layout_constraintStart_toStartOf="parent"
          app:layout_constraintEnd_toEndOf="parent"

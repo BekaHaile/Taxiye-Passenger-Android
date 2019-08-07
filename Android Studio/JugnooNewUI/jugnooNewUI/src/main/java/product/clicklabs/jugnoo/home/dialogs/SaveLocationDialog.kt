@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.home.dialogs
 
+import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -7,9 +8,12 @@ import android.support.v4.app.DialogFragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import kotlinx.android.synthetic.main.dialog_save_location.view.*
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.utils.ASSL
+
+
 
 class SaveLocationDialog : DialogFragment() {
     private var lat : Double? = 0.0
@@ -19,9 +23,14 @@ class SaveLocationDialog : DialogFragment() {
     private lateinit var rootView : View
     private var finalViewHeight : Float? = 0f
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.fullscreen_dialog)
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        // The only reason you might override this method when using onCreateView() is
+        // to modify any dialog characteristics. For example, the dialog includes a
+        // title by default, but your custom layout might not need it. So here you can
+        // remove the dialog title, but you must call the superclass to get the Dialog.
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        return dialog
     }
 
     companion object {

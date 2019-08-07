@@ -31,8 +31,14 @@ public class Driver {
 	@SerializedName("vehicle_type")
 	@Expose
 	private Integer vehicleType;
-	@SerializedName("region_ids")
+	@SerializedName("device_token")
 	@Expose
+	private String deviceToken;
+	@SerializedName("external_id")
+	@Expose
+	private String externalId;
+	@Expose
+	@SerializedName("region_ids")
 	private List<Integer> regionIds = new ArrayList<>();
 	@SerializedName("distance")
 	@Expose
@@ -155,6 +161,22 @@ public class Driver {
 	 */
 	public Double getRating() {
 		return rating;
+	}
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
 	}
 
 	/**

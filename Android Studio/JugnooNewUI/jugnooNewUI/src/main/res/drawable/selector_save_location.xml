@@ -3,5 +3,5 @@
 
     <item android:drawable="@drawable/ic_save_location_heart" android:state_pressed="true"/>
     <item android:drawable="@drawable/ic_save_location_empty_heart"/>
-    
+
 </selector>

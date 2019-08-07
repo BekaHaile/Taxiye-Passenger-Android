@@ -21,6 +21,7 @@ public class Driver {
 	@Expose
 	private String userName;
 	@SerializedName("phone_no")
+
 	@Expose
 	private String phoneNo;
 	@SerializedName("latitude")
@@ -121,6 +122,9 @@ public class Driver {
 	public Integer getVehicleType() {
 		return vehicleType;
 	}
+
+
+
 
 	/**
 	 * @param vehicleType The vehicle_type

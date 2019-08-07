@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.branch.referral.Branch;
@@ -53,6 +54,7 @@ import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedString;
 
@@ -489,4 +491,25 @@ public class HomeUtil {
 		}
 	}
 
+
+	public static int chooseNextEligiblePaymentOption(int paymentOption, HomeActivity activity) {
+		ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
+		if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
+			List<Integer> restrictedPaymentMode = new ArrayList<>();
+			if (Data.autoData.getRegions().size() > 1) {
+				restrictedPaymentMode = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
+			} else if (Data.autoData.getRegions().size() > 0) {
+				restrictedPaymentMode = Data.autoData.getRegions().get(0).getRestrictedPaymentModes();
+			}
+			for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
+				if (paymentModeConfigData.getEnabled() == 1) {
+					if ((restrictedPaymentMode.size() > 0 && !restrictedPaymentMode.contains(paymentModeConfigData.getPaymentOption())) || restrictedPaymentMode.size() == 0) {
+						paymentOption = paymentModeConfigData.getPaymentOption();
+						break;
+					}
+				}
+			}
+		}
+		return paymentOption;
+	}
 }

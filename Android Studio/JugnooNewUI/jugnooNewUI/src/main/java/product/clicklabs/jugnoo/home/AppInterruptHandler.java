@@ -37,4 +37,6 @@ public interface AppInterruptHandler {
 	void onDisplayMessagePushReceived();
 
 	void onUpdatePoolRideStatus(JSONObject jsonObject);
+
+	void updateGpsLockStatus(int gpsLockStatus);
 }
