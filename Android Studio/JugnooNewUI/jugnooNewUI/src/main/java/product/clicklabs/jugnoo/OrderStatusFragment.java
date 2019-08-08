@@ -392,6 +392,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                     }
                 }
             });
+            bCancelOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelOrder(true);
+                }
+            });
             feedFragmentShadowTop.setVisibility(View.GONE);
             rootView.findViewById(R.id.layout_menus_order).setVisibility(View.GONE);
             rootView.findViewById(R.id.layout_feed_order).setVisibility(View.VISIBLE);
@@ -438,6 +444,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         return relative;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     private void initPaymentMethodViews() {
         llPaymentSummary = (LinearLayout) cvPaymentMethod.findViewById(R.id.llPaymentSummary);
         ((TextView) cvPaymentMethod.findViewById(R.id.tvPaymentSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
@@ -478,6 +489,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                     currency = datum1.getCurrency();
                                     setOrderItemAdapter();
                                     llMain.setVisibility(View.VISIBLE);
+
                                     if (historyResponse.getRecentOrdersPossibleFatafatStatus().size() > 0) {
                                         cvOrderStatus.setVisibility(View.VISIBLE);
                                         rlOrderStatusFeed.setVisibility(View.GONE);
@@ -486,10 +498,24 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
                                         showPossibleStatus(historyResponse.getRecentOrdersPossibleFatafatStatus(), datum1.getOrderStatusIndex(),true);
 
+                                        TrackOrderFragment fragment = getTrackOrderFragment();
+//                                        if (fragment != null) {
+//                                            // for multiple deliveries, update the currently delivery point being delivered
+//                                            fragment.updateOrderDetails(datum1.getDeliveries(), datum1.getLiveTracking().isPickupCompleted());
+//                                        }
+
+                                        if (datum1.getCancellable() == 1) {
+                                            bCancelOrder.setVisibility(View.VISIBLE);
+                                        } else {
+                                            bCancelOrder.setVisibility(View.GONE);
+                                        }
+
                                     } else {
                                         cvOrderStatus.setVisibility(View.GONE);
                                         rlOrderStatusFeed.setVisibility(View.VISIBLE);
                                         dividerBelowRlOrderStatusFeed.setVisibility(View.VISIBLE);
+
+                                        bCancelOrder.setVisibility(View.GONE);
                                     }
 
                                     setFeedOrderData(datum1, activity);
@@ -522,6 +548,51 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void cancelOrder(boolean isFromFatafat) {
+        if (datum1.getCancellable() == 1) {
+            int storeId = datum1.getStoreId() == null ? 0 : datum1.getStoreId();
+            if (datum1.getShowCancellationReasons() == 1) {
+                int containerId = -1;
+                if (activity instanceof FreshActivity) {
+                    containerId = ((FreshActivity) activity).getRelativeLayoutContainer().getId();
+                } else if (activity instanceof RideTransactionsActivity) {
+                    containerId = ((RideTransactionsActivity) activity).getContainer().getId();
+                } else if (activity instanceof SupportActivity) {
+                    containerId = ((SupportActivity) activity).getContainer().getId();
+                }
+                if (containerId > -1) {
+                    activity.getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                            .add(containerId, OrderCancelReasonsFragment.newInstance(datum1.getOrderId(),
+                                    productType, storeId, getClientIdByProductType(productType)),
+                                    OrderCancelReasonsFragment.class.getName())
+                            .addToBackStack(OrderCancelReasonsFragment.class.getName())
+                            .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                                    .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                            .commitAllowingStateLoss();
+                }
+            } else if (!isFromFatafat) {
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", getString(R.string.are_you_sure_cancel_order), getResources().getString(R.string.ok),
+                        getResources().getString(R.string.cancel), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                cancelOrderApi();
+                                if (activity instanceof FreshActivity) {
+                                    GAUtils.event(((FreshActivity) activity).getGaCategory(), ORDER_STATUS, ORDER + CANCELLED);
+                                }
+                            }
+                        }, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }, false, false);
+            }
+        } else if (!isFromFatafat) {
+            feedbackBtn.performClick();
         }
     }
 

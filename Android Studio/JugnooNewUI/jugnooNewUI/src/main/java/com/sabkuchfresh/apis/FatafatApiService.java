@@ -77,4 +77,9 @@ public interface FatafatApiService {
     @GET("/nearby_agents")
     void nearbyAgents(@QueryMap Map<String, String> params, Callback<NearbyDriversResponse> callback);
 
+    @FormUrlEncoded
+    @POST("/cancel_order")
+    void cancelOrder(@FieldMap Map<String, String> params,
+                     Callback<SettleUserDebt> callback);
+
 }
