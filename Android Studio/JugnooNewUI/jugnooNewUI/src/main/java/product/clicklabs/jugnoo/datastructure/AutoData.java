@@ -118,15 +118,19 @@ public class AutoData {
         this.isTipEnabled = isTipEnabled;
         this.showRegionSpecificFare = showRegionSpecificFare;
         this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
-        ArrayList<Integer> rideTypes = new ArrayList<>();
-        ArrayList<Integer> regionIds = new ArrayList<>();
-        rideTypes.add(ServiceTypeValue.NORMAL.getType());
-        rideTypes.add(ServiceTypeValue.POOL.getType());
-        rideTypes.add(ServiceTypeValue.BIKE_RENTAL.getType());
-        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
-    }
+		defaultServiceType();
+	}
 
-    public String getDestinationHelpText() {
+	public void defaultServiceType() {
+		ArrayList<Integer> rideTypes = new ArrayList<>();
+		ArrayList<Integer> regionIds = new ArrayList<>();
+		rideTypes.add(ServiceTypeValue.NORMAL.getType());
+		rideTypes.add(ServiceTypeValue.POOL.getType());
+		rideTypes.add(ServiceTypeValue.BIKE_RENTAL.getType());
+		serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
+	}
+
+	public String getDestinationHelpText() {
         return destinationHelpText;
     }
 
@@ -374,6 +378,7 @@ public class AutoData {
             }
             if(!isSelectedTypeAvailable && Data.autoData != null && (Data.autoData.getServiceTypes() == null || Data.autoData.getServiceTypes().isEmpty())) {
                 isSelectedTypeAvailable = true;
+				defaultServiceType();
             }
             if (!isSelectedTypeAvailable) {
                 if (getServiceTypes() != null && getServiceTypes().size() > 0) {

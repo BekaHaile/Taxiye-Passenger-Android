@@ -15,13 +15,16 @@ class ReflectionUtils {
             f.setAccessible(true);
             return f;
         } catch (NoSuchFieldException ignored) {
+            ignored.printStackTrace();
         }
         return null;
     }
 
     static Object getValue(Field field, Object obj) {
         try {
-            return field.get(obj);
+            if(field!=null && obj!=null && field.get(obj)!=null) {
+                return field.get(obj);
+            }
         } catch (IllegalAccessException ignored) {
         }
         return null;
@@ -29,6 +32,7 @@ class ReflectionUtils {
 
     static void setValue(Field field, Object obj, Object value) {
         try {
+            if(field!=null && obj!=null && field.get(obj)!=null)
             field.set(obj, value);
         } catch (IllegalAccessException ignored) {
         }
