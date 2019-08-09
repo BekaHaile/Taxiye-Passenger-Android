@@ -345,6 +345,33 @@ public class HistoryResponse {
         private String distanceUnit;
         @SerializedName("currency_code")
         private String currencyCode;
+        @Expose
+        @SerializedName("pending_feedback")
+        private int pendingFeedback = 0;
+
+        @Expose
+        @SerializedName("feedback_info")
+        private LoginResponse.FeedbackData feedbackData;
+
+        @Expose
+        @SerializedName("driver_name")
+        private String driveName;
+
+        public boolean isPendingFeedback() {
+            return pendingFeedback == 1;
+        }
+
+        public LoginResponse.FeedbackData getFeedBackData() {
+            return feedbackData;
+        }
+
+        public String getDriveName() {
+            return driveName;
+        }
+
+        public void setDriveName(String driveName) {
+            this.driveName = driveName;
+        }
 
         @Expose
         @SerializedName("deliveries")
@@ -362,27 +389,7 @@ public class HistoryResponse {
         @SerializedName("order_created_at")
         private String order_created_at;
 
-        @Expose
-        @SerializedName("driver_name")
-        private String driveName;
-
-        @Expose
-        @SerializedName("feedback_info")
-        private LoginResponse.FeedbackData feedbackData;
-
-        @Expose
-        @SerializedName("pending_feedback")
-        private int pendingFeedback = 0;
-
-        public boolean isPendingFeedback() {
-            return pendingFeedback == 1;
-        }
-
-        public LoginResponse.FeedbackData getFeedBackData() {
-            return feedbackData;
-        }
-
-         public String getDriverName() {
+        public String getDriverName() {
             return driveName;
         }
 

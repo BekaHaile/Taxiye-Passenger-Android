@@ -71,6 +71,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.BillSummaryModel;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
@@ -93,13 +94,15 @@ import retrofit.mime.TypedByteArray;
 
 public class OrderStatusFragment extends Fragment implements GAAction, View.OnClickListener {
 
+    private static final int REQ_CODE_REORDER = 5011;
+    private boolean hideRateOrder, hideRepeatOrder;
     private CoordinatorLayout relative;
     private RelativeLayout rlOrderStatus;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
             tvDelveryPlace, tvDeliveryToVal,
             tvTotalAmountVal, tvAmountPayableVal;
     private ImageView ivDeliveryPlace, ivOrderCompleted, imageViewRestaurant, imageViewCallRestaurant;
-    private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
+    private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn, btRateOrder;
     private int orderId, productType;
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
@@ -132,6 +135,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private boolean isFeedOrder;
     private HomeUtil homeUtil = new HomeUtil();
     private String currencyCode, currency;
+    private String vehicleImage;
+
+    private com.sabkuchfresh.home.TransactionUtils transactionUtils;
 
     @BindView(R.id.tv2r)
     TextView tv2r;
@@ -204,6 +210,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -228,6 +235,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             orderId = getArguments().getInt(Constants.KEY_ORDER_ID, 0);
             productType = getArguments().getInt(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
             openLiveTracking = getArguments().getInt(Constants.KEY_OPEN_LIVE_TRACKING, 0);
+            hideRateOrder = getArguments().getBoolean(Constants.KEY_SHOW_RATE_ORDER_BUTTON, false);
             setFragTitle();
         } catch (Exception e) {
             e.printStackTrace();
@@ -348,6 +356,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         reorderBtn.setTypeface(Fonts.mavenRegular(activity));
         feedbackBtn = (Button) rootView.findViewById(R.id.feedbackBtn);
         feedbackBtn.setTypeface(Fonts.mavenRegular(activity));
+        btRateOrder = (Button) rootView.findViewById(R.id.btRateOrder);
+        btRateOrder.setTypeface(Fonts.mavenRegular(activity));
         cancelfeedbackBtn = (Button) rootView.findViewById(R.id.cancelfeedbackBtn);
         cancelfeedbackBtn.setTypeface(Fonts.mavenRegular(activity));
 
@@ -364,12 +374,16 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
         buttonCancelOrder.setOnClickListener(this);
+        btRateOrder.setOnClickListener(this);
         reorderBtn.setOnClickListener(this);
         feedbackBtn.setOnClickListener(this);
         cancelfeedbackBtn.setOnClickListener(this);
 
 
         listViewOrder = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
+        orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders, currencyCode, currency);
+        listViewOrder.setAdapter(orderItemsAdapter);
+
 
 
 
@@ -633,6 +647,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         SearchResult searchResultTo = homeUtil.getNearBySavedAddress(activity,
                 new LatLng(datum.getToLatitude(), datum.getToLongitude()),
                 Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+        btRateOrder.setVisibility(datum.isPendingFeedback() ? View.VISIBLE : View.GONE);
         if (searchResultTo != null && !TextUtils.isEmpty(searchResultTo.getName())) {
             llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
             ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResultTo.getName()));
@@ -806,6 +821,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         if (!hidden) {
             if (activity instanceof FreshActivity) {
                 ((FreshActivity) activity).fragmentUISetup(this);
+            }
+
+            if (isFeedOrder){
+                getFeedOrderData(activity);
+            } else{
+                getOrderData(activity);
             }
             setFragTitle();
             if (datum1.getCancellable() == 1) {
@@ -1161,6 +1182,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 rlOrderStatus.setVisibility(View.VISIBLE);
             }
 
+            btRateOrder.setVisibility(datum1.isPendingFeedback() ? View.VISIBLE : View.GONE);
 
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum1.getOrderTime())));
 
@@ -1487,6 +1509,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                     GAUtils.event(GACategory.SIDE_MENU, ORDER + DETAILS, NEED_HELP + CLICKED);
                 }
                 break;
+            case R.id.btRateOrder:
+                openFeedBackFragment();
+                break;
         }
     }
 
@@ -1719,4 +1744,36 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
        return Config.getAutosClientId();
     }
+
+    private com.sabkuchfresh.home.TransactionUtils getTransactionUtils() {
+        if (transactionUtils == null) {
+            transactionUtils = new com.sabkuchfresh.home.TransactionUtils();
+        }
+        return transactionUtils;
+    }
+
+    private void openFeedBackFragment() {
+       View container = null;
+        if (getActivity() instanceof RideTransactionsActivity) {
+            container = ((RideTransactionsActivity)getActivity()).getContainer();
+        } else if (activity instanceof FreshActivity) {
+            container = ((FreshActivity)getActivity()).getRelativeLayoutContainer();
+        }
+        getTransactionUtils().openFeedback(getActivity(), container, getClientIdByProductType(productType),
+                getFeedBackData(), false);
+    }
+
+    private LoginResponse.FeedbackData getFeedBackData() {
+        LoginResponse.FeedbackData feedbackData = datum1.getFeedBackData();
+        if (feedbackData == null) return null;
+
+        feedbackData.setRestaurantName(datum1.getRestaurantName());
+        feedbackData.setDriverName(datum1.getDriveName());
+        feedbackData.setOrderId(String.valueOf(datum1.getOrderId()));
+        feedbackData.setAmount(datum1.getDiscountedAmount() == 0 ? datum1.getAmount() : datum1.getDiscountedAmount());
+        feedbackData.setFeedbackCurrencyCode(currencyCode);
+        feedbackData.setFeedbackCurrency(currency);
+        return feedbackData;
+    }
+
 }

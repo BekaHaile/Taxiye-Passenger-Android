@@ -224,7 +224,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys {
+public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys, FeedbackFragment.ParentActivityMethods {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -2607,7 +2607,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      * Method used to open feedback screen
      */
     public void openFeedback(String clientId) {
-        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,clientId);
+        LoginResponse.FeedbackData feedbackData = null;
+
+        if (clientId.equals(Config.getFreshClientId())) {
+            feedbackData = Data.getFreshData();
+        } else if (clientId.equals(Config.getMealsClientId())) {
+            feedbackData = Data.getMealsData();
+        } else if (clientId.equals(Config.getGroceryClientId())) {
+            feedbackData = Data.getGroceryData();
+        } else if (clientId.equals(Config.getMenusClientId())) {
+            feedbackData = Data.getMenusData();
+        } else if (clientId.equals(Config.getDeliveryCustomerClientId())) {
+            feedbackData = Data.getDeliveryCustomerData();
+        } else if (clientId.equals(Config.getFeedClientId())) {
+            feedbackData = Data.getFeedData();
+        }
+        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,clientId, feedbackData, true);
     }
 
     public void openAddToAddressBook(Bundle bundle) {
@@ -5219,11 +5234,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     private Handler handler;
+
+    @Override
+    public void setTitle(final String text) {
+        getTopBar().title.setText(text);
+    }
+
     public Handler getHandler(){
         if(handler == null){
             handler = new Handler();
         }
         return handler;
+    }
+
+    @Override
+    public View getFragmentContainer() {
+        return getRelativeLayoutContainer();
     }
 
     public double getTotalPrice(){

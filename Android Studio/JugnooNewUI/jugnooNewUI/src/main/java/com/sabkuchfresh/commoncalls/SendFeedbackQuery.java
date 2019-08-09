@@ -31,6 +31,8 @@ public class SendFeedbackQuery {
 
     public interface FeedbackResultListener {
         void onSendFeedbackResult(boolean isSuccess, int rating);
+
+        boolean onRatingFailed(String message, int flag);
     }
 
     public void sendQuery(final int orderId, final int restaurantId, final ProductType productType, final int rating, final String ratingType,
@@ -88,7 +90,10 @@ public class SendFeedbackQuery {
                             if (notificationInboxResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 feedbackResultListener.onSendFeedbackResult(true, rating);
                             } else {
-                                DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());
+                                if (!feedbackResultListener.onRatingFailed(notificationInboxResponse.getMessage(),
+                                        notificationInboxResponse.getFlag())) {
+                                    DialogPopup.alertPopup(activity, "", notificationInboxResponse.getMessage());
+                                }
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

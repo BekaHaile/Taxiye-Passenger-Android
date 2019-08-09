@@ -2037,6 +2037,14 @@
     <string name="save_your_drop_location">Save your drop location</string>
     <string name="tap_on_pin">Tap on pin...</string>
     <string name="favourite">Favourite%s</string>
+    <string name="text_disclaimer">We will dispatching Taxi with class 4 license with authorisation Taxi companies only</string>
+    <string name="select_pickup_address">Select pickup address</string>
+
+
+
+    <string name="btn_rate_order">Rate order</string>
+    <string name="offers_and_coupons">offers</string>
+    <string name="error_vehicle_type">Please choose proper vehicle type and pickup address before proceeding.</string>
 
 
     <!-- Scanner Layout -->
@@ -2110,13 +2118,9 @@
     <string name="please_lock_the_bike_and_proceed">Please lock the bike and proceed</string>
     <string name="bike_lock_alert_message">Make sure the bike is locked and parked safely</string>
 
-    <string name="select_pickup_address">Select Pickup Address</string>
-
     <string name="text_no_delivery_available">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="fatafat_text">Delivery</string>
 
     <string name="pickup">Pickup</string>
     <string name="rate_order">Rate Order</string>
-    <string name="offers_and_coupons">offers</string>
-    <string name="error_vehicle_type">Please choose proper vehicle type and pickup address before proceeding.</string>
 </resources>

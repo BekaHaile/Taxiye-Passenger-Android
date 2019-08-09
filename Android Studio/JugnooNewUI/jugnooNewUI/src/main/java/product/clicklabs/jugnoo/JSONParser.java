@@ -652,6 +652,105 @@ public class JSONParser implements Constants {
             Data.setDeliveryCustomerData(loginResponse.getDeliveryCustomer());
             setPromoCoupons(Data.getDeliveryCustomerData());
 
+        } else {
+            String mockDelivery = "{\n" +
+                    "    \"pending_feedback\": 0,\n" +
+                    "    \"fata     fat_enabled\": 1,\n" +
+                    "    \"current_user_city\": 107,\n" +
+                    "    \"city_id\": 107,\n" +
+                    "    \"user_id\": 6217145,\n" +
+                    "    \"operator_id\": 337,\n" +
+                    "    \"suggestions\": [\n" +
+                    "      {\n" +
+                    "        \"restaurant_item_id\": 1428766,\n" +
+                    "        \"item_name\": \"Happy Verde To You\",\n" +
+                    "        \"line_1\": \"Happy Verde To You\",\n" +
+                    "        \"line_1_color\": \"#595968\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"restaurant_item_id\": 1430381,\n" +
+                    "        \"item_name\": \"KAVA\",\n" +
+                    "        \"line_1\": \"KAVA\",\n" +
+                    "        \"line_1_color\": \"#595968\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"restaurant_item_id\": 1494669,\n" +
+                    "        \"item_name\": \"Snickers\",\n" +
+                    "        \"line_1\": \"Snickers\",\n" +
+                    "        \"line_1_color\": \"#595968\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"restaurant_item_id\": 1494713,\n" +
+                    "        \"item_name\": \"Coca Cola\",\n" +
+                    "        \"line_1\": \"Coca Cola\",\n" +
+                    "        \"line_1_color\": \"#595968\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"restaurant_item_id\": 1514185,\n" +
+                    "        \"item_name\": \"Galleta Double Tree\",\n" +
+                    "        \"line_1\": \"Galleta Double Tree\",\n" +
+                    "        \"line_1_color\": \"#595968\"\n" +
+                    "      }\n" +
+                    "    ],\n" +
+                    "    \"show_promo_box\": 1,\n" +
+                    "    \"add_store_images_limit\": 2,\n" +
+                    "    \"show_add_store\": 1,\n" +
+                    "    \"merchant_categories\": [\n" +
+                    "      {\n" +
+                    "        \"id\": 77,\n" +
+                    "        \"category\": \"Dairy & Milk Products\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 26,\n" +
+                    "        \"category\": \"Farmacia\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 75,\n" +
+                    "        \"category\": \"Groceries\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 27,\n" +
+                    "        \"category\": \"Hogar\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 28,\n" +
+                    "        \"category\": \"Mascotas\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 76,\n" +
+                    "        \"category\": \"OTC wellness\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 74,\n" +
+                    "        \"category\": \"Pet Care\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 73,\n" +
+                    "        \"category\": \"Restaurant\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 13,\n" +
+                    "        \"category\": \"Restaurants\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 2,\n" +
+                    "        \"category\": \"Servicios\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 29,\n" +
+                    "        \"category\": \"Shopping\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 30,\n" +
+                    "        \"category\": \"Specialties\"\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"id\": 25,\n" +
+                    "        \"category\": \"Supermercado\"\n" +
+                    "      }\n" +
+                    "    ]\n" +
+                    "  }";
+            Data.setDeliveryCustomerData(new Gson().fromJson(mockDelivery, LoginResponse.DeliveryCustomer.class));
         }
         if(loginResponse.getMeals()!=null){
             Data.setMealsData(loginResponse.getMeals());
@@ -671,6 +770,70 @@ public class JSONParser implements Constants {
         }
         if(loginResponse.getFeed() != null) {
             Data.setFeedData(loginResponse.getFeed());
+        } else {
+            String mockFeed = "{\n" +
+                    "    \"coupons\": [\n" +
+                    "      \n" +
+                    "    ],\n" +
+                    "    \"promotions\": [\n" +
+                    "      \n" +
+                    "    ],\n" +
+                    "    \"feed_active\": 1,\n" +
+                    "    \"feed_rank\": 3328,\n" +
+                    "    \"user_count\": 4948,\n" +
+                    "    \"has_handle\": 1,\n" +
+                    "    \"show_create_handle\": 0,\n" +
+                    "    \"early_access_text\": \"<span style='font-family:MavenProRegular;font-size:17px;color:#595968;text-align:center;padding:0px;margin:0px'>Skip ahead in the queue by spreading the word about <b>AskLocal</b>. The more friends that join, the sooner you’ll get access.</span>\",\n" +
+                    "    \"early_access_share_title\": \"Change the way you connect with your city\",\n" +
+                    "    \"early_access_share_desc\": \"Don't miss out on AskLocal, Jugnoo's latest offering. Ask questions, get reviews and recommendations, and transform your city life! To get early access, reserve your spot now.\",\n" +
+                    "    \"contacts_synced\": 1,\n" +
+                    "    \"max_upload_images\": 5,\n" +
+                    "    \"ask_something_placeholder\": \"Ask a question?\",\n" +
+                    "    \"review_placeholder\": \"Share your experience...\",\n" +
+                    "    \"feed_reg_string\": \"What is everyone in the city upto? Find out through AskLocal.\",\n" +
+                    "    \"anonymous_functionality_enabled\": 1,\n" +
+                    "    \"feed_name\": \"Delivery\",\n" +
+                    "    \"count_notification_polling_interval\": 15,\n" +
+                    "    \"show_promo_box\": 1,\n" +
+                    "    \"upload_image_info\": {\n" +
+                    "      \"show_image_box\": 1,\n" +
+                    "      \"image_limit\": 2,\n" +
+                    "      \"image_size_limit\": 2097152\n" +
+                    "    },\n" +
+                    "    \"max_deliveries\": 5,\n" +
+                    "    \"vehicle_type\": {\n" +
+                    "      \"Bike\": 1\n" +
+                    "    },\n" +
+                    "    \"locale\": \"es\",\n" +
+                    "    \"how_it_works\": [\n" +
+                    "      {\n" +
+                    "        \"image_url\": \"https://s3-ap-south-1.amazonaws.com/jugnoo-marketing-images/default/AdoL08W4-24992182_150434205579820_1139049513_n.png\",\n" +
+                    "        \"heading\": \"Place Your Order\",\n" +
+                    "        \"info\": \"Make sure you have enough balance in your wallet to cover delivery costs.\",\n" +
+                    "        \"order\": 1\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"image_url\": \"https://s3-ap-south-1.amazonaws.com/jugnoo-marketing-images/default/JUILuucu-25105791_150434285579812_346337539_n.png\",\n" +
+                    "        \"heading\": \"Confirm Order Details\",\n" +
+                    "        \"info\": \"Our chat support team will contact you with availability and pricing.\",\n" +
+                    "        \"order\": 2\n" +
+                    "      },\n" +
+                    "      {\n" +
+                    "        \"image_url\": \"https://s3-ap-south-1.amazonaws.com/jugnoo-marketing-images/default/1gZNTZTc-24989668_150434235579817_82520482_n.png\",\n" +
+                    "        \"heading\": \"Collect Your Order\",\n" +
+                    "        \"info\": \"Pay item cost in cash or online to our delivery executive and receive your order.\",\n" +
+                    "        \"order\": 3\n" +
+                    "      }\n" +
+                    "    ],\n" +
+                    "    \"vehicles_info\": [\n" +
+                    "      {\n" +
+                    "        \"type\": 1,\n" +
+                    "        \"name\": \"Bike\",\n" +
+                    "        \"image\": \"https://s3.ap-south-1.amazonaws.com/jugnoo-fatafat/images/Android/bike.png\"\n" +
+                    "      }\n" +
+                    "    ]\n" +
+                    "  }";
+            Data.setFeedData(new Gson().fromJson(mockFeed, LoginResponse.Feed.class));
         }
 
 

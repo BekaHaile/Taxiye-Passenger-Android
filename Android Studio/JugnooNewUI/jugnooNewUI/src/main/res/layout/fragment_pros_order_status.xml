@@ -733,6 +733,49 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dp_14"
+                android:layout_marginEnd="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:splitMotionEvents="false"
+                android:visibility="visible"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btCallSupportPros"
+                    android:layout_width="0px"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_margin="@dimen/dp_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/capsule_theme_color_selector"
+                    android:text="@string/call_support"
+                    android:textAllCaps="true"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_16"
+                    app:typekitFont="@string/maven"/>
+
+                <Button
+                    android:id="@+id/btRateOrder"
+                    android:layout_width="0px"
+                    android:layout_height="@dimen/dp_40"
+                    android:layout_margin="@dimen/dp_7"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_white_grey_theme_capsule_border_selector"
+                    android:text="@string/btn_rate_order"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color_theme_selector"
+                    android:textSize="@dimen/sp_16"
+                    android:visibility="gone"
+                    app:typekitFont="@string/maven"
+                    />
+
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>
