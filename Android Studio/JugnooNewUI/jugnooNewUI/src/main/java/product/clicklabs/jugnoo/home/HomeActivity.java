@@ -11686,7 +11686,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 	@Override
 	public void onBidCancelled(@NotNull BidInfo bidInfo) {
-
+		cancelBidApi(String.valueOf(bidInfo.getEngagementId()));
 	}
 
 
@@ -11696,6 +11696,37 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
 
         new ApiCommon<FeedCommonResponse>(this).showLoader(true).execute(params, ApiName.SELECT_BID,
+                new APICommonCallback<FeedCommonResponse>() {
+
+                    @Override
+                    public void onSuccess(final FeedCommonResponse response, String message, int flag) {
+                        try {
+                            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+
+                            } else {
+                                DialogPopup.alertPopup(HomeActivity.this, "", message);
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.connection_lost_please_try_again));
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
+    }
+
+    public void cancelBidApi(String engagementId) {
+
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+
+        new ApiCommon<FeedCommonResponse>(this).showLoader(true).execute(params, ApiName.CANCEL_BID,
                 new APICommonCallback<FeedCommonResponse>() {
 
                     @Override
