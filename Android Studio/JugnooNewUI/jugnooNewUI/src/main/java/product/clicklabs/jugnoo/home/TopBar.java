@@ -39,6 +39,7 @@ public class TopBar implements GACategory, GAAction {
     public ImageView imageViewHelp, imageViewScheduleRide;
     public ImageView imageViewBack;
     public TextView tvScheduleRidePopup;
+    public ImageView imageViewShadow;
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
         this.activity = activity;
@@ -62,6 +63,7 @@ public class TopBar implements GACategory, GAAction {
         imageViewBack.setVisibility(View.GONE);
         tvScheduleRidePopup = (TextView) drawerLayout.findViewById(R.id.tvScheduleRidePopup);
         tvScheduleRidePopup.setTypeface(Fonts.mavenRegular(activity));
+        imageViewShadow = drawerLayout.findViewById(R.id.imageViewShadow);
 
 
         //Top bar events
