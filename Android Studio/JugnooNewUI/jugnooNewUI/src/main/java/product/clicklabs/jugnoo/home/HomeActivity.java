@@ -351,7 +351,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     //Assigining layout
-    RelativeLayout assigningLayout, rlAssigningBidding;
+    RelativeLayout assigningLayout, rlAssigningNormal, rlAssigningBidding, rlBidTimer;
     TextView textViewFindingDriver, tvBidTimer;
     private ProgressWheel pwBidTimer;
     Button initialCancelRideBtn;
@@ -566,7 +566,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private RecyclerView rvBidsIncoming;
-    private ImageView ivCancelRequest;
     private BidsPlacedAdapter bidsPlacedAdapter;
 
     private RelativeLayout rlThumbsType;
@@ -866,7 +865,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         //Assigning layout
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
+		rlAssigningNormal = findViewById(R.id.rlAssigningNormal);
 		rlAssigningBidding = findViewById(R.id.rlAssigningBidding);
+		rlBidTimer = findViewById(R.id.rlBidTimer);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
         textViewFindingDriver.setTypeface(Fonts.mavenLight(this));
         pwBidTimer = (ProgressWheel) findViewById(R.id.pwBidTimer);
@@ -884,8 +885,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         bidsPlacedAdapter = new BidsPlacedAdapter(this, rvBidsIncoming, this);
         rvBidsIncoming.setAdapter(bidsPlacedAdapter);
         rvBidsIncoming.setVisibility(View.GONE);
-        ivCancelRequest = findViewById(R.id.ivCancelRequest);
-        ivCancelRequest.setVisibility(View.GONE);
 
 
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
@@ -1753,12 +1752,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-        });
-        ivCancelRequest.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                initialCancelRideBtn.performClick();
             }
         });
 
@@ -3210,7 +3203,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setcSessionId("");
             Data.autoData.setBidInfos(null);
             totalBidTime = -1;
-			bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), totalBidTime);
+			bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), totalBidTime,
+					slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
             Prefs.with(HomeActivity.this).remove(KEY_REVERSE_BID_TIME_INTERVAL);
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
@@ -3585,6 +3579,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 if(mode != PassengerScreenMode.P_ASSIGNING){
 					getHandler().removeCallbacks(runnableBidTimer);
+					topBar.tvCancel.setVisibility(View.GONE);
 				}
                 switch (mode) {
 
@@ -8937,7 +8932,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
                         relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
                         initialCancelRideBtn.setVisibility(View.GONE);
-                        ivCancelRequest.setVisibility(View.GONE);
+                        topBar.tvCancel.setVisibility(View.GONE);
                         findDriverJugnooAnimation.setVisibility(View.VISIBLE);
                         if (findDriverJugnooAnimation instanceof ImageView) {
                             jugnooAnimation.start();
@@ -8947,10 +8942,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         long diff = Prefs.with(HomeActivity.this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
                         if (diff <= 0 || bidsPlacedAdapter.getItemCount() == 0) {
-                            ivCancelRequest.setVisibility(View.GONE);
+							topBar.tvCancel.setVisibility(View.GONE);
                             initialCancelRideBtn.setVisibility(View.VISIBLE);
                         } else {
-                            ivCancelRequest.setVisibility(View.VISIBLE);
+							topBar.tvCancel.setVisibility(View.VISIBLE);
                             initialCancelRideBtn.setVisibility(View.GONE);
                         }
 
@@ -9499,7 +9494,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
-    class CheckForGPSAccuracyTimer {
+	class CheckForGPSAccuracyTimer {
 
         public Timer timer;
         public TimerTask timerTask;
@@ -11441,8 +11436,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         //bids from various drivers will show and block the cancel request button in this case
         if (bidsPlacedAdapter.getItemCount() > 0) {
 			rlAssigningBidding.setVisibility(View.VISIBLE);
+			rlBidTimer.setVisibility(View.GONE);
+			rlAssigningNormal.setVisibility(View.GONE);
+			topBar.tvCancel.setVisibility(View.VISIBLE);
 		} else {
 			rlAssigningBidding.setVisibility(View.GONE);
+			rlBidTimer.setVisibility(View.VISIBLE);
+			rlAssigningNormal.setVisibility(View.VISIBLE);
+			topBar.tvCancel.setVisibility(View.GONE);
 		}
 
 
@@ -11465,7 +11466,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 bidTime = (int) diff;
             }
         }
-		bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), totalBidTime);
+		bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), totalBidTime,
+				slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
 
     }
 
@@ -11492,6 +11494,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
     };
+
+
+
+	public void cancelClick() {
+		if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+			initialCancelRideBtn.performClick();
+		}
+	}
 
     private TrackingLogHelper trackingLogHelper;
 

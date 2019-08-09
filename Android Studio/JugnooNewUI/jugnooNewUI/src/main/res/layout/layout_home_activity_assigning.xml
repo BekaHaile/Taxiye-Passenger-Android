@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/assigningLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/top_bar_height"
-    android:splitMotionEvents="false"
-    android:visibility="visible">
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/assigningLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/top_bar_height"
+                android:splitMotionEvents="false"
+                android:visibility="visible"
+                android:animateLayoutChanges="true"
+    >
 
     <RelativeLayout
         android:id="@+id/rlAssigningNormal"
@@ -104,18 +107,6 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivCancelRequest"
-        style="@style/cross_popup_dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="-20dp"
-        android:layout_above="@+id/llFindingADriver"
-        />
-
     <RelativeLayout
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -123,6 +114,7 @@
         android:layout_centerHorizontal="true"
         android:tag="@string/dont_touch_me"
         android:layout_marginBottom="-20dp"
+        android:id="@+id/rlBidTimer"
         >
 
         <View
@@ -282,7 +274,7 @@
         android:id="@+id/rlAssigningBidding"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black_alpha_less"
+        android:background="@color/black"
         android:tag="@string/dont_touch_me"
         android:clickable="true"
         android:focusable="true"
@@ -299,6 +291,7 @@
             android:gravity="center_horizontal"
             android:textSize="16sp"
             android:text="@string/you_can_accept_or_decline_bids_from_drivers"
+            app:typekitFont="@string/maven"
             />
 
 

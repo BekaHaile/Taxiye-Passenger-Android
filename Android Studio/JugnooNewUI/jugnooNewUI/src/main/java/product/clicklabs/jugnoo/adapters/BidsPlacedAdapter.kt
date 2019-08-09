@@ -16,7 +16,6 @@ import com.squareup.picasso.Picasso
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.datastructure.BidInfo
 import product.clicklabs.jugnoo.utils.DateOperations
-import product.clicklabs.jugnoo.utils.Log
 import product.clicklabs.jugnoo.utils.Utils
 import java.util.*
 
@@ -30,16 +29,18 @@ class BidsPlacedAdapter(private val context: Context,
     private val layoutInflater: LayoutInflater
     private var bidInfos: ArrayList<BidInfo>? = null
     private val dp2: Int
-    private var maxTimeDiff:Long = 60L
+    private var maxTimeDiff: Long = 60L
+    private var vehicleName:String = ""
 
     init {
         layoutInflater = LayoutInflater.from(context)
         dp2 = context.resources.getDimensionPixelSize(R.dimen.dp_5)
     }
 
-    fun setList(bidInfos: ArrayList<BidInfo>?, totalBidTime:Long) {
+    fun setList(bidInfos: ArrayList<BidInfo>?, totalBidTime: Long, vehicleName:String) {
         this.bidInfos = bidInfos
-        maxTimeDiff = if(totalBidTime > 0) totalBidTime else 60L
+        maxTimeDiff = if (totalBidTime > 0) totalBidTime else 60L
+        this.vehicleName = vehicleName
         notifyDataSetChanged()
         recyclerView.visibility = if (itemCount == 0) View.GONE else View.VISIBLE
     }
@@ -68,17 +69,18 @@ class BidsPlacedAdapter(private val context: Context,
         }
         holder.textViewDriverRating.text = Utils.getDecimalFormat1Decimal().format(bidInfo.rating)
         holder.tvBidValue.text = Utils.formatCurrencyValue(bidInfo.currency, bidInfo.bidValue)
-        holder.tvDriverName.text = bidInfo.driverName
-        holder.tvVehicleName.text = bidInfo.vehicleName
+        holder.tvDriverName.text = if(TextUtils.isEmpty(bidInfo.driverName)) context.getString(R.string.driver) else bidInfo.driverName
+        holder.tvVehicleName.text = vehicleName
 
-        val diff = (System.currentTimeMillis() - DateOperations.getMilliseconds(DateOperations.utcToLocalWithTZFallback(bidInfo.createdAt)))/1000
-        Log.w("BidPlacedAdapter", "diff="+diff)
 
-        holder.tvEta.text = (maxTimeDiff - diff).toString()
+        holder.tvEta.visibility = if(TextUtils.isEmpty(bidInfo.eta)) View.GONE else View.VISIBLE
+        holder.tvEta.text = bidInfo.eta
         holder.tvDistance.text = bidInfo.acceptDistanceText
 
+
+        val diff = (System.currentTimeMillis() - DateOperations.getMilliseconds(DateOperations.utcToLocalWithTZFallback(bidInfo.createdAt))) / 1000
         val params = holder.vProgressLeft.layoutParams
-        params.width = (holder.cvRoot.measuredWidth.toDouble()*((maxTimeDiff - diff).toDouble()/maxTimeDiff.toDouble())).toInt()
+        params.width = (holder.cvRoot.measuredWidth.toDouble() * ((maxTimeDiff - diff).toDouble() / maxTimeDiff.toDouble())).toInt()
         holder.vProgressLeft.layoutParams = params
 
     }
@@ -88,14 +90,12 @@ class BidsPlacedAdapter(private val context: Context,
     }
 
     override fun onClickItem(viewClicked: View, parentView: View) {
-        if (viewClicked.id == R.id.llRoot) {
-            val position = recyclerView.getChildAdapterPosition(parentView)
-            if (position != RecyclerView.NO_POSITION) {
-                when (viewClicked.id) {
-                    R.id.bAccept -> callback.onBidAccepted(bidInfos!![position])
+        val position = recyclerView.getChildAdapterPosition(parentView)
+        if (position != RecyclerView.NO_POSITION) {
+            when (viewClicked.id) {
+                R.id.bAccept -> callback.onBidAccepted(bidInfos!![position])
 
-                    R.id.bCancel -> callback.onBidCancelled(bidInfos!![position])
-                }
+                R.id.bCancel -> callback.onBidCancelled(bidInfos!![position])
             }
         }
     }
@@ -129,8 +129,12 @@ class BidsPlacedAdapter(private val context: Context,
             bCancel = itemView.findViewById(R.id.bCancel)
             bAccept = itemView.findViewById(R.id.bAccept)
 
-            bCancel.setOnClickListener { itemListener.onClickItem(bCancel, itemView) }
-            bAccept.setOnClickListener { itemListener.onClickItem(bAccept, itemView) }
+            bAccept.setOnClickListener {
+                itemListener.onClickItem(bAccept, itemView)
+            }
+            bCancel.setOnClickListener {
+                itemListener.onClickItem(bCancel, itemView)
+            }
         }
     }
 
