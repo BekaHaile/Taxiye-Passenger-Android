@@ -6,6 +6,7 @@ import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -16,6 +17,7 @@ import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by gurmail on 18/08/16.
@@ -127,7 +129,8 @@ public class AutoData {
 		rideTypes.add(ServiceTypeValue.NORMAL.getType());
 		rideTypes.add(ServiceTypeValue.POOL.getType());
 		rideTypes.add(ServiceTypeValue.BIKE_RENTAL.getType());
-		serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
+		int scheduleRideEnabled = Prefs.with(MyApplication.getInstance()).getBoolean(Constants.SCHEDULE_RIDE_ENABLED, false) ? 1 : 0;
+		serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", scheduleRideEnabled, true);
 	}
 
 	public String getDestinationHelpText() {
