@@ -83,7 +83,14 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 holder.tvOfferTag.setText(discount);
             }
         }
-
+        if(showRegionFares && activity.getResources().getBoolean(R.bool.fallback_is_new_reverse)) {
+            holder.imageViewSep.setVisibility(View.GONE);
+        } else {
+            holder.imageViewSep.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params = ((RelativeLayout.LayoutParams)holder.relativeIn.getLayoutParams());
+            params.setMargins(0,0,0,0);
+            holder.relativeIn.setLayoutParams(params);
+        }
 
         if(activity.showSurgeIcon() && region.getCustomerFareFactor() > 1.0){
             holder.imageViewMultipleSurge.setVisibility(View.VISIBLE);
@@ -96,15 +103,27 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
+                if(activity.getResources().getBoolean(R.bool.fallback_is_new_reverse) && showRegionFares) {
+                    holder.relativeIn.setBackground(activity.getResources().getDrawable(R.drawable.background_cornered_theme_stroke_white_in));
+                    holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
+                } else {
+                    holder.relativeIn.setBackground(null);
+                    holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
+                }
+
                 Picasso.with(activity)
                         .load(region.getImages().getTabHighlighted())
                         .placeholder(region.getTabSelected())
                         .into(holder.imageViewTab);
-                if(showRegionFares){
+                if(showRegionFares && region.getRegionFare() != null){
                     holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_info_grey, 0);
                 }
             } else{
+                if(activity.getResources().getBoolean(R.bool.fallback_is_new_reverse) && showRegionFares) {
+                    holder.relativeIn.setBackground(activity.getResources().getDrawable(R.drawable.background_cornered_grey_stroke_white_theme));
+                } else {
+                    holder.relativeIn.setBackground(null);
+                }
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
                 Picasso.with(activity)
@@ -159,6 +178,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         public ImageView imageViewSelected;
         public TextView tvETA, textViewVehicleName,tvVehicleFare, tvOfferTag;
         public DiscountedFareTextView tvVehicleFareStrike;
+        public RelativeLayout relativeIn;
 
         public ViewHolder(View itemView, Activity activity,boolean showingConfirmLayout) {
             super(itemView);
@@ -177,6 +197,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             tvOfferTag.setTypeface(Fonts.mavenRegular(activity));
             tvVehicleFareStrike = (DiscountedFareTextView)itemView.findViewById(R.id.tvVehicleFareStrike);
             tvVehicleFareStrike.setTypeface(Fonts.mavenRegular(activity));
+            relativeIn = itemView.findViewById(R.id.relativeIn);
             View linearLayoutContainer= itemView.findViewById(R.id.linearLayoutContainer);
             if(showingConfirmLayout){
                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSelected.getLayoutParams();

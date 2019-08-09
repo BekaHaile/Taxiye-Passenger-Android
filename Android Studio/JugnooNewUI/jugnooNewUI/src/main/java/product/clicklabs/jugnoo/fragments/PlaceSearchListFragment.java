@@ -813,10 +813,12 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 						@Override
 						public void onMapSettled() {
-							if (!getResources().getBoolean(R.bool.show_bouncing_marker)) {
-								if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED)
-									fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, false);
+							if(getContext() != null) {
+								if (!getResources().getBoolean(R.bool.show_bouncing_marker)) {
+									if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED)
+										fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, false);
 //								autoCompleteResultClicked = false;
+								}
 							}
 						}
 

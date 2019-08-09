@@ -630,10 +630,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private Button customerLocation;
 //    public static int rentalInRideStatus = RentalRideStatus.ONGOING.getOrdinal();
     Dialog dialogRentalStations;
-    boolean isNewUI = true;
+
+    boolean isNewUI = false;
+
     RelativeLayout relativeLayoutSearchContainerNew, relativeLayoutDestSearchBarNew, relativeLayoutInitialSearchBarNew;
     TextView textViewDestSearchNew,textViewInitialSearchNew;
     ImageView imageViewDropCrossNew;
+    LinearLayout linearLayoutConfirmOption;
 
     @SuppressLint("NewApi")
     @Override
@@ -694,6 +697,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         HomeActivity.appInterruptHandler = HomeActivity.this;
 
+        isNewUI = getResources().getBoolean(R.bool.fallback_is_new_reverse);
 
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
@@ -2255,6 +2259,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutSearchContainerNew = findViewById(R.id.relativeLayoutSearchContainerNew);
         relativeLayoutDestSearchBarNew = findViewById(R.id.relativeLayoutDestSearchBarNew);
         relativeLayoutInitialSearchBarNew = findViewById(R.id.relativeLayoutInitialSearchBarNew);
+        linearLayoutConfirmOption = findViewById(R.id.linearLayoutConfirmOption);
         textViewDestSearchNew = findViewById(R.id.textViewDestSearchNew); textViewDestSearchNew.setTypeface(Fonts.mavenRegular(this));
         relativeLayoutInitialSearchBarNew.setOnClickListener(new OnClickListener() {
             @Override
@@ -2279,9 +2284,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(isNewUI) {
             relativeLayoutSearchContainerNew.setVisibility(View.VISIBLE);
             relativeLayoutSearchContainer.setVisibility(View.GONE);
+            linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.white));
         } else {
             relativeLayoutSearchContainerNew.setVisibility(View.GONE);
             relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+            linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
         }
 
 
@@ -10688,13 +10695,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }else{
             relativeLayoutDestSearchBar.setVisibility(View.VISIBLE);
         }
-        if(confirmedScreenOpened) {
+        if((confirmedScreenOpened || isNewUI) && Data.autoData.getPickupLatLng() != null) {
             pickupLocationEtaMarker();
         }
         if(oldRegionId != slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
             mNotes = "";
         }
-        if(confirmedScreenOpened && vehiclesTabAdapterConfirmRide!=null){
+        if((confirmedScreenOpened || isNewUI) && vehiclesTabAdapterConfirmRide!=null){
             vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
         }
         if (Data.autoData.getRegions().size() == 1) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayoutConfirmRequest"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -49,19 +50,18 @@
             android:layout_width="wrap_content"
             android:visibility="visible"
             android:layout_below="@+id/recyclerViewVehiclesConfirmRide"
-            android:layout_height="210px"
-            android:layout_marginTop="5px">
+            android:layout_height="200px">
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutDestSearchBarNew"
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="95px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginStart="20px"
                 android:layout_marginEnd="20px"
                 android:layout_marginBottom="5px"
                 android:layout_marginTop="105px"
-                android:background="@drawable/background_white_rounded_bordered"
+                android:background="@color/menu_item_selector_color_F7"
                 android:splitMotionEvents="false">
 
                 <ImageView
@@ -118,12 +118,12 @@
             <RelativeLayout
                 android:id="@+id/relativeLayoutInitialSearchBarNew"
                 android:layout_width="match_parent"
-                android:layout_height="100px"
+                android:layout_height="95px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginStart="20px"
                 android:layout_marginEnd="20px"
                 android:layout_marginTop="5px"
-                android:background="@drawable/background_white_rounded_bordered"
+                android:background="@color/menu_item_selector_color_F7"
                 android:splitMotionEvents="false">
 
                 <ImageView
@@ -169,6 +169,52 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="94px">
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutBidValue"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:theme="@style/GreyHighlight"
+                    android:paddingStart="15px"
+                    android:paddingEnd="12px"
+                    android:paddingTop="12px"
+                    android:paddingBottom="12px"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/imageViewRupee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rupee"/>
+
+                    <EditText
+                        android:id="@+id/editTextBidValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10px"
+                        android:background="@color/menu_item_selector_color_F7"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:gravity="center"
+                        android:hint="@string/enter_bid"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivBidDivider"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="15px"
+                    android:layout_marginBottom="15px"
+                    android:src="@color/stroke_light_grey_alpha"
+                    />
+
 
                 <LinearLayout
                     android:id="@+id/linearLayoutPaymentModeConfirm"
