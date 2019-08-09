@@ -2023,7 +2023,12 @@ public class JSONParser implements Constants {
                             object.optString(Constants.KEY_CURRENCY),
                             object.optDouble(Constants.KEY_ACCEPT_DISTANCE),object.optString(Constants.KEY_ACCEPT_DISTANCE_TEXT),
                             object.optDouble(Constants.KEY_DRIVER_RATING),
-                            object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC())));
+                            object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC()),
+                            object.optString(Constants.KEY_DRIVER_IMAGE),
+                            object.optString(Constants.KEY_DRIVER_NAME),
+                            object.optString(Constants.KEY_VEHICLE_NAME),
+                            object.optString(Constants.KEY_ETA)
+							));
                 }
             }
         } catch (Exception ignored){

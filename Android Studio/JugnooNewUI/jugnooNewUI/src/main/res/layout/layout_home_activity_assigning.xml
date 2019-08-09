@@ -8,6 +8,11 @@
     android:splitMotionEvents="false"
     android:visibility="visible">
 
+    <RelativeLayout
+        android:id="@+id/rlAssigningNormal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <LinearLayout
         android:id="@+id/llFindingADriver"
         android:layout_width="match_parent"
@@ -60,16 +65,6 @@
                     android:textSize="@dimen/text_size_34" />
 
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvBidsIncoming"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tag="@string/dont_touch_me"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:visibility="gone"
-                    />
                 
                 <include layout="@layout/layout_jugnoo_loading_anim"/>
 
@@ -281,6 +276,45 @@
         android:visibility="gone">
 
     </RelativeLayout>
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rlAssigningBidding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_alpha_less"
+        android:tag="@string/dont_touch_me"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/tvAssigningBidHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_margin="20dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:textSize="16sp"
+            android:text="@string/you_can_accept_or_decline_bids_from_drivers"
+            />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvBidsIncoming"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tag="@string/dont_touch_me"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:visibility="visible"
+            android:layout_below="@+id/tvAssigningBidHelp"
+            />
+
+
+    </RelativeLayout>
 </RelativeLayout>
 

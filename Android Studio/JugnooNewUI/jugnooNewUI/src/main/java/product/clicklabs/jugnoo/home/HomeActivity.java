@@ -351,7 +351,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     //Assigining layout
-    RelativeLayout assigningLayout;
+    RelativeLayout assigningLayout, rlAssigningBidding;
     TextView textViewFindingDriver, tvBidTimer;
     private ProgressWheel pwBidTimer;
     Button initialCancelRideBtn;
@@ -866,6 +866,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         //Assigning layout
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
+		rlAssigningBidding = findViewById(R.id.rlAssigningBidding);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
         textViewFindingDriver.setTypeface(Fonts.mavenLight(this));
         pwBidTimer = (ProgressWheel) findViewById(R.id.pwBidTimer);
@@ -879,7 +880,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         rvBidsIncoming = (RecyclerView) findViewById(R.id.rvBidsIncoming);
         rvBidsIncoming.setHasFixedSize(false);
-        rvBidsIncoming.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        rvBidsIncoming.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         bidsPlacedAdapter = new BidsPlacedAdapter(this, rvBidsIncoming, this);
         rvBidsIncoming.setAdapter(bidsPlacedAdapter);
         rvBidsIncoming.setVisibility(View.GONE);
@@ -3208,8 +3209,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.autoData.setcSessionId("");
             Data.autoData.setBidInfos(null);
-            bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
             totalBidTime = -1;
+			bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), totalBidTime);
             Prefs.with(HomeActivity.this).remove(KEY_REVERSE_BID_TIME_INTERVAL);
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
@@ -3582,6 +3583,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     cancelPollingGetGPSLockStatus();
                 }
 
+                if(mode != PassengerScreenMode.P_ASSIGNING){
+					getHandler().removeCallbacks(runnableBidTimer);
+				}
                 switch (mode) {
 
                     case P_INITIAL:
@@ -11426,9 +11430,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     };
 
     private void updateBidsView() {
-        bidsPlacedAdapter.setList(Data.autoData.getBidInfos());
-//        textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
-
 
         if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
                 RideTypeValue.BIKE_RENTAL.getOrdinal()) {
@@ -11436,6 +11437,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else {
             textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
         }
+
+        //bids from various drivers will show and block the cancel request button in this case
+        if (bidsPlacedAdapter.getItemCount() > 0) {
+			rlAssigningBidding.setVisibility(View.VISIBLE);
+		} else {
+			rlAssigningBidding.setVisibility(View.GONE);
+		}
 
 
         long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
@@ -11457,6 +11465,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 bidTime = (int) diff;
             }
         }
+		bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), totalBidTime);
 
     }
 
@@ -11469,12 +11478,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             bidTime--;
             tvBidTimer.setText(String.valueOf(bidTime));
             pwBidTimer.setInstantProgress(((float) (bidTime)) / (float) totalBidTime);
-            rvBidsIncoming.clearAnimation();
+			bidsPlacedAdapter.notifyDataSetChanged();
+
             if (bidTime > 0) {
                 if (bidsPlacedAdapter.getItemCount() > 0 && bidTime <= 20) {
                     if (bidTime % 4 == 0) {
-                        Animation shake = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.scale_bounce_slow);
-                        rvBidsIncoming.startAnimation(shake);
+
                     }
                 }
                 getHandler().postDelayed(this, 1000);
@@ -11659,10 +11668,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
     }
 
-    @Override
-    public void onBidClicked(BidInfo bidInfo) {
-        selectBidAPI(String.valueOf(bidInfo.getEngagementId()));
-    }
+
+	@Override
+	public void onBidAccepted(@NotNull BidInfo bidInfo) {
+		selectBidAPI(String.valueOf(bidInfo.getEngagementId()));
+	}
+
+	@Override
+	public void onBidCancelled(@NotNull BidInfo bidInfo) {
+
+	}
+
 
     public void selectBidAPI(String engagementId) {
 
