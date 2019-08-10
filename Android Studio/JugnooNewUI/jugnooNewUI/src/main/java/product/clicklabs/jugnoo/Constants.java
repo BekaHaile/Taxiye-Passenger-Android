@@ -898,7 +898,6 @@ public interface Constants {
     String KEY_EMERGENCY_NO = "emergency_no";
     String REJECT_API = "reject_api";
 
-    String KEY_REVERSE_BID_TIME_INTERVAL = "reverse_bid_time_interval";
     String KEY_CREATED_AT = "created_at";
     String KEY_DISTANCE_UNIT = "distance_unit";
     String KEY_CUSTOMER_SUPPORT_EMAIL = "customer_support_email";
@@ -1069,4 +1068,5 @@ public interface Constants {
 	String KEY_DRIVER_ETA = "driver_eta";
 	String KEY_BID_REQUEST_RIDE_TIMEOUT = "bid_request_ride_timeout";
 	String KEY_BID_TIMEOUT = "bid_timeout";
+	String KEY_REQUEST_RIDE_START_TIME = "request_ride_start_time";
 }

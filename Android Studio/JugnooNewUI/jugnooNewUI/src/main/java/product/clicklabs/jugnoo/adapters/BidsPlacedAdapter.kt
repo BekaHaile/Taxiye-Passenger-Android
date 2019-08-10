@@ -44,7 +44,7 @@ class BidsPlacedAdapter(private val context: Context,
 
     fun setList(bidInfos: ArrayList<BidInfo>?, totalBidTime: Long, vehicleName:String) {
         this.bidInfos = bidInfos
-        maxTimeDiff = if (totalBidTime > 0) totalBidTime*1000 else 60000
+        maxTimeDiff = if (totalBidTime > 0) totalBidTime else 60000L
         this.vehicleName = vehicleName
         notifyDataSetChanged()
         recyclerView.visibility = if (itemCount == 0) View.GONE else View.VISIBLE

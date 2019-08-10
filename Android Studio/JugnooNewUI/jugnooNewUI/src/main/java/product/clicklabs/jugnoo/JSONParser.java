@@ -1249,6 +1249,9 @@ public class JSONParser implements Constants {
                         parseDropLatLng(jObject1);
                         bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
                         Data.autoData.setIsReverseBid(jObject1.optInt(Constants.KEY_REVERSE_BID, 0));
+						Prefs.with(context).save(KEY_REQUEST_RIDE_START_TIME,
+								DateOperations.getMilliseconds(DateOperations.utcToLocalWithTZFallback(jObject1.optString(KEY_START_TIME,
+										DateOperations.getCurrentTimeInUTC()))));
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -2017,7 +2020,6 @@ public class JSONParser implements Constants {
     }
 
     public static ArrayList<BidInfo> parseBids(Context context, String arrayKeyName, JSONObject jsonObject){
-        Prefs.with(context).save(KEY_REVERSE_BID_TIME_INTERVAL, jsonObject.optLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L));
         ArrayList<BidInfo> bidInfos = new ArrayList<>();
         try{
             if(jsonObject.has(arrayKeyName)){

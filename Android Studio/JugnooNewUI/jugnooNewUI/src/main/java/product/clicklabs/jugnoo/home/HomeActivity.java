@@ -3273,10 +3273,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.autoData.setcSessionId("");
             Data.autoData.setBidInfos(null);
-            totalBidTime = -1;
-			bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), totalBidTime,
+			Prefs.with(this).save(Constants.KEY_REQUEST_RIDE_START_TIME, System.currentTimeMillis());
+			bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), Data.autoData.getBidTimeout(),
 					slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
-            Prefs.with(HomeActivity.this).remove(KEY_REVERSE_BID_TIME_INTERVAL);
             Data.autoData.setcEngagementId("");
             dropLocationSearchText = "";
 
@@ -11663,6 +11662,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     };
 
     private void updateBidsView() {
+    	bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), Data.autoData.getBidTimeout(),
+				slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
 
         if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
                 RideTypeValue.BIKE_RENTAL.getOrdinal()) {
@@ -11686,8 +11687,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		updateCancelButtonUI();
 
 
-        long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
-        if (diff <= 0) {
+		long startTime = Prefs.with(this).getLong(Constants.KEY_REQUEST_RIDE_START_TIME, System.currentTimeMillis());
+		bidTime = Data.autoData.getBidRequestRideTimeout() - (System.currentTimeMillis() - startTime);
+
+        if (bidTime <= 0) {
             getHandler().removeCallbacks(runnableBidTimer);
             findViewById(R.id.vBidTimer).setVisibility(View.GONE);
             pwBidTimer.setVisibility(View.GONE);
@@ -11696,42 +11699,36 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             findViewById(R.id.vBidTimer).setVisibility(View.VISIBLE);
             pwBidTimer.setVisibility(View.VISIBLE);
             tvBidTimer.setVisibility(View.VISIBLE);
-            if (totalBidTime < 0) {
-                totalBidTime = (int) diff;
-                bidTime = totalBidTime;
-                getHandler().removeCallbacks(runnableBidTimer);
-                getHandler().post(runnableBidTimer);
-            } else {
-                bidTime = (int) diff;
-            }
+
+
+			Log.e("updateBidsView", "diff small="+(System.currentTimeMillis() - startTime));
+			Log.e("updateBidsView", "bidTime="+bidTime);
+
+            getHandler().removeCallbacks(runnableBidTimer);
+            getHandler().post(runnableBidTimer);
         }
-		bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), totalBidTime,
-				slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
 
     }
 
 
     private double bidTime = -1;
-    private int totalBidTime = -1;
     private Runnable runnableBidTimer = new Runnable() {
         @Override
         public void run() {
-            bidTime = bidTime - (75.0/1000.0);
-            tvBidTimer.setText(String.valueOf((int)bidTime));
-            pwBidTimer.setInstantProgress((float) (bidTime / (double) totalBidTime));
-            bidsPlacedAdapter.updateProgress();
-
-            if (bidTime > 0) {
-                if (bidsPlacedAdapter.getItemCount() > 0 && bidTime <= 20) {
-                    if (bidTime % 4 == 0) {
-
-                    }
-                }
-                getHandler().postDelayed(this, 75);
-            } else {
-                getHandler().removeCallbacks(this);
-            }
-        }
+			try {
+				bidTime = bidTime - 75.0;
+				tvBidTimer.setText(String.valueOf((int)(bidTime/1000D)));
+				pwBidTimer.setInstantProgress((float) (bidTime / (double) Data.autoData.getBidRequestRideTimeout()));
+				bidsPlacedAdapter.updateProgress();
+				if (bidTime > 0) {
+					getHandler().postDelayed(this, 75);
+				} else {
+					getHandler().removeCallbacks(this);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
     };
 
 
