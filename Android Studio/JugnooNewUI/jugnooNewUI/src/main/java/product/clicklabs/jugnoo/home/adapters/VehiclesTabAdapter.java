@@ -85,7 +85,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
         }
         holder.tvOfferTag.setVisibility(View.GONE);
-        if(showRegionFares && region.getRegionFare() != null){
+        if(showRegionFares && region.getRegionFare() != null && region.getReverseBid() == 0){
             holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()));
             holder.tvVehicleFareStrike.setText(region.getRegionFare().getStrikedFareText(region.getFareMandatory()));
             holder.tvVehicleFareStrike.setVisibility(holder.tvVehicleFareStrike.getText().length() > 0 ? View.VISIBLE : View.GONE);
@@ -97,6 +97,10 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         }
         if(showRegionFares && activity.isNewUI()) {
             holder.imageViewSep.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = ((RelativeLayout.LayoutParams)holder.relativeIn.getLayoutParams());
+            params.setMarginStart((int) (ASSL.Xscale()*(position == 0 ? 10f : 5f)));
+            params.setMarginEnd((int) (ASSL.Xscale()*(position == getItemCount()-1 ? 10f : 5f)));
+            holder.relativeIn.setLayoutParams(params);
         } else {
             holder.imageViewSep.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams params = ((RelativeLayout.LayoutParams)holder.relativeIn.getLayoutParams());
@@ -127,7 +131,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                         .load(region.getImages().getTabHighlighted())
                         .placeholder(region.getTabSelected())
                         .into(holder.imageViewTab);
-                if(showRegionFares && region.getRegionFare() != null){
+                if(showRegionFares && region.getRegionFare() != null && region.getReverseBid() == 0){
                     holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_info_grey, 0);
                 }
             } else{
