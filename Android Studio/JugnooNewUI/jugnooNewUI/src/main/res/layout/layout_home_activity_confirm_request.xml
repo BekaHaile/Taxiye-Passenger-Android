@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relativeLayoutConfirmRequest"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -44,13 +45,123 @@
             android:background="@android:color/white"
             android:splitMotionEvents="false"/>
 
+        <RelativeLayout
+            android:id="@+id/relativeLayoutSearchContainerNew"
+            android:layout_width="wrap_content"
+            android:visibility="visible"
+            android:layout_below="@+id/recyclerViewVehiclesConfirmRide"
+            android:layout_height="150px">
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutDestSearchBarNew"
+                android:layout_width="match_parent"
+                android:layout_height="70px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="20px"
+                android:layout_marginEnd="20px"
+                android:layout_marginBottom="5px"
+                android:layout_marginTop="80px"
+                android:background="@color/menu_item_selector_color_F7"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewDestSearchGPSIconNew"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="37px"
+                    android:src="@drawable/circle_red"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewDestSearchNew"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="37px"
+                    android:layout_toStartOf="@+id/layout_edit_destinationNew"
+                    android:layout_toEndOf="@+id/imageViewDestSearchGPSIconNew"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical"
+                    android:hint="@string/assigning_state_edit_text_hint"
+                    android:paddingEnd="20px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="30px" />
+
+
+                <LinearLayout
+                    android:id="@+id/layout_edit_destinationNew"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imageViewDropCrossNew"
+                        android:layout_width="70px"
+                        android:layout_height="70px"
+                        android:layout_marginEnd="5px"
+                        android:padding="16px"
+                        android:src="@drawable/ic_cross_et_selector"
+                        android:tag="mwar"
+                        android:visibility="visible" />
+
+                </LinearLayout>
+
+
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutInitialSearchBarNew"
+                android:layout_width="match_parent"
+                android:layout_height="70px"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginStart="20px"
+                android:layout_marginEnd="20px"
+                android:layout_marginTop="5px"
+                android:background="@color/menu_item_selector_color_F7"
+                android:splitMotionEvents="false">
+
+                <ImageView
+                    android:id="@+id/imageViewInitialSearchGPSIconNew"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="37px"
+                    android:src="@drawable/circle_green"
+                    android:tag="mwar" />
+
+                <TextView
+                    android:id="@+id/textViewInitialSearchNew"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="37px"
+                    android:layout_toEndOf="@+id/imageViewInitialSearchGPSIconNew"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical|start"
+                    android:hint="@string/set_pickup_location"
+                    android:paddingEnd="20px"
+                    android:singleLine="true"
+                    android:textColor="@color/text_color"
+                    android:layout_toStartOf="@+id/ivLikePickup"
+                    android:textSize="30px" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
 
         <LinearLayout
-            android:id="@+id/linearLayoutConfirmOption"
+            android:id="@+id/linearLayoutConfirmOption2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10px"
-            android:layout_below="@id/recyclerViewVehiclesConfirmRide"
+            android:layout_below="@id/relativeLayoutSearchContainerNew"
             android:background="@color/menu_item_selector_color_F7"
             android:orientation="vertical"
             android:visibility="visible">
@@ -60,9 +171,56 @@
                 android:layout_height="94px">
 
                 <LinearLayout
-                    android:id="@+id/linearLayoutPaymentModeConfirm"
+                    android:id="@+id/linearLayoutBidValue"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:theme="@style/GreyHighlight"
+                    android:paddingStart="15px"
+                    android:paddingEnd="12px"
+                    android:paddingTop="12px"
+                    android:paddingBottom="12px"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/textViewRupee"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rupee"/>
+
+                    <EditText
+                        android:id="@+id/editTextBidValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="10px"
+                        android:maxLength="5"
+                        android:background="@color/menu_item_selector_color_F7"
+                        android:inputType="numberDecimal|numberSigned"
+                        android:gravity="center"
+                        android:hint="@string/enter_bid"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_26" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivBidDivider"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="15px"
+                    android:layout_marginBottom="15px"
+                    android:src="@color/stroke_light_grey_alpha"
+                    />
+
+
+                <LinearLayout
+                    android:id="@+id/linearLayoutPaymentModeConfirm"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_height="match_parent"
                     android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackground"
@@ -78,7 +236,6 @@
                         android:id="@+id/textViewPaymentModeValueConfirm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="10px"
                         android:gravity="center"
                         android:text="@string/_200"
                         android:textAllCaps="true"
@@ -100,14 +257,16 @@
                 <RelativeLayout
                     android:id="@+id/linearLayoutOfferConfirm"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
+                    android:paddingStart="5px"
+                    android:gravity="center"
                     android:layout_height="match_parent"
                     android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackground">
 
                     <ImageView
-                        android:layout_width="30px"
-                        android:layout_height="29px"
+                        android:layout_width="35px"
+                        android:layout_height="34px"
                         android:layout_centerVertical="true"
                         android:layout_toStartOf="@+id/textViewOffersConfirm"
                         android:src="@drawable/ic_gift"
@@ -119,7 +278,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="20px"
+                        android:layout_marginStart="15px"
                         android:gravity="center"
                         android:text="@string/nl_offers"
                         android:textAllCaps="true"
@@ -285,7 +444,7 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_38"
             android:textAllCaps="false"
-            android:layout_below="@+id/linearLayoutConfirmOption"
+            android:layout_below="@+id/linearLayoutConfirmOption2"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10px"
             android:text="@string/confirm_request" />

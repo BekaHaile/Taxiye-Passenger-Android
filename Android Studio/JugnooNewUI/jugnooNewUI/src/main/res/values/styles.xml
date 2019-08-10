@@ -288,6 +288,27 @@
         </item>
     </style>
 
+    <style name="ButtonThemeCapsuleRectangle" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">
+            @dimen/button_width
+        </item>
+        <item name="android:layout_height">
+            @dimen/splash_button_height
+        </item>
+        <item name="android:background">
+            @drawable/background_theme_gradient_selector
+        </item>
+        <item name="android:textColor">
+            @color/white
+        </item>
+        <item name="android:textSize">
+            @dimen/text_size_34
+        </item>
+        <item name="android:textAllCaps">
+            true
+        </item>
+    </style>
+
 
     <style name="ButtonThemeCapsuleWrap" parent="@android:style/Widget.Button">
         <item name="android:layout_width">
@@ -474,10 +495,10 @@
 
     <style name="payment_option_icon_small">
         <item name="android:layout_width">
-            101px
+            70px
         </item>
         <item name="android:layout_height">
-            37px
+            34px
         </item>
         <item name="android:src">
             @drawable/ic_cash_small
