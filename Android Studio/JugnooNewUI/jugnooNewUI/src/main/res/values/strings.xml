@@ -2111,6 +2111,6 @@
     <string name="bike_lock_alert_message">Make sure the bike is locked and parked safely</string>
     <string name="request_ride">Request Ride</string>
     <string name="enter_bid">Enter Bid</string>
-
+    <string name="error_bid_value">Please enter bid value before proceeding</string>
 
 </resources>

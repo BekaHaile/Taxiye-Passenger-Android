@@ -1502,15 +1502,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                        findDriversETACall(true, true, false, getApiFindADriver().getParams());
-                    } else {
-                        if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-                                .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                            openBikeRentalScan();
+                    if((isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+                            && !editTextBidValue.getText().toString().isEmpty())
+                            || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 0) {
+                        if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 1
+                                && !textViewDestSearchNew.getText().toString().isEmpty())
+                                || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 0) {
+                            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                                findDriversETACall(true, true, false, getApiFindADriver().getParams());
+                            } else {
+                                if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                                        .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                                    openBikeRentalScan();
+                                } else {
+                                    requestRideClick();
+                                }
+                            }
                         } else {
-                            requestRideClick();
+                            Utils.showToast(HomeActivity.this,getString(R.string.destination_required));
                         }
+                    } else {
+                        Utils.showToast(HomeActivity.this,getString(R.string.error_bid_value));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
