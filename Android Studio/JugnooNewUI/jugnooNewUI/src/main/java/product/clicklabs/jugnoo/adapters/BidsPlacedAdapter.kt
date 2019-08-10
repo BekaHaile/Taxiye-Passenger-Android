@@ -101,6 +101,9 @@ class BidsPlacedAdapter(private val context: Context,
                 val params = holder.vProgressLeft.layoutParams
                 params.width = (holder.cvRoot.measuredWidth.toDouble() * ((maxTimeDiff - diff).toDouble() / maxTimeDiff.toDouble())).toInt()
                 holder.vProgressLeft.layoutParams = params
+                if(!callback.isBidCancelling(holder.bidInfo!!.engagementId) && (maxTimeDiff - diff) <= 1000){
+                    callback.onBidCancelled(holder.bidInfo!!, false)
+                }
             }
         }
     }
@@ -115,7 +118,7 @@ class BidsPlacedAdapter(private val context: Context,
             when (viewClicked.id) {
                 R.id.bAccept -> callback.onBidAccepted(bidInfos!![position])
 
-                R.id.bCancel -> callback.onBidCancelled(bidInfos!![position])
+                R.id.bCancel -> callback.onBidCancelled(bidInfos!![position], true)
             }
         }
     }
@@ -163,7 +166,8 @@ class BidsPlacedAdapter(private val context: Context,
 
     interface Callback {
         fun onBidAccepted(bidInfo: BidInfo)
-        fun onBidCancelled(bidInfo: BidInfo)
+        fun onBidCancelled(bidInfo: BidInfo, showDialog:Boolean)
+        fun isBidCancelling(engagementId:Int) : Boolean
     }
 
 }

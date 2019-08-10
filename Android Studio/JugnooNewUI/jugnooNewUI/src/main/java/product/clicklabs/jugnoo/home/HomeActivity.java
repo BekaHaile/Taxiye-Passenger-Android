@@ -3240,14 +3240,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
+			Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
             if (!isPoolRideAtConfirmation()) {
-                double fareFactor = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerFareFactor();
-                int priorityTipCategory = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getPriorityTipCategory();
+                double fareFactor = regionSelected.getCustomerFareFactor();
+                int priorityTipCategory = regionSelected.getPriorityTipCategory();
                 new PriorityTipDialog(HomeActivity.this, fareFactor, priorityTipCategory,
                         new PriorityTipDialog.Callback() {
                             @Override
                             public void onConfirmed(boolean confirmClicked) {
-                                finalRequestRideTimerStart();
+                                finalRequestRideTimerStart(regionSelected);
                             }
 
                             @Override
@@ -3259,7 +3260,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             }
                         }).showDialog();
             } else {
-                finalRequestRideTimerStart();
+                finalRequestRideTimerStart(regionSelected);
             }
 
         } else {
@@ -3269,11 +3270,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void finalRequestRideTimerStart() {
+    private void finalRequestRideTimerStart(Region region) {
         try {
             Data.autoData.setcSessionId("");
             Data.autoData.setBidInfos(null);
 			Prefs.with(this).save(Constants.KEY_REQUEST_RIDE_START_TIME, System.currentTimeMillis());
+			Data.autoData.setIsReverseBid(region.getReverseBid());
 			bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), Data.autoData.getBidTimeout(),
 					slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
             Data.autoData.setcEngagementId("");
@@ -3764,7 +3766,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             relativeLayoutSearchContainerNew.setVisibility(View.GONE);
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
-                            buttonConfirmRequest.setBackground(getDrawable(R.drawable.capsule_theme_login_selector));
+                            buttonConfirmRequest.setBackground(ContextCompat.getDrawable(this, R.drawable.capsule_theme_login_selector));
                             if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
                                 hideCenterPickupPin();
                                 imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
@@ -3831,7 +3833,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             linearLayoutRequestMain.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.VISIBLE);
-                            buttonConfirmRequest.setBackground(getDrawable(R.drawable.background_theme_gradient_selector));
+                            buttonConfirmRequest.setBackground(ContextCompat.getDrawable(this, R.drawable.background_theme_gradient_selector));
                             RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,120);
                             buttonConfirmRequest.setTextSize(19);
                             params.setMargins(30,0,30,20);
@@ -8893,7 +8895,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
 
 
-                                Log.e(TAG, "requestRide result=" + response);
 
                                 if (responseRetro == null || response == null
                                         || response.contains(Constants.SERVER_TIMEOUT)) {
@@ -9519,12 +9520,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void setTopBarTransNewUI() {
         if(passengerScreenMode == PassengerScreenMode.P_INITIAL && isNewUI && !confirmedScreenOpened && !scheduleRideOpen && !specialPickupScreenOpened) {
-            topBar.topRl.setBackground(getDrawable(R.color.transparent));
-            topBar.imageViewShadow.setBackground(getDrawable(R.color.transparent));
+            topBar.topRl.setBackground(ContextCompat.getDrawable(this, R.color.transparent));
+            topBar.imageViewShadow.setBackground(ContextCompat.getDrawable(this, R.color.transparent));
             topBar.textViewTitle.setVisibility(View.GONE);
         } else {
-            topBar.topRl.setBackground(getDrawable(R.color.white));
-            topBar.imageViewShadow.setBackground(getDrawable(R.drawable.shadow_down));
+            topBar.topRl.setBackground(ContextCompat.getDrawable(this, R.color.white));
+            topBar.imageViewShadow.setBackground(ContextCompat.getDrawable(this, R.drawable.shadow_down));
             topBar.textViewTitle.setVisibility(View.VISIBLE);
         }
     }
@@ -11921,12 +11922,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 	}
 
 	@Override
-	public void onBidCancelled(@NotNull BidInfo bidInfo) {
-		cancelBidApi(bidInfo);
+	public void onBidCancelled(@NotNull BidInfo bidInfo, boolean showDialog) {
+    	bidsInCancelState.add(bidInfo.getEngagementId());
+		cancelBidApi(bidInfo, showDialog);
 	}
 
+	@Override
+	public boolean isBidCancelling(int engagementId) {
+		return bidsInCancelState.contains(engagementId);
+	}
 
-    public void selectBidAPI(String engagementId) {
+	public void selectBidAPI(String engagementId) {
 
         final HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
@@ -11957,12 +11963,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 });
     }
 
-    public void cancelBidApi(BidInfo bidInfo) {
+    private ArrayList<Integer> bidsInCancelState = new ArrayList<>();
+    public void cancelBidApi(BidInfo bidInfo, boolean showDialog) {
 
         final HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(bidInfo.getEngagementId()));
 
-        new ApiCommon<FeedCommonResponse>(this).showLoader(true).execute(params, ApiName.CANCEL_BID,
+        new ApiCommon<FeedCommonResponse>(this).showLoader(showDialog).execute(params, ApiName.CANCEL_BID,
                 new APICommonCallback<FeedCommonResponse>() {
 
                     @Override
@@ -11974,16 +11981,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 								updateBidsView();
                             } else {
                                 DialogPopup.alertPopup(HomeActivity.this, "", message);
+								bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
                             DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.connection_lost_please_try_again));
+							bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
                         }
                     }
 
                     @Override
                     public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+						bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
                         return false;
                     }
 
@@ -12438,7 +12448,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Data.autoData.setPickupAddress(searchResultPickup.getAddress(), searchResultPickup.getLatLng());
                 Data.autoData.setSelectedPackage(selectedPackage);
                 slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(region);
-                finalRequestRideTimerStart();
+                finalRequestRideTimerStart(region);
                 performBackpressed();
             }
         }
