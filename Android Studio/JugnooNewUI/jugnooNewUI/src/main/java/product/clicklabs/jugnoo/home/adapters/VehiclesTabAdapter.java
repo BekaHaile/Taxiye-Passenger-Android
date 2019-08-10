@@ -34,20 +34,18 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     private ArrayList<Region> regions = new ArrayList<>();
     private boolean showRegionFares;
     private VehicleFareEstimateDialog estimateDialog;
-    private boolean isNewUI = false;
 
     public VehiclesTabAdapter(HomeActivity activity, ArrayList<Region> regions,boolean showFares) {
         this.regions = regions;
         this.activity = activity;
         this.showRegionFares = showFares;
         this.estimateDialog = new VehicleFareEstimateDialog();
-        isNewUI = activity.getResources().getBoolean(R.bool.fallback_is_new_reverse);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = null;
-        if(isNewUI) {
+        if(activity.isNewUI()) {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicles_new,parent,false);
         } else {
             v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
@@ -77,12 +75,12 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         int visibility = showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE;
         holder.tvVehicleFare.setVisibility(visibility);
         holder.tvVehicleFareStrike.setVisibility(View.GONE);
-        if(region.getEta()!= null && !region.getEta().isEmpty() && !region.getEta().equals("-")&& isNewUI) {
+        if(region.getEta()!= null && !region.getEta().isEmpty() && !region.getEta().equals("-")&& activity.isNewUI()) {
             holder.textViewVehicleName.setText(region.getRegionName() + " - " + region.getEta() + " " + activity.getString(R.string.min));
         } else {
             holder.textViewVehicleName.setText(region.getRegionName());
         }
-        if(!isNewUI) {
+        if(!activity.isNewUI()) {
             holder.tvETA.setVisibility(visibility);
             holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
         }
@@ -97,7 +95,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 holder.tvOfferTag.setText(discount);
             }
         }
-        if(showRegionFares && isNewUI) {
+        if(showRegionFares && activity.isNewUI()) {
             holder.imageViewSep.setVisibility(View.GONE);
         } else {
             holder.imageViewSep.setVisibility(View.VISIBLE);
@@ -117,7 +115,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                if(isNewUI && showRegionFares) {
+                if(activity.isNewUI() && showRegionFares) {
                     holder.relativeIn.setBackground(activity.getResources().getDrawable(R.drawable.background_cornered_theme_stroke_white_in));
                     holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
                 } else {
@@ -133,7 +131,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                     holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_info_grey, 0);
                 }
             } else{
-                if(isNewUI && showRegionFares) {
+                if(activity.isNewUI() && showRegionFares) {
                     holder.relativeIn.setBackground(activity.getResources().getDrawable(R.drawable.background_cornered_grey_stroke_white_theme));
                 } else {
                     holder.relativeIn.setBackground(null);

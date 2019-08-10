@@ -636,7 +636,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout relativeLayoutSearchContainerNew, relativeLayoutDestSearchBarNew, relativeLayoutInitialSearchBarNew;
     TextView textViewDestSearchNew,textViewInitialSearchNew;
     ImageView imageViewDropCrossNew;
-    LinearLayout linearLayoutConfirmOption;
+    LinearLayout linearLayoutConfirmOption,linearLayoutBidValue;
+    EditText editTextBidValue;
 
     @SuppressLint("NewApi")
     @Override
@@ -697,7 +698,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         HomeActivity.appInterruptHandler = HomeActivity.this;
 
-        isNewUI = getResources().getBoolean(R.bool.fallback_is_new_reverse);
+//        isNewUI = getResources().getBoolean(R.bool.fallback_is_new_reverse);
 
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
@@ -2260,6 +2261,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutDestSearchBarNew = findViewById(R.id.relativeLayoutDestSearchBarNew);
         relativeLayoutInitialSearchBarNew = findViewById(R.id.relativeLayoutInitialSearchBarNew);
         linearLayoutConfirmOption = findViewById(R.id.linearLayoutConfirmOption2);
+        linearLayoutBidValue = findViewById(R.id.linearLayoutBidValue);
+        editTextBidValue = findViewById(R.id.editTextBidValue);
+        editTextBidValue.setTypeface(Fonts.mavenMedium(this));
         textViewDestSearchNew = findViewById(R.id.textViewDestSearchNew); textViewDestSearchNew.setTypeface(Fonts.mavenRegular(this));
         relativeLayoutInitialSearchBarNew.setOnClickListener(new OnClickListener() {
             @Override
@@ -3778,6 +3782,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             updateConfirmedStateCoupon();
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
+                            linearLayoutBidValue.setVisibility(View.GONE);
                             if(Data.autoData.showRegionSpecificFare()){
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.VISIBLE);
                                 relativeLayoutTotalFare.setVisibility(View.GONE);
@@ -3822,11 +3827,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             params.setMargins(30,0,30,20);
                             params.addRule(RelativeLayout.BELOW,linearLayoutConfirmOption.getId());
                             buttonConfirmRequest.setLayoutParams(params);
-                            if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
-                                hideCenterPickupPin();
+                            if (isNewUiWithDropAtConfirmation()) {
+                                pickupLocationMarker.remove();
                                 fareEstimatBeforeRequestRide();
-                            } else {
-                                ivLikeDrop.setVisibility(View.GONE);
                             }
                             if(!selectPickUpdropAtOnce){
                                 relativeLayoutInitialSearchBar.setEnabled(false);
@@ -6409,6 +6412,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon) {
         //fabViewTest.setFABButtons();
         if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if (Data.autoData.getRegions() != null && Data.autoData.getRegions().size() > 0) {
+                boolean setNew = false;
+                for (Region region : Data.autoData.getRegions()) {
+                    if (region.getReverseBid() == 1) {
+                        setNew = true;
+                    }
+                }
+                if (setNew) {
+                    if (!isNewUI) {
+                        isNewUI = true;
+                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        switchPassengerScreen(passengerScreenMode);
+                    }
+                } else {
+                    if (isNewUI) {
+                        isNewUI = false;
+                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        switchPassengerScreen(passengerScreenMode);
+                    }
+                }
+            }
             try {
                 if (!stopDefaultCoupon && (slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation)) {
                     defaultCouponSelection();
@@ -8796,7 +8820,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if(Data.autoData.getSelectedPackage() != null) {
                                     nameValuePairs.put(Constants.KEY_PACKAGE_ID, String.valueOf(Data.autoData.getSelectedPackage().getPackageId()));
                                 }
-
+                                if (isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
+                                    if (!editTextBidValue.getText().toString().isEmpty()) {
+                                        nameValuePairs.put("initial_bid_value", editTextBidValue.getText().toString());
+                                    }
+                                }
                                 if(Data.autoData.showRegionSpecificFare()){
                                     if ((regionSelected.getRideType() == RideTypeValue.POOL.getOrdinal() || regionSelected.getFareMandatory() == 1)
                                             && regionSelected.getRegionFare() != null && regionSelected.getRegionFare().getPoolFareId() > 0) {
@@ -9033,6 +9061,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isNewUI() {
+        return isNewUI;
     }
 
     public void cancelTimerRequestRide() {
@@ -10696,6 +10728,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
+        if(isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
+            linearLayoutBidValue.setVisibility(View.VISIBLE);
+        } else {
+            linearLayoutBidValue.setVisibility(View.GONE);
+        }
 
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()== RideTypeValue.BIKE_RENTAL.getOrdinal()) {
                 relativeLayoutDestSearchBar.setVisibility(View.GONE);
