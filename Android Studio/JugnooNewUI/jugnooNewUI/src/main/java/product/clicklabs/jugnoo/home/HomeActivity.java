@@ -278,6 +278,7 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.MySpinner;
 import product.clicklabs.jugnoo.widgets.PrefixedEditText;
 import retrofit.Callback;
@@ -1502,11 +1503,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
+                    Utils.hideKeyboard(HomeActivity.this);
                     if((isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
                             && !editTextBidValue.getText().toString().isEmpty())
                             || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 0) {
                         if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 1
-                                && !textViewDestSearchNew.getText().toString().isEmpty())
+                                &&  Data.autoData.getDropLatLng() != null)
                                 || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 0) {
                             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
                                 findDriversETACall(true, true, false, getApiFindADriver().getParams());
@@ -2269,7 +2271,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         linearLayoutConfirmOption = findViewById(R.id.linearLayoutConfirmOption2);
         linearLayoutBidValue = findViewById(R.id.linearLayoutBidValue);
         editTextBidValue = findViewById(R.id.editTextBidValue);
-        editTextBidValue.setTypeface(Fonts.mavenMedium(this));
+        editTextBidValue.setTypeface(Fonts.mavenRegular(this));
         textViewDestSearchNew = findViewById(R.id.textViewDestSearchNew); textViewDestSearchNew.setTypeface(Fonts.mavenRegular(this));
         relativeLayoutInitialSearchBarNew.setOnClickListener(new OnClickListener() {
             @Override
@@ -3688,7 +3690,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
                         requestFinalLayout.setVisibility(View.GONE);
-
+                        relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
                         relativeLayoutInitialSearchBar.setVisibility(View.VISIBLE);
 
                         imageViewRideNow.setVisibility(View.VISIBLE);
@@ -6445,6 +6447,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         passengerScreenMode = PassengerScreenMode.P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                     }
+                }
+                if(isNewUI) {
+                    linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.white));
+                    if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() == 1
+                            &&  MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+                        linearLayoutPaymentModeConfirm.setVisibility(View.GONE);
+                    }
+                } else {
+                    linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
                 }
             }
             try {
@@ -10747,8 +10758,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
         if(isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
             linearLayoutBidValue.setVisibility(View.VISIBLE);
+            relativeLayoutOfferConfirm.setVisibility(View.GONE);
+            boolean isCashOnly = true;
+            if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
+                for (PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()) {
+                    if(paymentModeConfigData.getPaymentOption() != PaymentOption.CASH.getOrdinal()
+                            && paymentModeConfigData.getEnabled() == 1
+                            && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes().contains(paymentModeConfigData.getPaymentOption())
+                            && paymentModeConfigData.getPaymentOption() != 0) {
+                        isCashOnly = false;
+                    }
+                }
+            }
+            if(isCashOnly) {
+                linearLayoutPaymentModeConfirm.setVisibility(View.GONE);
+            }
         } else {
             linearLayoutBidValue.setVisibility(View.GONE);
+            linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+            relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
         }
 
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()== RideTypeValue.BIKE_RENTAL.getOrdinal()) {

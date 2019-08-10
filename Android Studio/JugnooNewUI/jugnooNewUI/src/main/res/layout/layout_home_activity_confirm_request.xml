@@ -51,27 +51,51 @@
             android:visibility="visible"
             android:layout_below="@+id/recyclerViewVehiclesConfirmRide"
             android:layout_height="150px">
+            
+            <RelativeLayout
+                android:id="@+id/rlMark"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20px"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/iv1"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/circle_theme"/>
+                <ImageView
+                    android:id="@+id/iv2"
+                    android:layout_width="40px"
+                    android:layout_height="50px"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/iv1"
+                    android:orientation="vertical"
+                    android:rotation="0"
+                    android:src="@drawable/dotted_vertical_line"/>
+                <ImageView
+                    android:id="@+id/iv3"
+                    android:layout_width="20px"
+                    android:layout_height="20px"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@id/iv2"
+                    android:src="@drawable/ic_shape"/>
+                
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutDestSearchBarNew"
                 android:layout_width="match_parent"
                 android:layout_height="70px"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginStart="20px"
                 android:layout_marginEnd="20px"
                 android:layout_marginBottom="5px"
                 android:layout_marginTop="80px"
+                android:layout_toEndOf="@id/rlMark"
                 android:background="@color/menu_item_selector_color_F7"
                 android:splitMotionEvents="false">
-
-                <ImageView
-                    android:id="@+id/imageViewDestSearchGPSIconNew"
-                    android:layout_width="16px"
-                    android:layout_height="16px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="37px"
-                    android:src="@drawable/circle_red"
-                    android:tag="mwar" />
+                
 
                 <TextView
                     android:id="@+id/textViewDestSearchNew"
@@ -80,7 +104,6 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="37px"
                     android:layout_toStartOf="@+id/layout_edit_destinationNew"
-                    android:layout_toEndOf="@+id/imageViewDestSearchGPSIconNew"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
                     android:hint="@string/assigning_state_edit_text_hint"
@@ -120,28 +143,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="70px"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginStart="20px"
                 android:layout_marginEnd="20px"
                 android:layout_marginTop="5px"
+                android:layout_toEndOf="@id/rlMark"
                 android:background="@color/menu_item_selector_color_F7"
                 android:splitMotionEvents="false">
-
-                <ImageView
-                    android:id="@+id/imageViewInitialSearchGPSIconNew"
-                    android:layout_width="16px"
-                    android:layout_height="16px"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="37px"
-                    android:src="@drawable/circle_green"
-                    android:tag="mwar" />
-
+                
                 <TextView
                     android:id="@+id/textViewInitialSearchNew"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="37px"
-                    android:layout_toEndOf="@+id/imageViewInitialSearchGPSIconNew"
                     android:background="@color/transparent"
                     android:gravity="center_vertical|start"
                     android:hint="@string/set_pickup_location"
@@ -176,7 +189,7 @@
                     android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:theme="@style/GreyHighlight"
-                    android:paddingStart="15px"
+                    android:paddingStart="20px"
                     android:paddingEnd="12px"
                     android:paddingTop="12px"
                     android:paddingBottom="12px"
@@ -187,6 +200,7 @@
 
                     <TextView
                         android:id="@+id/textViewRupee"
+                        android:layout_marginStart="10px"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/rupee"/>
@@ -196,14 +210,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="10px"
-                        android:maxLength="5"
+                        android:maxLength="4"
+                        android:paddingStart="37px"
                         android:background="@color/menu_item_selector_color_F7"
-                        android:inputType="numberDecimal|numberSigned"
-                        android:gravity="center"
+                        android:digits="0123456789"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
                         android:hint="@string/enter_bid"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
+                        android:textSize="30px" />
 
                 </LinearLayout>
 
