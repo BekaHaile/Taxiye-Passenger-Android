@@ -388,6 +388,11 @@ public class JSONParser implements Constants {
             Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
             Data.autoData.setFaultConditions(autosData.getFaultConditions());
 
+			long bidRequestRideTimeout = autoData.optLong(KEY_BID_REQUEST_RIDE_TIMEOUT, 420000);
+			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
+            Data.autoData.setBidRequestRideTimeout(bidRequestRideTimeout);
+            Data.autoData.setBidTimeout(bidTimeout);
+
             if(Data.autoData.getPromoCoupons() == null){
                 Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
             } else{
@@ -1243,6 +1248,7 @@ public class JSONParser implements Constants {
                         Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""), Data.autoData.getPickupLatLng());
                         parseDropLatLng(jObject1);
                         bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
+                        Data.autoData.setIsReverseBid(jObject1.optInt(Constants.KEY_REVERSE_BID, 0));
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -2027,7 +2033,7 @@ public class JSONParser implements Constants {
                             object.optString(Constants.KEY_DRIVER_IMAGE),
                             object.optString(Constants.KEY_DRIVER_NAME),
                             object.optString(Constants.KEY_VEHICLE_NAME),
-                            object.optString(Constants.KEY_ETA)
+                            object.optString(Constants.KEY_DRIVER_ETA)
 							));
                 }
             }

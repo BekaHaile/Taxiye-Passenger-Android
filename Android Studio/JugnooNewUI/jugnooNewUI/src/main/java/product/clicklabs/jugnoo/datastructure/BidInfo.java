@@ -35,7 +35,7 @@ public class BidInfo {
 	@SerializedName("vehicle_name")
 	@Expose
 	private String vehicleName;
-	@SerializedName("eta")
+	@SerializedName("driver_eta")
 	@Expose
 	private String eta;
 
@@ -141,5 +141,10 @@ public class BidInfo {
 
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof BidInfo && ((BidInfo)obj).getEngagementId() == getEngagementId();
 	}
 }

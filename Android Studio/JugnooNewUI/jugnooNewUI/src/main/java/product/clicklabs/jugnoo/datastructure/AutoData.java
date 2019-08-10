@@ -23,7 +23,9 @@ import product.clicklabs.jugnoo.utils.Prefs;
  * Created by gurmail on 18/08/16.
  */
 public class AutoData {
-    private String fuguChannelId;
+	private int isReverseBid;
+	private long bidRequestRideTimeout, bidTimeout;
+	private String fuguChannelId;
     private String fuguChannelName;
     private ArrayList<String> fuguTags;
     private String destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, inRideSendInviteTextBold,
@@ -776,4 +778,28 @@ public class AutoData {
     public void setFaultConditions(List<String> faultConditions) {
         FaultConditions = faultConditions;
     }
+
+	public int getIsReverseBid() {
+		return isReverseBid;
+	}
+
+	public void setIsReverseBid(int isReverseBid) {
+		this.isReverseBid = isReverseBid;
+	}
+
+	public long getBidTimeout() {
+		return bidTimeout;
+	}
+
+	public void setBidTimeout(long bidTimeout) {
+		this.bidTimeout = bidTimeout;
+	}
+
+	public long getBidRequestRideTimeout() {
+		return bidRequestRideTimeout;
+	}
+
+	public void setBidRequestRideTimeout(long bidRequestRideTimeout) {
+		this.bidRequestRideTimeout = bidRequestRideTimeout;
+	}
 }

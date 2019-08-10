@@ -1066,4 +1066,7 @@ public interface Constants {
 	String KEY_DRIVER_IMAGE = "driver_image";
 	String KEY_DRIVER_NAME = "driver_name";
 	String KEY_VEHICLE_NAME = "vehicle_name";
+	String KEY_DRIVER_ETA = "driver_eta";
+	String KEY_BID_REQUEST_RIDE_TIMEOUT = "bid_request_ride_timeout";
+	String KEY_BID_TIMEOUT = "bid_timeout";
 }

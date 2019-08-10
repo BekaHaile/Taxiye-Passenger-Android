@@ -8545,12 +8545,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Prefs.with(HomeActivity.this).save(Constants.SKIP_SAVE_DROP_LOCATION, false);
         try {
 
-            requestRideLifeTime = ((2 * 60 * 1000) + (1 * 60 * 1000));
+            requestRideLifeTime = Data.autoData.getIsReverseBid() == 1 ? Data.autoData.getBidRequestRideTimeout() : 3 * 60 * 1000;
             serverRequestStartTime = System.currentTimeMillis();
             serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
             executionTime = -10;
-            if(Prefs.with(this).getInt(KEY_CUSTOMER_REQUEST_RIDE_BID_FAST_INTERVAL, 0) == 1
-                    && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1){
+            if(Data.autoData.getIsReverseBid() == 1){
                 requestPeriod = 5000;
             } else {
                 requestPeriod = 20000;
@@ -8940,8 +8939,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     } else {
                         setDropLocationAssigningUI();
 
-                        long diff = Prefs.with(HomeActivity.this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
-                        if (diff <= 0 || bidsPlacedAdapter.getItemCount() == 0) {
+                        if (bidsPlacedAdapter.getItemCount() == 0) {
 							topBar.tvCancel.setVisibility(View.GONE);
                             initialCancelRideBtn.setVisibility(View.VISIBLE);
                         } else {
@@ -11445,6 +11443,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			rlAssigningNormal.setVisibility(View.VISIBLE);
 			topBar.tvCancel.setVisibility(View.GONE);
 		}
+		updateCancelButtonUI();
 
 
         long diff = Prefs.with(this).getLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L);
@@ -11472,15 +11471,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private int bidTime = -1;
+    private double bidTime = -1;
     private int totalBidTime = -1;
     private Runnable runnableBidTimer = new Runnable() {
         @Override
         public void run() {
-            bidTime--;
-            tvBidTimer.setText(String.valueOf(bidTime));
-            pwBidTimer.setInstantProgress(((float) (bidTime)) / (float) totalBidTime);
-			bidsPlacedAdapter.notifyDataSetChanged();
+            bidTime = bidTime - (75.0/1000.0);
+            tvBidTimer.setText(String.valueOf((int)bidTime));
+            pwBidTimer.setInstantProgress((float) (bidTime / (double) totalBidTime));
+            bidsPlacedAdapter.updateProgress();
 
             if (bidTime > 0) {
                 if (bidsPlacedAdapter.getItemCount() > 0 && bidTime <= 20) {
@@ -11488,7 +11487,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     }
                 }
-                getHandler().postDelayed(this, 1000);
+                getHandler().postDelayed(this, 75);
             } else {
                 getHandler().removeCallbacks(this);
             }
@@ -11686,7 +11685,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 	@Override
 	public void onBidCancelled(@NotNull BidInfo bidInfo) {
-		cancelBidApi(String.valueOf(bidInfo.getEngagementId()));
+		cancelBidApi(bidInfo);
 	}
 
 
@@ -11721,10 +11720,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 });
     }
 
-    public void cancelBidApi(String engagementId) {
+    public void cancelBidApi(BidInfo bidInfo) {
 
         final HashMap<String, String> params = new HashMap<>();
-        params.put(Constants.KEY_ENGAGEMENT_ID, engagementId);
+        params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(bidInfo.getEngagementId()));
 
         new ApiCommon<FeedCommonResponse>(this).showLoader(true).execute(params, ApiName.CANCEL_BID,
                 new APICommonCallback<FeedCommonResponse>() {
@@ -11733,7 +11732,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     public void onSuccess(final FeedCommonResponse response, String message, int flag) {
                         try {
                             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-
+								Data.autoData.getBidInfos().remove(bidInfo);
+								bidsPlacedAdapter.notifyDataSetChanged();
+								updateBidsView();
                             } else {
                                 DialogPopup.alertPopup(HomeActivity.this, "", message);
                             }
