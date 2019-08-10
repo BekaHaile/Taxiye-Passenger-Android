@@ -3840,7 +3840,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             params.addRule(RelativeLayout.BELOW,linearLayoutConfirmOption.getId());
                             buttonConfirmRequest.setLayoutParams(params);
                             if (isNewUiWithDropAtConfirmation()) {
-                                pickupLocationMarker.remove();
+                                if(currentLocationMarker != null) {
+                                    currentLocationMarker.remove();
+                                }
                                 fareEstimatBeforeRequestRide();
                             }
                             if(!selectPickUpdropAtOnce){
@@ -10421,6 +10423,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 searchedALocation = true;
             }
             if(isNewUiWithDropAtConfirmation()) {
+                if(currentLocationMarker != null) {
+                    currentLocationMarker.remove();
+                }
                 fareEstimatBeforeRequestRide();
             }
         } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
@@ -10563,6 +10568,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     GAUtils.event(RIDES, HOME, DESTINATION + LOCATION + ENTERED);
                 }
                 if(isNewUiWithDropAtConfirmation()) {
+                    if(currentLocationMarker != null) {
+                        currentLocationMarker.remove();
+                    }
                     fareEstimatBeforeRequestRide();
                 }
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
