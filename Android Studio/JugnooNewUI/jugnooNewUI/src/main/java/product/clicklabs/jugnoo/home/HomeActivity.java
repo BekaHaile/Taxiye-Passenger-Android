@@ -2259,7 +2259,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutSearchContainerNew = findViewById(R.id.relativeLayoutSearchContainerNew);
         relativeLayoutDestSearchBarNew = findViewById(R.id.relativeLayoutDestSearchBarNew);
         relativeLayoutInitialSearchBarNew = findViewById(R.id.relativeLayoutInitialSearchBarNew);
-        linearLayoutConfirmOption = findViewById(R.id.linearLayoutConfirmOption);
+        linearLayoutConfirmOption = findViewById(R.id.linearLayoutConfirmOption2);
         textViewDestSearchNew = findViewById(R.id.textViewDestSearchNew); textViewDestSearchNew.setTypeface(Fonts.mavenRegular(this));
         relativeLayoutInitialSearchBarNew.setOnClickListener(new OnClickListener() {
             @Override
@@ -3750,6 +3750,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             relativeLayoutSearchContainerNew.setVisibility(View.GONE);
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
+                            buttonConfirmRequest.setBackground(getDrawable(R.drawable.capsule_theme_login_selector));
                             if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
                                 hideCenterPickupPin();
                                 imageViewConfirmDropLocationEdit.setVisibility(View.VISIBLE);
@@ -3807,7 +3808,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 findViewById(R.id.ivNotes).setVisibility(View.GONE);
                             }
                         } else if(isNewUI) {
-                            buttonConfirmRequest.setText(R.string.request_ride);
+                            buttonConfirmRequest.setText(R.string.book);
                             relativeLayoutSearchContainerNew.setVisibility(View.VISIBLE);
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
@@ -3815,6 +3816,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             linearLayoutRequestMain.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.VISIBLE);
+                            buttonConfirmRequest.setBackground(getDrawable(R.drawable.background_theme_gradient_selector));
+                            RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,120);
+                            buttonConfirmRequest.setTextSize(19);
+                            params.setMargins(30,0,30,20);
+                            params.addRule(RelativeLayout.BELOW,linearLayoutConfirmOption.getId());
+                            buttonConfirmRequest.setLayoutParams(params);
                             if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
                                 hideCenterPickupPin();
                                 fareEstimatBeforeRequestRide();

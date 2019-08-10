@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,17 +34,24 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     private ArrayList<Region> regions = new ArrayList<>();
     private boolean showRegionFares;
     private VehicleFareEstimateDialog estimateDialog;
+    private boolean isNewUI = false;
 
     public VehiclesTabAdapter(HomeActivity activity, ArrayList<Region> regions,boolean showFares) {
         this.regions = regions;
         this.activity = activity;
         this.showRegionFares = showFares;
         this.estimateDialog = new VehicleFareEstimateDialog();
+        isNewUI = activity.getResources().getBoolean(R.bool.fallback_is_new_reverse);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
+        View v = null;
+        if(isNewUI) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicles_new,parent,false);
+        } else {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
+        }
 
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT,
                 showRegionFares ?RecyclerView.LayoutParams.WRAP_CONTENT:125);
@@ -65,13 +73,19 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId())
                 ;
 
-        holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
         int visibility = showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE;
         holder.tvVehicleFare.setVisibility(visibility);
         holder.tvVehicleFareStrike.setVisibility(View.GONE);
-        holder.tvETA.setVisibility(visibility);
-        holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
+        if(region.getEta()!= null && !region.getEta().isEmpty() && !region.getEta().equals("-")&& isNewUI) {
+            holder.textViewVehicleName.setText(region.getRegionName() + " - " + region.getEta() + " " + activity.getString(R.string.min));
+        } else {
+            holder.textViewVehicleName.setText(region.getRegionName());
+        }
+        if(!isNewUI) {
+            holder.tvETA.setVisibility(visibility);
+            holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
+        }
         holder.tvOfferTag.setVisibility(View.GONE);
         if(showRegionFares && region.getRegionFare() != null){
             holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()));
@@ -83,7 +97,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 holder.tvOfferTag.setText(discount);
             }
         }
-        if(showRegionFares && activity.getResources().getBoolean(R.bool.fallback_is_new_reverse)) {
+        if(showRegionFares && isNewUI) {
             holder.imageViewSep.setVisibility(View.GONE);
         } else {
             holder.imageViewSep.setVisibility(View.VISIBLE);
@@ -103,7 +117,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                if(activity.getResources().getBoolean(R.bool.fallback_is_new_reverse) && showRegionFares) {
+                if(isNewUI && showRegionFares) {
                     holder.relativeIn.setBackground(activity.getResources().getDrawable(R.drawable.background_cornered_theme_stroke_white_in));
                     holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
                 } else {
@@ -119,7 +133,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                     holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_info_grey, 0);
                 }
             } else{
-                if(activity.getResources().getBoolean(R.bool.fallback_is_new_reverse) && showRegionFares) {
+                if(isNewUI && showRegionFares) {
                     holder.relativeIn.setBackground(activity.getResources().getDrawable(R.drawable.background_cornered_grey_stroke_white_theme));
                 } else {
                     holder.relativeIn.setBackground(null);
