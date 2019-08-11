@@ -2110,9 +2110,11 @@
     <string name="please_lock_the_bike_and_proceed">Please lock the bike and proceed</string>
     <string name="bike_lock_alert_message">Make sure the bike is locked and parked safely</string>
     <string name="request_ride">Request Ride</string>
-    <string name="enter_bid">Enter Bid</string>
-    <string name="error_bid_value">Please enter bid value before proceeding</string>
+    <string name="enter_bid">Please offer your fare</string>
+    <string name="error_bid_value">Please enter valid fare value before proceeding</string>
     <string name="you_can_accept_or_decline_bids_from_drivers">You can accept or decline bids\nfrom drivers</string>
+    <string name="bid_lower_value_err">Minimum fare for this route is %s. Raise your offer to this.</string>
+    <string name="bid_greater_amount_err">The price is too high for this route. Please offer lower fare.</string>
 
 
 </resources>
