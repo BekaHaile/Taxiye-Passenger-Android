@@ -11,7 +11,8 @@
 
     <RelativeLayout
         android:id="@+id/relativeIn"
-        android:layout_margin="@dimen/px_10"
+        android:layout_marginTop="@dimen/px_10"
+        android:layout_marginBottom="@dimen/px_10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
