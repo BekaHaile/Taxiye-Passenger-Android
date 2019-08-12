@@ -390,6 +390,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 }
                 if(!matched){
                     regionSelected = Data.autoData.getRegions().get(0);
+                    activity.setVehicleTypeSelected(0, false, true);
                 }
 
                 vehiclesTabAdapter.notifyDataSetChanged();

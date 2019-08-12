@@ -95,7 +95,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 holder.tvOfferTag.setText(discount);
             }
         }
-        if(showRegionFares && activity.isNewUI()) {
+        if(activity.isNewUI()) {
             holder.imageViewSep.setVisibility(View.GONE);
             RelativeLayout.LayoutParams params = ((RelativeLayout.LayoutParams)holder.relativeIn.getLayoutParams());
             params.setMarginStart((int) (ASSL.Xscale()*(position == 0 ? 10f : 5f)));
@@ -107,6 +107,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             params.setMargins(0,0,0,0);
             holder.relativeIn.setLayoutParams(params);
         }
+
 
         if(activity.showSurgeIcon() && region.getCustomerFareFactor() > 1.0){
             holder.imageViewMultipleSurge.setVisibility(View.VISIBLE);

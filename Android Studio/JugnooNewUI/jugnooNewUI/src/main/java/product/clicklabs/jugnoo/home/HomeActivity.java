@@ -1504,9 +1504,34 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     Utils.hideKeyboard(HomeActivity.this);
-                    if((isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
-                            && !editTextBidValue.getText().toString().isEmpty())
-                            || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 0) {
+                    double innerValue = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8;
+                    double outerValue = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10;
+                    if(isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+                            && !editTextBidValue.getText().toString().isEmpty()) {
+                        if(Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
+                            Utils.showToast(HomeActivity.this,getString(R.string.bid_lower_value_err,String.valueOf(innerValue)),Toast.LENGTH_LONG);
+                        } else if(Double.parseDouble(editTextBidValue.getText().toString()) > outerValue
+                                && Double.parseDouble(editTextBidValue.getText().toString()) > 5000) {
+                            Utils.showToast(HomeActivity.this,getString(R.string.bid_greater_amount_err),Toast.LENGTH_LONG);
+                        } else {
+                            if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 1
+                                    &&  Data.autoData.getDropLatLng() != null)
+                                    || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 0) {
+                                if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                                    findDriversETACall(true, true, false, getApiFindADriver().getParams());
+                                } else {
+                                    if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                                            .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                                        openBikeRentalScan();
+                                    } else {
+                                        requestRideClick();
+                                    }
+                                }
+                            } else {
+                                Utils.showToast(HomeActivity.this,getString(R.string.destination_required));
+                            }
+                        }
+                    } else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 0) {
                         if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 1
                                 &&  Data.autoData.getDropLatLng() != null)
                                 || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 0) {
@@ -3794,9 +3819,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             imageViewDropCrossNew.setVisibility(View.GONE);
                             updateConfirmedStatePaymentUI();
                             updateConfirmedStateCoupon();
+                            RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams((int) (ASSL.Yscale()*500),(int) (ASSL.Xscale()*96));
+                            params.setMargins(0,0,0,0);
+                            params.addRule(RelativeLayout.BELOW,linearLayoutConfirmOption.getId());
+                            params.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
+                            buttonConfirmRequest.setLayoutParams(params);
+
                             //fabView.setRelativeLayoutFABVisibility(mode);
                             setGoogleMapPadding(mapPaddingConfirm);
                             linearLayoutBidValue.setVisibility(View.GONE);
+                            relativeLayoutTotalFare.setVisibility(View.VISIBLE);
                             if(Data.autoData.showRegionSpecificFare()){
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.VISIBLE);
                                 relativeLayoutTotalFare.setVisibility(View.GONE);
@@ -3836,10 +3868,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             topBar.imageViewBack.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.VISIBLE);
                             buttonConfirmRequest.setBackground(ContextCompat.getDrawable(this, R.drawable.background_theme_gradient_selector));
-                            RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,120);
+                            RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(int) (ASSL.Xscale()*96));
                             buttonConfirmRequest.setTextSize(19);
                             params.setMargins(30,0,30,20);
                             params.addRule(RelativeLayout.BELOW,linearLayoutConfirmOption.getId());
+                            params.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
                             buttonConfirmRequest.setLayoutParams(params);
                             if (isNewUiWithDropAtConfirmation()) {
                                 if(currentLocationMarker != null) {
@@ -3884,6 +3917,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 rlNotes.setVisibility(View.GONE);
                                 findViewById(R.id.ivNotes).setVisibility(View.GONE);
                             }
+                            relativeLayoutSearchContainer.setVisibility(View.GONE);
+                            hideCenterPickupPin();
                         } else {
                             if (!specialPickupScreenOpened && map != null) {
                                 if (!searchedALocation) {
@@ -3914,8 +3949,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             damageReportButton.setVisibility(View.GONE);
                             Log.d("HomeActivityResult" , " Rental");
                         }
-                        relativeLayoutSearchContainer.setVisibility(View.GONE);
-                        hideCenterPickupPin();
                         break;
 
 
@@ -6449,12 +6482,38 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 }
                 if(isNewUI) {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mapLayout.getLayoutParams();
+                    params.setMargins(0,0,0,0);
+                    mapLayout.setLayoutParams(params);
+
+                    RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams)passengerMainLayout.getLayoutParams();
+                    params.setMargins(0,0,0,0);
+                    passengerMainLayout.setLayoutParams(params);
+                    relativeLayoutSearchContainer.setVisibility(View.GONE);
                     linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.white));
-                    if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() == 1
-                            &&  MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+                    boolean isCashOnly = true;
+                    if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
+                        for (PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()) {
+                            if(paymentModeConfigData.getPaymentOption() != PaymentOption.CASH.getOrdinal()
+                                    && paymentModeConfigData.getEnabled() == 1
+                                    && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes().contains(paymentModeConfigData.getPaymentOption())
+                                    && paymentModeConfigData.getPaymentOption() != 0) {
+                                isCashOnly = false;
+                            }
+                        }
+                    }
+                    if(isCashOnly) {
                         linearLayoutPaymentModeConfirm.setVisibility(View.GONE);
                     }
                 } else {
+                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mapLayout.getLayoutParams();
+                    params.setMargins(0, (int) (ASSL.Yscale()*96),0,0);
+                    mapLayout.setLayoutParams(params);
+
+                    relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                    RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams)passengerMainLayout.getLayoutParams();
+                    params.setMargins(0, (int) (ASSL.Yscale()*96),0,0);
+                    passengerMainLayout.setLayoutParams(params);
                     linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
                 }
             }
@@ -10756,26 +10815,31 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
         int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
         slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
-        if(isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
-            linearLayoutBidValue.setVisibility(View.VISIBLE);
-            relativeLayoutOfferConfirm.setVisibility(View.GONE);
-            boolean isCashOnly = true;
-            if(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
-                for (PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()) {
-                    if(paymentModeConfigData.getPaymentOption() != PaymentOption.CASH.getOrdinal()
-                            && paymentModeConfigData.getEnabled() == 1
-                            && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes().contains(paymentModeConfigData.getPaymentOption())
-                            && paymentModeConfigData.getPaymentOption() != 0) {
-                        isCashOnly = false;
+        if(isNewUI) {
+            relativeLayoutTotalFare.setVisibility(View.GONE);
+            linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
+                linearLayoutBidValue.setVisibility(View.VISIBLE);
+                relativeLayoutOfferConfirm.setVisibility(View.GONE);
+                boolean isCashOnly = true;
+                if (MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
+                    for (PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()) {
+                        if (paymentModeConfigData.getPaymentOption() != PaymentOption.CASH.getOrdinal()
+                                && paymentModeConfigData.getEnabled() == 1
+                                && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes().contains(paymentModeConfigData.getPaymentOption())
+                                && paymentModeConfigData.getPaymentOption() != 0) {
+                            isCashOnly = false;
+                        }
                     }
                 }
-            }
-            if(isCashOnly) {
-                linearLayoutPaymentModeConfirm.setVisibility(View.GONE);
+                if (isCashOnly) {
+                    linearLayoutPaymentModeConfirm.setVisibility(View.GONE);
+                }
             }
         } else {
             linearLayoutBidValue.setVisibility(View.GONE);
             linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+            relativeLayoutTotalFare.setVisibility(View.VISIBLE);
             relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
         }
 
