@@ -22,7 +22,7 @@
     <View
         android:id="@+id/vProgressLeft"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="5dp"
         android:background="@drawable/background_theme_gradient_selector"
         />
 

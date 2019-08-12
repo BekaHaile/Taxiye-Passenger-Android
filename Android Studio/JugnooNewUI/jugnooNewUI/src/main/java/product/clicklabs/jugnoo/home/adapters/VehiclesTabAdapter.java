@@ -164,7 +164,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 int position = (int) v.getTag();
                 boolean changed = activity.setVehicleTypeSelected(position, true, false);
                 if(showRegionFares && !changed){
-                    if(showRegionFares && regions.get(0).getReverseBid() == 0) {
+                    if(showRegionFares && regions.get(position).getReverseBid() == 0) {
                         estimateDialog.show(activity, regions.get(position));
                     }
                 }

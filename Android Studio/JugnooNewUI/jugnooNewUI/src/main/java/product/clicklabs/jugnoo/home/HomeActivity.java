@@ -693,6 +693,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Data.longitude = Data.loginLongitude;
 
 
+        isNewUI = Data.autoData != null && Data.autoData.getNewUIFlag();
+
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -2565,8 +2567,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.autoData.setLastRefreshLatLng(latLng);
                     }
                 }
-                getAddressAsync(latLng, textViewInitialSearch, null);
-                getAddressAsync(latLng, textViewInitialSearchNew, null);
+                getAddressAsync(latLng, isNewUI() ? textViewInitialSearchNew : textViewInitialSearch, null);
+                if(passengerScreenMode == PassengerScreenMode.P_INITIAL
+                        && isNewUI() && Data.autoData.getPickupLatLng() != null) {
+                    pickupLocationEtaMarker();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -2779,7 +2784,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (passengerScreenMode == null) {
                 passengerScreenMode = PassengerScreenMode.P_INITIAL;
             }
-            isNewUI = Data.autoData != null && Data.autoData.getNewUIFlag();
 
 
             switchUserScreen();
@@ -4091,17 +4095,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         topBar.imageViewHelp.setVisibility(View.GONE);
 
-                        try {
-                            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()) {
-                                imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
-                                relativeLayoutAssigningDropLocationClick.setEnabled(false);
-                            } else {
-                                imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
-                                relativeLayoutAssigningDropLocationClick.setEnabled(true);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
 
                         fabViewTest.setMenuLabelsRightTestPadding(160f);
@@ -4449,6 +4442,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     e.printStackTrace();
                 }
 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setDropEditInAssigningState() {
+        try {
+            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
+                || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+                || (Data.autoData != null && Data.autoData.getIsReverseBid() == 1)) {
+                imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
+                relativeLayoutAssigningDropLocationClick.setEnabled(false);
+            } else {
+                imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
+                relativeLayoutAssigningDropLocationClick.setEnabled(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -5021,7 +5030,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                     textViewAssigningDropLocationClick.setText("");
                     dropAddressName = "";
-                    imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
+                    setDropEditInAssigningState();
                     progressBarAssigningDropLocation.setVisibility(View.GONE);
                 }
             } else {
@@ -5042,7 +5051,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 }
                 setDropLocationMarker();
-                imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
+                setDropEditInAssigningState();
                 getAddressAsync(Data.autoData.getDropLatLng(), textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
             }
         } catch (Exception e) {
@@ -6588,7 +6597,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                && Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0){
 //            return Data.autoData.getPickupLatLng();
 //        } else {
+        if(myLocation != null) {
             return new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        } else {
+            return new LatLng(Data.latitude,Data.longitude);
+        }
 //        }
     }
 
@@ -11808,7 +11821,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			topBar.tvCancel.setVisibility(View.VISIBLE);
 		} else {
 			rlAssigningBidding.setVisibility(View.GONE);
-			rlBidTimer.setVisibility(View.VISIBLE);
+			rlBidTimer.setVisibility(View.GONE);
 			rlAssigningNormal.setVisibility(View.VISIBLE);
 			topBar.tvCancel.setVisibility(View.GONE);
 		}
