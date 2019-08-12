@@ -1063,4 +1063,5 @@ public interface Constants {
 
 
     String KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL = "customer_gps_lock_status_polling_interval";
+    String KEY_INITIAL_BID_VALUE = "initial_bid_value";
 }
