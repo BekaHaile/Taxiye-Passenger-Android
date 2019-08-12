@@ -8892,7 +8892,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     }
                                 }
 
-                                if (promoCouponSelectedForRide != null) {
+                                Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+                                if (promoCouponSelectedForRide != null && regionSelected.getReverseBid() == 0) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
                                         nameValuePairs.put(KEY_COUPON_TO_APPLY, String.valueOf(promoCouponSelectedForRide.getId()));
                                         if (promoCouponSelectedForRide.getId() == 0) {
@@ -8903,7 +8904,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     }
                                     nameValuePairs.put(KEY_MASTER_COUPON, String.valueOf(promoCouponSelectedForRide.getMasterCoupon()));
                                 }
-                                Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
                                     double fareFactor = regionSelected.getCustomerFareFactor();
                                     double driverFareFactor = regionSelected.getDriverFareFactor();
@@ -10218,7 +10218,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 .getTextAssignBitmap(HomeActivity.this,
                         slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getEta(),
                         getResources().getDimensionPixelSize(R.dimen.text_size_24))));
-        pickupLocationMarker = map.addMarker(poolMarkerOptionStart);
+        if(map!= null) {
+            pickupLocationMarker = map.addMarker(poolMarkerOptionStart);
+        }
     }
 
     private void poolPathZoomAtConfirm() {
