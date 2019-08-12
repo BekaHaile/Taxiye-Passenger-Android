@@ -335,6 +335,16 @@ public class AutoData {
         this.fareStructure = fareStructure;
     }
 
+    public boolean getNewUIFlag(){
+        boolean setNew = false;
+        for (Region region : Data.autoData.getRegions()) {
+            if (region.getReverseBid() == 1) {
+                setNew = true;
+            }
+        }
+        return setNew;
+    }
+
     public ArrayList<Region> getRegions() {
         if(regionsTemp == null){
             regionsTemp = new ArrayList<>();

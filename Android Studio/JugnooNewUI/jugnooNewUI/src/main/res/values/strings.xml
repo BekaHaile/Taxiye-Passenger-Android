@@ -1972,7 +1972,7 @@
     <string name="are_you_sure_delete_schedule_ride">Are you sure you want to cancel the scheduled ride?</string>
     <string name="booking_scheduled_successfully">Booking scheduled successfully.</string>
     <string name="no_scheduled_rides">No Rides Scheduled currently</string>
-    <string name="bid_fare">Bid Fare</string>
+    <string name="bid_fare">Offer Fare</string>
     <string name="expected_toll_charge">Expected Toll Charges</string>
     <string name="schedule_ride_alert">*We cannot always guarantee that a driver will be available</string>
     <string name="vehicle">Vehicle</string>
@@ -2112,7 +2112,7 @@
     <string name="request_ride">Request Ride</string>
     <string name="enter_bid">Please offer your fare</string>
     <string name="error_bid_value">Please enter valid fare value before proceeding</string>
-    <string name="you_can_accept_or_decline_bids_from_drivers">You can accept or decline bids\nfrom drivers</string>
+    <string name="you_can_accept_or_decline_bids_from_drivers">You can accept or decline offers\nfrom drivers</string>
     <string name="bid_lower_value_err">Minimum fare for this route is %s. Raise your offer to this.</string>
     <string name="bid_greater_amount_err">The price is too high for this route. Please offer lower fare.</string>
 

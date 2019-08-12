@@ -94,10 +94,14 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 holder.tvOfferTag.setVisibility(View.VISIBLE);
                 holder.tvOfferTag.setText(discount);
             }
+        } else if(activity.isNewUI() && region.getRegionFare() != null && region.getReverseBid() == 1) {
+            holder.tvVehicleFare.setVisibility(View.INVISIBLE);
+            holder.tvVehicleFareStrike.setVisibility(View.GONE);
         }
         if(activity.isNewUI()) {
             holder.imageViewSep.setVisibility(View.GONE);
             RelativeLayout.LayoutParams params = ((RelativeLayout.LayoutParams)holder.relativeIn.getLayoutParams());
+            params.setMargins(((int) (ASSL.Xscale()*(position == 0 ? 10f : 5f))),((int) (ASSL.Yscale()*10)),((int) (ASSL.Xscale()*(position == getItemCount()-1 ? 10f : 5f))),((int) (ASSL.Yscale()*10)));
             params.setMarginStart((int) (ASSL.Xscale()*(position == 0 ? 10f : 5f)));
             params.setMarginEnd((int) (ASSL.Xscale()*(position == getItemCount()-1 ? 10f : 5f)));
             holder.relativeIn.setLayoutParams(params);
@@ -160,7 +164,9 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 int position = (int) v.getTag();
                 boolean changed = activity.setVehicleTypeSelected(position, true, false);
                 if(showRegionFares && !changed){
-                    estimateDialog.show(activity, regions.get(position));
+                    if(showRegionFares && regions.get(0).getReverseBid() == 0) {
+                        estimateDialog.show(activity, regions.get(position));
+                    }
                 }
                 try {
                     GAUtils.event(RIDES, HOME, regions.get(position).getRegionName()+" "+CLICKED);
