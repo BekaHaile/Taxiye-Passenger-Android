@@ -12134,29 +12134,30 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     public void onSuccess(final FeedCommonResponse response, String message, int flag) {
                         try {
                             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+								bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
 								Data.autoData.getBidInfos().remove(bidInfo);
 								bidsPlacedAdapter.notifyDataSetChanged();
 								updateBidsView();
-								bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
                             } else {
                                 DialogPopup.alertPopup(HomeActivity.this, "", message);
-								bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
                             }
 
                         } catch (Exception e) {
                             e.printStackTrace();
                             DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.connection_lost_please_try_again));
-							bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
                         }
                     }
 
                     @Override
                     public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
-						bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
                         return false;
                     }
 
-                });
+					@Override
+					public void onFinish() {
+						super.onFinish();
+					}
+				});
     }
 
     private CallbackPaymentOptionSelector callbackPaymentOptionSelector = new CallbackPaymentOptionSelector() {
