@@ -1936,7 +1936,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
-                    if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1) {
+                    if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1
+							&& Prefs.with(HomeActivity.this).getInt(KEY_REVERSE_BID, 0) != 1) {
                         initDropLocationSearchUI(true);
                     }
                 } catch (Exception e) {
@@ -3312,6 +3313,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setBidInfos(null);
 			Prefs.with(this).save(Constants.KEY_REQUEST_RIDE_START_TIME, System.currentTimeMillis());
 			Data.autoData.setIsReverseBid(region.getReverseBid());
+			Prefs.with(this).save(KEY_REVERSE_BID, Data.autoData.getIsReverseBid());
 			bidsPlacedAdapter.setList(Data.autoData.getBidInfos(), Data.autoData.getBidTimeout(),
 					slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName());
             Data.autoData.setcEngagementId("");
@@ -4173,6 +4175,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1
+								|| Prefs.with(HomeActivity.this).getInt(KEY_REVERSE_BID, 0) == 1){
+							imageViewFinalDropLocationEdit.setVisibility(View.GONE);
+						}
                         checkForGoogleLogoVisibilityInRide();
                         setFabViewAtRide(mode);
 
@@ -4256,6 +4262,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
+						if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1
+								|| Prefs.with(HomeActivity.this).getInt(KEY_REVERSE_BID, 0) == 1){
+							imageViewFinalDropLocationEdit.setVisibility(View.GONE);
+						}
                         checkForGoogleLogoVisibilityInRide();
                         setFabViewAtRide(mode);
 
@@ -4335,6 +4346,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
+						if(Data.autoData.getAssignedDriverInfo().getIsPooledRide() == 1
+								|| Prefs.with(HomeActivity.this).getInt(KEY_REVERSE_BID, 0) == 1){
+							imageViewFinalDropLocationEdit.setVisibility(View.GONE);
+						}
                         checkForGoogleLogoVisibilityInRide();
 
                         setFabViewAtRide(mode);
@@ -12121,6 +12137,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 								Data.autoData.getBidInfos().remove(bidInfo);
 								bidsPlacedAdapter.notifyDataSetChanged();
 								updateBidsView();
+								bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
                             } else {
                                 DialogPopup.alertPopup(HomeActivity.this, "", message);
 								bidsInCancelState.remove(Integer.valueOf(bidInfo.getEngagementId()));
