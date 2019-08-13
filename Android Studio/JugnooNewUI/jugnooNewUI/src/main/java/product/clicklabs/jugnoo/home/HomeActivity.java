@@ -286,6 +286,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
+
 //import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 //import com.google.ads.conversiontracking.AdWordsConversionReporter;
 
@@ -2555,7 +2557,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 }
                 LatLng latLng;
-                if ((PassengerScreenMode.P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
+                if ((P_INITIAL == passengerScreenMode && Data.locationSettingsNoPressed)
                         || (Utils.compareDouble(Data.latitude, 0) == 0 && Utils.compareDouble(Data.longitude, 0) == 0)) {
                     latLng = Data.getIndiaCentre();
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 5));
@@ -2569,7 +2571,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 }
                 getAddressAsync(latLng, isNewUI() ? textViewInitialSearchNew : textViewInitialSearch, null);
-                if(passengerScreenMode == PassengerScreenMode.P_INITIAL
+                if(passengerScreenMode == P_INITIAL
                         && isNewUI() && Data.autoData.getPickupLatLng() != null) {
                     pickupLocationEtaMarker();
                 }
@@ -2729,7 +2731,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     releaseCalled = false;
 
                     if (Data.userData != null && pokestopHelper != null
-                            && (PassengerScreenMode.P_INITIAL != passengerScreenMode || !refresh)) {
+                            && (P_INITIAL != passengerScreenMode || !refresh)) {
                         pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
                     }
                 }
@@ -2783,7 +2785,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
 
             if (passengerScreenMode == null) {
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                passengerScreenMode = P_INITIAL;
             }
 
 
@@ -3212,7 +3214,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             float mapTopPadding = 0.0f;
             if (map != null) {
-                if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                if (P_INITIAL == passengerScreenMode) {
                     mapTopPadding = confirmedScreenOpened ? 300.0f : isNewUI ? 150.0f: 200.0f;
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
                     params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
@@ -3234,7 +3236,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void setCentrePinAccToGoogleMapPadding() {
         try {
-            if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if (P_INITIAL == passengerScreenMode) {
                 RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) imageViewCenterPinMargin.getLayoutParams();
                 params.height = (int) (ASSL.Yscale() * googleMapPadding);
                 imageViewCenterPinMargin.setLayoutParams(params);
@@ -3248,7 +3250,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void callMapTouchedRefreshDrivers(HashMap<String, String> params) {
         try {
             if (Data.userData != null) {
-                if ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
+                if ((P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode) &&
                         map != null && !confirmedScreenOpened) {
                     if (!dontCallRefreshDriver && Data.autoData.getPickupLatLng() != null) {
                         findDriversETACall(false, false, false, params);
@@ -3292,7 +3294,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             public void onCancelled() {
                                 Log.v("Request of Ride", "Aborted");
                                 specialPickupScreenOpened = false;
-                                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                passengerScreenMode = P_INITIAL;
                                 switchPassengerScreen(passengerScreenMode);
                             }
                         }).showDialog();
@@ -3507,7 +3509,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             poolPathZoomAtConfirm();
             return;
         }
-        if (passengerScreenMode != PassengerScreenMode.P_INITIAL
+        if (passengerScreenMode != P_INITIAL
                 && Data.autoData != null
                 && Data.autoData.getAssignedDriverInfo() != null
                 && Data.autoData.getAssignedDriverInfo().latLng != null) {
@@ -3658,7 +3660,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
 
                     } else {
-                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        passengerScreenMode = P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                     }
                 } else {
@@ -4431,7 +4433,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 showReferAllDialog();
                 callT20AndReferAllDialog(mode);
 
-                int savedMode = Prefs.with(this).getInt(SP_CURRENT_STATE, PassengerScreenMode.P_INITIAL.getOrdinal());
+                int savedMode = Prefs.with(this).getInt(SP_CURRENT_STATE, P_INITIAL.getOrdinal());
                 if(savedMode != mode.getOrdinal()){
                 	if((mode.getOrdinal() == PassengerScreenMode.P_REQUEST_FINAL.getOrdinal()
 								&& Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_ACCEPT, 0) == 1)
@@ -4495,7 +4497,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void setScheduleRideUI(PassengerScreenMode mode) {
-        if (mode == PassengerScreenMode.P_INITIAL && isScheduleRideEnabled && !scheduleRideOpen) {
+        if (mode == P_INITIAL && isScheduleRideEnabled && !scheduleRideOpen) {
             topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
             if(showScheduleRideTut){
                 showScheduleRideTut = false;
@@ -4663,7 +4665,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void showPromoFailedAtSignupDialog() {
         try {
             if (Data.userData.getPromoSuccess() == 0
-                    && PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                    && P_INITIAL == passengerScreenMode) {
                 DialogPopup.alertPopupWithListener(HomeActivity.this, "",
                         Data.userData.getPromoMessage(),
                         new OnClickListener() {
@@ -4739,7 +4741,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void dismissReferAllDialog(PassengerScreenMode mode) {
         try {
             if (PassengerScreenMode.P_IN_RIDE != mode
-                    && PassengerScreenMode.P_INITIAL != mode) {
+                    && P_INITIAL != mode) {
                 dismissReferAllDialog();
                 dialogUploadContacts = null;
             }
@@ -4840,7 +4842,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     modeClicked = PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal();
                 }
                 int mode = placeSearchMode.getOrdinal();
-                if(selectPickUpdropAtOnce && (PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
+                if(selectPickUpdropAtOnce && (P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
                     mode = PlaceSearchListFragment.PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
                 }
                 bundle.putInt(KEY_SEARCH_MODE, mode);
@@ -5432,7 +5434,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             });
                 }
-            } else if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            } else if (P_INITIAL == passengerScreenMode) {
                 if (Data.autoData.getReferAllStatusLogin() == 0
                         && dialogUploadContacts == null) {
                     drawerLayout.closeDrawer(GravityCompat.START);
@@ -5550,7 +5552,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Runnable runnableFindADriver = new Runnable() {
         @Override
         public void run() {
-            if(PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if(P_INITIAL == passengerScreenMode) {
                 callMapTouchedRefreshDrivers(getApiFindADriver().getParams());
             }
         }
@@ -5586,7 +5588,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (activityResumed) {
                         saveDriverBearing();
                         if (!intentFired
-                                && PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened
+                                && P_INITIAL == passengerScreenMode && !confirmedScreenOpened
                                 && map != null && myLocation != null && !isSpecialPickupScreenOpened()
                                 && PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)
                                 && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1 && !isNewUI) {
@@ -5660,7 +5662,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                 // to check if selected destination saved address is deleted or not
-                if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                if (passengerScreenMode == P_INITIAL) {
                 	if(Data.autoData != null && Data.autoData.getDropLatLng() != null) {
 						SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
 								Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
@@ -5811,7 +5813,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void performDeepLinkForLatLngRequest() {
         try {
-            if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if (P_INITIAL == passengerScreenMode) {
                 if (Data.deepLinkPickup == 1) {
                     zoomingForDeepLink = true;
                     getHandler().postDelayed(new Runnable() {
@@ -5880,7 +5882,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         SearchResult searchResult = new Gson().fromJson(strResult, SearchResult.class);
                         if (searchResult != null) {
                             placeAdded = true;
-                            if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                            if (passengerScreenMode == P_INITIAL) {
                                 if (likeClicked == 1) {
                                     textViewInitialSearch.setText(searchResult.getName());
                                     textViewInitialSearchNew.setText(searchResult.getName());
@@ -6187,7 +6189,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 }
             }, 300);
@@ -6241,7 +6243,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         imageViewDropCrossNew.setVisibility(View.VISIBLE);
                         setLikeDropVisibilityAndBG();
                     }
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     if(Data.autoData != null) {
                         map.animateCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()), MAP_ANIMATE_DURATION, null);
@@ -6249,7 +6251,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                    navigateToCurrLoc(false);
                 } else if (specialPickupScreenOpened) {
                     specialPickupScreenOpened = false;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     initialMyLocationBtn.performClick();
                 }
@@ -6390,7 +6392,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     }
                                 }
 
-                                if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                                if (P_INITIAL == passengerScreenMode) {
                                     pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
                                 }
                             } catch (Exception e) {
@@ -6492,19 +6494,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon) {
         //fabViewTest.setFABButtons();
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+        if (P_INITIAL == passengerScreenMode) {
             if (Data.autoData.getRegions() != null && Data.autoData.getRegions().size() > 0) {
                 boolean setNew = Data.autoData.getNewUIFlag();
                 if (setNew) {
                     if (!isNewUI) {
                         isNewUI = true;
-                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        passengerScreenMode = P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                     }
                 } else {
                     if (isNewUI) {
                         isNewUI = false;
-                        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        passengerScreenMode = P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                     }
                 }
@@ -6704,7 +6706,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 } else {
                     //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
-                    if ((passengerScreenMode == PassengerScreenMode.P_INITIAL && !confirmedScreenOpened)
+                    if ((passengerScreenMode == P_INITIAL && !confirmedScreenOpened)
                             || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
                             || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
@@ -6764,7 +6766,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     //Our service is not available in this area
     public void setServiceAvailablityUI(String farAwayCity) {
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+        if (P_INITIAL == passengerScreenMode
                 && relativeLayoutLocationError.getVisibility() == View.GONE) {
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -6867,7 +6869,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void addUserCurrentLocationAddressMarker() {
         try {
-            if(passengerScreenMode == PassengerScreenMode.P_INITIAL
+            if(passengerScreenMode == P_INITIAL
                     && !confirmedScreenOpened
                     && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0 || isNewUI) {
                 if (Data.autoData != null && Data.autoData.getPickupLatLng() == null && myLocation != null) {
@@ -6908,7 +6910,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             if ("".equalsIgnoreCase(Data.autoData.getFarAwayCity())) {
                 if (userMode == UserMode.PASSENGER &&
-                        ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
+                        ((P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)
                                 || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)) {
                     if (map != null) {
                         setDropLocationMarker();
@@ -7011,7 +7013,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     break;
                 }
             }
-            if ((PassengerScreenMode.P_INITIAL == passengerScreenMode || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)
+            if ((P_INITIAL == passengerScreenMode || PassengerScreenMode.P_ASSIGNING == passengerScreenMode)
                     && firstDriverInfo != null) {
                 firstLatLng = firstDriverInfo.latLng;
             }
@@ -7093,7 +7095,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
                     Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
-            if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+            if (passengerScreenMode == P_INITIAL) {
                 if (searchResult != null) {
                     addressNeeded = false;
                     textView.setText(searchResult.getName());
@@ -7143,7 +7145,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     progressBar.setVisibility(View.VISIBLE);
                 }
                 textView.setText("");
-                if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                if (passengerScreenMode == P_INITIAL) {
                     Data.autoData.setPickupAddress("", null);
                     Data.autoData.setPickupLatLng(currentLatLng);
                 }
@@ -7153,7 +7155,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 					try {
 						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
 						String address = gapiAddress.getSearchableAddress();
-						if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+						if (P_INITIAL == passengerScreenMode) {
 							textView.setHint(getResources().getString(R.string.getting_address));
 							textView.setText(address);
 							Data.autoData.setPickupAddress(address, currentLatLng);
@@ -7172,7 +7174,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 					}
 				});
             } else {
-                if (passengerScreenMode == PassengerScreenMode.P_INITIAL) {
+                if (passengerScreenMode == P_INITIAL) {
                     Data.autoData.setPickupLatLng(currentLatLng);
                 }
             }
@@ -7270,7 +7272,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         cancelTimerRequestRide();
 
-        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+        passengerScreenMode = P_INITIAL;
         switchPassengerScreen(passengerScreenMode);
 
         if (map != null && pickupLocationMarker != null) {
@@ -8118,7 +8120,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 public void onClick(View view) {
                     dialog.dismiss();
                     specialPickupScreenOpened = false;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 }
             });
@@ -8194,7 +8196,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (getFilteredDrivers() == 0) {
                 noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
                 specialPickupScreenOpened = false;
-                passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                passengerScreenMode = P_INITIAL;
                 switchPassengerScreen(passengerScreenMode);
                 return true;
             } else {
@@ -8333,7 +8335,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 Log.i("in in herestartRideForCustomer  run class", "=");
                                 if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
                                     firstTimeZoom = false;
-                                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                    passengerScreenMode = P_INITIAL;
                                     switchPassengerScreen(passengerScreenMode);
                                     DialogPopup.alertPopup(HomeActivity.this, "", message);
                                     dismissSOSDialog();
@@ -8717,7 +8719,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private void checkForMyLocationButtonVisibility() {
-        if(PassengerScreenMode.P_INITIAL != passengerScreenMode){
+        if(P_INITIAL != passengerScreenMode){
             return;
         }
         if (relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE) {
@@ -8761,7 +8763,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             checkForMyLocationButtonVisibility();
 
-            if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink) {
+            if (P_INITIAL == passengerScreenMode && !zoomedToMyLocation && !zoomingForDeepLink) {
                 Data.autoData.setFarAwayCity("");
                 mapTouched = true;
                 zoomToCurrentLocationWithOneDriver(new LatLng(location.getLatitude(), location.getLongitude()));
@@ -8778,7 +8780,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } catch (Exception e) {
 //				e.printStackTrace();
             }
-            if (!cached && PassengerScreenMode.P_INITIAL == passengerScreenMode
+            if (!cached && P_INITIAL == passengerScreenMode
                     && relativeLayoutLocationError.getVisibility() == View.VISIBLE) {
                 locationGotNow();
             }
@@ -8863,7 +8865,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     try {
                                         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                             noDriverAvailablePopup(HomeActivity.this, false, "");
-                                            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                            HomeActivity.passengerScreenMode = P_INITIAL;
                                             switchPassengerScreen(passengerScreenMode);
                                         }
                                     } catch (Exception e) {
@@ -9048,7 +9050,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                             try {
                                                                 if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                                                     DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
-                                                                    HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                                                    HomeActivity.passengerScreenMode = P_INITIAL;
                                                                     switchPassengerScreen(passengerScreenMode);
                                                                 }
                                                             } catch (Exception e) {
@@ -9126,7 +9128,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                                                 noDriverAvailablePopup(HomeActivity.this, false, log);
                                                                 firstTimeZoom = false;
-                                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                                                HomeActivity.passengerScreenMode = P_INITIAL;
                                                                 switchPassengerScreen(passengerScreenMode);
                                                             }
                                                         } catch (Exception e) {
@@ -9144,7 +9146,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     public void run() {
                                                         try {
                                                             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                                                HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                                                                HomeActivity.passengerScreenMode = P_INITIAL;
                                                                 switchPassengerScreen(passengerScreenMode);
                                                                 new UserDebtDialog(HomeActivity.this, Data.userData,
                                                                         new UserDebtDialog.Callback() {
@@ -9278,13 +9280,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         cancelTimerRequestRide();
         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
             firstTimeZoom = false;
-            HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+            HomeActivity.passengerScreenMode = P_INITIAL;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         noDriverAvailablePopup(HomeActivity.this, false, logMessage);
-                        HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                        HomeActivity.passengerScreenMode = P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -9349,7 +9351,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             resetPickupDropFeilds();
 
-            passengerScreenMode = PassengerScreenMode.P_INITIAL;
+            passengerScreenMode = P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
             getHandler().postDelayed(new Runnable() {
                 @Override
@@ -9647,7 +9649,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     public void setTopBarTransNewUI() {
-        if(passengerScreenMode == PassengerScreenMode.P_INITIAL && isNewUI && !confirmedScreenOpened && !scheduleRideOpen && !specialPickupScreenOpened) {
+        if(passengerScreenMode == P_INITIAL && isNewUI && !confirmedScreenOpened && !scheduleRideOpen && !specialPickupScreenOpened) {
             topBar.topRl.setBackground(ContextCompat.getDrawable(this, R.color.transparent));
             topBar.imageViewShadow.setBackground(ContextCompat.getDrawable(this, R.color.transparent));
             topBar.textViewTitle.setVisibility(View.GONE);
@@ -10511,7 +10513,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
-                || (PassengerScreenMode.P_INITIAL == passengerScreenMode
+                || (P_INITIAL == passengerScreenMode
                 && placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP))
                 && !"".equalsIgnoreCase(text)) {
             dropLocationSearchText = text;
@@ -10532,7 +10534,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onPlaceClick(SearchResult autoCompleteSearchResult) {
         Log.d("RentalStationClick" , " onPlaceClick");
 
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+        if (P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
             if(scheduleRideOpen){
                 return;
@@ -10568,7 +10570,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onPlaceSearchPre() {
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+        if (P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
             if(scheduleRideOpen){
                 return;
@@ -10622,7 +10624,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setLastRefreshLatLng(latLng);
             refresh = true;
         }
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupSelected) {
+        if (P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupSelected) {
             if (refresh && touchCalled && releaseCalled) {
                 getAddressAsync(latLng, textViewInitialSearch, null);
                 getAddressAsync(latLng, textViewInitialSearchNew, null);
@@ -10641,7 +10643,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
 
             PlaceSearchListFragment.PlaceSearchMode searchMode = placeSearchMode==null?this.placeSearchMode:placeSearchMode;
-            if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+            if (P_INITIAL == passengerScreenMode
                     || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 if(scheduleRideOpen){
                     if(getScheduleRideFragment() != null){
@@ -10651,7 +10653,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     if (map != null && searchResult != null) {
                         setSearchResultToPickupCase(searchResult);
@@ -10675,7 +10677,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     // Save Last 3 Destination...
                     saveLastDestinations(searchResult);
 
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    passengerScreenMode = P_INITIAL;
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
                     textViewDestSearchNew.setTextColor(getResources().getColor(R.color.text_color));
                     switchPassengerScreen(passengerScreenMode);
@@ -10727,7 +10729,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onPlaceSearchError() {
-        if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+        if (P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
             if(scheduleRideOpen){
 
@@ -10756,7 +10758,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onPlaceSaved() {
-        if((PassengerScreenMode.P_INITIAL == passengerScreenMode
+        if((P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) && scheduleRideOpen){
 
             return;
@@ -10914,7 +10916,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }else{
             relativeLayoutDestSearchBar.setVisibility(View.VISIBLE);
         }
-        if((confirmedScreenOpened || isNewUI) && Data.autoData.getPickupLatLng() != null) {
+        if((confirmedScreenOpened || (passengerScreenMode == PassengerScreenMode.P_INITIAL && isNewUI)) && Data.autoData.getPickupLatLng() != null) {
             pickupLocationEtaMarker();
         }
         if(oldRegionId != slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
@@ -11132,7 +11134,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void setFabMarginInitial(boolean isSliding, boolean isSlidingPanelCollapsing) {
         try {
-            if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+            if (P_INITIAL == passengerScreenMode) {
                 fabViewFinal.setVisibility(View.GONE);
                 fabViewIntial.setVisibility(View.VISIBLE);
                 final ValueAnimator animator;
@@ -11156,7 +11158,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                     @Override
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        if (PassengerScreenMode.P_INITIAL == passengerScreenMode) {
+                        if (P_INITIAL == passengerScreenMode) {
                             fabViewTest.setMenuLabelsRightTestPadding((Integer) valueAnimator.getAnimatedValue());
                         }
                     }
@@ -11256,7 +11258,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
                 setFabMarginInitial(false, isSlidingPanelCollapsing);
             }
-            if (PassengerScreenMode.P_INITIAL == passengerScreenMode
+            if (P_INITIAL == passengerScreenMode
                     && !specialPickupScreenOpened && !confirmedScreenOpened) {
                 setGoogleMapPadding(mapBottomPadding);
             }
@@ -11527,7 +11529,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (updateSpecialPickupScreen() && !isSpecialPickupScreenOpened()) {
                     // show special pickup screen
                     specialPickupScreenOpened = true;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     showSpecialPickupMarker(specialPickups);
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
@@ -11563,7 +11565,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     // show special pickup screen
 
                     specialPickupScreenOpened = true;
-                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
+                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                     showSpecialPickupMarker(specialPickups);
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(Data.autoData.getPickupLatLng(), MAX_ZOOM));
@@ -11640,18 +11642,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void openConfirmRequestView() {
         confirmedScreenOpened = true;
         textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
-        passengerScreenMode = PassengerScreenMode.P_INITIAL;
+        passengerScreenMode = P_INITIAL;
         switchPassengerScreen(passengerScreenMode);
     }
 
     private boolean isPoolRideAtConfirmation() {
-        return PassengerScreenMode.P_INITIAL == passengerScreenMode
+        return P_INITIAL == passengerScreenMode
                 && confirmedScreenOpened
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal();
     }
 
     private boolean isNormalRideWithDropAtConfirmation() {
-        return PassengerScreenMode.P_INITIAL == passengerScreenMode
+        return P_INITIAL == passengerScreenMode
                 && confirmedScreenOpened || isNewUI
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()
                 && Data.autoData.getDropLatLng() != null
@@ -11659,12 +11661,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private boolean isSpecialPickupScreenOpened() {
-        return PassengerScreenMode.P_INITIAL == passengerScreenMode
+        return P_INITIAL == passengerScreenMode
                 && specialPickupScreenOpened;
     }
 
     private boolean isNewUiWithDropAtConfirmation() {
-        return PassengerScreenMode.P_INITIAL == passengerScreenMode
+        return P_INITIAL == passengerScreenMode
                 && isNewUI
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()
                 && Data.autoData.getDropLatLng() != null;
@@ -11700,7 +11702,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (mode == PassengerScreenMode.P_REQUEST_FINAL || mode == PassengerScreenMode.P_DRIVER_ARRIVED
                         || mode == PassengerScreenMode.P_IN_RIDE) {
                     imageView = imageViewPokemonOnOffEngaged;
-                } else if (mode == PassengerScreenMode.P_INITIAL) {
+                } else if (mode == P_INITIAL) {
                     if (confirmedScreenOpened) {
                         imageView = imageViewPokemonOnOffConfirm;
                     } else {
@@ -12319,7 +12321,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 imageViewDropCrossNew.setVisibility(View.VISIBLE);
                 setLikeDropVisibilityAndBG();
             }
-            passengerScreenMode = PassengerScreenMode.P_INITIAL;
+            passengerScreenMode = P_INITIAL;
             switchPassengerScreen(passengerScreenMode);
             if (Data.autoData != null) {
                 map.animateCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()), MAP_ANIMATE_DURATION, null);
@@ -12342,7 +12344,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void setScheduleIcon() {
-        if(passengerScreenMode == PassengerScreenMode.P_INITIAL && isScheduleRideEnabled) {
+        if(passengerScreenMode == P_INITIAL && isScheduleRideEnabled) {
             topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
         } else {
             topBar.imageViewScheduleRide.setVisibility(View.GONE);
