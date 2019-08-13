@@ -99,6 +99,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -300,6 +302,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
     private final String TAG = "Home Screen";
     private String macId ="";
+    private boolean isTransfered = false;
 
     public DrawerLayout drawerLayout;
 
@@ -1985,51 +1988,55 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else {
                             setZeroRatingView();
                         }
-                        if (score >= 3 && score <= 5) {
-                            ratingCount = ratingBarRSFeedback.getScore();
-                            Log.i("rating bar", "rating bar selected" + ratingCount);
-                            if (dialog == null) {
-                                dialog = new Dialog(HomeActivity.this);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.dialog_add_driver_favourote);
 
-                                dialog.setCancelable(false);
-                                dialog.setCanceledOnTouchOutside(false);
+//                        if (score >= 3 && score <= 5 && isTransfered==false) {
+//                            ratingCount = ratingBarRSFeedback.getScore();
+//                            Log.i("rating bar", "rating bar selected" + ratingCount);
+//                            if (dialog == null) {
+//                                dialog = new Dialog(HomeActivity.this);
+//                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//                                dialog.setContentView(R.layout.dialog_add_driver_favourote);
+//
+//                                dialog.setCancelable(false);
+//                                dialog.setCanceledOnTouchOutside(false);
+//
+//                                dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+//                                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+//                                layoutParams.dimAmount = 0.5f;
+//                                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//                                tvAddDriverFavourite = (TextView) dialog.findViewById(R.id.tvAddDriverFavourite);
+//
+//                                btnFavouriteCancle = (Button) dialog.findViewById(R.id.btnFavouriteCancle);
+//                                btnFavouriteCancle.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+//
+//                                btnFavouriteAdd = (Button) dialog.findViewById(R.id.btnFavouriteAdd);
+//                                btnFavouriteAdd.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+//
+//                                tvAddDriverFavourite.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+//
+//
+//                                btnFavouriteCancle.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View view) {
+//                                        dialog.dismiss();
+//                                    }
+//                                });
+//
+//                                btnFavouriteAdd.setOnClickListener(new View.OnClickListener() {
+//                                    @Override
+//                                    public void onClick(View view) {
+//                                        addUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 1);
+//
+//
+//                                    }
+//                                });
+//                            }
+//                            if (!dialog.isShowing()) {
+//                                dialog.show();
+//
+//                            }
+//                        }
 
-                                dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-                                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-                                layoutParams.dimAmount = 0.5f;
-                                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                                tvAddDriverFavourite = (TextView) dialog.findViewById(R.id.tvAddDriverFavourite);
-
-                                btnFavouriteCancle = (Button) dialog.findViewById(R.id.btnFavouriteCancle);
-                                btnFavouriteCancle.setTypeface(Fonts.mavenRegular(HomeActivity.this));
-
-                                btnFavouriteAdd = (Button) dialog.findViewById(R.id.btnFavouriteAdd);
-                                btnFavouriteAdd.setTypeface(Fonts.mavenRegular(HomeActivity.this));
-
-                                tvAddDriverFavourite.setTypeface(Fonts.mavenRegular(HomeActivity.this));
-
-
-                                btnFavouriteCancle.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                btnFavouriteAdd.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-
-                                    }
-                                });
-                            }
-                            if (!dialog.isShowing()) {
-                                dialog.show();
-                            }
-
-                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2073,7 +2080,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     if (0 == rating) {
                         DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
-                    } else {
+                    }
+                    else {
 //                        if (Data.autoData.getFeedbackReasons().size() > 0 && rating <= 3) {
 //                            if (feedbackReasons.length() > 0) {
 //                                if (isLastReasonSelected && feedbackStr.length() == 0) {
@@ -2089,12 +2097,71 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if (feedbackStr.length() > 300) {
                             editTextRSFeedback.requestFocus();
                             editTextRSFeedback.setError(getString(R.string.review_must_be_in));
-                        } else {
-                            submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                                    rating, feedbackStr, feedbackReasons);
-                            goodFeedbackViewType();
-                            flurryEventGAForTransaction();
                         }
+//                         else {
+//                            submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+//                                    rating, feedbackStr, feedbackReasons);
+//                            goodFeedbackViewType();
+//                            flurryEventGAForTransaction();
+//                        }
+
+                        else if (rating >= 3 && rating <= 5 ) {
+                            ratingCount = ratingBarRSFeedback.getScore();
+                            Log.i("rating bar", "rating bar selected" + ratingCount);
+                            if (dialog == null) {
+                                dialog = new Dialog(HomeActivity.this);
+                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                dialog.setContentView(R.layout.dialog_add_driver_favourote);
+
+                                dialog.setCancelable(false);
+                                dialog.setCanceledOnTouchOutside(false);
+
+                                dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+                                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+                                layoutParams.dimAmount = 0.5f;
+                                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                                tvAddDriverFavourite = (TextView) dialog.findViewById(R.id.tvAddDriverFavourite);
+
+                                btnFavouriteCancle = (Button) dialog.findViewById(R.id.btnFavouriteCancle);
+                                btnFavouriteCancle.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+                                btnFavouriteAdd = (Button) dialog.findViewById(R.id.btnFavouriteAdd);
+                                btnFavouriteAdd.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+                                tvAddDriverFavourite.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+
+                                btnFavouriteCancle.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                                btnFavouriteAdd.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        addUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 1);
+                                        submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+                                                rating, feedbackStr, feedbackReasons);
+                                        goodFeedbackViewType();
+                                        flurryEventGAForTransaction();
+
+
+                                    }
+                                });
+                            }
+                            if (!dialog.isShowing()) {
+                                dialog.show();
+
+                            }
+                        }
+
+
+
+
+
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2325,6 +2392,52 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    private void addUserDriverMapping(final Activity activity, final String engagementId,int pActionBit) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+        params.put(Constants.KEY_ENGAGEMENT_ID,engagementId);
+        params.put("action_type",String.valueOf(pActionBit));
+        params.put(Constants.KEY_DRIVER_ID,String.valueOf(Data.autoData.getAssignedDriverInfo().userId));
+        new HomeUtil().putDefaultParams(params);
+
+        RestClient.getApiService().addUserDriverMapping(params, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                Log.i(TAG, "addUserDriverMapping response = " + responseStr);
+                Log.i(TAG, "addUserDriverMapping jsonresponse = " + new GsonBuilder().setPrettyPrinting().create().toJson(responseStr));
+                try{
+                    JSONObject jObj = new JSONObject(responseStr);
+                    int flag = jObj.getInt(Constants.KEY_FLAG);
+
+                    if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                        dialog.dismiss();
+                        Toast.makeText(activity,Constants.KEY_ADD_DRIVER_MAPPING,Toast.LENGTH_LONG).show();
+
+                    }
+                  if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal()==flag){
+                        dialog.dismiss();
+                        Toast.makeText(activity,Constants.KEY_DRIVER_ALREADY_FAVOURITE,Toast.LENGTH_LONG).show();
+                    }
+
+
+                }catch(Exception exception){
+                    exception.printStackTrace();
+                }
+//                isTransfered = true;
+
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("error", error.getMessage().toString());
+            }
+        });
 
     }
 
