@@ -1176,6 +1176,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLatitude()),
                         Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLongitude()));
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
+                Log.w("pickuplogging", "special pickup spin itemsel"+Data.autoData.getPickupLatLng());
                 getApiFindADriver().setRefreshLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), getMapAnimateDuration(), null);
@@ -2552,6 +2553,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.latitude = latitude;
                         Data.longitude = longitude;
                         Data.autoData.setPickupLatLng(latLngInIntent);
+                        Log.w("pickuplogging", "onMapReady"+Data.autoData.getPickupLatLng());
                         mapTouched = true;
                         addressPopulatedFromDifferentOffering = true;
                     }
@@ -2570,6 +2572,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.autoData.setLastRefreshLatLng(latLng);
                     }
                 }
+                Log.w("getAddressAsync", "onMapReady");
                 getAddressAsync(latLng, isNewUI() ? textViewInitialSearchNew : textViewInitialSearch, null);
                 if(passengerScreenMode == P_INITIAL
                         && isNewUI() && Data.autoData.getPickupLatLng() != null) {
@@ -2721,6 +2724,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         checkForMyLocationButtonVisibility();
                         if((Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1 && !isNewUI) || fromNaviCurrentLocation) {
                             fromNaviCurrentLocation = false;
+                            Log.w("findADriverAndGeocode", "onMapSettled");
                             refresh = findADriverAndGeocode(map.getCameraPosition().target, mapTouched, touchCalled, releaseCalled);
                         }
                     } catch (Exception e) {
@@ -3366,6 +3370,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void snapPickupLocToNearbyAddress(SearchResult searchResult) {
         try {
             Data.autoData.setPickupLatLng(searchResult.getLatLng());
+            Log.w("pickuplogging", "snap pickup to nrearby"+Data.autoData.getPickupLatLng());
             Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
             addUserCurrentLocationAddressMarker();
@@ -3749,8 +3754,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if (Data.autoData.getPickupLatLng() == null) {
                             if (Data.latitude != 0 && Data.longitude != 0) {
                                 Data.autoData.setPickupLatLng(new LatLng(Data.latitude, Data.longitude));
+                                Log.w("pickuplogging", "case P_INITIAL Data.latitude"+Data.autoData.getPickupLatLng());
                             } else if (myLocation != null) {
                                 Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                                Log.w("pickuplogging", "case P_INITIAL mylocation"+Data.autoData.getPickupLatLng());
                             }
                         }
 
@@ -5070,7 +5077,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 setDropLocationMarker();
                 setDropEditInAssigningState();
-                getAddressAsync(Data.autoData.getDropLatLng(), textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
+                Log.w("getAddressAsync", "setDropAssigningUI");
+                if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+                    getAddressAsync(Data.autoData.getDropLatLng(), textViewAssigningDropLocationClick, progressBarAssigningDropLocation);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -5087,6 +5097,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else {
             setDropLocationMarker();
             imageViewFinalDropLocationEdit.setVisibility(View.VISIBLE);
+            Log.w("getAddressAsync", "setDropEngagedUI");
             getAddressAsync(Data.autoData.getDropLatLng(), textViewFinalDropLocationClick, progressBarFinalDropLocation);
         }
     }
@@ -5597,8 +5608,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 LatLng currLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                                 Data.setLatLngOfJeanieLastShown(currLatLng);
                                 Data.autoData.setLastRefreshLatLng(currLatLng);
-                                getAddressAsync(currLatLng, textViewInitialSearch, null);
-                                getAddressAsync(currLatLng, textViewInitialSearchNew, null);
+                                Log.w("getAddressAsync", "onResume");
+                                getAddressAsync(currLatLng, isNewUI() ? textViewInitialSearchNew : textViewInitialSearch, null);
                             } catch (Exception ignored) {}
                             initialMyLocationBtn.performClick();
                             mapTouched = true;
@@ -6682,6 +6693,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLatitude()),
                         Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLongitude()));
                 Data.autoData.setPickupLatLng(specialPicupLatLng);
+                Log.w("pickuplogging", "getIndex"+Data.autoData.getPickupLatLng());
                 addUserCurrentLocationAddressMarker();
                 specialPickupSelected = true;
                 selectedSpecialPickup = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getText() + ", ";
@@ -6874,6 +6886,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0 || isNewUI) {
                 if (Data.autoData != null && Data.autoData.getPickupLatLng() == null && myLocation != null) {
                     Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                    Log.w("pickuplogging", "addUserCurrentLocationAddressMarker"+Data.autoData.getPickupLatLng());
                 }
                 LatLng latLng = Data.autoData.getPickupLatLng();
                 BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
@@ -7148,6 +7161,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (passengerScreenMode == P_INITIAL) {
                     Data.autoData.setPickupAddress("", null);
                     Data.autoData.setPickupLatLng(currentLatLng);
+                    Log.w("pickuplogging", "getAddressAsync"+Data.autoData.getPickupLatLng());
                 }
                 textView.setHint(R.string.getting_address);
 
@@ -7176,6 +7190,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else {
                 if (passengerScreenMode == P_INITIAL) {
                     Data.autoData.setPickupLatLng(currentLatLng);
+                    Log.w("pickuplogging", "getAddressAsync else"+Data.autoData.getPickupLatLng());
                 }
             }
         } catch (Exception e) {
@@ -8489,6 +8504,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             String promoName = JSONParser.getPromoName(this, jObj);
 
             Data.autoData.setPickupLatLng(new LatLng(pickupLatitude, pickupLongitude));
+            Log.w("pickuplogging", "fetchAcceptedDriverInfoAndChangeState"+Data.autoData.getPickupLatLng());
             Data.autoData.setPickupAddress(jObj.optString(KEY_PICKUP_LOCATION_ADDRESS,
                     Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng())), Data.autoData.getPickupLatLng());
             JSONParser.parseDropLatLng(jObj);
@@ -9237,6 +9253,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             jugnooAnimation.start();
                         }
                     } else {
+                        Log.w("setDropLocationAssigningUI", "updateCancelButtonUI");
                         setDropLocationAssigningUI();
 
                         if (bidsPlacedAdapter.getItemCount() == 0) {
@@ -9334,6 +9351,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             Data.autoData.setLastRefreshLatLng(null);
             Data.autoData.setPickupLatLng(null);
+            Log.w("pickuplogging", "afterRideFeedbackSubmitted"+Data.autoData.getPickupLatLng());
             Data.autoData.setPickupAddress("", null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
@@ -9362,6 +9380,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
                         if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0  || isNewUI) {
                             Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+                            Log.w("pickuplogging", "afterRideFeedbackSubmitted delayed runnable"+Data.autoData.getPickupLatLng());
+                            Log.w("findADriverAndGeocode", "afterRideFeedback");
                             findADriverAndGeocode(Data.autoData.getPickupLatLng(), true, true, true);
                         }
                     }
@@ -10594,6 +10614,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 mapTouched = true;
                 updateSavedAddressLikeButton(searchResult.getLatLng(), true);
                 Data.autoData.setPickupLatLng(searchResult.getLatLng());
+                Log.w("pickuplogging", "setSearchResultToPickupCase"+Data.autoData.getPickupLatLng());
                 Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
 
                 try {
@@ -10609,6 +10630,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 addUserCurrentLocationAddressMarker();
                 if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0 || isNewUI) {
+                    Log.w("findADriverAndGeocode", "setSearchResultToPickupCase");
                     findADriverAndGeocode(Data.autoData.getPickupLatLng(), true, true, true);
                 }
             }
@@ -10626,8 +10648,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         if (P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupSelected) {
             if (refresh && touchCalled && releaseCalled) {
-                getAddressAsync(latLng, textViewInitialSearch, null);
-                getAddressAsync(latLng, textViewInitialSearchNew, null);
+                Log.w("getAddressAsync", "findADriverAndGeocode");
+                getAddressAsync(latLng, isNewUI() ? textViewInitialSearchNew : textViewInitialSearch, null);
             }
             if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
                 addressPopulatedFromDifferentOffering = false;
@@ -12607,6 +12629,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (serviceType.getSupportedRideTypes() != null
                     && (serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()) || serviceType.getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))) {
                 Data.autoData.setPickupLatLng(searchResultPickup.getLatLng());
+                Log.w("pickuplogging", "callRentalOutstationRequestRide"+Data.autoData.getPickupLatLng());
                 Data.autoData.setPickupAddress(searchResultPickup.getAddress(), searchResultPickup.getLatLng());
                 Data.autoData.setSelectedPackage(selectedPackage);
                 slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(region);
