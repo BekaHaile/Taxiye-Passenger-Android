@@ -26,6 +26,7 @@
             android:layout_marginTop="@dimen/px_20"
             android:background="@drawable/circle_grocery_new"
             android:padding="12px"
+            android:layout_centerVertical="true"
             android:src="@drawable/ic_groceries_new_vector"
             android:tag="mwar"/>
         <RelativeLayout
@@ -41,7 +42,7 @@
                 <RelativeLayout
                     android:layout_width="500px"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10px">
+                    android:layout_marginTop="15px">
 
                     <TextView
                         android:id="@+id/tvBlockedDriverName"
@@ -49,7 +50,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="20px"
                         android:layout_marginStart="20px"
-                        android:text="@string/driver_name"
+                        android:text="@string/driver_name_f"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_24"/>
 
@@ -66,7 +67,7 @@
                 <RelativeLayout
                     android:layout_width="500px"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10px">
+                    android:layout_marginTop="15px">
 
                     <TextView
                         android:id="@+id/tvBlockedVehicleType"
@@ -90,7 +91,7 @@
                 <RelativeLayout
                     android:layout_width="500px"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10px">
+                    android:layout_marginTop="15px">
 
                     <TextView
                         android:id="@+id/tvBlockedDriverRating"
@@ -120,6 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_cross"
+                android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="10dp"/>
         </RelativeLayout>

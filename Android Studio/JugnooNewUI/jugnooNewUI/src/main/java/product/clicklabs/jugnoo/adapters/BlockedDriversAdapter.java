@@ -15,6 +15,7 @@ import com.google.gson.JsonObject;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -23,6 +24,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.GetFetchUserDriverResponse;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -57,9 +59,26 @@ public class BlockedDriversAdapter extends RecyclerView.Adapter<BlockedDriversAd
     public void onBindViewHolder(@NonNull ViewHolderBlockedDriver holder, int position) {
         Log.i("data",blockedDriverlist.get(position).driverName);
 
+        holder.imageViewBlockedDriverType.setBackgroundResource(R.drawable.circle_theme);
             holder.textViewDriverNameValue.setText(blockedDriverlist.get(position).getDriverName());
-            holder.tvVehicleTypeValue.setText(blockedDriverlist.get(position).getVehicleType() + "");
-            holder.tvBlockedDriverRatingValue.setText(blockedDriverlist.get(position).getAvgRating() + "");
+//            holder.tvVehicleTypeValue.setText(blockedDriverlist.get(position).getVehicleType() + "");
+        if(blockedDriverlist.get(position).getVehicleType()== VehicleTypeValue.AUTOS.getOrdinal()){
+            holder.tvVehicleTypeValue.setText(R.string.auto);
+            holder.imageViewBlockedDriverType.setImageResource(R.drawable.ic_rides);
+        }else if(blockedDriverlist.get(position).getVehicleType()==VehicleTypeValue.BIKES.getOrdinal())
+        {
+            holder.tvVehicleTypeValue.setText("Bike");
+            holder.imageViewBlockedDriverType.setImageResource(R.drawable.ic_bike_white);
+        } else if(blockedDriverlist.get(position).getVehicleType()==VehicleTypeValue.TAXI.getOrdinal())
+        {
+            holder.tvVehicleTypeValue.setText("Taxi");
+            holder.imageViewBlockedDriverType.setImageResource(R.drawable.ic_car_white);
+        }else{
+            holder.imageViewBlockedDriverType.setImageResource(R.drawable.ic_rides);
+        }
+
+//        double rating = Double.parseDouble(Data.autoData.getAssignedDriverInfo().rating);
+        holder.tvBlockedDriverRatingValue.setText(blockedDriverlist.get(position).getAvgRating() +"");
 
             holder.imageViewBlockedCross.setOnClickListener(new View.OnClickListener() {
                 @Override

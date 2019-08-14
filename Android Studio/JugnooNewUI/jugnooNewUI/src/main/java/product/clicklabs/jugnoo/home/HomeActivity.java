@@ -423,9 +423,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private AnimationDrawable jugnooAnimation;
     private ImageView imageViewThumbsDown, imageViewThumbsUp, ivEndRideType,
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
-    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends, btnRideNo, btnRideYes;
+    private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
     private LinearLayout llPayOnline;
-    private TextView tvPayOnline, tvPayOnlineIn, textViewShowFareEstimate, tvRideDriverFavourite;
+    private TextView tvPayOnline, tvPayOnlineIn, textViewShowFareEstimate;
     private boolean isFromConfirmToOther;
 
     private float ratingCount;
@@ -1493,61 +1493,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         buttonConfirmRequest.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (dialogRideWithFavDriver == null) {
-                    dialogRideWithFavDriver = new Dialog(HomeActivity.this);
-                    dialogRideWithFavDriver.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                    dialogRideWithFavDriver.setContentView(R.layout.dialog_ride_with_favourite_driver);
-
-                    dialogRideWithFavDriver.setCancelable(false);
-                    dialogRideWithFavDriver.setCanceledOnTouchOutside(false);
-
-                   dialogRideWithFavDriver.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-                    WindowManager.LayoutParams layoutParams = dialogRideWithFavDriver.getWindow().getAttributes();
-                    layoutParams.dimAmount = 0.5f;
-                    dialogRideWithFavDriver.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                    tvRideDriverFavourite = (TextView) dialogRideWithFavDriver.findViewById(R.id.tvRideDriverFavourite);
-
-                    btnRideNo = (Button) dialogRideWithFavDriver.findViewById(R.id.btnRideNo);
-                    btnRideNo.setTypeface(Fonts.mavenRegular(HomeActivity.this));
-
-                    btnRideYes = (Button) dialogRideWithFavDriver.findViewById(R.id.btnRideYes);
-                    btnRideYes.setTypeface(Fonts.mavenRegular(HomeActivity.this));
-
-                    tvRideDriverFavourite.setTypeface(Fonts.mavenRegular(HomeActivity.this));
-
-
-                    btnRideNo.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            dialogRideWithFavDriver.dismiss();
+                try {
+                    if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                        findDriversETACall(true, true, false, getApiFindADriver().getParams());
+                    } else {
+                        if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                                .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                            openBikeRentalScan();
+                        } else {
+                            requestRideClick();
                         }
-                    });
-
-                    btnRideYes.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            try {
-                                if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                                    findDriversETACall(true, true, false, getApiFindADriver().getParams());
-                                } else {
-                                    if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-                                            .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                        openBikeRentalScan();
-                                    } else {
-                                        requestRideClick();
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            dialogRideWithFavDriver.dismiss();
-                        }
-                    });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (dialogRideWithFavDriver != null && !dialogRideWithFavDriver.isShowing()) {
-                    dialogRideWithFavDriver.show();
-                }
-
             }
         });
 

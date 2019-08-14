@@ -50,5 +50,28 @@
         android:layout_below="@+id/topBar">
     </android.support.v7.widget.RecyclerView>
 
+    <LinearLayout
+        android:id="@+id/linearLayoutFavkDriver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:tag="mwar">
+
+        <ImageView
+            android:layout_width="241px"
+            android:layout_height="350px"
+            android:src="@drawable/ic_no_items"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_fav_divers"
+            android:layout_marginTop="30px"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/px_32"/>
+
+    </LinearLayout>
+
 
 </RelativeLayout>

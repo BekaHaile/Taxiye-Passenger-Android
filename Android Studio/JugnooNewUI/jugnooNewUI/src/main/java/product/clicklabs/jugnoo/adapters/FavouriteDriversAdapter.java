@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.GetFavouriteDriver;
 import product.clicklabs.jugnoo.retrofit.model.GetFetchUserDriverResponse;
@@ -62,8 +63,24 @@ public class FavouriteDriversAdapter extends RecyclerView.Adapter<FavouriteDrive
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Log.i("data", favouriteDriverlist.get(position).driverName);
+
+        holder.imageViewVehicleType.setBackgroundResource(R.drawable.circle_theme);
             holder.tvDriverNameValue.setText(favouriteDriverlist.get(position).getDriverName());
-            holder.tvVehicleTypeValue.setText(favouriteDriverlist.get(position).getVehicleType() + "");
+//            holder.tvVehicleTypeValue.setText(favouriteDriverlist.get(position).getVehicleType() + "");
+        if(favouriteDriverlist.get(position).getVehicleType()== VehicleTypeValue.AUTOS.getOrdinal()){
+            holder.tvVehicleTypeValue.setText( R.string.auto);
+            holder.imageViewVehicleType.setImageResource(R.drawable.ic_rides);
+        } else if(favouriteDriverlist.get(position).getVehicleType()== VehicleTypeValue.BIKES.getOrdinal()) {
+            holder.tvVehicleTypeValue.setText("Bike");
+            holder.imageViewVehicleType.setImageResource(R.drawable.ic_bike_white);
+        }else if(favouriteDriverlist.get(position).getVehicleType()== VehicleTypeValue.TAXI.getOrdinal()){
+            holder.tvVehicleTypeValue.setText( "Taxi");
+            holder.imageViewVehicleType.setImageResource(R.drawable.ic_car_white);
+        }
+        else{
+            holder.tvVehicleTypeValue.setText( "Auto");
+            holder.imageViewVehicleType.setImageResource(R.drawable.ic_rides);
+        }
             holder.tvDriverRatingValue.setText(favouriteDriverlist.get(position).getAvgRating() + "");
             holder.imgVwCrossDriver.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -74,15 +91,7 @@ public class FavouriteDriversAdapter extends RecyclerView.Adapter<FavouriteDrive
             });
     }
 
-    int getVisibleCount(ArrayList<GetFetchUserDriverResponse> pGetFetchUserDriverResponse) {
-        int count = 0;
-        for (GetFetchUserDriverResponse mGetFetchUserDriverResponse : pGetFetchUserDriverResponse) {
-            if (mGetFetchUserDriverResponse.getType() == 1) {
-                count++;
-            }
-        }
-        return count;
-    }
+
 
     private void deleteDriverMapping(int driverId, int pos) {
         HashMap<String, String> params = new HashMap<>();
@@ -125,7 +134,7 @@ public class FavouriteDriversAdapter extends RecyclerView.Adapter<FavouriteDrive
 
     @Override
     public int getItemCount() {
-        return favouriteDriverlist == null ? 0 : getVisibleCount(favouriteDriverlist);
+        return favouriteDriverlist == null ? 0 : favouriteDriverlist.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

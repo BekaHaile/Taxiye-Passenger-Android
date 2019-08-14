@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class FavouriteDriversActivity extends Activity {
     private RecyclerView recycleViewFavourite;
     private ImageView imageViewBack;
     private TextView textViewTitle;
+    private LinearLayout linearLayoutFavkDriver;
 
 
 
@@ -49,8 +51,11 @@ public class FavouriteDriversActivity extends Activity {
         favouriteDriver = new GetFavouriteDriver();
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        linearLayoutFavkDriver = (LinearLayout) findViewById(R.id.linearLayoutFavkDriver);
+        linearLayoutFavkDriver.setVisibility(View.GONE);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         recycleViewFavourite = (RecyclerView) findViewById(R.id.recycleViewFavourite);
+        fetchUserDriverList = new ArrayList<>();
 
 
         textViewTitle.setText(getResources().getString(R.string.favourite_driver));
@@ -75,22 +80,34 @@ public class FavouriteDriversActivity extends Activity {
             @Override
             public void success(GetFavouriteDriver jsonObject, Response response) {
                 String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                Log.i("TAG","getFetchUserDriverMapping response = " + responseStr);
+                Log.e("TAG","getFavorateFetchUserDriverMapping response = " + responseStr);
                 try{
                     JSONObject jObj = new JSONObject(responseStr);
                     favouriteDriver   = jsonObject;
                     if(favouriteDriver.getFlag()== ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                         if(favouriteDriver.getData()!=null&& favouriteDriver.getData().size()>0) {
-                            fetchUserDriverList = favouriteDriver.getData();
-                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                            recycleViewFavourite.setLayoutManager(linearLayoutManager);
-                            favouriteDriversAdapter = new FavouriteDriversAdapter(fetchUserDriverList, FavouriteDriversActivity.this);
-                            recycleViewFavourite.setAdapter(favouriteDriversAdapter);
+                            if(fetchUserDriverList!=null&& !fetchUserDriverList.isEmpty()){
+                                fetchUserDriverList.clear();
+                            }for(int i=0;favouriteDriver.getData().size()>i;i++){
+                                if(favouriteDriver.getData().get(i).getType()==1){
+                                    fetchUserDriverList.add(favouriteDriver.getData().get(i));
+                                }
+                            }
+
+//                            fetchUserDriverList = favouriteDriver.getData();
+                            if(fetchUserDriverList!=null&& fetchUserDriverList.size()>0) {
+                                linearLayoutFavkDriver.setVisibility(View.GONE);
+                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                                recycleViewFavourite.setLayoutManager(linearLayoutManager);
+                                favouriteDriversAdapter = new FavouriteDriversAdapter(fetchUserDriverList, FavouriteDriversActivity.this);
+                                recycleViewFavourite.setAdapter(favouriteDriversAdapter);
+                            }
+                            else{
+                                linearLayoutFavkDriver.setVisibility(View.VISIBLE);
+                            }
                         }else{
-                            Toast.makeText(FavouriteDriversActivity.this,"No Favourite Driver Found",Toast.LENGTH_SHORT).show();
+                            linearLayoutFavkDriver.setVisibility(View.VISIBLE);
                         }
-                    }else{
-                        Toast.makeText(FavouriteDriversActivity.this,favouriteDriver.getError()+"",Toast.LENGTH_SHORT).show();
                     }
 
 

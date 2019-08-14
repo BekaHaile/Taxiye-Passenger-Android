@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ public class BlockedDriversActivity extends Activity {
     private RecyclerView recycleViewBlocked;
     private ImageView imageViewBack;
     private TextView textViewTitle;
+    private LinearLayout linearLayoutNoblockDriver;
 
     private BlockedDriversAdapter blockedDriversAdapter;
 
@@ -45,6 +47,8 @@ public class BlockedDriversActivity extends Activity {
         blockedDriver = new GetFavouriteDriver();
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        linearLayoutNoblockDriver = (LinearLayout) findViewById(R.id.linearLayoutNoblockDriver);
+        linearLayoutNoblockDriver.setVisibility(View.GONE);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
         recycleViewBlocked = (RecyclerView) findViewById(R.id.recycleViewBlocked);
         fetchUserDriverListBlocked = new ArrayList<>();
@@ -71,7 +75,7 @@ public class BlockedDriversActivity extends Activity {
             @Override
             public void success(GetFavouriteDriver jsonObject, Response response) {
                 String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                Log.i("TAG","getBlockedFetchUserDriverMapping response = " + responseStr);
+                Log.e("TAG","getBlockedFetchUserDriverMapping response = " + responseStr);
                 try{
                     JSONObject jObj = new JSONObject(responseStr);
                     blockedDriver   = jsonObject;
@@ -86,19 +90,21 @@ public class BlockedDriversActivity extends Activity {
                                 }
                                 }
                                 if(fetchUserDriverListBlocked!=null&&fetchUserDriverListBlocked.size()>0) {
+                                    linearLayoutNoblockDriver.setVisibility(View.GONE);
                                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                                     recycleViewBlocked.setLayoutManager(linearLayoutManager);
                                     blockedDriversAdapter = new BlockedDriversAdapter(fetchUserDriverListBlocked, BlockedDriversActivity.this);
                                     recycleViewBlocked.setAdapter(blockedDriversAdapter);
                                 }else{
-                                    Toast.makeText(BlockedDriversActivity.this,"No Blocked Drivers",Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(BlockedDriversActivity.this,"No Blocked Drivers",Toast.LENGTH_SHORT).show();
+                                    linearLayoutNoblockDriver.setVisibility(View.VISIBLE);
                                 }
                             }else{
-                                Toast.makeText(BlockedDriversActivity.this,"No Blocked Driver Found",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(BlockedDriversActivity.this,"No Blocked Driver Found",Toast.LENGTH_SHORT).show();
+                                linearLayoutNoblockDriver.setVisibility(View.VISIBLE);
                             }
-                    }else{
-                        Toast.makeText(BlockedDriversActivity.this,blockedDriver.getError()+"",Toast.LENGTH_SHORT).show();
                     }
+
                 }catch(Exception e){
                     e.printStackTrace();
 
