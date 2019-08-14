@@ -823,6 +823,7 @@ public class WalletCore {
                         //&& paymentModeConfigData.getCardsData()!=null && paymentModeConfigData.getCardsData().size()>0
                         paymentModeConfigDataDefault = paymentModeConfigData;
                         if(paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()
+								&& paymentModeConfigData.getCardsData() != null
                                 && Prefs.with(context).getString(Constants.STRIPE_SELECTED_POS, "0").equalsIgnoreCase("0")) {
                             Prefs.with(context).save(Constants.STRIPE_SELECTED_POS, paymentModeConfigData.getCardsData().get(0).getCardId());
                         }
