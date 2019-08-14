@@ -2112,4 +2112,8 @@
     <string name = "favourite_driver">Favourite Driver</string>
     <string name="blocked_driver">Blocked Driver</string>
 
+    <string name="driver_name">Driver Name:</string>
+    <string name="vehicle_type">Vehicle Type: </string>
+    <string name="rating">Rating :</string>
+
 </resources>

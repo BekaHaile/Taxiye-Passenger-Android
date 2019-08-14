@@ -2156,6 +2156,29 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             }
                         }
+                       else if(rating<=2 && rating >0){
+
+
+                            DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "","Do you want block this driver?" ,
+                                    getResources().getString(R.string.yes),getResources().getString(R.string.no),
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+//                                            deleteDriverMapping(driverId,pos);
+                                            blockUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 0);
+                                            submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+                                                    rating, feedbackStr, feedbackReasons);
+                                            goodFeedbackViewType();
+                                            flurryEventGAForTransaction();
+                                        }
+                                    },
+                                    new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                        }
+                                    }, true, false);
+                        }
 
 
 
@@ -2395,6 +2418,50 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
+    private void blockUserDriverMapping(HomeActivity activity, String engagementId, int pActionBit) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+        params.put(Constants.KEY_ENGAGEMENT_ID,engagementId);
+        params.put("action_type",String.valueOf(pActionBit));
+        params.put(Constants.KEY_DRIVER_ID,String.valueOf(Data.autoData.getAssignedDriverInfo().userId));
+        new HomeUtil().putDefaultParams(params);
+
+        RestClient.getApiService().addUserDriverMapping(params, new Callback<JsonObject>() {
+            @Override
+            public void success(JsonObject jsonObject, Response response) {
+                String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                Log.i(TAG, "blockUserDriverMapping response = " + responseStr);
+                Log.i(TAG, "blockUserDriverMapping jsonresponse = " + new GsonBuilder().setPrettyPrinting().create().toJson(responseStr));
+                try{
+                    JSONObject jObj = new JSONObject(responseStr);
+                    int flag = jObj.getInt(Constants.KEY_FLAG);
+
+                    if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+                        Toast.makeText(activity,"Driver has been blocked.",Toast.LENGTH_LONG).show();
+
+                    }
+                    if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal()==flag){
+                        Toast.makeText(activity,"Driver already blocked.",Toast.LENGTH_LONG).show();
+                    }
+
+
+                }catch(Exception exception){
+                    exception.printStackTrace();
+                }
+//                isTransfered = true;
+
+
+
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e("error", error.getMessage().toString());
+            }
+        });
+
+    }
+
     private void addUserDriverMapping(final Activity activity, final String engagementId,int pActionBit) {
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -2415,12 +2482,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
                         dialog.dismiss();
-                        Toast.makeText(activity,Constants.KEY_ADD_DRIVER_MAPPING,Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity,"Driver has been added as favourite.",Toast.LENGTH_LONG).show();
 
                     }
                   if(ApiResponseFlags.SHOW_ERROR_MESSAGE.getOrdinal()==flag){
                         dialog.dismiss();
-                        Toast.makeText(activity,Constants.KEY_DRIVER_ALREADY_FAVOURITE,Toast.LENGTH_LONG).show();
+                        Toast.makeText(activity,"Driver already added as favourite.",Toast.LENGTH_LONG).show();
                     }
 
 

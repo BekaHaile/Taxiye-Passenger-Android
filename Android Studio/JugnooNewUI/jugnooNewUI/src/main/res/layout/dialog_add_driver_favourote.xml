@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@color/white">
 
     <TextView
         android:id="@+id/tvAddDriverFavourite"
@@ -11,14 +10,17 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:gravity="center"
-        android:padding="@dimen/dp_10"
         android:text="@string/Do_you_want_add_driver_as_a_favourote"
         android:textColor="@color/text_color"
-        android:textSize="20sp"
-        android:tag="@string/dont_touch_me"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="16sp"
+        android:tag="@string/dont_touch_me"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAddDriverFavourite"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
 
     <Button
         android:id="@+id/btnFavouriteCancle"
@@ -26,16 +28,9 @@
         android:layout_height="wrap_content"
         android:text="@string/cancel"
         android:textSize="13sp"
+        android:padding="5dp"
         style="@style/ButtonThemeCapsule"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="@dimen/dp_16"
-        android:tag="@string/dont_touch_me"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddDriverFavourite"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/btnFavouriteAdd"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        android:tag="@string/dont_touch_me" />
 
     <Button
         android:id="@+id/btnFavouriteAdd"
@@ -43,15 +38,10 @@
         android:layout_height="wrap_content"
         android:text="@string/add"
         android:textSize="13sp"
+        android:padding="5dp"
         style="@style/ButtonThemeCapsule"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="@dimen/dp_16"
-        android:tag="@string/dont_touch_me"
-        app:layout_constraintTop_toBottomOf="@+id/tvAddDriverFavourite"
-        app:layout_constraintStart_toEndOf="@id/btnFavouriteCancle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        />
+        android:layout_marginStart="42dp"
+        android:tag="@string/dont_touch_me" />
+    </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

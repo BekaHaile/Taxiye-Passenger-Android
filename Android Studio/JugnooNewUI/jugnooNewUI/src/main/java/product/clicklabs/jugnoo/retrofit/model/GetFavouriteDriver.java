@@ -15,6 +15,17 @@ public class GetFavouriteDriver {
     @Expose
     private String message;
 
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    @SerializedName("error")
+    @Expose
+    private String error;
     public int getFlag() {
         return flag;
     }

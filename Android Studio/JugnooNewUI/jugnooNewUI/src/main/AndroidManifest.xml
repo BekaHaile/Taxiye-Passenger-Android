@@ -277,6 +277,10 @@
             android:theme="@style/AppThemePicker.NoActionBar"
             />
 
+        <activity android:name=".BlockedDriversActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemePicker.NoActionBar"
+            />
 
         <receiver android:name=".home.LocationReceiverBG"/>
 

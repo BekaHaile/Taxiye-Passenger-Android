@@ -1061,9 +1061,6 @@ public interface Constants {
     String KEY_LOCATION_ID = "location_id";
     String KEY_DAMAGE_IMAGE = "damage_image";
 
-    String KEY_ADD_DRIVER_MAPPING = "Driver has been added as favourite";
-
-    String KEY_DRIVER_ALREADY_FAVOURITE = "Driver already added as favourite.";
 
     String KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL = "customer_gps_lock_status_polling_interval";
 }

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import org.json.JSONObject;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.adapters.FavouriteDriversAdapter;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.GetFavouriteDriver;
@@ -68,7 +70,7 @@ public class FavouriteDriversActivity extends Activity {
     private void getFetchDriversData() {
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-        new HomeUtil().putDefaultParams(params);
+        //new HomeUtil().putDefaultParams(params);
         RestClient.getApiService().getFetchUserDriverMapping(params, new Callback<GetFavouriteDriver>() {
             @Override
             public void success(GetFavouriteDriver jsonObject, Response response) {
@@ -77,12 +79,19 @@ public class FavouriteDriversActivity extends Activity {
                 try{
                     JSONObject jObj = new JSONObject(responseStr);
                     favouriteDriver   = jsonObject;
-                    fetchUserDriverList = favouriteDriver.getData();
-                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                    recycleViewFavourite.setLayoutManager(linearLayoutManager);
-                    favouriteDriversAdapter = new FavouriteDriversAdapter(fetchUserDriverList,FavouriteDriversActivity.this);
-                    recycleViewFavourite.setAdapter(favouriteDriversAdapter);
-
+                    if(favouriteDriver.getFlag()== ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                        if(favouriteDriver.getData()!=null&& favouriteDriver.getData().size()>0) {
+                            fetchUserDriverList = favouriteDriver.getData();
+                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                            recycleViewFavourite.setLayoutManager(linearLayoutManager);
+                            favouriteDriversAdapter = new FavouriteDriversAdapter(fetchUserDriverList, FavouriteDriversActivity.this);
+                            recycleViewFavourite.setAdapter(favouriteDriversAdapter);
+                        }else{
+                            Toast.makeText(FavouriteDriversActivity.this,"No Favourite Driver Found",Toast.LENGTH_SHORT).show();
+                        }
+                    }else{
+                        Toast.makeText(FavouriteDriversActivity.this,favouriteDriver.getError()+"",Toast.LENGTH_SHORT).show();
+                    }
 
 
                 }catch(Exception e){
@@ -95,6 +104,7 @@ public class FavouriteDriversActivity extends Activity {
 
             @Override
             public void failure(RetrofitError error) {
+
 
             }
         });

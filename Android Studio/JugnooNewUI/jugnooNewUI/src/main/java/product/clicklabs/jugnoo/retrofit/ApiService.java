@@ -692,7 +692,7 @@ public interface ApiService {
     @POST("/customer/add_user_driver_mapping")
     void addUserDriverMapping(@FieldMap Map<String, String> params, Callback<JsonObject> callback);
 
-    @GET("/customer/fetch_user_driver_mapping?")
+    @GET("/customer/fetch_user_driver_mapping")
     void getFetchUserDriverMapping(@QueryMap Map<String, String> params,Callback<GetFavouriteDriver> callback);
 
     @FormUrlEncoded

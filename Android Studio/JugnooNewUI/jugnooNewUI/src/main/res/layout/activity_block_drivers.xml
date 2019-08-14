@@ -4,8 +4,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".FavouriteDriversActivity">
-
+    android:background="@color/menu_item_selector_color_F7"
+    android:orientation="vertical"
+    tools:context=".BlockedDriversActivity">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -16,7 +17,7 @@
         <TextView
             android:id="@+id/textViewTitle"
             style="@style/title"
-            android:text="@string/favourite_driver"
+            android:text="@string/blocked_driver"
             android:textSize="@dimen/sp_16"
             app:typekitFont="maven"
             />
@@ -43,12 +44,9 @@
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleViewFavourite"
+        android:id="@+id/recycleViewBlocked"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="vertical"
-        android:layout_below="@+id/topBar">
-    </android.support.v7.widget.RecyclerView>
-
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topBar"></android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>
