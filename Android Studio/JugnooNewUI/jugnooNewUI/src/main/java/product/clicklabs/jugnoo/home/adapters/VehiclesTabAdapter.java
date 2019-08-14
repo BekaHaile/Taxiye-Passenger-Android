@@ -73,7 +73,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
         holder.relative.setTag(position);
         int visibility = showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE;
-        holder.tvVehicleFare.setVisibility(visibility);
+        holder.tvVehicleFare.setVisibility(activity.isNewUI() && region.getRegionFare() != null && region.getReverseBid() == 1 ? View.INVISIBLE: visibility);
         holder.tvVehicleFareStrike.setVisibility(View.GONE);
         if(region.getEta()!= null && !region.getEta().isEmpty() && !region.getEta().equals("-")&& activity.isNewUI()) {
             holder.textViewVehicleName.setText(region.getRegionName() + " - " + region.getEta() + " " + activity.getString(R.string.min));

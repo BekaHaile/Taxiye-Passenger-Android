@@ -1286,7 +1286,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         recyclerViewVehiclesConfirmRide = (RecyclerView) findViewById(R.id.recyclerViewVehiclesConfirmRide);
-        recyclerViewVehiclesConfirmRide.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(HomeActivity.this,
+        recyclerViewVehiclesConfirmRide.setLayoutManager(new LinearLayoutManager(HomeActivity.this,
                 LinearLayoutManager.HORIZONTAL, false));
         recyclerViewVehiclesConfirmRide.setItemAnimator(new DefaultItemAnimator());
         recyclerViewVehiclesConfirmRide.setHasFixedSize(false);
