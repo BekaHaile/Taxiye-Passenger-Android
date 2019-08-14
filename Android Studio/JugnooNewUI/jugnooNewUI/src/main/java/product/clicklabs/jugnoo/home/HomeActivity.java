@@ -39,6 +39,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
@@ -214,6 +215,7 @@ import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
+import product.clicklabs.jugnoo.home.dialogs.TutorialInfoDialog;
 import product.clicklabs.jugnoo.home.fragments.ScheduleRideFragment;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
@@ -640,6 +642,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ImageView imageViewDropCrossNew;
     LinearLayout linearLayoutConfirmOption,linearLayoutBidValue;
     EditText editTextBidValue;
+
+    private CardView cvTutorialBanner;
+    private TextView tvTutorialBanner;
+    private ImageView ivCrossTutorialBanner;
 
     @SuppressLint("NewApi")
     @Override
@@ -2214,6 +2220,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         rlThumbsType = (RelativeLayout) findViewById(R.id.rlThumbsType);
         llRatingFeedbackType = (LinearLayout) findViewById(R.id.llRatingFeedbackType);
 
+		cvTutorialBanner = findViewById(R.id.cvTutorialBanner);
+		tvTutorialBanner = findViewById(R.id.tvTutorialBanner);
+		ivCrossTutorialBanner = findViewById(R.id.ivCrossTutorialBanner);
+
+		ivCrossTutorialBanner.setOnClickListener(v -> {
+			cvTutorialBanner.setVisibility(View.GONE);
+			Prefs.with(HomeActivity.this).save(Constants.KEY_TUTORIAL_SKIPPED, true);
+		});
+		tvTutorialBanner.setOnClickListener(v->{
+			LatLng latLng = new LatLng(LocationFetcher.getSavedLatFromSP(HomeActivity.this), LocationFetcher.getSavedLngFromSP(HomeActivity.this));
+			if(myLocation != null){
+				latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+			}
+			TutorialInfoDialog.INSTANCE.showAddToll(HomeActivity.this, latLng);
+		});
+
         if (Prefs.with(this).getInt(Constants.KEY_RIDE_FEEDBACK_RATING_BAR, 0) == 1) {
             rlThumbsType.setVisibility(View.GONE);
             llRatingFeedbackType.setVisibility(View.VISIBLE);
@@ -3698,6 +3720,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 					getHandler().removeCallbacks(runnableBidTimer);
 					topBar.tvCancel.setVisibility(View.GONE);
 				}
+                cvTutorialBanner.setVisibility(View.GONE);
+
                 switch (mode) {
 
                     case P_INITIAL:
@@ -3971,6 +3995,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             damageReportButton.setVisibility(View.GONE);
                             Log.d("HomeActivityResult" , " Rental");
                         }
+
+
+						String tutorialBannerText = Prefs.with(this).getString(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, "");
+						cvTutorialBanner.setVisibility(TextUtils.isEmpty(tutorialBannerText)
+								|| Prefs.with(this).getBoolean(Constants.KEY_TUTORIAL_SKIPPED, false) ? View.GONE : View.VISIBLE);
+						tvTutorialBanner.setText(tutorialBannerText);
+
                         break;
 
 

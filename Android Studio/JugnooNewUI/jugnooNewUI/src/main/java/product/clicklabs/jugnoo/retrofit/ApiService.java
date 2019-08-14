@@ -691,4 +691,9 @@ public interface ApiService {
 	void cancelBid(@FieldMap Map<String, String> params,
 					  Callback<FeedCommonResponse> callback);
 
+
+	@FormUrlEncoded
+	@POST("/get_information")
+	Response fetchTutorialData(@FieldMap Map<String, String> params);
+
 }

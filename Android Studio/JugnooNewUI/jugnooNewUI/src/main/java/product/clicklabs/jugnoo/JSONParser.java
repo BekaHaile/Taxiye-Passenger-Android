@@ -546,6 +546,8 @@ public class JSONParser implements Constants {
                 context.getResources().getInteger(R.integer.customer_google_caching_enabled)));
         Prefs.with(context).save(KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, autoData.optLong(KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL,
                 context.getResources().getInteger(R.integer.customer_gps_lock_status_polling_interval)));
+
+		Prefs.with(context).save(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, autoData.optString(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, "Tutorial"));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

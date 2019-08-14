@@ -1071,4 +1071,8 @@ public interface Constants {
 	String KEY_BID_TIMEOUT = "bid_timeout";
 	String KEY_REQUEST_RIDE_START_TIME = "request_ride_start_time";
     String KEY_INITIAL_BID_VALUE = "initial_bid_value";
+
+	String KEY_CUSTOMER_TUTORIAL_BANNER_TEXT = "customer_tutorial_banner_text";
+	String KEY_SECTION = "section";
+	String KEY_TUTORIAL_SKIPPED = "tutorial_skipped";
 }

@@ -302,6 +302,7 @@
 
             </RelativeLayout>
 
+            <include layout="@layout/layout_tutorial_click"/>
 
         </RelativeLayout>
 

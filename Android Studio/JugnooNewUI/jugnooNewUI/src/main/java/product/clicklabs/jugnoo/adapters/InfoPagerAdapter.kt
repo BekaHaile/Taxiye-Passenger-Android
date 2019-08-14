@@ -1,13 +1,14 @@
 package product.clicklabs.jugnoo.adapters
 
 import android.content.Context
+import android.support.constraint.ConstraintLayout
 import android.support.v4.view.PagerAdapter
+import android.support.v4.view.ViewPager
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import product.clicklabs.jugnoo.R
@@ -17,15 +18,15 @@ import product.clicklabs.jugnoo.datastructure.PagerInfo
  * Created by Shankar on 13/08/19.
  */
 
-class InfoPagerAdapter(internal var mContext: Context, private var infoList: List<PagerInfo>?) : PagerAdapter() {
-    internal var mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+class InfoPagerAdapter(private var mContext: Context, private var infoList: List<PagerInfo>?) : PagerAdapter() {
+    private var mLayoutInflater: LayoutInflater = mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getCount(): Int {
         return infoList!!.size
     }
 
     override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view === `object` as LinearLayout
+        return view === `object` as ConstraintLayout
     }
 
     @Synchronized
@@ -36,6 +37,9 @@ class InfoPagerAdapter(internal var mContext: Context, private var infoList: Lis
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val itemView = mLayoutInflater.inflate(R.layout.info_pager_item, container, false)
+        val params = itemView.layoutParams
+        params.height = ViewPager.LayoutParams.MATCH_PARENT
+        itemView.layoutParams = params
 
         val info = infoList!![position]
 
@@ -44,11 +48,16 @@ class InfoPagerAdapter(internal var mContext: Context, private var infoList: Lis
         val tvMessage = itemView.findViewById(R.id.tvMessage) as TextView
         if(!TextUtils.isEmpty(info.image)){
             Picasso.with(mContext).load(info.image)
-                    .placeholder(R.drawable.ic_fresh_new_placeholder)
-                    .error(R.drawable.ic_fresh_new_placeholder)
-                    .fit()
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .into(iv)
         }
+
+        tvTitle.text = info.title
+        tvMessage.text = info.message
+        tvTitle.visibility = if(TextUtils.isEmpty(info.title)) View.GONE else View.VISIBLE
+        tvMessage.visibility = if(TextUtils.isEmpty(info.message)) View.GONE else View.VISIBLE
+
 
         container.addView(itemView)
 
@@ -56,6 +65,6 @@ class InfoPagerAdapter(internal var mContext: Context, private var infoList: Lis
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeView(`object` as LinearLayout)
+        container.removeView(`object` as ConstraintLayout)
     }
 }
