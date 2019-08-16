@@ -435,7 +435,12 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
                             cardViewSearch.setVisibility(View.GONE);
                         }
                     }
-                }, showSavedPlaces,editTextDeliveryAddress);
+
+					@Override
+					public void onSetLocationOnMapClicked() {
+
+					}
+				}, showSavedPlaces,false, editTextDeliveryAddress);
 
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
         listViewSearch.setAdapter(searchListAdapter);

@@ -109,6 +109,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private SearchResult searchResultPickup,searchResultDestination;
 	private ImageView ivLocationMarker;
 	private boolean isMarkerSet = false;
+
+	private LinearLayout llSavedPlaces, llSetLocationOnMap;
+	private View vSetLocationOnMapDiv;
+	private boolean setLocationOnMapOnTop = true;
+
 	private SearchListAdapter.SearchListActionsHandler searchAdapterListener = new SearchListAdapter.SearchListActionsHandler() {
 
 		@Override
@@ -226,6 +231,12 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				searchListActionsHandler.onNotifyDataSetChanged(count);
 			}
 		}
+
+		@Override
+		public void onSetLocationOnMapClicked() {
+			llSetLocationOnMap.performClick();
+			scrollViewSearch.setVisibility(View.GONE);
+		}
 	};;
 
 	public static PlaceSearchListFragment newInstance(Bundle bundle){
@@ -254,6 +265,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
         activity = getActivity();
 		linearLayoutRoot = (LinearLayout) rootView.findViewById(R.id.linearLayoutRoot);
 		rootLayout = (RelativeLayout) rootView.findViewById(R.id.rootLayout);
+
+		setLocationOnMapOnTop = Prefs.with(activity).getInt(KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP, 0) == 1;
 
 		new ASSL(activity, rootLayout, 1134, 720, false);
 
@@ -328,7 +341,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 
 		searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), searchMode,
-				searchAdapterListener, true,editTextsForAdapter);
+				searchAdapterListener, true, setLocationOnMapOnTop, editTextsForAdapter);
 
 
 		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
@@ -420,7 +433,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			}
 		});
-		rootView.findViewById(R.id.ll_set_location_on_map).setOnClickListener(new View.OnClickListener() {
+		llSavedPlaces = rootView.findViewById(R.id.llSavedPlaces);
+		llSetLocationOnMap = rootView.findViewById(R.id.ll_set_location_on_map);
+		vSetLocationOnMapDiv = rootView.findViewById(R.id.vSetLocationOnMapDiv);
+		llSetLocationOnMap.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -453,6 +469,15 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		searchListAdapter.addSavedLocationsToList();
 		updateSavedPlacesLists();
 		showSearchLayout();
+
+		if(setLocationOnMapOnTop){
+			LinearLayout.LayoutParams paramsLL = (LinearLayout.LayoutParams) llSetLocationOnMap.getLayoutParams();
+			LinearLayout.LayoutParams paramsV = (LinearLayout.LayoutParams) vSetLocationOnMapDiv.getLayoutParams();
+			llSavedPlaces.removeView(llSetLocationOnMap);
+			llSavedPlaces.removeView(vSetLocationOnMapDiv);
+			llSavedPlaces.addView(llSetLocationOnMap, 0, paramsLL);
+			llSavedPlaces.addView(vSetLocationOnMapDiv, 1, paramsV);
+		}
 
         return rootView;
 	}
@@ -984,9 +1009,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private void startAnimation() {
 		if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
 			setFetchedAddressToTextView(getString(R.string.tap_on_pin), true, true);
-			ivLocationMarker.clearAnimation();
-			final Animation anim = AnimationUtils.loadAnimation(activity, R.anim.bounce_view);
-			ivLocationMarker.startAnimation(anim);
+			if(ivLocationMarker.getAnimation() == null) {
+				ivLocationMarker.clearAnimation();
+				final Animation anim = AnimationUtils.loadAnimation(activity, R.anim.bounce_view);
+				ivLocationMarker.startAnimation(anim);
+			}
 			isMarkerSet = false;
 		}
 	}

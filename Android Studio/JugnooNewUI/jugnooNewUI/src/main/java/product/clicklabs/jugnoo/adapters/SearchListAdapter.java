@@ -123,6 +123,9 @@ public class SearchListAdapter extends BaseAdapter{
 
 	private String uuidVal = "";
 
+	private final String SET_LOCATION_ON_MAP = "<set_location_on_map>";
+	private SearchResult searchResultSetLocationOnMap;
+	boolean setLocationOnMapOnTop;
     /**
      * Constructor for initializing search base adapter
      *
@@ -133,7 +136,7 @@ public class SearchListAdapter extends BaseAdapter{
      */
     public SearchListAdapter(final Context context,LatLng searchPivotLatLng,
 							 int searchMode, SearchListActionsHandler searchListActionsHandler,
-                             boolean showSavedPlaces,EditText... editTextForSearch)
+                             boolean showSavedPlaces, boolean setLocationOnMapOnTop, EditText... editTextForSearch)
             throws IllegalStateException{
         if(context instanceof Activity) {
             this.context = context;
@@ -160,10 +163,12 @@ public class SearchListAdapter extends BaseAdapter{
                 });
             }
 
-
+			this.setLocationOnMapOnTop = setLocationOnMapOnTop;
 
             this.showSavedPlaces = showSavedPlaces;
 			uuidVal = UUID.randomUUID().toString();
+			searchResultSetLocationOnMap = new SearchResult(SET_LOCATION_ON_MAP, context.getString(R.string.set_location_on_map), "", 0, 0);
+
         }
         else{
             throw new IllegalStateException("context passed is not of Activity type");
@@ -173,6 +178,9 @@ public class SearchListAdapter extends BaseAdapter{
     public void setResults(ArrayList<SearchResult> autoCompleteSearchResults) {
         this.searchResults.clear();
         this.searchResults.addAll(autoCompleteSearchResults);
+        if(setLocationOnMapOnTop) {
+			this.searchResults.add(0, searchResultSetLocationOnMap);
+		}
         this.notifyDataSetChanged();
     }
 
@@ -229,19 +237,24 @@ public class SearchListAdapter extends BaseAdapter{
             holder.id = position;
 
 			SearchResult searchResult = searchResults.get(position);
-
-            holder.textViewSearchName.setText(searchResult.getName());
-            holder.textViewSearchAddress.setText(searchResult.getAddress());
-			if(searchResult.getAddress().equalsIgnoreCase("")){
-				holder.textViewSearchAddress.setVisibility(View.GONE);
-			}else {
-				holder.textViewSearchAddress.setVisibility(View.VISIBLE);
-			}
-
-			if(TextUtils.isEmpty(searchResult.getName())){
+			if(SET_LOCATION_ON_MAP.equalsIgnoreCase(searchResult.getName())){
 				holder.textViewSearchName.setText(searchResult.getAddress());
 				holder.textViewSearchAddress.setVisibility(View.GONE);
+			} else {
+				holder.textViewSearchName.setText(searchResult.getName());
+				holder.textViewSearchAddress.setText(searchResult.getAddress());
+				if(searchResult.getAddress().equalsIgnoreCase("")){
+					holder.textViewSearchAddress.setVisibility(View.GONE);
+				}else {
+					holder.textViewSearchAddress.setVisibility(View.VISIBLE);
+				}
+
+				if(TextUtils.isEmpty(searchResult.getName())){
+					holder.textViewSearchName.setText(searchResult.getAddress());
+					holder.textViewSearchAddress.setVisibility(View.GONE);
+				}
 			}
+
 
             if(searchResult.getType() == SearchResult.Type.HOME){
                 holder.imageViewType.setVisibility(View.VISIBLE);
@@ -288,11 +301,15 @@ public class SearchListAdapter extends BaseAdapter{
 					try {
 						holder = (ViewHolderSearchItem) v.getTag();
                         final SearchResult autoCompleteSearchResult = searchResults.get(holder.id);
-                        if(!context.getResources().getString(R.string.no_results_found).equalsIgnoreCase(autoCompleteSearchResult.getName())
+						if(SET_LOCATION_ON_MAP.equalsIgnoreCase(autoCompleteSearchResult.getName())){
+							Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
+							handler.postDelayed(() -> searchListActionsHandler.onSetLocationOnMapClicked(), 200);
+						}
+                        else if(!context.getResources().getString(R.string.no_results_found).equalsIgnoreCase(autoCompleteSearchResult.getName())
                                 && !context.getResources().getString(R.string.no_internet_connection).equalsIgnoreCase(autoCompleteSearchResult.getName())){
-                            Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
+							Utils.hideSoftKeyboard((Activity) context, editTextForSearch);
                             Log.e("SearchListAdapter", "on click="+autoCompleteSearchResult.getAddress());
-                            new Handler().postDelayed(new Runnable() {
+                            handler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (autoCompleteSearchResult.getPlaceId() != null
@@ -553,6 +570,7 @@ public class SearchListAdapter extends BaseAdapter{
 		void onPlaceSearchError();
         void onPlaceSaved();
 		void onNotifyDataSetChanged(int count);
+		void onSetLocationOnMapClicked();
 	}
 
 	private class CustomRunnable implements Runnable {
