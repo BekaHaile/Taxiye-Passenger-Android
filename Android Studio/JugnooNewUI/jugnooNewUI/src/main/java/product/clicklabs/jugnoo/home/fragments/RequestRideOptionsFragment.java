@@ -161,7 +161,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         relativeLayoutPriorityTipMS = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPriorityTip);
 
         recyclerViewVehicles = (RecyclerView) rootView.findViewById(R.id.recyclerViewVehicles);
-        recyclerViewVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
+        recyclerViewVehicles.setLayoutManager(new LinearLayoutManager(activity,
                 LinearLayoutManager.HORIZONTAL, false));
         recyclerViewVehicles.setItemAnimator(new DefaultItemAnimator());
         recyclerViewVehicles.setHasFixedSize(false);
@@ -390,6 +390,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 }
                 if(!matched){
                     regionSelected = Data.autoData.getRegions().get(0);
+                    activity.setVehicleTypeSelected(0, false, true);
                 }
 
                 vehiclesTabAdapter.notifyDataSetChanged();

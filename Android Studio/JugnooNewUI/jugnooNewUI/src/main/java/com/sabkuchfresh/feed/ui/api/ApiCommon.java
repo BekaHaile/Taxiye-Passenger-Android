@@ -311,6 +311,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case RENTALS_INSERT_DAMAGE_REPORT:
                 RestClient.getApiService().insertDamageReport(multipartTypedOutput, callback);
                 break;
+			case CANCEL_BID:
+                RestClient.getApiService().cancelBid(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

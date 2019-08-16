@@ -1063,4 +1063,16 @@ public interface Constants {
 
 
     String KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL = "customer_gps_lock_status_polling_interval";
+	String KEY_DRIVER_IMAGE = "driver_image";
+	String KEY_DRIVER_NAME = "driver_name";
+	String KEY_VEHICLE_NAME = "vehicle_name";
+	String KEY_DRIVER_ETA = "driver_eta";
+	String KEY_BID_REQUEST_RIDE_TIMEOUT = "bid_request_ride_timeout";
+	String KEY_BID_TIMEOUT = "bid_timeout";
+	String KEY_REQUEST_RIDE_START_TIME = "request_ride_start_time";
+    String KEY_INITIAL_BID_VALUE = "initial_bid_value";
+
+	String KEY_CUSTOMER_TUTORIAL_BANNER_TEXT = "customer_tutorial_banner_text";
+	String KEY_SECTION = "section";
+	String KEY_TUTORIAL_SKIPPED = "tutorial_skipped";
 }

@@ -388,6 +388,11 @@ public class JSONParser implements Constants {
             Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
             Data.autoData.setFaultConditions(autosData.getFaultConditions());
 
+			long bidRequestRideTimeout = autoData.optLong(KEY_BID_REQUEST_RIDE_TIMEOUT, 420000);
+			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
+            Data.autoData.setBidRequestRideTimeout(bidRequestRideTimeout);
+            Data.autoData.setBidTimeout(bidTimeout);
+
             if(Data.autoData.getPromoCoupons() == null){
                 Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
             } else{
@@ -541,6 +546,8 @@ public class JSONParser implements Constants {
                 context.getResources().getInteger(R.integer.customer_google_caching_enabled)));
         Prefs.with(context).save(KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL, autoData.optLong(KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL,
                 context.getResources().getInteger(R.integer.customer_gps_lock_status_polling_interval)));
+
+		Prefs.with(context).save(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, autoData.optString(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, ""));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
@@ -1240,9 +1247,15 @@ public class JSONParser implements Constants {
                         }
 
                         Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
+                        Log.w("pickuplogging", "state restore assigning"+Data.autoData.getPickupLatLng());
                         Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""), Data.autoData.getPickupLatLng());
                         parseDropLatLng(jObject1);
                         bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
+                        Data.autoData.setIsReverseBid(jObject1.optInt(Constants.KEY_REVERSE_BID, 0));
+                        Prefs.with(context).save(KEY_REVERSE_BID, Data.autoData.getIsReverseBid());
+						Prefs.with(context).save(KEY_REQUEST_RIDE_START_TIME,
+								DateOperations.getMilliseconds(DateOperations.utcToLocalWithTZFallback(jObject1.optString(KEY_START_TIME,
+										DateOperations.getCurrentTimeInUTC()))));
 
                         engagementStatus = EngagementStatus.REQUESTED.getOrdinal();
                     } else if (ApiResponseFlags.ENGAGEMENT_DATA.getOrdinal() == flag) {
@@ -1406,6 +1419,7 @@ public class JSONParser implements Constants {
                 Data.autoData.setcDriverId(userId);
 
                 Data.autoData.setPickupLatLng(new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
+                Log.w("pickuplogging", "state restore req final"+Data.autoData.getPickupLatLng());
                 Data.autoData.setPickupAddress(pickupAddress, Data.autoData.getPickupLatLng());
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
                     Data.autoData.setDropLatLng(null);
@@ -2011,7 +2025,6 @@ public class JSONParser implements Constants {
     }
 
     public static ArrayList<BidInfo> parseBids(Context context, String arrayKeyName, JSONObject jsonObject){
-        Prefs.with(context).save(KEY_REVERSE_BID_TIME_INTERVAL, jsonObject.optLong(KEY_REVERSE_BID_TIME_INTERVAL, 0L));
         ArrayList<BidInfo> bidInfos = new ArrayList<>();
         try{
             if(jsonObject.has(arrayKeyName)){
@@ -2023,7 +2036,12 @@ public class JSONParser implements Constants {
                             object.optString(Constants.KEY_CURRENCY),
                             object.optDouble(Constants.KEY_ACCEPT_DISTANCE),object.optString(Constants.KEY_ACCEPT_DISTANCE_TEXT),
                             object.optDouble(Constants.KEY_DRIVER_RATING),
-                            object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC())));
+                            object.optString(Constants.KEY_CREATED_AT, DateOperations.getCurrentTimeInUTC()),
+                            object.optString(Constants.KEY_DRIVER_IMAGE),
+                            object.optString(Constants.KEY_DRIVER_NAME),
+                            object.optString(Constants.KEY_VEHICLE_NAME),
+                            object.optString(Constants.KEY_DRIVER_ETA)
+							));
                 }
             }
         } catch (Exception ignored){

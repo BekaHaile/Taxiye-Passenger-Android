@@ -686,4 +686,14 @@ public interface ApiService {
     @POST("/send_email_invoice")
     void sendEmailInvoice(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
 
+	@FormUrlEncoded
+	@POST("/cancel_the_bid")
+	void cancelBid(@FieldMap Map<String, String> params,
+					  Callback<FeedCommonResponse> callback);
+
+
+	@FormUrlEncoded
+	@POST("/get_information")
+	Response fetchTutorialData(@FieldMap Map<String, String> params);
+
 }

@@ -251,6 +251,7 @@ public class Data {
             Prefs.with(context).remove(Constants.SP_PAYTM_LAST_BALANCE);
             Prefs.with(context).remove(Constants.SP_MOBIKWIK_LAST_BALANCE);
             Prefs.with(context).remove(Constants.SP_FREECHARGE_LAST_BALANCE);
+            Prefs.with(context).remove(Constants.KEY_TUTORIAL_SKIPPED);
 
             context.getSharedPreferences(Data.SHARED_PREF_NAME, context.MODE_PRIVATE).edit()
                     .remove(Constants.SP_CONTACTS_SYNCED).commit();

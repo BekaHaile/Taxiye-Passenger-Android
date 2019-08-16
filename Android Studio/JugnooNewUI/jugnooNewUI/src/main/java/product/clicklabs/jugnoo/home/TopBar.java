@@ -38,7 +38,8 @@ public class TopBar implements GACategory, GAAction {
     public Button buttonCheckServer;
     public ImageView imageViewHelp, imageViewScheduleRide;
     public ImageView imageViewBack;
-    public TextView tvScheduleRidePopup;
+    public TextView tvScheduleRidePopup, tvCancel;
+    public ImageView imageViewShadow;
 
     public TopBar(Activity activity, DrawerLayout drawerLayout) {
         this.activity = activity;
@@ -62,6 +63,9 @@ public class TopBar implements GACategory, GAAction {
         imageViewBack.setVisibility(View.GONE);
         tvScheduleRidePopup = (TextView) drawerLayout.findViewById(R.id.tvScheduleRidePopup);
         tvScheduleRidePopup.setTypeface(Fonts.mavenRegular(activity));
+        imageViewShadow = drawerLayout.findViewById(R.id.imageViewShadow);
+
+		tvCancel = drawerLayout.findViewById(R.id.tvCancel);
 
 
         //Top bar events
@@ -69,6 +73,7 @@ public class TopBar implements GACategory, GAAction {
         imageViewMenu.setOnClickListener(topBarOnClickListener);
         buttonCheckServer.setOnClickListener(topBarOnClickListener);
         imageViewScheduleRide.setOnClickListener(topBarOnClickListener);
+		tvCancel.setOnClickListener(topBarOnClickListener);
 
         buttonCheckServer.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -128,6 +133,11 @@ public class TopBar implements GACategory, GAAction {
                 case R.id.imageViewBack:
                     if (activity instanceof HomeActivity) {
                         ((HomeActivity) activity).performBackpressed();
+                    }
+                    break;
+                case R.id.tvCancel:
+                    if (activity instanceof HomeActivity) {
+                        ((HomeActivity) activity).cancelClick();
                     }
                     break;
 

@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/assigningLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/top_bar_height"
-    android:splitMotionEvents="false"
-    android:visibility="visible">
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/assigningLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/top_bar_height"
+                android:splitMotionEvents="false"
+                android:visibility="visible"
+                android:animateLayoutChanges="true"
+    >
+
+    <RelativeLayout
+        android:id="@+id/rlAssigningNormal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/llFindingADriver"
@@ -60,16 +68,6 @@
                     android:textSize="@dimen/text_size_34" />
 
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvBidsIncoming"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tag="@string/dont_touch_me"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:visibility="gone"
-                    />
                 
                 <include layout="@layout/layout_jugnoo_loading_anim"/>
 
@@ -109,18 +107,6 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/ivCancelRequest"
-        style="@style/cross_popup_dp"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="-20dp"
-        android:layout_above="@+id/llFindingADriver"
-        />
-
     <RelativeLayout
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -128,6 +114,7 @@
         android:layout_centerHorizontal="true"
         android:tag="@string/dont_touch_me"
         android:layout_marginBottom="-20dp"
+        android:id="@+id/rlBidTimer"
         >
 
         <View
@@ -281,6 +268,46 @@
         android:visibility="gone">
 
     </RelativeLayout>
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rlAssigningBidding"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:tag="@string/dont_touch_me"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/tvAssigningBidHelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:layout_margin="20dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:textSize="16sp"
+            android:text="@string/you_can_accept_or_decline_bids_from_drivers"
+            app:typekitFont="@string/maven"
+            />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvBidsIncoming"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:tag="@string/dont_touch_me"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:visibility="visible"
+            android:layout_below="@+id/tvAssigningBidHelp"
+            />
+
+
+    </RelativeLayout>
 </RelativeLayout>
 
