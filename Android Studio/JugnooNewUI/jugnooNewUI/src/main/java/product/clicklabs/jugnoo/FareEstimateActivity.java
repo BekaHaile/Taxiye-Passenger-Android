@@ -591,4 +591,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
+	@Override
+	public void onSetLocationOnMapClicked() {
+
+	}
 }

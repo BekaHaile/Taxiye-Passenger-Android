@@ -1075,4 +1075,6 @@ public interface Constants {
 	String KEY_CUSTOMER_TUTORIAL_BANNER_TEXT = "customer_tutorial_banner_text";
 	String KEY_SECTION = "section";
 	String KEY_TUTORIAL_SKIPPED = "tutorial_skipped";
+
+	String KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP = "customer_set_location_on_map_on_top";
 }

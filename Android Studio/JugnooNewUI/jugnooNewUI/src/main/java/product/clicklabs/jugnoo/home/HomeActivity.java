@@ -10824,7 +10824,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
-    private void saveLastDestinations(SearchResult searchResult) {
+	@Override
+	public void onSetLocationOnMapClicked() {
+
+	}
+
+	private void saveLastDestinations(SearchResult searchResult) {
         try {
             lastDestination.clear();
             lastDestination.addAll(fetchLastLocations(SPLabels.LAST_DESTINATION));
