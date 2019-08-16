@@ -1528,11 +1528,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
                                 outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
                             }
-                            String innerStr = getString(R.string.bid_lower_value_err, Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue));
+                            String minBidValueStr = Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue);
+                            String innerStr = getString(R.string.bid_lower_value_err, minBidValueStr);
                             String outerStr = getString(R.string.bid_greater_amount_err);
                             if (Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
-								EnterBidDialog.INSTANCE.show(HomeActivity.this, null, innerStr,
-										getString(R.string.fare), Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
+								EnterBidDialog.INSTANCE.showRaiseFareDialog(HomeActivity.this, innerStr,
+										getString(R.string.raise_to_format, minBidValueStr), innerValue, false, value -> {
 											editTextBidValue.setText(value);
 											buttonConfirmRequest.performClick();
 										});

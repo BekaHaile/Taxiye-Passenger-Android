@@ -82,6 +82,50 @@ object EnterBidDialog {
         }
 
     }
+    fun showRaiseFareDialog(activity: Activity, message:String?,
+             buttonText:String?, minValue:Double, cancellable:Boolean, callback:Callback?) {
+
+        try {
+            val dialog = Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar)
+            dialog.window!!.attributes.windowAnimations = R.style.Animations_LoadingDialogFade
+            dialog.setContentView(R.layout.dialog_two_buttons_capsule_vert)
+
+            val layoutParams = dialog.window!!.attributes
+            layoutParams.dimAmount = 0.6f
+            dialog.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            dialog.setCancelable(cancellable)
+            dialog.setCanceledOnTouchOutside(cancellable)
+
+
+            val tvMessage = dialog.findViewById<TextView>(R.id.tvMessage)
+            tvMessage.typeface = Fonts.mavenMedium(activity)
+            tvMessage.text = message
+
+            tvMessage.visibility = if(TextUtils.isEmpty(message)) View.GONE else View.VISIBLE
+
+            val bPositive = dialog.findViewById<Button>(R.id.bPositive)
+            bPositive.typeface = Fonts.mavenMedium(activity)
+            if(!TextUtils.isEmpty(buttonText)){
+                bPositive.text = buttonText
+            }
+
+            bPositive.setOnClickListener {
+                dialog.dismiss()
+                callback?.onButtonClick(minValue.toString())
+            }
+
+            val bNegative = dialog.findViewById<Button>(R.id.bNegative)
+            bNegative.typeface = Fonts.mavenMedium(activity)
+            bNegative.setOnClickListener{
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
 
     interface Callback{
         fun onButtonClick(value:String?)

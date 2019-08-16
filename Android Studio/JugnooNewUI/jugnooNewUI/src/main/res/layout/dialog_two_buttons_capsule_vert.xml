@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_white_layer_shadow"
+    android:orientation="vertical"
+    android:padding="1dp"
+    android:splitMotionEvents="false">
+
+    <TextView
+        android:id="@+id/tvMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/dp_20"
+        android:layout_marginTop="@dimen/dp_25"
+        android:gravity="center"
+        android:maxHeight="400dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/bid_lower_value_err"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        app:typekitFont="maven"
+        />
+
+
+    <Button
+        android:id="@+id/bPositive"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/capsule_theme_color_selector"
+        android:minWidth="100dp"
+        android:text="@string/raise_to_format"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:textAllCaps="false"
+        app:typekitFont="maven"
+        />
+
+    <Button
+        android:id="@+id/bNegative"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="?attr/selectableItemBackground"
+        android:theme="@style/GreyHighlight"
+        android:minWidth="100dp"
+        android:text="@string/cancel"
+        android:textColor="@color/text_color_red_dark_aplha_selector"
+        android:textSize="13sp"
+        android:textAllCaps="false"
+        android:layout_gravity="center_horizontal"
+        app:typekitFont="maven"/>
+
+
+
+</LinearLayout>
