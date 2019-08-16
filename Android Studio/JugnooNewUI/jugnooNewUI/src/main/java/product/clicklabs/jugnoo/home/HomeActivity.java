@@ -204,6 +204,7 @@ import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
+import product.clicklabs.jugnoo.home.dialogs.EnterBidDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.NotesDialog;
 import product.clicklabs.jugnoo.home.dialogs.PartnerWithJugnooDialog;
@@ -1527,12 +1528,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
                                 outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
                             }
+                            String innerStr = getString(R.string.bid_lower_value_err, Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue));
+                            String outerStr = getString(R.string.bid_greater_amount_err);
                             if (Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
-                                Utils.showToast(HomeActivity.this, getString(R.string.bid_lower_value_err, String.valueOf((int)innerValue)), Toast.LENGTH_LONG);
+								EnterBidDialog.INSTANCE.show(HomeActivity.this, null, innerStr,
+										getString(R.string.fare), Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
+											editTextBidValue.setText(value);
+											buttonConfirmRequest.performClick();
+										});
 
                             } else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue
                                     && Double.parseDouble(editTextBidValue.getText().toString()) > 5000) {
-                                Utils.showToast(HomeActivity.this, getString(R.string.bid_greater_amount_err), Toast.LENGTH_LONG);
+								EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
+										getString(R.string.fare), Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
+											editTextBidValue.setText(value);
+											buttonConfirmRequest.performClick();
+										});
 
                             } else {
                                 if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
@@ -9099,6 +9110,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                                     DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
                                                                     HomeActivity.passengerScreenMode = P_INITIAL;
                                                                     switchPassengerScreen(passengerScreenMode);
+                                                                    DialogPopup.dismissLoadingDialog();
                                                                 }
                                                             } catch (Exception e) {
                                                                 e.printStackTrace();

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rv"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:splitMotionEvents="false" >
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:splitMotionEvents="false"
+                android:tag="@string/dont_touch_me">
 
     <RelativeLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_margin="50px"
+        android:layout_margin="24dp"
         android:background="@drawable/background_white_rounded_bordered"
         android:splitMotionEvents="false" >
 
@@ -20,59 +22,63 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:splitMotionEvents="false" 
-            android:padding="2px"
+            android:padding="1dp"
             >
 
             <TextView
                 android:id="@+id/textHead"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:paddingStart="40px"
-                android:paddingEnd="40px"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:text="@string/title"
-                android:textColor="@color/grey_dark_more"
-                android:textSize="50px"
-                android:visibility="gone" />
+                android:textColor="@color/text_color"
+                android:textSize="22sp"
+                android:visibility="visible"
+                app:fontFamily="@font/maven_pro_medium"/>
 
             <TextView
                 android:id="@+id/textMessage"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="0px"
-                android:layout_marginTop="40px"
+                android:layout_marginBottom="0dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center"
-                android:lineSpacingExtra="10px"
-                android:maxHeight="800px"
-                android:paddingStart="40px"
-                android:paddingEnd="40px"
+                android:lineSpacingExtra="5dp"
+                android:maxHeight="400dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:text="@string/message"
-                android:textColor="@color/black"
-                android:textSize="34px"
-                android:visibility="gone" />
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                app:fontFamily="@font/maven_pro_regular"
+                android:visibility="visible" />
 
-            <EditText
+            <product.clicklabs.jugnoo.widgets.PrefixedEditText
                 android:id="@+id/etCode"
-                android:layout_width="480px"
-                android:layout_height="80px"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:maxWidth="240dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/background_transparent"
                 android:gravity="center"
                 android:hint="@string/enter_code"
                 android:inputType="number"
-                android:paddingStart="30px"
-                android:paddingEnd="30px"
-                android:textColor="@color/black"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:textColor="@color/text_color"
                 android:textCursorDrawable="@drawable/cursor_black"
-                android:textSize="38px" />
+                app:fontFamily="@font/maven_pro_regular"
+                android:drawablePadding="5dp"
+                android:textSize="18sp" />
             <ImageView
-                android:layout_width="480px"
-                android:layout_height="2px"
+                android:layout_width="240dp"
+                android:layout_height="1dp"
                 android:src="@color/theme_color"
                 android:layout_gravity="center_horizontal"
                 />
@@ -81,21 +87,22 @@
             
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="2px"
+                android:layout_height="1dp"
                 android:background="@color/grey_light"
-                android:layout_marginTop="40px"
+                android:layout_marginTop="20dp"
                 />
             <Button
                 android:id="@+id/btnConfirm"
                 android:layout_width="match_parent"
-                android:layout_height="83px"
+                android:layout_height="41dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="0px"
+                android:layout_marginTop="0dp"
                 android:background="@drawable/button_white_grey_br_selector"
                 android:singleLine="true"
                 android:text="@string/ok"
                 android:textColor="@color/text_color"
-                android:textSize="34px" />
+                app:fontFamily="@font/maven_pro_medium"
+                android:textSize="16sp" />
             
         </LinearLayout>
     </RelativeLayout>
