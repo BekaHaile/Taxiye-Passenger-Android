@@ -43,6 +43,18 @@ public class DynamicDeliveryResponse extends FeedCommonResponse {
 
         @SerializedName("tnc")
         String tandC;
+        @SerializedName("currency_code")
+        String currencyCode;
+        @SerializedName("currency")
+        String currency;
+
+        public String getCurrencyCode() {
+            return currencyCode;
+        }
+
+        public String getCurrency() {
+            return currency;
+        }
 
         public String getTandC() {
             return tandC;

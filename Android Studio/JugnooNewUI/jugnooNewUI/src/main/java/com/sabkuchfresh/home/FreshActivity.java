@@ -302,6 +302,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
     private boolean menusIsOpenMerchantInfo = true; // keep default value as true ( to account for deepIndex cases )
     private VendorDirectSearch vendorDirectSearch;
+    private String currencyCode, currency;
 
 
     public View getFeedHomeAddPostView() {
@@ -1396,7 +1397,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
-    public Product product;
+//    public Product product;
     public List<Product> productList = new ArrayList<>();
 
     public List<Product> getProduct() {
@@ -1534,8 +1535,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     llCheckoutBarSetVisibility(View.GONE);
                 }
-                tvCartAmount.setText(String.format(getResources().getString(R.string.rupees_value_format),
-                        Utils.getMoneyDecimalFormat().format(totalPrice)));
+
+                tvCartAmount.setText(Utils.formatCurrencyAmount(totalPrice, currencyCode, currency));
 
                 tvCheckoutItemsCount.setText(Utils.fromHtml(getString(quantity == 1 ?
                         R.string.checkout_bracket_item : R.string.checkout_bracket_items,
@@ -2197,8 +2198,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             textViewMinOrderVis = View.VISIBLE;
                         } else if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                             textViewMinOrderVis = View.VISIBLE;
-                            textViewMinOrder.setText(getString(R.string.minimum_order) + " "
-                                    + getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
+
+                            textViewMinOrder.setText(getString(R.string.minimum_order).concat(" ").concat(Utils.formatCurrencyAmount(getVendorOpened().getMinimumOrderAmount(), currencyCode, currency)));
+
                         } else if (totalQuantity > 0 && getVendorOpened().getShowFreeDeliveryText() == 1
                                 && totalPrice < getVendorOpened().getDeliveryAmountThreshold()) {
                             textViewMinOrderVis = View.VISIBLE;
@@ -2883,11 +2885,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void setSuperCategoriesData(SuperCategoriesData superCategoriesData) {
+        currencyCode = getString(R.string.default_currency);
+        currency = getString(R.string.default_currency);
         this.superCategoriesData = superCategoriesData;
     }
 
     public void setProductsResponse(ProductsResponse productsResponse) {
         this.productsResponse = productsResponse;
+        currencyCode = getString(R.string.default_currency);
+        currency = getString(R.string.default_currency);
         mContactNo = productsResponse.getSupportContact();
     }
 
@@ -2897,6 +2903,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setMenuProductsResponse(VendorMenuResponse vendorMenuResponse) {
         this.vendorMenuResponse = vendorMenuResponse;
+        currencyCode = vendorMenuResponse.getCurrencyCode();
+        currency = vendorMenuResponse.getCurrency();
         mContactNo = vendorMenuResponse.getSupportContact();
     }
 
@@ -2914,6 +2922,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setUserCheckoutResponse(UserCheckoutResponse userCheckoutResponse) {
         this.userCheckoutResponse = userCheckoutResponse;
+        currencyCode = userCheckoutResponse.getCurrencyCode();
+        currency = userCheckoutResponse.getCurrency();
     }
 
     public RelativeLayout getRelativeLayoutContainer() {
@@ -3645,7 +3655,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground() &&  getMenusFragment()!=null && getMenusFragment().isCustomOrderEnabled()
                     && Data.getFeedData()!=null){
                 FreshCheckoutMergedFragment.orderViaFatafat(this, FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
-                        this,updateCartValuesGetTotalPrice().first);
+                        this,updateCartValuesGetTotalPrice().first, getString(R.string.default_currency), getString(R.string.default_currency));
                 return;
             }
 
@@ -3728,8 +3738,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return vendorOpened;
     }
 
-    public void setVendorOpened(MenusResponse.Vendor vendorOpened) {
+    public void setVendorOpened(MenusResponse.Vendor vendorOpened, String currencyCode, String currency) {
         this.vendorOpened = vendorOpened;
+        this.currencyCode = currencyCode;
+        this.currency = currency;
         getMenusCart().updateRestaurant(vendorOpened);
     }
 
@@ -3741,6 +3753,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void setMenusResponse(MenusResponse menusResponse) {
+        currencyCode = getString(R.string.default_currency);
+        currency = getString(R.string.default_currency);
         this.menusResponse = menusResponse;
     }
 

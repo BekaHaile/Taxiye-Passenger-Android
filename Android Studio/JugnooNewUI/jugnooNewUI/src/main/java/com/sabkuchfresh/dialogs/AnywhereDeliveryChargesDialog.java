@@ -21,7 +21,6 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 5/2/16.
@@ -34,15 +33,19 @@ public class AnywhereDeliveryChargesDialog {
 	ArrayList<HashMap<String,Double>> popupData;
 	private Dialog dialog ;
 	private LinearLayout linearLayoutInner;
+	private String currencyCode;
+	private String currency;
 	private double estimatedCharges;
 	private TextView textViewFare;
 	private String tandCText ;
 	private TextView textViewTandC;
 
-	public AnywhereDeliveryChargesDialog(FreshActivity activity, Callback callback, ArrayList<HashMap<String, Double>> popupData, double estimatedCharges, String tandCText) {
+	public AnywhereDeliveryChargesDialog(FreshActivity activity, Callback callback, ArrayList<HashMap<String, Double>> popupData, String currencyCode, String currency, double estimatedCharges, String tandCText) {
 		this.activity = activity;
 		this.callback = callback;
 		this.popupData = popupData;
+		this.currencyCode = currencyCode;
+		this.currency = currency;
 		this.estimatedCharges = estimatedCharges;
 		this.tandCText = tandCText;
 		init();
@@ -63,7 +66,12 @@ public class AnywhereDeliveryChargesDialog {
 	}
 
 	private void setPopupData() {
-		textViewFare.setText(String.format("%s%s", activity.getString(R.string.rupee), Utils.getMoneyDecimalFormat().format(estimatedCharges)));
+		String deliveryFare = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(currencyCode, estimatedCharges, false);
+		if(deliveryFare.contains(currencyCode)){
+			textViewFare.setText(String.format("%s%s", currency, product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(estimatedCharges)));
+		} else {
+			textViewFare.setText(deliveryFare);
+		}
 		LayoutInflater inflater = LayoutInflater.from(activity);
 
 
@@ -73,7 +81,12 @@ public class AnywhereDeliveryChargesDialog {
             double value = entry.getValue();
             LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.layout_details_anywhere_delivery_dialog, null, false);
             ((TextView)linearLayout.findViewById(R.id.tv_label)).setText(label);
-			((TextView)linearLayout.findViewById(R.id.tv_value)).setText(String.format("%s%s", activity.getString(R.string.rupee), Utils.getMoneyDecimalFormat().format(value)));
+			String mapValFare = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(currencyCode, value, false);
+			if(mapValFare.contains(currencyCode)){
+				((TextView)linearLayout.findViewById(R.id.tv_value)).setText(String.format("%s%s", currency, product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(value)));
+			} else {
+				((TextView)linearLayout.findViewById(R.id.tv_value)).setText(deliveryFare);
+			}
             ((View)linearLayout.findViewById(R.id.view_dotted)).setLayerType(View.LAYER_TYPE_SOFTWARE, null) ;
 			linearLayoutInner.addView(linearLayout,linearLayoutInner.getChildCount()-1);
 

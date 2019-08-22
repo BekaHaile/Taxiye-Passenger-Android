@@ -343,6 +343,8 @@ public class HistoryResponse {
         private String currency;
         @SerializedName("distance_unit")
         private String distanceUnit;
+        @SerializedName("currency_code")
+        private String currencyCode;
 
         @Expose
         @SerializedName("deliveries")
@@ -1260,6 +1262,10 @@ public class HistoryResponse {
 
         public void setIs_corporate(final String is_corporate) {
             this.is_corporate = is_corporate;
+        }
+
+        public String getCurrencyCode() {
+            return currencyCode;
         }
     }
 

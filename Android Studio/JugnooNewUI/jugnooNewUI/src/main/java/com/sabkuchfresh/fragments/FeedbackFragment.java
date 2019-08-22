@@ -91,7 +91,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     private int viewType = RideEndGoodFeedbackViewType.RIDE_END_NONE.getOrdinal();
     private String dateValue = "", endRideGoodFeedbackText;
     private double orderAmount = 0;
-    private String orderId = "", feedbackOrderItems = "";
+    private String orderId = "", feedbackOrderItems = "", feedbackCurrencyCode, feedbackCurrency;
     private int rateApp = 0;
     private RateAppDialogContent rateAppDialogContent;
 
@@ -231,6 +231,8 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         viewType = feedbackData.getFeedbackViewType();
         dateValue =feedbackData.getFeedbackDeliveryDate();
         orderAmount = feedbackData.getAmount();
+        feedbackCurrencyCode = feedbackData.getFeedbackCurrencyCode();
+        feedbackCurrency = feedbackData.getFeedbackCurrency();
         orderId = feedbackData.getOrderId();
         endRideGoodFeedbackText = feedbackData.getRideEndGoodFeedbackText();
         negativeReasons.clear();
@@ -286,8 +288,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         textViewThumbsDown.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
         textViewThumbsUp.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
 
-        textViewRSCashPaidValue.setText(getResources().getString(R.string.rupee)
-                + "" + Utils.getMoneyDecimalFormat().format(orderAmount));
+        textViewRSCashPaidValue.setText(Utils.formatCurrencyAmount(orderAmount, feedbackCurrencyCode, feedbackCurrency));
         textViewRSData.setText("" + dateValue);
 
         if (!TextUtils.isEmpty(feedbackOrderItems)) {

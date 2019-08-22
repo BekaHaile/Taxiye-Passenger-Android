@@ -36,6 +36,7 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 
 	private View rootView;
 	private FreshActivity activity;
+	private String currencyCode, currency;
 
 
 	public static MenusItemCustomizeFragment newInstance(int categoryPos, int subCategoryPos, int itemPos) {
@@ -84,13 +85,15 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 				} else {
 					item = activity.getMenuProductsResponse().getCategories().get(categoryPos).getItems().get(itemPos);
 				}
+				currencyCode = activity.getMenuProductsResponse().getCurrencyCode();
+				currency = activity.getMenuProductsResponse().getCurrency();
 				if (item != null) {
 					menusItemCustomizeAdapter = new MenusItemCustomizeAdapter(activity, item,
 							new MenusItemCustomizeAdapter.Callback() {
 								@Override
 								public void updateItemTotalPrice(ItemSelected itemSelected) {
-									activity.tvItemTotalValue.setText(activity.getString(R.string.rupees_value_format,
-											Utils.getMoneyDecimalFormat().format(itemSelected.getTotalPriceWithQuantity())));
+
+									activity.tvItemTotalValue.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(itemSelected.getTotalPriceWithQuantity(), currencyCode, currency));
 								}
 
 								@Override
@@ -106,7 +109,7 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 								public void onItemPlusClick(){
 										GAUtils.event(activity.getGaCategory(), GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.INCREASED);
 								}
-							});
+							}, currencyCode, currency);
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
 
 					activity.rlAddToCart.setOnClickListener(new View.OnClickListener() {
