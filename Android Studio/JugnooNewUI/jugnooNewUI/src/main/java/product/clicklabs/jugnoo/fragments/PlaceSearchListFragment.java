@@ -808,7 +808,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 						@Override
 						public void onMapSettled() {
-							if (!getResources().getBoolean(R.bool.show_bouncing_marker)) {
+							if (getContext() != null && !getResources().getBoolean(R.bool.show_bouncing_marker)) {
 								if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED)
 									fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false);
 //								autoCompleteResultClicked = false;

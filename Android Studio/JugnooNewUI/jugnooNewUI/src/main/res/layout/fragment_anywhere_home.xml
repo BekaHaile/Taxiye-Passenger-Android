@@ -532,7 +532,9 @@
                     android:layout_alignParentBottom="true"
                     />
 
-                <include layout="@layout/order_place_referal" />
+                <include
+                    android:visibility="gone"
+                    layout="@layout/order_place_referal" />
 
             </android.support.v7.widget.CardView>
 

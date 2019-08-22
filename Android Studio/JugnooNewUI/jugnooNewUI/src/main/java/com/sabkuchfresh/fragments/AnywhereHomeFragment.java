@@ -1220,7 +1220,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 vehicleInfoList = dynamicDeliveryResponse.getVehiclesInfoList();
                 currentVehicleTypePos = 0;
                 vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
-                if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
+                if(vehicleInfoList != null && vehicleInfoList.size() > 1){
                     if (vehicleTypeAdapterFeed == null) {
                         vehicleTypeAdapterFeed = new VehicleTypeAdapterFeed((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterFeed.OnItemSelectedListener() {
                             @Override
