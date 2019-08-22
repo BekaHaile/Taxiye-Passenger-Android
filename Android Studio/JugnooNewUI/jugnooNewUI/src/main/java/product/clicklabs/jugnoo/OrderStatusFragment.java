@@ -535,6 +535,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                     setFeedOrderData(datum1, activity);
                                     if(datum1.getIsPaid()==1){
                                         setPaymentModes(datum1);
+                                    } else {
+                                        tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(0, currencyCode, currency));
                                     }
                                     openTrackOrderFragment();
                                 } else {
@@ -1344,6 +1346,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
         } else {
             rlWalletDeducted.setVisibility(View.GONE);
+            tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(0, currencyCode, currency));
         }
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvPaymentMethodVal.getLayoutParams();
