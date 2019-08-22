@@ -239,6 +239,8 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
+import product.clicklabs.jugnoo.retrofit.model.GetFavouriteDriver;
+import product.clicklabs.jugnoo.retrofit.model.GetFetchUserDriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
@@ -287,6 +289,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import retrofit2.Call;
 
 //import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 //import com.google.ads.conversiontracking.AdWordsConversionReporter;
@@ -303,6 +306,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private final String TAG = "Home Screen";
     private String macId ="";
     private boolean isTransfered = false;
+    boolean isValidated= true;
 
     public DrawerLayout drawerLayout;
 
@@ -2065,85 +2069,31 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                        }
 
                         else if (rating >= 3 && rating <= 5 ) {
-                            ratingCount = ratingBarRSFeedback.getScore();
-                            Log.i("rating bar", "rating bar selected" + ratingCount);
-                            if (dialog == null) {
-                                dialog = new Dialog(HomeActivity.this);
-                                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                dialog.setContentView(R.layout.dialog_add_driver_favourote);
+                            favouriteDriverCheckDialog(Integer.parseInt(Data.autoData.getAssignedDriverInfo().userId),feedbackStr,feedbackReasons);
 
-                                dialog.setCancelable(false);
-                                dialog.setCanceledOnTouchOutside(false);
-
-                                dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-                                WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
-                                layoutParams.dimAmount = 0.5f;
-                                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-                                tvAddDriverFavourite = (TextView) dialog.findViewById(R.id.tvAddDriverFavourite);
-
-                                btnFavouriteCancle = (Button) dialog.findViewById(R.id.btnFavouriteCancle);
-                                btnFavouriteCancle.setTypeface(Fonts.mavenRegular(HomeActivity.this));
-
-                                btnFavouriteAdd = (Button) dialog.findViewById(R.id.btnFavouriteAdd);
-                                btnFavouriteAdd.setTypeface(Fonts.mavenRegular(HomeActivity.this));
-
-                                tvAddDriverFavourite.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+                            } else if (rating <= 2 && rating > 0) {
 
 
-                                btnFavouriteCancle.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                btnFavouriteAdd.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        addUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 1);
-                                        submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                                                rating, feedbackStr, feedbackReasons);
-                                        goodFeedbackViewType();
-                                        flurryEventGAForTransaction();
-
-
-                                    }
-                                });
-                            }
-                            if (!dialog.isShowing()) {
-                                dialog.show();
-
-                            }
-                        }
-                       else if(rating<=2 && rating >0){
-
-
-                            DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "","Do you want block this driver?" ,
-                                    getResources().getString(R.string.yes),getResources().getString(R.string.no),
-                                    new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
+                                DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "", "Do you want block this driver?",
+                                        getResources().getString(R.string.yes), getResources().getString(R.string.no),
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
 //                                            deleteDriverMapping(driverId,pos);
-                                            blockUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 0);
-                                            submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                                                    rating, feedbackStr, feedbackReasons);
-                                            goodFeedbackViewType();
-                                            flurryEventGAForTransaction();
-                                        }
-                                    },
-                                    new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
+                                                blockUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 0);
+                                                submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+                                                        rating, feedbackStr, feedbackReasons);
+                                                goodFeedbackViewType();
+                                                flurryEventGAForTransaction();
+                                            }
+                                        },
+                                        new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
 
-                                        }
-                                    }, true, false);
-                        }
-
-
-
-
-
-
+                                            }
+                                        }, true, false);
+                            }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2374,8 +2324,107 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
+    private void showFavtDialog(String feedbackStr,String feedbackReasons){
+        ratingCount = ratingBarRSFeedback.getScore();
+        Log.i("rating bar", "rating bar selected" + ratingCount);
+
+        if (dialog == null) {
+            dialog = new Dialog(HomeActivity.this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.dialog_add_driver_favourote);
+
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
+
+            dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+            WindowManager.LayoutParams layoutParams = dialog.getWindow().getAttributes();
+            layoutParams.dimAmount = 0.5f;
+            dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            tvAddDriverFavourite = (TextView) dialog.findViewById(R.id.tvAddDriverFavourite);
+
+            btnFavouriteCancle = (Button) dialog.findViewById(R.id.btnFavouriteCancle);
+            btnFavouriteCancle.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+            btnFavouriteAdd = (Button) dialog.findViewById(R.id.btnFavouriteAdd);
+            btnFavouriteAdd.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+            tvAddDriverFavourite.setTypeface(Fonts.mavenRegular(HomeActivity.this));
+
+
+            btnFavouriteCancle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialog.dismiss();
+                }
+            });
+
+            btnFavouriteAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    addUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 1);
+                    submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+                            rating, feedbackStr, feedbackReasons);
+                    goodFeedbackViewType();
+                    flurryEventGAForTransaction();
+
+
+                }
+            });
+        }
+        if (!dialog.isShowing()) {
+            dialog.show();
+
+        }
+    }
+
+    private void favouriteDriverCheckDialog(int driverId,String feedback,String feedbackReasons) {
+        isValidated = true;
+        HashMap<String,String> params = new HashMap<>();
+        params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+        RestClient.getApiService().getFetchUserDriverMapping(params, new Callback<GetFavouriteDriver>() {
+            @Override
+            public void success(GetFavouriteDriver getFavouriteDriver, Response response) {
+                String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                Log.e("TAG","ldetified deiver favt response = " + responseStr);
+                try{
+                    JSONObject jObj = new JSONObject(responseStr);
+                    int flag = jObj.getInt(Constants.KEY_FLAG);
+                    if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal()==flag){
+                        if(getFavouriteDriver.getData()!=null) {
+                            for (int i = 0; getFavouriteDriver.getData().size() > i; i++) {
+                                Log.e("drivers data", getFavouriteDriver.getData().get(i).getDriverId()+"----on ride driver"+driverId);
+                                if (getFavouriteDriver.getData().get(i).getDriverId() == driverId) {
+                                    isValidated = false;
+                                }
+                            }
+                        }else{
+                            isValidated = true;
+                        }
+                        if(isValidated){
+                            showFavtDialog(feedback,feedbackReasons);
+                        }else{
+
+                            submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+                                        rating, feedback, feedbackReasons);
+                                goodFeedbackViewType();
+                                flurryEventGAForTransaction();
+
+                        }
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+
+            }
+        });
+    }
+
 
     private void blockUserDriverMapping(HomeActivity activity, String engagementId, int pActionBit) {
         HashMap<String, String> params = new HashMap<>();
