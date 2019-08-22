@@ -240,7 +240,6 @@ import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.GetFavouriteDriver;
-import product.clicklabs.jugnoo.retrofit.model.GetFetchUserDriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
@@ -289,7 +288,6 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
-import retrofit2.Call;
 
 //import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 //import com.google.ads.conversiontracking.AdWordsConversionReporter;
@@ -2043,8 +2041,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                     if (0 == rating) {
                         DialogPopup.alertPopup(HomeActivity.this, "", getString(R.string.we_take_your_feedback_seriously));
-                    }
-                    else {
+                    } else {
 //                        if (Data.autoData.getFeedbackReasons().size() > 0 && rating <= 3) {
 //                            if (feedbackReasons.length() > 0) {
 //                                if (isLastReasonSelected && feedbackStr.length() == 0) {
@@ -2060,40 +2057,38 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if (feedbackStr.length() > 300) {
                             editTextRSFeedback.requestFocus();
                             editTextRSFeedback.setError(getString(R.string.review_must_be_in));
-                        }
-//                         else {
-//                            submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-//                                    rating, feedbackStr, feedbackReasons);
-//                            goodFeedbackViewType();
-//                            flurryEventGAForTransaction();
-//                        }
+                        } else {
+                            if(Data.isMenuTagEnabled(MenuInfoTags.FAVOURITE_DRIVERS) || Data.isMenuTagEnabled(MenuInfoTags.BLOCKED_DRIVERS)){
+                                if (Data.isMenuTagEnabled(MenuInfoTags.FAVOURITE_DRIVERS) && rating >= 3 && rating <= 5 ) {
 
-                        else if (rating >= 3 && rating <= 5 ) {
-                            favouriteDriverCheckDialog(Integer.parseInt(Data.autoData.getAssignedDriverInfo().userId),feedbackStr,feedbackReasons);
+                                    favouriteDriverCheckDialog(Integer.parseInt(Data.autoData.getAssignedDriverInfo().userId), feedbackStr, feedbackReasons);
 
-                            } else if (rating <= 2 && rating > 0) {
+                                } else if (Data.isMenuTagEnabled(MenuInfoTags.BLOCKED_DRIVERS) && rating <= 2 && rating > 0) {
 
-
-                                DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "", "Do you want block this driver?",
-                                        getResources().getString(R.string.yes), getResources().getString(R.string.no),
-                                        new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
+                                    DialogPopup.alertPopupTwoButtonsWithListeners(HomeActivity.this, "", "Do you want block this driver?",
+                                            getResources().getString(R.string.yes), getResources().getString(R.string.no),
+                                            new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
 //                                            deleteDriverMapping(driverId,pos);
-                                                blockUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 0);
-                                                submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                                                        rating, feedbackStr, feedbackReasons);
-                                                goodFeedbackViewType();
-                                                flurryEventGAForTransaction();
-                                            }
-                                        },
-                                        new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
+                                                    blockUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 0);
+                                                    submitFeedBack(feedbackStr, feedbackReasons);
+                                                }
+                                            },
+                                            new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View v) {
 
-                                            }
-                                        }, true, false);
+                                                }
+                                            }, true, false);
+                                } else {
+                                    submitFeedBack(feedbackStr, feedbackReasons);
+                                }
+                            } else{
+                                submitFeedBack(feedbackStr, feedbackReasons);
                             }
+                        }
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2326,6 +2321,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
+    private void submitFeedBack(String feedbackStr, String feedbackReasons) {
+        Log.e("favourite driver disabled","fvd disablede");
+        submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
+                rating, feedbackStr, feedbackReasons);
+        goodFeedbackViewType();
+        flurryEventGAForTransaction();
+    }
+
     private void showFavtDialog(String feedbackStr,String feedbackReasons){
         ratingCount = ratingBarRSFeedback.getScore();
         Log.i("rating bar", "rating bar selected" + ratingCount);
@@ -2364,10 +2367,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void onClick(View view) {
                     addUserDriverMapping(HomeActivity.this, Data.autoData.getcEngagementId(), 1);
-                    submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                            rating, feedbackStr, feedbackReasons);
-                    goodFeedbackViewType();
-                    flurryEventGAForTransaction();
+                    submitFeedBack(feedbackStr, feedbackReasons);
 
 
                 }
@@ -2379,7 +2379,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void favouriteDriverCheckDialog(int driverId,String feedback,String feedbackReasons) {
+    private void favouriteDriverCheckDialog(int driverId,String feedbackStr,String feedbackReasons) {
         isValidated = true;
         HashMap<String,String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -2403,14 +2403,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             isValidated = true;
                         }
                         if(isValidated){
-                            showFavtDialog(feedback,feedbackReasons);
+                            showFavtDialog(feedbackStr,feedbackReasons);
                         }else{
 
-                            submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
-                                        rating, feedback, feedbackReasons);
-                                goodFeedbackViewType();
-                                flurryEventGAForTransaction();
-
+                            submitFeedBack(feedbackStr, feedbackReasons);
                         }
                     }
                 }catch(Exception e){
