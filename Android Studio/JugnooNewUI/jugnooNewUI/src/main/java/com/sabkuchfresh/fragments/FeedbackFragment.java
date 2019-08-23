@@ -184,7 +184,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
 
                     productType = ProductType.FRESH;
-                    setTitle(getResources().getString(R.string.fatafat));
+                    setTitle(getResources().getString(R.string.delivery_new_name));
 
                 } else if (feedbackClientId.equals(Config.getMealsClientId())) {
                     initFeedbackVariables(feedbackData);
@@ -877,7 +877,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
             activityCallbacks.registerForKeyBoardEvent(mKeyBoardStateHandler);
             if (feedbackClientId.equals(Config.getFreshClientId())) {
-                setTitle(getResources().getString(R.string.fatafat));
+                setTitle(getResources().getString(R.string.delivery_new_name));
             } else if (feedbackClientId.equals(Config.getMealsClientId())) {
                 setTitle(getResources().getString(R.string.meals));
             } else if (feedbackClientId.equals(Config.getGroceryClientId())) {

@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -67,6 +68,8 @@ public class PickerActivity extends AppCompatActivity {
     private static final int REQUEST_PORTRAIT_RFC = 1337;
     private static final int REQUEST_PORTRAIT_FFC = REQUEST_PORTRAIT_RFC + 1;
     public static final int REQUEST_IMAGE_CAPTURE = 99;
+    private static final int REQUEST_CODE_SELECT_IMAGES=1002;
+    private static final int REQ_CODE_IMAGE_PERMISSION = 1001;
     public static ArrayList<ImageEntry> sCheckedImages = new ArrayList<>();
     private final static int REQ_CODE_PERMISSION_CAMERA = 1005;
 
@@ -84,8 +87,10 @@ public class PickerActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     private TextView tvImageCount;
     private TextView toolbarTitle;
+    private Picker picker;
     private RecyclerView recyclerViewSelectedImages;
     private String[] permissionsRequestArray;
+    private PermissionCommon permissionCommon;
 //    private PermissionCommon mPermissionCommon;
 
 
@@ -97,6 +102,23 @@ public class PickerActivity extends AppCompatActivity {
             finish();
             onCancel();
         }
+
+        permissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                dispatchTakePictureIntent();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
 
         if(savedInstanceState==null)
           mPickOptions = (EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class)).options;
@@ -278,7 +300,11 @@ public class PickerActivity extends AppCompatActivity {
             return;
         }
 
-
+        if(!PermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE,this)
+           || !PermissionCommon.isGranted(Manifest.permission.CAMERA,this)){
+            permissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+            return;
+        }
 
 
         if (sCheckedImages != null && sCheckedImages.size() >= mPickOptions.limit) {
@@ -749,6 +775,9 @@ public class PickerActivity extends AppCompatActivity {
 
         }
 
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            refreshMediaScanner(mCurrentPhotoPath);
+        }
         if (resultCode == RESULT_OK && requestCode == REQUEST_PORTRAIT_FFC) {
             //For capturing image from camera
             galleryAddPic();
@@ -975,21 +1004,21 @@ public class PickerActivity extends AppCompatActivity {
 
     }
 
-   /* @Override
+    @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mPermissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        permissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @Override
-    public void permissionGranted(final int requestCode) {
-        if(requestCode == REQ_CODE_PERMISSION_CAMERA){
-            startCamera(findViewById(R.id.iv_camera));
-        }
-    }
-
-    @Override
-    public void permissionDenied(final int requestCode) {
-
-    }*/
+//    @Override
+//    public void permissionGranted(final int requestCode) {
+//        if(requestCode == REQ_CODE_PERMISSION_CAMERA){
+//            startCamera(findViewById(R.id.iv_camera));
+//        }
+//    }
+//
+//    @Override
+//    public void permissionDenied(final int requestCode) {
+//
+//    }
 }
