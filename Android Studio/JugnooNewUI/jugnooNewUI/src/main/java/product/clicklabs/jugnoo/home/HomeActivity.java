@@ -2826,7 +2826,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     boolean refresh = false;
                     try {
                         checkForMyLocationButtonVisibility();
-                        if((Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1 && !isNewUI) || fromNaviCurrentLocation) {
+                        if((Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1) || fromNaviCurrentLocation) {
                             fromNaviCurrentLocation = false;
                             refresh = findADriverAndGeocode(map.getCameraPosition().target, mapTouched, touchCalled, releaseCalled);
                         }
@@ -11948,7 +11948,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private PaymentOptionDialog paymentOptionDialogTip;
     public PaymentOptionDialog getPaymentOptionDialogForTip(){
-        if(paymentOptionDialogTip == null{
+        if(paymentOptionDialogTip == null){
             paymentOptionDialogTip = new PaymentOptionDialog(this, getCallbackPaymentOptionSelector(), new PaymentOptionDialog.Callback() {
                 @Override
                 public void onDialogDismiss() {
