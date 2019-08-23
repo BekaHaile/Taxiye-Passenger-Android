@@ -142,6 +142,8 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     @SerializedName("services")
     @Expose
     private ArrayList<ServiceType> serviceTypes;
+    @SerializedName("bottom_request_ui_enabled")
+	private int bottomRequestUIEnabled;
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -536,4 +538,11 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
         this.serviceTypes = serviceTypes;
     }
 
+	public int getBottomRequestUIEnabled() {
+		return bottomRequestUIEnabled;
+	}
+
+	public void setBottomRequestUIEnabled(int bottomRequestUIEnabled) {
+		this.bottomRequestUIEnabled = bottomRequestUIEnabled;
+	}
 }

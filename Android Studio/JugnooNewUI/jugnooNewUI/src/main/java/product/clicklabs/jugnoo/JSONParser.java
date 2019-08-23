@@ -739,7 +739,6 @@ public class JSONParser implements Constants {
 
     private void parseFindDriverResp(LoginResponse.Autos autos){
         try {
-            //current_user_status = 1 driver or 2 user
             parseDriversToShow(autos.getDrivers());
 
             Data.autoData.setServiceTypes(autos.getServiceTypes());
@@ -766,6 +765,7 @@ public class JSONParser implements Constants {
             if(autos.getCityId() != null){
                 Data.userData.setCurrentCity(autos.getCityId());
             }
+            Data.autoData.setNewBottomRequestUIEnabled(autos.getBottomRequestUIEnabled());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1290,6 +1290,9 @@ public class JSONParser implements Constants {
                             cardId= jObject.optString(Constants.KEY_CARD_ID, "0");
                             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jObject.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
+							Data.autoData.setIsReverseBid(jObject.optInt(Constants.KEY_REVERSE_BID, 0));
+							Prefs.with(context).save(KEY_REVERSE_BID, Data.autoData.getIsReverseBid());
+
                             try {
                                 if(jObject.has(KEY_OP_DROP_LATITUDE) && jObject.has(KEY_OP_DROP_LONGITUDE)) {
                                     dropLatitude = jObject.getDouble(KEY_OP_DROP_LATITUDE);
@@ -1526,7 +1529,7 @@ public class JSONParser implements Constants {
     }
 
 
-    public void parseDriversToShow(List<Driver> drivers) {
+    public static void parseDriversToShow(List<Driver> drivers) {
         try {
             Data.autoData.getDriverInfos().clear();
             if(drivers != null) {

@@ -2379,7 +2379,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             boolean nomatch = true;
             for(ServiceType st: Data.autoData.getServiceTypes()){
                 if(st.getSupportedVehicleTypes() == null
-                        || st.getSupportedVehicleTypes().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType())){
+                        || st.getSupportedVehicleTypes().contains(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType())
+						|| st.getSupportedVehicleTypes().contains(-1)){
 
                 if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null && st.getSupportedRideTypes() != null
                         && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().size() == st.getSupportedRideTypes().size()) {
@@ -2830,24 +2831,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             switchUserScreen();
 
             startUIAfterGettingUserStatus();
-            if (Data.autoData.getDropLatLng() == null) {
-                getHandler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(!isNewUI()) {
-                            relativeLayoutDestSearchBar.performClick();
-                        }
-                    }
-                }, 500);
-            }
+			getHandler().postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (Data.autoData.getDropLatLng() == null && !isNewUI()) {
+						relativeLayoutDestSearchBar.performClick();
+					}
+				}
+			}, 500);
 
-//            if (Data.autoData.getCancellationChargesPopupTextLine1().equalsIgnoreCase("")) {
-                textViewCancellation.setVisibility(View.GONE);
-//            }
+            textViewCancellation.setVisibility(View.GONE);
 
-//            if (PermissionCommon.isGranted(Manifest.permission.READ_SMS, this) && Data.userData.getGetGogu() == 1) {
-//                new FetchAndSendMessages(this, Data.userData.accessToken, false, "", "").execute();
-//            }
 
             openPushDialog();
 
@@ -2868,24 +2862,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
             Branch.getInstance(this).setIdentity(Data.userData.userIdentifier);
-//            FlurryAgent.setUserId(Data.userData.getUserId());
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-//		Prefs.with(HomeActivity.this).save(SPLabels.CHECK_BALANCE_LAST_TIME, (System.currentTimeMillis() - (2 * FETCH_WALLET_BALANCE_REFRESH_TIME)));
 
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA_TYPE, "");
         Prefs.with(this).save(SPLabels.LOGIN_UNVERIFIED_DATA, "");
 
 
-//        try {
-//            AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-//                    "947755540", "cZEMCIHV0GgQlLT2wwM", "50.00", false);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
         try {
             if (getIntent().getBundleExtra(Constants.KEY_APP_SWITCH_BUNDLE).getBoolean(Constants.KEY_INTERNAL_APP_SWITCH, false)
@@ -3763,9 +3749,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         clearMap();
 
-                        if(!isNewUI()) {
-                            setEnteredDestination();
-                        }
+						initialLayout.post(new Runnable() {
+							@Override
+							public void run() {
+								RelativeLayout.LayoutParams paramsInitial = (RelativeLayout.LayoutParams) initialLayout.getLayoutParams();
+								if(!isNewUI()) {
+									setEnteredDestination();
+									paramsInitial.topMargin = (int) (ASSL.Yscale() * 96F);
+								} else {
+									paramsInitial.topMargin = 0;
+								}
+								initialLayout.setLayoutParams(paramsInitial);
+							}
+						});
                         initialLayout.setVisibility(View.VISIBLE);
                         assigningLayout.setVisibility(View.GONE);
                         relativeLayoutSearchSetVisiblity(View.GONE);
@@ -5754,16 +5750,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             Utils.hideSoftKeyboard(this, editTextRSFeedback);
 
-//            try {
-//                AdWordsConversionReporter.registerReferrer(MyApplication.getInstance(), this.getIntent().getData());
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                AdWordsAutomatedUsageReporter.enableAutomatedUsageReporting(MyApplication.getInstance(), GOOGLE_ADWORD_CONVERSION_ID);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
 
             if (AccountActivity.updateMenuBar) {
                 menuBar.setProfileData();

@@ -11,8 +11,8 @@ import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -20,7 +20,6 @@ import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.Driver;
 import product.clicklabs.jugnoo.retrofit.model.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -164,24 +163,7 @@ public class ApiFindADriver {
 
 	public void parseFindADriverResponse(FindADriverResponse findADriverResponse){
 		try {
-			Data.autoData.getDriverInfos().clear();
-			if(findADriverResponse.getDrivers() != null) {
-				for (Driver driver : findADriverResponse.getDrivers()) {
-					//Log.e(TAG,"device token api parsing: "+driver.getExternalId());
-					double bearing = 0;
-					if (driver.getBearing() != null) {
-						bearing = driver.getBearing();
-					}
-					int vehicleType = driver.getVehicleType() == null ? Constants.VEHICLE_AUTO : driver.getVehicleType();
-					String brandingStatus = driver.getBrandingStatus();
-					Data.autoData.getDriverInfos().add(new DriverInfo(String.valueOf(driver.getUserId()), driver.getLatitude(), driver.getLongitude(), driver.getUserName(), "",
-							"", driver.getPhoneNo(), String.valueOf(driver.getRating()), "", 0, bearing, vehicleType, (ArrayList<Integer>)driver.getRegionIds(), brandingStatus,
-							driver.getOperatorId(), driver.getPaymentMethod(),driver.getDeviceToken(),driver.getExternalId()));
-				}
-				/*for(DriverInfo dInfo: Data.autoData.getDriverInfos()){
-					Log.e(TAG,"device token api parsing after inserting: "+dInfo.getExternalId());
-				}*/
-			}
+			JSONParser.parseDriversToShow(findADriverResponse.getDrivers());
 
 			Data.autoData.setServiceTypes(findADriverResponse.getServiceTypes());
 
@@ -212,6 +194,7 @@ public class ApiFindADriver {
             if(findADriverResponse.getCityId() != null){
                 Data.userData.setCurrentCity(findADriverResponse.getCityId());
             }
+			Data.autoData.setNewBottomRequestUIEnabled(findADriverResponse.getBottomRequestUIEnabled());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

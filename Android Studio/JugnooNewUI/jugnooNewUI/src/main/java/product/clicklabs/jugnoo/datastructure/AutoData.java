@@ -86,6 +86,8 @@ public class AutoData {
 
     private List<String> FaultConditions;
 
+    private int newBottomRequestUIEnabled;
+
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
                     String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String confirmScreenFareEstimateEnable,
@@ -336,7 +338,7 @@ public class AutoData {
     }
 
     public boolean getNewUIFlag(){
-        boolean setNew = false;
+        boolean setNew = false;//getNewBottomRequestUIEnabled() == 1;
         for (Region region : Data.autoData.getRegions()) {
             if (region.getReverseBid() == 1) {
                 setNew = true;
@@ -811,5 +813,13 @@ public class AutoData {
 
 	public void setBidRequestRideTimeout(long bidRequestRideTimeout) {
 		this.bidRequestRideTimeout = bidRequestRideTimeout;
+	}
+
+	public int getNewBottomRequestUIEnabled() {
+		return newBottomRequestUIEnabled;
+	}
+
+	public void setNewBottomRequestUIEnabled(int newBottomRequestUIEnabled) {
+		this.newBottomRequestUIEnabled = newBottomRequestUIEnabled;
 	}
 }
