@@ -34,7 +34,6 @@ object ApiCancelRequest {
             RestClient.getApiService().cancelTheRequest(params, object : retrofit.Callback<SettleUserDebt> {
                 override fun success(settleUserDebt: SettleUserDebt, response: Response) {
                     val responseStr = String((response.body as TypedByteArray).bytes)
-                    DialogPopup.dismissLoadingDialog()
                     try {
                         val jObj = JSONObject(responseStr)
                         val message = JSONParser.getServerMessage(jObj)
@@ -42,13 +41,20 @@ object ApiCancelRequest {
                         if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                             if(flag == ApiResponseFlags.REQUEST_CANCELLED.getOrdinal()){
                                 callback?.onSuccess()
+                                if(callback != null && callback.canDismissDialog()) {
+                                    DialogPopup.dismissLoadingDialog()
+                                }
                             } else {
+                                DialogPopup.dismissLoadingDialog()
                                 DialogPopup.alertPopupWithListener(activity, "", message
                                 ) { callback?.onFailure() }
                             }
+                        } else {
+                            DialogPopup.dismissLoadingDialog()
                         }
                     } catch (exception: Exception) {
                         exception.printStackTrace()
+                        DialogPopup.dismissLoadingDialog()
                         DialogPopup.alertPopupWithListener(activity, "", activity.getString(R.string.connection_lost_please_try_again))
                         { callback?.onFailure() }
                     }
@@ -84,6 +90,7 @@ object ApiCancelRequest {
     interface Callback{
         fun onSuccess()
         fun onFailure()
+        fun canDismissDialog(): Boolean
     }
 
 }

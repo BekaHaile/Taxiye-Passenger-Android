@@ -7253,6 +7253,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			public void onFailure() {
 				callAndHandleStateRestoreAPI(true);
 			}
+
+			@Override
+			public boolean canDismissDialog() {
+				return true;
+			}
 		});
 		if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
 			GAUtils.event(RIDES, HOME,
@@ -7264,7 +7269,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			@Override
 			public void onSuccess() {
 				cancelTimerRequestRide();
-
 				getHandler().postDelayed(runnableRaiseBid, 5000);
 			}
 
@@ -7272,14 +7276,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			public void onFailure() {
 				callAndHandleStateRestoreAPI(true);
 			}
+
+			@Override
+			public boolean canDismissDialog() {
+				return false;
+			}
 		});
 	}
 	private Runnable runnableRaiseBid = new Runnable() {
 		@Override
 		public void run() {
+			DialogPopup.dismissLoadingDialog();
 			double bidVal = Double.parseDouble(editTextBidValue.getText().toString());
 			bidVal = bidVal * 1.1D;
 			editTextBidValue.setText(Utils.getDecimalFormat2Decimal().format(bidVal));
+			editTextBidValue.setSelection(editTextBidValue.getText().length());
 
 			finalRequestRideTimerStart(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
 		}
