@@ -165,6 +165,7 @@ import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
 import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
+import product.clicklabs.jugnoo.apis.ApiCancelRequest;
 import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
@@ -1808,6 +1809,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
+		// TODO: 2019-08-26 revert
+		textViewFindingDriver.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(Data.autoData.getIsReverseBid() == 1) {
+					cancelAndReBid();
+				}
+			}
+		});
 
         initialCancelRideBtn.setOnClickListener(new OnClickListener() {
             @Override
@@ -7233,82 +7243,47 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
      * ASync for cancelCustomerRequestAsync from server
      */
     public void cancelCustomerRequestAsync(final Activity activity) {
-        if (MyApplication.getInstance().isOnline()) {
+		ApiCancelRequest.INSTANCE.cancelCustomerRequestAsync(activity, new ApiCancelRequest.Callback() {
+			@Override
+			public void onSuccess() {
+				customerUIBackToInitialAfterCancel();
+			}
 
-            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
+			@Override
+			public void onFailure() {
+				callAndHandleStateRestoreAPI(true);
+			}
+		});
+		if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
+			GAUtils.event(RIDES, HOME,
+					slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
+		}
+	}
+    public void cancelAndReBid() {
+		ApiCancelRequest.INSTANCE.cancelCustomerRequestAsync(this, new ApiCancelRequest.Callback() {
+			@Override
+			public void onSuccess() {
+				cancelTimerRequestRide();
 
-            HashMap<String, String> params = new HashMap<>();
+				getHandler().postDelayed(runnableRaiseBid, 5000);
+			}
 
-            params.put("access_token", Data.userData.accessToken);
-            params.put("session_id", Data.autoData.getcSessionId());
+			@Override
+			public void onFailure() {
+				callAndHandleStateRestoreAPI(true);
+			}
+		});
+	}
+	private Runnable runnableRaiseBid = new Runnable() {
+		@Override
+		public void run() {
+			double bidVal = Double.parseDouble(editTextBidValue.getText().toString());
+			bidVal = bidVal * 1.1D;
+			editTextBidValue.setText(Utils.getDecimalFormat2Decimal().format(bidVal));
 
-            Log.i("access_token", "=" + Data.userData.accessToken);
-            Log.i("session_id", "=" + Data.autoData.getcSessionId());
-
-            new HomeUtil().putDefaultParams(params);
-            RestClient.getApiService().cancelTheRequest(params, new Callback<SettleUserDebt>() {
-                @Override
-                public void success(SettleUserDebt settleUserDebt, Response response) {
-                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i(TAG, "cancelTheRequest response = " + responseStr);
-                    DialogPopup.dismissLoadingDialog();
-
-                    try {
-                        JSONObject jObj = new JSONObject(responseStr);
-                        int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-                        if (!jObj.isNull("error")) {
-                            String errorMessage = jObj.getString("error");
-                            if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
-                                HomeActivity.logoutUser(activity);
-                            } else {
-                                DialogPopup.alertPopupWithListener(activity, "", errorMessage,
-                                        new OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                callAndHandleStateRestoreAPI(true);
-                                            }
-                                        });
-                            }
-                        } else {
-                            customerUIBackToInitialAfterCancel();
-                        }
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e(TAG, "cancelTheRequest error=" + error.toString());
-                    DialogPopup.dismissLoadingDialog();
-                    callAndHandleStateRestoreAPI(true);
-                }
-            });
-            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
-                GAUtils.event(RIDES, HOME,
-                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
-            }
-        } else {
-            //DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
-            DialogPopup.dialogNoInternet(HomeActivity.this, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
-                @Override
-                public void positiveClick(View v) {
-                    cancelCustomerRequestAsync(HomeActivity.this);
-                }
-
-                @Override
-                public void neutralClick(View v) {
-
-                }
-
-                @Override
-                public void negativeClick(View v) {
-
-                }
-            });
-        }
-    }
+			finalRequestRideTimerStart(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+		}
+	};
 
 
     public void customerUIBackToInitialAfterCancel() {

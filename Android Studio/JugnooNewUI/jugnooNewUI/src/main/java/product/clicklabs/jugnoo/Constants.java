@@ -74,6 +74,7 @@ public interface Constants {
     String KEY_ERROR = "error";
 
     String KEY_ACCESS_TOKEN = "access_token";
+    String KEY_SESSION_ID = "session_id";
     String KEY_UPDATE_CONTACTS="update_contacts";
     String KEY_CONTACTS_LIST="contacts_list";
     String KEY_ENGAGEMENT_ID = "engagement_id";
