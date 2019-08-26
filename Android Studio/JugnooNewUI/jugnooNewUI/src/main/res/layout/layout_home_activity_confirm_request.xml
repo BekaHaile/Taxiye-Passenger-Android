@@ -34,6 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/confirmMyLocationBtn"
+        android:clickable="true"
+        android:focusable="true"
         android:background="@color/white">
 
         <android.support.v7.widget.RecyclerView
@@ -50,39 +52,41 @@
             android:layout_width="wrap_content"
             android:visibility="visible"
             android:layout_below="@+id/recyclerViewVehiclesConfirmRide"
-            android:layout_height="150px">
+            android:layout_height="wrap_content">
             
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/rlMark"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="40px"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20px"
-                android:gravity="center">
+                android:layout_marginTop="35px"
+                android:orientation="vertical"
+                android:gravity="center"
+                >
 
                 <ImageView
                     android:id="@+id/iv1"
                     android:layout_width="16px"
                     android:layout_height="16px"
-                    android:layout_centerHorizontal="true"
+                    android:tag="mwar"
                     android:src="@drawable/circle_theme"/>
                 <ImageView
-                    android:id="@+id/iv2"
+                    android:id="@+id/iv2NewUIDropDashedLine"
                     android:layout_width="40px"
                     android:layout_height="50px"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@id/iv1"
                     android:orientation="vertical"
                     android:rotation="0"
+                    android:visibility="visible"
                     android:src="@drawable/dotted_vertical_line"/>
                 <ImageView
-                    android:id="@+id/iv3"
+                    android:id="@+id/iv3NewUIDropMark"
                     android:layout_width="20px"
                     android:layout_height="20px"
-                    android:layout_centerHorizontal="true"
-                    android:layout_below="@id/iv2"
+                    android:visibility="visible"
+                    android:tag="mwar"
                     android:src="@drawable/ic_shape"/>
                 
-            </RelativeLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutDestSearchBarNew"
@@ -91,10 +95,12 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginEnd="20px"
                 android:layout_marginBottom="5px"
-                android:layout_marginTop="80px"
                 android:layout_toEndOf="@id/rlMark"
+                android:layout_below="@+id/relativeLayoutInitialSearchBarNew"
                 android:background="@color/menu_item_selector_color_F7"
-                android:splitMotionEvents="false">
+                android:splitMotionEvents="false"
+                android:visibility="visible"
+                >
                 
 
                 <TextView
@@ -145,6 +151,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginEnd="20px"
                 android:layout_marginTop="5px"
+                android:layout_marginBottom="5px"
                 android:layout_toEndOf="@id/rlMark"
                 android:background="@color/menu_item_selector_color_F7"
                 android:splitMotionEvents="false">

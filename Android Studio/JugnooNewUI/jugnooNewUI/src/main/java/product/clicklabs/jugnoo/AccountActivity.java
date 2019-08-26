@@ -450,7 +450,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             @Override
             public void onClick(View v) {
                 if (editTextUserName.isEnabled()) {
-                    permissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    permissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
                 }
             }
         });
