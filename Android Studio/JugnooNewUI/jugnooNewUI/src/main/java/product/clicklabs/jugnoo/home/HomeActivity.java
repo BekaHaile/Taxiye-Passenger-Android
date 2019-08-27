@@ -6553,13 +6553,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                 if(isNewUI) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mapLayout.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    mapLayout.setLayoutParams(params);
-
-                    RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams)passengerMainLayout.getLayoutParams();
-                    params.setMargins(0,0,0,0);
-                    passengerMainLayout.setLayoutParams(params);
 
 					textViewRupee.setText(Utils.getCurrencySymbol(Data.autoData.getCurrency()));
 
@@ -6591,14 +6584,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 } else {
 
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)mapLayout.getLayoutParams();
-                    params.setMargins(0, (int) (ASSL.Yscale()*96),0,0);
-                    mapLayout.setLayoutParams(params);
 
                     relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
-                    RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams)passengerMainLayout.getLayoutParams();
-                    params.setMargins(0, (int) (ASSL.Yscale()*96),0,0);
-                    passengerMainLayout.setLayoutParams(params);
 
                     linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
                     linearLayoutBidValue.setVisibility(View.GONE);
