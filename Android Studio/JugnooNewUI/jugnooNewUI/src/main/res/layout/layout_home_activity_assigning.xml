@@ -53,6 +53,83 @@
                 android:orientation="vertical"
                 android:layout_below="@+id/pbAssigning">
 
+                <RelativeLayout
+                    android:id="@+id/rlPickupDropAssigning"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="@string/dont_touch_me"
+                    android:visibility="visible"
+                    android:layout_marginTop="7dp"
+                    >
+
+                    <LinearLayout
+                        android:id="@+id/rlMarkAssigning"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="17dp"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:src="@drawable/circle_theme" />
+
+                        <ImageView
+                            android:id="@+id/iv2NewUIDropDashedLineAssigning"
+                            android:layout_width="20dp"
+                            android:layout_height="25dp"
+                            android:orientation="vertical"
+                            android:rotation="0"
+                            android:src="@drawable/dotted_vertical_line"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/iv3NewUIDropMarkAssigning"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:src="@drawable/ic_shape"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDropAssigning"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_below="@+id/tvPickupAssigning"
+                        android:layout_marginBottom="2.5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_toEndOf="@id/rlMarkAssigning"
+                        android:background="@color/menu_item_selector_color_F7"
+                        android:gravity="center_vertical"
+                        android:hint="@string/drop_location"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="18dp"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tvPickupAssigning"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:layout_marginBottom="2.5dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="2.5dp"
+                        android:layout_toEndOf="@id/rlMarkAssigning"
+                        android:background="@color/menu_item_selector_color_F7"
+                        android:gravity="center_vertical"
+                        android:hint="@string/pickup_location"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="18dp"
+                        android:singleLine="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp" />
+
+                </RelativeLayout>
+
                 <TextView
                     android:id="@+id/textViewFindingDriver"
                     android:layout_width="match_parent"
@@ -152,111 +229,6 @@
             android:textSize="18sp"
             android:visibility="visible"/>
 
-    </RelativeLayout>
-
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutAssigningDropLocationClick"
-        android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:layout_marginStart="20px"
-        android:layout_marginEnd="20px"
-        android:layout_marginTop="20px"
-        android:background="@drawable/dropshadow_in_white"
-        android:splitMotionEvents="false">
-
-        <ImageView
-            android:id="@+id/imageViewAssigningDropLocationSearch"
-            android:layout_width="16px"
-            android:layout_height="16px"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="37px"
-            android:src="@drawable/circle_red"
-            android:tag="mwar" />
-
-        <TextView
-            android:id="@+id/textViewAssigningDropLocationClick"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="37px"
-            android:layout_toStartOf="@+id/linearLayoutAssigningDropLocationEditProgress"
-            android:layout_toEndOf="@+id/imageViewAssigningDropLocationSearch"
-            android:background="@color/transparent"
-            android:gravity="center_vertical"
-            android:hint="@string/enter_destination"
-            android:paddingEnd="20px"
-            android:singleLine="true"
-            android:textColor="@color/text_color"
-            android:textColorHint="@color/text_color_hint"
-            android:textCursorDrawable="@null"
-            android:textSize="30px" />
-
-        <LinearLayout
-            android:id="@+id/linearLayoutAssigningDropLocationEditProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10px"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <product.clicklabs.jugnoo.utils.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/progressBarAssigningDropLocation"
-                android:layout_width="70px"
-                android:layout_height="70px"
-                android:tag="mwar"
-                android:visibility="visible"
-                wheel:matProg_barColor="@color/theme_color"
-                wheel:matProg_barWidth="3dp"
-                wheel:matProg_fillRadius="true"
-                wheel:matProg_progressIndeterminate="true" />
-
-            <ImageView
-                android:id="@+id/imageViewAssigningDropLocationEdit"
-                android:layout_width="60px"
-                android:layout_height="60px"
-                android:padding="15px"
-                android:src="@drawable/edit_icon_selector"
-                android:tag="mwar"
-                android:visibility="visible" />
-
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayoutDestinationHelp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayoutAssigningDropLocationClick"
-        android:layout_marginStart="50px"
-        android:layout_marginEnd="50px"
-        android:layout_marginTop="-15px"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/imageViewDestHelp"
-            android:layout_width="60px"
-            android:layout_height="60px"
-            android:layout_marginStart="50px"
-            android:layout_marginTop="-30px"
-            android:background="@drawable/triangle_help_text"
-            android:rotation="0"
-            android:tag="mwar" />
-
-        <TextView
-            android:id="@+id/textViewDestHelp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageViewDestHelp"
-            android:background="@drawable/background_black_80_r"
-            android:padding="15px"
-            android:text="@string/for_complete_peace_of_mind_please_enter_the_destination_so_we_can_provide_him_turn_by_turn_navigation"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_30" />
     </RelativeLayout>
 
 

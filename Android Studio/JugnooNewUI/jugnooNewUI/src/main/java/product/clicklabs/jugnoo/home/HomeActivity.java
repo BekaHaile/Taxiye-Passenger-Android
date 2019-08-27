@@ -364,10 +364,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Button initialCancelRideBtn;
     private LinearLayout llFindingADriver;
     public RelativeLayout relativeLayoutAssigningDropLocationParent;
-    private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp, relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
-    private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
-    ProgressWheel progressBarAssigningDropLocation;
-    ImageView imageViewAssigningDropLocationEdit;
+    private RelativeLayout relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
+    private TextView tvPickupAssigning, tvDropAssigning, textViewFellowRider;
     boolean cancelTouchHold = false, placeAdded, zoomAfterFindADriver, fromNaviCurrentLocation;
 
 
@@ -910,17 +908,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 		llFindingADriver = findViewById(R.id.llFindingADriver);
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
-        relativeLayoutAssigningDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationClick);
-        relativeLayoutDestinationHelp = (RelativeLayout) findViewById(R.id.relativeLayoutDestinationHelp);
-        textViewDestHelp = (TextView) findViewById(R.id.textViewDestHelp);
-        textViewDestHelp.setTypeface(Fonts.mavenRegular(this));
-        textViewAssigningDropLocationClick = (TextView) findViewById(R.id.textViewAssigningDropLocationClick);
-        textViewAssigningDropLocationClick.setTypeface(Fonts.mavenMedium(this));
-        textViewAssigningDropLocationClick.setText("");
-        progressBarAssigningDropLocation = (ProgressWheel) findViewById(R.id.progressBarAssigningDropLocation);
-        imageViewAssigningDropLocationEdit = (ImageView) findViewById(R.id.imageViewAssigningDropLocationEdit);
-        imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
-        progressBarAssigningDropLocation.setVisibility(View.GONE);
+		tvPickupAssigning = findViewById(R.id.tvPickupAssigning);
+		tvPickupAssigning.setTypeface(Fonts.mavenMedium(this));
+		tvPickupAssigning.setText("");
+		tvDropAssigning = findViewById(R.id.tvDropAssigning);
+		tvDropAssigning.setTypeface(Fonts.mavenMedium(this));
+		tvDropAssigning.setText("");
 
 
         //Request Final Layout
@@ -1833,10 +1826,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
 
 
-        relativeLayoutAssigningDropLocationClick.setOnClickListener(new OnClickListener() {
+		tvDropAssigning.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                relativeLayoutDestinationHelp.setVisibility(View.GONE);
                 initDropLocationSearchUI(false);
             }
         });
@@ -3971,7 +3963,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     dropAddressName = "";
                                 }
                             }
-                            textViewAssigningDropLocationClick.setText("");
+							tvDropAssigning.setText("");
                             textViewFinalDropLocationClick.setText("");
                         }
 
@@ -4520,11 +4512,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
                 || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
                 || (Data.autoData != null && Data.autoData.getIsReverseBid() == 1)) {
-                imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
-                relativeLayoutAssigningDropLocationClick.setEnabled(false);
+				tvDropAssigning.setEnabled(false);
             } else {
-                imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
-                relativeLayoutAssigningDropLocationClick.setEnabled(true);
+				tvDropAssigning.setEnabled(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4923,8 +4913,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if (frag == null || frag.isRemoving()) {
                 Bundle bundle = new Bundle();
-                if (textViewAssigningDropLocationClick.getText().length() > 0) {
-                    bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewAssigningDropLocationClick.getText().toString());
+                if (tvDropAssigning.getText().length() > 0) {
+                    bundle.putString(KEY_SEARCH_FIELD_TEXT, tvDropAssigning.getText().toString());
                 } else {
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
                 }
@@ -5050,79 +5040,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void setDropLocationAssigningUI() {
         try {
-            if (Data.autoData.getDropLatLng() == null) {
-                if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-                    relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-                    relativeLayoutDestinationHelp.setVisibility(View.GONE);
-                } else {
-                    if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
-
-                        if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-							relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-                        } else {
-							relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-                        }
-                        try {
-                            Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-                            topInAnimation.setAnimationListener(new Animation.AnimationListener() {
-                                @Override
-                                public void onAnimationStart(Animation animation) {
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-                                    relativeLayoutAssigningDropLocationClick.clearAnimation();
-                                    if (Data.userData != null && (!Data.autoData.getDestinationHelpText().equalsIgnoreCase(""))) {
-                                        textViewDestHelp.setText(Data.autoData.getDestinationHelpText());
-                                        if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                            relativeLayoutDestinationHelp.setVisibility(View.GONE);
-                                        } else {
-                                            relativeLayoutDestinationHelp.setVisibility(View.VISIBLE);
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {
-
-                                }
-                            });
-							if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-								relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
-							}
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    textViewAssigningDropLocationClick.setText("");
-                    dropAddressName = "";
-                    setDropEditInAssigningState();
-                    progressBarAssigningDropLocation.setVisibility(View.GONE);
-                }
-            } else {
-                relativeLayoutDestinationHelp.setVisibility(View.GONE);
-                if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
-					if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-						relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-					} else {
-						relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-					}
-                    try {
-						if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-							Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-							relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
-						}
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                setDropLocationMarker();
-                setDropEditInAssigningState();
-                if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                    getAddressAsync(Data.autoData.getDropLatLng(), textViewAssigningDropLocationClick, progressBarAssigningDropLocation, PlaceSearchListFragment.PlaceSearchMode.DROP);
-                }
-            }
+        	getAddressAsync(Data.autoData.getPickupLatLng(), tvPickupAssigning, null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+			if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+				tvDropAssigning.setVisibility(View.GONE);
+				findViewById(R.id.iv2NewUIDropDashedLineAssigning).setVisibility(View.GONE);
+				findViewById(R.id.iv3NewUIDropMarkAssigning).setVisibility(View.GONE);
+			} else {
+				tvDropAssigning.setVisibility(View.VISIBLE);
+				findViewById(R.id.iv2NewUIDropDashedLineAssigning).setVisibility(View.VISIBLE);
+				findViewById(R.id.iv3NewUIDropMarkAssigning).setVisibility(View.VISIBLE);
+			}
+			setDropLocationMarker();
+			setDropEditInAssigningState();
+			if (Data.autoData.getDropLatLng() != null && passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+				getAddressAsync(Data.autoData.getDropLatLng(), tvDropAssigning, null, PlaceSearchListFragment.PlaceSearchMode.DROP);
+			} else if (Data.autoData.getDropLatLng() == null) {
+				tvDropAssigning.setText("");
+				dropAddressName = "";
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -10434,7 +10369,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 fareEstimatBeforeRequestRide();
             }
         } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
-            textViewAssigningDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
+			tvDropAssigning.setText(autoCompleteSearchResult.getNameForText());
             dropAddressName = autoCompleteSearchResult.getNameForText();
         } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -10622,7 +10557,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewInitialSearchNew.setText("");
             }
         } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
-            textViewAssigningDropLocationClick.setText("");
+			tvDropAssigning.setText("");
             dropAddressName = "";
         } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
