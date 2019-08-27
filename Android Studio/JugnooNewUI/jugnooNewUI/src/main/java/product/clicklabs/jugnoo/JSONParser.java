@@ -1253,6 +1253,7 @@ public class JSONParser implements Constants {
                         parseDropLatLng(jObject1);
                         bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
                         Data.autoData.setIsReverseBid(jObject1.optInt(Constants.KEY_REVERSE_BID, 0));
+                        Data.autoData.setInitialBidValue(jObject1.optDouble(Constants.KEY_INITIAL_BID_VALUE, 0D));
                         Prefs.with(context).save(KEY_REVERSE_BID, Data.autoData.getIsReverseBid());
 						Prefs.with(context).save(KEY_REQUEST_RIDE_START_TIME,
 								DateOperations.getMilliseconds(DateOperations.utcToLocalWithTZFallback(jObject1.optString(KEY_START_TIME,

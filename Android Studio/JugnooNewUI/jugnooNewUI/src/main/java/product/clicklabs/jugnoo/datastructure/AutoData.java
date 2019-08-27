@@ -87,6 +87,7 @@ public class AutoData {
     private List<String> FaultConditions;
 
     private int newBottomRequestUIEnabled;
+    private double initialBidValue;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -821,5 +822,13 @@ public class AutoData {
 
 	public void setNewBottomRequestUIEnabled(int newBottomRequestUIEnabled) {
 		this.newBottomRequestUIEnabled = newBottomRequestUIEnabled;
+	}
+
+	public double getInitialBidValue() {
+		return initialBidValue;
+	}
+
+	public void setInitialBidValue(double initialBidValue) {
+		this.initialBidValue = initialBidValue;
 	}
 }

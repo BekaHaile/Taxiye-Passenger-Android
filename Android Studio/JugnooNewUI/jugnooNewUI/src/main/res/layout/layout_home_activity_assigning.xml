@@ -141,28 +141,96 @@
                     android:gravity="center"
                     android:singleLine="true"
                     android:text="@string/finding_a_driver"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/theme_color"
                     android:textSize="@dimen/text_size_34" />
 
 
                 
                 <include layout="@layout/layout_jugnoo_loading_anim"/>
 
-                <Button
-                    android:id="@+id/initialCancelRideBtn"
-                    android:layout_width="240dp"
-                    android:layout_height="48dp"
-                    style="@style/ButtonThemeCapsule"
-                    android:minWidth="200dp"
+                <LinearLayout
+                    android:id="@+id/llRaiseBidButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
                     android:tag="@string/dont_touch_me"
+                    android:gravity="center"
+                    >
+
+                    <Button
+                        android:id="@+id/bRaiseFareMinus"
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="0.8"
+                        style="@style/ButtonThemeAlternate"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_color_selector"
+                        android:text="@string/minus_200"
+                        android:textAllCaps="false"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvRaiseBidValue"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        tools:text="Rs.120"
+                        android:gravity="center"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginEnd="4dp"
+                        />
+
+
+
+                    <Button
+                        android:id="@+id/bRaiseFarePlus"
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="0.8"
+                        style="@style/ButtonThemeAlternate"
+                        android:textSize="16sp"
+                        android:textColor="@color/text_color_selector"
+                        android:text="@string/minus_200"
+                        android:textAllCaps="false"
+                        />
+
+
+                </LinearLayout>
+                
+                <Button
+                    android:id="@+id/bRaiseOfferFare"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    android:background="@drawable/background_theme_gradient_selector"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp"
+                    android:textSize="16sp"
                     android:textColor="@color/white"
+                    android:text="@string/raise_fare"
                     android:textAllCaps="false"
-                    android:textSize="19dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:tag="@string/dont_touch_me"
+                    />
+
+                <TextView
+                    android:id="@+id/tvInitialCancelRide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:theme="@style/GreyHighlight"
+                    android:tag="@string/dont_touch_me"
+                    android:textColor="@color/text_color_selector"
+                    android:textAllCaps="false"
+                    android:textSize="15sp"
+                    android:padding="7dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
                     android:text="@string/cancel_request"/>
 

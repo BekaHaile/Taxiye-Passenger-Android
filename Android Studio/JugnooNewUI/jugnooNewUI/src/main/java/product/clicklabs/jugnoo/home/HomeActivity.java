@@ -361,7 +361,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout assigningLayout, rlAssigningNormal, rlAssigningBidding, rlBidTimer;
     TextView textViewFindingDriver, tvBidTimer;
     private ProgressWheel pwBidTimer;
-    Button initialCancelRideBtn;
+    TextView tvInitialCancelRide, tvRaiseBidValue;
+	Button bRaiseOfferFare, bRaiseFareMinus, bRaiseFarePlus;
+	LinearLayout llRaiseBidButton;
     private LinearLayout llFindingADriver;
     public RelativeLayout relativeLayoutAssigningDropLocationParent;
     private RelativeLayout relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
@@ -892,8 +894,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         pwBidTimer = (ProgressWheel) findViewById(R.id.pwBidTimer);
         tvBidTimer = (TextView) findViewById(R.id.tvBidTimer);
         tvBidTimer.setTypeface(Fonts.mavenMedium(this));
-        initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
-        initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
+        tvInitialCancelRide = findViewById(R.id.tvInitialCancelRide);
+        tvInitialCancelRide.setTypeface(Fonts.mavenRegular(this));
+		bRaiseOfferFare = findViewById(R.id.bRaiseOfferFare);
+		bRaiseOfferFare.setTypeface(Fonts.mavenMedium(this));
+		bRaiseOfferFare.setVisibility(View.GONE);
+		llRaiseBidButton = findViewById(R.id.llRaiseBidButton);
+		bRaiseFareMinus = findViewById(R.id.bRaiseFareMinus); bRaiseFareMinus.setTypeface(Fonts.mavenRegular(this));
+		bRaiseFarePlus = findViewById(R.id.bRaiseFarePlus); bRaiseFarePlus.setTypeface(Fonts.mavenRegular(this));
+		tvRaiseBidValue = findViewById(R.id.tvRaiseBidValue); tvRaiseBidValue.setTypeface(Fonts.mavenMedium(this));
         findDriverJugnooAnimation = findViewById(R.id.findDriverJugnooAnimation);
         if (findDriverJugnooAnimation instanceof ImageView) {
             jugnooAnimation = (AnimationDrawable) findDriverJugnooAnimation.getBackground();
@@ -1802,8 +1811,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
-		// TODO: 2019-08-26 revert
-		textViewFindingDriver.setOnClickListener(new OnClickListener() {
+		bRaiseOfferFare.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(Data.autoData.getIsReverseBid() == 1) {
@@ -1812,7 +1820,32 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			}
 		});
 
-        initialCancelRideBtn.setOnClickListener(new OnClickListener() {
+		bRaiseFareMinus.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				double innerValue = 20.0;
+				if(Data.autoData.getInitialBidValue()-10D >= innerValue) {
+					Data.autoData.setInitialBidValue(Data.autoData.getInitialBidValue() - 10D);
+					tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getInitialBidValue()));
+				} else {
+					Utils.showToast(HomeActivity.this, getString(R.string.offer_cannot_be_less_than_min_value));
+				}
+			}
+		});
+		bRaiseFarePlus.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				double outerValue = 5000.0;
+				if(Data.autoData.getInitialBidValue()+10D <= outerValue) {
+					Data.autoData.setInitialBidValue(Data.autoData.getInitialBidValue() + 10D);
+					tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getInitialBidValue()));
+				} else {
+					Utils.showToast(HomeActivity.this, getString(R.string.offer_cannot_be_more_than_max_value));
+				}
+			}
+		});
+
+        tvInitialCancelRide.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -4072,10 +4105,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         } else {
                             textViewFindingDriver.setText(R.string.finding_a_driver);
                         }
+						textViewFindingDriver.getPaint().setShader(Utils.textColorGradient(this, textViewFindingDriver, R.color.theme_color_start, R.color.theme_color_end));
 
                         pwBidTimer.setVisibility(View.GONE);
                         tvBidTimer.setVisibility(View.GONE);
-                        initialCancelRideBtn.setVisibility(View.GONE);
+                        tvInitialCancelRide.setVisibility(View.GONE);
                         try {
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         } catch (Exception e) {
@@ -4143,8 +4177,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         setJeanieVisibility();
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
 
-						llFindingADriver.getMeasuredHeight();
-						llFindingADriver.post(() -> setGoogleMapPadding(llFindingADriver.getMeasuredHeight(), true));
+//						llFindingADriver.post(() -> setGoogleMapPadding(llFindingADriver.getMeasuredHeight(), true));
 
                         break;
 
@@ -7222,9 +7255,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		@Override
 		public void run() {
 			DialogPopup.dismissLoadingDialog();
-			double bidVal = Double.parseDouble(editTextBidValue.getText().toString());
-			bidVal = bidVal * 1.1D;
-			editTextBidValue.setText(Utils.getDecimalFormat2Decimal().format(bidVal));
+			editTextBidValue.setText(Utils.getDecimalFormat2Decimal().format(Data.autoData.getInitialBidValue()));
 			editTextBidValue.setSelection(editTextBidValue.getText().length());
 
 			finalRequestRideTimerStart(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
@@ -9069,6 +9100,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                         GAUtils.event(RIDES, HOME, slidingBottomPanel
                                                                 .getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUESTED);
                                                     }
+													Data.autoData.setInitialBidValue(Double.parseDouble(nameValuePairs.getOrDefault(Constants.KEY_INITIAL_BID_VALUE, "0")));
                                                 }
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
                                                 Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
@@ -9202,7 +9234,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 try {
                     if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
                         relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
-                        initialCancelRideBtn.setVisibility(View.GONE);
+                        tvInitialCancelRide.setVisibility(View.GONE);
                         topBar.tvCancel.setVisibility(View.GONE);
                         findDriverJugnooAnimation.setVisibility(View.VISIBLE);
                         if (findDriverJugnooAnimation instanceof ImageView) {
@@ -9213,10 +9245,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         if (bidsPlacedAdapter.getItemCount() == 0) {
 							topBar.tvCancel.setVisibility(View.GONE);
-                            initialCancelRideBtn.setVisibility(View.VISIBLE);
+                            tvInitialCancelRide.setVisibility(View.VISIBLE);
                         } else {
 							topBar.tvCancel.setVisibility(View.VISIBLE);
-                            initialCancelRideBtn.setVisibility(View.GONE);
+                            tvInitialCancelRide.setVisibility(View.GONE);
                         }
 
                         if (findDriverJugnooAnimation instanceof ImageView) {
@@ -11634,6 +11666,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else {
             textViewFindingDriver.setText(bidsPlacedAdapter.getItemCount() == 0 ? R.string.finding_a_driver : R.string.tap_a_bid);
         }
+		textViewFindingDriver.getPaint().setShader(Utils.textColorGradient(this, textViewFindingDriver, R.color.theme_color_start, R.color.theme_color_end));
 
         //bids from various drivers will show and block the cancel request button in this case
         if (bidsPlacedAdapter.getItemCount() > 0) {
@@ -11648,6 +11681,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			topBar.tvCancel.setVisibility(View.GONE);
 		}
 		updateCancelButtonUI();
+
+		int bidFareVisibility = (tvInitialCancelRide.getVisibility() == View.VISIBLE
+				&& Data.autoData.getIsReverseBid() == 1) ? View.VISIBLE : View.GONE;
+		bRaiseOfferFare.setVisibility(bidFareVisibility);
+		llRaiseBidButton.setVisibility(bidFareVisibility);
+		tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getInitialBidValue()));
+		bRaiseFareMinus.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), -10D));
+		bRaiseFarePlus.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), 10D));
 
 
 		long startTime = Prefs.with(this).getLong(Constants.KEY_REQUEST_RIDE_START_TIME, System.currentTimeMillis());
@@ -11671,6 +11712,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             getHandler().post(runnableBidTimer);
         }
 
+		llFindingADriver.post(() -> setGoogleMapPadding(llFindingADriver.getMeasuredHeight(), true));
     }
 
 
@@ -11698,7 +11740,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 	public void cancelClick() {
 		if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-			initialCancelRideBtn.performClick();
+			tvInitialCancelRide.performClick();
 		}
 	}
 
