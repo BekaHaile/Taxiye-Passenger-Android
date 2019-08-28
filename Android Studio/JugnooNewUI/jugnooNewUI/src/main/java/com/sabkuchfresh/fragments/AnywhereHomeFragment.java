@@ -499,19 +499,19 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
 
 
-        if (searchResult != null && searchResult.getName() != null) {
+        if (searchResult != null && searchResult.getNameForText(activity) != null) {
             textViewToSet.setVisibility(View.VISIBLE);
 //          tvNoAddressAlert.setVisibility(View.GONE);
             String addressType;
-            if (searchResult.getName().equalsIgnoreCase(activity.getString(R.string.home))) {
+            if (searchResult.getNameForText(activity).equalsIgnoreCase(activity.getString(R.string.home))) {
                 imageViewToSet.setImageResource(R.drawable.ic_home);
                 addressType = activity.getString(R.string.home);
-            } else if (searchResult.getName().equalsIgnoreCase(activity.getString(R.string.work))) {
+            } else if (searchResult.getNameForText(activity).equalsIgnoreCase(activity.getString(R.string.work))) {
                 imageViewToSet.setImageResource(R.drawable.ic_work);
                 addressType = activity.getString(R.string.work);
             } else {
                 imageViewToSet.setImageResource(R.drawable.ic_loc_other);
-                addressType = searchResult.getName();
+                addressType = searchResult.getNameForText(activity);
             }
 
 
