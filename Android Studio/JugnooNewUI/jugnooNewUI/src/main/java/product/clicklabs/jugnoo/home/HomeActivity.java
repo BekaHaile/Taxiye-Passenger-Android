@@ -56,6 +56,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -11703,13 +11704,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		bRaiseOfferFare.setEnabled(Data.autoData.getInitialBidValue() != Data.autoData.getChangedBidValue());
 		llRaiseBidButton.setVisibility(bidFareVisibility);
 		tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getChangedBidValue()));
+		if(Data.autoData.getIsReverseBid() == 1){
+			tvInitialCancelRide.setTextColor(ContextCompat.getColorStateList(this, R.color.text_color_selector));
+			tvInitialCancelRide.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+		} else {
+			tvInitialCancelRide.setTextColor(ContextCompat.getColorStateList(this, R.color.text_color_red_dark_aplha_selector));
+			tvInitialCancelRide.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+		}
 
 		SpannableStringBuilder ssbMinus = new SpannableStringBuilder("-"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), 10D));
-		ssbMinus.setSpan(new RelativeSizeSpan(1.4F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbMinus.setSpan(new RelativeSizeSpan(1.5F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvRaiseFareMinus.setText(ssbMinus);
 
 		SpannableStringBuilder ssbPlus = new SpannableStringBuilder("+"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), 10D));
-		ssbPlus.setSpan(new RelativeSizeSpan(1.4F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbPlus.setSpan(new RelativeSizeSpan(1.5F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvRaiseFarePlus.setText(ssbPlus);
 
 		setTopBarTransNewUI();
