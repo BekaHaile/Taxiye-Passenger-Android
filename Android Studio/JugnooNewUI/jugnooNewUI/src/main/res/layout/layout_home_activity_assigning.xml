@@ -8,13 +8,28 @@
                 android:layout_marginTop="@dimen/top_bar_height"
                 android:splitMotionEvents="false"
                 android:visibility="visible"
-                android:animateLayoutChanges="true"
     >
 
     <RelativeLayout
         android:id="@+id/rlAssigningNormal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textViewFindingDriver"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="100dp"
+            android:gravity="center_horizontal"
+            android:singleLine="true"
+            android:text="@string/finding_a_driver"
+            android:textColor="@color/text_color"
+            android:textSize="20sp"
+            android:background="@color/white_alpha_light"
+            android:clickable="true"
+            android:focusable="true"
+            android:tag="@string/dont_touch_me"
+            android:layout_above="@+id/llFindingADriver"/>
 
     <LinearLayout
         android:id="@+id/llFindingADriver"
@@ -130,21 +145,6 @@
 
                 </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/textViewFindingDriver"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20px"
-                    android:layout_marginEnd="20px"
-                    android:layout_marginTop="25px"
-                    android:layout_marginBottom="10px"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:text="@string/finding_a_driver"
-                    android:textColor="@color/theme_color"
-                    android:textSize="@dimen/text_size_34" />
-
-
                 
                 <include layout="@layout/layout_jugnoo_loading_anim"/>
 
@@ -160,12 +160,12 @@
                     android:gravity="center"
                     >
 
-                    <Button
-                        android:id="@+id/bRaiseFareMinus"
+                    <TextView
+                        android:id="@+id/tvRaiseFareMinus"
                         android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_weight="0.8"
-                        style="@style/ButtonThemeAlternate"
+                        style="@style/ButtonThemeAlternateCapsule"
                         android:textSize="16sp"
                         android:textColor="@color/text_color_selector"
                         android:text="@string/minus_200"
@@ -187,12 +187,12 @@
 
 
 
-                    <Button
-                        android:id="@+id/bRaiseFarePlus"
+                    <TextView
+                        android:id="@+id/tvRaiseFarePlus"
                         android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_weight="0.8"
-                        style="@style/ButtonThemeAlternate"
+                        style="@style/ButtonThemeAlternateCapsule"
                         android:textSize="16sp"
                         android:textColor="@color/text_color_selector"
                         android:text="@string/minus_200"

@@ -68,10 +68,6 @@
 
                     </RelativeLayout>
 
-                    <!-- top bar layout -->
-                    <include
-                        android:id="@+id/topBarMain"
-                        layout="@layout/layout_top_bar" />
 
                     <include
                         android:id="@+id/fabViewIntial"
@@ -172,6 +168,10 @@
                 android:layout_alignParentBottom="true"
                 />
 
+            <!-- top bar layout -->
+            <include
+                android:id="@+id/topBarMain"
+                layout="@layout/layout_top_bar" />
 
             <include
                 android:id="@+id/fabViewFinal"
