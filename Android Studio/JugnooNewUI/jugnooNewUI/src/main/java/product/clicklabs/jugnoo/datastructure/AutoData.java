@@ -338,13 +338,13 @@ public class AutoData {
     }
 
     public boolean getNewUIFlag(){
-        boolean setNew = false;//getNewBottomRequestUIEnabled() == 1;
-        for (Region region : Data.autoData.getRegions()) {
-            if (region.getReverseBid() == 1) {
-                setNew = true;
-            }
-        }
-        return setNew;
+//        boolean setNew = false;//getNewBottomRequestUIEnabled() == 1;
+//        for (Region region : Data.autoData.getRegions()) {
+//            if (region.getReverseBid() == 1) {
+//                setNew = true;
+//            }
+//        }
+        return getNewBottomRequestUIEnabled() == 1;
     }
 
     public ArrayList<Region> getRegions() {
