@@ -11713,11 +11713,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		}
 
 		SpannableStringBuilder ssbMinus = new SpannableStringBuilder("-"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), 10D));
-		ssbMinus.setSpan(new RelativeSizeSpan(1.5F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbMinus.setSpan(new RelativeSizeSpan(1.2F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbMinus.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbMinus.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.black)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvRaiseFareMinus.setText(ssbMinus);
 
 		SpannableStringBuilder ssbPlus = new SpannableStringBuilder("+"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), 10D));
-		ssbPlus.setSpan(new RelativeSizeSpan(1.5F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbPlus.setSpan(new RelativeSizeSpan(1.2F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbPlus.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbPlus.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.black)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvRaiseFarePlus.setText(ssbPlus);
 
 		setTopBarTransNewUI();
