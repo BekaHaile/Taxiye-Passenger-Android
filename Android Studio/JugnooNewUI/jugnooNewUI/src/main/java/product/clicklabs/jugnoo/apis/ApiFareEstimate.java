@@ -45,7 +45,10 @@ public class ApiFareEstimate {
     private Context context;
     private Callback callback;
     private String startAddress, endAddress, distanceText, timeText;
+    private List<LatLng> list;
     private double distanceValue, timeValue;
+
+    private LatLng sourceLatLng, destLatLng;
 
     public ApiFareEstimate(Context context, Callback callback) {
         this.context = context;
@@ -56,6 +59,13 @@ public class ApiFareEstimate {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 if (sourceLatLng != null && destLatLng != null) {
+                	if(this.sourceLatLng != null && this.destLatLng != null
+								&& MapUtils.distance(this.sourceLatLng, sourceLatLng) < 10
+							&& MapUtils.distance(this.destLatLng, destLatLng) < 10
+							&& list != null && distanceValue > 0){
+						directionsSuccess(promoCoupon, callFareEstimate, sourceLatLng, destLatLng, isPooled, region);
+						return;
+					}
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
                     GoogleRestApis.INSTANCE.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
                             destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, getDistanceUnit(), new retrofit.Callback<SettleUserDebt>() {
@@ -65,9 +75,10 @@ public class ApiFareEstimate {
                                         String result = new String(((TypedByteArray) response.getBody()).getBytes());
                                         Log.i("result", "=" + result);
                                         JSONObject jObj = new JSONObject(result);
-                                        final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
+                                        list = MapUtils.getLatLngListFromPath(result);
                                         if (jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
-
+											ApiFareEstimate.this.sourceLatLng = sourceLatLng;
+											ApiFareEstimate.this.destLatLng = destLatLng;
                                             startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address");
                                             endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address");
 
@@ -76,14 +87,8 @@ public class ApiFareEstimate {
 
                                             distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
                                             timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
-                                            callback.onSuccess(list, startAddress, endAddress, distanceText, timeText,
-                                                    distanceValue, timeValue, promoCoupon);
-                                            if(callFareEstimate) {
-                                                getFareEstimate((Activity) context, sourceLatLng, destLatLng,
-                                                        distanceValue / 1000d, timeValue / 60d, isPooled, region, promoCoupon,
-                                                        list);
-                                            }
-                                        } else {
+											directionsSuccess(promoCoupon, callFareEstimate, sourceLatLng, destLatLng, isPooled, region);
+										} else {
                                             DialogPopup.dismissLoadingDialog();
                                             retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon);
                                             callback.onDirectionsFailure();
@@ -117,7 +122,19 @@ public class ApiFareEstimate {
         }
     }
 
-    @NonNull
+	public void directionsSuccess(PromoCoupon promoCoupon, boolean callFareEstimate, LatLng sourceLatLng, LatLng destLatLng, int isPooled, Region region) {
+		callback.onSuccess(list, startAddress, endAddress, distanceText, timeText,
+				distanceValue, timeValue, promoCoupon);
+		if(callFareEstimate) {
+			getFareEstimate((Activity) context, sourceLatLng, destLatLng,
+					distanceValue / 1000d, timeValue / 60d, isPooled, region, promoCoupon,
+					list);
+		} else {
+			DialogPopup.dismissLoadingDialog();
+		}
+	}
+
+	@NonNull
     private String getDistanceUnit() {
         String units = "metric";
         if(Data.autoData != null

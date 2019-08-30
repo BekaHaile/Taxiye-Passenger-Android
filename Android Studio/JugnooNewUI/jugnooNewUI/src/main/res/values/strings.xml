@@ -2116,6 +2116,7 @@
     <string name="bid_lower_value_err">Minimum fare for this route is %s. Raise your offer to this.</string>
     <string name="bid_greater_amount_err">The price is too high for this route. Please offer lower fare.</string>
     <string name="raise_to_format">Raise to %s</string>
+    <string name="drop_location">Drop Location</string>
 
 
 </resources>
