@@ -1078,4 +1078,5 @@ public interface Constants {
 	String KEY_TUTORIAL_SKIPPED = "tutorial_skipped";
 
 	String KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP = "customer_set_location_on_map_on_top";
+	String KEY_CUSTOMER_BID_INCREMENT = "customer_bid_increment";
 }

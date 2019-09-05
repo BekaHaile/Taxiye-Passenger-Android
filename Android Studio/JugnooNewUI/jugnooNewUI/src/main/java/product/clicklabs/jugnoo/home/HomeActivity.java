@@ -1828,8 +1828,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
 				double innerValue = 20.0;
-				if(Data.autoData.getChangedBidValue()-10D >= innerValue) {
-					Data.autoData.setChangedBidValue(Data.autoData.getChangedBidValue() - 10D);
+				if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+						&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
+					innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
+				}
+
+				double incrementVal = getBidIncrementValFromServer();
+				if(Data.autoData.getChangedBidValue()-incrementVal >= innerValue) {
+					Data.autoData.setChangedBidValue(Data.autoData.getChangedBidValue() - incrementVal);
 					tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getChangedBidValue()));
 					bRaiseOfferFare.setEnabled(true);
 				} else {
@@ -1841,8 +1847,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
 				double outerValue = 5000.0;
-				if(Data.autoData.getChangedBidValue()+10D <= outerValue) {
-					Data.autoData.setChangedBidValue(Data.autoData.getChangedBidValue() + 10D);
+				if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+						&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
+					outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
+				}
+				double incrementVal = getBidIncrementValFromServer();
+				if(Data.autoData.getChangedBidValue()+incrementVal <= outerValue) {
+					Data.autoData.setChangedBidValue(Data.autoData.getChangedBidValue() + incrementVal);
 					tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getChangedBidValue()));
 					bRaiseOfferFare.setEnabled(true);
 				} else {
@@ -4551,7 +4562,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 || (Data.autoData != null && Data.autoData.getIsReverseBid() == 1)) {
 				tvDropAssigning.setEnabled(false);
             } else {
-				tvDropAssigning.setEnabled(true);
+				tvDropAssigning.setEnabled(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -11715,12 +11726,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		}
 
 		//setting text on reverse bid increment and decrement values
-		SpannableStringBuilder ssbMinus = new SpannableStringBuilder("-"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), 10D));
+		double incrementVal = getBidIncrementValFromServer();
+		SpannableStringBuilder ssbMinus = new SpannableStringBuilder("-"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), incrementVal));
 		ssbMinus.setSpan(new RelativeSizeSpan(1.2F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ssbMinus.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ssbMinus.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.black)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		tvRaiseFareMinus.setText(ssbMinus);
-		SpannableStringBuilder ssbPlus = new SpannableStringBuilder("+"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), 10D));
+		SpannableStringBuilder ssbPlus = new SpannableStringBuilder("+"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), incrementVal));
 		ssbPlus.setSpan(new RelativeSizeSpan(1.2F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ssbPlus.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ssbPlus.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.black)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -11751,8 +11763,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		llFindingADriver.post(() -> setGoogleMapPadding(llFindingADriver.getMeasuredHeight(), true));
     }
 
+	private double getBidIncrementValFromServer() {
+		double incrementVal = 10D;
+		try{incrementVal = Double.parseDouble(Prefs.with(this).getString(KEY_CUSTOMER_BID_INCREMENT, String.valueOf(10D)));}catch(Exception e){}
+		return incrementVal;
+	}
 
-    private double bidTime = -1;
+
+	private double bidTime = -1;
     private Runnable runnableBidTimer = new Runnable() {
         @Override
         public void run() {
