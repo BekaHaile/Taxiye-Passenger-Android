@@ -2456,6 +2456,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
             rvRideTypes.setVisibility(serviceTypesEligible.size() > 1 ? View.VISIBLE : View.GONE);
+			setTopBarTransNewUI();
         }
     }
 
@@ -9673,18 +9674,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     public void setTopBarTransNewUI() {
-        if((passengerScreenMode == P_INITIAL || (passengerScreenMode == P_ASSIGNING
-				&& relativeLayoutAssigningDropLocationParent.getVisibility() == View.GONE))
+		RelativeLayout.LayoutParams paramsInitial = (RelativeLayout.LayoutParams) initialLayout.getLayoutParams();
+        if(((passengerScreenMode == P_INITIAL && rvRideTypes.getVisibility() == View.GONE)
+				|| (passengerScreenMode == P_ASSIGNING && relativeLayoutAssigningDropLocationParent.getVisibility() == View.GONE))
 				&& (Data.autoData.getBidInfos() == null || Data.autoData.getBidInfos().size() == 0)
 				&& isNewUI && !confirmedScreenOpened && !scheduleRideOpen && !specialPickupScreenOpened) {
             topBar.topRl.setBackground(ContextCompat.getDrawable(this, R.color.transparent));
             topBar.imageViewShadow.setBackground(ContextCompat.getDrawable(this, R.color.transparent));
             topBar.textViewTitle.setVisibility(View.GONE);
+			paramsInitial.topMargin = 0;
         } else {
             topBar.topRl.setBackground(ContextCompat.getDrawable(this, R.color.white));
             topBar.imageViewShadow.setBackground(ContextCompat.getDrawable(this, R.drawable.shadow_down));
             topBar.textViewTitle.setVisibility(View.VISIBLE);
+			paramsInitial.topMargin = (int) (ASSL.Yscale() * 96F);
         }
+		initialLayout.setLayoutParams(paramsInitial);
     }
 
 

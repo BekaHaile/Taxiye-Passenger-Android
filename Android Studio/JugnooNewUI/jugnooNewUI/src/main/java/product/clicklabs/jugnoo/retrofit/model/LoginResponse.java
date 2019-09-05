@@ -852,7 +852,7 @@ public class LoginResponse {
 		@SerializedName("fault_conditions")
 		@Expose
 		private List<String> faultConditions;
-		@SerializedName("bottom_request_ui_enabled")
+		@SerializedName("bottom_request_ui_enabled_v2")
 		private int bottomRequestUIEnabled;
 
 		public List<Driver> getDrivers() {
