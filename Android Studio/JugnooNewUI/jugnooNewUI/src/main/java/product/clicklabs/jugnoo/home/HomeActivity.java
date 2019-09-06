@@ -1344,11 +1344,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //            if (getFilteredDrivers() == 0) {
 //                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
 //            } else {
-                if (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())
-                        && Data.autoData.getDropLatLng() == null) {
-                    destinationRequiredShake();
-                    return;
-                }
+//                if (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())
+//                        && Data.autoData.getDropLatLng() == null) {
+//                    destinationRequiredShake();
+//                    return;
+//                }
                 topBar.openScheduleFragment(Data.autoData.getServiceTypeSelected(), false);
 //            }
         });
@@ -1526,57 +1526,58 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             if (isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
                                 && !editTextBidValue.getText().toString().isEmpty()) {
-                            double innerValue = 20.0;
-                            double outerValue = 5000.0;
-                            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
-                                innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
-                                outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
-                            }
-                            String minBidValueStr = Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue);
-                            String innerStr = getString(R.string.bid_lower_value_err, minBidValueStr);
-                            String outerStr = getString(R.string.bid_greater_amount_err);
-                            if (Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
-								EnterBidDialog.INSTANCE.showRaiseFareDialog(HomeActivity.this, innerStr,
-										getString(R.string.raise_to_format, minBidValueStr), innerValue, false, value -> {
-											editTextBidValue.setText(value);
-											buttonConfirmRequest.performClick();
-										});
+								double innerValue = 20.0;
+								double outerValue = 5000.0;
+								if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
+									innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
+									outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
+								}
+								String minBidValueStr = Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue);
+								String innerStr = getString(R.string.bid_lower_value_err, minBidValueStr);
+								String outerStr = getString(R.string.bid_greater_amount_err);
+								if (Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
+									EnterBidDialog.INSTANCE.showRaiseFareDialog(HomeActivity.this, innerStr,
+											getString(R.string.raise_to_format, minBidValueStr), innerValue, false, value -> {
+												editTextBidValue.setText(value);
+												buttonConfirmRequest.performClick();
+											});
 
-                            } else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue
-                                    && Double.parseDouble(editTextBidValue.getText().toString()) > 5000) {
-								EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
-										getString(R.string.fare), Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
-											editTextBidValue.setText(value);
-											buttonConfirmRequest.performClick();
-										});
+								} else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue
+										&& Double.parseDouble(editTextBidValue.getText().toString()) > 5000) {
+									EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
+											getString(R.string.fare), Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
+												editTextBidValue.setText(value);
+												buttonConfirmRequest.performClick();
+											});
 
-                            } else {
-                                if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                                    findDriversETACall(true, true, false, getApiFindADriver().getParams());
-                                } else {
-                                    if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-                                            .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                        openBikeRentalScan();
-                                    } else {
-                                        requestRideClick();
-                                    }
-                                }
+								} else {
+									if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+										findDriversETACall(true, true, false, getApiFindADriver().getParams());
+									} else {
+										if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+												.getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+											openBikeRentalScan();
+										} else {
+											requestRideClick();
+										}
+									}
 
-                            }
-                        } else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 0) {
-                            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                                findDriversETACall(true, true, false, getApiFindADriver().getParams());
-                            } else {
-                                if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-                                        .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                    openBikeRentalScan();
-                                } else {
-                                    requestRideClick();
-                                }
-                            }
-                        } else {
-                            Utils.showToast(HomeActivity.this,getString(R.string.error_bid_value));
-                        }
+								}
+							} else if(isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+										&& editTextBidValue.getText().toString().isEmpty()) {
+								Utils.showToast(HomeActivity.this,getString(R.string.error_bid_value));
+                        	} else {
+								if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+									findDriversETACall(true, true, false, getApiFindADriver().getParams());
+								} else {
+									if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+											.getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+										openBikeRentalScan();
+									} else {
+										requestRideClick();
+									}
+								}
+                        	}
                     } else {
                         Utils.showToast(HomeActivity.this,getString(R.string.destination_required));
                     }
@@ -3862,6 +3863,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             showCenterPickupPin(true);
                         }
 
+						relativeLayoutConfirmBottom.getMeasuredHeight();
+						constraintLayoutRideTypeConfirm.getMeasuredHeight();
                         findADriverFinishing(false, !switchUICalledFromStateRestore);
 
                         linearLayoutRequestMain.setVisibility(View.VISIBLE);
@@ -4018,13 +4021,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             textViewFinalDropLocationClick.setText("");
                         }
 
-						relativeLayoutConfirmBottom.getMeasuredHeight();
-						relativeLayoutConfirmBottom.post(new Runnable() {
-							@Override
-							public void run() {
-								setGoogleMapPadding(relativeLayoutConfirmBottom.getMeasuredHeight(), true);
-							}
-						});
 
                         if(scheduleRideOpen){
                            scheduleRideContainer.setVisibility(View.VISIBLE);
@@ -12289,8 +12285,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             (region.getPackages() != null && !region.getPackages().isEmpty() && region.getPackages().get(0).getFareFixed() != null) ? region.getPackages().get(0).getFareFixed() : 0)));
                 }
             }
+			relativeLayoutConfirmBottom.setVisibility(View.GONE);
 
         } else {
+			relativeLayoutConfirmBottom.setVisibility(View.VISIBLE);
             constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
             linearLayoutRequestMain.setVisibility(View.VISIBLE);
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
@@ -12298,6 +12296,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 setServiceTypeAdapter(false);
             }, 200);
         }
+		relativeLayoutConfirmBottom.post(new Runnable() {
+			@Override
+			public void run() {
+				int bottomPadding = relativeLayoutConfirmBottom.getMeasuredHeight();
+				if(relativeLayoutConfirmBottom.getVisibility() == View.GONE){
+					bottomPadding = constraintLayoutRideTypeConfirm.getMeasuredHeight();
+				}
+				setGoogleMapPadding(bottomPadding, true);
+			}
+		});
     }
 
     private SpannableStringBuilder getThemeColorSpannableString(String message){

@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -164,7 +163,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 int position = (int) v.getTag();
                 boolean changed = activity.setVehicleTypeSelected(position, true, false);
                 if(showRegionFares && !changed){
-                    if(showRegionFares && regions.get(position).getReverseBid() == 0) {
+                    if(showRegionFares && regions.size() > position && regions.get(position).getReverseBid() == 0) {
                         estimateDialog.show(activity, regions.get(position));
                     }
                 }

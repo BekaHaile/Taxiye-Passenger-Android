@@ -316,7 +316,9 @@ public class WalletCore {
 
                 RequestRideOptionsFragment requestRideOptionsFragment = homeActivity.slidingBottomPanel.getRequestRideOptionsFragment();
                 if (requestRideOptionsFragment.getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()) {
-                    homeActivity.slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                    if(!homeActivity.isNewUI()){
+                    	homeActivity.slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+					}
                     if (Data.autoData.getRegions().size() > 1) {
                         requestRideOptionsFragment.getPaymentOptionDialog().show(-1, null);
                     } else {
