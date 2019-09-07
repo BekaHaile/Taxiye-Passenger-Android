@@ -803,7 +803,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		rvRideTypes = findViewById(R.id.rvRideTypes);
 		rvRideTypes.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(this,
 				LinearLayoutManager.HORIZONTAL, false));
-        setServiceTypeAdapter(true);
 
         relativeLayoutSearchContainer = (RelativeLayout) findViewById(R.id.relativeLayoutSearchContainer);
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
@@ -2870,6 +2869,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             switchUserScreen();
 
+			setServiceTypeAdapter(true);
             startUIAfterGettingUserStatus();
 			getHandler().postDelayed(new Runnable() {
 				@Override
@@ -11711,8 +11711,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		updateCancelButtonUI();
 
 		//bid and cancel buttons visibility and ui
+		double incrementVal = getBidIncrementValFromServer();
 		int bidFareVisibility = (tvInitialCancelRide.getVisibility() == View.VISIBLE
-				&& Data.autoData.getIsReverseBid() == 1
+				&& Data.autoData.getIsReverseBid() == 1 && incrementVal > 0D
 				&& Data.autoData.getInitialBidValue() > 0) ? View.VISIBLE : View.GONE;
 		bRaiseOfferFare.setVisibility(bidFareVisibility);
 		bRaiseOfferFare.setEnabled(Data.autoData.getInitialBidValue() != Data.autoData.getChangedBidValue());
@@ -11727,7 +11728,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		}
 
 		//setting text on reverse bid increment and decrement values
-		double incrementVal = getBidIncrementValFromServer();
 		SpannableStringBuilder ssbMinus = new SpannableStringBuilder("-"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), incrementVal));
 		ssbMinus.setSpan(new RelativeSizeSpan(1.2F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		ssbMinus.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -11765,8 +11765,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 	private double getBidIncrementValFromServer() {
-		double incrementVal = 10D;
-		try{incrementVal = Double.parseDouble(Prefs.with(this).getString(KEY_CUSTOMER_BID_INCREMENT, String.valueOf(10D)));}catch(Exception e){}
+		double incrementVal = 0D;
+		try{incrementVal = Double.parseDouble(Prefs.with(this).getString(KEY_CUSTOMER_BID_INCREMENT, String.valueOf(0D)));}catch(Exception e){}
 		return incrementVal;
 	}
 
