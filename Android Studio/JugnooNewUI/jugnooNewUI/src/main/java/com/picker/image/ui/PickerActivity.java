@@ -14,9 +14,11 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
@@ -33,6 +35,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fugu.interfaces.PermissionCallback;
 import com.picker.image.model.AlbumEntry;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.CameraSupport;
@@ -52,10 +55,12 @@ import de.greenrobot.event.EventBus;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
-public class PickerActivity extends AppCompatActivity {
+public class PickerActivity extends AppCompatActivity implements PermissionCommon.PermissionListener
+{
 
 
     public static final int NO_LIMIT = -1;
@@ -86,7 +91,7 @@ public class PickerActivity extends AppCompatActivity {
     private TextView toolbarTitle;
     private RecyclerView recyclerViewSelectedImages;
     private String[] permissionsRequestArray;
-//    private PermissionCommon mPermissionCommon;
+    private PermissionCommon mPermissionCommon;
 
 
     @Override
@@ -123,6 +128,7 @@ public class PickerActivity extends AppCompatActivity {
         initFab();
         updateFab();
         new HomeUtil().forceRTL(this);
+        mPermissionCommon = new PermissionCommon(this).setCallback(this);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -732,7 +738,11 @@ public class PickerActivity extends AppCompatActivity {
                 }
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    if (mPermissionCommon.isGranted(Manifest.permission.CAMERA,this)) {
+                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    } else {
+                        mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CAMERA,Manifest.permission.CAMERA);
+                    }
                 }
             }
         }
@@ -975,21 +985,28 @@ public class PickerActivity extends AppCompatActivity {
 
     }
 
-   /* @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mPermissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 
     @Override
     public void permissionGranted(final int requestCode) {
         if(requestCode == REQ_CODE_PERMISSION_CAMERA){
             startCamera(findViewById(R.id.iv_camera));
         }
+        dispatchTakePictureIntent();
     }
 
     @Override
-    public void permissionDenied(final int requestCode) {
+    public boolean permissionDenied(int requestCode, boolean neverAsk) {
+        if(neverAsk) {
+            Utils.showToast(this, getResources().getString(R.string.camera_permission_required));
+            return true;
+        } else {
+            mPermissionCommon.getPermission(requestCode,Manifest.permission.CAMERA);
+            return false;
+        }
+    }
 
-    }*/
+    @Override
+    public void onRationalRequestIntercepted(int requestCode) {
+
+    }
 }
