@@ -1,9 +1,17 @@
 package product.clicklabs.jugnoo;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -23,6 +31,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -73,7 +82,7 @@ public class DebugOptionsActivity extends BaseActivity {
 
     ScrollView scrollView;
     LinearLayout linearLayoutMain;
-    TextView textViewScroll;
+    TextView textViewScroll, tvDeviceID;
 
     int showAllDriversValue = 0;
     int showDriverInfoValue = 0;
@@ -196,6 +205,26 @@ public class DebugOptionsActivity extends BaseActivity {
         scrollView = (ScrollView) findViewById(R.id.scrollView);
         linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
         textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+		tvDeviceID = findViewById(R.id.tvDeviceID); tvDeviceID.setTypeface(Fonts.mavenMedium(this));
+
+		tvDeviceID.setText("Device ID: ");
+		SpannableStringBuilder ssbId = new SpannableStringBuilder(UniqueIMEIID.getUniqueIMEIId(this));
+		ssbId.setSpan(new StyleSpan(Typeface.BOLD), 0, ssbId.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvDeviceID.append(ssbId);
+
+		SpannableStringBuilder ssb = new SpannableStringBuilder("Long press to copy");
+		ssb.setSpan(new RelativeSizeSpan(0.7f), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvDeviceID.append("\n");
+		tvDeviceID.append(ssb);
+		tvDeviceID.setOnLongClickListener(v -> {
+			try {
+				ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				ClipData clip = ClipData.newPlainText(UniqueIMEIID.getUniqueIMEIId(this), UniqueIMEIID.getUniqueIMEIId(this));
+				clipboard.setPrimaryClip(clip);
+				Utils.showToast(DebugOptionsActivity.this, getString(R.string.copied));
+			} catch (Exception e) {}
+			return false;
+		});
 
 
         imageViewBack.setOnClickListener(new OnClickListener() {
