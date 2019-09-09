@@ -1837,7 +1837,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				if(Data.autoData.getChangedBidValue()-incrementVal >= innerValue) {
 					Data.autoData.setChangedBidValue(Data.autoData.getChangedBidValue() - incrementVal);
 					tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getChangedBidValue()));
-					bRaiseOfferFare.setEnabled(true);
+					bRaiseOfferFare.setEnabled(Data.autoData.getInitialBidValue() != Data.autoData.getChangedBidValue());
 				} else {
 					Utils.showToast(HomeActivity.this, getString(R.string.offer_cannot_be_less_than_min_value));
 				}
@@ -1855,7 +1855,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				if(Data.autoData.getChangedBidValue()+incrementVal <= outerValue) {
 					Data.autoData.setChangedBidValue(Data.autoData.getChangedBidValue() + incrementVal);
 					tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getChangedBidValue()));
-					bRaiseOfferFare.setEnabled(true);
+					bRaiseOfferFare.setEnabled(Data.autoData.getInitialBidValue() != Data.autoData.getChangedBidValue());
 				} else {
 					Utils.showToast(HomeActivity.this, getString(R.string.offer_cannot_be_more_than_max_value));
 				}
@@ -4983,7 +4983,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             setJeanieVisibility();
         }
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) assigningLayout.getLayoutParams();
-        params.topMargin = View.VISIBLE == visiblity ? (int)(ASSL.Yscale() * 96F) : 0;
+        params.topMargin = View.VISIBLE == visiblity ? (int)(ASSL.Yscale() * 96F) : isNewUI() ? 0 : (int)(ASSL.Yscale() * 96F);
 		assigningLayout.setLayoutParams(params);
 		setTopBarTransNewUI();
     }
@@ -11704,7 +11704,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			rlAssigningNormal.setVisibility(View.VISIBLE);
 			topBar.tvCancel.setVisibility(View.GONE);
 
-			params.topMargin = 0;
+			params.topMargin = isNewUI() ? 0 : (int) (ASSL.Yscale() * 96F);
 		}
         assigningLayout.setLayoutParams(params);
 
