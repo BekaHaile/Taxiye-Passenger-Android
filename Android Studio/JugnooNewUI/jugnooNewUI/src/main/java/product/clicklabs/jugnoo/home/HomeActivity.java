@@ -2874,7 +2874,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			getHandler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					if (Data.autoData.getDropLatLng() == null && !isNewUI()) {
+					if (Data.autoData != null && Data.autoData.getDropLatLng() == null && !isNewUI()) {
 						relativeLayoutDestSearchBar.performClick();
 					}
 				}
@@ -9114,8 +9114,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                         GAUtils.event(RIDES, HOME, slidingBottomPanel
                                                                 .getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUESTED);
                                                     }
-													Data.autoData.setInitialBidValue(Double.parseDouble(nameValuePairs.getOrDefault(Constants.KEY_INITIAL_BID_VALUE, "0")));
-                                                }
+													try {
+														if(nameValuePairs.containsKey(Constants.KEY_INITIAL_BID_VALUE)){
+															Data.autoData.setInitialBidValue(Double.parseDouble(nameValuePairs.get(Constants.KEY_INITIAL_BID_VALUE)));
+														} else if (!editTextBidValue.getText().toString().isEmpty()) {
+															Data.autoData.setInitialBidValue(Double.parseDouble(editTextBidValue.getText().toString()));
+														} else {
+															Data.autoData.setInitialBidValue(0);
+														}
+													} catch (Exception ignored) {}
+												}
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
                                                 Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
                                                 runOnUiThread(new Runnable() {
