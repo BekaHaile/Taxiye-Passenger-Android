@@ -142,7 +142,7 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     @SerializedName("services")
     @Expose
     private ArrayList<ServiceType> serviceTypes;
-    @SerializedName("bottom_request_ui_enabled")
+    @SerializedName("bottom_request_ui_enabled_v2")
 	private int bottomRequestUIEnabled;
 
     public List<CouponInfo> getDeliveryCoupons() {

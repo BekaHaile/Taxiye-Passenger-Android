@@ -787,6 +787,18 @@ public class Utils implements GAAction, GACategory{
 		return shader;
 	}
 
+	public static Shader textColorGradient(Context context, TextView textView, int colorRes0, int colorRes1){
+		textView.measure(0, 0);
+		int mWidth = textView.getMeasuredWidth();
+		Shader shader;
+		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
+		shader = new LinearGradient(0, 0, (int)(mWidth/1.3), 0,
+		context.getResources().getColor(colorRes0),
+				context.getResources().getColor(colorRes1), tile_mode);
+
+		return shader;
+	}
+
 	public static void setTextColorGradient(Activity activity,TextView... textViews){
 		for(TextView toSetView:textViews){
 			try {

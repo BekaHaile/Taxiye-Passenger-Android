@@ -97,6 +97,19 @@
                     android:orientation="vertical"
                     >
 
+
+                    <TextView
+                        android:id="@+id/tvDeviceID"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="20px"
+                        android:text="Device ID:"
+                        android:textColor="@color/grey_dark"
+                        android:background="?attr/selectableItemBackground"
+                        android:theme="@style/GreyHighlight"
+                        android:textSize="30px"/>
+
                     <RelativeLayout
                         android:id="@+id/relativeLayoutShowAllDrivers"
                         android:layout_width="match_parent"
