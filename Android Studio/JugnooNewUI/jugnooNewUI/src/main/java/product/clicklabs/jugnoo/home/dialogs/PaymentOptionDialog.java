@@ -555,7 +555,6 @@ public class PaymentOptionDialog implements View.OnClickListener {
         void onPaymentModeUpdated();
         void getSelectedPaymentOption();
 
-        void getSelectedPaymentOption();
     }
 
 }
