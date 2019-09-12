@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+
+    <string name="app_name">Lucky to Go</string>
+
+    <string name="google_maps_api_key">AIzaSyB7jNp8hsVAmB4VvqcX6cIEWgNfQVRUego</string>
+    <string name="google_server_client_id">826904983990-phdpcf1msfkrd1pnd1te8cmh92fvrdvt.apps.googleusercontent.com</string>
+    <string name="fb_app_id">598360027354182</string>
+    <string name="fb_login_protocol_scheme">fb1543492105750451</string>
+    <string name="fb_client_token">9c455c35d48d2d228813cc2646c1a9e8</string>
+    <string name="ak_login_protocol_scheme">ak598360027354182</string>
+    <string name="branch_key">key_live_lbKvAw7L8jUFyMzskN8hplemrCe8ziQc</string>
+
+
+    <string name="operator_token">30d139030c5936ea328c0c6d5c947e5c</string>
+    <string name="support_number">+2549023121121</string>
+    <string name="police_number">999</string>
+    <string name="facebook_page_id">205679188</string>
+        <string name="facebook_page_name">luckytogo.ng</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
+    <bool name="force_open_autos">false</bool>
+
+
+
+    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
+    <dimen name="splash_logo_width">200dp</dimen>
+    <dimen name="splash_logo_height">150dp</dimen>
+    <dimen name="splash_logo_top_margin">120dp</dimen>
+    <integer name="show_splash_bg">@integer/view_visible</integer>
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <drawable name="login_logo_icon_drawable">@drawable/ic_login_logo</drawable>
+    <drawable name="splash_background_drawable">@drawable/image_splash</drawable>
+    <drawable name="login_background_drawable">@color/white</drawable>
+    <integer name="show_social_login">@integer/view_visible</integer>
+    <integer name="show_facebook_login">@integer/view_visible</integer>
+    <integer name="show_google_login">@integer/view_gone</integer>
+    <integer name="show_splash_logo_text">@integer/view_invisible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+    <drawable name="cursor">@drawable/cursor_black</drawable>
+
+    <string name="file_provider_name">com.luckytogo.fileprovider</string>
+    <string name="web_landing_page">http://luckytogo.ng/</string>
+    <string name="smart_url">http://smarturl.it/luckytogo</string>
+    <string name="db_name">luckytogo_database</string>
+    <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
+    <string name="app_domain">luckytogo.ng</string>
+    <string name="app_host_name">www.luckytogo.ng</string>
+    <string name="branch_domain">w7153.app.link</string>
+    <string name="app_scheme">luckytogo</string>
+
+    <string name="pictures_path">Lucky U to Go/Lucky U to Go Pictures</string>
+    <bool name="force_inhouse_login">true</bool>
+    <bool name="force_mpesa_payment">false</bool>
+    <integer name="show_about">@integer/view_visible</integer>
+    <bool name="show_change_languge">false</bool>
+
+    <bool name="ride_feedback_rating_bar">true</bool>
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">support@luckytogo.ng</string>
+    <integer name="send_invites_visibility">@integer/view_gone</integer>
+    <bool name="specified_country_search_result_enabled">false</bool>
+    <bool name="show_call_me_option_in_otp">false</bool>
+    <integer name="show_promo">@integer/view_gone</integer>
+    <integer name="skip_in_signup_onboarding">@integer/view_gone</integer>
+    <string name="profile_saved_location_text">@string/address_book</string>
+
+
+    <color name="layout_login_signup_text_color">@color/black</color>
+
+    <drawable name="login_button_drawable">@drawable/capsule_theme_login_selector_new</drawable>
+
+    <string name="default_currency">CAD</string>
+    <color name="yellow_jugnoo">#EA1F24</color>
+
+    <string name="fatafat_new_name_delivery">Delivery</string>
+
+    <drawable name="menu_ride_selector">@drawable/ic_menu_category_auto_selector_initial</drawable>
+    <drawable name="menu_delivery_customer_eat">@drawable/ic_menu_category_delivery_customer_selector_initial</drawable>
+    <string name="geocode_address_format">route,street_number,sublocality,locality,administrative_area</string>
+
+    <string name="action_order_via_fatafat">Order via Delivery</string>
+    <string name="no_delivery_available_your_location">Sorry, Delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
+    <string name="fatafat_banner_heading"><b>Get it delivered via Delivery \n</b></string>
+    <string name="fatafat_banner_sub_heading">Your location is outside store\'s delivery area but you can get it through Delivery</string>
+
+    <string name="delivery_new_name">Delivery</string>
+
+    <!--show fleet-->
+    <bool name="show_fleet">true</bool>
+
+</resources>
