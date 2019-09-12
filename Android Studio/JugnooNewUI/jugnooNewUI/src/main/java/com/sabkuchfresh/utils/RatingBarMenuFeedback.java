@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -258,8 +259,14 @@ public class RatingBarMenuFeedback extends LinearLayout {
 
             if (mDisplayText) {
                 if (i == mCurrentScore) {
+                    if(!Data.autoData.getFeedBackInfoRatingData().isEmpty()){
+                        mStarsViews[i - 1].setText(Data.autoData.getFeedBackInfoRatingData().get(i-1).getDesc());
+
+                    }
+                    else
                     switch (i) {
                         case 1:
+
                             mStarsViews[i - 1].setText(getContext().getString(R.string.terrible));
                             break;
                         case 2:

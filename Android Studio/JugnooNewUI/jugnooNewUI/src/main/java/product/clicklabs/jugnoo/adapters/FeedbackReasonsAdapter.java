@@ -86,8 +86,8 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         holder.textViewFeedbackReason.setText(feedbackReason.name);
 
         if (feedbackReason.checked) {
-            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_green_color_selector);
-            holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.white));
+            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_white_theme_stroke);
+            holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.black));
         } else {
             holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_white_stroke);
             holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.text_color));

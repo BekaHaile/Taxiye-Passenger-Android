@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.net.Uri;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
@@ -23,7 +25,19 @@ import product.clicklabs.jugnoo.utils.Prefs;
  * Created by gurmail on 18/08/16.
  */
 public class AutoData {
-	private int isReverseBid;
+
+
+    private ArrayList<FeedBackInfo> feedBackInfoRatingData=new ArrayList<>();
+
+    public void setFeedBackInfoRatingData(ArrayList<FeedBackInfo> feedBackInfoRateData) {
+        this.feedBackInfoRatingData = feedBackInfoRateData;
+    }
+
+    public ArrayList<FeedBackInfo> getFeedBackInfoRatingData() {
+        return feedBackInfoRatingData;
+    }
+
+    private int isReverseBid;
 	private long bidRequestRideTimeout, bidTimeout;
 	private String fuguChannelId;
     private String fuguChannelName;

@@ -29,6 +29,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -121,6 +122,9 @@ import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.Target;
+import com.yarolegovich.discretescrollview.DiscreteScrollView;
+import com.yarolegovich.discretescrollview.transform.Pivot;
+import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -157,6 +161,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.RideCancellationActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.adapters.BadgesAdapter;
 import product.clicklabs.jugnoo.adapters.BidsPlacedAdapter;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
@@ -408,11 +413,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     LinearLayout linearLayoutRideSummaryContainer, linearLayoutRideSummary;
     TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
     LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites, linearLayoutPaymentModeConfirm;
-
+DiscreteScrollView badgesScroll;
+RecyclerView badgesNormal;
     RatingBarMenuFeedback ratingBarRSFeedback;
     TextView textViewRSWhatImprove, textViewRSOtherError;
     NonScrollGridView gridViewRSFeedbackReasons;
     FeedbackReasonsAdapter feedbackReasonsAdapter;
+    BadgesAdapter badgesAdapter;
+
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
@@ -1136,6 +1144,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         ratingBarRSFeedback = (RatingBarMenuFeedback) findViewById(R.id.ratingBarRSFeedback);
+        badgesScroll=findViewById(R.id.badges);
+        badgesNormal=findViewById(R.id.badgesNormal);
         ratingBarRSFeedback.setScore(0, false);
         textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove);
         textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
@@ -1216,6 +1226,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
 
         try {
+
             feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(),
                     new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
                         @Override
@@ -1227,7 +1238,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             }
                         }
                     });
+
             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1999,10 +2012,51 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void scoreChanged(float score) {
                 try {
+
+                    if(!Data.autoData.getFeedBackInfoRatingData().isEmpty()){
+                        int imageBadgeSize;
+
+                        try {
+                            int position=(int)Math.abs(score)-1;
+                            imageBadgeSize=Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().size();
+                            if(imageBadgeSize>1){
+                                Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().add(imageBadgeSize/2,null);
+                            }
+                            feedbackReasonsAdapter = new FeedbackReasonsAdapter(HomeActivity.this, Data.autoData.getFeedBackInfoRatingData().get(position).getTextBadges(),
+                                    new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
+                                        @Override
+                                        public void onLastItemSelected(boolean selected, String name) {
+                                            if (!selected) {
+                                                if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
+                                                    textViewRSOtherError.setText("");
+                                                }
+                                            }
+                                        }
+                                    });
+
+                            gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+
+                            badgesAdapter=new BadgesAdapter(HomeActivity.this,Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges());
+                            badgesNormal.setLayoutManager(new LinearLayoutManager(HomeActivity.this,LinearLayoutManager.HORIZONTAL,false));
+                            badgesNormal.setAdapter(badgesAdapter);
+//                            badgesScroll.setAdapter(badgesAdapter);
+//                            badgesScroll.setItemTransformer(new ScaleTransformer.Builder()
+//                                    .setMaxScale(1.55f)
+//                                    .setMinScale(0.6f)
+//                                    .setPivotX(Pivot.X.CENTER) // CENTER is a default one
+//                                    .setPivotY(Pivot.Y.CENTER) // CENTER is a default one
+//                                    .build());
+//                            badgesScroll.getLayoutManager().scrollToPosition(3);
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else{
                     if (Data.autoData.getFeedbackReasons().size() > 0) {
                         if (score > 0 && score <= 3) {
                             textViewRSWhatImprove.setVisibility(View.VISIBLE);
-                            gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+
 
                             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
                             layoutParams.height = (int) (ASSL.Yscale() * 150);
@@ -2011,6 +2065,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             setZeroRatingView();
                         }
                     }
+                    }
+                    gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -4320,6 +4376,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         rentalStateUIHandling(mode);
 
+
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
@@ -4554,6 +4611,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void updateDriverTipUI(PassengerScreenMode mode) {
+        vehiclesTabAdapterConfirmRide = new VehiclesTabAdapter(HomeActivity.this, Data.autoData.getRegions(),true);
         if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null  &&
                 Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()
                 && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0){
@@ -7456,11 +7514,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     Data.autoData.setEndRideData(JSONParser.parseEndRideData(jObj, engagementId, Data.autoData.getFareStructure().getFixedFare()));
 
                                     clearSPData();
+                                    if(jObj.has(Constants.KEY_FEEDBACK_INFO))
+                                    {
+                                        JSONArray jsonArray=jObj.getJSONArray(Constants.KEY_FEEDBACK_INFO);
+                                        JSONParser.parseFeedBackInfo(jsonArray);
+                                    }
+
                                     passengerScreenMode = PassengerScreenMode.P_RIDE_END;
                                     switchPassengerScreen(passengerScreenMode);
 
                                     Utils.hideSoftKeyboard(activity, textViewInitialSearch);
                                     Utils.hideSoftKeyboard(activity, textViewInitialSearchNew);
+
 
                                     setUserData();
 
@@ -12628,3 +12693,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 }
 
+//class discreteScrollAdapter extends DiscreteScrollView.Adapter<>{
+//
+//    @NonNull
+//    @Override
+//    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//        return null;
+//    }
+//
+//    @Override
+//    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+//
+//    }
+//
+//    @Override
+//    public int getItemCount() {
+//        return 0;
+//    }
+//}

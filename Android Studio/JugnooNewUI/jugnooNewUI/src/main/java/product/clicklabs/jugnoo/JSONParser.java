@@ -11,6 +11,7 @@ import com.facebook.appevents.AppEventsConstants;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
@@ -36,6 +37,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.FeedBackInfo;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
@@ -920,7 +922,6 @@ public class JSONParser implements Constants {
             Data.autoData.setPickupAddress("", null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
-
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"),
                     jDriverInfo.optInt(KEY_OPERATOR_ID, 0)));
@@ -942,12 +943,39 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jLastRideData.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public static void parseFeedBackInfo(JSONArray jsonArray){
+        ArrayList<FeedBackInfo.ImageBadges> imageBadges;
+        ArrayList<FeedbackReason> textBadges;
+       if(jsonArray.length()>0) {
+           for (int i = 0; i < jsonArray.length(); i++) {
+               imageBadges=new ArrayList<>();
+               textBadges=new ArrayList<>();
+               JSONObject jObj = jsonArray.optJSONObject(i);
+               if(jObj.has("image_badges")){
+                   JSONArray imgArr=jObj.optJSONArray("image_badges");
+                   for(int j=0;j<imgArr.length();j++){
+                       JSONObject imageBadge=imgArr.optJSONObject(j);
+                       imageBadges.add( new FeedBackInfo.ImageBadges(imageBadge.optString("name"),imageBadge.optInt("badge_id"),imageBadge.optString("image")));
+                   }
+               }
+               if(jObj.has("text_badges")){
+                   JSONArray txtArr=jObj.optJSONArray("text_badges");
+                   for(int j=0;j<txtArr.length();j++){
+                       JSONObject textBadge=txtArr.optJSONObject(j);
+                       textBadges.add( new FeedbackReason(textBadge.optString("name"),textBadge.optInt("badge_id")));
+                   }
+               }
+               Data.autoData.getFeedBackInfoRatingData().add(new FeedBackInfo(jObj.optInt("rating"),jObj.optString("desc"),imageBadges,textBadges));
 
+           }
+       }
+    }
 
 	public static EndRideData parseEndRideData(JSONObject jLastRideData, String engagementId, double initialBaseFare) throws Exception{
 		double baseFare = initialBaseFare;
@@ -1382,6 +1410,11 @@ public class JSONParser implements Constants {
 
                         }
                     } else if (ApiResponseFlags.LAST_RIDE.getOrdinal() == flag) {
+                        //Driver FeedBack
+                        if(jObject1.has(KEY_FEEDBACK_INFO)){
+                            JSONArray jsonArray=jObject1.getJSONArray(KEY_FEEDBACK_INFO);
+                            parseFeedBackInfo(jsonArray);
+                        }
                         parseLastRideData(context, jObject1);
                         return returnResponse;
                     }
