@@ -219,6 +219,26 @@ public class DateOperations {
 		}
 	}
 
+    /**
+     * Converts date string from 2014-01-12 00:00 to 12 Jan, 2014 12:00 AM
+     * @param dateTime
+     * @return
+     */
+    public static String convertDateViaFormatToLocal(String dateTime) {
+
+        SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdfFrom.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+        sdfTo.setTimeZone(TimeZone.getDefault());
+        try {
+            Date myDate = sdfFrom.parse(dateTime);
+            return sdfTo.format(myDate);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            return convertDate(dateTime);
+        }
+    }
+
 	public static String convertDateViaFormatTZ(String dateTime) {
 
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

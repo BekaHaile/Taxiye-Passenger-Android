@@ -28,7 +28,7 @@ data class UpcomingRide(@Expose @SerializedName("pickup_id") var engagementId:St
 
        fun getDisplayTime():String{
             return  pickUpTime?.run {
-                DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(this))
+                DateOperations.convertDateViaFormatToLocal(DateOperations.utcToLocalWithTZFallback(this))
               }?:""
        }
 

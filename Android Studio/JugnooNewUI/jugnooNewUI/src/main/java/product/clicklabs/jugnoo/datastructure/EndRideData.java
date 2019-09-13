@@ -138,8 +138,8 @@ public class EndRideData {
 		this.paidUsingPOS = paidUsingPOS;
 		this.stripeCardsAmount = stripeCardsAmount;
 
-		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges
-				+ this.tollCharge + this.driverTipAmount + this.netCustomerTax;
+		this.finalFare = (this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew  + this.sumAdditionalCharges
+				+ this.tollCharge + this.driverTipAmount + this.netCustomerTax) - this.discount;
 	}
 
 
