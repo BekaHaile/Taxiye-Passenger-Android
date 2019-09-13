@@ -1659,7 +1659,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 datum1.getLiveTracking().getShowDeliveryRoute(), datum1.getLiveTracking().getDriverPhoneNo(), llShadowPeekHeight,
                                 openLiveTracking != 1),
                                 TrackOrderFragment.class.getName())
-                        .commit();
+                        .commitAllowingStateLoss();
 
                 if (openLiveTracking == 1) {
                     scrollView.setVisibility(View.GONE);
