@@ -746,10 +746,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 @Override
                 public void onDelete(Object object) {
                     objectList.remove(object);
-                    ivUploadImage.setVisibility(objectList.size()<maxNoImages?View.VISIBLE:View.GONE);
-                    if(objectList.size()==0){
-                        cvImages.setVisibility(View.GONE);
-                        fatafatImageAdapter=null;
+                    ivUploadImage.setVisibility(objectList.size() < maxNoImages ? View.VISIBLE : GONE);
+                    if (objectList.size() == 0) {
+                        cvImages.setVisibility(GONE);
+                        fatafatImageAdapter = null;
                         cvUploadImages.setVisibility(View.VISIBLE);
                     }
                 }
@@ -760,7 +760,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             fatafatImageAdapter.setList(objectList);
         }
 
-        ivUploadImage.setVisibility(objectList.size()<maxNoImages?View.VISIBLE:View.GONE);
+        ivUploadImage.setVisibility(objectList.size() < maxNoImages ? View.VISIBLE : GONE);
 
         if(objectList.size()>0){
             svImages.post(new Runnable() {
@@ -785,7 +785,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 ArrayList<ImageEntry> images = (ArrayList<ImageEntry>) data.getSerializableExtra("imagesList");
                 if (images != null && images.size() != 0) {
                     imageObjectList.addAll(images);
-                    cvUploadImages.setVisibility(View.GONE);
+                    cvUploadImages.setVisibility(GONE);
                     cvImages.setVisibility(View.VISIBLE);
                     setImageAdapter(imageObjectList);
                 }
