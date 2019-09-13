@@ -222,7 +222,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         scrollView = (NestedScrollView) rootView.findViewById(R.id.scrollView);
         scrollView.setVisibility(View.GONE);
-        bottomSheetBehavior = (LockableBottomSheetBehavior) BottomSheetBehavior.from(scrollView);
+        bottomSheetBehavior = (LockableBottomSheetBehavior)BottomSheetBehavior.from(scrollView);
         bottomSheetBehavior.setPeekHeight(0);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetBehavior.setLocked(true);

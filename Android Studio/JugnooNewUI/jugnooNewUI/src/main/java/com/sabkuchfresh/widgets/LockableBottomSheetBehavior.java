@@ -1,6 +1,7 @@
 package com.sabkuchfresh.widgets;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.util.AttributeSet;
@@ -49,27 +50,27 @@ public class LockableBottomSheetBehavior<V extends View> extends BottomSheetBeha
 	}
 
 	@Override
-	public boolean onStartNestedScroll(CoordinatorLayout coordinatorLayout, V child, View directTargetChild, View target, int nestedScrollAxes) {
+	public boolean onStartNestedScroll(@NonNull CoordinatorLayout coordinatorLayout, @NonNull V child, @NonNull View directTargetChild, @NonNull View target, int axes, int type) {
 		boolean handled = false;
 
 		if (!mLocked) {
-			handled = super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, nestedScrollAxes);
+			handled = super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, axes, type);
 		}
 
 		return handled;
 	}
 
 	@Override
-	public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx, int dy, int[] consumed) {
+	public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, V child, View target, int dx, int dy, int[] consumed, int type) {
 		if (!mLocked) {
-			super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
+			super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type);
 		}
 	}
 
 	@Override
-	public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, V child, View target) {
+	public void onStopNestedScroll(CoordinatorLayout coordinatorLayout, V child, View target, int type) {
 		if (!mLocked) {
-			super.onStopNestedScroll(coordinatorLayout, child, target);
+			super.onStopNestedScroll(coordinatorLayout, child, target, type);
 		}
 	}
 
