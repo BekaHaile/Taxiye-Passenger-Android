@@ -57,6 +57,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -294,6 +295,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import static com.sabkuchfresh.feed.utils.FeedUtils.dpToPx;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
 
 //import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
@@ -414,7 +416,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
     LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites, linearLayoutPaymentModeConfirm;
 DiscreteScrollView badgesScroll;
-RecyclerView badgesNormal;
+LinearLayout badgesNormal;
+RelativeLayout plusBadge;
     RatingBarMenuFeedback ratingBarRSFeedback;
     TextView textViewRSWhatImprove, textViewRSOtherError;
     NonScrollGridView gridViewRSFeedbackReasons;
@@ -605,7 +608,7 @@ RecyclerView badgesNormal;
 
     private ImageView ivLikePickup, ivLikeDrop;
     private LinearLayout llFeedbackMain, llAddTip;
-    private TextView tvTipFirst, tvTipSecond, tvTipThird, tvSkipTip;
+    private TextView tvTipFirst, tvTipSecond, tvTipThird, tvSkipTip,tvDriverName;
     private PrefixedEditText etTipOtherValue;
     private Button bPayTip;
     private double tipSelected;
@@ -1065,6 +1068,7 @@ RecyclerView badgesNormal;
         tvTipFirst = findViewById(R.id.tvTipFirst);
         tvTipSecond = findViewById(R.id.tvTipSecond);
         tvTipThird = findViewById(R.id.tvTipThird);
+        tvDriverName=findViewById(R.id.driverName);
         tvSkipTip = findViewById(R.id.tvSkipTip);
         etTipOtherValue = findViewById(R.id.etTipOtherValue);
         bPayTip = findViewById(R.id.bPayTip);
@@ -1146,6 +1150,7 @@ RecyclerView badgesNormal;
         ratingBarRSFeedback = (RatingBarMenuFeedback) findViewById(R.id.ratingBarRSFeedback);
         badgesScroll=findViewById(R.id.badges);
         badgesNormal=findViewById(R.id.badgesNormal);
+        plusBadge=findViewById(R.id.plus_badge);
         ratingBarRSFeedback.setScore(0, false);
         textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove);
         textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
@@ -2012,16 +2017,43 @@ RecyclerView badgesNormal;
             @Override
             public void scoreChanged(float score) {
                 try {
+                    int position=(int)Math.abs(score)-1;
+                    plusBadge.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            badgesNormal.setVisibility(View.GONE);
+                            badgesScroll.setVisibility(View.VISIBLE);
+                            badgesAdapter=new BadgesAdapter(HomeActivity.this,Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges());
+                            badgesScroll.setAdapter(badgesAdapter);
+                            badgesScroll.setAdapter(badgesAdapter);
+                            badgesScroll.setItemTransformer(new ScaleTransformer.Builder()
+                                    .setMaxScale(1.55f)
+                                    .setMinScale(0.6f)
+                                    .setPivotX(Pivot.X.CENTER) // CENTER is a default one
+                                    .setPivotY(Pivot.Y.CENTER) // CENTER is a default one
+                                    .build());
+                            badgesScroll.setOffscreenItems(3);
 
+                        }
+                    });
+
+                    badgesScroll.setVisibility(View.GONE);
                     if(!Data.autoData.getFeedBackInfoRatingData().isEmpty()){
                         int imageBadgeSize;
 
                         try {
-                            int position=(int)Math.abs(score)-1;
+
                             imageBadgeSize=Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().size();
                             if(imageBadgeSize>1){
-                                Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().add(imageBadgeSize/2,null);
+
+                                Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(0).getImageAdress()).into(((ImageView)findViewById(R.id.badge1)));
+                                Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(1).getImageAdress()).into(((ImageView)findViewById(R.id.badge2)));
+                                badgesNormal.setVisibility(View.VISIBLE);
+                                findViewById(R.id.tvAddCompliment).setVisibility(View.VISIBLE);
                             }
+                            else
+                            {  badgesNormal.setVisibility(View.GONE);
+                                findViewById(R.id.tvAddCompliment).setVisibility(View.VISIBLE);}
                             feedbackReasonsAdapter = new FeedbackReasonsAdapter(HomeActivity.this, Data.autoData.getFeedBackInfoRatingData().get(position).getTextBadges(),
                                     new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
                                         @Override
@@ -2036,23 +2068,15 @@ RecyclerView badgesNormal;
 
                             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
 
-                            badgesAdapter=new BadgesAdapter(HomeActivity.this,Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges());
-                            badgesNormal.setLayoutManager(new LinearLayoutManager(HomeActivity.this,LinearLayoutManager.HORIZONTAL,false));
-                            badgesNormal.setAdapter(badgesAdapter);
-//                            badgesScroll.setAdapter(badgesAdapter);
-//                            badgesScroll.setItemTransformer(new ScaleTransformer.Builder()
-//                                    .setMaxScale(1.55f)
-//                                    .setMinScale(0.6f)
-//                                    .setPivotX(Pivot.X.CENTER) // CENTER is a default one
-//                                    .setPivotY(Pivot.Y.CENTER) // CENTER is a default one
-//                                    .build());
-//                            badgesScroll.getLayoutManager().scrollToPosition(3);
+
 
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
                     else{
+                        findViewById(R.id.tvAddCompliment).setVisibility(View.GONE);
+                        badgesNormal.setVisibility(View.GONE);
                     if (Data.autoData.getFeedbackReasons().size() > 0) {
                         if (score > 0 && score <= 3) {
                             textViewRSWhatImprove.setVisibility(View.VISIBLE);
@@ -4521,6 +4545,14 @@ RecyclerView badgesNormal;
 
 
                 updateTopBar();
+                if(Data.autoData!=null&&Data.autoData.getAssignedDriverInfo()!=null){
+                    Picasso.with(this)
+                            .load(Data.autoData.getAssignedDriverInfo().image)
+                            .transform(new CircleTransform())
+                            .into(((ImageView)findViewById(R.id.profileImg)));
+                    tvDriverName.setText(Data.autoData.getAssignedDriverInfo().name);
+                }
+
 
                 updateDriverTipUI(mode);
 

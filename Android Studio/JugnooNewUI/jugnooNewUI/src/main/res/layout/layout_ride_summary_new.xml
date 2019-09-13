@@ -117,6 +117,7 @@
                         android:visibility="@integer/show_amount_on_ride_summary">
 
                         <TextView
+                            android:id="@+id/driverName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dp_35"
@@ -407,11 +408,154 @@
                             app:starOff="@drawable/ic_menu_feedback_star_off"
                             app:starOn="@drawable/ic_menu_feedback_star_on" />
 
+                        <TextView
+                            android:id="@+id/tvAddCompliment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginBottom="@dimen/dp_20"
+                            android:text="Add a compliment?"
+                            android:textSize="@dimen/dp_10"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
+                            android:visibility="gone" />
+                       <LinearLayout
+                           android:id="@+id/llBadges"
+                           android:layout_width="wrap_content"
+                           android:layout_height="wrap_content"
+                           android:animateLayoutChanges="true"
+                           android:orientation="vertical"
+                           android:layout_gravity="center_horizontal"
+                           android:gravity="center_horizontal">
+                        <LinearLayout
+
+                            android:id="@+id/badgesNormal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            android:visibility="gone">
+
+                            <RelativeLayout
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="-20dp">
+
+                                <RelativeLayout
+                                    android:id="@+id/summary_badge"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_marginTop="10dp"
+                                    android:splitMotionEvents="false"
+                                    android:tag="mwar">
+
+                                    <ImageView
+                                        android:id="@+id/badge1back"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/circle_grey"
+                                        android:tag="mwar" />
+
+                                    <ImageView
+                                        android:id="@+id/badge1"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_centerInParent="true"
+                                        android:tag="mwar" />
+                                </RelativeLayout>
+
+                                <TextView
+                                    android:id="@+id/tvBadgeName1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/summary_badge" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:layout_gravity="center"
+                                android:elevation="@dimen/dp_10">
+
+                                <RelativeLayout
+                                    android:id="@+id/plus_badge"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_marginTop="10dp"
+                                    android:splitMotionEvents="false"
+                                    android:tag="mwar">
+
+                                    <ImageView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/circle_border_autos"
+                                        android:tag="mwar" />
+
+                                    <ImageView
+                                        android:id="@+id/badge_plus"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:src="@drawable/ic_plus_theme"
+                                        android:tag="mwar" />
+                                </RelativeLayout>
+
+                                <TextView
+                                    android:id="@+id/tvBadgePlus"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/plus_badge" />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="45dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="-20dp">
+
+                                <RelativeLayout
+                                    android:id="@+id/summary_badge2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_marginTop="10dp"
+                                    android:splitMotionEvents="false"
+                                    android:tag="mwar">
+
+                                    <ImageView
+                                        android:id="@+id/badge2back"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:background="@drawable/circle_grey"
+                                        android:tag="mwar" />
+
+                                    <ImageView
+                                        android:id="@+id/badge2"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_centerInParent="true"
+                                        android:tag="mwar" />
+                                </RelativeLayout>
+
+                                <TextView
+                                    android:id="@+id/tvBadgeName2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/summary_badge2" />
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
                         <com.yarolegovich.discretescrollview.DiscreteScrollView
                             android:id="@+id/badges"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-
+                            android:layout_height="80dp"
+                            android:visibility="gone"
+                            />
+                       </LinearLayout>
                         <TextView
                             android:id="@+id/textViewRSWhatImprove"
                             android:layout_width="wrap_content"
@@ -422,14 +566,9 @@
                             android:textColor="@color/text_color"
                             android:textSize="30px"
                             android:visibility="gone" />
-<android.support.v7.widget.RecyclerView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/badgesNormal"
-    android:orientation="horizontal"
-    >
 
-</android.support.v7.widget.RecyclerView>
+
+
                         <product.clicklabs.jugnoo.utils.NonScrollGridView
                             android:id="@+id/gridViewRSFeedbackReasons"
                             android:layout_width="match_parent"

@@ -25,13 +25,27 @@ import product.clicklabs.jugnoo.datastructure.FeedBackInfo;
 public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder> {
     ArrayList<FeedBackInfo.ImageBadges> imageBadges;
     Activity activity;
-    float size=0;
-    int margin=-200;
+    float scalingFactor=0;
+    float imageSize;
+    int margin;
     public static boolean plusClicked = false;
 
     public BadgesAdapter(Activity activity, ArrayList<FeedBackInfo.ImageBadges> imageBadges) {
         this.imageBadges = imageBadges;
         this.activity = activity;
+        double temp=1.0/((double)imageBadges.size()/2);
+        scalingFactor=(float)temp;
+        imageSize=scalingFactor;
+        margin=dpToPx((int)(60*imageSize));
+
+
+    }
+
+    public int dpToPx(int dp) {
+        float density = activity.getResources()
+                .getDisplayMetrics()
+                .density;
+        return Math.round((float) dp * density);
     }
 
     @NonNull
@@ -44,40 +58,20 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder
 
     @Override
     public void onBindViewHolder(@NonNull viewholder holder, int position) {
-        RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        if (!plusClicked&&position<imageBadges.size()/2) {
-            holder.itemView.setScaleX(size+0.3f);
-            holder.itemView.setScaleY(size+0.3f);
-            size=size+0.3f;
-            layoutParams.setMarginEnd(margin+50);
-margin=margin+50;
-        }
-
-        if (!plusClicked&&position>imageBadges.size()/2) {
-            holder.itemView.setScaleX(size-0.3f);
-            holder.itemView.setScaleY(size-0.3f);
-            size=size-0.3f;
-            layoutParams.setMarginEnd(margin-50);
-            margin=margin-50;
-        }
-holder.itemView.setLayoutParams(layoutParams);
 
 
-
-
-
-        if (this.imageBadges.get(position) == null) {
-            Picasso.with(activity).load(R.drawable.ic_plus_theme_selector)
-                    .transform(new CircleTransform())
-                    .into(holder.imageView);
-        } else {
+//        if (this.imageBadges.get(position) == null) {
+//            Picasso.with(activity).load(R.drawable.ic_plus_theme_selector)
+//                    .transform(new CircleTransform())
+//                    .into(holder.imageView);
+//        } else {
             String image = this.imageBadges.get(position).getImageAdress();
             String name = this.imageBadges.get(position).getName();
             Picasso.with(activity).load(image)
                     .transform(new CircleTransform())
                     .into(holder.imageView);
             holder.textView.setText(name);
-        }
+//        }
     }
 
     @Override
