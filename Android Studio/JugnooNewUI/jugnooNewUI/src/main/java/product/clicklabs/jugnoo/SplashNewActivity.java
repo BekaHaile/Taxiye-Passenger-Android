@@ -2109,7 +2109,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		retryAccessTokenLogin();
 		resumed = true;
 		userVerfied = 0;
-		AppEventsLogger.activateApp(this);
+		AppEventsLogger.activateApp(getApplication());
 
 		if(OTPConfirmScreen.backToSplashOboarding){
 			OTPConfirmScreen.backToSplashOboarding = false;
