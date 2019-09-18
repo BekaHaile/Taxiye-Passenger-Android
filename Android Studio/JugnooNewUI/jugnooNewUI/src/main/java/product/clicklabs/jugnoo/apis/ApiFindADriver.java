@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -210,12 +211,22 @@ public class ApiFindADriver {
 				Data.autoData.clearRegions();
 			}
 			if(findADriverResponse.getRegions() != null) {
+				double minRegionFare = findADriverResponse.getRegions().size() > 0 && findADriverResponse.getRegions().get(0).getRegionFare() != null ? findADriverResponse.getRegions().get(0).getRegionFare().getFare() : 20.0,
+						maxRegionFare = findADriverResponse.getRegions().size() > 0 && findADriverResponse.getRegions().get(0).getRegionFare() != null ? findADriverResponse.getRegions().get(0).getRegionFare().getFare() : 5000.0;
 				HomeUtil homeUtil = new HomeUtil();
 				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
 					region.setIsDefault(false);
 					Data.autoData.addRegion(region);
+					if(region.getRegionFare() != null && region.getRegionFare().getFare() < minRegionFare) {
+						minRegionFare = region.getRegionFare().getFare();
+					}
+					if(region.getRegionFare() != null && region.getRegionFare().getFare() > maxRegionFare) {
+						maxRegionFare = region.getRegionFare().getFare();
+					}
 				}
+				Prefs.with(activity).save(Constants.KEY_MIN_REGION_FARE, (float) (minRegionFare * 0.8));
+				Prefs.with(activity).save(Constants.KEY_MAX_REGION_FARE, (float) maxRegionFare * 10);
 			}
 		} catch(Exception e){
 			e.printStackTrace();

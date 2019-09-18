@@ -689,7 +689,7 @@ public class JSONParser implements Constants {
         parseDeliveryData(loginResponse.getDelivery());
         parseProsData(context, loginResponse.getPros());
         MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
-        parseFindDriverResp(loginResponse.getAutos());
+        parseFindDriverResp(loginResponse.getAutos(), context);
 
         //Fetching user current status
         JSONObject jUserStatusObject = jObj.getJSONObject(KEY_AUTOS).getJSONObject(KEY_STATUS);
@@ -738,7 +738,7 @@ public class JSONParser implements Constants {
     }
 
 
-    private void parseFindDriverResp(LoginResponse.Autos autos){
+    private void parseFindDriverResp(LoginResponse.Autos autos, Context context){
         try {
             parseDriversToShow(autos.getDrivers());
 
@@ -777,12 +777,22 @@ public class JSONParser implements Constants {
                 Data.autoData.clearRegions();
             }
             if(autos.getRegions() != null) {
+                double minRegionFare = autos.getRegions().size() > 0 && autos.getRegions().get(0).getRegionFare() != null ? autos.getRegions().get(0).getRegionFare().getFare() : 20.0,
+                        maxRegionFare = autos.getRegions().size() > 0 && autos.getRegions().get(0).getRegionFare() != null ? autos.getRegions().get(0).getRegionFare().getFare() : 5000.0;
                 HomeUtil homeUtil = new HomeUtil();
                 for (Region region : autos.getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
                     region.setIsDefault(false);
                     Data.autoData.addRegion(region);
+                    if(region.getRegionFare() != null && region.getRegionFare().getFare() < minRegionFare) {
+                        minRegionFare = region.getRegionFare().getFare();
+                    }
+                    if(region.getRegionFare() != null && region.getRegionFare().getFare() > maxRegionFare) {
+                        maxRegionFare = region.getRegionFare().getFare();
+                    }
                 }
+                Prefs.with(context).save(Constants.KEY_MIN_REGION_FARE, (float) (minRegionFare * 0.8));
+                Prefs.with(context).save(Constants.KEY_MAX_REGION_FARE, (float) (maxRegionFare * 10));
             }
         } catch(Exception e){
             e.printStackTrace();
