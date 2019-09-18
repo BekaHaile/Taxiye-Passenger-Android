@@ -133,7 +133,21 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         }
         return reasons;
     }
-
+    public String getSelectedReasonsId() {
+        ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
+        String reasons = "";
+        if (currentList != null && currentList.size() > 0) {
+            for (int i = 0; i < currentList.size(); i++) {
+                if (currentList.get(i).checked) {
+                    reasons = reasons + currentList.get(i).badgeId + ",";
+                }
+            }
+            if (!reasons.equalsIgnoreCase("")) {
+                reasons = reasons.substring(0, reasons.length() - 1);
+            }
+        }
+        return reasons;
+    }
     public boolean isLastSelected() {
         ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
         if (currentList != null && currentList.size() > 0) {

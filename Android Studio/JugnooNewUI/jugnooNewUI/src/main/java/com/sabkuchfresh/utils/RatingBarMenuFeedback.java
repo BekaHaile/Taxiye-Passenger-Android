@@ -260,7 +260,7 @@ public class RatingBarMenuFeedback extends LinearLayout {
             if (mDisplayText) {
                 if (i == mCurrentScore) {
                     if(!Data.autoData.getFeedBackInfoRatingData().isEmpty()){
-                        mStarsViews[i - 1].setText(Data.autoData.getFeedBackInfoRatingData().get(i-1).getDesc());
+//                        mStarsViews[i - 1].setText(Data.autoData.getFeedBackInfoRatingData().get(i-1).getDesc());
 
                     }
                     else

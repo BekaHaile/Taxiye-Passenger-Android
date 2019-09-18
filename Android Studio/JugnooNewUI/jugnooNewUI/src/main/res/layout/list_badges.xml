@@ -2,32 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:layout_marginStart="@dimen/dp_10"
     >
 
     <RelativeLayout
         android:id="@+id/summary_badge"
-
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="74dp"
+        android:layout_height="74dp"
         android:splitMotionEvents="false"
+        android:background="@drawable/background_transparent"
         android:tag="mwar">
+
 
         <ImageView
             android:id="@+id/profileBack"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/circle_grey"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
             android:tag="mwar" />
 
         <ImageView
             android:id="@+id/profileImg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_centerInParent="true"
             android:tag="mwar" />
+        <ImageView
+            android:id="@+id/badgeClicked"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/profileBack"
+            android:layout_alignTop="@id/profileBack"
+            android:visibility="gone"
+            android:src="@drawable/ic_tick_orange"/>
     </RelativeLayout>
 
     <TextView

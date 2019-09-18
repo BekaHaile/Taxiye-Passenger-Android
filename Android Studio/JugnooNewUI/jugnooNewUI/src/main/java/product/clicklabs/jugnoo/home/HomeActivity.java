@@ -29,6 +29,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
@@ -63,6 +64,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
@@ -124,6 +126,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.Target;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
+import com.yarolegovich.discretescrollview.transform.DiscreteScrollItemTransformer;
 import com.yarolegovich.discretescrollview.transform.Pivot;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -305,7 +308,7 @@ import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITI
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
-        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler {
+        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,BadgesAdapter.BadgesClickListener {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -413,10 +416,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout endRideReviewRl;
     ScrollView scrollViewRideSummary;
     LinearLayout linearLayoutRideSummaryContainer, linearLayoutRideSummary;
-    TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
+    TextView textViewRSTotalFareValue, textViewRSCashPaidValue,tvDesc;
     LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites, linearLayoutPaymentModeConfirm;
 DiscreteScrollView badgesScroll;
 LinearLayout badgesNormal;
+
 RelativeLayout plusBadge;
     RatingBarMenuFeedback ratingBarRSFeedback;
     TextView textViewRSWhatImprove, textViewRSOtherError;
@@ -1046,6 +1050,7 @@ RelativeLayout plusBadge;
         textViewRSTotalFareValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewRSTotalFare)).setTypeface(Fonts.mavenMedium(this));
         textViewRSCashPaidValue = (TextView) findViewById(R.id.textViewRSCashPaidValue);
+        tvDesc=findViewById(R.id.tvAddCompliment);
         textViewRSCashPaidValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewRSCashPaid)).setTypeface(Fonts.mavenMedium(this));
         linearLayoutRSViewInvoice = (LinearLayout) findViewById(R.id.linearLayoutRSViewInvoice);
@@ -2027,20 +2032,24 @@ RelativeLayout plusBadge;
                             badgesScroll.setAdapter(badgesAdapter);
                             badgesScroll.setAdapter(badgesAdapter);
                             badgesScroll.setItemTransformer(new ScaleTransformer.Builder()
-                                    .setMaxScale(1.55f)
-                                    .setMinScale(0.6f)
+                                    .setMaxScale(1.5f)
+                                    .setMinScale(0.8f)
                                     .setPivotX(Pivot.X.CENTER) // CENTER is a default one
                                     .setPivotY(Pivot.Y.CENTER) // CENTER is a default one
                                     .build());
+
                             badgesScroll.setOffscreenItems(3);
 
                         }
                     });
 
                     badgesScroll.setVisibility(View.GONE);
+
+
                     if(!Data.autoData.getFeedBackInfoRatingData().isEmpty()){
                         int imageBadgeSize;
-
+                        tvDesc.setVisibility(View.VISIBLE);
+                        tvDesc.setText(Data.autoData.getFeedBackInfoRatingData().get(position).getDesc());
                         try {
 
                             imageBadgeSize=Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().size();
@@ -2049,11 +2058,11 @@ RelativeLayout plusBadge;
                                 Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(0).getImageAdress()).into(((ImageView)findViewById(R.id.badge1)));
                                 Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(1).getImageAdress()).into(((ImageView)findViewById(R.id.badge2)));
                                 badgesNormal.setVisibility(View.VISIBLE);
-                                findViewById(R.id.tvAddCompliment).setVisibility(View.VISIBLE);
                             }
                             else
-                            {  badgesNormal.setVisibility(View.GONE);
-                                findViewById(R.id.tvAddCompliment).setVisibility(View.VISIBLE);}
+                            {
+                                badgesNormal.setVisibility(View.GONE);
+                            }
                             feedbackReasonsAdapter = new FeedbackReasonsAdapter(HomeActivity.this, Data.autoData.getFeedBackInfoRatingData().get(position).getTextBadges(),
                                     new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
                                         @Override
@@ -2075,7 +2084,7 @@ RelativeLayout plusBadge;
                         }
                     }
                     else{
-                        findViewById(R.id.tvAddCompliment).setVisibility(View.GONE);
+                        tvDesc.setVisibility(View.GONE);
                         badgesNormal.setVisibility(View.GONE);
                     if (Data.autoData.getFeedbackReasons().size() > 0) {
                         if (score > 0 && score <= 3) {
@@ -2129,6 +2138,9 @@ RelativeLayout plusBadge;
                     Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
 
                     String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
+                    if(Data.autoData.getFeedBackInfoRatingData()!=null){
+                    feedbackReasons=feedbackReasonsAdapter.getSelectedReasonsId();
+                    }
                     boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
 
                     if (0 == rating) {
@@ -2441,6 +2453,15 @@ RelativeLayout plusBadge;
         }
 
 
+    }
+    ArrayList<Integer> imgBadgesClicked=new ArrayList<>();
+
+    @Override
+    public void onClickBadge(int badgeId,int position){
+    if(BadgesAdapter.badgeCLicked){
+        imgBadgesClicked.add(badgeId);
+    }
+    badgesScroll.smoothScrollToPosition(position);
     }
 
     public void setServiceTypeAdapter(boolean setAdapter) {
@@ -10389,6 +10410,7 @@ RelativeLayout plusBadge;
 
                 //DialogPopup.showLoadingDialog(activity, "Loading...");
 
+
                 HashMap<String, String> params = new HashMap<>();
 
                 params.put("access_token", Data.userData.accessToken);
@@ -10396,9 +10418,15 @@ RelativeLayout plusBadge;
                 params.put("engagement_id", engagementId);
                 params.put("driver_id", ratingReceiverId);
                 params.put("feedback", feedbackText);
-                params.put("feedback_reasons", feedbackReasons);
 
+                if(badgesAdapter!=null&&Data.autoData.getFeedBackInfoRatingData()!=null){
+                    String imgBadgeIds=badgesAdapter.getClickedBadgesIds();
+                    params.put("image_badge_ids",imgBadgeIds);
+                    params.put("text_badge_ids",feedbackReasons);
+                }
+                params.put("feedback_reasons", feedbackReasons);
                 Log.i("params", "=" + params);
+
 
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getApiService().rateTheDriver(params, new Callback<SettleUserDebt>() {
@@ -12724,22 +12752,3 @@ RelativeLayout plusBadge;
 
     }
 }
-
-//class discreteScrollAdapter extends DiscreteScrollView.Adapter<>{
-//
-//    @NonNull
-//    @Override
-//    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-//        return null;
-//    }
-//
-//    @Override
-//    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-//
-//    }
-//
-//    @Override
-//    public int getItemCount() {
-//        return 0;
-//    }
-//}
