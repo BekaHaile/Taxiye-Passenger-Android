@@ -2055,8 +2055,8 @@ RelativeLayout plusBadge;
                             imageBadgeSize=Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().size();
                             if(imageBadgeSize>1){
 
-                                Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(0).getImageAdress()).into(((ImageView)findViewById(R.id.badge1)));
-                                Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(1).getImageAdress()).into(((ImageView)findViewById(R.id.badge2)));
+                                Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(0).getImageAdress()).transform(new CircleTransform()).into(((ImageView)findViewById(R.id.badge1)));
+                                Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(1).getImageAdress()).transform(new CircleTransform()).into(((ImageView)findViewById(R.id.badge2)));
                                 badgesNormal.setVisibility(View.VISIBLE);
                             }
                             else

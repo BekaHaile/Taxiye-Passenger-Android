@@ -434,7 +434,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:orientation="horizontal"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <RelativeLayout
                                 android:layout_width="45dp"
@@ -552,7 +552,7 @@
                         <com.yarolegovich.discretescrollview.DiscreteScrollView
                             android:id="@+id/badges"
                             android:layout_width="match_parent"
-                            android:layout_height="80dp"
+                            android:layout_height="wrap_content"
                             android:visibility="gone"
                             />
                        </LinearLayout>
