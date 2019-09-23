@@ -66,15 +66,17 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     // indicates vendorDirectSearchItemPosition
     private int vendorDirectSearchSubCatIndex, vendorDirectSearchItemIndex;
     private VendorDirectSearch vendorDirectSearch;
+    private String currencyCode, currency;
 
     private boolean isVendorMenuFragment;
-    public MenusCategoryItemsAdapter(Activity context, int categoryPos, Category category, Callback callback) {
+    public MenusCategoryItemsAdapter(Activity context, int categoryPos, Category category, Callback callback, String currencyCode, String currency) {
         this.context = context;
         this.callback = callback;
         this.categoryPos = categoryPos;
         this.category = category;
         isVendorMenuFragment = true;
-
+        this.currencyCode = currencyCode;
+        this.currency = currency;
         if(((FreshActivity)context).getVendorDirectSearchObject()!=null){
             vendorDirectSearch = ((FreshActivity)context).getVendorDirectSearchObject();
         }
@@ -146,10 +148,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    public MenusCategoryItemsAdapter(Activity context, ArrayList<Item> items, Callback callback) {
+    public MenusCategoryItemsAdapter(Activity context, ArrayList<Item> items, Callback callback, String currencyCode, String currency) {
         this.context = context;
         this.callback = callback;
         this.categoryPos = -1;
+        this.currencyCode = currencyCode;
+        this.currency = currency;
         setList(items, false, null);
     }
 
@@ -670,14 +674,15 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         if(!TextUtils.isEmpty(item.getDisplayPrice())){
             textView.append(item.getDisplayPrice());
         } else {
-            textView.append(context.getString(R.string.rupees_value_format, com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getPrice())));
+
+            textView.append(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(item.getPrice(), currencyCode, currency));
         }
 
         if(item.getOldPrice() != null && !item.getOldPrice().equals(item.getPrice())){
+
             final StrikethroughSpan sts = new StrikethroughSpan();
             final ForegroundColorSpan fcs = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.theme_color));
-            final SpannableStringBuilder sbst = new SpannableStringBuilder(context.getString(R.string.rupees_value_format,
-                    com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getOldPrice())));
+            final SpannableStringBuilder sbst = new SpannableStringBuilder(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(item.getOldPrice(), currencyCode, currency));
             sbst.setSpan(sts, 0, sbst.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             sbst.setSpan(fcs, 0, sbst.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.append("  ");

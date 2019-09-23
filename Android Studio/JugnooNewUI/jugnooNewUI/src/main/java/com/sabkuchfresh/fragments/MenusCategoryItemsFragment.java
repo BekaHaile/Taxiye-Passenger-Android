@@ -240,7 +240,7 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             public void onCategoryClick(Category category) {
 
                             }
-                        });
+                        }, activity.getMenuProductsResponse().getCurrencyCode(), activity.getMenuProductsResponse().getCurrency());
                 recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 
             }

@@ -253,6 +253,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private EditText edtIciciVpa;
     private String jugnooVpaHandle;
     private TextView tvUPICashback;
+    private String currencyCode = "", currency = "";
 
     @Override
     public void onStart() {
@@ -292,13 +293,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         layoutMinOrder =(LinearLayout)rootView.findViewById(R.id.layout_min_order);
         tvOrderViaFatafat =(TextView)rootView.findViewById(R.id.tv_order_via_fatafaat);
         tvOrderViaFatafat.setTypeface(tvOrderViaFatafat.getTypeface(),Typeface.BOLD);
+        tvOrderViaFatafat.setText(getString(R.string.action_order_via_fatafat, R.string.fatafat_text));
         tvOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     GAUtils.event(GACategory.FATAFAT3, GAAction.MIN_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
 
-                    orderViaFatafat(activity, itemsInCart,subItemsInCart,activity,subTotalAmount);
+                    orderViaFatafat(activity, itemsInCart,subItemsInCart,activity,subTotalAmount, currencyCode, currency);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -394,14 +396,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         tvStarOffer.setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
 
-        if (isMenusOrDeliveryOpen()) {
-            menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this);
-            listViewCart.setAdapter(menusCartItemsAdapter);
-        } else {
-            freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, true, this,this);
-            listViewCart.setAdapter(freshCartItemsAdapter);
-        }
-
 
         listViewCharges = (NonScrollListView) rootView.findViewById(R.id.listViewCharges);
         chargesList = new ArrayList<>(); chargesListForFatafat = new ArrayList<>();
@@ -410,8 +404,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         chargesList.add(taxSubTotal);
         chargesList.add(taxTotal);
 
-        chargesAdapter = new CheckoutChargesAdapter(activity, chargesList);
-        listViewCharges.setAdapter(chargesAdapter);
         linearLayoutDeliverySlot = (LinearLayout) rootView.findViewById(R.id.linearLayoutDeliverySlot);
         recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
         recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
@@ -924,10 +916,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (dialogOrderComplete == null || dialogOrderComplete.getDialog()==null ||!dialogOrderComplete.getDialog().isShowing()) {
             if (payableAmount() > 0) {
 //                Utils.getDoubleTwoDigits((double)Math.round(payableAmount()));
-                activity.buttonPlaceOrder.setText(getString(R.string.pay_format, activity.getString(R.string.rupees_value_format,
-                        Utils.getDoubleTwoDigits((double) Math.round(payableAmount())))));
-                activity.tvSlide.setText(getString(R.string.pay_format, activity.getString(R.string.rupees_value_format,
-                        Utils.getDoubleTwoDigits((double) Math.round(payableAmount())))));
+
+                activity.buttonPlaceOrder.setText(getString(R.string.pay_format, Utils.formatCurrencyAmount(payableAmount(), activity.getUserCheckoutResponse().getCurrencyCode(), activity.getUserCheckoutResponse().getCurrency())));
+                activity.tvSlide.setText(getString(R.string.pay_format, Utils.formatCurrencyAmount(payableAmount(), activity.getUserCheckoutResponse().getCurrencyCode(), activity.getUserCheckoutResponse().getCurrency())));
+
             } else {
                 activity.buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
                 activity.tvSlide.setText(activity.getResources().getString(R.string.place_order));
@@ -1980,13 +1972,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
                 String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(payableAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, currencyCode, currency, R.drawable.ic_paytm_big);
             } else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
                 String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(payableAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, currencyCode, currency, R.drawable.ic_mobikwik_big);
             } else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
                 String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(payableAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, currencyCode, currency, R.drawable.ic_freecharge_big);
             } else {
                 intentToWallet(paymentOption);
             }
@@ -2459,6 +2451,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
 
+                                    currencyCode = userCheckoutResponse.getCurrencyCode();
+                                    currency = userCheckoutResponse.getCurrency();
+                                    setAdapterMenuOrFresh(userCheckoutResponse);
+
+                                    setChargesAdapter(userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
+
                                     if (FreshCheckoutMergedFragment.this.type == AppConstant.ApplicationType.FRESH
                                             && userCheckoutResponse.getCityId() != null
                                             && activity.checkForCityChange(userCheckoutResponse.getCityId(),
@@ -2667,6 +2665,28 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
     }
+
+    private void setChargesAdapter(String currencyCode, String currency) {
+        if(chargesAdapter == null) {
+            chargesAdapter = new CheckoutChargesAdapter(activity, chargesList, currencyCode, currency);
+            listViewCharges.setAdapter(chargesAdapter);
+        }
+    }
+
+    private void setAdapterMenuOrFresh(UserCheckoutResponse userCheckoutResponse) {
+        if (isMenusOrDeliveryOpen()) {
+            if(menusCartItemsAdapter == null) {
+                menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this, userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
+                listViewCart.setAdapter(menusCartItemsAdapter);
+            }
+        } else {
+            if(freshCartItemsAdapter == null) {
+                freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, true, this, this, userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
+                listViewCart.setAdapter(freshCartItemsAdapter);
+            }
+        }
+    }
+
     public void getCheckoutDataAPI(SubscriptionData.Subscription subscription, final boolean showMealsMismatchPopup){
         getCheckoutDataAPI(subscription,showMealsMismatchPopup,null);
     }
@@ -2757,16 +2777,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive() && userCheckoutResponse.getShowStarSubscriptions() == 1) {
             if (userCheckoutResponse.getSubscriptionInfo() != null && userCheckoutResponse.getSubscriptionInfo().getSubscriptionId() != null) {
                 if (isMenusOrDeliveryOpen()) {
-                    menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo());
+                    menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo(), userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
                 } else {
-                    freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo());
+                    freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo(), userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
                 }
                 cvBecomeStar.setVisibility(View.GONE);
             } else {
                 if (isMenusOrDeliveryOpen()) {
-                    menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo());
+                    menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo(), userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
                 } else {
-                    freshCartItemsAdapter.setResults(subItemsInCart, null);
+                    freshCartItemsAdapter.setResults(subItemsInCart, null, userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
                 }
                 cvBecomeStar.setVisibility(View.VISIBLE);
             }
@@ -3813,7 +3833,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
 
-    public static void orderViaFatafat(Context context, ArrayList<Item> itemsInCart, ArrayList<SubItem> subItemsInCart, FreshActivity activity, Double subTotalAmount){
+    public static void orderViaFatafat(Context context, ArrayList<Item> itemsInCart, ArrayList<SubItem> subItemsInCart, FreshActivity activity, Double subTotalAmount, String mCurrencyCode, String mCurrency){
         activity.lastAppTypeOpen = activity.getAppType();
         StringBuilder sb = new StringBuilder();
         String newLine = "\n", colon = ": ", xSpace = " X ";
@@ -3852,7 +3872,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
         sb.append(newLine);
-        sb.append(context.getString(R.string.approx_order_amount)).append(colon).append(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(subTotalAmount)));
+        sb.append(context.getString(R.string.approx_order_amount)).append(colon).append(Utils.formatCurrencyAmount(subTotalAmount, mCurrencyCode, mCurrency));
 
 
 

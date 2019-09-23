@@ -3086,9 +3086,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
             }
 
-            textViewDestSearch.setText(searchResult.getNameForText());
+            textViewDestSearch.setText(searchResult.getNameForText(this));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
-            textViewDestSearchNew.setText(searchResult.getNameForText());
+            textViewDestSearchNew.setText(searchResult.getNameForText(this));
             textViewDestSearchNew.setTextColor(getResources().getColor(R.color.text_color));
 
             dropLocationSet = true;
@@ -7159,7 +7159,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP
 						&& Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())) {
                 	if(searchResult != null){
-                		dropAddressName = searchResult.getNameForText();
+                		dropAddressName = searchResult.getNameForText(this);
 					}
                     if (dropAddressName.length() == 0) {
                         textView.setText(Data.autoData.getDropAddress());
@@ -7170,7 +7170,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP
 						&& !TextUtils.isEmpty(Data.autoData.getPickupAddress(currentLatLng))){
                 	if(searchResult != null){
-						textView.setText(searchResult.getNameForText());
+						textView.setText(searchResult.getNameForText(this));
 					} else {
 						textView.setText(Data.autoData.getPickupAddress(currentLatLng));
 					}
@@ -8772,6 +8772,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.latitude = location.getLatitude();
             Data.longitude = location.getLongitude();
+            map.setTrafficEnabled(true);
             if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
                 HomeActivity.myLocation = location;
             }
@@ -10414,12 +10415,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             zoomAfterFindADriver = false;
             if (!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                    textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
-                    textViewInitialSearchNew.setText(autoCompleteSearchResult.getNameForText());
+                    textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText(this));
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
-                    textViewDestSearch.setText(autoCompleteSearchResult.getNameForText());
-                    textViewDestSearchNew.setText(autoCompleteSearchResult.getNameForText());
-                    dropAddressName = autoCompleteSearchResult.getNameForText();
+                    textViewDestSearch.setText(autoCompleteSearchResult.getNameForText(this));
+                    dropAddressName = autoCompleteSearchResult.getNameForText(this);
                 }
                 searchedALocation = true;
             }
@@ -10430,13 +10429,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 fareEstimatBeforeRequestRide();
             }
         } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
-			tvDropAssigning.setText(autoCompleteSearchResult.getNameForText());
-            dropAddressName = autoCompleteSearchResult.getNameForText();
+            dropAddressName = autoCompleteSearchResult.getNameForText(this);
         } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-            textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
-            dropAddressName = autoCompleteSearchResult.getNameForText();
+            textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getNameForText(this));
+            dropAddressName = autoCompleteSearchResult.getNameForText(this);
         }
     }
 
@@ -10459,8 +10457,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void setSearchResultToPickupCase(SearchResult searchResult) {
         try {
             if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
-                textViewInitialSearch.setText(searchResult.getNameForText());
-                textViewInitialSearchNew.setText(searchResult.getNameForText());
+                textViewInitialSearch.setText(searchResult.getNameForText(this));
+                textViewInitialSearchNew.setText(searchResult.getNameForText(this));
+
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                 setPickupAddressZoomedOnce = true;
                 mapTouched = true;

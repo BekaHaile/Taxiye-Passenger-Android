@@ -377,10 +377,10 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     fun searchResultReceived(searchResult: SearchResult, placeSearchMode: PlaceSearchListFragment.PlaceSearchMode?) {
         if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-            tvPickup.text = searchResult.nameForText
+            tvPickup.text = searchResult.getNameForText(activity)
             searchResultPickup = searchResult
         } else {
-            tvDestination.text = searchResult.nameForText
+            tvDestination.text = searchResult.getNameForText(activity)
             searchResultDestination = searchResult
         }
     }

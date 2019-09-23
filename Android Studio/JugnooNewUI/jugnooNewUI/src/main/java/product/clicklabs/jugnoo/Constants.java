@@ -522,6 +522,8 @@ public interface Constants {
     String KEY_RATING_FLAG = "rating_flag";
     String KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE = "ride_end_good_feedback_view_type";
     String KEY_RIDE_END_GOOD_FEEDBACK_TEXT = "ride_end_good_feedback_text";
+    String KEY_FEEDBACK_ORDER_CURRENCY_CODE = "feedback_order_currency_code";
+    String KEY_FEEDBACK_ORDER_CURRENCY = "feedback_order_currency";
     String KEY_IS_FEED_ORDER_FEEDBACK = "is_feed_order_feedback";
     String KEY_RATE_APP = "rate_app";
     String KEY_NEGATIVE_FEEDBACK_REASONS = "negative_feedback_reasons";
@@ -745,6 +747,8 @@ public interface Constants {
 
     String KEY_SP_IS_VEG_TOGGLE = "is_veg_toggle";
     String KEY_OPEN_LIVE_TRACKING = "open_live_tracking";
+    String KEY_SHOW_RATE_ORDER_BUTTON = "key_show_rate_order_button";
+    String KEY_SHOW_REPEAT_ORDER_BUTTON = "key_show_repeat_order_button";
     String SP_ASKLOCAL_LAST_ADDRESS_OBJ = "sp_asklocal_last_address_obj";
     String SP_MENUS_CART_ADDRESS = "sp_menus_cart_address";
     String SP_DELIVERY_CUSTOMER_CART_ADDRESS = "sp_delivery_customer_cart_address";

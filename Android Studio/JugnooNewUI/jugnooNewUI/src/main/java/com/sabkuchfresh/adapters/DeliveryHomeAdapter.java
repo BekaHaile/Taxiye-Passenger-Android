@@ -1116,7 +1116,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         if (recentOrder.getOrderAmount() != null) {
-            statusHolder.tvOrderAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(recentOrder.getOrderAmount())));
+
+            statusHolder.tvOrderAmount.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(recentOrder.getOrderAmount(), recentOrder.getCurrencyCode(), recentOrder.getCurrency()).replaceAll("-", ""));
         }
 
         // track or view order buttons
@@ -2113,8 +2114,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ViewHolderItemBannerFatafat(View itemView) {
             super(itemView);
             tVBannerText = (TextView) itemView.findViewById(R.id.tv_banner_text);
-            String heading = activity.getString(R.string.fatafat_banner_heading);
-            String subHeading = activity.getString(R.string.fatafat_banner_sub_heading);
+            String heading = activity.getString(R.string.fatafat_banner_heading, R.string.fatafat_text);
+            String subHeading = activity.getString(R.string.fatafat_banner_sub_heading, R.string.fatafat_text);
             StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
             SpannableString spannableString = new SpannableString(heading + subHeading);
             spannableString.setSpan(new RelativeSizeSpan(0.9f), heading.length(), spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);

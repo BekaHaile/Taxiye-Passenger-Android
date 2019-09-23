@@ -314,6 +314,10 @@ public class ApiCommon<T extends FeedCommonResponse> {
 			case CANCEL_BID:
                 RestClient.getApiService().cancelBid(params, callback);
                 break;
+            case NEARBY_AGENTS:
+                RestClient.getFatafatApiService().nearbyAgents(params,callback);
+                break;
+
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

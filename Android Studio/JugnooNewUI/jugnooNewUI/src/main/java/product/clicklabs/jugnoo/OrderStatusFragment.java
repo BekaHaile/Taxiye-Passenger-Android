@@ -52,7 +52,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
+import product.clicklabs.jugnoo.adapters.ImageWithTextAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.config.Config;
@@ -67,6 +71,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.BillSummaryModel;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
@@ -89,13 +94,15 @@ import retrofit.mime.TypedByteArray;
 
 public class OrderStatusFragment extends Fragment implements GAAction, View.OnClickListener {
 
+    private static final int REQ_CODE_REORDER = 5011;
+    private boolean hideRateOrder, hideRepeatOrder;
     private CoordinatorLayout relative;
     private RelativeLayout rlOrderStatus;
     private TextView tvOrderStatus, tvOrderStatusVal, tvOrderTime, tvOrderTimeVal, tvDeliveryTime, tvDeliveryTimeVal, tvDeliveryTo,
             tvDelveryPlace, tvDeliveryToVal,
             tvTotalAmountVal, tvAmountPayableVal;
     private ImageView ivDeliveryPlace, ivOrderCompleted, imageViewRestaurant, imageViewCallRestaurant;
-    private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn;
+    private Button bNeedHelp, buttonCancelOrder, reorderBtn, feedbackBtn, cancelfeedbackBtn, btRateOrder;
     private int orderId, productType;
     private NonScrollListView listViewOrder;
     private OrderItemsAdapter orderItemsAdapter;
@@ -127,6 +134,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private JSONObject responseOrderDataApi;
     private boolean isFeedOrder;
     private HomeUtil homeUtil = new HomeUtil();
+    private String currencyCode, currency;
+    private String vehicleImage;
+
+    private com.sabkuchfresh.home.TransactionUtils transactionUtils;
 
     @BindView(R.id.tv2r)
     TextView tv2r;
@@ -188,6 +199,15 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
      CardView cardFeedBillSummary;
     @BindView(R.id.llFeedExtraCharges)
      LinearLayout llFeedExtraCharges;
+    @BindView(R.id.btRepeatOrderFeed)
+    Button btRepeatOrderFeed;
+    @BindView(R.id.btRateOrder) Button btRateOrderFeed;
+    @BindView(R.id.rvFeedPickupImages) RecyclerView rvFeedPickupImages;
+    @BindView(R.id.rvFeedDeliveriesImages) RecyclerView rvFeedDeliveriesImages;
+    @BindView(R.id.cardDeliveriesFeedPhotos) CardView cardDeliveriesFeedPhotos;
+    @BindView(R.id.cardPickupFeedPhotos) CardView cardPickupFeedPhotos;
+
+
 
 
 
@@ -215,6 +235,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             orderId = getArguments().getInt(Constants.KEY_ORDER_ID, 0);
             productType = getArguments().getInt(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
             openLiveTracking = getArguments().getInt(Constants.KEY_OPEN_LIVE_TRACKING, 0);
+            hideRateOrder = getArguments().getBoolean(Constants.KEY_SHOW_RATE_ORDER_BUTTON, false);
             setFragTitle();
         } catch (Exception e) {
             e.printStackTrace();
@@ -335,6 +356,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         reorderBtn.setTypeface(Fonts.mavenRegular(activity));
         feedbackBtn = (Button) rootView.findViewById(R.id.feedbackBtn);
         feedbackBtn.setTypeface(Fonts.mavenRegular(activity));
+        btRateOrder = (Button) rootView.findViewById(R.id.btRateOrder);
+        btRateOrder.setTypeface(Fonts.mavenRegular(activity));
         cancelfeedbackBtn = (Button) rootView.findViewById(R.id.cancelfeedbackBtn);
         cancelfeedbackBtn.setTypeface(Fonts.mavenRegular(activity));
 
@@ -351,13 +374,14 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
 
         buttonCancelOrder.setOnClickListener(this);
+        btRateOrder.setOnClickListener(this);
         reorderBtn.setOnClickListener(this);
         feedbackBtn.setOnClickListener(this);
         cancelfeedbackBtn.setOnClickListener(this);
 
 
         listViewOrder = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
-        orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders);
+        orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders, currencyCode, currency);
         listViewOrder.setAdapter(orderItemsAdapter);
 
 
@@ -380,6 +404,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                     }else if(activity instanceof FreshActivity){
                         activity.onBackPressed();
                     }
+                }
+            });
+            bCancelOrder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    cancelOrder(true);
                 }
             });
             feedFragmentShadowTop.setVisibility(View.GONE);
@@ -428,6 +458,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         return relative;
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
     private void initPaymentMethodViews() {
         llPaymentSummary = (LinearLayout) cvPaymentMethod.findViewById(R.id.llPaymentSummary);
         ((TextView) cvPaymentMethod.findViewById(R.id.tvPaymentSummary)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
@@ -464,7 +499,11 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 String message = JSONParser.getServerMessage(jObj);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     datum1 = historyResponse.getData().get(0);
+                                    currencyCode = datum1.getCurrencyCode();
+                                    currency = datum1.getCurrency();
+                                    setOrderItemAdapter();
                                     llMain.setVisibility(View.VISIBLE);
+
                                     if (historyResponse.getRecentOrdersPossibleFatafatStatus().size() > 0) {
                                         cvOrderStatus.setVisibility(View.VISIBLE);
                                         rlOrderStatusFeed.setVisibility(View.GONE);
@@ -473,15 +512,31 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
                                         showPossibleStatus(historyResponse.getRecentOrdersPossibleFatafatStatus(), datum1.getOrderStatusIndex(),true);
 
+                                        TrackOrderFragment fragment = getTrackOrderFragment();
+//                                        if (fragment != null) {
+//                                            // for multiple deliveries, update the currently delivery point being delivered
+//                                            fragment.updateOrderDetails(datum1.getDeliveries(), datum1.getLiveTracking().isPickupCompleted());
+//                                        }
+
+                                        if (datum1.getCancellable() == 1) {
+                                            bCancelOrder.setVisibility(View.VISIBLE);
+                                        } else {
+                                            bCancelOrder.setVisibility(View.GONE);
+                                        }
+
                                     } else {
                                         cvOrderStatus.setVisibility(View.GONE);
                                         rlOrderStatusFeed.setVisibility(View.VISIBLE);
                                         dividerBelowRlOrderStatusFeed.setVisibility(View.VISIBLE);
+
+                                        bCancelOrder.setVisibility(View.GONE);
                                     }
 
                                     setFeedOrderData(datum1, activity);
                                     if(datum1.getIsPaid()==1){
                                         setPaymentModes(datum1);
+                                    } else {
+                                        tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(0, currencyCode, currency));
                                     }
                                     openTrackOrderFragment();
                                 } else {
@@ -509,6 +564,58 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void cancelOrder(boolean isFromFatafat) {
+        if (datum1.getCancellable() == 1) {
+            int storeId = datum1.getStoreId() == null ? 0 : datum1.getStoreId();
+            if (datum1.getShowCancellationReasons() == 1) {
+                int containerId = -1;
+                if (activity instanceof FreshActivity) {
+                    containerId = ((FreshActivity) activity).getRelativeLayoutContainer().getId();
+                } else if (activity instanceof RideTransactionsActivity) {
+                    containerId = ((RideTransactionsActivity) activity).getContainer().getId();
+                } else if (activity instanceof SupportActivity) {
+                    containerId = ((SupportActivity) activity).getContainer().getId();
+                }
+                if (containerId > -1) {
+                    activity.getSupportFragmentManager().beginTransaction()
+                            .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                            .add(containerId, OrderCancelReasonsFragment.newInstance(datum1.getOrderId(),
+                                    productType, storeId, getClientIdByProductType(productType)),
+                                    OrderCancelReasonsFragment.class.getName())
+                            .addToBackStack(OrderCancelReasonsFragment.class.getName())
+                            .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                                    .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                            .commitAllowingStateLoss();
+                }
+            } else if (!isFromFatafat) {
+                DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", getString(R.string.are_you_sure_cancel_order), getResources().getString(R.string.ok),
+                        getResources().getString(R.string.cancel), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                cancelOrderApi();
+                                if (activity instanceof FreshActivity) {
+                                    GAUtils.event(((FreshActivity) activity).getGaCategory(), ORDER_STATUS, ORDER + CANCELLED);
+                                }
+                            }
+                        }, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        }, false, false);
+            }
+        } else if (!isFromFatafat) {
+            feedbackBtn.performClick();
+        }
+    }
+
+    private void setOrderItemAdapter() {
+        if(orderItemsAdapter == null) {
+            orderItemsAdapter = new OrderItemsAdapter(activity, subItemsOrders, currencyCode, currency);
+            listViewOrder.setAdapter(orderItemsAdapter);
         }
     }
 
@@ -542,6 +649,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         SearchResult searchResultTo = homeUtil.getNearBySavedAddress(activity,
                 new LatLng(datum.getToLatitude(), datum.getToLongitude()),
                 Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+        btRateOrder.setVisibility(datum.isPendingFeedback() ? View.VISIBLE : View.GONE);
         if (searchResultTo != null && !TextUtils.isEmpty(searchResultTo.getName())) {
             llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
             ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResultTo.getName()));
@@ -595,6 +703,66 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             cardFeedBillSummary.setVisibility(View.GONE);
         }
 
+//todo delivery
+
+        if (datum1.getImages() != null) {
+            final HistoryResponse.OrderImageTypes images = datum1.getImages();
+
+            // pickup images
+            if(images.getPickupImages() != null && images.getPickupImages().size() > 0) {
+
+                ArrayList<FetchFeedbackResponse.ReviewImage> imageList = new ArrayList<>();
+
+                for (HistoryResponse.OrderImages image :images.getPickupImages()) {
+                    imageList.add(new FetchFeedbackResponse.ReviewImage(image.getImage(), image.getImage()));
+                }
+
+                setOrderImages(imageList, rvFeedPickupImages, images.getPickupImages());
+                cardPickupFeedPhotos.setVisibility(View.VISIBLE);
+            } else {
+                cardPickupFeedPhotos.setVisibility(View.GONE);
+            }
+
+            // delivery images
+
+            if(images.getDeliveryImages() != null && images.getDeliveryImages().size() > 0) {
+
+
+                ArrayList<FetchFeedbackResponse.ReviewImage> imageList = new ArrayList<>();
+
+                int deliveryId = images.getDeliveryImages().get(0).getDelivery_id();
+                int count = 1;
+
+                for (HistoryResponse.OrderImages image :images.getDeliveryImages()) {
+                    imageList.add(new FetchFeedbackResponse.ReviewImage(image.getImage(), image.getImage()));
+                    if (deliveryId != image.getDelivery_id()) {
+                        deliveryId = image.getDelivery_id();
+                        count++;
+                    }
+                    image.setDeliveryNo(count);
+                }
+
+                setOrderImages(imageList, rvFeedDeliveriesImages,images.getDeliveryImages());
+                cardDeliveriesFeedPhotos.setVisibility(View.VISIBLE);
+            } else {
+                cardDeliveriesFeedPhotos.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void setOrderImages(final ArrayList<FetchFeedbackResponse.ReviewImage> adapterImageList,
+                                final RecyclerView recyclerView, final ArrayList<HistoryResponse.OrderImages> imageList) {
+
+        if(recyclerView == null) return;
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(new ImageWithTextAdapter(imageList, new ImageWithTextAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(final HistoryResponse.OrderImages image, final int pos) {
+                ReviewImagePagerDialog dialog = ReviewImagePagerDialog.newInstance(pos,adapterImageList);
+                dialog.show(activity.getFragmentManager(), ReviewImagePagerDialog.class.getSimpleName());
+            }
+        }));
 
     }
 
@@ -655,6 +823,12 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         if (!hidden) {
             if (activity instanceof FreshActivity) {
                 ((FreshActivity) activity).fragmentUISetup(this);
+            }
+
+            if (isFeedOrder){
+                getFeedOrderData(activity);
+            } else{
+                getOrderData(activity);
             }
             setFragTitle();
             if (datum1.getCancellable() == 1) {
@@ -747,6 +921,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                 if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
                                     llMain.setVisibility(View.VISIBLE);
                                     datum1 = historyResponse.getData().get(0);
+                                    currencyCode = datum1.getCurrencyCode();
+                                    currency = datum1.getCurrency();
+                                    setOrderItemAdapter();
                                     subItemsOrders.clear();
                                     subItemsOrders.addAll(historyResponse.getData().get(0).getOrderItems());
                                     orderItemsAdapter.notifyDataSetChanged();
@@ -937,13 +1114,15 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             RelativeLayout relative = (RelativeLayout) view.findViewById(R.id.relative);
             TextView tvDelCharges = (TextView) view.findViewById(R.id.tvDelCharges);
             TextView tvDelChargesVal = (TextView) view.findViewById(R.id.tvDelChargesVal);
+
             tvDelCharges.setText(fieldText);
+
             if (showNegative) {
-                tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
+                tvDelChargesVal.setText("- " + com.sabkuchfresh.utils.Utils.formatCurrencyAmount(fieldTextVal, currencyCode, currency));
                 tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
             } else {
                 if (fieldTextVal > 0) {
-                    tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
+                    tvDelChargesVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(fieldTextVal, currencyCode, currency));
                     tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                 } else {
                     if (showFree) {
@@ -951,9 +1130,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.order_status_green));
                     } else {
                         if (Utils.compareDouble(fieldTextVal, 0) == -1) {
-                            tvDelChargesVal.setText("- " + activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(Math.abs(fieldTextVal))));
+                            tvDelChargesVal.setText("- " + com.sabkuchfresh.utils.Utils.formatCurrencyAmount(Math.abs(fieldTextVal), currencyCode, currency));
                         } else {
-                            tvDelChargesVal.setText(activity.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(fieldTextVal)));
+                            tvDelChargesVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(fieldTextVal, currencyCode, currency));
                         }
                         tvDelChargesVal.setTextColor(ContextCompat.getColor(activity, R.color.text_color));
                     }
@@ -1005,6 +1184,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 rlOrderStatus.setVisibility(View.VISIBLE);
             }
 
+            btRateOrder.setVisibility(datum1.isPendingFeedback() ? View.VISIBLE : View.GONE);
 
             tvOrderTimeVal.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(datum1.getOrderTime())));
 
@@ -1052,11 +1232,10 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             tvTotalAmountValOld.setVisibility(View.GONE);
             if (Double.compare(datum1.getDiscountedAmount(), datum1.getOrderAmount()) != 0) {
                 tvTotalAmountValOld.setVisibility(View.VISIBLE);
-                tvTotalAmountValOld.setText(activity.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormat().format(datum1.getOrderAmount())));
+                tvTotalAmountValOld.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(datum1.getOrderAmount(), currencyCode, currency));
             }
-            tvTotalAmountVal.setText(activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(datum1.getDiscountedAmount())));
+
+            tvTotalAmountVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(datum1.getDiscountedAmount(), currencyCode, currency));
 
             tvTotalAmountMessage.setVisibility(TextUtils.isEmpty(datum1.getNote()) ? View.GONE : View.VISIBLE);
             tvTotalAmountMessage.setText(datum1.getNote());
@@ -1160,12 +1339,14 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             rlWalletDeducted.setVisibility(View.VISIBLE);
             llPaymentSummary.removeView(rlWalletDeducted);
             llFinalAmount.addView(rlWalletDeducted);
-            tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
-                    Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
+
+            tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(Math.abs(datum1.getWalletDeducted()), currencyCode, currency));
+
             llFinalAmount.setVisibility(View.VISIBLE);
             vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
         } else {
             rlWalletDeducted.setVisibility(View.GONE);
+            tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(0, currencyCode, currency));
         }
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvPaymentMethodVal.getLayoutParams();
@@ -1330,6 +1511,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 } else {
                     GAUtils.event(GACategory.SIDE_MENU, ORDER + DETAILS, NEED_HELP + CLICKED);
                 }
+                break;
+            case R.id.btRateOrder:
+                openFeedBackFragment();
                 break;
         }
     }
@@ -1563,4 +1747,36 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         }
        return Config.getAutosClientId();
     }
+
+    private com.sabkuchfresh.home.TransactionUtils getTransactionUtils() {
+        if (transactionUtils == null) {
+            transactionUtils = new com.sabkuchfresh.home.TransactionUtils();
+        }
+        return transactionUtils;
+    }
+
+    private void openFeedBackFragment() {
+       View container = null;
+        if (getActivity() instanceof RideTransactionsActivity) {
+            container = ((RideTransactionsActivity)getActivity()).getContainer();
+        } else if (activity instanceof FreshActivity) {
+            container = ((FreshActivity)getActivity()).getRelativeLayoutContainer();
+        }
+        getTransactionUtils().openFeedback(getActivity(), container, getClientIdByProductType(productType),
+                getFeedBackData(), false);
+    }
+
+    private LoginResponse.FeedbackData getFeedBackData() {
+        LoginResponse.FeedbackData feedbackData = datum1.getFeedBackData();
+        if (feedbackData == null) return null;
+
+        feedbackData.setRestaurantName(datum1.getRestaurantName());
+        feedbackData.setDriverName(datum1.getDriveName());
+        feedbackData.setOrderId(String.valueOf(datum1.getOrderId()));
+        feedbackData.setAmount(datum1.getDiscountedAmount() == 0 ? datum1.getAmount() : datum1.getDiscountedAmount());
+        feedbackData.setFeedbackCurrencyCode(currencyCode);
+        feedbackData.setFeedbackCurrency(currency);
+        return feedbackData;
+    }
+
 }

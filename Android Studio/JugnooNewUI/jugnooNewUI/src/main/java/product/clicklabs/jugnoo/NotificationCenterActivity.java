@@ -92,7 +92,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
 
         mNotificationSettingBtn = (ImageView) findViewById(R.id.imageViewSetting);
         mNotificationSettingBtn.setOnClickListener(this);
-        if(Data.userData != null && Data.userData.getNotificationSettingEnabled() == 1) {
+        if(Data.userData != null && Data.userData.getNotificationSettingEnabled() == 1 || getResources().getBoolean(R.bool.show_inbox_preferences)) {
             mNotificationSettingBtn.setVisibility(View.VISIBLE);
         } else {
             mNotificationSettingBtn.setVisibility(View.GONE);
