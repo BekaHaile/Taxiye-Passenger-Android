@@ -257,6 +257,8 @@ public class JSONParser implements Constants {
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
                 showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode, regAs);
 
+		Prefs.with(context).save(KEY_USER_ID, userId);
+
         Prefs.with(context).save(Constants.SP_LAST_PHONE_NUMBER_SAVED, phoneNo);
         Prefs.with(context).save(Constants.SP_LAST_COUNTRY_CODE_SAVED, countryCode);
 

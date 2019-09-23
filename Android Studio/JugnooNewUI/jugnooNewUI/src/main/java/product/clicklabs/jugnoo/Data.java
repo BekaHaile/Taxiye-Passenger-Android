@@ -160,6 +160,7 @@ public class Data {
             Prefs.with(context).remove(SPLabels.ADD_GYM);
             Prefs.with(context).remove(SPLabels.ADD_FRIEND);
             Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
+			Prefs.with(context).remove(Constants.KEY_USER_ID);
 
             Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
             Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);

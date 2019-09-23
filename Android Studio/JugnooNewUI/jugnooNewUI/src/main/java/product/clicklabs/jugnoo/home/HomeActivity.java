@@ -10792,13 +10792,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()== RideTypeValue.BIKE_RENTAL.getOrdinal()) {
         	relativeLayoutDestSearchBar.setVisibility(View.GONE);
 			relativeLayoutDestSearchBarNew.setVisibility(View.GONE);
-			findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.GONE);
-			findViewById(R.id.iv3NewUIDropMark).setVisibility(View.GONE);
+
+			View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+			if(viewDash != null){
+				viewDash.setVisibility(View.GONE);
+			}
+			View viewDrop = findViewById(R.id.iv3NewUIDropMark);
+			if(viewDrop != null){
+				viewDrop.setVisibility(View.GONE);
+			}
         } else {
             relativeLayoutDestSearchBar.setVisibility(View.VISIBLE);
 			relativeLayoutDestSearchBarNew.setVisibility(View.VISIBLE);
-			findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.VISIBLE);
-			findViewById(R.id.iv3NewUIDropMark).setVisibility(View.VISIBLE);
+
+			View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+			if(viewDash != null){
+				viewDash.setVisibility(View.VISIBLE);
+			}
+			View viewDrop = findViewById(R.id.iv3NewUIDropMark);
+			if(viewDrop != null){
+				viewDrop.setVisibility(View.VISIBLE);
+			}
         }
         if((confirmedScreenOpened || (passengerScreenMode == P_INITIAL && isNewUI)) && Data.autoData.getPickupLatLng() != null) {
             pickupLocationEtaMarker();
