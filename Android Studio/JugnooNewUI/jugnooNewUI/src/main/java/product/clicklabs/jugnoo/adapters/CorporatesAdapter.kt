@@ -24,7 +24,7 @@ class CorporatesAdapter(private var corporates: ArrayList<Corporate>, val recycl
     }
 
     override fun onClickItem(viewClicked: View?, parentView: View?) {
-        val pos = recyclerView.getChildLayoutPosition(parentView)
+        val pos = recyclerView.getChildLayoutPosition(parentView!!)
         if(pos != RecyclerView.NO_POSITION){
             for(corp in corporates){
                 corp.selected = false

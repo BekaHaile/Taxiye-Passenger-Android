@@ -29,6 +29,7 @@
 -dontwarn retrofit.**
 -dontwarn okio.**
 -dontwarn com.flurry.**
+-dontwarn com.sothree.slidinguppanel.**
 -keep class com.google.inject.** { *; }
 -keep class org.apache.http.** { *; }
 -keep class org.apache.james.mime4j.** { *; }

@@ -733,7 +733,7 @@
         <item name="android:textSize">
             9sp
         </item>
-        <item name="textColorError">
+        <item name="android:textColorHighlight">
             @color/design_textinput_error_color_light
         </item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
