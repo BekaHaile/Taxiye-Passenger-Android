@@ -1077,7 +1077,7 @@
     <string name="shares">Shares</string>
     <string name="share">Share</string>
     <string name="renew">Renew</string>
-    <string name="invoice_amount_excluding_any_toll_taxes">*Invoice amount is excluding any toll taxes which are to be borne directly by the customer.</string>
+    <string name="invoice_amount_excluding_any_toll_taxes">*Invoice amount will include any applicable toll taxes.</string>
     <string name="previous_plan">Previous plan</string>
     <string name="star_info_text">Shows the total amount you\'ve saved by subscribing to star</string>
     <string name="delivery_from">Delivery from</string>
@@ -2038,4 +2038,78 @@
     <string name="save_your_drop_location">Save your drop location</string>
     <string name="tap_on_pin">Tap on pin...</string>
     <string name="favourite">Favourite%s</string>
+
+
+    <!-- Scanner Layout -->
+    <string name="enter_number">Enter Number</string>
+    <string name="info_message_qr">Place a QR code inside the rectangle to scan it.</string>
+
+    <string name="turn_flashlight_off">Flashlight Off</string>
+    <string name="turn_flashlight_on">Flashlight On</string>
+
+
+    <!-- Enter QR Number Activity -->
+    <!-- <string name="next">Next</string>     String Resource already present-->
+    <string name="info_message">Input the code mentioned below the QR to start</string>
+    <string name="bike_number_colon">Bike Number :</string>
+
+
+    <!--Instruction Dialog List Item Layout-->
+    <string name="how_to_ride">How to ride</string>
+    <string name="find_a_bike_near_you_and_tap_to_unlock">Find a bike near you and tap to unlock</string>
+    <string name="got_it">Got It</string>
+
+    <!-- Damage Report Activity -->
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="select_file">Select File</string>
+    <string name="incorrect_qr_code">Incorrect QR Code</string>
+    <string name="scan_not_complete">Scan Not Complete</string>
+    <string name="cant_upload_more_than_five_pictures">Can\'t Upload More Than 5 pictures</string>
+    <string name="bike_number_required">Bike Number Required</string>
+    <string name="permissions_required">Permissions Required</string>
+
+
+    <!-- Damage Report Image Adapter-->
+    <string name="remove_image">Remove Image</string>
+
+
+    <!-- Damage Report Layout -->
+    <string name="fault_condition_colon">Fault Condtion:</string>
+    <string name="bike_info_colon">Bike Info:</string>
+    <string name="click_to_add_vehicle_number">Click to add Vehicle number</string>
+    <string name="add_description_colon">Add Description:</string>
+    <string name="trouble_description">Trouble description</string>
+    <string name="add_image_colon">Add Image:</string>
+    <string name="add_image">Add Image</string>
+    <string name="report">Report</string>
+
+    <!-- Damage Report List Item Layout-->
+    <string name="damage_report_item">Damage Report</string>
+    <string name="please_enter_qr_number_to_continue">Please Enter QR Number To Continue</string>
+
+
+    <!-- Scanner Activity -->
+
+    <string name="enter_qr_number">Enter QR Number</string>
+    <string name="lock">lock</string>
+
+    <string name="drop_stations">Drop Stations</string>
+
+    <!-- Rental In Ride Layout -->
+    <string name="lock_ride">Lock Ride</string>
+    <string name="unlock_ride">Unlock Ride</string>
+    <string name="end_ride">End Ride</string>
+
+    <string name="booking_a_bike">Booking a bike...</string>
+    <string name="ending_ride">Ending Ride</string>
+    <string name="unlocking_ride">Unlocking Ride</string>
+    <string name="locking_ride">Locking Ride</string>
+    <string name="select_drop_off_station">Select Drop Off Station</string>
+    <string name="no_nearby_drop_off_stations">No nearby drop off stations available</string>
+    <string name="qr_code_too_small">QR Number too small</string>
+    <string name="please_lock_the_bike_and_proceed">Please lock the bike and proceed</string>
+    <string name="bike_lock_alert_message">Make sure the bike is locked and parked safely</string>
+
+
 </resources>

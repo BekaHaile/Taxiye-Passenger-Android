@@ -1048,7 +1048,19 @@ public interface Constants {
 	String KEY_JSONDATA = "jsonData";
 	String KEY_CUSTOMER_GOOGLE_CACHING_ENABLED = "customer_google_caching_enabled";
 
-//    save location
+    //    save location
     String SKIP_SAVE_PICKUP_LOCATION = "skip_save_pickup_location";
     String SKIP_SAVE_DROP_LOCATION = "skip_save_drop_location";
+
+    String KEY_GPS_LOCK_STATUS = "gps_lock_status";
+    String KEY_EXTERNAL_ID = "external_id";
+    String KEY_LOCK_STATUS = "lock_status";
+    String KEY_FAULT_CONDITION = "fault_condition";
+
+
+    String KEY_LOCATION_ID = "location_id";
+    String KEY_DAMAGE_IMAGE = "damage_image";
+
+
+    String KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL = "customer_gps_lock_status_polling_interval";
 }
