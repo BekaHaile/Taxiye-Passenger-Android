@@ -422,7 +422,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 public void onDirectionsFailure() {
 
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon);
+            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon, null);
 
         } catch (Exception e) {
             e.printStackTrace();

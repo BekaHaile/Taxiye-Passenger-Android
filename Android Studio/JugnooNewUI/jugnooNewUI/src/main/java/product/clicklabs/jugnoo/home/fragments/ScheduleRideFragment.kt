@@ -6,12 +6,15 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.*
 import com.google.gson.Gson
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GACategory
@@ -27,6 +30,9 @@ import product.clicklabs.jugnoo.*
 import product.clicklabs.jugnoo.Constants.SCHEDULE_CURRENT_TIME_DIFF
 import product.clicklabs.jugnoo.Constants.SCHEDULE_DAYS_LIMIT
 import product.clicklabs.jugnoo.adapters.RentalPackagesAdapter
+import product.clicklabs.jugnoo.apis.ApiFareEstimate
+import product.clicklabs.jugnoo.datastructure.CouponInfo
+import product.clicklabs.jugnoo.datastructure.PromoCoupon
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
 import product.clicklabs.jugnoo.home.HomeActivity
@@ -63,6 +69,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     var minBufferTimeCurrent = 30
     var scheduleDaysLimit = 2
     private var isOneWay : Int = -1
+    private var apiFareEstimate : ApiFareEstimate? = null
     private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
     private val onDateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
         val date = year.toString() + "-" + (month + 1) + "-" + dayOfMonth
@@ -159,6 +166,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         R.drawable.ic_radio_button_unchecked,
                         0, 0, 0)
                 packagesAdapter!!.setList(getOneWayPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
+                getFareEstimate()
 //                updatePackagesAccRegionSelected(selectedRegion)
             }
 
@@ -172,6 +180,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         R.drawable.ic_radio_button_checked,
                         0, 0, 0)
                 packagesAdapter!!.setList(getRoundTripPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
+                getFareEstimate()
             }
 
             btSchedule.setOnClickListener {
@@ -236,6 +245,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvDestination.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
             tvPickupDateTime.visibility = visibilityNotRental
             tvSelectDateTime.visibility = visibilityNotRental
+            tvFareEstimate.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
+            rvVehiclesList.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.GONE else View.VISIBLE
+            tvSelectVehicleType.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.GONE else View.VISIBLE
             tvSelectRoute.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
             tvOneWay.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
             isOneWay = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) 1 else -1
@@ -271,6 +283,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         override fun onItemSelected(selectedPackage: Package) {
                             this@ScheduleRideFragment.selectedPackage = selectedPackage
                             scheduleRideVehicleListAdapter.notifyDataSetChanged()
+                            getFareEstimate()
                         }
                     })
             rvPackages.adapter = packagesAdapter
@@ -382,6 +395,66 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         } else {
             tvDestination.text = searchResult.nameForText
             searchResultDestination = searchResult
+        }
+        getFareEstimate()
+    }
+
+    private fun getDirectionsAndComputeFare(sourceLatLng: LatLng, sourceAddress: String, destLatLng: LatLng, destAddress: String) {
+        try {
+            selectedPackage?.isRoundTrip = if(isOneWay == 1) 0 else 1
+            if(apiFareEstimate == null) {
+                apiFareEstimate = ApiFareEstimate(context, object : ApiFareEstimate.Callback {
+                    override fun onSuccess(list: List<LatLng>, startAddress: String, endAddress: String, distanceText: String,
+                                           timeText: String, distanceValue: Double, timeValue: Double, promoCoupon: PromoCoupon) {
+
+                    }
+
+                    override fun onFareEstimateSuccess(currency: String, minFare: String, maxFare: String, convenienceCharge: Double, tollCharge: Double) {
+
+                        tvFareEstimate.text = getString(R.string.fare_estimate).plus(": ")
+                                .plus(Utils.formatCurrencyValue(currency, minFare).plus(" - ").plus(Utils.formatCurrencyValue(currency, maxFare)))
+                        if (Prefs.with(context).getInt(Constants.KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
+                            tvFareEstimate.append(" ")
+                            tvFareEstimate.append(getString(R.string.bracket_in_format, currency))
+                        }
+
+//                    if (convenienceCharge > 0) {
+//                        textViewConvenienceCharge.setText(getString(R.string.convenience_charge_colon) + " " + Utils.formatCurrencyValue(currency, convenienceCharge))
+//                    } else {
+//                        textViewConvenienceCharge.setText("")
+//                    }
+//                    setTextTollCharges(currency, tollCharge)
+                    }
+
+                    override fun onPoolSuccess(currency: String, fare: Double, rideDistance: Double, rideDistanceUnit: String,
+                                               rideTime: Double, rideTimeUnit: String, poolFareId: Int, convenienceCharge: Double,
+                                               text: String, tollCharge: Double) {
+                    }
+
+                    override fun onNoRetry() {
+                    }
+
+                    override fun onRetry() {}
+
+                    override fun onFareEstimateFailure() {
+
+                    }
+
+                    override fun onDirectionsFailure() {
+
+                    }
+                })
+            }
+            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+    private fun getFareEstimate() {
+        if(searchResultPickup != null && searchResultDestination != null && Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) {
+            getDirectionsAndComputeFare(searchResultPickup!!.latLng, searchResultPickup!!.address, searchResultDestination!!.latLng, searchResultDestination!!.address)
         }
     }
 
