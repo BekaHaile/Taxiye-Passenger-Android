@@ -2125,6 +2125,7 @@
     <string name="offer_cannot_be_less_than_min_value">Offer can\'t be less than minimum value</string>
     <string name="offer_cannot_be_more_than_max_value">Offer can\'t be more than max value</string>
     <string name="copied">Copied</string>
+    <string name="text_rewards">Rewards</string>
 
 
 </resources>

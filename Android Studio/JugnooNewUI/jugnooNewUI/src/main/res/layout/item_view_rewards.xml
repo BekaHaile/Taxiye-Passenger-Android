@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="180dp"
+    android:id="@+id/clRewards"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/spacing_large"
+    android:layout_marginTop="@dimen/spacing_tiny"
+    android:layout_marginBottom="@dimen/spacing_tiny"
+    android:background="@drawable/bg_rewards_white_round_layer_shadow"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivOffer"
+        android:layout_width="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_rewards_offer"
+        android:layout_height="90dp" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/font_extra_large"
+        android:textColor="@color/black"
+        android:text="100"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/spacing_normal"
+        app:layout_constraintTop_toBottomOf="@+id/ivOffer"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvRewardInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/font_small"
+        android:textColor="@color/text_color"
+        android:text="Cashback won"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/tvAmount"/>
+</android.support.constraint.ConstraintLayout>

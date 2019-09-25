@@ -561,6 +561,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             />
+
+        <activity
+            android:name=".newui.activity.RewardsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>
