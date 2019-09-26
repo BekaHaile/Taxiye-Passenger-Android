@@ -2117,7 +2117,7 @@ RelativeLayout plusBadge;
                 new KeyboardLayoutListener.KeyBoardStateHandler() {
                     @Override
                     public void keyboardOpened() {
-                        editTextRSFeedback.setHint("");
+//                        editTextRSFeedback.setHint("");
                         scrollViewRideSummary.smoothScrollTo(0, buttonRSSubmitFeedback.getBottom());
                     }
 
@@ -2158,7 +2158,7 @@ RelativeLayout plusBadge;
 //                            }
 //                        }
 
-                        if (feedbackStr.length() > 300) {
+                        if (feedbackStr.length() > 50) {
                             editTextRSFeedback.requestFocus();
                             editTextRSFeedback.setError(getString(R.string.review_must_be_in));
                         } else {
@@ -4602,6 +4602,8 @@ RelativeLayout plusBadge;
                 showPokestopOnOffButton(mode);
 
                 setScheduleRideUI(mode);
+                badgesAdapter=null;
+
 
                 try {
                     getTrackingLogHelper().startSyncService(mode, Data.userData.accessToken);
@@ -9486,6 +9488,9 @@ RelativeLayout plusBadge;
                 e.printStackTrace();
             }
 
+            badgesAdapter=null;
+            badgesNormal.setVisibility(View.GONE);
+            badgesScroll.setVisibility(View.GONE);
 
             ReferralActions.incrementTransactionCount(HomeActivity.this);
             userMode = UserMode.PASSENGER;
@@ -9780,7 +9785,7 @@ RelativeLayout plusBadge;
                     if (getStarSubscriptionCheckoutFragment() != null) {
                         topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
                     } else {
-                        topBar.textViewTitle.setText(getResources().getString(R.string.rides));
+                        topBar.textViewTitle.setText(getResources().getString(R.string.rating_summary));
                     }
                 }
                 localModeEnabled = modeEnabled;

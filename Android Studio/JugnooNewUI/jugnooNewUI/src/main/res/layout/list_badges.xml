@@ -50,6 +50,8 @@
         android:id="@+id/tvBadgeName"
         android:layout_height="wrap_content"
         android:text="ssssss"
+        android:textSize="12sp"
         android:textColor="@color/black"
+
         android:layout_below="@id/summary_badge" />
 </RelativeLayout>
