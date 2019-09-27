@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
@@ -102,8 +103,12 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
                     holder = (ViewHolderFeedbackReason) v.getTag();
                     if (currentList.get(holder.id).checked) {
                         currentList.get(holder.id).checked = false;
+                        if(currentList.get(holder.id).canComment)
+                            feedbackReasonsListEventHandler.showCommentBox(View.GONE);
                     } else {
                         currentList.get(holder.id).checked = true;
+                        if(currentList.get(holder.id).canComment)
+                        feedbackReasonsListEventHandler.showCommentBox(View.VISIBLE);
                     }
                     notifyDataSetChanged();
 
@@ -178,6 +183,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
 
     public interface FeedbackReasonsListEventHandler {
         void onLastItemSelected(boolean selected, String name);
+        void showCommentBox(int visibilty);
     }
 
     public void resetData(boolean showPositiveReasons) {

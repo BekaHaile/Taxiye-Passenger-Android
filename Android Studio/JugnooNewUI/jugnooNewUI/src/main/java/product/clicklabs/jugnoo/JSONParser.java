@@ -968,7 +968,7 @@ public class JSONParser implements Constants {
                    JSONArray txtArr=jObj.optJSONArray("text_badges");
                    for(int j=0;j<txtArr.length();j++){
                        JSONObject textBadge=txtArr.optJSONObject(j);
-                       textBadges.add( new FeedbackReason(textBadge.optString("name"),textBadge.optInt("badge_id")));
+                       textBadges.add( new FeedbackReason(textBadge.optString("name"),textBadge.optInt("badge_id"),textBadge.optInt("can_comment")==1?true:false));
                    }
                }
                Data.autoData.getFeedBackInfoRatingData().add(new FeedBackInfo(jObj.optInt("rating"),jObj.optString("desc"),imageBadges,textBadges));

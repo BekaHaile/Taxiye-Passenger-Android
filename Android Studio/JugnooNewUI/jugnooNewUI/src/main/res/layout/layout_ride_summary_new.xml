@@ -69,6 +69,7 @@
                 android:background="@color/menu_item_selector_color">
 
                 <RelativeLayout
+
                     android:id="@+id/profileRl"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
@@ -88,8 +89,8 @@
 
                     <ImageView
                         android:id="@+id/profileImg"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
+                        android:layout_width="68dp"
+                        android:layout_height="68dp"
                         android:layout_centerInParent="true"
                         android:tag="mwar" />
                 </RelativeLayout>
@@ -100,12 +101,12 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="45dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="@dimen/dp_20"
+                    android:layout_marginBottom="@dimen/dp_30"
                     android:gravity="center"
                     android:visibility="@integer/show_amount_on_ride_summary"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="14dp"
-                    app:cardElevation="@dimen/dp_20">
+                    app:cardElevation="@dimen/dp_8">
 
                     <LinearLayout
                         android:id="@+id/llRideEndTotalFareTakeCash"
@@ -120,9 +121,10 @@
                             android:id="@+id/driverName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/dp_35"
+                            android:layout_marginTop="@dimen/dp_40"
                             android:fontFamily="@font/maven_pro_medium"
                             android:text="Jetha Lal"
+                            android:textStyle="bold"
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_15" />
 
@@ -149,7 +151,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/total_fare"
-                                    android:textColor="@color/text_color"
+                                    android:textColor="@color/grey_dark"
                                     android:textSize="@dimen/end_ride_fare_title_text_size" />
 
                                 <TextView
@@ -186,7 +188,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/Cash_to_be_paid"
-                                    android:textColor="@color/text_color"
+                                    android:textColor="@color/grey_dark"
                                     android:textSize="@dimen/end_ride_fare_title_text_size" />
 
                                 <TextView
@@ -202,8 +204,6 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
             </RelativeLayout>
-
-
 
 
             <TextView
@@ -252,9 +252,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/dp_10"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="@dimen/dp_20"
-                android:layout_marginTop="@dimen/dp_10"
                 android:gravity="center"
                 android:visibility="@integer/show_amount_on_ride_summary"
                 app:cardBackgroundColor="@color/white"
@@ -276,6 +276,7 @@
                         android:layout_marginEnd="60px">
 
                         <ImageView
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_height="2px"
                             android:layout_alignParentStart="true"
@@ -288,16 +289,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:layout_marginStart="20px"
-                            android:layout_marginEnd="20px"
                             android:gravity="center"
                             android:text="@string/how_was_your_experience"
                             android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_36" />
+                            android:textStyle="bold"
+                            android:textSize="17sp" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="2px"
+                            android:visibility="gone"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:layout_toEndOf="@+id/textViewRSRateYourRide"
@@ -389,149 +390,153 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="-10dp"
                             android:layout_marginBottom="@dimen/dp_20"
-                            android:text="Add a compliment?"
+                            android:fontFamily="@font/maven_pro_medium"
+                            android:text="Add Your Reviews"
+                            android:textColor="@color/grey_dark"
                             android:textSize="@dimen/dp_10"
                             android:textStyle="bold"
-                            android:textColor="@color/black"
-                            android:visibility="gone" />
-                       <LinearLayout
-                           android:id="@+id/llBadges"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:animateLayoutChanges="true"
-                           android:orientation="vertical"
-                           android:layout_gravity="center_horizontal"
-                           android:gravity="center_horizontal">
+                            android:visibility="visible" />
+
                         <LinearLayout
-                            android:animateLayoutChanges="true"
-                            android:id="@+id/badgesNormal"
+                            android:id="@+id/llBadges"
+                            android:layout_marginBottom="@dimen/dp_20"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
+                            android:animateLayoutChanges="true"
+                            android:gravity="center_horizontal"
+                            android:tag="@string/dont_touch_me"
+                            android:orientation="vertical">
 
-                            <RelativeLayout
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:layout_gravity="center"
-                                android:layout_marginEnd="-20dp">
-
-                                <RelativeLayout
-                                    android:id="@+id/summary_badge"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_marginTop="10dp"
-                                    android:splitMotionEvents="false"
-                                    android:tag="mwar">
-
-                                    <ImageView
-                                        android:id="@+id/badge1back"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:background="@drawable/circle_grey"
-                                        android:tag="mwar" />
-
-                                    <ImageView
-                                        android:id="@+id/badge1"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_centerInParent="true"
-                                        android:tag="mwar" />
-                                </RelativeLayout>
-
-                                <TextView
-                                    android:id="@+id/tvBadgeName1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@id/summary_badge" />
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
-                                android:layout_gravity="center"
-                                android:elevation="@dimen/dp_10">
+                            <LinearLayout
+                                android:id="@+id/badgesNormal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:animateLayoutChanges="true"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
 
                                 <RelativeLayout
-                                    android:id="@+id/plus_badge"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_marginTop="10dp"
-                                    android:splitMotionEvents="false"
-                                    android:tag="mwar">
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginEnd="-30dp">
 
-                                    <ImageView
+                                    <RelativeLayout
+                                        android:id="@+id/summary_badge"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:background="@drawable/circle_border_autos"
-                                        android:tag="mwar" />
+                                        android:layout_centerHorizontal="true"
+                                        android:splitMotionEvents="false"
+                                        android:tag="@string/dont_touch_me">
 
-                                    <ImageView
-                                        android:id="@+id/badge_plus"
+                                        <ImageView
+                                            android:id="@+id/badge1back"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:background="@drawable/circle_grey"
+                                            android:tag="@string/dont_touch_me" />
+
+                                        <ImageView
+                                            android:id="@+id/badge1"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerInParent="true"
+                                            android:tag="@string/dont_touch_me" />
+                                    </RelativeLayout>
+
+                                    <TextView
+                                        android:id="@+id/tvBadgeName1"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_centerInParent="true"
-                                        android:src="@drawable/ic_plus_theme"
-                                        android:tag="mwar" />
+                                        android:layout_below="@id/summary_badge" />
                                 </RelativeLayout>
-
-                                <TextView
-                                    android:id="@+id/tvBadgePlus"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@id/plus_badge" />
-                            </RelativeLayout>
-
-                            <RelativeLayout
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="-20dp">
 
                                 <RelativeLayout
-                                    android:id="@+id/summary_badge2"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_centerHorizontal="true"
-                                    android:layout_marginTop="10dp"
-                                    android:splitMotionEvents="false"
-                                    android:tag="mwar">
+                                    android:layout_width="80dp"
+                                    android:layout_height="80dp"
+                                    android:layout_gravity="center"
+                                    android:elevation="@dimen/dp_10">
 
-                                    <ImageView
-                                        android:id="@+id/badge2back"
+                                    <RelativeLayout
+                                        android:id="@+id/plus_badge"
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:background="@drawable/circle_grey"
-                                        android:tag="mwar" />
+                                        android:layout_centerHorizontal="true"
+                                        android:splitMotionEvents="false"
+                                        android:tag="@string/dont_touch_me">
 
-                                    <ImageView
-                                        android:id="@+id/badge2"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_centerInParent="true"
-                                        android:tag="mwar" />
+                                        <ImageView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:background="@drawable/circle_white_stroke_grey"
+                                            android:tag="@string/dont_touch_me" />
+
+                                        <ImageView
+                                            android:id="@+id/badge_plus"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:src="@drawable/ic_plus_dark_selector"
+                                            android:tag="@string/dont_touch_me" />
+                                    </RelativeLayout>
+
+                                    <TextView
+                                        android:id="@+id/tvBadgePlus"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@id/plus_badge" />
                                 </RelativeLayout>
 
-                                <TextView
-                                    android:id="@+id/tvBadgeName2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@id/summary_badge2" />
-                            </RelativeLayout>
+                                <RelativeLayout
+                                    android:layout_width="60dp"
+                                    android:layout_height="60dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="-30dp">
+
+                                    <RelativeLayout
+                                        android:id="@+id/summary_badge2"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_centerHorizontal="true"
+                                        android:splitMotionEvents="false"
+                                        android:tag="@string/dont_touch_me">
+
+                                        <ImageView
+                                            android:id="@+id/badge2back"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:background="@drawable/circle_grey"
+                                            android:tag="@string/dont_touch_me" />
+
+                                        <ImageView
+                                            android:id="@+id/badge2"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerInParent="true"
+                                            android:tag="@string/dont_touch_me" />
+                                    </RelativeLayout>
+
+                                    <TextView
+                                        android:id="@+id/tvBadgeName2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@id/summary_badge2" />
+                                </RelativeLayout>
 
 
+                            </LinearLayout>
+
+                            <com.yarolegovich.discretescrollview.DiscreteScrollView
+                                android:id="@+id/badges"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone" />
                         </LinearLayout>
-                        <com.yarolegovich.discretescrollview.DiscreteScrollView
-                            android:id="@+id/badges"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone"
-                            />
-                       </LinearLayout>
+
                         <TextView
                             android:id="@+id/textViewRSWhatImprove"
                             android:layout_width="wrap_content"
@@ -544,43 +549,52 @@
                             android:visibility="gone" />
 
 
-
                         <product.clicklabs.jugnoo.utils.NonScrollGridView
                             android:id="@+id/gridViewRSFeedbackReasons"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="40px"
-                            android:layout_marginTop="20px"
                             android:layout_marginEnd="40px"
+                            android:layout_marginBottom="20dp"
                             android:divider="@color/transparent"
                             android:dividerHeight="0px"
                             android:numColumns="2"
                             android:splitMotionEvents="false"
                             android:visibility="visible" />
 
-
-                        <EditText
-                            android:id="@+id/editTextRSFeedback"
+                        <android.support.v7.widget.CardView
+                            android:id="@+id/cvAdditionalComments"
                             android:layout_width="match_parent"
-                            android:layout_height="200px"
-                            android:layout_marginStart="40px"
-                            android:layout_marginTop="20px"
-                            android:layout_marginEnd="40px"
-                            android:background="@drawable/button_grey_blr"
-                            android:gravity="start"
-                            android:hint="@string/leave_a_comment"
-                            android:padding="20px"
-                            android:scrollbars="vertical"
-                            android:textColor="@color/grey_dark_more"
-                            android:textCursorDrawable="@drawable/cursor_black"
-                            android:textSize="12sp" />
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="#f7f7f9"
+                            android:layout_marginBottom="@dimen/dp_20"
+                            android:layout_marginStart="@dimen/dp_10"
+                            android:layout_marginTop="@dimen/dp_20"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            app:cardElevation="-5dp"
+                            app:cardCornerRadius="@dimen/dp_10"
+                            android:visibility="gone">
 
+                            <EditText
+                                android:background="@color/transparent"
+                                android:id="@+id/editTextRSFeedback"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:gravity="start"
+                                android:hint="@string/leave_a_comment"
+                                android:padding="20px"
+                                android:scrollbars="vertical"
+                                android:textColor="@color/grey_alpha_50"
+                                android:textCursorDrawable="@drawable/cursor_black"
+                                android:textSize="12sp" />
+                        </android.support.v7.widget.CardView>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="32px"
                             android:layout_marginStart="60px"
-                            android:layout_marginTop="10px">
+                            android:layout_marginTop="10px"
+                            android:visibility="gone" >
 
                             <TextView
                                 android:id="@+id/textViewRSOtherError"
@@ -593,14 +607,16 @@
                         </LinearLayout>
 
                         <Button
+                            android:visibility="gone"
                             android:id="@+id/buttonRSSubmitFeedback"
-                            android:layout_width="match_parent"
                             style="@style/ButtonTheme"
+                            android:layout_width="match_parent"
                             android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="20px"
-                            android:layout_marginBottom="50px"
-                            android:layout_marginEnd="@dimen/dp_20"
-                            android:layout_marginStart="@dimen/dp_20"
+                            android:layout_marginStart="@dimen/dp_10"
+                            android:layout_marginEnd="@dimen/dp_10"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp"
+                            android:textAllCaps="false"
                             android:text="@string/done_caps" />
 
                         <Button
@@ -619,6 +635,140 @@
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
+
+
+            <Button
+                android:id="@+id/buttonAddTipEndRide"
+                style="@style/ButtonTheme"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20px"
+                android:layout_marginBottom="30px"
+                android:text="@string/action_add_tip"
+                android:textAllCaps="true"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginEnd="10dp"
+                android:background="@color/white"
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginBottom="@dimen/dp_20"
+                app:cardCornerRadius="@dimen/dp_14"
+                app:cardElevation="@dimen/dp_8">
+
+                <LinearLayout
+                    android:id="@+id/llAddTip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:orientation="vertical"
+                    android:tag="@string/dont_touch_me">
+
+                    <TextView
+                        android:id="@+id/tvTipDriver"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/tip_the_driver"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="13sp"
+                        app:typekitFont="@string/maven" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvTipFirst"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/circle_white_grey_selector"
+                            android:gravity="center"
+                            android:textColor="@color/text_color"
+                            android:textSize="14sp"
+                            app:typekitFont="@string/maven"
+                            tools:text="Rs10" />
+
+                        <TextView
+                            android:id="@+id/tvTipSecond"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="30dp"
+                            android:background="@drawable/circle_white_grey_selector"
+                            android:gravity="center"
+                            android:textColor="@color/text_color"
+                            android:textSize="14sp"
+                            app:typekitFont="@string/maven"
+                            tools:text="Rs20" />
+
+                        <TextView
+                            android:id="@+id/tvTipThird"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="30dp"
+                            android:background="@drawable/circle_white_grey_selector"
+                            android:gravity="center"
+                            android:textColor="@color/text_color"
+                            android:textSize="14sp"
+                            app:typekitFont="@string/maven"
+                            tools:text="Rs30" />
+
+                    </LinearLayout>
+
+                    <product.clicklabs.jugnoo.widgets.PrefixedEditText
+                        android:id="@+id/etTipOtherValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="35dp"
+                        android:layout_marginEnd="45dp"
+                        android:background="@drawable/background_white_bottom_border"
+                        android:drawablePadding="5dp"
+                        android:hint="@string/add_other_value"
+                        android:inputType="numberDecimal"
+                        android:maxLines="1"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textSize="13sp"
+                        app:typekitFont="@string/maven" />
+
+                    <Button
+                        android:id="@+id/bPayTip"
+                        style="@style/ButtonThemeCapsule"
+                        android:layout_width="110dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/pay"
+                        android:textAllCaps="true"
+                        android:textSize="15sp"
+                        app:typekitFont="@string/maven" />
+
+                    <TextView
+                        android:id="@+id/tvSkipTip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="60dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/skip"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color_less_light"
+                        android:textSize="15sp"
+                        app:typekitFont="@string/maven" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
             <LinearLayout
                 android:id="@+id/linearLayoutRSViewInvoice"
                 android:layout_width="wrap_content"
@@ -646,135 +796,6 @@
 
             </LinearLayout>
 
-            <Button
-                android:id="@+id/buttonAddTipEndRide"
-                style="@style/ButtonTheme"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20px"
-                android:layout_marginBottom="30px"
-                android:text="@string/action_add_tip"
-                android:textAllCaps="true"
-                android:visibility="visible" />
-<android.support.v7.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
-    app:cardCornerRadius="@dimen/dp_14"
-    android:background="@color/white"
-    app:cardElevation="@dimen/dp_20"
-    app:cardBackgroundColor="@color/white"
-    android:layout_marginTop="@dimen/dp_10"
-    >
-            <LinearLayout
-                android:id="@+id/llAddTip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:orientation="vertical"
-                android:tag="@string/dont_touch_me">
-
-                <TextView
-                    android:id="@+id/tvTipDriver"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/tip_the_driver"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="13sp"
-                    app:typekitFont="@string/maven" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvTipFirst"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:background="@drawable/circle_white_grey_selector"
-                        android:gravity="center"
-                        android:textColor="@color/text_color"
-                        android:textSize="14sp"
-                        app:typekitFont="@string/maven"
-                        tools:text="Rs10" />
-
-                    <TextView
-                        android:id="@+id/tvTipSecond"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="30dp"
-                        android:background="@drawable/circle_white_grey_selector"
-                        android:gravity="center"
-                        android:textColor="@color/text_color"
-                        android:textSize="14sp"
-                        app:typekitFont="@string/maven"
-                        tools:text="Rs20" />
-
-                    <TextView
-                        android:id="@+id/tvTipThird"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="30dp"
-                        android:background="@drawable/circle_white_grey_selector"
-                        android:gravity="center"
-                        android:textColor="@color/text_color"
-                        android:textSize="14sp"
-                        app:typekitFont="@string/maven"
-                        tools:text="Rs30" />
-
-                </LinearLayout>
-
-                <product.clicklabs.jugnoo.widgets.PrefixedEditText
-                    android:id="@+id/etTipOtherValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="45dp"
-                    android:layout_marginTop="35dp"
-                    android:layout_marginEnd="45dp"
-                    android:background="@drawable/background_white_bottom_border"
-                    android:drawablePadding="5dp"
-                    android:hint="@string/add_other_value"
-                    android:inputType="numberDecimal"
-                    android:maxLines="1"
-                    android:textColor="@color/text_color"
-                    android:textColorHint="@color/text_color_hint"
-                    android:textSize="13sp"
-                    app:typekitFont="@string/maven" />
-
-                <Button
-                    android:id="@+id/bPayTip"
-                    style="@style/ButtonThemeCapsule"
-                    android:layout_width="110dp"
-                    android:layout_height="45dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/pay"
-                    android:textAllCaps="true"
-                    android:textSize="15sp"
-                    app:typekitFont="@string/maven" />
-
-                <TextView
-                    android:id="@+id/tvSkipTip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="60dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="@string/skip"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color_less_light"
-                    android:textSize="15sp"
-                    app:typekitFont="@string/maven" />
-
-            </LinearLayout>
-</android.support.v7.widget.CardView>
             <TextView
                 android:id="@+id/textViewRSScroll"
                 android:layout_width="20px"

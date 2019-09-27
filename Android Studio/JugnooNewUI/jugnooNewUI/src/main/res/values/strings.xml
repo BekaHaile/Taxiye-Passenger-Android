@@ -33,7 +33,7 @@
     <string name="confirm_request">Confirm Request</string>
 
     <string name="enter_code">Enter Code</string>
-    <string name="done_caps">Done</string>
+    <string name="done_caps">DONE</string>
 
     <string name="logout">Logout</string>
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
@@ -124,16 +124,16 @@
     <string name="assigning_state_edit_text_hint">Enter Destination</string>
 
     <!-- Ride Summary New Strings -->
-    <string name="total_fare">TOTAL FARE</string>
+    <string name="total_fare">Total Fare</string>
     <string name="total_fare_colon">TOTAL FARE: </string>
-    <string name="Cash_to_be_paid">CASH TO BE PAID</string>
+    <string name="Cash_to_be_paid">Cash To Be Paid</string>
     <string name="view_invoice">View Invoice</string>
     <string name="trip_overview">Trip Overview</string>
     <string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
-    <string name="done">DONE</string>
+    <string name="done">Done</string>
     <string name="skip">Skip</string>
     <string name="star_required">* Required</string>
-    <string name="leave_a_comment">Additional Comments</string>
+    <string name="leave_a_comment">Additional Comments..</string>
     <string name="what_could_we_improve">What could we improve?</string>
     <string name="rupees_value_format">&currency;%s</string>
     <string name="we_take_your_feedback_seriously">We take your feedback seriously. Please give us a rating</string>
@@ -1303,7 +1303,7 @@
     <string name="can_be_used_format">Can be used %s times</string>
     <string name="applied_on_all_offerings">Applicable on all offerings</string>
     <string name="no_coupons_available">No Coupons Available</string>
-    <string name="how_was_your_experience">How was your Trip?</string>
+    <string name="how_was_your_experience">How was your Trip</string>
     <string name="to_use_this_coupon">To use this coupon, select it at the time of checkout.</string>
     <string name="are_you_sure_want_to_disable_emergency">Are you sure you want to disable Emergency mode?</string>
     <string name="call">Call</string>

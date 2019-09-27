@@ -48,6 +48,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
@@ -419,6 +420,10 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                             } else {
                                 GAUtils.event(activity.getGaCategory(), FEEDBACK, ISSUE+SELECTED+name);
                             }
+                        }
+                        @Override
+                        public void showCommentBox(int visibility){
+//                            HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibility);
                         }
                     });
             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);

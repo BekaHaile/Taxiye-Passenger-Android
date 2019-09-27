@@ -188,6 +188,8 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.FeedBackInfo;
+import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.LatLngCoordinates;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
@@ -1247,6 +1249,10 @@ RelativeLayout plusBadge;
                                 }
                             }
                         }
+                        @Override
+                        public void showCommentBox(int visibility){
+                            HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibility);
+                        }
                     });
 
             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
@@ -1264,9 +1270,9 @@ RelativeLayout plusBadge;
 
         textViewRSWhatImprove.setVisibility(View.GONE);
         gridViewRSFeedbackReasons.setVisibility(View.GONE);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-        layoutParams.height = (int) (ASSL.Yscale() * 200);
-        editTextRSFeedback.setLayoutParams(layoutParams);
+//        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+//        layoutParams.height = (int) (ASSL.Yscale() * 200);
+//        editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
         textViewShowFareEstimate = (TextView)findViewById(R.id.tvShowFareEstimate);
         textViewShowFareEstimate.setTypeface(Fonts.mavenRegular(this));
@@ -2023,6 +2029,10 @@ RelativeLayout plusBadge;
             public void scoreChanged(float score) {
                 try {
                     int position=(int)Math.abs(score)-1;
+                    buttonRSSubmitFeedback.setVisibility(View.VISIBLE);
+                    findViewById(R.id.cvAdditionalComments).setVisibility(View.GONE);
+                    resetFeedBackListClicked(position);
+                    feedbackReasonsAdapter.notifyDataSetChanged();
                     plusBadge.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -2073,6 +2083,10 @@ RelativeLayout plusBadge;
                                                 }
                                             }
                                         }
+                                        @Override
+                                        public void showCommentBox(int visibility){
+                                            HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibility);
+                                        }
                                     });
 
                             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
@@ -2091,9 +2105,9 @@ RelativeLayout plusBadge;
                             textViewRSWhatImprove.setVisibility(View.VISIBLE);
 
 
-                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-                            layoutParams.height = (int) (ASSL.Yscale() * 150);
-                            editTextRSFeedback.setLayoutParams(layoutParams);
+//                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+//                            layoutParams.height = (int) (ASSL.Yscale() * 150);
+//                            editTextRSFeedback.setLayoutParams(layoutParams);
                         } else {
                             setZeroRatingView();
                         }
@@ -2455,7 +2469,14 @@ RelativeLayout plusBadge;
 
     }
     ArrayList<Integer> imgBadgesClicked=new ArrayList<>();
-
+    public void resetFeedBackListClicked(int pos){
+        for(FeedbackReason fr:Data.autoData.getFeedbackReasons()){
+            fr.checked=false;
+        }
+        for (FeedbackReason fr:Data.autoData.getFeedBackInfoRatingData().get(pos).getTextBadges()){
+            fr.checked=false;
+        }
+    }
     @Override
     public void onClickBadge(int badgeId,int position){
     if(BadgesAdapter.badgeCLicked){
@@ -3054,6 +3075,9 @@ RelativeLayout plusBadge;
         relativeLayoutRideEndWithImage.setVisibility(View.VISIBLE);
         imageViewRideEndWithImage.setImageResource(drawable);
     }
+
+
+
 
 
     private void showServiceUnavailableDialog() {
@@ -4965,9 +4989,9 @@ RelativeLayout plusBadge;
     private void setZeroRatingView() {
         textViewRSWhatImprove.setVisibility(View.GONE);
         gridViewRSFeedbackReasons.setVisibility(View.GONE);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-        layoutParams.height = (int) (ASSL.Yscale() * 200);
-        editTextRSFeedback.setLayoutParams(layoutParams);
+//        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+//        layoutParams.height = (int) (ASSL.Yscale() * 200);
+//        editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
     }
 
