@@ -4564,7 +4564,7 @@ RelativeLayout plusBadge;
                         rentalInRideLayout.setVisibility(View.GONE);
                         rentalEndRideLayout.setVisibility(View.GONE);
                         damageReportButton.setVisibility(View.GONE);
-
+                        tvDesc.setText(getResources().getString(R.string.add_your_reviews));
 
                         hideCenterPickupPin();
 

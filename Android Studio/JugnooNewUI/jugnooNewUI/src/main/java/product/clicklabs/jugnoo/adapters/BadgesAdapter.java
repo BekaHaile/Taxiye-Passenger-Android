@@ -26,6 +26,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder
     ArrayList<FeedBackInfo.ImageBadges> imageBadges;
     ArrayList<Integer> clickImagesIds=new ArrayList<>();
     BadgesClickListener activity;
+    private int clickCount=0;
 //    float scalingFactor=0;
 //    float imageSize;
 //    int margin;
@@ -99,17 +100,20 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(v.getTag()==null){
+
+                    if(v.getTag()==null&&clickCount<5){
                         v.setTag("Clicked");
+                        clickCount++;
                         badgeCLicked=true;
                         border.setBackground(((Activity)activity).getResources().getDrawable(R.drawable.circle_border_autos));
                         textView.setTextColor(((Activity)activity).getResources().getColor(R.color.theme_color));
                         clickImagesIds.add(imageBadges.get(getAdapterPosition()).getBadgeId());
                         badgeTick.setVisibility(View.VISIBLE);
                     }
-                    else if(v.getTag().equals("Clicked"))
+                    else if(v.getTag()!=null&&v.getTag().equals("Clicked"))
                         {
                            v.setTag(null);
+                           clickCount--;
                            int index=clickImagesIds.indexOf(imageBadges.get(getAdapterPosition()).getBadgeId());
                             if(index>=0){
                                 clickImagesIds.remove(index);

@@ -96,12 +96,13 @@
                 </RelativeLayout>
 
                 <android.support.v7.widget.CardView
+                    android:id="@+id/cvRideEndTotalFareTakeCash"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="45dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="@dimen/dp_30"
+                    android:layout_marginBottom="@dimen/dp_20"
                     android:gravity="center"
                     android:visibility="@integer/show_amount_on_ride_summary"
                     app:cardBackgroundColor="@color/white"
@@ -203,6 +204,397 @@
                         </LinearLayout>
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
+                <android.support.v7.widget.CardView
+                    android:layout_below="@id/cvRideEndTotalFareTakeCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:gravity="center"
+                    android:visibility="@integer/show_amount_on_ride_summary"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="@dimen/dp_8">
+
+                    <LinearLayout
+                        android:id="@+id/llFeedbackMain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="60px"
+                            android:layout_marginTop="70px"
+                            android:layout_marginEnd="60px">
+
+                            <ImageView
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="2px"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@+id/textViewRSRateYourRide"
+                                android:src="@color/text_color" />
+
+                            <TextView
+                                android:id="@+id/textViewRSRateYourRide"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:gravity="center"
+                                android:text="@string/how_was_your_experience"
+                                android:textColor="@color/text_color"
+                                android:textStyle="bold"
+                                android:textSize="19sp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="2px"
+                                android:visibility="gone"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toEndOf="@+id/textViewRSRateYourRide"
+                                android:src="@color/text_color" />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlThumbsType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="10px"
+                            android:orientation="horizontal">
+
+
+                            <ImageView
+                                android:id="@+id/imageViewThumbsDown"
+                                android:layout_width="238px"
+                                android:layout_height="238px"
+                                android:contentDescription="@string/bad_feedback"
+                                android:src="@drawable/ic_thumbs_down_selector"
+                                android:tag="mwar" />
+
+                            <ImageView
+                                android:id="@+id/imageViewThumbsUp"
+                                android:layout_width="238px"
+                                android:layout_height="238px"
+                                android:layout_marginStart="50px"
+                                android:layout_toEndOf="@+id/imageViewThumbsDown"
+                                android:contentDescription="@string/great_feedback"
+                                android:src="@drawable/ic_thumbs_up_selector"
+                                android:tag="mwar" />
+
+                            <TextView
+                                android:id="@+id/textViewThumbsDown"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/imageViewThumbsDown"
+                                android:layout_alignStart="@+id/imageViewThumbsDown"
+                                android:layout_alignEnd="@+id/imageViewThumbsDown"
+                                android:gravity="center"
+                                android:text="@string/bad"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/textViewThumbsUp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/imageViewThumbsUp"
+                                android:layout_alignStart="@+id/imageViewThumbsUp"
+                                android:layout_alignEnd="@+id/imageViewThumbsUp"
+                                android:gravity="center"
+                                android:text="@string/great"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="@dimen/text_size_30"
+                                android:visibility="visible" />
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llRatingFeedbackType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical">
+
+                            <com.sabkuchfresh.utils.RatingBarMenuFeedback
+                                android:id="@+id/ratingBarRSFeedback"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="15dp"
+                                android:numStars="5"
+                                android:rating="0"
+                                android:tag="@string/dont_touch_me"
+                                app:halfStars="false"
+                                app:maxStars="5"
+                                app:onlyForDisplay="false"
+                                app:starOff="@drawable/ic_menu_feedback_star_off"
+                                app:starOn="@drawable/ic_menu_feedback_star_on" />
+
+                            <TextView
+                                android:id="@+id/tvAddCompliment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="-10dp"
+                                android:layout_marginBottom="@dimen/dp_10"
+                                android:fontFamily="@font/maven_pro_medium"
+                                android:text="@string/add_your_reviews"
+                                android:textColor="@color/grey_dark"
+                                android:textSize="@dimen/dp_10"
+                                android:textStyle="bold"
+                                android:visibility="visible" />
+
+                            <LinearLayout
+                                android:id="@+id/llBadges"
+                                android:layout_marginBottom="@dimen/dp_10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:animateLayoutChanges="true"
+                                android:gravity="center_horizontal"
+                                android:tag="@string/dont_touch_me"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:id="@+id/badgesNormal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:animateLayoutChanges="true"
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
+
+                                    <RelativeLayout
+                                        android:layout_width="60dp"
+                                        android:layout_height="60dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginEnd="-30dp">
+
+                                        <RelativeLayout
+                                            android:id="@+id/summary_badge"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerHorizontal="true"
+                                            android:splitMotionEvents="false"
+                                            android:tag="@string/dont_touch_me">
+
+                                            <ImageView
+                                                android:id="@+id/badge1back"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:background="@drawable/circle_grey"
+                                                android:tag="@string/dont_touch_me" />
+
+                                            <ImageView
+                                                android:id="@+id/badge1"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_centerInParent="true"
+                                                android:tag="@string/dont_touch_me" />
+                                        </RelativeLayout>
+
+                                        <TextView
+                                            android:id="@+id/tvBadgeName1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_below="@id/summary_badge" />
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:layout_gravity="center"
+                                        android:elevation="@dimen/dp_10">
+
+                                        <RelativeLayout
+                                            android:id="@+id/plus_badge"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerHorizontal="true"
+                                            android:splitMotionEvents="false"
+                                            android:tag="@string/dont_touch_me">
+
+                                            <ImageView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:background="@drawable/circle_white_stroke_grey"
+                                                android:tag="@string/dont_touch_me" />
+
+                                            <ImageView
+                                                android:id="@+id/badge_plus"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_centerInParent="true"
+                                                android:src="@drawable/ic_plus_dark_selector"
+                                                android:tag="@string/dont_touch_me" />
+                                        </RelativeLayout>
+
+                                        <TextView
+                                            android:id="@+id/tvBadgePlus"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_below="@id/plus_badge" />
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="60dp"
+                                        android:layout_height="60dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginStart="-30dp">
+
+                                        <RelativeLayout
+                                            android:id="@+id/summary_badge2"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerHorizontal="true"
+                                            android:splitMotionEvents="false"
+                                            android:tag="@string/dont_touch_me">
+
+                                            <ImageView
+                                                android:id="@+id/badge2back"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:background="@drawable/circle_grey"
+                                                android:tag="@string/dont_touch_me" />
+
+                                            <ImageView
+                                                android:id="@+id/badge2"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_centerInParent="true"
+                                                android:tag="@string/dont_touch_me" />
+                                        </RelativeLayout>
+
+                                        <TextView
+                                            android:id="@+id/tvBadgeName2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_below="@id/summary_badge2" />
+                                    </RelativeLayout>
+
+
+                                </LinearLayout>
+
+                                <com.yarolegovich.discretescrollview.DiscreteScrollView
+                                    android:id="@+id/badges"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/textViewRSWhatImprove"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="40px"
+                                android:layout_marginTop="15px"
+                                android:text="@string/what_could_we_improve"
+                                android:textColor="@color/text_color"
+                                android:textSize="30px"
+                                android:visibility="gone" />
+
+
+                            <product.clicklabs.jugnoo.utils.NonScrollGridView
+                                android:tag="@string/dont_touch_me"
+                                android:id="@+id/gridViewRSFeedbackReasons"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="40px"
+                                android:layout_marginEnd="40px"
+                                android:layout_marginBottom="20dp"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:stretchMode="columnWidth"
+                                android:numColumns="auto_fit"
+                                android:gravity="center"
+                                android:splitMotionEvents="false"
+                                android:visibility="visible" />
+
+                            <android.support.v7.widget.CardView
+                                android:id="@+id/cvAdditionalComments"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="#f7f7f9"
+                                android:layout_marginBottom="@dimen/dp_20"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_20"
+                                android:layout_marginEnd="@dimen/dp_10"
+                                app:cardElevation="-5dp"
+                                app:cardCornerRadius="@dimen/dp_10"
+                                android:visibility="gone">
+
+                                <EditText
+                                    android:background="@color/transparent"
+                                    android:id="@+id/editTextRSFeedback"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="100dp"
+                                    android:gravity="start"
+                                    android:hint="@string/leave_a_comment"
+                                    android:padding="20px"
+                                    android:scrollbars="vertical"
+                                    android:textColor="@color/grey_alpha_50"
+                                    android:textCursorDrawable="@drawable/cursor_black"
+                                    android:textSize="12sp" />
+                            </android.support.v7.widget.CardView>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="32px"
+                                android:layout_marginStart="60px"
+                                android:layout_marginTop="10px"
+                                android:visibility="gone" >
+
+                                <TextView
+                                    android:id="@+id/textViewRSOtherError"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/star_required"
+                                    android:textColor="@color/red_status"
+                                    android:textSize="22px"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <Button
+                                android:visibility="gone"
+                                android:id="@+id/buttonRSSubmitFeedback"
+                                style="@style/ButtonTheme"
+                                android:layout_width="match_parent"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:layout_marginEnd="@dimen/dp_10"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:textAllCaps="false"
+                                android:text="@string/done_caps" />
+
+                            <Button
+                                android:id="@+id/buttonRSSkipFeedback"
+                                android:layout_width="150px"
+                                android:layout_height="@dimen/button_height"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="10px"
+                                android:layout_marginBottom="40px"
+                                android:background="@drawable/background_transparent"
+                                android:text="@string/skip"
+                                android:textColor="@color/text_color_light_selector"
+                                android:textSize="@dimen/button_small_text_size"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
             </RelativeLayout>
 
 
@@ -248,393 +640,7 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="@dimen/dp_20"
-                android:gravity="center"
-                android:visibility="@integer/show_amount_on_ride_summary"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="@dimen/dp_20">
 
-                <LinearLayout
-                    android:id="@+id/llFeedbackMain"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="60px"
-                        android:layout_marginTop="70px"
-                        android:layout_marginEnd="60px">
-
-                        <ImageView
-                            android:visibility="gone"
-                            android:layout_width="wrap_content"
-                            android:layout_height="2px"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:layout_toStartOf="@+id/textViewRSRateYourRide"
-                            android:src="@color/text_color" />
-
-                        <TextView
-                            android:id="@+id/textViewRSRateYourRide"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
-                            android:gravity="center"
-                            android:text="@string/how_was_your_experience"
-                            android:textColor="@color/text_color"
-                            android:textStyle="bold"
-                            android:textSize="17sp" />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="2px"
-                            android:visibility="gone"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@+id/textViewRSRateYourRide"
-                            android:src="@color/text_color" />
-                    </RelativeLayout>
-
-
-                    <RelativeLayout
-                        android:id="@+id/rlThumbsType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10px"
-                        android:orientation="horizontal">
-
-
-                        <ImageView
-                            android:id="@+id/imageViewThumbsDown"
-                            android:layout_width="238px"
-                            android:layout_height="238px"
-                            android:contentDescription="@string/bad_feedback"
-                            android:src="@drawable/ic_thumbs_down_selector"
-                            android:tag="mwar" />
-
-                        <ImageView
-                            android:id="@+id/imageViewThumbsUp"
-                            android:layout_width="238px"
-                            android:layout_height="238px"
-                            android:layout_marginStart="50px"
-                            android:layout_toEndOf="@+id/imageViewThumbsDown"
-                            android:contentDescription="@string/great_feedback"
-                            android:src="@drawable/ic_thumbs_up_selector"
-                            android:tag="mwar" />
-
-                        <TextView
-                            android:id="@+id/textViewThumbsDown"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/imageViewThumbsDown"
-                            android:layout_alignStart="@+id/imageViewThumbsDown"
-                            android:layout_alignEnd="@+id/imageViewThumbsDown"
-                            android:gravity="center"
-                            android:text="@string/bad"
-                            android:textAllCaps="true"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30"
-                            android:visibility="visible" />
-
-                        <TextView
-                            android:id="@+id/textViewThumbsUp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/imageViewThumbsUp"
-                            android:layout_alignStart="@+id/imageViewThumbsUp"
-                            android:layout_alignEnd="@+id/imageViewThumbsUp"
-                            android:gravity="center"
-                            android:text="@string/great"
-                            android:textAllCaps="true"
-                            android:textColor="@color/text_color"
-                            android:textSize="@dimen/text_size_30"
-                            android:visibility="visible" />
-
-                    </RelativeLayout>
-
-                    <LinearLayout
-                        android:id="@+id/llRatingFeedbackType"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:orientation="vertical">
-
-                        <com.sabkuchfresh.utils.RatingBarMenuFeedback
-                            android:id="@+id/ratingBarRSFeedback"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="15dp"
-                            android:numStars="5"
-                            android:rating="0"
-                            android:tag="@string/dont_touch_me"
-                            app:halfStars="false"
-                            app:maxStars="5"
-                            app:onlyForDisplay="false"
-                            app:starOff="@drawable/ic_menu_feedback_star_off"
-                            app:starOn="@drawable/ic_menu_feedback_star_on" />
-
-                        <TextView
-                            android:id="@+id/tvAddCompliment"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="-10dp"
-                            android:layout_marginBottom="@dimen/dp_20"
-                            android:fontFamily="@font/maven_pro_medium"
-                            android:text="Add Your Reviews"
-                            android:textColor="@color/grey_dark"
-                            android:textSize="@dimen/dp_10"
-                            android:textStyle="bold"
-                            android:visibility="visible" />
-
-                        <LinearLayout
-                            android:id="@+id/llBadges"
-                            android:layout_marginBottom="@dimen/dp_20"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:animateLayoutChanges="true"
-                            android:gravity="center_horizontal"
-                            android:tag="@string/dont_touch_me"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:id="@+id/badgesNormal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal"
-                                android:animateLayoutChanges="true"
-                                android:orientation="horizontal"
-                                android:visibility="gone">
-
-                                <RelativeLayout
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginEnd="-30dp">
-
-                                    <RelativeLayout
-                                        android:id="@+id/summary_badge"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_centerHorizontal="true"
-                                        android:splitMotionEvents="false"
-                                        android:tag="@string/dont_touch_me">
-
-                                        <ImageView
-                                            android:id="@+id/badge1back"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:background="@drawable/circle_grey"
-                                            android:tag="@string/dont_touch_me" />
-
-                                        <ImageView
-                                            android:id="@+id/badge1"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_centerInParent="true"
-                                            android:tag="@string/dont_touch_me" />
-                                    </RelativeLayout>
-
-                                    <TextView
-                                        android:id="@+id/tvBadgeName1"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@id/summary_badge" />
-                                </RelativeLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="80dp"
-                                    android:layout_height="80dp"
-                                    android:layout_gravity="center"
-                                    android:elevation="@dimen/dp_10">
-
-                                    <RelativeLayout
-                                        android:id="@+id/plus_badge"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_centerHorizontal="true"
-                                        android:splitMotionEvents="false"
-                                        android:tag="@string/dont_touch_me">
-
-                                        <ImageView
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:background="@drawable/circle_white_stroke_grey"
-                                            android:tag="@string/dont_touch_me" />
-
-                                        <ImageView
-                                            android:id="@+id/badge_plus"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_centerInParent="true"
-                                            android:src="@drawable/ic_plus_dark_selector"
-                                            android:tag="@string/dont_touch_me" />
-                                    </RelativeLayout>
-
-                                    <TextView
-                                        android:id="@+id/tvBadgePlus"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@id/plus_badge" />
-                                </RelativeLayout>
-
-                                <RelativeLayout
-                                    android:layout_width="60dp"
-                                    android:layout_height="60dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginStart="-30dp">
-
-                                    <RelativeLayout
-                                        android:id="@+id/summary_badge2"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_centerHorizontal="true"
-                                        android:splitMotionEvents="false"
-                                        android:tag="@string/dont_touch_me">
-
-                                        <ImageView
-                                            android:id="@+id/badge2back"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:background="@drawable/circle_grey"
-                                            android:tag="@string/dont_touch_me" />
-
-                                        <ImageView
-                                            android:id="@+id/badge2"
-                                            android:layout_width="match_parent"
-                                            android:layout_height="match_parent"
-                                            android:layout_centerInParent="true"
-                                            android:tag="@string/dont_touch_me" />
-                                    </RelativeLayout>
-
-                                    <TextView
-                                        android:id="@+id/tvBadgeName2"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_below="@id/summary_badge2" />
-                                </RelativeLayout>
-
-
-                            </LinearLayout>
-
-                            <com.yarolegovich.discretescrollview.DiscreteScrollView
-                                android:id="@+id/badges"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:visibility="gone" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/textViewRSWhatImprove"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="40px"
-                            android:layout_marginTop="15px"
-                            android:text="@string/what_could_we_improve"
-                            android:textColor="@color/text_color"
-                            android:textSize="30px"
-                            android:visibility="gone" />
-
-
-                        <product.clicklabs.jugnoo.utils.NonScrollGridView
-                            android:id="@+id/gridViewRSFeedbackReasons"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="40px"
-                            android:layout_marginEnd="40px"
-                            android:layout_marginBottom="20dp"
-                            android:divider="@color/transparent"
-                            android:dividerHeight="0px"
-                            android:numColumns="2"
-                            android:splitMotionEvents="false"
-                            android:visibility="visible" />
-
-                        <android.support.v7.widget.CardView
-                            android:id="@+id/cvAdditionalComments"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:cardBackgroundColor="#f7f7f9"
-                            android:layout_marginBottom="@dimen/dp_20"
-                            android:layout_marginStart="@dimen/dp_10"
-                            android:layout_marginTop="@dimen/dp_20"
-                            android:layout_marginEnd="@dimen/dp_10"
-                            app:cardElevation="-5dp"
-                            app:cardCornerRadius="@dimen/dp_10"
-                            android:visibility="gone">
-
-                            <EditText
-                                android:background="@color/transparent"
-                                android:id="@+id/editTextRSFeedback"
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:gravity="start"
-                                android:hint="@string/leave_a_comment"
-                                android:padding="20px"
-                                android:scrollbars="vertical"
-                                android:textColor="@color/grey_alpha_50"
-                                android:textCursorDrawable="@drawable/cursor_black"
-                                android:textSize="12sp" />
-                        </android.support.v7.widget.CardView>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="32px"
-                            android:layout_marginStart="60px"
-                            android:layout_marginTop="10px"
-                            android:visibility="gone" >
-
-                            <TextView
-                                android:id="@+id/textViewRSOtherError"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/star_required"
-                                android:textColor="@color/red_status"
-                                android:textSize="22px"
-                                android:visibility="gone" />
-                        </LinearLayout>
-
-                        <Button
-                            android:visibility="gone"
-                            android:id="@+id/buttonRSSubmitFeedback"
-                            style="@style/ButtonTheme"
-                            android:layout_width="match_parent"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginStart="@dimen/dp_10"
-                            android:layout_marginEnd="@dimen/dp_10"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginBottom="10dp"
-                            android:textAllCaps="false"
-                            android:text="@string/done_caps" />
-
-                        <Button
-                            android:id="@+id/buttonRSSkipFeedback"
-                            android:layout_width="150px"
-                            android:layout_height="@dimen/button_height"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10px"
-                            android:layout_marginBottom="40px"
-                            android:background="@drawable/background_transparent"
-                            android:text="@string/skip"
-                            android:textColor="@color/text_color_light_selector"
-                            android:textSize="@dimen/button_small_text_size"
-                            android:visibility="gone" />
-
-                    </LinearLayout>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
 
 
             <Button
@@ -651,14 +657,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="@dimen/dp_10"
                 android:layout_marginEnd="10dp"
                 android:background="@color/white"
                 app:cardBackgroundColor="@color/white"
-                android:layout_marginBottom="@dimen/dp_20"
                 app:cardCornerRadius="@dimen/dp_14"
+                android:layout_marginBottom="@dimen/dp_20"
                 app:cardElevation="@dimen/dp_8">
-
                 <LinearLayout
                     android:id="@+id/llAddTip"
                     android:layout_width="match_parent"
@@ -790,7 +794,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:text="@string/ride_summary_view_invoice_text"
-                    android:textAllCaps="true"
+                    android:textAllCaps="false"
                     android:textColor="@color/text_color_theme_selector"
                     android:textSize="@dimen/text_size_26" />
 

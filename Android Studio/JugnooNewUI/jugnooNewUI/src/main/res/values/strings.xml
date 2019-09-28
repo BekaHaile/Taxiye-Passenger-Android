@@ -2119,6 +2119,7 @@
     <string name="bid_greater_amount_err">The price is too high for this route. Please offer lower fare.</string>
     <string name="raise_to_format">Raise to %s</string>
     <string name="drop_location">Drop Location</string>
+    <string name="add_your_reviews">Add Your Reviews</string>
 
 
 </resources>
