@@ -28,7 +28,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
     private ArrayList<FeedbackReason> positiveReasons;
     private FeedbackReasonsListEventHandler feedbackReasonsListEventHandler;
     private boolean showPositiveReasons;
-    private int textBadgeCount=-1;
+    private int textBadgeCount=0;
     private int canCommentCount=0;
 
     public FeedbackReasonsAdapter(Context context, ArrayList<FeedbackReason> feedbackReasons, FeedbackReasonsListEventHandler feedbackReasonsListEventHandler) {
