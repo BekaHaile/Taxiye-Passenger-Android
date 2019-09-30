@@ -3415,6 +3415,11 @@ RelativeLayout plusBadge;
     }
 
 
+    @Override
+    public void showCommentBox(int visibilty){
+        HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibilty);
+    }
+
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
 			Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();

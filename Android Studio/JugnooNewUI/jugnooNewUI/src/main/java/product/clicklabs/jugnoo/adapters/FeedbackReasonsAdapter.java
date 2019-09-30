@@ -28,6 +28,8 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
     private ArrayList<FeedbackReason> positiveReasons;
     private FeedbackReasonsListEventHandler feedbackReasonsListEventHandler;
     private boolean showPositiveReasons;
+    private int textBadgeCount=-1;
+    private int canCommentCount=0;
 
     public FeedbackReasonsAdapter(Context context, ArrayList<FeedbackReason> feedbackReasons, FeedbackReasonsListEventHandler feedbackReasonsListEventHandler) {
         this.context = context;
@@ -102,14 +104,20 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
                 try {
                     holder = (ViewHolderFeedbackReason) v.getTag();
                     if (currentList.get(holder.id).checked) {
+                        textBadgeCount--;
                         currentList.get(holder.id).checked = false;
                         if(currentList.get(holder.id).canComment)
-                            feedbackReasonsListEventHandler.showCommentBox(View.GONE);
+                            canCommentCount--;
                     } else {
+                        if(textBadgeCount<5){
+                            textBadgeCount++;
                         currentList.get(holder.id).checked = true;
                         if(currentList.get(holder.id).canComment)
-                        feedbackReasonsListEventHandler.showCommentBox(View.VISIBLE);
+                            canCommentCount++;
+
                     }
+                    }
+                    showAdditionalComments();
                     notifyDataSetChanged();
 
                     feedbackReasonsListEventHandler.onLastItemSelected(isLastSelected(), currentList.get(holder.id).name);
@@ -123,6 +131,12 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void showAdditionalComments(){
+        if(canCommentCount>0)
+            feedbackReasonsListEventHandler.showCommentBox(View.VISIBLE);
+        else
+            feedbackReasonsListEventHandler.showCommentBox(View.GONE);
+    }
     public String getSelectedReasons() {
         ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
         String reasons = "";

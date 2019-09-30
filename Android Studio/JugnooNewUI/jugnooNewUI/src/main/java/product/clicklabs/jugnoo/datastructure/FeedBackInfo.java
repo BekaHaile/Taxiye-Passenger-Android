@@ -30,10 +30,11 @@ public class FeedBackInfo{
     }
 
     public static class ImageBadges{
-        public ImageBadges(String name, int badgeId, String imageAddress){
+        public ImageBadges(String name, int badgeId, String imageAddress,boolean canComment){
             this.badgeId=badgeId;
             this.imageAdress=imageAddress;
             this.name=name;
+            this.canComment=canComment;
         }
 
         public int getBadgeId() {
@@ -47,10 +48,12 @@ public class FeedBackInfo{
         public String getName() {
             return name;
         }
+        public boolean canComment(){return canComment;}
 
         private String name;
         private int badgeId;
         private String imageAdress;
+        private boolean canComment;
     }
 
 

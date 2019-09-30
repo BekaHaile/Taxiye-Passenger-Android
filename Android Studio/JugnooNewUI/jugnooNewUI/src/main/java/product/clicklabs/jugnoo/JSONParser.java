@@ -961,14 +961,14 @@ public class JSONParser implements Constants {
                    JSONArray imgArr=jObj.optJSONArray("image_badges");
                    for(int j=0;j<imgArr.length();j++){
                        JSONObject imageBadge=imgArr.optJSONObject(j);
-                       imageBadges.add( new FeedBackInfo.ImageBadges(imageBadge.optString("name"),imageBadge.optInt("badge_id"),imageBadge.optString("image")));
+                       imageBadges.add( new FeedBackInfo.ImageBadges(imageBadge.optString("name"),imageBadge.optInt("badge_id"),imageBadge.optString("image"), imageBadge.optInt("can_comment", 0) == 1));
                    }
                }
                if(jObj.has("text_badges")){
                    JSONArray txtArr=jObj.optJSONArray("text_badges");
                    for(int j=0;j<txtArr.length();j++){
                        JSONObject textBadge=txtArr.optJSONObject(j);
-                       textBadges.add( new FeedbackReason(textBadge.optString("name"),textBadge.optInt("badge_id"),textBadge.optInt("can_comment")==1?true:false));
+                       textBadges.add( new FeedbackReason(textBadge.optString("name"),textBadge.optInt("badge_id"),textBadge.optInt("can_comment")==1));
                    }
                }
                Data.autoData.getFeedBackInfoRatingData().add(new FeedBackInfo(jObj.optInt("rating"),jObj.optString("desc"),imageBadges,textBadges));

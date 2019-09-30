@@ -27,6 +27,8 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder
     ArrayList<Integer> clickImagesIds=new ArrayList<>();
     BadgesClickListener activity;
     private int clickCount=0;
+    private int canCommentCount=0;
+
 //    float scalingFactor=0;
 //    float imageSize;
 //    int margin;
@@ -109,6 +111,8 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder
                         textView.setTextColor(((Activity)activity).getResources().getColor(R.color.theme_color));
                         clickImagesIds.add(imageBadges.get(getAdapterPosition()).getBadgeId());
                         badgeTick.setVisibility(View.VISIBLE);
+                        if(imageBadges.get(getAdapterPosition()).canComment())
+                            canCommentCount++;
                     }
                     else if(v.getTag()!=null&&v.getTag().equals("Clicked"))
                         {
@@ -122,9 +126,13 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder
                             border.setBackground(((Activity)activity).getResources().getDrawable(R.drawable.background_transparent));
                             badgeTick.setVisibility(View.GONE);
                             textView.setTextColor(((Activity)activity).getResources().getColor(R.color.black));
+                            if(imageBadges.get(getAdapterPosition()).canComment())
+                                canCommentCount--;
                         }
 
                     activity.onClickBadge(imageBadges.get(getAdapterPosition()).getBadgeId(), getAdapterPosition());
+                    activity.showCommentBox(canCommentCount>0?View.VISIBLE:View.GONE);
+
 
                 }
             });
@@ -147,6 +155,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder
 
     public interface BadgesClickListener {
         void onClickBadge(int badgeId, int position);
+        void showCommentBox(int visibilty);
     }
 
 }
