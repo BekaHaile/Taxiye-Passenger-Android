@@ -467,6 +467,10 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     fun getPaymentOptionDialog(): PaymentOptionDialog? {
         if (paymentOptionDialog == null) {
             paymentOptionDialog = PaymentOptionDialog(activity, (requireActivity() as HomeActivity).getCallbackPaymentOptionSelector(), object : PaymentOptionDialog.Callback {
+                override fun getSelectedPaymentOption() {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
                 override fun onDialogDismiss() {
 
                 }

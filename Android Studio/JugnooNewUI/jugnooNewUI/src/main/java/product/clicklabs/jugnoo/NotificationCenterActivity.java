@@ -97,6 +97,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
         } else {
             mNotificationSettingBtn.setVisibility(View.GONE);
         }
+        mNotificationSettingBtn.setVisibility(View.GONE);
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

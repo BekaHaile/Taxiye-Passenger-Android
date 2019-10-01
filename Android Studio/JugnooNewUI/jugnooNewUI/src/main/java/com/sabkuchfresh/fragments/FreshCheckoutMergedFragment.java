@@ -2197,7 +2197,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             for(PromoCoupon promo:promoCouponsList){
                 if(promo.showPromoBox()){
                     promoCouponsList.remove(promo);
-                    promoCouponsList.add(promo);
+//                    promoCouponsList.add(promo);
                     break;
                 }
             }

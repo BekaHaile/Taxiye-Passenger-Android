@@ -842,7 +842,7 @@
     <string name="saved_location">Saved location</string>
     <string name="we_could_not_verify">Sorry, we could not verify through\nmissed call. Please try again.</string>
     <string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
-    <string name="no_available_offers">No Available Offers</string>
+    <string name="no_available_offers">No offers available yet!</string>
     <string name="select_an_offer">Select an Offer</string>
 
 
@@ -991,7 +991,7 @@
 
     <string name="no_menus_available_with_these_filters">Sorry, no results found. Try again with fewer filters.</string>
     <string name="no_menus_available_your_location">Sorry, online ordering isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
-    <string name="text_no_fatafat_available_your_location">Sorry, fatafat isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
+    <string name="text_no_fatafat_available_your_location">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="oops_no_results_found">Oops, No results found</string>
     <string name="quick_filters">Quick Filters</string>
     <string name="free_delivery">Free Delivery</string>
@@ -2136,6 +2136,10 @@
     <string name="text_no_delivery_available">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="fatafat_text">Delivery</string>
 
+
     <string name="pickup">Pickup</string>
     <string name="rate_order">Rate Order</string>
+    <string name="pay_for_delivery">Pay For Your Delivery Using</string>
+    <string name="offers_and_coupons_applied_colon">Offers Applied: \n<b>%s</b></string>
+
 </resources>

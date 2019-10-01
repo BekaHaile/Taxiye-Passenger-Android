@@ -21,12 +21,13 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 5/2/16.
  */
 public class AnywhereDeliveryChargesDialog {
-
+	private static final String DISCOUNT_TAG = "TAG_DISCOUNT";
 	private final String TAG = AnywhereDeliveryChargesDialog.class.getSimpleName();
 	private FreshActivity activity;
 	private Callback callback;
@@ -157,4 +158,24 @@ public class AnywhereDeliveryChargesDialog {
 		void onDialogDismiss();
 	}
 
+	public double addDiscount(final double discount) {
+		double newPrice = Math.max(estimatedCharges - discount, 0);
+		textViewFare.setText(String.format("%s%s", activity.getString(R.string.rupee), Utils.getMoneyDecimalFormat().format(newPrice)));
+
+		LayoutInflater inflater = LayoutInflater.from(activity);
+
+		View view = linearLayoutInner.findViewWithTag(DISCOUNT_TAG);
+		if (view != null) {
+			linearLayoutInner.removeView(view);
+		}
+		if (discount > 0) {
+			LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.layout_details_anywhere_delivery_dialog, null, false);
+			((TextView)linearLayout.findViewById(R.id.tv_label)).setText(activity.getString(R.string.discount));
+			((TextView)linearLayout.findViewById(R.id.tv_value)).setText(String.format("%s%s", activity.getString(R.string.rupee), Utils.getMoneyDecimalFormat().format(Math.min(estimatedCharges, discount * -1))));
+			((View)linearLayout.findViewById(R.id.view_dotted)).setLayerType(View.LAYER_TYPE_SOFTWARE, null) ;
+			linearLayout.setTag(DISCOUNT_TAG);
+			linearLayoutInner.addView(linearLayout,linearLayoutInner.getChildCount()-1);
+		}
+		return newPrice;
+	}
 }

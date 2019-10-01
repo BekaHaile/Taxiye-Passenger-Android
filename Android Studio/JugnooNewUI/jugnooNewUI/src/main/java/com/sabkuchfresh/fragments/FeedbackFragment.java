@@ -226,7 +226,13 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 } else if (feedbackClientId.equals(Config.getFeedClientId())) {
                     productType = ProductType.FEED;
                     if (Data.getFeedData() != null && !TextUtils.isEmpty(Data.getFeedData().getFeedName())) {
-                        setTitle(Data.getFeedData().getFeedName());
+
+                        if(Data.getFeedData().getFeedName().equals("Fatafat")){
+                            setTitle(activity.getString(R.string.delivery_new_name));
+                        }
+                        else {
+                            setTitle(Data.getFeedData().getFeedName());
+                        }
                     } else {
                         setTitle(activity.getString(R.string.delivery_new_name));
                     }

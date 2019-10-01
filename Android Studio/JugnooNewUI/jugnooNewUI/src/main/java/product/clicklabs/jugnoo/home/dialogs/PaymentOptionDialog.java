@@ -533,6 +533,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
         void onDialogDismiss();
         void onPaymentModeUpdated();
 
+        void getSelectedPaymentOption();
     }
 
 }

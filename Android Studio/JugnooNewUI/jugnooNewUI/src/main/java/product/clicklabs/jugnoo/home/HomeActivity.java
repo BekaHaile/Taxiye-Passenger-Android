@@ -12150,6 +12150,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(HomeActivity.this, Data.autoData.getPickupPaymentOption())),
                             v -> getDriverTipInteractor().addTip(tipSelected, Data.autoData.getEndRideData().getPaymentOption()));
                 }
+                @Override
+                public void getSelectedPaymentOption() {
+
+                }
             });
         }
         return paymentOptionDialogTip;

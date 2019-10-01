@@ -96,6 +96,7 @@ import product.clicklabs.jugnoo.retrofit.model.FatafatUploadImageInfo;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -252,6 +253,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
     private PromoCouponDialog mPromoCouponDialog;
     private PromoCoupon selectedPromo;
+
 
     public boolean isPickUpAddressRequested() {
         return isPickUpAddressRequested;
@@ -1531,6 +1533,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     paymentOptionDialog.dismiss();
                 }
             }
+
 
             @Override
             public void onWalletAdd(PaymentOption paymentOption) {

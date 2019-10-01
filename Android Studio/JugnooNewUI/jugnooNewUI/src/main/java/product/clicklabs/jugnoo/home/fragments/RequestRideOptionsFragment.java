@@ -575,6 +575,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     try {GAUtils.event(RIDES, HOME+WALLET+SELECTED, MyApplication.getInstance().getWalletCore()
                             .getPaymentOptionName(Data.autoData.getPickupPaymentOption()));} catch (Exception e) {}
                 }
+
+                @Override
+                public void getSelectedPaymentOption() {
+
+                }
             });
         }
         return paymentOptionDialog;
