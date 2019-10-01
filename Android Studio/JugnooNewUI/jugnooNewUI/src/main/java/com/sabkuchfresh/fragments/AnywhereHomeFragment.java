@@ -81,6 +81,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -510,40 +511,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         openPaymentOptionDialog();
 
 
-
         cvPaymentOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 if(paymentOptionDialog!=null){
-                    paymentOptionDialog.show(paymentMethod,activity.getResources().getString(R.string.pay_for_delivery));
-                }
-                else {
-                    openPaymentOptionDialog();
-                }
-
-                if(paymentMethod!=-1){
-                    ivPaymentOption.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_radio_button_selected));
-                }
-            }
-        });
-
-        cvPaymentOption = (CardView) rootView.findViewById(R.id.cvPaymentOption);
-        tvPaymentOption = (TextView) rootView.findViewById(R.id.tvPaymentOption);
-        ivPaymentOption = (ImageView) rootView.findViewById(R.id.ivPaymentOption);
-
-
-        fetchWalletBalance();
-        openPaymentOptionDialog();
-
-
-
-        cvPaymentOption.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(paymentOptionDialog!=null){
-                    paymentOptionDialog.show(paymentMethod,activity.getResources().getString(R.string.pay_for_delivery));
+                    paymentOptionDialog.show(-1,activity.getResources().getString(R.string.pay_for_delivery));
                 }
 
                 if(paymentMethod!=-1){
@@ -1418,15 +1391,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     }
                 }, true, false);
     }
-//    private void updateEstimateCost() {
-//        double newPrice = anywhereDeliveryChargesDialog.addDiscount(selectedPromo == null || selectedPromo.getDiscount() == null ? 0 : selectedPromo.getDiscount());
-//        if (selectedPromo == null) {
-//            tvOffer.setText(R.string.offers_and_coupons);
-//        } else {
-//            tvOffer.setText(getString(R.string.offers_and_coupons_applied_colon, selectedPromo.getTitle()));
-//        }
-//        labelDeliveryValue.setText(String.format(Locale.US, "%s%.2f", activity.getString(R.string.rupee), newPrice));
-//    }
+
     private void fetchDrivers() {
         HashMap<String, String> params = new HashMap<>();
 
@@ -1557,6 +1522,11 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4());
                     paymentOptionDialog.dismiss();
                 }
+
+                if(paymentMethod!=-1){
+                    ivPaymentOption.setImageDrawable(activity.getResources().getDrawable(MyApplication.getInstance().getWalletCore()
+                            .getPaymentOptionIconSmall(paymentMethod)));
+                }
             }
 
             @Override
@@ -1593,7 +1563,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         paymentOptionDialog = new PaymentOptionDialog(getActivity(), callbackPaymentOptionSelector, new PaymentOptionDialog.Callback() {
             @Override
             public void onDialogDismiss() {
-
+                if(paymentMethod!=-1){
+                    ivPaymentOption.setImageDrawable(activity.getResources().getDrawable(MyApplication.getInstance().getWalletCore()
+                            .getPaymentOptionIconSmall(paymentMethod)));
+                }
             }
 
             @Override
@@ -1617,4 +1590,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
         labelDeliveryValue.setText(String.format(Locale.US, "%s%.2f", defaultCurrencyFromResponse, newPrice));
     }
+
+
 }
