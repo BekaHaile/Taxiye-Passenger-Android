@@ -483,12 +483,12 @@
                 android:id="@+id/cv_promo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="5dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="@dimen/dp_25"
-                android:visibility="visible"
+                android:paddingBottom="5dp"
+                android:visibility="gone"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
 

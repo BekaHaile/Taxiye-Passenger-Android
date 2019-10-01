@@ -45,7 +45,6 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -209,10 +208,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(Data.autoData != null && Data.autoData.getRegions().size() > 1) {
-                        activity.setVehicleTypeSelected(0, false, true);
-                    }
-                }
+					try {
+						if(Data.autoData != null && Data.autoData.getRegions().size() > 1) {
+							activity.setVehicleTypeSelected(0, false, true);
+						}
+					} catch (Exception ignored) {}
+				}
             }, 500);
         } catch (Exception e) {
             e.printStackTrace();

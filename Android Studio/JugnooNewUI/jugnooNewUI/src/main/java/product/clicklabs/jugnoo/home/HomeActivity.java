@@ -1525,8 +1525,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             if (isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
                                 && !editTextBidValue.getText().toString().isEmpty()) {
-								double innerValue = 20.0;
-								double outerValue = 5000.0;
+								double innerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MIN_REGION_FARE, 20.0f);
+								double outerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MAX_REGION_FARE, 5000.0f);
 								if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
 									innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
 									outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
@@ -1541,8 +1541,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 												buttonConfirmRequest.performClick();
 											});
 
-								} else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue
-										&& Double.parseDouble(editTextBidValue.getText().toString()) > 5000) {
+								} else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue) {
 									EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
 											getString(R.string.fare), Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
 												editTextBidValue.setText(value);
@@ -1827,7 +1826,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		tvRaiseFareMinus.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				double innerValue = 20.0;
+				double innerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MIN_REGION_FARE, 20.0f);
 				if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
 						&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
 					innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
@@ -1846,7 +1845,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		tvRaiseFarePlus.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				double outerValue = 5000.0;
+				double outerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MAX_REGION_FARE, 5000.0f);
 				if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
 						&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
 					outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
@@ -10526,11 +10525,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
+                    passengerScreenMode = P_INITIAL;
+
 					if (map != null && searchResult != null) {
 						setSearchResultToPickupCase(searchResult);
 						GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
 					}
-                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 } else if (searchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
 
@@ -10792,13 +10792,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()== RideTypeValue.BIKE_RENTAL.getOrdinal()) {
         	relativeLayoutDestSearchBar.setVisibility(View.GONE);
 			relativeLayoutDestSearchBarNew.setVisibility(View.GONE);
-			findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.GONE);
-			findViewById(R.id.iv3NewUIDropMark).setVisibility(View.GONE);
+
+			View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+			if(viewDash != null){
+				viewDash.setVisibility(View.GONE);
+			}
+			View viewDrop = findViewById(R.id.iv3NewUIDropMark);
+			if(viewDrop != null){
+				viewDrop.setVisibility(View.GONE);
+			}
         } else {
             relativeLayoutDestSearchBar.setVisibility(View.VISIBLE);
 			relativeLayoutDestSearchBarNew.setVisibility(View.VISIBLE);
-			findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.VISIBLE);
-			findViewById(R.id.iv3NewUIDropMark).setVisibility(View.VISIBLE);
+
+			View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+			if(viewDash != null){
+				viewDash.setVisibility(View.VISIBLE);
+			}
+			View viewDrop = findViewById(R.id.iv3NewUIDropMark);
+			if(viewDrop != null){
+				viewDrop.setVisibility(View.VISIBLE);
+			}
         }
         if((confirmedScreenOpened || (passengerScreenMode == P_INITIAL && isNewUI)) && Data.autoData.getPickupLatLng() != null) {
             pickupLocationEtaMarker();

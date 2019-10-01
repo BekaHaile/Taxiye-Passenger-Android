@@ -1083,4 +1083,6 @@ public interface Constants {
 
 	String KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP = "customer_set_location_on_map_on_top";
 	String KEY_CUSTOMER_BID_INCREMENT = "customer_bid_increment";
+	String KEY_MIN_REGION_FARE = "min_region_fare";
+	String KEY_MAX_REGION_FARE = "max_region_fare";
 }

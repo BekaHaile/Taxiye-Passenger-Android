@@ -278,16 +278,20 @@ public class TypekitLayoutInflater extends LayoutInflater {
                 mConstructorArgs = ReflectionUtils.getField(LayoutInflater.class, "mConstructorArgs");
 
             final Object[] mConstructorArgsArr = (Object[]) ReflectionUtils.getValue(mConstructorArgs, this);
-            final Object lastContext = mConstructorArgsArr[0];
-            // The LayoutInflater actually finds out the correct context to use. We just need to set
-            // it on the mConstructor for the internal method.
-            // Set the constructor ars up for the createView, not sure why we can't pass these in.
-            mConstructorArgsArr[0] = viewContext;
+            Object lastContext = new Object();
+            if(mConstructorArgsArr!=null) {
+                lastContext = mConstructorArgsArr[0];
+                // The LayoutInflater actually finds out the correct context to use. We just need to set
+                // it on the mConstructor for the internal method.
+                // Set the constructor ars up for the createView, not sure why we can't pass these in.
+                mConstructorArgsArr[0] = viewContext;
+            }
             ReflectionUtils.setValue(mConstructorArgs, this, mConstructorArgsArr);
             try {
                 view = createView(name, null, attrs);
             } catch (ClassNotFoundException ignored) {
             } finally {
+                if(mConstructorArgsArr!=null)
                 mConstructorArgsArr[0] = lastContext;
                 ReflectionUtils.setValue(mConstructorArgs, this, mConstructorArgsArr);
             }

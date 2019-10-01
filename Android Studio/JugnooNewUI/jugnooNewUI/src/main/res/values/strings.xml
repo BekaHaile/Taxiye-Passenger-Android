@@ -2033,6 +2033,7 @@
     <string name="write_notes_here">Write notes here...</string>
     <string name="save_notes">Save notes</string>
     <string name="alert_provide_some_notes">Please add some notes</string>
+    <string name="offers_and_coupons">Offers and Coupons</string>
 
 
     <!--save location-->
@@ -2046,7 +2047,6 @@
 
 
     <string name="btn_rate_order">Rate order</string>
-    <string name="offers_and_coupons">offers</string>
     <string name="error_vehicle_type">Please choose proper vehicle type and pickup address before proceeding.</string>
 
 

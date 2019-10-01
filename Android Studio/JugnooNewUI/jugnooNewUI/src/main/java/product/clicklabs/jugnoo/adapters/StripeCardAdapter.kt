@@ -26,7 +26,7 @@ class StripeCardAdapter (private var stripeData: ArrayList<StripeCardData>?, val
     }
 
     override fun onClickItem(viewClicked: View?, parentView: View?) {
-        val pos = recyclerView.getChildLayoutPosition(parentView)
+        val pos = recyclerView.getChildLayoutPosition(parentView!!)
         if(pos != RecyclerView.NO_POSITION){
             for(corp in stripeData!!){
                 corp.selected = false
