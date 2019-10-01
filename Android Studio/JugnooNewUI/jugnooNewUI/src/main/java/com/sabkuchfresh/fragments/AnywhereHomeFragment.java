@@ -1439,6 +1439,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         }
                     }
                     else {
+                        vehicleType = vehicleInfoList.get(0).getType();
                         rvVehicles.setVisibility(GONE);
                     }
                     fetchDynamicDeliveryCharges(false,false,false);
