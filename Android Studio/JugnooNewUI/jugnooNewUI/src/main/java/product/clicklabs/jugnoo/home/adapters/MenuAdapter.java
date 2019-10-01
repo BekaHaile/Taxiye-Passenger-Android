@@ -861,7 +861,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 
 
-            textViewFeed.setText(Data.getFeedName(context));
+            textViewFeed.setText(R.string.delivery_new_name);
         }
     }
 

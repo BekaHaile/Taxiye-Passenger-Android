@@ -294,7 +294,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         layoutMinOrder =(LinearLayout)rootView.findViewById(R.id.layout_min_order);
         tvOrderViaFatafat =(TextView)rootView.findViewById(R.id.tv_order_via_fatafaat);
         tvOrderViaFatafat.setTypeface(tvOrderViaFatafat.getTypeface(),Typeface.BOLD);
-        tvOrderViaFatafat.setText(getString(R.string.action_order_via_fatafat, R.string.fatafat_text));
         tvOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -488,7 +487,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlUPI = (RelativeLayout) rootView.findViewById(R.id.rlUPI);
         ivUPI = (ImageView) rootView.findViewById(R.id.ivUPI);
         tvUPI = (TextView) rootView.findViewById(R.id.tvUPI);
-
+        tvNoAvailableOffers = rootView.findViewById(R.id.tvNoAvailableOffers);
+        tvNoAvailableOffers.setTypeface(Fonts.mavenMedium(activity));
+        cvOffersAvailable = rootView.findViewById(R.id.cvOffersAvailable);
         linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
         listViewOffers = (RecyclerView) rootView.findViewById(R.id.listViewOffers);
         listViewOffers.setNestedScrollingEnabled(false);
@@ -2233,9 +2234,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (promoCoupons != null) {
 
             if (promoCoupons.size() > 0) {
-                linearLayoutOffers.setVisibility(View.VISIBLE);
+//                linearLayoutOffers.setVisibility(View.VISIBLE);
+                listViewOffers.setVisibility(View.VISIBLE);
+                tvNoAvailableOffers.setVisibility(View.GONE);
+
             } else {
-                linearLayoutOffers.setVisibility(View.GONE);
+//                linearLayoutOffers.setVisibility(View.GONE);
+                listViewOffers.setVisibility(View.GONE);
+                tvNoAvailableOffers.setVisibility(View.VISIBLE);
             }
             PromoCoupon pcOld = selectServerMarkedCouponAndReturnOld();
 
@@ -2272,7 +2278,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }
         } else {
-            linearLayoutOffers.setVisibility(View.GONE);
+//            linearLayoutOffers.setVisibility(View.GONE);
+            listViewOffers.setVisibility(View.GONE);
+            tvNoAvailableOffers.setVisibility(View.VISIBLE);
         }
     }
 

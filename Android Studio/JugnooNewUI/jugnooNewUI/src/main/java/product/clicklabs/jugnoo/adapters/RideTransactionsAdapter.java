@@ -103,7 +103,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewAmount.setText(Utils.formatCurrencyValue(orderHistory.getCurrency(), orderHistory.getAmount()));
                 holder.textViewAmount.setVisibility(Prefs.with(activity).getInt(Constants.KEY_SHOW_FARE_IN_RIDE_HISTORY, 1) == 1 ? View.VISIBLE : View.GONE);
 
-                holder.imageViewProductType.setImageResource(R.drawable.ic_rides);
+                holder.imageViewProductType.setImageResource(R.drawable.ic_car_white);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_theme);
 
                 try {
@@ -189,7 +189,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.imageViewProductType.setImageResource(R.drawable.ic_menus);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_purple_menu_fab);
                 } else if (orderHistory.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_delivery_customer);
+                    holder.imageViewProductType.setImageResource(R.drawable.ic_delivery_customer_bike);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_green_delivery_customer_fab);
                 } else if (orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
@@ -250,7 +250,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else {
                     holder.textViewAmount.setText("");
                 }
-                holder.imageViewProductType.setImageResource(Data.userData.isRidesAndFatafatEnabled() ? R.drawable.ic_delivery_customer : R.drawable.ic_anywhere_fab);
+                holder.imageViewProductType.setImageResource(Data.userData.isRidesAndFatafatEnabled() ? R.drawable.ic_delivery_customer_bike : R.drawable.ic_anywhere_fab);
                 holder.imageViewProductType.setBackgroundResource(Data.userData.isRidesAndFatafatEnabled() ? R.drawable.circle_green_delivery_customer_fab : R.drawable.circle_feed_grey_fab);
 
                 holder.relativeLayoutTo.setVisibility(View.VISIBLE);
@@ -408,7 +408,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 if (rideType == RideTypeValue.POOL.getOrdinal()) {
                     return R.drawable.ic_pool_white;
                 } else {
-                    return R.drawable.ic_rides;
+                    return R.drawable.ic_car_white;
                 }
             } else if (vehicleType == VehicleTypeValue.BIKES.getOrdinal()) {
                 if (rideType == RideTypeValue.POOL.getOrdinal()) {
@@ -430,7 +430,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     || iconSet.equalsIgnoreCase(VehicleIconSet.TRANSPORT.getName())) {
                 return R.drawable.ic_transport_white;
             } else {
-                return R.drawable.ic_rides;
+                return R.drawable.ic_car_white;
             }
         }
 

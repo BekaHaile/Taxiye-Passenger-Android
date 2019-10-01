@@ -86,8 +86,19 @@
     <!--set preferences Inbox-->
     <bool name="show_inbox_preferences">true</bool>
 
-    <string name="delivery_new_name">@string/text_fatafat</string>
+
+<!--    Add these as per your customizations in your own white-label.-->
     <string name="no_delivery_available_your_location">@string/text_no_fatafat_available_your_location</string>
-    <string name="text_for_pickup_anywhre">@string/anywhere</string>
+    <string name="text_for_pickup_anywhre">Enter Pickup Location</string>
+
+    <string name="delivery_new_name">Delivery</string>
+    <string name="anywhere">Enter Pickup Location</string>
+
+    <color name="orange_rides_fab_pressed">@color/colorPrimaryDark</color>
+    <color name="theme_color_start">@color/colorPrimary</color>
+    <color name="green_delivery_customer_fab">@color/colorPrimary</color>
+    <color name="green_delivery_customer_fab_pressed">@color/colorPrimaryDark</color>
+    <color name="yellow_jugnoo">@color/colorPrimary</color>
+    <color name="text_color_orange">@color/colorPrimary</color>
 
 </resources>
