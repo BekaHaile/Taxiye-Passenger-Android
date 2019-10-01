@@ -20,6 +20,7 @@
         android:id="@+id/sv_anywhere"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         android:background="@color/menu_item_selector_color_F7">
 
 
@@ -242,7 +243,7 @@
                         android:layout_height="wrap_content"
 
                         android:gravity="top"
-                        android:text="@string/text_for_pickup_anywhre"
+                        android:text="@string/select_pickup_address"
                         android:textColor="@color/text_color"
                         android:textSize="13sp"
                         app:typekitFont="@string/maven" />
@@ -477,18 +478,18 @@
                 android:textAllCaps="true"
                 android:visibility="visible"
                 android:textColor="@color/text_color"
-                app:typekitFont="@string/maven_r"/>
+                app:typekitFont="@string/maven_r" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cv_promo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="@dimen/dp_25"
                 android:paddingBottom="5dp"
-                android:visibility="gone"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/dp_25"
+                android:visibility="visible"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
 
@@ -502,12 +503,62 @@
                     android:gravity="center"
                     android:minHeight="40dp"
                     android:paddingStart="10dp"
-                    android:text="@string/offers"
+                    android:text="@string/offers_and_coupons"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="14sp"
                     app:typekitFont="@string/maven" />
             </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cvPaymentOption"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="15dp"
+                android:paddingBottom="5dp"
+                android:visibility="visible"
+                app:cardBackgroundColor="@android:color/white"
+                app:cardCornerRadius="2dp">
+
+                <RelativeLayout
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="10dp"
+                    android:minHeight="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_transparent_menu_item_selector"
+                    >
+
+                    <ImageView
+                        android:id="@+id/ivPaymentOption"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_radio_button_off"
+                        android:tag="mwar" />
+
+
+                    <TextView
+                        android:layout_toEndOf="@id/ivPaymentOption"
+                        android:layout_centerVertical="true"
+                        android:id="@+id/tvPaymentOption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        android:text="@string/select_payment_option"
+                        android:textColor="@color/text_color"
+                        android:textSize="13sp"
+                        app:typekitFont="@string/maven" />
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
 
             <android.support.v7.widget.CardView
                 android:id="@+id/cvVehicles"
