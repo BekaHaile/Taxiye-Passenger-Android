@@ -1550,10 +1550,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                 if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption()==1) {
 
+                    android.util.Log.d(TAG, "onPaymentOptionSelected: " + paymentMethod);
 
                 }
                 else if(MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption()==9) {
-
+                    tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4());
+                    paymentOptionDialog.dismiss();
                 }
             }
 

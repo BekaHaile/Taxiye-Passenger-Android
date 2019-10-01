@@ -476,7 +476,7 @@
                 android:layout_marginStart="15dp"
                 android:text="@string/label_promo"
                 android:textAllCaps="true"
-                android:textColor="@color/text_color"
+android:layout_marginBottom="@dimen/dp_6"                android:textColor="@color/text_color"
                 android:visibility="visible"
                 app:typekitFont="@string/maven_r" />
 
