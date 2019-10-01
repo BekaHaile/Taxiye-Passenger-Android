@@ -83,6 +83,7 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -519,6 +520,30 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 }
                 else {
                     openPaymentOptionDialog();
+                }
+
+                if(paymentMethod!=-1){
+                    ivPaymentOption.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_radio_button_selected));
+                }
+            }
+        });
+
+        cvPaymentOption = (CardView) rootView.findViewById(R.id.cvPaymentOption);
+        tvPaymentOption = (TextView) rootView.findViewById(R.id.tvPaymentOption);
+        ivPaymentOption = (ImageView) rootView.findViewById(R.id.ivPaymentOption);
+
+
+        fetchWalletBalance();
+        openPaymentOptionDialog();
+
+
+
+        cvPaymentOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(paymentOptionDialog!=null){
+                    paymentOptionDialog.show(paymentMethod,activity.getResources().getString(R.string.pay_for_delivery));
                 }
 
                 if(paymentMethod!=-1){
@@ -1456,7 +1481,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 else {
                     rvVehicles.setVisibility(GONE);
                 }
-
+                fetchDynamicDeliveryCharges(false,false,false);
             }
 
             @Override
@@ -1525,15 +1550,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                 if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption()==1) {
 
-                    android.util.Log.d(TAG, "onPaymentOptionSelected: " + paymentMethod);
 
                 }
                 else if(MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption()==9) {
-                    tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4());
-                    paymentOptionDialog.dismiss();
+
                 }
             }
-
 
             @Override
             public void onWalletAdd(PaymentOption paymentOption) {
@@ -1576,7 +1598,6 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             public void onPaymentModeUpdated() {
 
             }
-
             @Override
             public void getSelectedPaymentOption() {
 
@@ -1584,7 +1605,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         });
     }
 
-    private void updateEstimateCost() {
+
+        private void updateEstimateCost() {
         double newPrice = anywhereDeliveryChargesDialog.addDiscount(selectedPromo == null || selectedPromo.getDiscount() == null ? 0 : selectedPromo.getDiscount());
         if (selectedPromo == null) {
             tvOffer.setText(R.string.offers_and_coupons);
