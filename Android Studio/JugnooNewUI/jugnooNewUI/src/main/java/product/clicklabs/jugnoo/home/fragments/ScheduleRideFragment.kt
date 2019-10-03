@@ -245,6 +245,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
             val visibilityNotRental = if (openSchedule) View.VISIBLE else View.GONE
             tvDestination.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
+            llDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
+            tvDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
             tvPickupDateTime.visibility = visibilityNotRental
             tvSelectDateTime.visibility = visibilityNotRental
 //            tvFareEstimate.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
@@ -417,7 +419,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                         tvFareEstimate.visibility = View.VISIBLE
                         viewInnerDrop.visibility = View.VISIBLE
                         tvFareEstimate.text = getString(R.string.fare_estimate).plus(": ")
-                                .plus(Utils.formatCurrencyValue(currency, minFare).plus(" - ").plus(Utils.formatCurrencyValue(currency, maxFare)))
+                                .plus(Utils.formatCurrencyValue(currency, if(isOneWay == 1) minFare else (2 * minFare.toDouble()).toString())
+                                        .plus(" - ")
+                                        .plus(Utils.formatCurrencyValue(currency, if(isOneWay == 1) maxFare else (2 * maxFare.toDouble()).toString())))
                         if (Prefs.with(context).getInt(Constants.KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
                             tvFareEstimate.append(" ")
                             tvFareEstimate.append(getString(R.string.bracket_in_format, currency))
