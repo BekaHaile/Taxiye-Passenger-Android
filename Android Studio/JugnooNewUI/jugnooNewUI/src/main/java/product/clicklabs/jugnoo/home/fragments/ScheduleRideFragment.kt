@@ -611,7 +611,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     fun getOneWayPackages(selectedRegion:Region?): ArrayList<Package> {
         oneWayPackages.clear()
-        if(selectedRegion != null) {
+        if(selectedRegion != null && selectedRegion.packages !=null ) {
             for (i in 0 until selectedRegion!!.packages.size) {
                 if (selectedRegion!!.packages.get(i).returnTrip == 0) {
                     val pck = Package()
