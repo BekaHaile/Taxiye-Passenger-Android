@@ -135,7 +135,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvRoundTrip.typeface = Fonts.mavenMedium(activity)
             btSchedule.typeface = Fonts.mavenMedium(activity)
             tvSelectPayment.setTypeface(Fonts.mavenMedium(activity), BOLD)
+            tvDropLocation.setTypeface(Fonts.mavenMedium(activity), BOLD)
             tvNote.setTypeface(Fonts.mavenMedium(activity), BOLD)
+            tvNote.visibility = View.GONE
             textViewPaymentModeValueConfirm.typeface = Fonts.mavenRegular(activity)
             tvSelectPackage.setTypeface(Fonts.mavenMedium(activity), BOLD)
             tvSelectRoute.setTypeface(Fonts.mavenMedium(activity), BOLD)
@@ -245,7 +247,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvDestination.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
             tvPickupDateTime.visibility = visibilityNotRental
             tvSelectDateTime.visibility = visibilityNotRental
-            tvFareEstimate.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
+//            tvFareEstimate.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
             rvVehiclesList.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.GONE else View.VISIBLE
             tvSelectVehicleType.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.GONE else View.VISIBLE
             tvSelectRoute.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
@@ -401,6 +403,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     private fun getDirectionsAndComputeFare(sourceLatLng: LatLng, sourceAddress: String, destLatLng: LatLng, destAddress: String) {
         try {
+            val region = (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected
             selectedPackage?.isRoundTrip = if(isOneWay == 1) 0 else 1
             if(apiFareEstimate == null) {
                 apiFareEstimate = ApiFareEstimate(context, object : ApiFareEstimate.Callback {
@@ -411,6 +414,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
                     override fun onFareEstimateSuccess(currency: String, minFare: String, maxFare: String, convenienceCharge: Double, tollCharge: Double) {
 
+                        tvFareEstimate.visibility = View.VISIBLE
+                        viewInnerDrop.visibility = View.VISIBLE
                         tvFareEstimate.text = getString(R.string.fare_estimate).plus(": ")
                                 .plus(Utils.formatCurrencyValue(currency, minFare).plus(" - ").plus(Utils.formatCurrencyValue(currency, maxFare)))
                         if (Prefs.with(context).getInt(Constants.KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
@@ -445,7 +450,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     }
                 })
             }
-            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage)
+            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage?: if(region != null) region.packages[0] else null)
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -454,7 +459,12 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
     private fun getFareEstimate() {
         if(searchResultPickup != null && searchResultDestination != null && Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) {
+            tvFareEstimate.visibility = View.VISIBLE
+            viewInnerDrop.visibility = View.VISIBLE
             getDirectionsAndComputeFare(searchResultPickup!!.latLng, searchResultPickup!!.address, searchResultDestination!!.latLng, searchResultDestination!!.address)
+        } else {
+            tvFareEstimate.visibility = View.GONE
+            viewInnerDrop.visibility = View.GONE
         }
     }
 

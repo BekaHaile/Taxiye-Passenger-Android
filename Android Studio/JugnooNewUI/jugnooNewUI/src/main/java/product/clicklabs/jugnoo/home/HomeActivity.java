@@ -10551,13 +10551,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 }
                 if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                    passengerScreenMode = P_INITIAL;
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
 					if (map != null && searchResult != null) {
 						setSearchResultToPickupCase(searchResult);
 						GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
 					}
-                    passengerScreenMode = P_INITIAL;
                     switchPassengerScreen(passengerScreenMode);
                 } else if (searchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
 

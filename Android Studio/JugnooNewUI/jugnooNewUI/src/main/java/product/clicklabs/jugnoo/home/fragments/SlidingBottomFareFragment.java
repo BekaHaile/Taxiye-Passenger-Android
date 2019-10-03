@@ -80,7 +80,7 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
             }
 
 
-            if(Data.autoData.getFareFactor() > 1.0){
+            if(Data.autoData.getFareFactor() > 1.0 && activity.showSurgeIcon()){
                 relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
                 textViewPriorityTipValue.setText(Data.autoData.getFareFactor()+"X");
             } else{

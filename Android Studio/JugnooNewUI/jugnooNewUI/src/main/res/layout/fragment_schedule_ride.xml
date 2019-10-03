@@ -34,25 +34,6 @@
         android:textColorHint="@color/text_color_hint"
         android:textSize="14sp"/>
     <TextView
-        android:id="@+id/tvDestination"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="14dp"
-        android:paddingStart="@dimen/fugu_margin_20"
-        android:paddingEnd="20dp"
-        android:drawableStart="@drawable/icv_circle_destination"
-        android:hint="@string/enter_destination"
-        android:drawablePadding="@dimen/fugu_margin_15"
-        android:background="@drawable/background_white_rounded_bordered"
-        app:layout_constraintEnd_toStartOf="@id/glEnd"
-        android:gravity="center_vertical"
-        app:layout_constraintStart_toEndOf="@id/glsStart"
-        app:layout_constraintTop_toBottomOf="@id/llPaymentOption"
-        android:textColor="@color/text_color"
-        android:textColorHint="@color/text_color_hint"
-        android:textSize="14sp"/>
-
-    <TextView
         android:id="@+id/tvPickupDateTime"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -230,16 +211,64 @@
 
 
     <TextView
-        android:id="@+id/tvFareEstimate"
+        android:id="@+id/tvDropLocation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/note"
+        android:text="@string/select_drop_location_estimate_fare"
         app:layout_constraintEnd_toStartOf="@id/glEnd"
         app:layout_constraintStart_toEndOf="@id/glsStart"
-        app:layout_constraintTop_toBottomOf="@+id/tvDestination"
-        android:textSize="16sp"
-        android:textColor="@color/theme_color"
-        android:layout_marginTop="@dimen/dp_20"/>
+        app:layout_constraintTop_toBottomOf="@+id/llPaymentOption"
+        android:textSize="14sp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/text_color" />
+
+    <LinearLayout
+        android:id="@+id/llDropLocation"
+        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_margin="8dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_white_grey_round_layer_shadow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDropLocation"
+        android:textSize="@dimen/sp_13"
+        android:textColor="@color/text_color">
+
+    <TextView
+        android:id="@+id/tvDestination"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:paddingStart="@dimen/fugu_margin_20"
+        android:paddingEnd="20dp"
+        android:gravity="center_vertical"
+        android:drawablePadding="@dimen/spacing_small"
+        android:drawableStart="@drawable/icv_circle_destination"
+        android:hint="@string/enter_destination"
+        android:textColor="@color/text_color"
+        android:textColorHint="@color/text_color_hint"
+        android:textSize="14sp"/>
+
+        <View
+            android:id="@+id/viewInnerDrop"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/spacing_normal"
+            android:layout_marginEnd="@dimen/spacing_normal"
+            android:background="@color/divider_color"/>
+
+    <TextView
+        android:id="@+id/tvFareEstimate"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="50dp"
+        android:textSize="14sp"
+        android:textColor="@color/text_color"
+        android:gravity="center"
+        android:background="@drawable/bg_transparent_menu_item_selector_color_blrrb_selector" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvNote"
@@ -248,7 +277,7 @@
         android:text="@string/note"
         app:layout_constraintEnd_toStartOf="@id/glEnd"
         app:layout_constraintStart_toEndOf="@id/glsStart"
-        app:layout_constraintTop_toBottomOf="@+id/tvFareEstimate"
+        app:layout_constraintTop_toBottomOf="@+id/llDropLocation"
         android:textSize="14sp"
         android:textColor="@color/text_color"
         android:layout_marginTop="@dimen/dp_20"/>
