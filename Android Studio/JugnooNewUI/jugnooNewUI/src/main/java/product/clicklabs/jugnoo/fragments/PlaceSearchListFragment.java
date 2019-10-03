@@ -39,6 +39,7 @@ import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CancellationException;
 
 import kotlinx.coroutines.Job;
@@ -55,6 +56,10 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.SearchLocation;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -114,6 +119,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private View vSetLocationOnMapDiv;
 	private boolean setLocationOnMapOnTop = true;
 
+	private List<SearchLocation> searchLocations = new ArrayList<>();
 	private SearchListAdapter.SearchListActionsHandler searchAdapterListener = new SearchListAdapter.SearchListActionsHandler() {
 
 		@Override
@@ -746,34 +752,24 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				cardViewSavedPlaces.setVisibility(View.GONE);
 			}
 
-			if(savedPlacesAdapterRecent == null) {
-				savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
-					@Override
-					public void onItemClick(SearchResult searchResult) {
-						clickOnSavedItem(searchResult);
-					}
+			SearchLocationDB searchLocationDB = DBObject.INSTANCE.getInstance();
 
-					@Override
-					public void onDeleteClick(SearchResult searchResult) {
+			if(PlaceSearchMode.PICKUP.getOrdinal() == PlaceSearchListFragment.this.searchMode) {
+				DBCoroutine.Companion.getPickupLocation(searchLocationDB, searchLocation -> {
+					if(!searchLocations.isEmpty()) {
+						searchLocations.clear();
 					}
-
-					@Override
-					public void onAddClick(SearchResult searchResult) {
-						onSavedLocationEdit(searchResult);
-					}
-				}, false, false, false, true);
-				listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+					searchLocations.addAll(searchLocation);
+					setRecentList();
+				});
 			} else {
-				savedPlacesAdapterRecent.setList(Data.userData.getSearchResultsRecent());
-			}
-			if(Data.userData.getSearchResultsRecent().size() > 0){
-//				cvRecentAddresses.setVisibility(View.VISIBLE);
-				textViewRecentAddresses.setVisibility(View.VISIBLE);
-				listViewRecentAddresses.setVisibility(View.VISIBLE);
-			} else{
-//				cvRecentAddresses.setVisibility(View.GONE);
-				textViewRecentAddresses.setVisibility(View.GONE);
-				listViewRecentAddresses.setVisibility(View.GONE);
+				DBCoroutine.Companion.getDropLocation(searchLocationDB, searchLocation -> {
+					if(!searchLocations.isEmpty()) {
+						searchLocations.clear();
+					}
+					searchLocations.addAll(searchLocation);
+					setRecentList();
+				});
 			}
 
 			if(savedPlaces > 0) {
@@ -792,6 +788,48 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void setRecentList() {
+		ArrayList<SearchResult> searchResultList = new ArrayList<>(Data.userData.getSearchResultsRecent());
+		if(searchLocations != null) {
+			for (int i = 0; i < searchLocations.size(); i++) {
+				SearchResult searchResult = new SearchResult(searchLocations.get(i).getName(), searchLocations.get(i).getAddress(), searchLocations.get(i).getPlaceId(),
+						searchLocations.get(i).getSlat(), searchLocations.get(i).getSLng());
+				searchResult.setType(SearchResult.Type.RECENT);
+				searchResultList.add(0, searchResult);
+			}
+		}
+		if(savedPlacesAdapterRecent == null) {
+
+			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, searchResultList, new SavedPlacesAdapter.Callback() {
+				@Override
+				public void onItemClick(SearchResult searchResult) {
+					clickOnSavedItem(searchResult);
+				}
+
+				@Override
+				public void onDeleteClick(SearchResult searchResult) {
+				}
+
+				@Override
+				public void onAddClick(SearchResult searchResult) {
+					onSavedLocationEdit(searchResult);
+				}
+			}, false, false, false, true);
+			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+		} else {
+			savedPlacesAdapterRecent.setList(searchResultList);
+		}
+		if(searchResultList.size() > 0){
+//				cvRecentAddresses.setVisibility(View.VISIBLE);
+			textViewRecentAddresses.setVisibility(View.VISIBLE);
+			listViewRecentAddresses.setVisibility(View.VISIBLE);
+		} else{
+//				cvRecentAddresses.setVisibility(View.GONE);
+			textViewRecentAddresses.setVisibility(View.GONE);
+			listViewRecentAddresses.setVisibility(View.GONE);
 		}
 	}
 

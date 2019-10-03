@@ -143,6 +143,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.branch.referral.Branch;
+import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
@@ -248,6 +250,10 @@ import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.SearchLocation;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.smartlock.callbacks.SmartlockCallbacks;
 import product.clicklabs.jugnoo.smartlock.controller.SmartLockController;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -302,7 +308,7 @@ import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITI
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
-        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler {
+        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler, CoroutineScope {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -648,6 +654,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ImageView imageViewDropCrossNew;
     LinearLayout linearLayoutConfirmOption,linearLayoutBidValue;
     EditText editTextBidValue;
+    private SearchLocationDB searchLocationDB;
 
     private CardView cvTutorialBanner;
     private TextView tvTutorialBanner;
@@ -657,6 +664,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        searchLocationDB = DBObject.INSTANCE.getInstance();
+        DBCoroutine.Companion.deleteLocationIfDatePassed(searchLocationDB);
 
         String languageToLoad = LocaleHelper.getLanguage(this);
         Locale locale = new Locale(languageToLoad);
@@ -6363,6 +6373,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             FacebookLoginHelper.logoutFacebook();
             LocalBroadcastManager.getInstance(this).unregisterReceiver(pushBroadcastReceiver);
             System.gc();
+            searchLocationDB.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -8874,6 +8885,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Prefs.with(HomeActivity.this).save(Constants.SKIP_SAVE_DROP_LOCATION, false);
         try {
 
+            createDataAndInsert(0);
+            createDataAndInsert(1);
             requestRideLifeTime = Data.autoData.getIsReverseBid() == 1 ? Data.autoData.getBidRequestRideTimeout() : 3 * 60 * 1000;
             serverRequestStartTime = System.currentTimeMillis();
             serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
@@ -9103,7 +9116,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                             int flag = jObj.getInt("flag");
                                             if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
-                                                final int lockStatus = jObj.getInt("gps_lock_status");
+                                                final int lockStatus = jObj.optInt("gps_lock_status", 0);
                                                 if(lockStatus==3){
                                                     smartLockObj.downDevice();
                                                 }
@@ -9248,6 +9261,31 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void createDataAndInsert(final int type) {
+        SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, type == 0 ? Data.autoData.getPickupLatLng() : Data.autoData.getDropLatLng(),  Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+        if(searchResult != null) {
+            return;
+        }
+        SearchLocation searchLocation;
+        if(type == 0) {
+            searchLocation = new SearchLocation(Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude, "",
+                    Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), 0 + "", System.currentTimeMillis(), type);
+        } else {
+            searchLocation = new SearchLocation(Data.autoData.getDropLatLng().latitude, Data.autoData.getDropLatLng().longitude, "",
+                    Data.autoData.getDropAddress(), Data.autoData.getDropAddressId() + "", System.currentTimeMillis(), type);
+        }
+
+        DBCoroutine.Companion.insertLocation(searchLocationDB, searchLocation);
+        DBCoroutine.Companion.getPickupLocation(searchLocationDB, new DBCoroutine.SearchLocationCallback() {
+            @Override
+            public void onSearchLocationReceived(@NotNull List<SearchLocation> searchLocation) {
+
+                Log.w("search Location:- ", searchLocation.toString());
+            }
+        });
+
     }
 
     public boolean isNewUI() {
@@ -9846,6 +9884,161 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
+    @NotNull
+    @Override
+    public CoroutineContext getCoroutineContext() {
+        return null;
+    }
+
+    class CheckForGPSAccuracyTimer {
+
+        public Timer timer;
+        public TimerTask timerTask;
+
+        public long startTime, lifeTime, endTime, period, executionTime;
+        public boolean isRunning = false;
+
+        public CheckForGPSAccuracyTimer(Context context, long delay, long period, long startTime, long lifeTime) {
+            Log.i("CheckForGPSAccuracyTimer before start myLocation = ", "=" + myLocation);
+            isRunning = false;
+            if (myLocation != null) {
+                if (myLocation.hasAccuracy()) {
+                    float accuracy = myLocation.getAccuracy();
+                    if (accuracy > HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND) {
+                        displayLessAccurateToast(context);
+                    } else if (accuracy <= HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND
+                            && accuracy > HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
+                        startTimer(context, delay, period, startTime, lifeTime);
+                        HomeActivity.this.switchRequestRideUI();
+                    } else if (accuracy <= HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
+                        HomeActivity.this.switchRequestRideUI();
+                        HomeActivity.this.startTimerRequestRide();
+                    } else {
+                        displayLessAccurateToast(context);
+                    }
+                } else {
+                    displayLessAccurateToast(context);
+                }
+            } else {
+                displayLessAccurateToast(context);
+            }
+        }
+
+
+        public void displayLessAccurateToast(Context context) {
+            Utils.showToast(context, getString(R.string.please_wait_more_accurate_location));
+        }
+
+        public void initRequestRideUi() {
+            stopTimer();
+            HomeActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    HomeActivity.this.startTimerRequestRide();
+                }
+            });
+        }
+
+        public void stopRequest(Context context) {
+            displayLessAccurateToast(context);
+            stopTimer();
+            HomeActivity.this.customerUIBackToInitialAfterCancel();
+        }
+
+        public void startTimer(final Context context, long delay, long period, long startTime, long lifeTime) {
+            stopTimer();
+            isRunning = true;
+
+            this.startTime = startTime;
+            this.lifeTime = lifeTime;
+            this.endTime = startTime + lifeTime;
+            this.period = period;
+            this.executionTime = -1;
+
+            timer = new Timer();
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    HomeActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                long start = System.currentTimeMillis();
+                                if (executionTime == -1) {
+                                    executionTime = CheckForGPSAccuracyTimer.this.startTime;
+                                }
+
+                                if (executionTime >= CheckForGPSAccuracyTimer.this.endTime) {
+                                    //Timer finished
+                                    if (myLocation != null) {
+                                        if (myLocation.hasAccuracy()) {
+                                            float accuracy = myLocation.getAccuracy();
+                                            if (accuracy > HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND) {
+                                                stopRequest(context);
+                                            } else {
+                                                initRequestRideUi();
+                                            }
+                                        } else {
+                                            stopRequest(context);
+                                        }
+                                    } else {
+                                        stopRequest(context);
+                                    }
+                                } else {
+                                    //Check for location accuracy
+                                    Log.i("CheckForGPSAccuracyTimer myLocation = ", "=" + myLocation);
+                                    if (myLocation != null) {
+                                        if (myLocation.hasAccuracy()) {
+                                            float accuracy = myLocation.getAccuracy();
+                                            if (accuracy <= HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
+                                                initRequestRideUi();
+                                            }
+                                        }
+                                    }
+                                }
+                                long stop = System.currentTimeMillis();
+                                long elapsedTime = stop - start;
+                                if (executionTime != -1) {
+                                    if (elapsedTime >= CheckForGPSAccuracyTimer.this.period) {
+                                        executionTime = executionTime + elapsedTime;
+                                    } else {
+                                        executionTime = executionTime + CheckForGPSAccuracyTimer.this.period;
+                                    }
+                                }
+                                Log.i("WaitForGPSAccuracyTimerTask execution", "=" + (CheckForGPSAccuracyTimer.this.endTime - executionTime));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            };
+            timer.scheduleAtFixedRate(timerTask, delay, period);
+            isRunning = true;
+        }
+
+        public void stopTimer() {
+            try {
+                isRunning = false;
+                Log.e("WaitForGPSAccuracyTimerTask", "stopTimer");
+                startTime = 0;
+                lifeTime = 0;
+                if (timerTask != null) {
+                    timerTask.cancel();
+                    timerTask = null;
+                }
+                if (timer != null) {
+                    timer.cancel();
+                    timer.purge();
+                    timer = null;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
 
     @Override
     public void onDisplayMessagePushReceived() {
