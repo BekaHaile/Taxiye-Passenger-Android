@@ -43,6 +43,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -296,7 +297,8 @@ public class SearchListAdapter extends BaseAdapter{
                                 @Override
                                 public void run() {
                                     if (autoCompleteSearchResult.getPlaceId() != null
-                                            && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
+                                            && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())
+                                            && MapUtils.distance(autoCompleteSearchResult.getLatLng(), new LatLng(0,0)) <= 10) {
                                         searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
                                         getSearchResultFromPlaceId(autoCompleteSearchResult.getName(),autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId());
                                     } else{

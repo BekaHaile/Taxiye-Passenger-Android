@@ -7208,7 +7208,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                 DialogPopup.alertPopup(activity, "", message);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-
+                                createDataAndInsert(1);
                                 Data.autoData.setDropLatLng(dropLatLng);
                                 Data.autoData.setDropAddress(address);
 
