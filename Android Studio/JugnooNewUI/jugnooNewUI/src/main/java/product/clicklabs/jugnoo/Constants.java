@@ -1081,4 +1081,6 @@ public interface Constants {
 	String KEY_CUSTOMER_BID_INCREMENT = "customer_bid_increment";
 	String KEY_MIN_REGION_FARE = "min_region_fare";
 	String KEY_MAX_REGION_FARE = "max_region_fare";
+	String KEY_CUSTOMER_SHOW_BOUNCING_MARKER = "customer_show_bouncing_marker";
+	String KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG = "customer_show_save_location_dialog";
 }

@@ -113,6 +113,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private LinearLayout llSavedPlaces, llSetLocationOnMap;
 	private View vSetLocationOnMapDiv;
 	private boolean setLocationOnMapOnTop = true;
+	private LatLng lastGeocodeLatLng;
+	private GoogleGeocodeResponse lastGeocodeResponse;
 
 	private SearchListAdapter.SearchListActionsHandler searchAdapterListener = new SearchListAdapter.SearchListActionsHandler() {
 
@@ -284,14 +286,14 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		ivLocationMarker = rootView.findViewById(R.id.ivLocationMarker);
 
-		if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+		if(showBouncingMarker()) {
 			ivLocationMarker.setImageResource(R.drawable.ic_bounce_pin);
 		} else {
 			ivLocationMarker.setImageResource(R.drawable.ic_delivery_address_map);
 		}
 
 		ivLocationMarker.setOnClickListener(view -> {
-			if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+			if(showBouncingMarker()) {
 				if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet)
 					fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, false);
 				stopAnimation();
@@ -453,7 +455,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					searchAdapterListener.onPlaceSearchPre();
 					searchAdapterListener.onPlaceSearchPost(autoCompleteSearchResult, null);
 				}else{
-					if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+					if(showBouncingMarker()) {
 						if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet)
 							fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, true);
 						stopAnimation();
@@ -795,6 +797,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 	}
 
+	private boolean showBouncingMarker(){
+		return Prefs.with(activity).getInt(Constants.KEY_CUSTOMER_SHOW_BOUNCING_MARKER, 0) == 1;
+	}
+
 	private boolean mapSettledCanForward;
 	private void setMap() {
 		((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap)).getMapAsync(new OnMapReadyCallback() {
@@ -824,8 +830,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						@Override
 						public void onMapUnsettled() {
 							mapSettledCanForward=false;
-							if(!getResources().getBoolean(R.bool.show_bouncing_marker)) {
-								setFetchedAddressToTextView("loading...", true, true);
+							if(!showBouncingMarker()) {
+								setFetchedAddressToTextView("Loading...", true, true);
 							}
 							/*mapSettledCanForward = false;
 							searchResultNearPin = null;*/
@@ -839,9 +845,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						@Override
 						public void onMapSettled() {
 							if(getContext() != null) {
-								if (!getResources().getBoolean(R.bool.show_bouncing_marker)) {
-									if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED)
+								if (!showBouncingMarker()) {
+									if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
 										fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, false);
+									}
 //								autoCompleteResultClicked = false;
 								}
 							}
@@ -906,6 +913,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private Double lastLngFetched ;
 	private void fillAddressDetails(LatLng latLng, final boolean setSearchResult, final boolean isFromConfirm) {
 		try {
+			if(lastGeocodeLatLng != null && lastGeocodeResponse != null
+					&& MapUtils.distance(latLng, lastGeocodeLatLng) <= 100){
+				setAddressToUI(lastGeocodeLatLng, lastGeocodeResponse, setSearchResult, isFromConfirm);
+				return;
+			}
 			getFocussedProgressBar().setVisibility(View.VISIBLE);
 
 			lastLatFetched = latLng.latitude;
@@ -914,7 +926,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			if(jobGeocode != null){
 				jobGeocode.cancel(new CancellationException());
 			}
-			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, address -> PlaceSearchListFragment.this.setAddressToUI(address, setSearchResult, isFromConfirm));
+			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, address -> PlaceSearchListFragment.this.setAddressToUI(latLng, address, setSearchResult, isFromConfirm));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -993,7 +1005,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
 			}
 			rlMarkerPin.setVisibility(View.VISIBLE);
-			if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+			if(showBouncingMarker()) {
 				startAnimation();
 			} else {
 				if(googleMap != null) {
@@ -1007,7 +1019,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 	private void startAnimation() {
-		if(getResources().getBoolean(R.bool.show_bouncing_marker)) {
+		if(showBouncingMarker()) {
 			setFetchedAddressToTextView(getString(R.string.tap_on_pin), true, true);
 			if(ivLocationMarker.getAnimation() == null) {
 				ivLocationMarker.clearAnimation();
@@ -1109,7 +1121,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 
-	private void setAddressToUI(GoogleGeocodeResponse address, boolean setSearchResult, final boolean isFromConfirm) {
+	private void setAddressToUI(LatLng latLng, GoogleGeocodeResponse address, boolean setSearchResult, final boolean isFromConfirm) {
 		Log.i("PlaceSearchListFragment", "setAddressToUI address=" + address);
 		GAPIAddress gapiAddress = null;
 		if (address != null) {
@@ -1125,6 +1137,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				setFetchedAddressToTextView(gapiAddress.formattedAddress, false, false);
 
 			}
+			lastGeocodeLatLng = latLng;
+			lastGeocodeResponse = address;
 			mapSettledCanForward = true;
 		} else {
 			Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));

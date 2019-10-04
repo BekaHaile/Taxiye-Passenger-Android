@@ -714,7 +714,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         HomeActivity.appInterruptHandler = HomeActivity.this;
 
-//        isNewUI = getResources().getBoolean(R.bool.fallback_is_new_reverse);
 
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
@@ -2675,7 +2674,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
 								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
-                                && getResources().getBoolean(R.bool.show_save_location_dialog)
+                                && showSaveLocationDialog()
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
                         && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                             openSaveLocationDialog(true);
@@ -2740,7 +2739,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED
                                 || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL)
 								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
-                                && getResources().getBoolean(R.bool.show_save_location_dialog)
+                                && showSaveLocationDialog()
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)
                                 && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                             openSaveLocationDialog(false);
@@ -5138,7 +5137,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             boolean savedLocationView = false;
             if((PassengerScreenMode.P_IN_RIDE == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
              || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode)
-                    && getResources().getBoolean(R.bool.show_save_location_dialog)
+                    && showSaveLocationDialog()
                     && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                 savedLocationView = true;
             }
@@ -6821,6 +6820,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
+    private boolean showSaveLocationDialog(){
+		return Prefs.with(this).getInt(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG, 0) == 1;
+	}
 
     public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, boolean inRide) {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -6831,7 +6833,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if (inRide) {
             if((Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
 					|| Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
-                    || !getResources().getBoolean(R.bool.show_save_location_dialog)
+                    || !showSaveLocationDialog()
                     || HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) != null) {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
