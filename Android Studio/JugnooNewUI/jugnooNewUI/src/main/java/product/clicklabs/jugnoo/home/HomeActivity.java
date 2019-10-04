@@ -29,6 +29,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
@@ -2478,7 +2479,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
             rvRideTypes.setVisibility(serviceTypesEligible.size() > 1 ? View.VISIBLE : View.GONE);
-			setTopBarTransNewUI();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setTopBarTransNewUI();
+                }
+            }, 50);
         }
     }
 
@@ -6733,6 +6739,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 specialPickupSelected = true;
                 selectedSpecialPickup = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getText() + ", ";
                 textViewInitialSearchNew.setText(selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+                tvPickupRentalOutstation.setText(selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
                 break;
             }
         }
@@ -7539,7 +7546,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                 DialogPopup.alertPopup(activity, "", message);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-
+                                createDataAndInsert(1);
                                 Data.autoData.setDropLatLng(dropLatLng);
                                 Data.autoData.setDropAddress(address);
 
@@ -11027,7 +11034,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())) {
                 relativeLayoutSearchContainer.setVisibility(View.GONE);
             }
-			relativeLayoutDestSearchBarNew.setVisibility(View.VISIBLE);
+            if(isNewUI) {
+                relativeLayoutDestSearchBarNew.setVisibility(View.VISIBLE);
+            } else {
+                relativeLayoutDestSearchBar.setVisibility(View.VISIBLE);
+            }
 
 			View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
 			if(viewDash != null){
@@ -12475,6 +12486,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null
          && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
           || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))) {
+            tvPickupRentalOutstation.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
             slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
             promoCouponSelectedForRide = null;
             showPoolInforBar(false);

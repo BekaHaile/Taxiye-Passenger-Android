@@ -622,8 +622,20 @@ public static String getAmPmFromServerDateFormat(String dateTime) {
 			return dateTime;
 		}
 	}
+	public static String getDaysAheadTimeMinute(String dateTime, int additionOfDays){
+		try{
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date1 = format.parse(dateTime);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date1);
+			calendar.set(Calendar.DAY_OF_MONTH, 0);
+			calendar.set(Calendar.HOUR_OF_DAY, 0);
+			calendar.add(Calendar.MINUTE, 30);
 
-
-
-
+			return format.format(calendar.getTime());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return dateTime;
+		}
+	}
 }
