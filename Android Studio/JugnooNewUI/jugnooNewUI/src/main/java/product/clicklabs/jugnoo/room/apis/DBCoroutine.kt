@@ -11,7 +11,6 @@ import product.clicklabs.jugnoo.room.database.SearchLocationDB
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Utils
-import java.util.*
 
 class DBCoroutine {
 
@@ -66,7 +65,7 @@ class DBCoroutine {
             GlobalScope.launch(Dispatchers.IO) {
                 val search = searchLocationDB.getSearchLocation().getLocation()
                 for (i in 0 until search.size) {
-                    val time = DateOperations.getTimeDifference(Date(search[i].date).toString(), DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 3))
+                    val time = DateOperations.getTimeDifference(DateOperations.getTimeStampUTCFromMillis(search[i].date, false), DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 15))
                     if(time > 0) {
                         deleteLocation(searchLocationDB, search[i])
                     }
@@ -86,6 +85,14 @@ class DBCoroutine {
             GlobalScope.launch(Dispatchers.Main) {
                 val searchLocation : List<SearchLocation> = withContext(Dispatchers.IO) {
                    searchLocationDB.getSearchLocation().getDropLocations()
+                }
+                searchLocationCallback.onSearchLocationReceived(searchLocation)
+            }
+        }
+        fun getAllLocations(searchLocationDB: SearchLocationDB, searchLocationCallback: SearchLocationCallback) {
+            GlobalScope.launch(Dispatchers.Main) {
+                val searchLocation : List<SearchLocation> = withContext(Dispatchers.IO) {
+                   searchLocationDB.getSearchLocation().getLocation()
                 }
                 searchLocationCallback.onSearchLocationReceived(searchLocation)
             }
