@@ -39,6 +39,9 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse;
 import product.clicklabs.jugnoo.retrofit.model.Prediction;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -58,11 +61,11 @@ public class SearchListAdapter extends BaseAdapter{
 
     private SparseArray<TextWatcherEditText> textWatcherMap = new SparseArray<>();
 
-    public TextWatcher getTextWatcherEditText(int editTextId){
+    public TextWatcherEditText getTextWatcherEditText(int editTextId){
         return textWatcherMap.get(editTextId);
     }
      class TextWatcherEditText implements  TextWatcher {
-        private CustomRunnable input_finish_checker;
+        public CustomRunnable input_finish_checker;
 
          public TextWatcherEditText(CustomRunnable input_finish_checker) {
              this.input_finish_checker = input_finish_checker;
@@ -124,6 +127,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 	private String uuidVal = "";
 
+	private ArrayList<SearchResult> searchResultRecent;
     /**
      * Constructor for initializing search base adapter
      *
@@ -161,6 +165,14 @@ public class SearchListAdapter extends BaseAdapter{
                 });
             }
 
+			SearchLocationDB searchLocationDB = DBObject.INSTANCE.getInstance();
+            if(searchLocationDB != null) {
+				DBCoroutine.Companion.getAllLocations(searchLocationDB, searchLocation -> {
+					searchResultRecent = PlaceSearchListFragment.getSearchResultsRecentAndSaved(searchLocation);
+				});
+			} else {
+            	searchResultRecent = new ArrayList<>(Data.userData.getSearchResultsRecent());
+			}
 
 
             this.showSavedPlaces = showSavedPlaces;
@@ -374,7 +386,7 @@ public class SearchListAdapter extends BaseAdapter{
 							refreshingAutoComplete = false;
 
 							if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
-								recallSearch(editText.getText().toString().trim(),editText);
+								handler.postDelayed(getTextWatcherEditText(editText.getId()).input_finish_checker.setTextToSearch(editText.getText().toString().trim()), delay);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -387,7 +399,7 @@ public class SearchListAdapter extends BaseAdapter{
 						refreshingAutoComplete = false;
 
 						if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
-							recallSearch(editText.getText().toString().trim(),editText);
+							handler.postDelayed(getTextWatcherEditText(editText.getId()).input_finish_checker.setTextToSearch(editText.getText().toString().trim()), delay);
 						}
 						searchListActionsHandler.onSearchPost();
 					}
@@ -432,14 +444,16 @@ public class SearchListAdapter extends BaseAdapter{
             if(showSavedPlaces && editTextForSearch.getText().length() > 0) {
 				favLocationsCount = 0;
 				try {
-					for(int i = Data.userData.getSearchResultsRecent().size()-1; i >= 0; i--){
-						SearchResult searchResult = Data.userData.getSearchResultsRecent().get(i);
-						if(searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
-								|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
-								|| searchText.equalsIgnoreCase("")){
-							searchResult.setType(SearchResult.Type.RECENT);
-							searchResultsForSearch.add(0, searchResult);
-							favLocationsCount++;
+					if(searchResultRecent != null) {
+						for (int i = searchResultRecent.size() - 1; i >= 0; i--) {
+							SearchResult searchResult = searchResultRecent.get(i);
+							if (searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
+									|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
+									|| searchText.equalsIgnoreCase("")) {
+								searchResult.setType(SearchResult.Type.RECENT);
+								searchResultsForSearch.add(0, searchResult);
+								favLocationsCount++;
+							}
 						}
 					}
 				} catch (Exception e) {

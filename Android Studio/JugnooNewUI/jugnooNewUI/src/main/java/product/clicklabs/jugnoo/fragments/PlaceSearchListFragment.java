@@ -762,15 +762,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 	private void setRecentList() {
-		ArrayList<SearchResult> searchResultList = new ArrayList<>(Data.userData.getSearchResultsRecent());
-		if(searchLocations != null) {
-			for (int i = 0; i < searchLocations.size(); i++) {
-				SearchResult searchResult = new SearchResult(searchLocations.get(i).getName(), searchLocations.get(i).getAddress(), searchLocations.get(i).getPlaceId(),
-						searchLocations.get(i).getSlat(), searchLocations.get(i).getSLng());
-				searchResult.setType(SearchResult.Type.RECENT);
-				searchResultList.add(0, searchResult);
-			}
-		}
+		ArrayList<SearchResult> searchResultList = getSearchResultsRecentAndSaved(searchLocations);
 		if(savedPlacesAdapterRecent == null) {
 
 			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, searchResultList, new SavedPlacesAdapter.Callback() {
@@ -801,6 +793,20 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			textViewRecentAddresses.setVisibility(View.GONE);
 			listViewRecentAddresses.setVisibility(View.GONE);
 		}
+	}
+
+	@NonNull
+	public static ArrayList<SearchResult> getSearchResultsRecentAndSaved(List<SearchLocation> searchLocations) {
+		ArrayList<SearchResult> searchResultList = new ArrayList<>(Data.userData.getSearchResultsRecent());
+		if(searchLocations != null) {
+			for (int i = 0; i < searchLocations.size(); i++) {
+				SearchResult searchResult = new SearchResult(searchLocations.get(i).getName(), searchLocations.get(i).getAddress(), searchLocations.get(i).getPlaceId(),
+						searchLocations.get(i).getSlat(), searchLocations.get(i).getSLng());
+				searchResult.setType(SearchResult.Type.RECENT);
+				searchResultList.add(0, searchResult);
+			}
+		}
+		return searchResultList;
 	}
 
 	private boolean mapSettledCanForward;

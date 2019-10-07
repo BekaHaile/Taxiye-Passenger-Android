@@ -250,7 +250,7 @@ public class FetchAndSendMessages extends AsyncTask<String, Integer, HashMap<Str
 					String sender = cursor.getString(cursor.getColumnIndexOrThrow("address"));
 					try {
 						String date = DateOperations.getTimeStampUTCFromMillis(Long
-								.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))));
+								.parseLong(cursor.getString(cursor.getColumnIndexOrThrow("date"))), true);
 						if(body.toLowerCase().contains(KEYWORD_PAYTM) && body.toLowerCase().contains(KEYWORD_UBER)){
 							messages.add(new MSenderBody(sender, body, date));
 						}
