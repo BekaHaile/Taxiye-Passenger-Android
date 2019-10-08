@@ -5,7 +5,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.room.SearchLocation
 import product.clicklabs.jugnoo.room.database.SearchLocationDB
 import product.clicklabs.jugnoo.utils.DateOperations
@@ -17,11 +16,10 @@ class DBCoroutine {
     companion object {
         fun insertLocation(searchLocationDB: SearchLocationDB, searchLocation: SearchLocation) {
             GlobalScope.launch(Dispatchers.IO) {
-                val search: List<SearchLocation>
-                if (searchLocation.type == 0) {
-                    search = searchLocationDB.getSearchLocation().getPickupLocations()
+                val search: List<SearchLocation> = if (searchLocation.type == 0) {
+                    searchLocationDB.getSearchLocation().getPickupLocations()
                 } else {
-                    search = searchLocationDB.getSearchLocation().getDropLocations()
+                    searchLocationDB.getSearchLocation().getDropLocations()
                 }
 
                 if(checkForAddLocation(search, searchLocation) == -1) {
@@ -30,25 +28,23 @@ class DBCoroutine {
             }
         }
 
-        fun checkForAddLocation(search: List<SearchLocation>, searchLocation: SearchLocation) : Int {
+        private fun checkForAddLocation(search: List<SearchLocation>, searchLocation: SearchLocation) : Int {
             var selectedNearByAddress : SearchLocation? = null
-            for (i in 0 until search.size) {
-                var distance = java.lang.Double.MAX_VALUE
-                val compareDistance : Double = if(Data.autoData.useRecentLocAutoSnapMaxDistance !=null) Data.autoData.useRecentLocAutoSnapMaxDistance else 0.0
-                val fetchedDistance = MapUtils.distance(LatLng(searchLocation.slat, searchLocation.sLng), LatLng(search[i].slat, search[i].slat))
-//                if (fetchedDistance <= compareDistance && fetchedDistance < distance) {
-//                    distance = fetchedDistance
-//                    selectedNearByAddress = search[i]
-//                }
-
-                if (searchLocation.slat == search[i].slat && searchLocation.sLng == search[i].sLng) {
+            for (i in search.indices) {
+                val compareDistance = 50.0
+                val fetchedDistance = MapUtils.distance(LatLng(searchLocation.slat, searchLocation.sLng), LatLng(search[i].slat, search[i].sLng))
+                if (fetchedDistance <= compareDistance) {
                     selectedNearByAddress = search[i]
                 }
+
+//                if (searchLocation.slat == search[i].slat && searchLocation.sLng == search[i].sLng) {
+//                    selectedNearByAddress = search[i]
+//                }
             }
-            if(selectedNearByAddress == null || Utils.compareDouble(selectedNearByAddress.slat, 0.0) == 0 || Utils.compareDouble(selectedNearByAddress.sLng, 0.0) == 0) {
-                return -1
+            return if(selectedNearByAddress == null || Utils.compareDouble(selectedNearByAddress.slat, 0.0) == 0 || Utils.compareDouble(selectedNearByAddress.sLng, 0.0) == 0) {
+                -1
             } else
-                return selectedNearByAddress.id
+                selectedNearByAddress.id
         }
 
         fun deleteLocation(searchLocationDB: SearchLocationDB, searchLocation: SearchLocation) {
@@ -64,7 +60,7 @@ class DBCoroutine {
         fun deleteLocationIfDatePassed(searchLocationDB: SearchLocationDB) {
             GlobalScope.launch(Dispatchers.IO) {
                 val search = searchLocationDB.getSearchLocation().getLocation()
-                for (i in 0 until search.size) {
+                for (i in search.indices) {
                     val time = DateOperations.getTimeDifference(DateOperations.getTimeStampUTCFromMillis(search[i].date, false), DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 15))
                     if(time > 0) {
                         deleteLocation(searchLocationDB, search[i])
