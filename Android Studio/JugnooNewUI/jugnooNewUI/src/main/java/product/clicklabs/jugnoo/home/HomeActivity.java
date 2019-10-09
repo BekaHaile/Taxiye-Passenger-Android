@@ -223,6 +223,7 @@ import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.dialogs.TutorialInfoDialog;
+import product.clicklabs.jugnoo.home.dialogs.VehicleFareEstimateDialog;
 import product.clicklabs.jugnoo.home.fragments.ScheduleRideFragment;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
@@ -393,7 +394,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Button customerInRideMyLocationBtn;
     LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
-    TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
+    TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating, tvTermsAndConditions;
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm,layoutAddedTip, rlNotes;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver,buttonAddTipEndRide;
     ImageView ivMoreOptions;
@@ -969,7 +970,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
         textViewInRideState.setTypeface(Fonts.mavenMedium(this));
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
+        tvTermsAndConditions = (TextView) findViewById(R.id.tvTermsAndConditions);
         textViewDriverRating.setTypeface(Fonts.mavenMedium(this));
+        tvTermsAndConditions.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
         textViewCancellation = (TextView) findViewById(R.id.textViewCancellation);
         textViewCancellation.setTypeface(Fonts.mavenRegular(this));
@@ -1624,6 +1627,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
+        if (isNewUI) {
+            tvTermsAndConditions.setVisibility(View.VISIBLE);
+        } else {
+            tvTermsAndConditions.setVisibility(View.GONE);
+        }
+
+        tvTermsAndConditions.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new VehicleFareEstimateDialog().show(HomeActivity.this,
+                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+            }
+        });
 
         imageViewInAppCampaign.setOnClickListener(new OnClickListener() {
             @Override
@@ -5120,7 +5136,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void setDropLocationAssigningUI() {
         try {
         	getAddressAsync(Data.autoData.getPickupLatLng(), tvPickupAssigning, null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
-			if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+			if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ||
+                    Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
 				tvDropAssigning.setVisibility(View.GONE);
 				findViewById(R.id.iv2NewUIDropDashedLineAssigning).setVisibility(View.GONE);
 				findViewById(R.id.iv3NewUIDropMarkAssigning).setVisibility(View.GONE);
@@ -7157,6 +7174,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (searchResult != null) {
                     addressNeeded = false;
                     textView.setText(searchResult.getName());
+                    if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                        tvPickupRentalOutstation.setText(searchResult.getName());
+                    }
                     Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
                     if(textView == textViewInitialSearch){
                         ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
@@ -7173,10 +7193,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							addressNeeded = false;
 							textView.setHint(R.string.enter_pickup);
                             textView.setText("");
+                            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                                tvPickupRentalOutstation.setText("");
+                            }
 						}
                     } else {
                         addressNeeded = false;
                         textView.setText(Data.autoData.getPickupAddress(currentLatLng));
+                        if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                            tvPickupRentalOutstation.setText(Data.autoData.getPickupAddress(currentLatLng));
+                        }
                     }
                 }
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
@@ -12486,7 +12512,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null
          && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
           || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))) {
-            tvPickupRentalOutstation.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
             slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
             promoCouponSelectedForRide = null;
             showPoolInforBar(false);

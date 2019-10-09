@@ -2126,6 +2126,7 @@
     <string name="offer_cannot_be_more_than_max_value">Offer can\'t be more than max value</string>
     <string name="copied">Copied</string>
     <string name="select_drop_location_estimate_fare">Select drop location to find estimate fare</string>
+    <string name="text_terms_and_conditions_apply"><![CDATA[Terms & Conditions Apply]]></string>
 
 
 </resources>

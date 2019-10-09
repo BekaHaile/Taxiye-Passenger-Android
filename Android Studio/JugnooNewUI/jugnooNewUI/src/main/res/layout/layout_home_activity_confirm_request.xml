@@ -471,6 +471,21 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10px"
             android:text="@string/confirm_request" />
+
+        <TextView
+            android:id="@+id/tvTermsAndConditions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_small"
+            android:tag="@string/dont_touch_me"
+            android:layout_below="@id/buttonConfirmRequest"
+            android:paddingStart="@dimen/spacing_small"
+            android:paddingEnd="@dimen/spacing_small"
+            android:paddingTop="@dimen/spacing_small"
+            android:paddingBottom="@dimen/spacing_normal"
+            android:text="@string/text_terms_and_conditions_apply"
+            android:gravity="center_horizontal"
+            android:textColor="@color/text_color_link"/>
     </RelativeLayout>
 
 </RelativeLayout>
