@@ -85,7 +85,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         }
         holder.tvOfferTag.setVisibility(View.GONE);
         if(showRegionFares && region.getRegionFare() != null && region.getReverseBid() == 0){
-            holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()));
+            holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()).toString().concat(activity.isNewUI() ? "*" : ""));
             holder.tvVehicleFareStrike.setText(region.getRegionFare().getStrikedFareText(region.getFareMandatory()));
             holder.tvVehicleFareStrike.setVisibility(holder.tvVehicleFareStrike.getText().length() > 0 ? View.VISIBLE : View.GONE);
             String discount = region.getRegionFare().getDiscountText(region.getFareMandatory());

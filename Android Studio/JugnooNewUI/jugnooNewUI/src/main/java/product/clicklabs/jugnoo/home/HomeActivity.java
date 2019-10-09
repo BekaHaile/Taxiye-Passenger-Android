@@ -1627,12 +1627,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
-        if (isNewUI) {
-            tvTermsAndConditions.setVisibility(View.VISIBLE);
-        } else {
-            tvTermsAndConditions.setVisibility(View.GONE);
-        }
-
         tvTermsAndConditions.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -6600,6 +6594,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     relativeLayoutTotalFare.setVisibility(View.GONE);
                     linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
                     relativeLayoutSearchContainer.setVisibility(View.GONE);
+                    tvTermsAndConditions.setVisibility(View.GONE);
                     linearLayoutConfirmOption.setBackground(ContextCompat.getDrawable(this,R.color.white));
                     if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
                         linearLayoutBidValue.setVisibility(View.VISIBLE);
@@ -6622,6 +6617,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         linearLayoutBidValue.setVisibility(View.GONE);
                         relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
                         linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+                        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() != null
+                                && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1) {
+                            tvTermsAndConditions.setVisibility(View.VISIBLE);
+                        }
                     }
                 } else {
 
@@ -7194,6 +7193,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							textView.setHint(R.string.enter_pickup);
                             textView.setText("");
                             if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                                tvPickupRentalOutstation.setHint(R.string.enter_pickup);
                                 tvPickupRentalOutstation.setText("");
                             }
 						}
@@ -7262,6 +7262,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						textView.setText(address);
 						if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
 							textView.setHint(getResources().getString(R.string.enter_pickup));
+                            tvPickupRentalOutstation.setHint(getResources().getString(R.string.enter_pickup));
+                            tvPickupRentalOutstation.setText(address);
 							Data.autoData.setPickupAddress(address, currentLatLng);
 						} else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
 							textView.setHint(getResources().getString(R.string.enter_destination));
@@ -11012,6 +11014,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(isNewUI) {
             relativeLayoutTotalFare.setVisibility(View.GONE);
             linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+            tvTermsAndConditions.setVisibility(View.GONE);
             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
                 linearLayoutBidValue.setVisibility(View.VISIBLE);
                 relativeLayoutOfferConfirm.setVisibility(View.GONE);
@@ -11033,6 +11036,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 linearLayoutBidValue.setVisibility(View.GONE);
                 relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
                 linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+
+                if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() != null
+                        && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1) {
+                    tvTermsAndConditions.setVisibility(View.VISIBLE);
+                }
             }
         } else {
             linearLayoutBidValue.setVisibility(View.GONE);

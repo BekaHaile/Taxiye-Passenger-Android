@@ -476,7 +476,7 @@
             android:id="@+id/tvTermsAndConditions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_small"
+            android:textSize="@dimen/font_extra_small"
             android:tag="@string/dont_touch_me"
             android:layout_below="@id/buttonConfirmRequest"
             android:paddingStart="@dimen/spacing_small"
