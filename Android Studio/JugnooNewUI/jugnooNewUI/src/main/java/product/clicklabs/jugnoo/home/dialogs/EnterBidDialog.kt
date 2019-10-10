@@ -2,7 +2,9 @@ package product.clicklabs.jugnoo.home.dialogs
 
 import android.app.Activity
 import android.app.Dialog
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -50,7 +52,19 @@ object EnterBidDialog {
                 editTextNumber.hint = etHint
             }
             if(!TextUtils.isEmpty(etPrefix)){
-                editTextNumber.setPrefix(etPrefix)
+                editTextNumber.addTextChangedListener(object : TextWatcher{
+                    override fun afterTextChanged(s: Editable?) {
+                        editTextNumber.setPrefix(if(s?.isNullOrEmpty() == true) "" else etPrefix)
+                        editTextNumber.hint = if(s?.isNullOrEmpty() == true) etHint else ""
+                    }
+
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    }
+
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    }
+
+                })
             }
 
             val btnConfirm = dialog.findViewById<Button>(R.id.btnConfirm)

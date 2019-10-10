@@ -1542,6 +1542,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             &&  Data.autoData.getDropLatLng() != null)
                             || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 0) {
 
+                    	//if selected region is for reverse bid and regionFare is null then we cannot proceed further
+                    	if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+								&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() == null){
+                    		if(Data.autoData.getDropLatLng() == null){
+								Utils.showToast(HomeActivity.this,getString(R.string.destination_required));
+							} else {
+								fareEstimatBeforeRequestRide();
+								Utils.showToast(HomeActivity.this,getString(R.string.fares_updated));
+							}
+                    		return;
+						}
+
                             if (isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
                                 && !editTextBidValue.getText().toString().isEmpty()) {
 								double innerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MIN_REGION_FARE, 20.0f);
@@ -1562,7 +1574,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 								} else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue) {
 									EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
-											getString(R.string.fare), Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
+											getString(R.string.suggested_fare)+": "+minBidValueStr, Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
 												editTextBidValue.setText(value);
 												buttonConfirmRequest.performClick();
 											});

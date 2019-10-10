@@ -2127,6 +2127,7 @@
     <string name="copied">Copied</string>
     <string name="select_drop_location_estimate_fare">Select drop location to find estimate fare</string>
     <string name="text_terms_and_conditions_apply"><![CDATA[*Terms & Conditions Apply]]></string>
+    <string name="suggested_fare">Suggested Fare</string>
 
 
 </resources>

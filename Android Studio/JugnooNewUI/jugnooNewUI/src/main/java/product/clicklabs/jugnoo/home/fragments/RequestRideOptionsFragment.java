@@ -380,10 +380,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             if(Data.autoData.getRegions().size() > 1){
                 boolean matched = false;
                 for (int i=0; i<Data.autoData.getRegions().size(); i++) {
-                    if(Data.autoData.getRegions().get(i).getOperatorId() == getRegionSelected().getOperatorId()
-                            && Data.autoData.getRegions().get(i).getRegionId().equals(getRegionSelected().getRegionId())
-                            && Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
-                            ){
+                    if(Data.autoData.getRegions().get(i).getRegionId().equals(getRegionSelected().getRegionId())){
                         regionSelected = Data.autoData.getRegions().get(i);
                         matched = true;
                         break;
