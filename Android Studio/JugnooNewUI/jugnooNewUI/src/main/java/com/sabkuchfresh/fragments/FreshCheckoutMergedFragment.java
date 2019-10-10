@@ -294,6 +294,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         layoutMinOrder =(LinearLayout)rootView.findViewById(R.id.layout_min_order);
         tvOrderViaFatafat =(TextView)rootView.findViewById(R.id.tv_order_via_fatafaat);
         tvOrderViaFatafat.setTypeface(tvOrderViaFatafat.getTypeface(),Typeface.BOLD);
+        tvOrderViaFatafat.setText(getString(R.string.action_order_via_fatafat, R.string.fatafat_text));
         tvOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -495,19 +496,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         listViewOffers.setNestedScrollingEnabled(false);
         listViewOffers.setLayoutManager(new LinearLayoutManager(activity));
 
-        tvNoAvailableOffers = rootView.findViewById(R.id.tvNoAvailableOffers);
-        //cvOffersAvailable = rootView.findViewById(R.id.cvOffersAvailable);
-
-
-        if(promoCoupons.size()>0){
-            tvNoAvailableOffers.setVisibility(View.GONE);
-            listViewOffers.setVisibility(View.VISIBLE);
-            promoCouponsAdapter = new PromoCouponsRecyclerAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this,listViewOffers);
-            listViewOffers.setAdapter(promoCouponsAdapter);
-        }else{
-            tvNoAvailableOffers.setVisibility(View.VISIBLE);
-            listViewOffers.setVisibility(View.GONE);
-        }
+        promoCouponsAdapter = new PromoCouponsRecyclerAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this,listViewOffers);
+        listViewOffers.setAdapter(promoCouponsAdapter);
 
 
         scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
@@ -2213,6 +2203,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } else {
             promoCoupons.addAll(promoCouponsList);
         }
+
+
     }
 
     private void updateCouponsDataView() {
@@ -2278,9 +2270,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }
         } else {
-//            linearLayoutOffers.setVisibility(View.GONE);
-            listViewOffers.setVisibility(View.GONE);
-            tvNoAvailableOffers.setVisibility(View.VISIBLE);
+            linearLayoutOffers.setVisibility(View.GONE);
+//            listViewOffers.setVisibility(View.GONE);
+//            tvNoAvailableOffers.setVisibility(View.VISIBLE);
         }
     }
 

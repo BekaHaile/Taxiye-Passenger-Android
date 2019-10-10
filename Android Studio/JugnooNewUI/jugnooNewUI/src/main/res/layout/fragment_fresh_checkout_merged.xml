@@ -11,61 +11,60 @@
     <LinearLayout
         android:id="@+id/layout_min_order"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#FFEDE4"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tv_min_order_label"
-            android:gravity="center"
-            android:textColor="@color/text_color"
-            android:paddingStart="60px"
-            android:paddingEnd="60px"
-            android:paddingTop="22px"
-            android:paddingBottom="22px"
-            android:textSize="28px"
-            app:typekitFont="maven"
-
-            android:visibility="visible"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingStart="60px"
+            android:paddingTop="22px"
+            android:paddingEnd="60px"
+            android:paddingBottom="22px"
+            android:textColor="@color/text_color"
+
+            android:textSize="28px"
+            android:visibility="visible"
+            app:typekitFont="maven" />
 
         <TextView
             android:id="@+id/labelOrMinOrder"
-            android:layout_gravity="center"
-            app:typekitFont="@string/maven"
-            android:text="@string/label_or_above_order_via_fatafat"
-            android:textSize="25px"
-            android:textColor="@color/text_color"
-            android:layout_marginBottom="20px"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20px"
+            android:text="@string/label_or_above_order_via_fatafat"
+            android:textColor="@color/text_color"
+            android:textSize="25px"
+            app:typekitFont="@string/maven" />
 
         <TextView
             android:id="@+id/tv_order_via_fatafaat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingBottom="22px"
+            android:text="@string/action_order_via_fatafat"
             android:textColor="#ff742c"
             android:textSize="34px"
-            android:paddingBottom="22px"
-            android:gravity="center"
-            android:text="@string/action_order_via_fatafat"
-            app:typekitFont="maven"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            app:typekitFont="maven" />
 
-       <!-- <View  android:layout_width="match_parent"
-            android:background="@drawable/shadow_down_new"
-            android:layout_height="8dp"/>-->
+        <!-- <View  android:layout_width="match_parent"
+             android:background="@drawable/shadow_down_new"
+             android:layout_height="8dp"/>-->
     </LinearLayout>
-
 
 
     <ScrollView
         android:id="@+id/scrollView"
-        android:layout_below="@id/layout_min_order"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_min_order">
 
         <LinearLayout
             android:id="@+id/linearLayoutMain"
@@ -99,10 +98,10 @@
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8px"
                     android:layout_marginStart="20px"
-                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px"
+                    android:layout_marginEnd="20px"
+                    android:layout_marginBottom="8px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
 
@@ -128,8 +127,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="10px"
-                            android:layout_marginEnd="25px"
                             android:layout_marginTop="25px"
+                            android:layout_marginEnd="25px"
                             android:layout_toEndOf="@+id/imageViewAddressType"
                             android:orientation="vertical">
 
@@ -203,10 +202,10 @@
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8px"
                     android:layout_marginStart="20px"
-                    android:layout_marginEnd="20px"
                     android:layout_marginTop="14px"
+                    android:layout_marginEnd="20px"
+                    android:layout_marginBottom="8px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
 
@@ -231,8 +230,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/px_80"
-                            android:layout_marginEnd="@dimen/px_20"
                             android:layout_marginTop="@dimen/px_25"
+                            android:layout_marginEnd="@dimen/px_20"
                             android:text=""
                             android:textColor="@color/text_color"
                             android:textSize="30px"
@@ -243,10 +242,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/tvRestName"
-                            android:layout_marginBottom="@dimen/px_25"
                             android:layout_marginStart="@dimen/px_80"
-                            android:layout_marginEnd="@dimen/px_20"
                             android:layout_marginTop="4px"
+                            android:layout_marginEnd="@dimen/px_20"
+                            android:layout_marginBottom="@dimen/px_25"
                             android:text=""
                             android:textColor="@color/text_color_light"
                             android:textSize="26px"
@@ -284,10 +283,10 @@
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8px"
                     android:layout_marginStart="20px"
-                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px"
+                    android:layout_marginEnd="20px"
+                    android:layout_marginBottom="8px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
 
@@ -347,10 +346,10 @@
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8px"
                     android:layout_marginStart="20px"
-                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px"
+                    android:layout_marginEnd="20px"
+                    android:layout_marginBottom="8px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
 
@@ -359,8 +358,8 @@
                         android:id="@+id/linearLayoutWalletContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5px"
                         android:layout_marginTop="5px"
+                        android:layout_marginBottom="5px"
                         android:orientation="vertical">
 
                         <RelativeLayout
@@ -445,17 +444,16 @@
 
                                 <TextView
                                     android:id="@+id/tvStripeCardNumber"
-                                    android:gravity="center"
-                                    tools:text="**** **** "
-                                    android:layout_marginStart="16px"
-                                    app:typekitFont="maven"
-                                    android:textSize="@dimen/text_size_34"
-                                    android:textColor="@color/text_color"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16px"
+                                    android:gravity="center"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/text_size_34"
+                                    app:typekitFont="maven"
+                                    tools:text="**** **** " />
 
                             </LinearLayout>
-
 
 
                             <ImageView
@@ -528,8 +526,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/px_30"
-                            android:layout_marginEnd="@dimen/px_30"
-                            />
+                            android:layout_marginEnd="@dimen/px_30" />
 
 
                         <RelativeLayout
@@ -768,10 +765,10 @@
                     android:id="@+id/cvOffersAvailable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8px"
                     android:layout_marginStart="20px"
-                    android:layout_marginEnd="20px"
                     android:layout_marginTop="15px"
+                    android:layout_marginEnd="20px"
+                    android:layout_marginBottom="8px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
 
@@ -781,7 +778,7 @@
                         android:layout_height="wrap_content"
                         android:divider="@color/transparent"
                         android:dividerHeight="0dp"
-                        android:splitMotionEvents="false"/>
+                        android:splitMotionEvents="false" />
 
                     <TextView
                         android:id="@+id/tvNoAvailableOffers"
@@ -790,7 +787,7 @@
                         android:text="@string/no_available_offers"
                         android:padding="5dp"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/sp_15"/>
+                        android:textSize="@dimen/sp_12"/>
 
 
 
@@ -824,10 +821,10 @@
                 <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8px"
                     android:layout_marginStart="20px"
-                    android:layout_marginEnd="20px"
                     android:layout_marginTop="10px"
+                    android:layout_marginEnd="20px"
+                    android:layout_marginBottom="8px"
                     card_view:cardBackgroundColor="@color/white"
                     card_view:cardCornerRadius="4px">
 
@@ -841,8 +838,8 @@
                         android:gravity="start"
                         android:hint="@string/add_special_notes"
                         android:inputType="textCapSentences|textMultiLine"
-                        android:paddingBottom="10px"
                         android:paddingTop="10px"
+                        android:paddingBottom="10px"
                         android:textColor="@color/text_color"
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@drawable/cursor_black"
@@ -867,10 +864,11 @@
         android:id="@+id/shadow_top_min_order"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_7"
-        android:tag="@string/dont_touch_me"
-        android:visibility="gone"
         android:layout_below="@id/layout_min_order"
-        android:src="@drawable/shadow_down_new"/>
+        android:src="@drawable/shadow_down_new"
+        android:tag="@string/dont_touch_me"
+        android:visibility="gone" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/shadow_new_height"
