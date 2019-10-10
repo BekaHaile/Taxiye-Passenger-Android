@@ -76,7 +76,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
     TextView textViewScroll;
 
-    boolean loginDataFetched = false;
+    public boolean loginDataFetched = false;
     private int linkedWallet = 0;
     //private int userVerified = 0;
     private String linkedWalletErrorMsg = "";
@@ -530,7 +530,6 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
             RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
                 @Override
                 public void success(LoginResponse loginResponse, Response response) {
-                    DialogPopup.dismissLoadingDialog();
                     if (missedCallDialog != null) {
                         missedCallDialog.dismiss();
                     }
@@ -568,16 +567,14 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                             } else {
                                 DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
-                            DialogPopup.dismissLoadingDialog();
-                        } else {
-                            DialogPopup.dismissLoadingDialog();
                         }
 
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                        DialogPopup.dismissLoadingDialog();
                     }
+
+					DialogPopup.dismissLoadingDialog();
                 }
 
                 @Override

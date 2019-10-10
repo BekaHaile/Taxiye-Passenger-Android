@@ -552,6 +552,11 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, autoData.optString(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, ""));
 		Prefs.with(context).save(KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP, autoData.optInt(KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP, 1));
 		Prefs.with(context).save(KEY_CUSTOMER_BID_INCREMENT, autoData.optString(KEY_CUSTOMER_BID_INCREMENT, String.valueOf(0D)));
+
+		Prefs.with(context).save(KEY_CUSTOMER_SHOW_BOUNCING_MARKER, autoData.optInt(KEY_CUSTOMER_SHOW_BOUNCING_MARKER,
+				context.getResources().getBoolean(R.bool.show_bouncing_marker)?1:0));
+		Prefs.with(context).save(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG, autoData.optInt(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG,
+				context.getResources().getBoolean(R.bool.show_save_location_dialog)?1:0));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

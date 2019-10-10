@@ -726,7 +726,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         HomeActivity.appInterruptHandler = HomeActivity.this;
 
-//        isNewUI = getResources().getBoolean(R.bool.fallback_is_new_reverse);
 
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
@@ -2716,7 +2715,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
 								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
-                                && getResources().getBoolean(R.bool.show_save_location_dialog)
+                                && showSaveLocationDialog()
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
                         && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                             openSaveLocationDialog(true);
@@ -2781,7 +2780,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED
                                 || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL)
 								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
-                                && getResources().getBoolean(R.bool.show_save_location_dialog)
+                                && showSaveLocationDialog()
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)
                                 && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                             openSaveLocationDialog(false);
@@ -5180,11 +5179,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             boolean savedLocationView = false;
             if((PassengerScreenMode.P_IN_RIDE == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
              || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode)
-                    && getResources().getBoolean(R.bool.show_save_location_dialog)
+                    && showSaveLocationDialog()
                     && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
                 savedLocationView = true;
             }
-            if(Data.autoData.getAssignedDriverInfo()!=null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            if(Data.autoData.getAssignedDriverInfo() != null
+					&& Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
                 Log.e("ride type", Data.autoData.getAssignedDriverInfo().getRideType()+"");
                     dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
             }
@@ -6877,6 +6877,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
+    private boolean showSaveLocationDialog(){
+		return Prefs.with(this).getInt(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG, 0) == 1;
+	}
 
     public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, boolean inRide) {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -6887,7 +6890,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if (inRide) {
             if((Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
 					|| Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
-                    || !getResources().getBoolean(R.bool.show_save_location_dialog)
+                    || !showSaveLocationDialog()
                     || HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) != null) {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
@@ -7350,12 +7353,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         cancelTimerRequestRide();
 
+		if (map != null && pickupLocationMarker != null) {
+			pickupLocationMarker.remove();
+		}
+
         passengerScreenMode = P_INITIAL;
         switchPassengerScreen(passengerScreenMode);
 
-        if (map != null && pickupLocationMarker != null) {
-            pickupLocationMarker.remove();
-        }
 
         dontCallRefreshDriver = false;
 		if(!confirmedScreenOpened && !isNewUI()) {
@@ -9918,162 +9922,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         startActivityForResult(intent, searchResult.getPlaceRequestCode());
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
-
-    @NotNull
-    @Override
-    public CoroutineContext getCoroutineContext() {
-        return null;
-    }
-
-    class CheckForGPSAccuracyTimer {
-
-        public Timer timer;
-        public TimerTask timerTask;
-
-        public long startTime, lifeTime, endTime, period, executionTime;
-        public boolean isRunning = false;
-
-        public CheckForGPSAccuracyTimer(Context context, long delay, long period, long startTime, long lifeTime) {
-            Log.i("CheckForGPSAccuracyTimer before start myLocation = ", "=" + myLocation);
-            isRunning = false;
-            if (myLocation != null) {
-                if (myLocation.hasAccuracy()) {
-                    float accuracy = myLocation.getAccuracy();
-                    if (accuracy > HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND) {
-                        displayLessAccurateToast(context);
-                    } else if (accuracy <= HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND
-                            && accuracy > HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
-                        startTimer(context, delay, period, startTime, lifeTime);
-                        HomeActivity.this.switchRequestRideUI();
-                    } else if (accuracy <= HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
-                        HomeActivity.this.switchRequestRideUI();
-                        HomeActivity.this.startTimerRequestRide();
-                    } else {
-                        displayLessAccurateToast(context);
-                    }
-                } else {
-                    displayLessAccurateToast(context);
-                }
-            } else {
-                displayLessAccurateToast(context);
-            }
-        }
-
-
-        public void displayLessAccurateToast(Context context) {
-            Utils.showToast(context, getString(R.string.please_wait_more_accurate_location));
-        }
-
-        public void initRequestRideUi() {
-            stopTimer();
-            HomeActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    HomeActivity.this.startTimerRequestRide();
-                }
-            });
-        }
-
-        public void stopRequest(Context context) {
-            displayLessAccurateToast(context);
-            stopTimer();
-            HomeActivity.this.customerUIBackToInitialAfterCancel();
-        }
-
-        public void startTimer(final Context context, long delay, long period, long startTime, long lifeTime) {
-            stopTimer();
-            isRunning = true;
-
-            this.startTime = startTime;
-            this.lifeTime = lifeTime;
-            this.endTime = startTime + lifeTime;
-            this.period = period;
-            this.executionTime = -1;
-
-            timer = new Timer();
-            timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    HomeActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                long start = System.currentTimeMillis();
-                                if (executionTime == -1) {
-                                    executionTime = CheckForGPSAccuracyTimer.this.startTime;
-                                }
-
-                                if (executionTime >= CheckForGPSAccuracyTimer.this.endTime) {
-                                    //Timer finished
-                                    if (myLocation != null) {
-                                        if (myLocation.hasAccuracy()) {
-                                            float accuracy = myLocation.getAccuracy();
-                                            if (accuracy > HomeActivity.WAIT_FOR_ACCURACY_UPPER_BOUND) {
-                                                stopRequest(context);
-                                            } else {
-                                                initRequestRideUi();
-                                            }
-                                        } else {
-                                            stopRequest(context);
-                                        }
-                                    } else {
-                                        stopRequest(context);
-                                    }
-                                } else {
-                                    //Check for location accuracy
-                                    Log.i("CheckForGPSAccuracyTimer myLocation = ", "=" + myLocation);
-                                    if (myLocation != null) {
-                                        if (myLocation.hasAccuracy()) {
-                                            float accuracy = myLocation.getAccuracy();
-                                            if (accuracy <= HomeActivity.WAIT_FOR_ACCURACY_LOWER_BOUND) {
-                                                initRequestRideUi();
-                                            }
-                                        }
-                                    }
-                                }
-                                long stop = System.currentTimeMillis();
-                                long elapsedTime = stop - start;
-                                if (executionTime != -1) {
-                                    if (elapsedTime >= CheckForGPSAccuracyTimer.this.period) {
-                                        executionTime = executionTime + elapsedTime;
-                                    } else {
-                                        executionTime = executionTime + CheckForGPSAccuracyTimer.this.period;
-                                    }
-                                }
-                                Log.i("WaitForGPSAccuracyTimerTask execution", "=" + (CheckForGPSAccuracyTimer.this.endTime - executionTime));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                }
-            };
-            timer.scheduleAtFixedRate(timerTask, delay, period);
-            isRunning = true;
-        }
-
-        public void stopTimer() {
-            try {
-                isRunning = false;
-                Log.e("WaitForGPSAccuracyTimerTask", "stopTimer");
-                startTime = 0;
-                lifeTime = 0;
-                if (timerTask != null) {
-                    timerTask.cancel();
-                    timerTask = null;
-                }
-                if (timer != null) {
-                    timer.cancel();
-                    timer.purge();
-                    timer = null;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-
-    }
+	@NotNull
+	@Override
+	public CoroutineContext getCoroutineContext() {
+		return null;
+	}
 
     @Override
     public void onDisplayMessagePushReceived() {
@@ -10782,6 +10635,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     passengerScreenMode = P_INITIAL;
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
+                    passengerScreenMode = P_INITIAL;
+
 					if (map != null && searchResult != null) {
 						setSearchResultToPickupCase(searchResult);
 						GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
