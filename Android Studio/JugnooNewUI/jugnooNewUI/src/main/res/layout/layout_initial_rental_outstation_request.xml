@@ -59,7 +59,7 @@
         android:layout_marginEnd="10dp"
         android:textSize="16sp"
         android:textColor="@color/text_color"
-        tools:text="@string/package_starting_at_format"
+        tools:text=""
         />
 
     <View

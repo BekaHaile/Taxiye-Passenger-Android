@@ -7370,6 +7370,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         cancelTimerRequestRide();
+        slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(null);
 
 		if (map != null && pickupLocationMarker != null) {
 			pickupLocationMarker.remove();
@@ -7465,7 +7466,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 public void onClick(View v) {
                 }
             });
-
+            slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(null);
             noDriversDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -9007,8 +9008,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("current_longitude", "" + Data.autoData.getPickupLatLng().longitude);
                                 }
                                 if (regionSelected.getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()
-                                        || (Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
-                                        && !Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()))
+                                        && !(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()))
 										&& Data.autoData.getDropLatLng() != null
                                         && Utils.compareDouble(Data.autoData.getDropLatLng().latitude, 0) != 0
                                         && Utils.compareDouble(Data.autoData.getDropLatLng().longitude, 0) != 0) {
