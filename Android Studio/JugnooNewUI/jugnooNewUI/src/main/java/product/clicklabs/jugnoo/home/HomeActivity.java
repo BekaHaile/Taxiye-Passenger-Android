@@ -7296,12 +7296,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         cancelTimerRequestRide();
 
+		if (map != null && pickupLocationMarker != null) {
+			pickupLocationMarker.remove();
+		}
+
         passengerScreenMode = P_INITIAL;
         switchPassengerScreen(passengerScreenMode);
 
-        if (map != null && pickupLocationMarker != null) {
-            pickupLocationMarker.remove();
-        }
 
         dontCallRefreshDriver = false;
 		if(!confirmedScreenOpened && !isNewUI()) {
