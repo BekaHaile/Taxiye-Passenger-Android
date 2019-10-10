@@ -4239,6 +4239,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
+                        if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
+                                && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+                            relativeLayoutFinalDropLocationClick.setVisibility(View.GONE);
+                        } else {
+                            relativeLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
+                        }
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
 
@@ -8989,6 +8995,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("current_longitude", "" + Data.autoData.getPickupLatLng().longitude);
                                 }
                                 if (regionSelected.getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()
+                                        || (Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
+                                        && !Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()))
 										&& Data.autoData.getDropLatLng() != null
                                         && Utils.compareDouble(Data.autoData.getDropLatLng().latitude, 0) != 0
                                         && Utils.compareDouble(Data.autoData.getDropLatLng().longitude, 0) != 0) {

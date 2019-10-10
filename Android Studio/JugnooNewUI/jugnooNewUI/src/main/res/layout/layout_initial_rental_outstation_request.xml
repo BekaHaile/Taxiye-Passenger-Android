@@ -173,10 +173,10 @@
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/ivPickup"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        android:src="@drawable/ic_shape"
+        android:src="@drawable/circle_theme"
         android:layout_marginStart="@dimen/spacing_normal"
         app:layout_constraintTop_toTopOf="@+id/tvPickupRentalOutstation"
         app:layout_constraintBottom_toBottomOf="@+id/tvPickupRentalOutstation"
