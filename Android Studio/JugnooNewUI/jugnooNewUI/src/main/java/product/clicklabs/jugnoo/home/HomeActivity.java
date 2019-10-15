@@ -4251,12 +4251,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
-                        if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
-                                && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
-                            relativeLayoutFinalDropLocationClick.setVisibility(View.GONE);
-                        } else {
-                            relativeLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
-                        }
+//                        if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
+//                                && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+//                            relativeLayoutFinalDropLocationClick.setVisibility(View.GONE);
+//                        } else {
+//                            relativeLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
+//                        }
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
 
@@ -12408,7 +12408,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void setScheduleIcon() {
-        if(passengerScreenMode == P_INITIAL && isScheduleRideEnabled) {
+        if(passengerScreenMode == P_INITIAL && isScheduleRideEnabled && !scheduleRideOpen) {
             topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
         } else {
             topBar.imageViewScheduleRide.setVisibility(View.GONE);
