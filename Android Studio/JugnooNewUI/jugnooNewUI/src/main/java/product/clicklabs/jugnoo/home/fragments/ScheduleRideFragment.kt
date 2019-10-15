@@ -501,7 +501,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()))
             textViewPaymentModeValueConfirm.text = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption())
+                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),activity)
 
         }
 

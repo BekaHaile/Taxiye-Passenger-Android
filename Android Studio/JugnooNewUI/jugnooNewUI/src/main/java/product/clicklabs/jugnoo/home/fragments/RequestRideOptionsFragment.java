@@ -349,10 +349,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
             imageViewPaymentMode.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
             imageViewPaymentModeMS.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
-            textViewPaymentModeValue.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
-            textViewPaymentModeValueMS.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
+            textViewPaymentModeValue.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(), activity));
+            textViewPaymentModeValueMS.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),activity));
             activity.getSlidingBottomPanel().getImageViewPaymentOp().setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
-            activity.getSlidingBottomPanel().getTextViewCashValue().setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
+            activity.getSlidingBottomPanel().getTextViewCashValue().setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),activity));
             updatePreferredPaymentOptionUI();
             activity.updateConfirmedStatePaymentUI();
         } catch (Exception e) {
