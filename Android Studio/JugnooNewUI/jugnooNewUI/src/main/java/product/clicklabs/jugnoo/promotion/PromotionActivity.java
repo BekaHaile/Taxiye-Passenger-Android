@@ -643,7 +643,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         if(pcAll.size() > 0){
             pcAll = countAndRemoveDuplicatePromoCoupons(pcAll);
             for(PromoCoupon pc : pcAll){
-                promosList.add(new Promo(getString(R.string.all), "", pc, R.drawable.ic_promo_all, -1));
+                promosList.add(new Promo(getString(R.string.all), "", pc, R.drawable.ic_promo_all, -1, false, 0));
             }
         }
         if(pcRides.size() > 0) {
@@ -658,31 +658,31 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     }
                 }
 
-                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, id, R.color.theme_color));
+                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, id, R.color.theme_color, false, 0));
             }
         }
         if(pcMeals.size() > 0) {
             pcMeals = countAndRemoveDuplicatePromoCoupons(pcMeals);
             for(PromoCoupon pc : pcMeals){
-                promosList.add(new Promo(getString(R.string.meals), Config.getMealsClientId(), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab));
+                promosList.add(new Promo(getString(R.string.meals), Config.getMealsClientId(), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab, false, 0));
             }
         }
         if(pcFatafat.size() > 0) {
             pcFatafat = countAndRemoveDuplicatePromoCoupons(pcFatafat);
             for(PromoCoupon pc : pcFatafat){
-                promosList.add(new Promo(getString(R.string.fatafat), Config.getFreshClientId(), pc, R.drawable.ic_promo_fresh, R.color.fresh_promotions_green));
+                promosList.add(new Promo(getString(R.string.fatafat), Config.getFreshClientId(), pc, R.drawable.ic_promo_fresh, R.color.fresh_promotions_green, false, 0));
             }
         }
         if(pcMenus.size() > 0) {
             pcMenus = countAndRemoveDuplicatePromoCoupons(pcMenus);
             for(PromoCoupon pc : pcMenus){
-                promosList.add(new Promo(getString(R.string.menus), Config.getMenusClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+                promosList.add(new Promo(getString(R.string.menus), Config.getMenusClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab, false, 0));
             }
         }
         if(pcDeliveryCustomer.size() > 0) {
             pcDeliveryCustomer = countAndRemoveDuplicatePromoCoupons(pcDeliveryCustomer);
             for(PromoCoupon pc : pcDeliveryCustomer){
-                promosList.add(new Promo(getString(R.string.delivery_new_name), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+                promosList.add(new Promo(getString(R.string.delivery_new_name), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab, false, 0));
             }
         }
 

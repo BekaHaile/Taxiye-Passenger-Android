@@ -696,4 +696,8 @@ public interface ApiService {
 	@POST("/get_information")
 	Response fetchTutorialData(@FieldMap Map<String, String> params);
 
+	@FormUrlEncoded
+	@POST("/customer/scratch_coupon")
+	void scratchCard(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
 }

@@ -13,12 +13,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Toast
+import com.sabkuchfresh.feed.models.FeedCommonResponse
+import com.sabkuchfresh.feed.ui.api.APICommonCallback
+import com.sabkuchfresh.feed.ui.api.ApiCommon
+import com.sabkuchfresh.feed.ui.api.ApiName
+import kotlinx.android.synthetic.main.dialog_rewards.view.*
+import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.R
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags
 import product.clicklabs.jugnoo.newui.utils.customview.ScratchView
+import product.clicklabs.jugnoo.promotion.models.Promo
+import product.clicklabs.jugnoo.utils.DialogPopup
+import java.util.*
 
 
 class RewardsDialog : DialogFragment() {
     private lateinit var rootView : View
+    private lateinit var promoData : Promo
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // The only reason you might override this method when using onCreateView() is
@@ -32,8 +43,11 @@ class RewardsDialog : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(): RewardsDialog {
+        fun newInstance(promo: Promo): RewardsDialog {
+            val bundle = Bundle()
+            bundle.putParcelable("coupon", promo)
             val rewardsDialog = RewardsDialog()
+            rewardsDialog.arguments = bundle
             return rewardsDialog
         }
     }
@@ -63,13 +77,16 @@ class RewardsDialog : DialogFragment() {
     private fun setData() {
         val scratchView : ScratchView = rootView.findViewById(R.id.scratch_view)
 
+        if (arguments != null) {
+            promoData = arguments?.getParcelable("coupon")!!
+            rootView.tvRewardInfo.text = promoData.name
+            rootView.tvAmount.text = promoData.promoCoupon.title
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             scratchView.setRevealListener(object : ScratchView.IRevealListener {
                 override fun onRevealed(scratchView: ScratchView) {
                     Toast.makeText(context, "Revealed", Toast.LENGTH_LONG).show()
-                    Handler().postDelayed({
-                        dismiss()
-                    }, 1000)
+                    scratchCard()
                 }
 
                 override fun onRevealPercentChangedListener(scratchView: ScratchView, percent: Float) {
@@ -81,4 +98,44 @@ class RewardsDialog : DialogFragment() {
         }
 
     }
+
+    private fun scratchCard(){
+        val params = HashMap<String, String>()
+        params[Constants.KEY_COUPON_ID] = promoData.promoCoupon.couponId().toString()
+
+        ApiCommon<FeedCommonResponse>(activity).showLoader(false).execute(params, ApiName.SCRATCH_CARD,
+                object : APICommonCallback<FeedCommonResponse>() {
+
+                    override fun onSuccess(response: FeedCommonResponse, message: String, flag: Int) {
+                        try {
+                            if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                Handler().postDelayed({
+                                    (activity as ScratchCardRevealedListener).onScratchCardRevealed()
+                                    dismiss()
+                                }, 500)
+                            } else {
+                                DialogPopup.alertPopup(activity, "", message)
+                            }
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            DialogPopup.alertPopup(activity, "", getString(R.string.connection_lost_please_try_again))
+                        }
+
+                    }
+
+                    override fun onError(feedCommonResponse: FeedCommonResponse, message: String, flag: Int): Boolean {
+                        return false
+                    }
+
+                    override fun onFinish() {
+                        super.onFinish()
+                    }
+                })
+    }
+
+    interface ScratchCardRevealedListener {
+        fun onScratchCardRevealed()
+    }
+
 }

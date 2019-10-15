@@ -94,6 +94,15 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 	@SerializedName("applicable_on")
 	@Expose
 	private String applicableOn;
+	@SerializedName("is_scratched")
+	@Expose
+	private int isScratched;
+	@SerializedName("coupon_card_type")
+	@Expose
+	private int couponCardType;
+	@SerializedName("benefit_type")
+	@Expose
+	private int benefitType;
 
 	@Override
 	public String getPromoName() {
@@ -147,6 +156,16 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 	@Override
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public int couponId() {
+		return id;
+	}
+
+	@Override
+	public int benefitType() {
+		return benefitType;
 	}
 
 	@Override
@@ -278,6 +297,11 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 		return isSelected;
 	}
 
+	@Override
+	public boolean isScratched() {
+		return isScratched == 1;
+	}
+
 	public void setIsSelected(Integer isSelected) {
 		this.isSelected = isSelected;
 	}
@@ -355,5 +379,13 @@ public class PromotionInfo extends PromoCoupon implements Serializable{
 
 	public void setPromoText(String promoText) {
 		this.promoText = promoText;
+	}
+
+	public int getIsScratched() {
+		return isScratched;
+	}
+
+	public Integer getCouponCardType() {
+		return couponCardType;
 	}
 }
