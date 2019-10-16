@@ -243,7 +243,7 @@
                 <LinearLayout
                     android:id="@+id/linearLayoutPaymentModeConfirm"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.7"
                     android:layout_height="match_parent"
                     android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackground"
@@ -280,7 +280,7 @@
                 <RelativeLayout
                     android:id="@+id/linearLayoutOfferConfirm"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.7"
                     android:paddingStart="5px"
                     android:gravity="center"
                     android:layout_height="match_parent"
@@ -335,7 +335,7 @@
                 <RelativeLayout
                     android:id="@+id/rlNotes"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:layout_height="match_parent"
                     android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackground">
