@@ -4,7 +4,7 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
-import product.clicklabs.jugnoo.room.SearchLocation
+import product.clicklabs.jugnoo.room.model.SearchLocation
 
 @Dao
 interface SearchLocationDao {
