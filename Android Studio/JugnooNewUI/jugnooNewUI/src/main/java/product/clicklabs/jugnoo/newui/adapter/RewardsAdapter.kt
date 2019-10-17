@@ -44,7 +44,7 @@ class RewardsAdapter(val recyclerView:RecyclerView, val promoList: ArrayList<Pro
 
         holder.clRewards.setOnClickListener {
 //            if(promoList[position].couponCardType == 1 && !promoList[position].isScratched) {
-                rewardCardListener.onCardClicked(promoList[position])
+                rewardCardListener.onCardClicked(promoList[position], position)
 //            }
         }
     }
@@ -65,7 +65,7 @@ class RewardsAdapter(val recyclerView:RecyclerView, val promoList: ArrayList<Pro
 
     interface RewardCardListener{
         fun onCardScratched()
-        fun onCardClicked(promo: Promo)
+        fun onCardClicked(promo: Promo, index: Int)
     }
 
 }

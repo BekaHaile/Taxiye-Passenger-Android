@@ -2126,6 +2126,8 @@
     <string name="offer_cannot_be_more_than_max_value">Offer can\'t be more than max value</string>
     <string name="copied">Copied</string>
     <string name="text_rewards">Rewards</string>
+    <string name="you_have_scratch_cards">You have scratch cards</string>
+    <string name="no_scratch_coupon">No Scratch Coupon!!\nTake rides to earn more coupons.</string>
 
 
 </resources>

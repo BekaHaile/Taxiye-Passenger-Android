@@ -3,6 +3,8 @@ package product.clicklabs.jugnoo.newui.activity
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
+import android.support.constraint.ConstraintLayout
+import android.support.constraint.Guideline
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
@@ -31,14 +33,19 @@ import retrofit.RetrofitError
 import retrofit.client.Response
 import retrofit.mime.TypedByteArray
 import java.util.*
+import kotlin.collections.ArrayList
 
 class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardRevealedListener {
     override fun onScratchCardRevealed() {
+        requestCode = Activity.RESULT_OK
         getCouponsAndPromotions(this)
     }
 
     private val promosList = ArrayList<Promo>()
+    private val promosTemp = ArrayList<Promo>()
     private var rewardsAdapter : RewardsAdapter? = null
+    private var filterEnabled = false
+    private var requestCode : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +58,52 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
 
     private fun setListenerView() {
         ivBack.setOnClickListener {
-            super.onBackPressed()
+            if(filterEnabled) {
+                filterEnabled = false
+                promosList.clear()
+                promosList.addAll(promosTemp)
+                groupCashback.visibility = View.VISIBLE
+                groupOffer.visibility = View.VISIBLE
+                rewardsAdapter?.notifyDataSetChanged()
+                val guideLine : Guideline= findViewById(R.id.glMid)
+                val params : ConstraintLayout.LayoutParams = guideLine.layoutParams as ConstraintLayout.LayoutParams
+                params.guidePercent = 0.50f // 45% // range: 0 <-> 1
+                guideLine.layoutParams = params
+                tvTitle.text = getString(R.string.text_rewards)
+            } else {
+                setResult(requestCode)
+                super.onBackPressed()
+            }
+        }
+        ivCashBack.setOnClickListener {
+            promosList.clear()
+            for (promo in promosTemp) {
+                if(promo.couponCardType == 1 && promo.promoCoupon.benefitType() == 3) {
+                    promosList.add(promo)
+                }
+            }
+            groupCashback.visibility = View.VISIBLE
+            groupOffer.visibility = View.GONE
+            filterEnabled = true
+            rewardsAdapter?.notifyDataSetChanged()
+            tvTitle.text = getString(R.string.cashback)
+        }
+        ivOffers.setOnClickListener {
+            promosList.clear()
+            for (promo in promosTemp) {
+                if(promo.couponCardType == 1 && promo.promoCoupon.benefitType() != 3) {
+                    promosList.add(promo)
+                }
+            }
+            val guideLine : Guideline= findViewById(R.id.glMid)
+            val params : ConstraintLayout.LayoutParams = guideLine.layoutParams as ConstraintLayout.LayoutParams
+            params.guidePercent = 0f // 45% // range: 0 <-> 1
+            guideLine.layoutParams = params
+            groupCashback.visibility = View.GONE
+            groupOffer.visibility = View.VISIBLE
+            filterEnabled = true
+            rewardsAdapter?.notifyDataSetChanged()
+            tvTitle.text = getString(R.string.offers)
         }
     }
 
@@ -63,15 +115,15 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
 
             }
 
-            override fun onCardClicked(promo: Promo) {
-                if(promo.couponCardType == 1 && !promo.isScratched && promo.promoCoupon.benefitType() != 3) {
+            override fun onCardClicked(promo: Promo, index: Int) {
+                if(promo.couponCardType == 1 && !promo.isScratched) {
                     val ft = supportFragmentManager.beginTransaction()
                     val prev = supportFragmentManager.findFragmentByTag("scratchDialog")
                     if (prev != null) {
                         ft.remove(prev)
                     }
                     ft.addToBackStack(null)
-                    val dialogFragment = RewardsDialog.newInstance(promo)
+                    val dialogFragment = RewardsDialog.newInstance(promo, index % 2 == 0)
                     dialogFragment.show(ft, "scratchDialog")
                 } else if(promo.couponCardType == 1 && promo.isScratched && promo.promoCoupon.benefitType() != 3
                         || promo.couponCardType == 0) {
@@ -326,9 +378,11 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
     fun updateListData() {
         if (promosList.size == 0) {
             rvRewards.visibility = View.GONE
+            noCoupons.visibility = View.VISIBLE
 //            linearLayoutNoOffers.setVisibility(View.VISIBLE)
         } else {
             rvRewards.visibility = View.VISIBLE
+            noCoupons.visibility = View.GONE
 //            linearLayoutNoOffers.setVisibility(View.GONE)
             rewardsAdapter?.notifyDataSetChanged()
         }
@@ -336,6 +390,7 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
 
     private fun parsePromoCoupons(promCouponResponse: PromCouponResponse) {
         promosList.clear()
+        promosTemp.clear()
 
         var pcAll = ArrayList<PromoCoupon>()
         var pcRides = ArrayList<PromoCoupon>()
@@ -423,7 +478,7 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
             }
         }
 
-
+        promosTemp.addAll(promosList)
     }
 
 
@@ -442,7 +497,13 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
             } else 1
         })
         set.addAll(promoCoupons)
-        promoCoupons = ArrayList(set)
+        val promoCouponsTemp = ArrayList(set)
+        promoCoupons.clear()
+        for(i in 0 until promoCouponsTemp.size) {
+            if(promoCouponsTemp[i].couponCardType == 1 && !promoCouponsTemp[i].isScratched) {
+                promoCoupons.add(promoCouponsTemp[i])
+            }
+        }
         return promoCoupons
     }
 }

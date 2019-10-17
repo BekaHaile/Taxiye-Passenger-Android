@@ -573,7 +573,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     Data.longitude = currLatLng.longitude;
                 }
                 if (MyApplication.getInstance().isOnline()) {
-                    activity.startActivity(new Intent(activity, RewardsActivity.class));
+                    activity.startActivity(new Intent(activity, PromotionActivity.class));
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else {
                     DialogPopup.dialogNoInternet(activity,

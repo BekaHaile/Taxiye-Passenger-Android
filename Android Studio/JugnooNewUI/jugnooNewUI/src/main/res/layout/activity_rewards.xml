@@ -8,7 +8,7 @@
     <android.support.design.widget.AppBarLayout
         android:id="@+id/main.appbar"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="?attr/actionBarSize"
         android:fitsSystemWindows="true"
         android:background="@drawable/bg_rewards"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -22,8 +22,10 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <android.support.constraint.ConstraintLayout
+                android:id="@+id/clUpperTab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:background="@color/transparent"
                 android:orientation="vertical"
                 android:layout_marginTop="100dp"
@@ -52,6 +54,7 @@
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvCashbackText"
                     android:layout_width="0dp"
                     app:layout_constraintStart_toStartOf="@+id/ivCashBack"
                     app:layout_constraintEnd_toEndOf="@+id/ivCashBack"
@@ -76,7 +79,7 @@
                     android:layout_width="0dp"
                     app:layout_constraintStart_toStartOf="@+id/ivOffers"
                     app:layout_constraintEnd_toEndOf="@+id/ivOffers"
-                    app:layout_constraintTop_toBottomOf="@+id/ivCashBack"
+                    app:layout_constraintTop_toBottomOf="@+id/ivOffers"
                     android:layout_marginTop="@dimen/spacing_normal"
                     android:textColor="@color/white"
                     android:text="10"
@@ -85,6 +88,7 @@
                     android:layout_height="wrap_content" />
 
                 <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvOfferText"
                     android:layout_width="0dp"
                     app:layout_constraintStart_toStartOf="@+id/ivOffers"
                     app:layout_constraintEnd_toEndOf="@+id/ivOffers"
@@ -101,6 +105,17 @@
                     android:layout_height="match_parent"
                     app:layout_constraintGuide_percent=".5"
                     android:orientation="vertical"/>
+
+                <android.support.constraint.Group
+                    android:id="@+id/groupOffer"
+                    app:constraint_referenced_ids="ivOffers,tvTotalOffers,tvOfferText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <android.support.constraint.Group
+                    android:id="@+id/groupCashback"
+                    app:constraint_referenced_ids="ivCashBack,tvTotalCashBack,tvCashbackText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.Toolbar
@@ -164,32 +179,43 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nsvDoctorProfile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="@dimen/spacing_normal"
-        android:layout_marginBottom="100dp"
+        android:fillViewport="true"
+        android:layout_marginBottom="50dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:soundEffectsEnabled="true">
+            android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvRewards"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
-            <LinearLayout
-                android:id="@+id/llContainer"
+            
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/noCoupons"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:soundEffectsEnabled="true"
-                android:visibility="gone"
-                />
-        </LinearLayout>
+                android:visibility="visible"
+                android:text="@string/no_scratch_coupon"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textSize="@dimen/font_large"
+                android:textColor="@color/black"
+                android:layout_height="match_parent"/>
 
+
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:soundEffectsEnabled="true"
+        android:visibility="gone"
+        />
 </android.support.design.widget.CoordinatorLayout>

@@ -46,14 +46,17 @@ import java.util.Map;
 
 import product.clicklabs.jugnoo.apis.ApiTrackPush;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
+import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
+import product.clicklabs.jugnoo.promotion.models.Promo;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -569,10 +572,19 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, getString(R.string.your_ride_has_ended));
 						String engagementId = jObj.getString("engagement_id");
+						JSONObject coupon = jObj.getJSONObject("coupon");
+						Promo promo = null;
 
+						if(coupon.has("coupon_card_type") && coupon.has("is_scratched") && coupon.optInt("is_scratched", 0) != 1) {
+							CouponInfo couponInfo = new CouponInfo(coupon.optInt("id", 0), coupon.optString("title", ""));
+//							couponInfo.setCouponId(coupon.getInt("coupon_id"));
+							promo = new Promo(coupon.optString("name", ""), coupon.optString("clientId", ""),
+									couponInfo, 0, 0, coupon.optInt("is_scratched", 0) == 1, coupon.getInt("coupon_card_type"));
+
+						}
 						if (HomeActivity.appInterruptHandler != null) {
 							if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
-								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
+								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId, promo);
 							}
 						}
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1){

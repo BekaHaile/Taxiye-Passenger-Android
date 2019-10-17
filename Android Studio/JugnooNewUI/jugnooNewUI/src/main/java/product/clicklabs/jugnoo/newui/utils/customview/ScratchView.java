@@ -197,6 +197,11 @@ public class ScratchView extends View {
         mErasePaint.setStrokeWidth(multiplier * STROKE_WIDTH);
     }
 
+    public void setOverlayImage(int image) {
+        scratchBitmap = BitmapFactory.decodeResource(getResources(), image);
+        mask();
+    }
+
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {

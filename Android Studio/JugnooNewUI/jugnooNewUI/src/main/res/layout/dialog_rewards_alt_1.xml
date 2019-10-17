@@ -7,13 +7,13 @@
 
     <View
         android:id="@+id/mainView"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@drawable/bg_rewards_white_round_layer_shadow"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/bg_rewards_white_round_layer_shadow" />
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/ivClose"
@@ -39,10 +39,10 @@
         android:id="@+id/tvAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/mainView"
         app:layout_constraintEnd_toEndOf="@id/mainView"
         android:textSize="@dimen/font_extra_large"
-        android:visibility="gone"
         android:textColor="@color/black"
         android:text="100"
         android:gravity="center"
@@ -52,8 +52,8 @@
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tvRewardInfo"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:visibility="gone"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/mainView"
         app:layout_constraintEnd_toEndOf="@id/mainView"
         android:textSize="@dimen/font_small"
@@ -70,20 +70,20 @@
         app:tile_mode="CLAMP"
         android:layout_width="280dp"
         android:layout_height="280dp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="20dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/scratchTemp"
         android:background="@drawable/ic_scratch_pattern"
-        android:visibility="gone"
-        android:layout_width="280dp"
-        android:layout_height="280dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

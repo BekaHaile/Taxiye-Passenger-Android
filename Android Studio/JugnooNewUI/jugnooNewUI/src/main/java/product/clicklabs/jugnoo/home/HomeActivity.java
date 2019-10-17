@@ -230,9 +230,11 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
+import product.clicklabs.jugnoo.newui.dialog.RewardsDialog;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.promotion.models.Promo;
 import product.clicklabs.jugnoo.rentals.InstructionDialog;
 import product.clicklabs.jugnoo.rentals.RentalStationAdapter;
 import product.clicklabs.jugnoo.rentals.damagereport.DamageReportActivity;
@@ -8619,7 +8621,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     @Override
-    public void customerEndRideInterrupt(final String engagementId) {
+    public void customerEndRideInterrupt(final String engagementId, final Promo promo) {
         try {
             Log.d("HomeActivityRental","CustomerEndRIde");
             if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.autoData.getcEngagementId())) {
@@ -8629,11 +8631,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     @Override
                     public void run() {
                         //dismiss rental dialogs if any
+                        boolean key = false;
                         DialogPopup.dismissAlertPopup();
                         if(rentalLockDialog != null){
                             rentalLockDialog.dismiss();
                         }
-
+                        if(promo != null) {
+                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            Fragment prev = getSupportFragmentManager().findFragmentByTag("scratchDialog");
+                            if (prev != null) {
+                                ft.remove(prev);
+                            }
+                            ft.addToBackStack(null);
+                            RewardsDialog dialogFragment = RewardsDialog.newInstance(promo, true);
+                            dialogFragment.show(ft, "scratchDialog");
+                        }
                         getRideSummaryAPI(HomeActivity.this, engagementId);
                         if(driverTipInteractor != null) {
 							driverTipInteractor.dismissDialog();
@@ -9018,6 +9030,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("qr_code_details",qrCodeDetails);
                                 }
                                 nameValuePairs.put("is_bluetooth_tracker",""+Data.autoData.getBluetoothEnabled());
+                                nameValuePairs.put("is_scratch_coupon_applicable", "" + true); // key added for differentiating request ride call from new scratch App and old App
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
                                 try {
