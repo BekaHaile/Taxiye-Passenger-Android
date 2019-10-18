@@ -41,6 +41,11 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         this.estimateDialog = new VehicleFareEstimateDialog();
     }
 
+    public void setList(ArrayList<Region> regions){
+		this.regions = regions;
+		notifyDataSetChanged();
+	}
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = null;

@@ -478,7 +478,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             zoomedToMyLocation = false,
             mapTouchedOnce = false;
     boolean dontCallRefreshDriver = false, firstTimeZoom = false, zoomingForDeepLink = false;
-    boolean dropLocationSet = false;
     boolean searchedALocation = false;
 
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
@@ -745,7 +744,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         searchedALocation = false;
         zoomingForDeepLink = false;
         freshIntroDialog = null;
-        dropLocationSet = false;
         rideNowClicked = false;
 
 
@@ -1787,7 +1785,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Data.autoData.setDropLatLng(null);
                     Data.autoData.setDropAddress("");
                     Data.autoData.setDropAddressId(0);
-                    dropLocationSet = false;
                     dropLocationSearched = false;
                     if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
 							|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 1) {
@@ -3142,7 +3139,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             textViewDestSearchNew.setText(searchResult.getNameForText());
             textViewDestSearchNew.setTextColor(getResources().getColor(R.color.text_color));
 
-            dropLocationSet = true;
             relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
             imageViewDropCross.setVisibility(View.VISIBLE);
             imageViewDropCrossNew.setVisibility(View.VISIBLE);
@@ -3294,7 +3290,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
             Data.autoData.setDropAddressId(0);
-            dropLocationSet = false;
             dropLocationSearched = false;
 
             textViewDestSearch.setText("");
@@ -3826,11 +3821,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         GCMIntentService.clearNotifications(HomeActivity.this);
                         Prefs.with(HomeActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
 
-                        if (!dropLocationSet) {
-                            Data.autoData.setDropLatLng(null);
-                            Data.autoData.setDropAddress("");
-                            Data.autoData.setDropAddressId(0);
-                        }
                         Data.autoData.setAssignedDriverInfo(null);
 
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
@@ -4554,7 +4544,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         dismissPushDialog(true);
 
-                        dropLocationSet = false;
                         Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
                         //fabView.setRelativeLayoutFABVisibility(mode);
 
@@ -6587,7 +6576,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon) {
         //fabViewTest.setFABButtons();
         if (P_INITIAL == passengerScreenMode) {
-            if (Data.autoData.getRegions() != null && Data.autoData.getRegions().size() > 0) {
+			ArrayList<Region> regions = Data.autoData.getRegions();
+            if (regions != null && regions.size() > 0) {
                 boolean setNew = Data.autoData.getNewUIFlag();
                 if (setNew) {
                     if (!isNewUI) {
@@ -6659,7 +6649,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     defaultCouponSelection();
                 }
                 if(vehiclesTabAdapterConfirmRide!=null){
-                    vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
+                    vehiclesTabAdapterConfirmRide.setList(regions);
                 }
                 slidingBottomPanel.update();
             } catch (Exception e) {
@@ -9070,7 +9060,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if(Data.autoData.getSelectedPackage() != null) {
                                     nameValuePairs.put(Constants.KEY_PACKAGE_ID, String.valueOf(Data.autoData.getSelectedPackage().getPackageId()));
                                 }
-                                if (isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
+                                if (isNewUI && regionSelected.getReverseBid() == 1) {
                                     if (!editTextBidValue.getText().toString().isEmpty()) {
                                         nameValuePairs.put(Constants.KEY_INITIAL_BID_VALUE, editTextBidValue.getText().toString());
                                     }
@@ -9191,13 +9181,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
                                                     fbLogEvent(nameValuePairs);
 
-                                                    // Ride Requested
-                                                    // Google Android in-app conversion tracking snippet
-                                                    // Add this code to the event you'd like to track in your app.
-                                                    // See code examples and learn how to add advanced features like app deep links at:
-                                                    //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-//                                                    AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-//                                                            GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
                                                     specialPickupScreenOpened = false;
                                                     if (Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
@@ -9208,15 +9191,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                         GAUtils.event(RIDES, HOME, slidingBottomPanel
                                                                 .getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUESTED);
                                                     }
-													try {
-														if(nameValuePairs.containsKey(Constants.KEY_INITIAL_BID_VALUE)){
-															Data.autoData.setInitialBidValue(Double.parseDouble(nameValuePairs.get(Constants.KEY_INITIAL_BID_VALUE)));
-														} else if (!editTextBidValue.getText().toString().isEmpty()) {
-															Data.autoData.setInitialBidValue(Double.parseDouble(editTextBidValue.getText().toString()));
-														} else {
-															Data.autoData.setInitialBidValue(0);
-														}
-													} catch (Exception ignored) {}
+                                                    if(nameValuePairs.containsKey(Constants.KEY_INITIAL_BID_VALUE)){
+                                                    	Data.autoData.setInitialBidValue(Double.parseDouble(nameValuePairs.get(Constants.KEY_INITIAL_BID_VALUE)));
+                                                    } else if (!editTextBidValue.getText().toString().isEmpty()) {
+                                                    	Data.autoData.setInitialBidValue(Double.parseDouble(editTextBidValue.getText().toString()));
+                                                    } else {
+                                                    	Data.autoData.setInitialBidValue(0);
+                                                    }
 												}
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
                                                 Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
@@ -9488,7 +9469,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(!editTextBidValue.getText().toString().isEmpty()) {
                 editTextBidValue.setText("");
             }
-            dropLocationSet = false;
             confirmedScreenOpened = false;
             specialPickupScreenOpened = false;
 
@@ -10065,11 +10045,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						map.addMarker(poolMarkerOptionEnd);
 
 						poolPathZoomAtConfirm();
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 
 						if (Data.autoData.showRegionSpecificFare()) {
 							HashMap<String, String> params = new HashMap<>();
@@ -10084,31 +10060,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 					@Override
 					public void onRetry() {
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 					}
 
 					@Override
 					public void onNoRetry() {
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 					}
 
 					@Override
 					public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge,
 													  double tollCharge) {
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						textViewTotalFare.setText(getString(R.string.total_fare_colon));
+						closeFabView();
 						textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
 								Utils.formatCurrencyValue(currency, maxFare));
 						if (Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
@@ -10120,7 +10083,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							textViewIncludes.setText(getString(R.string.convenience_charge_format, Utils.formatCurrencyValue(currency, convenienceCharge)));
 						} else {
 							textViewIncludes.setVisibility(View.GONE);
-							textViewIncludes.setText("");
 						}
 						setTextTollCharges(currency, tollCharge);
 					}
@@ -10133,6 +10095,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							textViewIncludes.append(getString(R.string.expected_toll_charge) + " " + Utils.formatCurrencyValue(currency, tollCharge));
 						}
 					}
+					private void closeFabView(){
+						if(fabViewTest != null) {
+							fabViewTest.closeMenu();
+						}
+					}
 
 					@Override
 					public void onPoolSuccess(String currency, double fare, double rideDistance, String rideDistanceUnit,
@@ -10141,7 +10108,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						Log.v("Pool Fare value is ", "--> " + fare);
 						jugnooPoolFareId = poolFareId;
 
-						textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
 						textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, fare));
 						if (Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
 							textViewTotalFareValue.append(" ");
@@ -10151,41 +10117,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						textViewIncludes.setVisibility(View.VISIBLE);
 						textViewIncludes.setText(text);
 						setTextTollCharges(currency, tollCharge);
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 					}
 
 					@Override
 					public void onDirectionsFailure() {
 						jugnooPoolFareId = 0;
-						textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
 						textViewTotalFareValue.setText("-");
 
 						textViewIncludes.setVisibility(View.GONE);
 						textViewIncludes.setText("");
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 					}
 
 					@Override
 					public void onFareEstimateFailure() {
 						jugnooPoolFareId = 0;
-						textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
 						textViewTotalFareValue.setText("-");
 
 						textViewIncludes.setVisibility(View.GONE);
 						textViewIncludes.setText("");
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 					}
 				});
 			}
@@ -10671,7 +10623,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Data.autoData.setDropLatLng(searchResult.getLatLng());
                     Data.autoData.setDropAddress(searchResult.getAddress());
                     Data.autoData.setDropAddressId(searchResult.getId());
-                    dropLocationSet = true;
                     relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                     imageViewDropCross.setVisibility(View.VISIBLE);
                     imageViewDropCrossNew.setVisibility(View.VISIBLE);
@@ -10964,10 +10915,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(oldRegionId != slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
             mNotes = "";
         }
+		ArrayList<Region> regions = Data.autoData.getRegions();
         if((confirmedScreenOpened || isNewUI) && vehiclesTabAdapterConfirmRide!=null){
-            vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
+            vehiclesTabAdapterConfirmRide.setList(regions);
         }
-        if (Data.autoData.getRegions().size() == 1) {
+        if (regions.size() == 1) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         } else {
@@ -11661,7 +11613,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void openConfirmRequestView() {
         confirmedScreenOpened = true;
-        textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
         passengerScreenMode = P_INITIAL;
         switchPassengerScreen(passengerScreenMode);
     }
