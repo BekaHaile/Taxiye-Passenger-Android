@@ -604,7 +604,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
-    private boolean selectPickUpdropAtOnce = false;
     private Polyline polyline;
 
     private ImageView ivLikePickup, ivLikeDrop;
@@ -1536,13 +1535,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     Utils.hideKeyboard(HomeActivity.this);
-                    if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 1
+                    Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+                    if((region.getDestinationMandatory() == 1
                             &&  Data.autoData.getDropLatLng() != null)
-                            || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 0) {
+                            || region.getDestinationMandatory() == 0) {
 
-                    	//if selected region is for reverse bid and regionFare is null then we cannot proceed further
-                    	if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
-								&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() == null){
+                    	//if selected region is for reverse bid or fare mandatory and regionFare is null then we cannot proceed further
+                    	if(Prefs.with(HomeActivity.this).getInt(Constants.KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, 0) == 1
+                    			&& (region.getReverseBid() == 1 || region.getFareMandatory() == 1)
+								&& (region.getRegionFare() == null || region.getRegionFare().getPoolFareId() <= 0)){
                     		if(Data.autoData.getDropLatLng() == null){
 								Utils.showToast(HomeActivity.this,getString(R.string.destination_required));
 							} else {
@@ -1552,13 +1553,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     		return;
 						}
 
-                            if (isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+                            if (isNewUI && region.getReverseBid() == 1
                                 && !editTextBidValue.getText().toString().isEmpty()) {
 								double innerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MIN_REGION_FARE, 20.0f);
 								double outerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MAX_REGION_FARE, 5000.0f);
-								if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
-									innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
-									outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
+								if(region.getRegionFare()!= null) {
+									innerValue = Math.ceil(region.getRegionFare().getFare() * 0.8);
+									outerValue = Math.ceil(region.getRegionFare().getFare() * 10);
 								}
 								String minBidValueStr = Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue);
 								String innerStr = getString(R.string.bid_lower_value_err, minBidValueStr);
@@ -1590,7 +1591,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 									}
 
 								}
-							} else if(isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+							} else if(isNewUI && region.getReverseBid() == 1
 										&& editTextBidValue.getText().toString().isEmpty()) {
 								Utils.showToast(HomeActivity.this,getString(R.string.error_bid_value));
                         	} else {
@@ -3941,9 +3942,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             linearLayoutRequestMain.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
-                            if(!selectPickUpdropAtOnce){
-                                relativeLayoutInitialSearchBar.setEnabled(false);
-                            }
 
                             if(mNotes != null && !mNotes.isEmpty()) {
                                 imageViewNotes.setVisibility(View.VISIBLE);
@@ -4013,9 +4011,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     currentLocationMarker.remove();
                                 }
                                 fareEstimatBeforeRequestRide();
-                            }
-                            if(!selectPickUpdropAtOnce){
-                                relativeLayoutInitialSearchBar.setEnabled(false);
                             }
                             if(mNotes != null && !mNotes.isEmpty()) {
                                 imageViewNotes.setVisibility(View.VISIBLE);
@@ -4972,9 +4967,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     modeClicked = PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal();
                 }
                 int mode = placeSearchMode.getOrdinal();
-                if(selectPickUpdropAtOnce && (P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
-                    mode = PlaceSearchListFragment.PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
-                }
+//                if(selectPickUpdropAtOnce && (P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
+//                    mode = PlaceSearchListFragment.PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
+//                }
                 bundle.putInt(KEY_SEARCH_MODE, mode);
                 bundle.putInt(KEY_SEARCH_MODE_CLICKED, modeClicked);
                 getSupportFragmentManager().beginTransaction()
@@ -10005,10 +10000,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void fareEstimatBeforeRequestRide() {
         jugnooPoolFareId = 0;
         if (Data.autoData.getDropLatLng() != null) {
-            int isPooled = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
-            boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
-					|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1
-					|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1;
+        	Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+            int isPooled = region.getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
+            boolean callFareEstimate = region.getRideType() == RideTypeValue.POOL.getOrdinal()
+					|| region.getShowFareEstimate() == 1
+					|| region.getFareMandatory() == 1;
             PromoCoupon promoCouponSelected = null;
             try {
                 promoCouponSelected = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
@@ -10047,7 +10043,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						poolPathZoomAtConfirm();
 						closeFabView();
 
-						if (Data.autoData.showRegionSpecificFare()) {
+						if (Data.autoData.showRegionSpecificFare() || !callFareEstimate) {
 							HashMap<String, String> params = new HashMap<>();
 							params.put(Constants.KEY_RIDE_DISTANCE, "" + (distanceValue / 1000D));
 							params.put(Constants.KEY_RIDE_TIME, "" + (timeValue / 60D));
@@ -10142,7 +10138,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				});
 			}
 			apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
-                    getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), promoCouponSelected, null);
+					region, promoCouponSelected, null);
         } else {
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
@@ -12380,12 +12376,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
 
             tvRideTypeRateInfo.setText(null);
+			ArrayList<Region> regions = Data.autoData.getRegions();
             if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())){
                 if(Data.autoData != null
-                        && Data.autoData.getRegions().size() > 0
-                        && Data.autoData.getRegions().get(0).getPackages() != null
-                        && Data.autoData.getRegions().get(0).getPackages().size() > 0) {
-                    Region region = Data.autoData.getRegions().get(0);
+                        && regions.size() > 0
+                        && regions.get(0).getPackages() != null
+                        && regions.get(0).getPackages().size() > 0) {
+                    Region region = regions.get(0);
                     tvRideTypeRateInfo.setText(R.string.package_starting_at);
                     tvRideTypeRateInfo.append(" ");
                     tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
@@ -12393,9 +12390,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             } else if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())){
                 if(Data.autoData != null
-                        && Data.autoData.getRegions().size() > 0
-                        && Data.autoData.getRegions().get(0).getFareStructure() != null) {
-                    Region region = Data.autoData.getRegions().get(0);
+                        && regions.size() > 0
+                        && regions.get(0).getFareStructure() != null) {
+                    Region region = regions.get(0);
                     tvRideTypeRateInfo.setText(R.string.package_starting_at);
                     tvRideTypeRateInfo.append(" ");
                     tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),

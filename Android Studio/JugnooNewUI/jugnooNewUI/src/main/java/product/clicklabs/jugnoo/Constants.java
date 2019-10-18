@@ -1084,4 +1084,6 @@ public interface Constants {
 	String KEY_IS_ROUND_TRIP = "is_round_trip";
 	String KEY_CUSTOMER_SHOW_BOUNCING_MARKER = "customer_show_bouncing_marker";
 	String KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG = "customer_show_save_location_dialog";
+
+	String KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED = "customer_region_fare_check_enabled";
 }

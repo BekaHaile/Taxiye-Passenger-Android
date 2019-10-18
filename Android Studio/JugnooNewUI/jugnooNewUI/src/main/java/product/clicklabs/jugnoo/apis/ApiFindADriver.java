@@ -401,13 +401,14 @@ public class ApiFindADriver {
 								fareStructure.getDisplayBaseFare(),
 								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(),
 								findADriverResponse.getCurrency(), findADriverResponse.getDistanceUnit());
-						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
+						ArrayList<Region> regions = Data.autoData.getRegions();
+						for (int i = 0; i < regions.size(); i++) {
 							try {
-								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
-										&& Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
+								if (regions.get(i).getOperatorId() == fareStructure.getOperatorId()
+										&& regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& regions.get(i).getRideType().equals(fareStructure.getRideType())
 										) {
-									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
+									regions.get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
