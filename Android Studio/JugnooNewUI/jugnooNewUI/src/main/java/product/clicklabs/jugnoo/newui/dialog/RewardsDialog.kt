@@ -21,17 +21,20 @@ import com.sabkuchfresh.feed.ui.api.ApiName
 import kotlinx.android.synthetic.main.dialog_rewards.view.*
 import kotlinx.android.synthetic.main.dialog_rewards_alt_2.*
 import product.clicklabs.jugnoo.Constants
+import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags
 import product.clicklabs.jugnoo.newui.utils.customview.ScratchView
 import product.clicklabs.jugnoo.promotion.models.Promo
 import product.clicklabs.jugnoo.utils.DialogPopup
+import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Log
 
 
 class RewardsDialog : DialogFragment() {
     private lateinit var rootView : View
     private lateinit var promoData : Promo
+    private var setAnimation = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // The only reason you might override this method when using onCreateView() is
@@ -46,10 +49,11 @@ class RewardsDialog : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(promo: Promo, isFromLeft : Boolean): RewardsDialog {
+        fun newInstance(promo: Promo, isFromLeft : Boolean, isFromEndRide : Boolean): RewardsDialog {
             val bundle = Bundle()
             bundle.putParcelable("coupon", promo)
             bundle.putBoolean("isFromLeft", isFromLeft)
+            bundle.putBoolean("isFromEndRide", isFromEndRide)
             val rewardsDialog = RewardsDialog()
             rewardsDialog.arguments = bundle
             return rewardsDialog
@@ -67,13 +71,14 @@ class RewardsDialog : DialogFragment() {
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog.window?.setDimAmount(0.9f)
             Handler().postDelayed({
-                addAnimationOperations()
+                if(!setAnimation) {
+                    addAnimationOperations()
+                }
             }, 50)
         }
     }
 
     private fun addAnimationOperations() {
-//        var set = false
         val constraint1 = ConstraintSet()
         constraint1.clone(card)
         val constraint2 = ConstraintSet()
@@ -83,41 +88,47 @@ class RewardsDialog : DialogFragment() {
 
         val transition = ChangeBounds()
         transition.duration = 500
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            TransitionManager.beginDelayedTransition(card, transition)
-//            val constraint = if(set) constraint1 else constraint2
-            constraint2.applyTo(card)
-//            set = !set
-        }
-
-        Handler().postDelayed({
+        var delayTime : Long = 1700
+        if(arguments!!.getBoolean("isFromEndRide", false)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 TransitionManager.beginDelayedTransition(card, transition)
-//            val constraint = if(set) constraint1 else constraint2
                 constraint3.applyTo(card)
-//            set = !set
             }
-        }, 501)
+            delayTime = 1200
+            setAnimation = true
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                TransitionManager.beginDelayedTransition(card, transition)
+                constraint2.applyTo(card)
+            }
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            TransitionManager.beginDelayedTransition(card)
-//            val constraint = if(set) constraint1 else constraint2
-//            constraint.applyTo(card)
-//            set = !set
-//        }
+            Handler().postDelayed({
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    TransitionManager.beginDelayedTransition(card, transition)
+                    constraint3.applyTo(card)
+                }
+            }, 400)
 
+            delayTime = 1700
+            setAnimation = true
+        }
         Handler().postDelayed({
             setData()
-        }, 1700)
+        }, delayTime)
     }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var isFromLeftSide : Boolean = false
+        var isFromEndRide : Boolean = false
         if(arguments != null) {
             isFromLeftSide = arguments!!.getBoolean("isFromLeft", false)
+            isFromEndRide = arguments!!.getBoolean("isFromEndRide", false)
         }
         if(isFromLeftSide) {
             rootView = inflater.inflate(R.layout.dialog_rewards_alt_2, container, false)
+        } else if(isFromEndRide){
+            rootView = inflater.inflate(R.layout.dialog_rewards_alt, container, false)
         } else {
             rootView = inflater.inflate(R.layout.dialog_rewards_alt_1, container, false)
         }
@@ -135,6 +146,10 @@ class RewardsDialog : DialogFragment() {
             rootView.tvAmount.text = promoData.promoCoupon.title
             rootView.tvRewardInfo.visibility = View.VISIBLE
             rootView.tvAmount.visibility = View.VISIBLE
+            if(arguments!!.getBoolean("isFromEndRide", false)) {
+                rootView.tvAmount.visibility = View.GONE
+                rootView.tvRewardInfo.visibility = View.GONE
+            }
 //            if(promoData.promoCoupon.benefitType() == 3) {
 //                scratchView.setOverlayImage(R.drawable.ic_pattern_cashback)
 //            } else {
@@ -163,6 +178,7 @@ class RewardsDialog : DialogFragment() {
     private fun scratchCard(){
         val params = HashMap<String, String>()
         params[Constants.KEY_ACCOUNT_ID] = promoData.promoCoupon.id.toString()
+        params[Constants.KEY_CURRENCY] = Data.autoData.currency
 
         ApiCommon<FeedCommonResponse>(activity).showLoader(false).execute(params, ApiName.SCRATCH_CARD,
                 object : APICommonCallback<FeedCommonResponse>() {
@@ -172,7 +188,16 @@ class RewardsDialog : DialogFragment() {
                             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 Handler().postDelayed({
                                     (activity as ScratchCardRevealedListener).onScratchCardRevealed()
-                                    dismiss()
+                                    rootView.tvScratchSuccessMsg.text = response.message
+                                    if(!response.getCashbackSuccessMessage().isNullOrEmpty()) {
+                                        rootView.tvAmount.text = response.cashbackSuccessMessage
+                                        rootView.tvAmount.typeface = Fonts.mavenMedium(activity)
+                                        rootView.tvAmount.visibility = View.VISIBLE
+                                        rootView.tvRewardInfo.visibility = View.GONE
+                                    } else {
+                                        rootView.tvAmount.visibility = View.VISIBLE
+                                        rootView.tvRewardInfo.visibility = View.VISIBLE
+                                    }
                                 }, 10)
                             } else {
                                 DialogPopup.alertPopup(activity, "", message)

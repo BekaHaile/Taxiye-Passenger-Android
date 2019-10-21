@@ -102,19 +102,15 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.AppCompatTextView
+    <android.support.v7.widget.AppCompatImageView
         android:id="@+id/tvScratchCards"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/you_have_scratch_cards"
-        android:textColor="@color/white"
-        android:padding="@dimen/spacing_small"
-        android:gravity="center_horizontal"
+        android:background="@drawable/ic_banner"
         android:textSize="@dimen/font_normal"
         android:layout_marginTop="@dimen/spacing_small"
         android:layout_marginBottom="@dimen/spacing_small"
-        android:layout_below="@+id/rlEnterPromo"
-        android:background="@drawable/button_theme_selector"/>
+        android:layout_below="@+id/rlEnterPromo"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewOffers"

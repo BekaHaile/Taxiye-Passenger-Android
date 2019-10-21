@@ -86,4 +86,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvScratchSuccessMsg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@id/mainView"
+        app:layout_constraintEnd_toEndOf="@id/mainView"
+        android:textSize="@dimen/font_large"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/spacing_extra_large"
+        app:layout_constraintTop_toBottomOf="@+id/mainView"/>
+
 </android.support.constraint.ConstraintLayout>

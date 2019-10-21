@@ -123,7 +123,7 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
                         ft.remove(prev)
                     }
                     ft.addToBackStack(null)
-                    val dialogFragment = RewardsDialog.newInstance(promo, index % 2 == 0)
+                    val dialogFragment = RewardsDialog.newInstance(promo, index % 2 == 0, false)
                     dialogFragment.show(ft, "scratchDialog")
                 } else if(promo.couponCardType == 1 && promo.isScratched && promo.promoCoupon.benefitType() != 3
                         || promo.couponCardType == 0) {

@@ -34,8 +34,8 @@ class RewardsAdapter(val recyclerView:RecyclerView, val promoList: ArrayList<Pro
         params.topMargin = 12
         params.bottomMargin = 12
         holder.clRewards.layoutParams = params
-        holder.tvRewardInfo.text = promoList.get(position).name
-        holder.tvAmount.text = promoList.get(position).promoCoupon.title
+//        holder.tvRewardInfo.text = promoList.get(position).name
+//        holder.tvAmount.text = promoList.get(position).promoCoupon.title
         if(promoList[position].couponCardType == 1 && !promoList[position].isScratched){
             holder.ivScratch.visibility = View.VISIBLE
         } else {

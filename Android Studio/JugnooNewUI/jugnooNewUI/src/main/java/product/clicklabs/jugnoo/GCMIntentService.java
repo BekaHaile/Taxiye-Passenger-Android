@@ -576,7 +576,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Promo promo = null;
 
 						if(coupon.has("coupon_card_type") && coupon.has("is_scratched") && coupon.optInt("is_scratched", 0) != 1) {
-							CouponInfo couponInfo = new CouponInfo(coupon.optInt("id", 0), coupon.optString("title", ""));
+							CouponInfo couponInfo = new CouponInfo(coupon.optInt("account_id", 0), coupon.optString("title", ""));
 //							couponInfo.setCouponId(coupon.getInt("coupon_id"));
 							promo = new Promo(coupon.optString("name", ""), coupon.optString("clientId", ""),
 									couponInfo, 0, 0, coupon.optInt("is_scratched", 0) == 1, coupon.getInt("coupon_card_type"));

@@ -85,7 +85,8 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
     private LinearLayout linearLayoutNoOffers;
     private RecyclerView recyclerViewOffers;
     private ImageView imageViewBack, imageViewFreeRideAuto;
-    private TextView textViewTitle, textViewFreeRides, tvScratchCards;
+    private TextView textViewTitle, textViewFreeRides;
+    private ImageView tvScratchCards;
     private LinearLayout llContainer;
 
 
@@ -127,7 +128,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
         editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode);
         textViewFreeRides = (TextView) findViewById(R.id.textViewFreeRides); textViewFreeRides.setTypeface(Fonts.mavenMedium(this));
-        tvScratchCards = (TextView) findViewById(R.id.tvScratchCards); tvScratchCards.setTypeface(Fonts.mavenMedium(this));
+        tvScratchCards =  findViewById(R.id.tvScratchCards);
         textViewFreeRides.setText(getString(R.string.want_free_rides, getString(R.string.app_name)));
         imageViewFreeRideAuto = (ImageView) findViewById(R.id.imageViewFreeRideAuto);
 
@@ -726,12 +727,6 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             }
         });
         set.addAll(promoCoupons);
-//        Iterator value = set.iterator();
-//        while (value.hasNext()) {
-//            if(((PromoCoupon)value.next()).getCouponCardType() == 1 && !((PromoCoupon)value.next()).isScratched())
-//            set.remove(value.next());
-//        }
-//        promoCoupons = new ArrayList<>(set);
         ArrayList<PromoCoupon> promoCouponsTemp = new ArrayList<>(set);
         promoCoupons.clear();
         for (int i = 0; i < promoCouponsTemp.size(); i++) {
@@ -739,6 +734,12 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
              || promoCouponsTemp.get(i).getCouponCardType() == 0) {
                 promoCoupons.add(promoCouponsTemp.get(i));
             }
+        }
+
+        if(promoCouponsTemp.size() != promoCoupons.size()) {
+            tvScratchCards.setVisibility(View.VISIBLE);
+        } else {
+            tvScratchCards.setVisibility(View.GONE);
         }
         return promoCoupons;
     }

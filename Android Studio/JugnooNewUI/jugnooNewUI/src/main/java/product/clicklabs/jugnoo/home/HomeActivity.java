@@ -304,7 +304,8 @@ import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITI
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
-        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler {
+        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,
+        RewardsDialog.ScratchCardRevealedListener {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -8631,7 +8632,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     @Override
                     public void run() {
                         //dismiss rental dialogs if any
-                        boolean key = false;
                         DialogPopup.dismissAlertPopup();
                         if(rentalLockDialog != null){
                             rentalLockDialog.dismiss();
@@ -8643,7 +8643,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 ft.remove(prev);
                             }
                             ft.addToBackStack(null);
-                            RewardsDialog dialogFragment = RewardsDialog.newInstance(promo, true);
+                            RewardsDialog dialogFragment = RewardsDialog.newInstance(promo, true, true);
                             dialogFragment.show(ft, "scratchDialog");
                         }
                         getRideSummaryAPI(HomeActivity.this, engagementId);
@@ -12689,6 +12689,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    public void onScratchCardRevealed() {
 
     }
 }
