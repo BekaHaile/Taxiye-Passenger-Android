@@ -2542,7 +2542,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 public void onConfirmed(Double amount, String engagementId) {
 
                     if(passengerScreenMode==PassengerScreenMode.P_RIDE_END){
-                        getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId());
+                        getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId(), null);
                     }else{
                         updateDriverTipUI(passengerScreenMode);
 
@@ -7386,7 +7386,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    public void getRideSummaryAPI(final Activity activity, final String engagementId) {
+    public void getRideSummaryAPI(final Activity activity, final String engagementId, final Promo promo) {
         if (!checkIfUserDataNull(activity)) {
             if (MyApplication.getInstance().isOnline()) {
 
@@ -7432,17 +7432,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                     setUserData();
 
+                                    showScratchCard(promo);
+
                                 } else {
                                     Log.d("HomeActivityRental","GetRideSummmary Offline 1");
 
-                                    endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                                    endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             Log.d("HomeActivityRental","GetRideSummmary offline 2");
 
-                            endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                            endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                         }
                     }
 
@@ -7452,21 +7454,33 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         Log.e(TAG, "getRideSummary error=" + error);
                         DialogPopup.dismissLoadingDialog();
-                        endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                        endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                     }
                 });
             } else {
-                endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_desc));
+                endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_desc), promo);
             }
         }
     }
 
-    public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage) {
+    private void showScratchCard(Promo promo) {
+        if(promo != null) {
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    RewardsDialog dialogFragment = RewardsDialog.newInstance(promo, true, true);
+                    dialogFragment.show(getSupportFragmentManager(), "scratchDialog");
+                }
+            }, 10);
+        }
+    }
+
+    public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage, final Promo promo) {
         DialogPopup.alertPopupWithListener(activity, "", errorMessage, new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                getRideSummaryAPI(activity, engagementId);
+                getRideSummaryAPI(activity, engagementId, promo);
             }
         });
     }
@@ -8636,17 +8650,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if(rentalLockDialog != null){
                             rentalLockDialog.dismiss();
                         }
-                        if(promo != null) {
-                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                            Fragment prev = getSupportFragmentManager().findFragmentByTag("scratchDialog");
-                            if (prev != null) {
-                                ft.remove(prev);
-                            }
-                            ft.addToBackStack(null);
-                            RewardsDialog dialogFragment = RewardsDialog.newInstance(promo, true, true);
-                            dialogFragment.show(ft, "scratchDialog");
-                        }
-                        getRideSummaryAPI(HomeActivity.this, engagementId);
+                        getRideSummaryAPI(HomeActivity.this, engagementId, promo);
                         if(driverTipInteractor != null) {
 							driverTipInteractor.dismissDialog();
 						}

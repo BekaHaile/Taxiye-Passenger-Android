@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.constraint.ConstraintSet
 import android.support.v4.app.DialogFragment
+import android.support.v4.app.FragmentManager
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.view.LayoutInflater
@@ -58,6 +59,17 @@ class RewardsDialog : DialogFragment() {
             rewardsDialog.arguments = bundle
             return rewardsDialog
         }
+    }
+
+    override fun show(manager: FragmentManager?, tag: String?) {
+        val ft = manager?.beginTransaction()
+        val prev = manager?.findFragmentByTag("scratchDialog")
+        if (prev != null) {
+            ft?.remove(prev)
+        }
+        ft?.addToBackStack(null)
+        ft?.add(this, tag);
+        ft?.commitAllowingStateLoss()
     }
 
     override fun onStart() {
