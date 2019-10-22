@@ -2233,8 +2233,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void success(String clientId) {
 					loginDataFetched = true;
-					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
-					DialogPopup.dismissLoadingDialog();
+					onWindowFocusChanged(true);
+//					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
+//					DialogPopup.dismissLoadingDialog();
 				}
 
 				@Override
