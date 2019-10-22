@@ -311,8 +311,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 if (searchResult != null) {
                     searchResultPickup = searchResult
                 } else {
-                    searchResultPickup = SearchResult("", Data.autoData.getPickupAddress(Data.autoData.pickupLatLng), "",
-                            Data.autoData.pickupLatLng.latitude, Data.autoData.pickupLatLng.longitude)
+                    searchResultPickup = Data.autoData.pickupSearchResult
                 }
                 searchResultReceived(searchResultPickup!!, PlaceSearchListFragment.PlaceSearchMode.PICKUP)
             }

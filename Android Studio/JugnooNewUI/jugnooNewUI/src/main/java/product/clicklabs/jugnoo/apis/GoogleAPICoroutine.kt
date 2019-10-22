@@ -58,12 +58,12 @@ object GoogleAPICoroutine {
                     val placesResponse = gson.fromJson(responseStr, PlacesAutocompleteResponse::class.java)
                     predictions = placesResponse.predictions
 
-                    if(isGoogleCachingEnabled()
+                    try{if(isGoogleCachingEnabled()
                             && placesResponse.predictions != null && placesResponse.predictions!!.size > 0) {
                         val param = InsertAutocomplete(JUNGOO_APP_PRODUCT_ID, TYPE_AUTO_COMPLETE, input, getUserId(),
                                 arr[0].toDouble(), arr[1].toDouble(), placesResponse)
                         insertPlaceAutocompleteCache(param)
-                    }
+                    }} catch(e1:Exception){}
 
                 }
                 callback.onAutocompletePredictionsReceived(predictions!!)
@@ -99,12 +99,12 @@ object GoogleAPICoroutine {
                     val responseStr = String((response!!.body as TypedByteArray).bytes)
                     placesResponse = gson.fromJson(responseStr, PlaceDetailsResponse::class.java)
 
-                    if(isGoogleCachingEnabled()
+                    try{if(isGoogleCachingEnabled()
                             && placesResponse.results != null && placesResponse.results!!.size > 0) {
                         val param = InsertPlaceDetail(JUNGOO_APP_PRODUCT_ID, TYPE_GEOCODING, placeAddress, getUserId(),
                                 placeId, placesResponse)
                         insertPlaceDetailCache(param)
-                    }
+                    }} catch(e1:Exception){}
                 }
                 callback.onPlaceDetailReceived(placesResponse!!)
             } catch (e: Exception) {
@@ -142,12 +142,12 @@ object GoogleAPICoroutine {
                     if (googleGeocodeResponse.results != null && googleGeocodeResponse.results.size > 0) {
                         address = googleGeocodeResponse
 
-                        if(isGoogleCachingEnabled()) {
+                        try{if(isGoogleCachingEnabled()) {
                             val gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse)
                             val body = InsertGeocode(JUNGOO_APP_PRODUCT_ID, TYPE_REVERSE_GEOCODING, gapiAddress.formattedAddress, getUserId(),
                                     latLng.latitude, latLng.longitude, googleGeocodeResponse)
                             insertGeocodeCache(body)
-                        }
+                        }} catch(e1:Exception){}
                     }
                 }
             }
