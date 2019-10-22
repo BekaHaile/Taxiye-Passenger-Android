@@ -268,9 +268,10 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
     private void setSelectedPaymentOptionUI() {
         try {
+			ArrayList<Region> regions = Data.autoData.getRegions();
             int selectedPaymentOption = callbackPaymentOptionSelector.getSelectedPaymentOption();
-            Region region = (Data.autoData.getRegions().size() > 1) ? ((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-                    : (Data.autoData.getRegions().size() > 0 ? Data.autoData.getRegions().get(0) : null);
+            Region region = (regions.size() > 1) ? ((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                    : (regions.size() > 0 ? regions.get(0) : null);
             if (region != null && region.getRestrictedPaymentModes().size() > 0) {
                 if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
                     callbackPaymentOptionSelector.setSelectedPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(callbackPaymentOptionSelector.getSelectedPaymentOption(), (HomeActivity) activity));
@@ -415,10 +416,11 @@ public class PaymentOptionDialog implements View.OnClickListener {
                 linearLayoutWalletContainer.removeAllViews();
                 List<Integer> restrictedPaymentMode = new ArrayList<>();
 
-                if(Data.autoData.getRegions().size() > 1) {
+				ArrayList<Region> regions = Data.autoData.getRegions();
+                if(regions.size() > 1) {
                     restrictedPaymentMode = ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
-                } else if(Data.autoData.getRegions().size() > 0) {
-                    restrictedPaymentMode = Data.autoData.getRegions().get(0).getRestrictedPaymentModes();
+                } else if(regions.size() > 0) {
+                    restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
                 }
 
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {

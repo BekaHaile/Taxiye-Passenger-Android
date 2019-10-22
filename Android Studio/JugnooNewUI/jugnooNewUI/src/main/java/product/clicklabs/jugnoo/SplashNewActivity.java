@@ -24,7 +24,6 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -64,7 +63,6 @@ import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
 import com.facebook.appevents.AppEventsLogger;
-import com.fugu.FuguConfig;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
@@ -127,7 +125,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-import static com.fugu.FuguConfig.*;
+import static com.fugu.FuguConfig.clearFuguData;
 
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
@@ -264,7 +262,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	View extra;
 
 
-	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
+	public boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
 	int debugState = 0, userVerfied = 0;
 	boolean hold1 = false, hold2 = false;
@@ -2235,8 +2233,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void success(String clientId) {
 					loginDataFetched = true;
-					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
-					DialogPopup.dismissLoadingDialog();
+					onWindowFocusChanged(true);
+//					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
+//					DialogPopup.dismissLoadingDialog();
 				}
 
 				@Override
@@ -2528,6 +2527,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					if(activity instanceof SplashNewActivity){
+						((SplashNewActivity)activity).loginDataFetched = false;
+					} else if(activity instanceof OTPConfirmScreen){
+						((OTPConfirmScreen)activity).loginDataFetched = false;
+					}
 					dialog.dismiss();
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID));
@@ -3273,10 +3277,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								//sendToOtpScreen = true;
 								goToLoginUsingPhone(phoneNo);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
+									loginDataFetched = true;
 
 
 								}

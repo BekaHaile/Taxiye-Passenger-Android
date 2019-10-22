@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.support.TransactionUtils;
@@ -496,10 +497,11 @@ public class HomeUtil {
 		ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
 		if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
 			List<Integer> restrictedPaymentMode = new ArrayList<>();
-			if (Data.autoData.getRegions().size() > 1) {
+			ArrayList<Region> regions = Data.autoData.getRegions();
+			if (regions.size() > 1) {
 				restrictedPaymentMode = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
-			} else if (Data.autoData.getRegions().size() > 0) {
-				restrictedPaymentMode = Data.autoData.getRegions().get(0).getRestrictedPaymentModes();
+			} else if (regions.size() > 0) {
+				restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
 			}
 			for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
 				if (paymentModeConfigData.getEnabled() == 1) {

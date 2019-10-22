@@ -552,6 +552,13 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, autoData.optString(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, ""));
 		Prefs.with(context).save(KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP, autoData.optInt(KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP, 1));
 		Prefs.with(context).save(KEY_CUSTOMER_BID_INCREMENT, autoData.optString(KEY_CUSTOMER_BID_INCREMENT, String.valueOf(0D)));
+
+		Prefs.with(context).save(KEY_CUSTOMER_SHOW_BOUNCING_MARKER, autoData.optInt(KEY_CUSTOMER_SHOW_BOUNCING_MARKER,
+				context.getResources().getBoolean(R.bool.show_bouncing_marker)?1:0));
+		Prefs.with(context).save(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG, autoData.optInt(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG,
+				context.getResources().getBoolean(R.bool.show_save_location_dialog)?1:0));
+
+		Prefs.with(context).save(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, 0));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
@@ -825,13 +832,14 @@ public class JSONParser implements Constants {
 								fareStructure.getDisplayBaseFare(),
 								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), autos.getCurrency(),
                                 autos.getDistanceUnit());
-						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
+						ArrayList<Region> regions = Data.autoData.getRegions();
+						for (int i = 0; i < regions.size(); i++) {
 							try {
-								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
-                                        && Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
+								if (regions.get(i).getOperatorId() == fareStructure.getOperatorId()
+                                        && regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& regions.get(i).getRideType().equals(fareStructure.getRideType())
 										) {
-									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
+									regions.get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();

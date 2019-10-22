@@ -243,7 +243,7 @@
                 <LinearLayout
                     android:id="@+id/linearLayoutPaymentModeConfirm"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.7"
                     android:layout_height="match_parent"
                     android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackground"
@@ -280,7 +280,7 @@
                 <RelativeLayout
                     android:id="@+id/linearLayoutOfferConfirm"
                     android:layout_width="0dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="0.7"
                     android:paddingStart="5px"
                     android:gravity="center"
                     android:layout_height="match_parent"
@@ -335,7 +335,7 @@
                 <RelativeLayout
                     android:id="@+id/rlNotes"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="0.7"
                     android:layout_height="match_parent"
                     android:theme="@style/GreyHighlight"
                     android:background="?attr/selectableItemBackground">
@@ -471,6 +471,21 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10px"
             android:text="@string/confirm_request" />
+
+        <TextView
+            android:id="@+id/tvTermsAndConditions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_extra_small"
+            android:tag="@string/dont_touch_me"
+            android:layout_below="@id/buttonConfirmRequest"
+            android:paddingStart="@dimen/spacing_small"
+            android:paddingEnd="@dimen/spacing_small"
+            android:paddingTop="@dimen/spacing_small"
+            android:paddingBottom="@dimen/spacing_normal"
+            android:text="@string/text_terms_and_conditions_apply"
+            android:gravity="center_horizontal"
+            android:textColor="@color/text_color_link"/>
     </RelativeLayout>
 
 </RelativeLayout>

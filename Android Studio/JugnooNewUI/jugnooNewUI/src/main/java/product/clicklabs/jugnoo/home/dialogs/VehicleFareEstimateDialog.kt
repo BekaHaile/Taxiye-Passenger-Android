@@ -51,7 +51,7 @@ class VehicleFareEstimateDialog {
                         .loadSelector(ivVehicleType, region.images.rideNowNormal, region.images.rideNowHighlighted, {}, true)
 
                 tvVehicle.text = region.regionName
-                tvEstimate.text = region.regionFare.getFareText(region.fareMandatory)
+                tvEstimate.text = region.regionFare?.getFareText(region.fareMandatory)
                 tvInfo.text = if(region.description.isNullOrEmpty()) activity.getString(R.string.vehicle_fare_estimate_alert) else region.description
                 tvInfo.visibility = if(tvInfo.text.isNullOrEmpty()) View.GONE else View.VISIBLE
                 tvBaseFareValue.text = Utils.fromHtml(region.fareStructure.getDisplayBaseFare(activity))

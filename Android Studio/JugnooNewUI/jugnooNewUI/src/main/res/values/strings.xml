@@ -1979,7 +1979,7 @@
     <string name="expected_toll_charge">Expected Toll Charges</string>
     <string name="schedule_ride_alert">*We cannot always guarantee that a driver will be available</string>
     <string name="vehicle">Vehicle</string>
-    <string name="vehicle_fare_estimate_alert">The estimated fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
+    <string name="vehicle_fare_estimate_alert">The fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
     <string name="choose_a_place">Choose a place</string>
     <string name="add_saved_place">Add Saved Place</string>
     <string name="tip_the_driver">Tip the Driver</string>
@@ -2128,6 +2128,9 @@
     <string name="text_rewards">Rewards</string>
     <string name="you_have_scratch_cards">You have scratch cards</string>
     <string name="no_scratch_coupon">No Scratch Coupon!!\nTake rides to earn more coupons.</string>
+    <string name="select_drop_location_estimate_fare">Select drop location to find estimate fare</string>
+    <string name="text_terms_and_conditions_apply"><![CDATA[*Terms & Conditions Apply]]></string>
+    <string name="suggested_fare">Suggested Fare</string>
 
 
 </resources>
