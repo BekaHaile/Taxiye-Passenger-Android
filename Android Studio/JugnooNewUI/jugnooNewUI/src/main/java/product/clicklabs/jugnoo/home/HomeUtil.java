@@ -110,7 +110,7 @@ public class HomeUtil {
 		}
 	}
 
-	public static SearchResult getNearBySavedAddress(Context context, LatLng latLng, double compareDistance, boolean includeRecent){
+	public static SearchResult getNearBySavedAddress(Context context, LatLng latLng, boolean includeRecent){
 		try {
 			ArrayList<SearchResult> searchResults = new ArrayList<>();
 			if (!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
@@ -124,6 +124,7 @@ public class HomeUtil {
 				searchResults.add(searchResult);
 			}
 			searchResults.addAll(Data.userData.getSearchResults());
+			double compareDistance = Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION;
 			if(includeRecent) {
 				searchResults.addAll(Data.userData.getSearchResultsRecent());
 				if(Data.autoData.getUseRecentLocAtRequest() == 1){

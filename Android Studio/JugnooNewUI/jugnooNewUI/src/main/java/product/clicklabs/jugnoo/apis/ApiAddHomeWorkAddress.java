@@ -23,7 +23,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.room.DBObject;
-import product.clicklabs.jugnoo.room.SearchLocation;
+import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.room.apis.DBCoroutine;
 import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.utils.DialogPopup;

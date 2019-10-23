@@ -57,7 +57,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.room.DBObject;
-import product.clicklabs.jugnoo.room.SearchLocation;
+import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.room.apis.DBCoroutine;
 import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -456,6 +456,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				if(mapSettledCanForward){
 					Utils.hideSoftKeyboard(activity, editTextSearch);
 					String address = getFocusedEditText().getText().toString();
+					if(address.equalsIgnoreCase(Constants.UNNAMED)){
+						Utils.showToast(activity, getString(R.string.unable_to_fetch_address));
+						return;
+					}
 					SearchResult autoCompleteSearchResult = new SearchResult("",address,"", lastLatFetched, lastLngFetched,0,1,0 );
 					searchAdapterListener.onPlaceClick(autoCompleteSearchResult);
 					searchAdapterListener.onPlaceSearchPre();

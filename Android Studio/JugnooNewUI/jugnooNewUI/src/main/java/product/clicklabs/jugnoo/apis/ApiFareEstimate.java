@@ -61,8 +61,8 @@ public class ApiFareEstimate {
             if (MyApplication.getInstance().isOnline()) {
                 if (sourceLatLng != null && destLatLng != null) {
                 	if(this.sourceLatLng != null && this.destLatLng != null
-								&& MapUtils.distance(this.sourceLatLng, sourceLatLng) < 10
-							&& MapUtils.distance(this.destLatLng, destLatLng) < 10
+								&& MapUtils.distance(this.sourceLatLng, sourceLatLng) < Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION
+							&& MapUtils.distance(this.destLatLng, destLatLng) < Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION
 							&& list != null && distanceValue > 0){
 						directionsSuccess(promoCoupon, callFareEstimate, sourceLatLng, destLatLng, isPooled, region, selectedPackage);
 						return;

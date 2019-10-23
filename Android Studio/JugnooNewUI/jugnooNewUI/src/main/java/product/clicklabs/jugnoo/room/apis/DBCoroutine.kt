@@ -5,8 +5,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import product.clicklabs.jugnoo.room.SearchLocation
 import product.clicklabs.jugnoo.room.database.SearchLocationDB
+import product.clicklabs.jugnoo.room.model.SearchLocation
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Utils
