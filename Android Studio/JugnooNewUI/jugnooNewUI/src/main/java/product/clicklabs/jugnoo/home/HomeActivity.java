@@ -10848,7 +10848,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				viewDrop.setVisibility(View.VISIBLE);
 			}
         }
-        if((confirmedScreenOpened || (passengerScreenMode == P_INITIAL && isNewUI)) && Data.autoData.getPickupLatLng() != null) {
+        if((confirmedScreenOpened || isNewUI) && Data.autoData.getPickupLatLng() != null) {
             pickupLocationEtaMarker();
         }
         if(oldRegionId != slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
