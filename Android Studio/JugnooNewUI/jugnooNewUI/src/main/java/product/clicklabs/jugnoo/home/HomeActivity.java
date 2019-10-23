@@ -1508,6 +1508,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
+					if(Prefs.with(HomeActivity.this).getInt(Constants.KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0) == 1
+							&& (Data.autoData.getPickupLatLng() == null || TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng())))){
+						Utils.showToast(HomeActivity.this,getString(R.string.please_confirm_you_have_selected_pickup_address));
+						return;
+					}
                     topBar.tvScheduleRidePopup.setVisibility(View.GONE);
                     if (map != null) {
                         if (!rideNowClicked) {
@@ -9269,6 +9274,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         SearchLocation searchLocation;
         if(type == 0) {
+        	if(TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()))){
+        		return;
+			}
             searchLocation = new SearchLocation(Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude, "",
                     Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), 0 + "", System.currentTimeMillis(), type);
         } else {

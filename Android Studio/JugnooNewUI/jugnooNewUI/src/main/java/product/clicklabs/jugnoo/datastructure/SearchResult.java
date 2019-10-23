@@ -87,7 +87,7 @@ public class SearchResult {
 		if(!TextUtils.isEmpty(name) && ("home".equalsIgnoreCase(name.toLowerCase()) || "work".equalsIgnoreCase(name.toLowerCase()))){
 			return Utils.firstCharCapital(name);
 		}
-		return name;
+		return getNameForText();
 	}
 
 	public String getNameForText() {

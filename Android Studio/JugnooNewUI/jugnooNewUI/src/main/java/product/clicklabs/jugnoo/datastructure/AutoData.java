@@ -568,7 +568,7 @@ public class AutoData {
     }
 
     public String getPickupAddress(LatLng latLng) {
-		if(searchResultPickup == null){
+		if(searchResultPickup == null || searchResultPickup.getAddress().equalsIgnoreCase(Constants.UNNAMED)){
 			return "";
 		}
 		if(latLng != null && MapUtils.distance(searchResultPickup.getLatLng(), latLng) > Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION){

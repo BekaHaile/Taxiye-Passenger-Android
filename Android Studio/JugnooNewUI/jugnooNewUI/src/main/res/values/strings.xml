@@ -2128,7 +2128,7 @@
     <string name="select_drop_location_estimate_fare">Select drop location to find estimate fare</string>
     <string name="text_terms_and_conditions_apply"><![CDATA[*Terms & Conditions Apply]]></string>
     <string name="suggested_fare">Suggested Fare</string>
-    <string name="please_confirm_you_have_selected_pickup_address">Please confirm you have selected correct pickup address</string>
+    <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
 
 
 </resources>
