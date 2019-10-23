@@ -163,7 +163,7 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
         try {
             if (!HomeActivity.checkIfUserDataNull(activity)) {
                 if (MyApplication.getInstance().isOnline) {
-                    DialogPopup.showLoadingDialog(activity, getString(R.string.loading))
+//                    DialogPopup.showLoadingDialog(activity, getString(R.string.loading))
 
                     val params = HashMap<String, String>()
                     params[Constants.KEY_ACCESS_TOKEN] = Data.userData.accessToken
@@ -199,12 +199,12 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
                                 retryDialogGetPromos(DialogErrorType.SERVER_ERROR, "")
                             }
 
-                            DialogPopup.dismissLoadingDialog()
+//                            DialogPopup.dismissLoadingDialog()
                         }
 
                         override fun failure(error: RetrofitError) {
 //                            Log.e(TAG, "getCouponsAndPromotions error=$error")
-                            DialogPopup.dismissLoadingDialog()
+//                            DialogPopup.dismissLoadingDialog()
                             updateListData()
                             retryDialogGetPromos(DialogErrorType.CONNECTION_LOST, "")
                         }

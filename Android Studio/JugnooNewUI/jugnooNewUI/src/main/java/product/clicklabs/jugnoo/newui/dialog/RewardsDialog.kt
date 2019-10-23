@@ -30,12 +30,15 @@ import product.clicklabs.jugnoo.promotion.models.Promo
 import product.clicklabs.jugnoo.utils.DialogPopup
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Log
+import product.clicklabs.jugnoo.utils.scratchanimation.ExplosionField
 
 
 class RewardsDialog : DialogFragment() {
     private lateinit var rootView : View
     private lateinit var promoData : Promo
     private var setAnimation = false
+    private var mExplosionField: ExplosionField? = null
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // The only reason you might override this method when using onCreateView() is
@@ -158,9 +161,10 @@ class RewardsDialog : DialogFragment() {
             rootView.tvAmount.text = promoData.promoCoupon.title
             rootView.tvRewardInfo.visibility = View.VISIBLE
             rootView.tvAmount.visibility = View.VISIBLE
+            mExplosionField = ExplosionField.attach2Window(activity, rootView.card)
             if(arguments!!.getBoolean("isFromEndRide", false)) {
-                rootView.tvAmount.visibility = View.GONE
-                rootView.tvRewardInfo.visibility = View.GONE
+//                rootView.tvAmount.visibility = View.GONE
+//                rootView.tvRewardInfo.visibility = View.GONE
             }
 //            if(promoData.promoCoupon.benefitType() == 3) {
 //                scratchView.setOverlayImage(R.drawable.ic_pattern_cashback)
@@ -188,6 +192,7 @@ class RewardsDialog : DialogFragment() {
     }
 
     private fun scratchCard(){
+        mExplosionField?.explode(rootView.ivOffer)
         val params = HashMap<String, String>()
         params[Constants.KEY_ACCOUNT_ID] = promoData.promoCoupon.id.toString()
         params[Constants.KEY_CURRENCY] = Data.autoData.currency
@@ -201,6 +206,7 @@ class RewardsDialog : DialogFragment() {
                                 Handler().postDelayed({
                                     (activity as ScratchCardRevealedListener).onScratchCardRevealed()
                                     rootView.tvScratchSuccessMsg.text = response.message
+                                    mExplosionField?.explode(rootView.ivOffer)
                                     if(!response.getCashbackSuccessMessage().isNullOrEmpty()) {
                                         rootView.tvAmount.text = response.cashbackSuccessMessage
                                         rootView.tvAmount.typeface = Fonts.mavenMedium(activity)
