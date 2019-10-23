@@ -316,7 +316,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			tv3r.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));
 			SearchResult searchResult = homeUtil.getNearBySavedAddress(activity,
 					new LatLng(datum.getJobLatitude(), datum.getJobLongitude()),
-					Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+					false);
 			if (searchResult != null && !TextUtils.isEmpty(searchResult.getName())) {
 				llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
 				ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResult.getName()));
@@ -514,7 +514,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 
 		SearchResult searchResultFrom = homeUtil.getNearBySavedAddress(activity,
 				new LatLng(datum.getFromLatitude(), datum.getFromLongitude()),
-				Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+				false);
 		if (searchResultFrom != null && !TextUtils.isEmpty(searchResultFrom.getName())) {
 			llFromPlace.setVisibility(View.VISIBLE);
 			ivFromPlace.setImageResource(homeUtil.getSavedLocationIcon(searchResultFrom.getName()));
@@ -527,7 +527,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 
 		SearchResult searchResultTo = homeUtil.getNearBySavedAddress(activity,
 				new LatLng(datum.getToLatitude(), datum.getToLongitude()),
-				Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+				false);
 		if (searchResultTo != null && !TextUtils.isEmpty(searchResultTo.getName())) {
 			llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
 			ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResultTo.getName()));

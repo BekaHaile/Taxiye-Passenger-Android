@@ -559,6 +559,7 @@ public class JSONParser implements Constants {
 				context.getResources().getBoolean(R.bool.show_save_location_dialog)?1:0));
 
 		Prefs.with(context).save(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, 0));
+		Prefs.with(context).save(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
@@ -1887,8 +1888,12 @@ public class JSONParser implements Constants {
 							Prefs.with(context).save(SPLabels.ADD_WORK, "");
 						}
 						workSaved = true;
-					} else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+					} else if(!TextUtils.isEmpty(jsonObject.optString(KEY_TYPE)) && !jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
 						Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
+					} else if (TextUtils.isEmpty(jsonObject.optString(KEY_TYPE)) && !jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+						SearchResult searchResult = gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class);
+						searchResult.setType(SearchResult.Type.RECENT);
+						Data.userData.getSearchResultsRecent().add(searchResult);
 					}
 				}
 			}

@@ -307,7 +307,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         if (Data.autoData != null) {
             if (Data.autoData.pickupLatLng != null) {
                 val searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.pickupLatLng,
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false)
+                        true)
                 if (searchResult != null) {
                     searchResultPickup = searchResult
                 } else {
@@ -317,7 +317,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             }
             if (Data.autoData.dropLatLng != null) {
                 val searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.dropLatLng,
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false)
+                        true)
                 if (searchResult != null) {
                     searchResultDestination = searchResult
                 } else {

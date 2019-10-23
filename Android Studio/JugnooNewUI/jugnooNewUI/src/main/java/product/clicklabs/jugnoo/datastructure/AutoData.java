@@ -571,7 +571,7 @@ public class AutoData {
 		if(searchResultPickup == null){
 			return "";
 		}
-		if(latLng != null && MapUtils.distance(searchResultPickup.getLatLng(), latLng) > 60){
+		if(latLng != null && MapUtils.distance(searchResultPickup.getLatLng(), latLng) > Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION){
 			return "";
 		}
 		return searchResultPickup != null ? searchResultPickup.getAddress() : "";

@@ -851,7 +851,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setReorderLatlngToAdrress(LatLng reorderLatLng,String  reoderAddress) {
         if(reorderLatLng!=null){
             SearchResult searchResult = homeUtil.getNearBySavedAddress(this, reorderLatLng,
-                    Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+					true);
             if (searchResult!=null) {
                 setSelectedAddress(searchResult.getAddress());
                 setSelectedLatLng(searchResult.getLatLng());
@@ -1241,7 +1241,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 // else find any tagged address near current set location, if that is not tagged
                 else if(getSelectedAddressId() == 0){
                     SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
-                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+							false);
                     if(searchResult != null){
                         setSelectedAddress(searchResult.getAddress());
                         setSelectedLatLng(searchResult.getLatLng());
@@ -4056,7 +4056,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
                 SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+						true);
                 if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
 					saveOfferingLastAddress(appType);

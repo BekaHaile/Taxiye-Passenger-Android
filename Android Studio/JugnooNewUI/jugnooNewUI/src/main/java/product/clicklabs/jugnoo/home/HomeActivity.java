@@ -1537,6 +1537,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     Utils.hideKeyboard(HomeActivity.this);
+                    if(Prefs.with(HomeActivity.this).getInt(Constants.KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0) == 1
+							&& (Data.autoData.getPickupLatLng() == null || TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng())))){
+						Utils.showToast(HomeActivity.this,getString(R.string.please_confirm_you_have_selected_pickup_address));
+                    	return;
+					}
+
                     Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
                     if((region.getDestinationMandatory() == 1
                             &&  Data.autoData.getDropLatLng() != null)
@@ -2725,7 +2731,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
                                 && showSaveLocationDialog()
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
-                        && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+                        && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), false) == null) {
                             openSaveLocationDialog(true);
                             pickupLocationMarker.remove();
                             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
@@ -2790,7 +2796,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
                                 && showSaveLocationDialog()
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)
-                                && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+                                && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), false) == null) {
                             openSaveLocationDialog(false);
                             dropLocationMarker.remove();
                             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getDropLatLng()));
@@ -3509,7 +3515,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 if (!specialPickupScreenOpened && Data.autoData.getUseRecentLocAtRequest() == 1) {
                                     SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
-                                            CHOOSE_SAVED_PICKUP_ADDRESS, true);
+											true);
                                     if (searchResult != null) {
                                         if (MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
                                                 <= Data.autoData.getUseRecentLocAutoSnapMinDistance()) {
@@ -4615,7 +4621,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void setLikeDropVisibilityAndBG() {
         ivLikeDrop.setVisibility(getLikePickupDropVisibility());
         if(ivLikeDrop.getVisibility() == View.VISIBLE && Data.autoData != null && Data.autoData.getDropLatLng() != null){
-            SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+            SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), false);
             if(searchResult != null){
                 ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
                 ivLikeDrop.setTag("liked");
@@ -5187,7 +5193,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if((PassengerScreenMode.P_IN_RIDE == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
              || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode)
                     && showSaveLocationDialog()
-                    && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+                    && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), false) == null) {
                 savedLocationView = true;
             }
             if(Data.autoData.getAssignedDriverInfo() != null
@@ -5749,7 +5755,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (passengerScreenMode == P_INITIAL) {
                 	if(Data.autoData != null && Data.autoData.getDropLatLng() != null) {
 						SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
-								Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+								false);
 						if (searchResult == null && Data.autoData.getDropAddressId() > 0) {
 							imageViewDropCross.performClick();
 							imageViewDropCrossNew.performClick();
@@ -5757,7 +5763,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 					}
 					if(intentFired){
                         SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
-                                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+								false);
                         if (searchResult != null) {
                             textViewInitialSearch.setText(searchResult.getName());
                             textViewInitialSearchNew.setText(searchResult.getName());
@@ -6899,7 +6905,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if((Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
 					|| Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
                     || !showSaveLocationDialog()
-                    || HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) != null) {
+                    || HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), false) != null) {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
                                 .createPinMarkerBitmapStart(HomeActivity.this)));
@@ -7157,7 +7163,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void updateSavedAddressLikeButton(LatLng currentLatLng, boolean isPickup){
         SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
-                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+				false);
         ImageView iv = isPickup? ivLikePickup : ivLikeDrop;
         if (searchResult != null) {
             iv.setImageResource(R.drawable.ic_heart_filled);
@@ -7175,7 +7181,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             boolean addressNeeded = true;
 
             SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
-                    Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+					true);
             if (passengerScreenMode == P_INITIAL) {
                 if (searchResult != null) {
                     addressNeeded = false;
@@ -9257,7 +9263,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void createDataAndInsert(final int type) {
-        SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, type == 0 ? Data.autoData.getPickupLatLng() : Data.autoData.getDropLatLng(),  Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+        SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, type == 0 ? Data.autoData.getPickupLatLng() : Data.autoData.getDropLatLng(), true);
         if(searchResult != null) {
             return;
         }

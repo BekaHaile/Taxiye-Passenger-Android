@@ -1086,4 +1086,5 @@ public interface Constants {
 	String KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG = "customer_show_save_location_dialog";
 
 	String KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED = "customer_region_fare_check_enabled";
+	String KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED = "customer_pickup_address_empty_check_enabled";
 }

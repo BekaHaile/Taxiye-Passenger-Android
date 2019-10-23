@@ -528,7 +528,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         SearchResult searchResultFrom = homeUtil.getNearBySavedAddress(activity,
                 new LatLng(datum.getFromLatitude(), datum.getFromLongitude()),
-                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+				false);
         if (searchResultFrom != null && !TextUtils.isEmpty(searchResultFrom.getName()) && datum.getCategory()==0) {
             llFromPlace.setVisibility(View.VISIBLE);
             ivFromPlace.setImageResource(homeUtil.getSavedLocationIcon(searchResultFrom.getName()));
@@ -541,7 +541,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
         SearchResult searchResultTo = homeUtil.getNearBySavedAddress(activity,
                 new LatLng(datum.getToLatitude(), datum.getToLongitude()),
-                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+				false);
         if (searchResultTo != null && !TextUtils.isEmpty(searchResultTo.getName())) {
             llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
             ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResultTo.getName()));

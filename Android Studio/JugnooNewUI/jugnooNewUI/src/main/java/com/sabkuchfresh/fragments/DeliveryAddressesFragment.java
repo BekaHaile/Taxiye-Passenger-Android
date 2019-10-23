@@ -732,7 +732,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             // saved addresses list
             if (activity instanceof FreshActivity) {
                 searchResultNearPin = HomeUtil.getNearBySavedAddress(activity, latLng,
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+						false);
                 if (searchResultNearPin != null) {
                     setFetchedAddressToTextView(searchResultNearPin.getName());
                     return;
