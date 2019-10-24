@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.newui.adapter
 import android.app.Activity
 import android.content.Context
 import android.support.constraint.ConstraintLayout
+import android.support.constraint.Group
 import android.support.v7.widget.AppCompatImageView
 import android.support.v7.widget.AppCompatTextView
 import android.support.v7.widget.RecyclerView
@@ -37,9 +38,9 @@ class RewardsAdapter(val recyclerView:RecyclerView, val promoList: ArrayList<Pro
 //        holder.tvRewardInfo.text = promoList.get(position).name
 //        holder.tvAmount.text = promoList.get(position).promoCoupon.title
         if(promoList[position].couponCardType == 1 && !promoList[position].isScratched){
-            holder.ivScratch.visibility = View.VISIBLE
+            holder.groupScratch.visibility = View.VISIBLE
         } else {
-            holder.ivScratch.visibility = View.GONE
+            holder.groupScratch.visibility = View.GONE
         }
 
         holder.clRewards.setOnClickListener {
@@ -61,6 +62,7 @@ class RewardsAdapter(val recyclerView:RecyclerView, val promoList: ArrayList<Pro
         var tvRewardInfo : AppCompatTextView= view.findViewById(R.id.tvRewardInfo)
         var tvAmount : AppCompatTextView= view.findViewById(R.id.tvAmount)
         var ivScratch : AppCompatImageView= view.findViewById(R.id.ivScratch)
+        var groupScratch : Group= view.findViewById(R.id.groupScratch)
     }
 
     interface RewardCardListener{

@@ -317,6 +317,11 @@ public class CouponInfo extends PromoCoupon implements Serializable{
 		return isScratched == 1;
 	}
 
+	@Override
+	public void setIsScratched(int isScratched) {
+		this.isScratched = isScratched;
+	}
+
 	public void setIsSelected(Integer isSelected) {
 		this.isSelected = isSelected;
 	}

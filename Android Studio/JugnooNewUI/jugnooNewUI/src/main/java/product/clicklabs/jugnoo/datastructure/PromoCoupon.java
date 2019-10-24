@@ -19,6 +19,7 @@ public abstract class PromoCoupon implements Serializable {
 	public abstract boolean equals(Object o);
 	public abstract Integer getIsSelected();
 	public abstract boolean isScratched();
+	public abstract void setIsScratched(int isScratched);
 	public abstract Integer getCouponCardType();
 	public abstract Integer getIsValid();
 	public abstract int getType();

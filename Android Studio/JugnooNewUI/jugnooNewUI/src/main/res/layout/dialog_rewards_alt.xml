@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/card"
+    android:tag="@string/dont_touch_me"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <View
@@ -98,4 +99,24 @@
         android:layout_marginTop="@dimen/spacing_extra_large"
         app:layout_constraintTop_toBottomOf="@+id/mainView"/>
 
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvSkip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/mainView"
+        app:layout_constraintEnd_toEndOf="@id/mainView"
+        android:textSize="@dimen/font_large"
+        android:textColor="@color/white"
+        android:text="@string/skip"
+        android:paddingStart="@dimen/spacing_large"
+        android:paddingEnd="@dimen/spacing_large"
+        android:paddingTop="@dimen/spacing_small"
+        android:paddingBottom="@dimen/spacing_small"
+        android:background="@drawable/capsule_white_skip_btn"
+        android:gravity="center"
+        android:visibility="gone"
+        android:fontFamily="@string/maven_r"
+        android:layout_marginTop="@dimen/spacing_extra_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvScratchSuccessMsg"/>
 </android.support.constraint.ConstraintLayout>

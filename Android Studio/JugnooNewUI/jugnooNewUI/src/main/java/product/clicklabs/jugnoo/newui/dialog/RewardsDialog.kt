@@ -24,12 +24,15 @@ import kotlinx.android.synthetic.main.dialog_rewards_alt_2.*
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
+import product.clicklabs.jugnoo.config.Config
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags
+import product.clicklabs.jugnoo.datastructure.CouponInfo
 import product.clicklabs.jugnoo.newui.utils.customview.ScratchView
 import product.clicklabs.jugnoo.promotion.models.Promo
 import product.clicklabs.jugnoo.utils.DialogPopup
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Log
+import product.clicklabs.jugnoo.utils.Prefs
 import product.clicklabs.jugnoo.utils.scratchanimation.ExplosionField
 
 
@@ -175,6 +178,9 @@ class RewardsDialog : DialogFragment() {
         rootView.ivClose.setOnClickListener {
             dismiss()
         }
+        rootView.tvSkip.setOnClickListener {
+            dismiss()
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             scratchView.setRevealListener(object : ScratchView.IRevealListener {
                 override fun onRevealed(scratchView: ScratchView) {
@@ -193,6 +199,7 @@ class RewardsDialog : DialogFragment() {
 
     private fun scratchCard(){
         mExplosionField?.explode(rootView.ivOffer)
+        rootView.tvSkip.visibility = View.GONE
         val params = HashMap<String, String>()
         params[Constants.KEY_ACCOUNT_ID] = promoData.promoCoupon.id.toString()
         params[Constants.KEY_CURRENCY] = Data.autoData.currency
@@ -205,6 +212,7 @@ class RewardsDialog : DialogFragment() {
                             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 Handler().postDelayed({
                                     (activity as ScratchCardRevealedListener).onScratchCardRevealed()
+                                    refreshLoginPromo()
                                     rootView.tvScratchSuccessMsg.text = response.message
                                     mExplosionField?.explode(rootView.ivOffer)
                                     if(!response.getCashbackSuccessMessage().isNullOrEmpty()) {
@@ -236,6 +244,21 @@ class RewardsDialog : DialogFragment() {
                         super.onFinish()
                     }
                 })
+    }
+
+    private fun refreshLoginPromo() {
+        if(Data.autoData != null && !Data.autoData.promoCoupons.isNullOrEmpty()) {
+            for (i in 0 until Data.autoData.promoCoupons.size) {
+                if (Data.autoData.promoCoupons[i].id == promoData.promoCoupon.id) {
+                    Data.autoData.promoCoupons[i].setIsScratched(1)
+                    val clientId = Config.getLastOpenedClientId(activity)
+                    Prefs.with(activity).save(Constants.SP_USE_COUPON_ + clientId, promoData.promoCoupon.id)
+                    Prefs.with(activity).save(Constants.SP_USE_COUPON_IS_COUPON_ + clientId, promoData.promoCoupon is CouponInfo)
+                    Prefs.with(activity).save(Constants.SP_PROMO_SCRATCHED, true)
+                    break
+                }
+            }
+        }
     }
 
     interface ScratchCardRevealedListener {

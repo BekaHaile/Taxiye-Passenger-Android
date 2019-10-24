@@ -57,6 +57,7 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
     }
 
     private fun setListenerView() {
+        ivInfo.visibility = View.INVISIBLE
         ivBack.setOnClickListener {
             if(filterEnabled) {
                 filterEnabled = false

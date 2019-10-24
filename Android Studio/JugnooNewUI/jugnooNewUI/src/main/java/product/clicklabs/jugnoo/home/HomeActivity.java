@@ -5644,6 +5644,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     protected void onResume() {
         super.onResume();
 
+        new Handler().postDelayed(() -> {
+            if(Prefs.with(HomeActivity.this).getBoolean(Constants.SP_PROMO_SCRATCHED, false)) {
+                slidingBottomPanel.getRequestRideOptionsFragment().selectAutoSelectedCouponAtRequestRide();
+                Prefs.with(HomeActivity.this).save(Constants.SP_PROMO_SCRATCHED, false);
+            }
+        }, 400);
 
         try {
 
