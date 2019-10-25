@@ -8,6 +8,7 @@ import android.support.constraint.Guideline
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.view.View
+import android.widget.Toast
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GACategory
 import com.sabkuchfresh.analytics.GAUtils
@@ -118,14 +119,18 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
 
             override fun onCardClicked(promo: Promo, index: Int) {
                 if(promo.couponCardType == 1 && !promo.isScratched) {
-                    val ft = supportFragmentManager.beginTransaction()
-                    val prev = supportFragmentManager.findFragmentByTag("scratchDialog")
-                    if (prev != null) {
-                        ft.remove(prev)
+                    if(MyApplication.getInstance().isOnline) {
+                        val ft = supportFragmentManager.beginTransaction()
+                        val prev = supportFragmentManager.findFragmentByTag("scratchDialog")
+                        if (prev != null) {
+                            ft.remove(prev)
+                        }
+                        ft.addToBackStack(null)
+                        val dialogFragment = RewardsDialog.newInstance(promo, index % 2 == 0, false)
+                        dialogFragment.show(ft, "scratchDialog")
+                    } else {
+                        Toast.makeText(this@RewardsActivity, getString(R.string.text_no_internet_connection), Toast.LENGTH_SHORT).show()
                     }
-                    ft.addToBackStack(null)
-                    val dialogFragment = RewardsDialog.newInstance(promo, index % 2 == 0, false)
-                    dialogFragment.show(ft, "scratchDialog")
                 } else if(promo.couponCardType == 1 && promo.isScratched && promo.promoCoupon.benefitType() != 3
                         || promo.couponCardType == 0) {
                     openPromoDescriptionFragment(promo.name, promo.clientId, promo.promoCoupon)

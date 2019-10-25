@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
+import product.clicklabs.jugnoo.retrofit.model.ScratchCard;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -698,6 +699,6 @@ public interface ApiService {
 
 	@FormUrlEncoded
 	@POST("/customer/scratch_coupon")
-	void scratchCard(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+	void scratchCard(@FieldMap Map<String, String> params, Callback<ScratchCard> callback);
 
 }

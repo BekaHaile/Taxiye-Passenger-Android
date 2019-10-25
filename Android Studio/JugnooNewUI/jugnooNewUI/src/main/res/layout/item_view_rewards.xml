@@ -88,7 +88,7 @@
 
     <android.support.constraint.Group
         android:id="@+id/groupScratch"
-        app:constraint_referenced_ids="tvMsg,ivGift,ivScratch"
+        app:constraint_referenced_ids="tvMsg,ivScratch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </android.support.constraint.ConstraintLayout>

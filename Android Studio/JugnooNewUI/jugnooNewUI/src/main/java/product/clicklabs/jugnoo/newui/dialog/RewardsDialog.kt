@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import com.sabkuchfresh.feed.models.FeedCommonResponse
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
 import com.sabkuchfresh.feed.ui.api.ApiName
@@ -29,6 +28,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags
 import product.clicklabs.jugnoo.datastructure.CouponInfo
 import product.clicklabs.jugnoo.newui.utils.customview.ScratchView
 import product.clicklabs.jugnoo.promotion.models.Promo
+import product.clicklabs.jugnoo.retrofit.model.ScratchCard
 import product.clicklabs.jugnoo.utils.DialogPopup
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Log
@@ -204,18 +204,23 @@ class RewardsDialog : DialogFragment() {
         params[Constants.KEY_ACCOUNT_ID] = promoData.promoCoupon.id.toString()
         params[Constants.KEY_CURRENCY] = Data.autoData.currency
 
-        ApiCommon<FeedCommonResponse>(activity).showLoader(false).execute(params, ApiName.SCRATCH_CARD,
-                object : APICommonCallback<FeedCommonResponse>() {
+        ApiCommon<ScratchCard>(activity).showLoader(false).execute(params, ApiName.SCRATCH_CARD,
+                object : APICommonCallback<ScratchCard>() {
 
-                    override fun onSuccess(response: FeedCommonResponse, message: String, flag: Int) {
+                    override fun onSuccess(response: ScratchCard, message: String, flag: Int) {
                         try {
                             if (flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
                                 Handler().postDelayed({
                                     (activity as ScratchCardRevealedListener).onScratchCardRevealed()
                                     refreshLoginPromo()
                                     rootView.tvScratchSuccessMsg.text = response.message
-                                    mExplosionField?.explode(rootView.ivOffer)
-                                    if(!response.getCashbackSuccessMessage().isNullOrEmpty()) {
+                                    if(response.zilch == 0) {
+                                        rootView.ivOffer.visibility = View.VISIBLE
+                                        mExplosionField?.explode(rootView.ivOffer)
+                                    } else {
+                                        rootView.ivOffer.visibility = View.INVISIBLE
+                                    }
+                                    if(response.cashbackSuccessMessage.isNotEmpty()) {
                                         rootView.tvAmount.text = response.cashbackSuccessMessage
                                         rootView.tvAmount.typeface = Fonts.mavenMedium(activity)
                                         rootView.tvAmount.visibility = View.VISIBLE
@@ -236,7 +241,7 @@ class RewardsDialog : DialogFragment() {
 
                     }
 
-                    override fun onError(feedCommonResponse: FeedCommonResponse, message: String, flag: Int): Boolean {
+                    override fun onError(feedCommonResponse: ScratchCard, message: String, flag: Int): Boolean {
                         return false
                     }
 

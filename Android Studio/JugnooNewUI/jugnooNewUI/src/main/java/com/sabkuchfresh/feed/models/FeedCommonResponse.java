@@ -20,9 +20,6 @@ public class FeedCommonResponse {
     @SerializedName("error")
     @Expose
     public String error;
-    @SerializedName("cashback_success_message")
-    @Expose
-    public String cashbackSuccessMessage;
 
     public int getFlag() {
         return flag;
@@ -46,13 +43,5 @@ public class FeedCommonResponse {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public String getCashbackSuccessMessage() {
-        return cashbackSuccessMessage;
-    }
-
-    public void setCashbackSuccessMessage(String cashbackSuccessMessage) {
-        this.cashbackSuccessMessage = cashbackSuccessMessage;
     }
 }

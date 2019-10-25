@@ -129,6 +129,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode);
         textViewFreeRides = (TextView) findViewById(R.id.textViewFreeRides); textViewFreeRides.setTypeface(Fonts.mavenMedium(this));
         tvScratchCards =  findViewById(R.id.tvScratchCards);
+        tvScratchCards.setVisibility(View.GONE);
         textViewFreeRides.setText(getString(R.string.want_free_rides, getString(R.string.app_name)));
         imageViewFreeRideAuto = (ImageView) findViewById(R.id.imageViewFreeRideAuto);
 
