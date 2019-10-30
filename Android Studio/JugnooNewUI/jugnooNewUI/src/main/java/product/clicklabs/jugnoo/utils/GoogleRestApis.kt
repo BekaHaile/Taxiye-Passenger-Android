@@ -44,7 +44,7 @@ object GoogleRestApis {
     fun getDirections(originLatLng: String, destLatLng: String, sensor: Boolean?,
                       mode: String, alternatives: Boolean?, units: String, source:String): Response {
         val response:Response
-        Log.i(GoogleRestApis::class.simpleName, "getDirections")
+        Log.i(GoogleRestApis::class.java.simpleName, "getDirections")
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/directions/json?" +
                     "origin=" + originLatLng
@@ -76,7 +76,7 @@ object GoogleRestApis {
 
     fun getDistanceMatrix(originLatLng: String, destLatLng: String, language: String,
                           sensor: Boolean?, alternatives: Boolean?): Response {
-        Log.i(GoogleRestApis::class.simpleName, "getDistanceMatrix")
+        Log.i(GoogleRestApis::class.java.simpleName, "getDistanceMatrix")
         val response:Response
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/distancematrix/json?" +
@@ -106,7 +106,7 @@ object GoogleRestApis {
     }
 
     fun geocode(latLng: String, language: String): Response? {
-        Log.i(GoogleRestApis::class.simpleName, "geocode")
+        Log.i(GoogleRestApis::class.java.simpleName, "geocode")
         if (checkApiLimit(null)) return null
 
         Log.i("GoogleRestApi", "geocode")
@@ -166,7 +166,7 @@ object GoogleRestApis {
 
     fun getDirectionsWaypoints(strOrigin: String, strDestination: String, strWaypoints: String): Response {
 
-        Log.i(GoogleRestApis::class.simpleName, "getDirectionsWaypoints")
+        Log.i(GoogleRestApis::class.java.simpleName, "getDirectionsWaypoints")
         val response:Response
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/directions/json?" +
@@ -196,7 +196,7 @@ object GoogleRestApis {
 
     fun getAutoCompletePredictions(input:String, sessiontoken:String, components:String, location:String, radius:String): Response {
 
-        Log.i(GoogleRestApis::class.simpleName, "getAutoCompletePredictions")
+        Log.i(GoogleRestApis::class.java.simpleName, "getAutoCompletePredictions")
         val response:Response
 //        if (MAPS_APIS_SIGN()) {
 //            val urlToSign = ("/maps/api/place/autocomplete/json?" +
@@ -223,7 +223,7 @@ object GoogleRestApis {
     }
     fun getPlaceDetails(placeId:String): Response {
 
-        Log.i(GoogleRestApis::class.simpleName, "getPlaceDetails")
+        Log.i(GoogleRestApis::class.java.simpleName, "getPlaceDetails")
         val response:Response
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/geocode/json?" +

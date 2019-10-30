@@ -274,7 +274,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
@@ -605,7 +604,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
-    private Polyline polyline;
+    private Polyline polylineP2D;
+    private PolylineOptions polylineOptionsP2D;
 
     private ImageView ivLikePickup, ivLikeDrop;
     private LinearLayout llFeedbackMain, llAddTip;
@@ -9982,17 +9982,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						mapTouched = false;
 						latLngBoundsBuilderPool = new LatLngBounds.Builder();
 
-						PolylineOptions poolPolylineOption = new PolylineOptions();
-						poolPolylineOption.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
+						polylineOptionsP2D = new PolylineOptions();
+						polylineOptionsP2D.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
 						for (int z = 0; z < list.size(); z++) {
-							poolPolylineOption.add(list.get(z));
+							polylineOptionsP2D.add(list.get(z));
 							latLngBoundsBuilderPool.include(list.get(z));
 						}
 
-						if (polyline != null) {
-							polyline.remove();
+						if (polylineP2D != null) {
+							polylineP2D.remove();
 						}
-						polyline = map.addPolyline(poolPolylineOption);
+						polylineP2D = map.addPolyline(polylineOptionsP2D);
 
 						pickupLocationEtaMarker();
 
@@ -11607,6 +11607,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 driverMarkerInRide.remove();
             }
             driverMarkerInRide = null;
+            polylineP2D = null;
+            if(polylineOptionsP2D != null && passengerScreenMode == P_INITIAL){
+				polylineP2D = map.addPolyline(polylineOptionsP2D);
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
