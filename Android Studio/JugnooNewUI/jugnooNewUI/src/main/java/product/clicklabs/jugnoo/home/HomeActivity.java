@@ -199,6 +199,7 @@ import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.directions.GAPIDirections;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
@@ -273,7 +274,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
@@ -604,7 +604,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
-    private Polyline polyline;
+    private Polyline polylineP2D;
+    private PolylineOptions polylineOptionsP2D;
 
     private ImageView ivLikePickup, ivLikeDrop;
     private LinearLayout llFeedbackMain, llAddTip;
@@ -7622,11 +7623,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                     stopDropLocationSearchUI(true);
                                     setDropLocationEngagedUI();
-                                    LatLng pickupLatLng = Data.autoData.getPickupLatLng();
-                                    if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                                        pickupLatLng = Data.autoData.getAssignedDriverInfo().latLng;
-                                    }
-                                    getDropLocationPathAndDisplay(pickupLatLng, zoomAfterDropSet, null);
+                                    getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), zoomAfterDropSet, null);
                                 }
 
                             } else {
@@ -7901,10 +7898,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                             if (lastLatLng != null) {
                                                 Data.autoData.getAssignedDriverInfo().latLng = lastLatLng;
-                                                getDropLocationPathAndDisplay(lastLatLng, true, latLngsList);
+                                                getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), true, latLngsList);
                                             }
                                             else if(!driverToDropPathShown){
-												getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, true, latLngsList);
+												getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), true, latLngsList);
 											}
                                             polylineOptionsInRideDriverPath = null;
                                             plotPolylineInRideDriverPath();
@@ -8050,15 +8047,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
                             LatLng source = pickupLatLng;
-                            if (latLngsListForDriverAnimation == null) {
-                                RidePath ridePath = MyApplication.getInstance().getDatabase2().getLastRidePath();
-                                source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
-                            }
-                            Response response = GoogleRestApis.INSTANCE.getDirections(source.latitude + "," + source.longitude,
-                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false, "metric");
-                            String result = new String(((TypedByteArray) response.getBody()).getBytes());
+							GAPIDirections.DirectionsResult result = GAPIDirections.INSTANCE.getDirectionsPathSync(source, Data.autoData.getDropLatLng(), "metric", "c_p2d");
                             if (result != null) {
-                                listPath = MapUtils.getLatLngListFromPath(result);
+                                listPath = result.getLatLngs();
 								driverToDropPathShown = true;
                                 final List<LatLng> finalListPath = listPath;
                                 if (listPath.size() > 0) {
@@ -9991,17 +9982,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						mapTouched = false;
 						latLngBoundsBuilderPool = new LatLngBounds.Builder();
 
-						PolylineOptions poolPolylineOption = new PolylineOptions();
-						poolPolylineOption.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
+						polylineOptionsP2D = new PolylineOptions();
+						polylineOptionsP2D.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
 						for (int z = 0; z < list.size(); z++) {
-							poolPolylineOption.add(list.get(z));
+							polylineOptionsP2D.add(list.get(z));
 							latLngBoundsBuilderPool.include(list.get(z));
 						}
 
-						if (polyline != null) {
-							polyline.remove();
+						if (polylineP2D != null) {
+							polylineP2D.remove();
 						}
-						polyline = map.addPolyline(poolPolylineOption);
+						polylineP2D = map.addPolyline(polylineOptionsP2D);
 
 						pickupLocationEtaMarker();
 
@@ -10112,7 +10103,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				});
 			}
 			apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
-					region, promoCouponSelected, null);
+					region, promoCouponSelected, null, "c_fe_home");
         } else {
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
@@ -11616,6 +11607,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 driverMarkerInRide.remove();
             }
             driverMarkerInRide = null;
+            polylineP2D = null;
+            if(polylineOptionsP2D != null && passengerScreenMode == P_INITIAL){
+				polylineP2D = map.addPolyline(polylineOptionsP2D);
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }

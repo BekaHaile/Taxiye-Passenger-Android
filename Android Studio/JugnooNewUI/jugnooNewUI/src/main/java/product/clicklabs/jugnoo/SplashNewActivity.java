@@ -93,6 +93,7 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.directions.GAPIDirections;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
@@ -536,6 +537,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 			LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
+
+			GAPIDirections.INSTANCE.deleteDirectionsPathOld();
 
 
 			setContentView(R.layout.activity_splash_new);
