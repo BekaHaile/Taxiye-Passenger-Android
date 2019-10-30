@@ -14,7 +14,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.text.TextUtils;
 import android.util.Property;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -25,16 +24,13 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
+import product.clicklabs.jugnoo.directions.GAPIDirections;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 public class MarkerAnimation {
 
@@ -229,9 +225,14 @@ public class MarkerAnimation {
                     straightLineCase();
                 }
                 else if(list == null || list.size() == 0) {
-                    Response response = GoogleRestApis.INSTANCE.getDirections(source.latitude + "," + source.longitude,
-                            destination.latitude + "," + destination.longitude, false, "driving", false, "metric");
-                    return new String(((TypedByteArray) response.getBody()).getBytes());
+					GAPIDirections.DirectionsResult result = GAPIDirections.INSTANCE.getDirectionsPathSync(source, destination, "metric", "c_manim");
+					if(result != null){
+						list = result.getLatLngs();
+						totalDistance = result.getPath().getDistance();
+					} else {
+						straightLineCase();
+					}
+                    return "";
                 } else {
                     LatLng first = list.get(0);
                     totalDistance = 0;
@@ -262,30 +263,12 @@ public class MarkerAnimation {
             if(!stopCurrentAsync) {
                 try {
                         clearPolylines();
-                        if (list == null && !TextUtils.isEmpty(result)) {
-                            try {
-                                JSONObject jObj = new JSONObject(result);
-                                String status = jObj.getString("status");
-                                if (status.equalsIgnoreCase("OK")) {
-									totalDistance = Double.parseDouble(jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("value"));
-									if(totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
-										straightLineCase();
-									} else {
-										list = MapUtils.getLatLngListFromPath(result);
-									}
-								} else {
-									throw new Exception();
-								}
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                straightLineCase();
-                            }
-                        } else if(list == null && TextUtils.isEmpty(result)){
-                            straightLineCase();
-						} else if(list != null && destination != null
+                        if(list != null && destination != null
                                 && totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
                             straightLineCase();
-                        }
+                        } else if(list == null){
+							straightLineCase();
+						}
 
                         ArrayList<Double> duration = new ArrayList<>();
 						double totalDuration = (fastDuration ? FAST_ANIMATION_TIME : ANIMATION_TIME);

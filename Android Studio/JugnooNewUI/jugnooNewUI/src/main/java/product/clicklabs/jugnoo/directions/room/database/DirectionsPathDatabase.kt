@@ -1,19 +1,19 @@
-package product.clicklabs.jugnoo.room.database
+package product.clicklabs.jugnoo.directions.room.database
 
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
-import product.clicklabs.jugnoo.room.dao.DirectionsPathDao
-import product.clicklabs.jugnoo.room.model.Path
-import product.clicklabs.jugnoo.room.model.Segment
+import product.clicklabs.jugnoo.directions.room.dao.DirectionsPathDao
+import product.clicklabs.jugnoo.directions.room.model.Path
+import product.clicklabs.jugnoo.directions.room.model.Point
 
 @Database(entities = [
-    Segment::class,
+    Point::class,
     Path::class
 ],//please update version number in any changes or addition to schema classes
-        version = 1)
+        version = 2)
 abstract class DirectionsPathDatabase: RoomDatabase(){
 
     companion object {

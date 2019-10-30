@@ -1,8 +1,6 @@
 package product.clicklabs.jugnoo.utils;
 
 import android.animation.ValueAnimator;
-import android.app.Activity;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -10,10 +8,8 @@ import android.text.TextUtils;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 
 import org.json.JSONArray;
@@ -28,8 +24,6 @@ import java.util.Locale;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
-import retrofit.client.Response;
-import retrofit.mime.TypedByteArray;
 
 public class MapUtils {
 
@@ -250,35 +244,6 @@ public class MapUtils {
 	    }
 	}
 
-	public static void drawPathFromGoogle(Activity activity, final GoogleMap map, final LatLng sourceLatLng, final LatLng destinationLatLng){
-		if (MyApplication.getInstance().isOnline()) {
-			Response response = GoogleRestApis.INSTANCE.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
-					destinationLatLng.latitude + "," + destinationLatLng.longitude, false, "driving", false, "metric");
-			String result = new String(((TypedByteArray)response.getBody()).getBytes());
-			Log.i("result", "=" + result);
-			if (result != null) {
-				final List<LatLng> list = MapUtils.getLatLngListFromPath(result);
-				if (list.size() > 0) {
-					activity.runOnUiThread(new Runnable() {
-
-						@Override
-						public void run() {
-							try {
-								PolylineOptions polylineOptions = new PolylineOptions();
-								polylineOptions.width(ASSL.Xscale() * 5).color(Color.BLUE).geodesic(true);
-								for (int z = 0; z < list.size(); z++) {
-									polylineOptions.add(list.get(z));
-								}
-								map.addPolyline(polylineOptions);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-					});
-				}
-			}
-		}
-	}
 
 
 

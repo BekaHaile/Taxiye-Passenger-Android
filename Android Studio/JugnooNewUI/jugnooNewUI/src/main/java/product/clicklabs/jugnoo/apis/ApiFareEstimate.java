@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +25,8 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.directions.GAPIDirections;
+import product.clicklabs.jugnoo.directions.room.model.Path;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -31,7 +34,6 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import retrofit.RetrofitError;
@@ -56,7 +58,9 @@ public class ApiFareEstimate {
         this.callback = callback;
     }
 
-    public void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate, final Region region, final PromoCoupon promoCoupon, final Package selectedPackage) {
+    public void getDirectionsAndComputeFare(final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled,
+											final boolean callFareEstimate, final Region region, final PromoCoupon promoCoupon,
+											final Package selectedPackage, final String source) {
         try {
             if (MyApplication.getInstance().isOnline()) {
                 if (sourceLatLng != null && destLatLng != null) {
@@ -68,53 +72,49 @@ public class ApiFareEstimate {
 						return;
 					}
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
-                    GoogleRestApis.INSTANCE.getDirections(sourceLatLng.latitude + "," + sourceLatLng.longitude,
-                            destLatLng.latitude + "," + destLatLng.longitude, false, "driving", false, getDistanceUnit(), new retrofit.Callback<SettleUserDebt>() {
-                                @Override
-                                public void success(SettleUserDebt settleUserDebt, Response response) {
-                                    try {
-                                        String result = new String(((TypedByteArray) response.getBody()).getBytes());
-                                        Log.i("result", "=" + result);
-                                        JSONObject jObj = new JSONObject(result);
-                                        list = MapUtils.getLatLngListFromPath(result);
-                                        if (jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
+					GAPIDirections.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, new GAPIDirections.Callback() {
+								@Override
+								public void onSuccess(@NotNull List<LatLng> latLngs, @NotNull Path path) {
+									try {
+										list = latLngs;
+										if (list.size() > 0) {
 											ApiFareEstimate.this.sourceLatLng = sourceLatLng;
 											ApiFareEstimate.this.destLatLng = destLatLng;
-                                            startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address");
-                                            endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address");
+											startAddress = path.getStartAddress();
+											endAddress = path.getEndAddress();
 
-                                            distanceText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("text");
-                                            timeText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
+											distanceText = path.getDistanceText();
+											timeText = path.getTimeText();
 
-                                            distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
-                                            timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+											distanceValue = path.getDistance();
+											timeValue = path.getTime();
 											directionsSuccess(promoCoupon, callFareEstimate, sourceLatLng, destLatLng, isPooled, region, selectedPackage);
 										} else {
-                                            DialogPopup.dismissLoadingDialog();
-                                            retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage);
-                                            callback.onDirectionsFailure();
-                                        }
+											DialogPopup.dismissLoadingDialog();
+											retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+											callback.onDirectionsFailure();
+										}
 
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        DialogPopup.dismissLoadingDialog();
-                                        retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage);
-                                        callback.onDirectionsFailure();
-                                    }
-                                }
+									} catch (Exception e) {
+										e.printStackTrace();
+										DialogPopup.dismissLoadingDialog();
+										retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+										callback.onDirectionsFailure();
+									}
+								}
 
-                                @Override
-                                public void failure(RetrofitError error) {
-                                    DialogPopup.dismissLoadingDialog();
-                                    retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage);
-                                    callback.onDirectionsFailure();
-                                }
-                            });
+								@Override
+								public void onFailure() {
+									DialogPopup.dismissLoadingDialog();
+									retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+									callback.onDirectionsFailure();
+								}
+							});
                 } else {
                     callback.onDirectionsFailure();
                 }
             } else {
-                retryDialogDirections(context.getString(R.string.connection_lost_desc), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage);
+                retryDialogDirections(context.getString(R.string.connection_lost_desc), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
                 callback.onDirectionsFailure();
             }
         } catch (Exception e) {
@@ -291,12 +291,13 @@ public class ApiFareEstimate {
     }
 
 
-    private void retryDialogDirections(String message, final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate, final Region region, final PromoCoupon promoCoupon, final Package selectedPackage){
+    private void retryDialogDirections(String message, final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate,
+									   final Region region, final PromoCoupon promoCoupon, final Package selectedPackage, final String source){
         DialogPopup.alertPopupTwoButtonsWithListeners((Activity) context, "", message, context.getString(R.string.retry), context.getString(R.string.cancel),
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage);
+                        getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
                         callback.onRetry();
                     }
                 },

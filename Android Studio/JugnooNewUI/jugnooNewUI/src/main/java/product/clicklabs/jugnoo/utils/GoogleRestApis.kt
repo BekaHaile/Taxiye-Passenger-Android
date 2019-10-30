@@ -42,7 +42,7 @@ object GoogleRestApis {
      * for driver animation, and path animation
      */
     fun getDirections(originLatLng: String, destLatLng: String, sensor: Boolean?,
-                      mode: String, alternatives: Boolean?, units: String): Response {
+                      mode: String, alternatives: Boolean?, units: String, source:String): Response {
         val response:Response
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/directions/json?" +
@@ -67,7 +67,7 @@ object GoogleRestApis {
                     sensor, mode, alternatives, units, MAPS_BROWSER_KEY())
         }
         if(originLatLng.contains(",")) {
-            logGoogleRestAPI(originLatLng.split(",")[0], originLatLng.split(",")[1], API_NAME_DIRECTIONS)
+            logGoogleRestAPI(originLatLng.split(",")[0], originLatLng.split(",")[1], API_NAME_DIRECTIONS+"_"+source)
         }
         return response
     }
@@ -76,7 +76,7 @@ object GoogleRestApis {
      * for fare estimate
      */
     fun getDirections(originLatLng: String, destLatLng: String, sensor: Boolean?,
-                      mode: String, alternatives: Boolean?, units: String, callback: Callback<SettleUserDebt>) {
+                      mode: String, alternatives: Boolean?, units: String, source:String, callback: Callback<SettleUserDebt>) {
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/directions/json?" +
                     "origin=" + originLatLng
@@ -100,7 +100,7 @@ object GoogleRestApis {
                     sensor, mode, alternatives, units, MAPS_BROWSER_KEY(), callback)
         }
         if(originLatLng.contains(",")) {
-            logGoogleRestAPIC(originLatLng.split(",")[0], originLatLng.split(",")[1], API_NAME_DIRECTIONS)
+            logGoogleRestAPIC(originLatLng.split(",")[0], originLatLng.split(",")[1], API_NAME_DIRECTIONS+"_"+source)
         }
     }
 
