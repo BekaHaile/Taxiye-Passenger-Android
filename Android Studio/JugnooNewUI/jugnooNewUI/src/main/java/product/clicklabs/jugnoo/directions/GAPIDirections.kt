@@ -12,6 +12,7 @@ import product.clicklabs.jugnoo.directions.room.model.Path
 import product.clicklabs.jugnoo.directions.room.model.Point
 import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.MapUtils
+import product.clicklabs.jugnoo.utils.Prefs
 import retrofit.mime.TypedByteArray
 import java.math.RoundingMode
 import java.text.NumberFormat
@@ -72,8 +73,9 @@ object GAPIDirections {
                 destinationLng,
                 timeStamp - Constants.DAY_MILLIS*30)
 
+        val cachingEnabled = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_DIRECTIONS_CACHING, 1) == 1
         //path is not found
-        if(paths == null || paths.isEmpty()){
+        if(!cachingEnabled || paths == null || paths.isEmpty()){
             val list = mutableListOf<LatLng>()
 
             //google directions hit
@@ -103,15 +105,17 @@ object GAPIDirections {
                     startAddress, endAddress, distanceText, timeText,
                     timeStamp)
 
-            db!!.getDao().deleteAllPath(timeStamp)
-            db!!.getDao().insertPath(path)
+            if(cachingEnabled) {
+                db!!.getDao().deleteAllPath(timeStamp)
+                db!!.getDao().insertPath(path)
 
-            //inserting path points
-            val points = mutableListOf<Point>()
-            for(latlng in list){
-                points.add(Point(timeStamp, latlng.latitude, latlng.longitude))
+                //inserting path points
+                val points = mutableListOf<Point>()
+                for (latlng in list) {
+                    points.add(Point(timeStamp, latlng.latitude, latlng.longitude))
+                }
+                db!!.getDao().insertPathPoints(points)
             }
-            db!!.getDao().insertPathPoints(points)
 
             directionsResult = DirectionsResult(list, path)
         } else {

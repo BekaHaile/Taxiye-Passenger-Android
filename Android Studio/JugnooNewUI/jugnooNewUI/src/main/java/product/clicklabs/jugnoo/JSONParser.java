@@ -560,6 +560,8 @@ public class JSONParser implements Constants {
 
 		Prefs.with(context).save(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, 0));
 		Prefs.with(context).save(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0));
+		Prefs.with(context).save(KEY_CUSTOMER_DIRECTIONS_CACHING, autoData.optInt(KEY_CUSTOMER_DIRECTIONS_CACHING,
+				1));
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
