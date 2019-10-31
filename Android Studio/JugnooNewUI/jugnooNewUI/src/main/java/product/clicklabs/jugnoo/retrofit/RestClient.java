@@ -16,6 +16,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.retrofit.apis.JungleMapsApi;
 import product.clicklabs.jugnoo.retrofit.model.ChatApiService;
 import retrofit.RestAdapter;
 
@@ -33,19 +34,24 @@ public class RestClient {
     private static FeedApiService FEED_API_SERVICE = null;
     private static ProsApi PROS_API = null;
     private static MapsCachingApiService MAPS_CACHING_API = null;
+    private static JungleMapsApi JUNGLE_MAPS_API = null;
 
     static {
-        setupRestClient();
-        setupGoogleAPIRestClient();
-        setupFreshApiRestClient();
-        setupChatApiRestClient();
-        setupMenusApiRestClient();
-        setupFatafatApiRestClient();
-        setupPayApiRestClient();
-        setupFeedApiRestClient();
-        setupProsApiRestClient();
-        setupMapsCachingRestClient();
+		setupAllClients();
     }
+	public static void setupAllClients(){
+		setupRestClient();
+		setupGoogleAPIRestClient();
+		setupFreshApiRestClient();
+		setupChatApiRestClient();
+		setupMenusApiRestClient();
+		setupFatafatApiRestClient();
+		setupPayApiRestClient();
+		setupFeedApiRestClient();
+		setupProsApiRestClient();
+		setupMapsCachingRestClient();
+		setupJungleMapsApi();
+	}
 
 	private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){
     	return getOkHttpClient(retryOnConnectionFailure, 30);
@@ -83,7 +89,7 @@ public class RestClient {
     }
 
 
-    public static void setupRestClient() {
+    private static void setupRestClient() {
         if(API_SERVICES == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getServerUrl())
@@ -111,17 +117,6 @@ public class RestClient {
         PROS_API = null;
     }
 
-    public static void setupAllClients(){
-        setupRestClient();
-        setupFreshApiRestClient();
-        setupChatApiRestClient();
-        setupMenusApiRestClient();
-        setupFatafatApiRestClient();
-        setupPayApiRestClient();
-        setupFeedApiRestClient();
-        setupProsApiRestClient();
-        setupMapsCachingRestClient();
-    }
 
 
     public static StringAPIService getStringRestClient() {
@@ -138,7 +133,7 @@ public class RestClient {
 
 
 
-    public static void setupGoogleAPIRestClient() {
+    private static void setupGoogleAPIRestClient() {
         if(GOOGLE_API_SERVICES == null) {
             RestAdapter.Log fooLog = new RestAdapter.Log() {
                 @Override
@@ -162,7 +157,7 @@ public class RestClient {
 
 
 
-    public static void setupFreshApiRestClient() {
+    private static void setupFreshApiRestClient() {
         if(FRESH_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFreshServerUrl())
@@ -181,7 +176,7 @@ public class RestClient {
 
 
 
-    public static void setupChatApiRestClient() {
+    private static void setupChatApiRestClient() {
         if(CHAT_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getChatServerUrl())
@@ -200,7 +195,7 @@ public class RestClient {
 
 
 
-    public static void setupMenusApiRestClient() {
+    private static void setupMenusApiRestClient() {
         if(MENUS_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getMenusServerUrl())
@@ -219,7 +214,7 @@ public class RestClient {
 
 
 
-    public static void setupFatafatApiRestClient() {
+    private static void setupFatafatApiRestClient() {
         if(FATAFAT_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFatafatServerUrl())
@@ -240,7 +235,7 @@ public class RestClient {
 
 
 
-    public static void setupPayApiRestClient() {
+    private static void setupPayApiRestClient() {
         if(PAY_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getPayServerUrl())
@@ -294,7 +289,7 @@ public class RestClient {
         return PROS_API;
     }
 
-    public static void setupMapsCachingRestClient() {
+    private static void setupMapsCachingRestClient() {
         if(MAPS_CACHING_API == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getMapsCachingServerUrl())
@@ -309,6 +304,23 @@ public class RestClient {
 
     public static MapsCachingApiService getMapsCachingService() {
         return MAPS_CACHING_API;
+    }
+
+    public static void setupJungleMapsApi() {
+        if(JUNGLE_MAPS_API == null) {
+            RestAdapter.Builder builder = new RestAdapter.Builder()
+                    .setEndpoint(Config.getJungleMapsServerUrl())
+                    .setClient(new Ok3Client(getOkHttpClient(true, 3)))
+                    .setLogLevel(RestAdapter.LogLevel.FULL);
+            setLogger(builder);
+
+            RestAdapter restAdapter = builder.build();
+			JUNGLE_MAPS_API = restAdapter.create(JungleMapsApi.class);
+        }
+    }
+
+    public static JungleMapsApi getJungleMapsApi() {
+        return JUNGLE_MAPS_API;
     }
 
 

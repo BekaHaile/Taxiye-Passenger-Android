@@ -278,7 +278,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         	if(apiFareEstimate == null){
 				apiFareEstimate = new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
                 @Override
-                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+                public void onSuccess(List<LatLng> list, String distanceText,
                                       String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
                     try {
 
@@ -340,19 +340,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             }, 500);
                         }
 
-                        if (!TextUtils.isEmpty(sourceAddress)) {
-                            startAddress = sourceAddress;
-                        }
-                        if (!TextUtils.isEmpty(destAddress)) {
-                            endAddress = destAddress;
-                        }
-                        textViewPickupLocation.setText(startAddress);
+                        textViewPickupLocation.setText(sourceAddress);
                         String startAdd = textViewPickupLocation.getText().toString();
                         if (startAdd.charAt(startAdd.length() - 1) == ',') {
                             textViewPickupLocation.setText(startAdd.substring(0, startAdd.length() - 1));
                         }
 
-                        textViewDropLocation.setText(endAddress);
+                        textViewDropLocation.setText(destAddress);
                         String endAdd = textViewDropLocation.getText().toString();
                         if (endAdd.charAt(endAdd.length() - 1) == ',') {
                             textViewDropLocation.setText(endAdd.substring(0, endAdd.length() - 1));

@@ -3309,6 +3309,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setDropAddressId(0);
             dropLocationSearched = false;
 
+
             textViewDestSearch.setText("");
             textViewDestSearchNew.setText("");
             imageViewDropCross.setVisibility(View.GONE);
@@ -9455,6 +9456,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             setUserData();
 
             resetPickupDropFeilds();
+			removeP2DPolyline();
 
             getHandler().postDelayed(new Runnable() {
                 @Override
@@ -9977,7 +9979,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(apiFareEstimate == null) {
 				apiFareEstimate = new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
 					@Override
-					public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+					public void onSuccess(List<LatLng> list, String distanceText,
 										  String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
 						mapTouched = false;
 						latLngBoundsBuilderPool = new LatLngBounds.Builder();
@@ -10561,7 +10563,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         getScheduleRideFragment().searchResultReceived(searchResult, searchMode);
                     }
                 }
-                if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+				removeP2DPolyline();
+				if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     passengerScreenMode = P_INITIAL;
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
@@ -10633,7 +10636,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    @Override
+	public void removeP2DPolyline() {
+		polylineOptionsP2D = null;
+		if(polylineP2D != null){
+			polylineP2D.remove();
+		}
+		polylineP2D = null;
+	}
+
+	@Override
     public void onPlaceSearchError() {
         if (P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {

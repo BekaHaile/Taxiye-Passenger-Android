@@ -4,12 +4,14 @@ import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONArray
 import org.json.JSONObject
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.MyApplication
 import product.clicklabs.jugnoo.directions.room.database.DirectionsPathDatabase
 import product.clicklabs.jugnoo.directions.room.model.Path
 import product.clicklabs.jugnoo.directions.room.model.Point
+import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Prefs
@@ -17,6 +19,7 @@ import retrofit.mime.TypedByteArray
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
+import kotlin.collections.HashMap
 
 object GAPIDirections {
 
@@ -76,48 +79,97 @@ object GAPIDirections {
         val cachingEnabled = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_DIRECTIONS_CACHING, 1) == 1
         //path is not found
         if(!cachingEnabled || paths == null || paths.isEmpty()){
-            val list = mutableListOf<LatLng>()
 
-            //google directions hit
-            val response = GoogleRestApis.getDirections("$sourceLat,$sourceLng", "$destinationLat,$destinationLng",
-                    false, "driving", false, units, apiSource)
-            val result = String((response.body as TypedByteArray).bytes)
-            val jObj = JSONObject(result)
+            try {
+                val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_MAPS_OBJ, Constants.EMPTY_JSON_OBJECT))
+                if(jungleObj.has(Constants.KEY_JUNGLE_OPTIONS)){
 
-            list.addAll(MapUtils.getLatLngListFromPath(result))
+                    val option = jungleObj.optInt(Constants.KEY_JUNGLE_OPTIONS, 0)
 
-            val startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address")
-            val endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address")
+                    val pointsJ = JSONArray()
+                    val startJ = JSONObject()
+                    startJ.put(Constants.KEY_LAT, sourceLat.toString()).put(Constants.KEY_LNG, sourceLng.toString())
+                    val destJ = JSONObject()
+                    destJ.put(Constants.KEY_LAT, destinationLat.toString()).put(Constants.KEY_LNG, destinationLng.toString())
+                    pointsJ.put(startJ).put(destJ)
 
-            val distanceText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("text")
-            val timeText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text")
+                    val params = HashMap<String, String>()
+                    params[Constants.KEY_JUNGLE_POINTS] = pointsJ.toString()
+                    params[Constants.KEY_JUNGLE_OPTIONS] = option.toString()
 
-            val distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value")
-            val timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value")
+                    when(option){
+                        1 -> { //here map
+                            params[Constants.KEY_JUNGLE_APP_ID] = jungleObj.optString(Constants.KEY_JUNGLE_APP_ID)
+                            params[Constants.KEY_JUNGLE_APP_CODE] = jungleObj.optString(Constants.KEY_JUNGLE_APP_CODE)
+                        }
+                        2 -> { //google
+                            params[Constants.KEY_JUNGLE_API_KEY] = jungleObj.optString(Constants.KEY_JUNGLE_API_KEY)
+                        }
+                        3 -> { //map box
+                            params[Constants.KEY_JUNGLE_ACCESS_TOKEN] = jungleObj.optString(Constants.KEY_JUNGLE_ACCESS_TOKEN)
+                        }
+                    }
+                    val response = RestClient.getJungleMapsApi().directions(params)
 
-            //inserting path
-            val path = Path(
-                    sourceLat,
-                    sourceLng,
-                    destinationLat,
-                    destinationLng,
-                    distanceValue, timeValue,
-                    startAddress, endAddress, distanceText, timeText,
-                    timeStamp)
 
-            if(cachingEnabled) {
+                    val result = String((response.body as TypedByteArray).bytes)
+                    val jObj = JSONObject(result)
+
+                    val list = mutableListOf<LatLng>()
+                    list.addAll(MapUtils.getLatLngListFromPathJungle(result))
+                    val distanceValue = jObj.getJSONObject("data").getJSONArray("paths").getJSONObject(0).getDouble("distance")
+                    val timeValue = jObj.getJSONObject("data").getJSONArray("paths").getJSONObject(0).getDouble("time")/1000
+
+                    val path = Path(
+                            sourceLat,
+                            sourceLng,
+                            destinationLat,
+                            destinationLng,
+                            distanceValue, timeValue,
+                            timeStamp)
+
+                    directionsResult = DirectionsResult(list, path)
+
+                } else {
+                    throw Exception()
+                }
+
+            } catch (e: Exception) {
+                //google directions hit
+                val response = GoogleRestApis.getDirections("$sourceLat,$sourceLng", "$destinationLat,$destinationLng",
+                        false, "driving", false, units, apiSource)
+                val result = String((response.body as TypedByteArray).bytes)
+                val jObj = JSONObject(result)
+
+                val list = mutableListOf<LatLng>()
+                list.addAll(MapUtils.getLatLngListFromPath(result))
+                val distanceValue = jObj.getJSONArray("paths").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value")
+                val timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value")
+
+                val path = Path(
+                        sourceLat,
+                        sourceLng,
+                        destinationLat,
+                        destinationLng,
+                        distanceValue, timeValue,
+                        timeStamp)
+
+                directionsResult = DirectionsResult(list, path)
+            }
+
+
+            if(cachingEnabled && directionsResult != null) {
                 db!!.getDao().deleteAllPath(timeStamp)
-                db!!.getDao().insertPath(path)
+                db!!.getDao().insertPath(directionsResult.path)
 
                 //inserting path points
                 val points = mutableListOf<Point>()
-                for (latlng in list) {
+                for (latlng in directionsResult.latLngs) {
                     points.add(Point(timeStamp, latlng.latitude, latlng.longitude))
                 }
                 db!!.getDao().insertPathPoints(points)
             }
 
-            directionsResult = DirectionsResult(list, path)
         } else {
             val segments = db!!.getDao().getPathPoints(paths[0].timeStamp)
             if (segments != null) {
