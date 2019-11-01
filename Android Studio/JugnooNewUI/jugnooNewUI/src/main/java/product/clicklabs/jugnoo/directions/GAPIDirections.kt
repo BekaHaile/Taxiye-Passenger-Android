@@ -35,8 +35,8 @@ object GAPIDirections {
         get() {
             if(field == null){
                 field = NumberFormat.getInstance(Locale.ENGLISH)
-                field!!.minimumFractionDigits = 3
-                field!!.maximumFractionDigits = 3
+                field!!.minimumFractionDigits = 4
+                field!!.maximumFractionDigits = 4
                 field!!.roundingMode = RoundingMode.HALF_UP
                 field!!.isGroupingUsed = false
             }
