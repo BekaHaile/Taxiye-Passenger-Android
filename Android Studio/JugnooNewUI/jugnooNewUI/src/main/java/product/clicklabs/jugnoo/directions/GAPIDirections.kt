@@ -143,7 +143,7 @@ object GAPIDirections {
 
                 val list = mutableListOf<LatLng>()
                 list.addAll(MapUtils.getLatLngListFromPath(result))
-                val distanceValue = jObj.getJSONArray("paths").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value")
+                val distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value")
                 val timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value")
 
                 val path = Path(
