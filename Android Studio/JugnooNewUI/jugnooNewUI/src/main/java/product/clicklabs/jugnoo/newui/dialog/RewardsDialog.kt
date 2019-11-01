@@ -158,6 +158,7 @@ class RewardsDialog : DialogFragment() {
      */
     private fun setData() {
         val scratchView : ScratchView = rootView.findViewById(R.id.scratch_view)
+        scratchView.canScratch(true)
         if (arguments != null) {
             promoData = arguments?.getParcelable("coupon")!!
             rootView.tvRewardInfo.text = promoData.name
