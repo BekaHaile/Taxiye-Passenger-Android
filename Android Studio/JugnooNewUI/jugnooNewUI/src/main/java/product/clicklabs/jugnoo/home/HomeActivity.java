@@ -7272,10 +7272,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textView.setText("");
                 textView.setHint(R.string.getting_address);
 
-				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
 					try {
-						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-						String address = gapiAddress.getSearchableAddress();
+						String address = null;
+						if(googleGeocodeResponse != null){
+							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse);
+							address = gapiAddress.getSearchableAddress();
+						} else if(singleAddress != null){
+							address = singleAddress;
+						}
 						textView.setText(address);
 						if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
 							textView.setHint(getResources().getString(R.string.enter_pickup));

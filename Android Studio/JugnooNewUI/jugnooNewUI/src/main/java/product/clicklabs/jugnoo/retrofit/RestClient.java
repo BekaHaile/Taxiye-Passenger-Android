@@ -293,7 +293,7 @@ public class RestClient {
         if(MAPS_CACHING_API == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getMapsCachingServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient(true, 3)))
+                    .setClient(new Ok3Client(getOkHttpClient(true, 5)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 
@@ -310,7 +310,7 @@ public class RestClient {
         if(JUNGLE_MAPS_API == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getJungleMapsServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient(true, 3)))
+                    .setClient(new Ok3Client(getOkHttpClient(true, 5)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 
