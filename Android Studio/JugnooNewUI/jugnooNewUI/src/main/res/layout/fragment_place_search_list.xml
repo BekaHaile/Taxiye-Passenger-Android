@@ -77,6 +77,42 @@
 
 
     </View>-->
+    <LinearLayout
+        android:id="@+id/llFinalAddress"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/bNext"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:background="@color/white"
+        android:tag="@string/dont_touch_me"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/etPreAddress"
+            android:layout_width="match_parent"
+            android:textSize="14sp"
+            android:maxLength="20"
+            android:background="@color/transparent"
+            android:textColor="@color/text_color"
+            android:drawableEnd="@drawable/edit_icon_selector"
+            android:drawablePadding="@dimen/spacing_small"
+            android:padding="@dimen/spacing_normal"
+            android:layout_height="wrap_content"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_color"/>
+
+        <TextView
+            android:id="@+id/tvFullAddress"
+            android:layout_width="match_parent"
+            android:textSize="14sp"
+            android:textColor="@color/text_color"
+            android:padding="@dimen/spacing_normal"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
     <Button
         android:id="@+id/bNext"
         android:layout_width="match_parent"
@@ -105,6 +141,7 @@
             android:background="@drawable/shadow_down" />
 
         <RelativeLayout
+            android:id="@+id/rlAddress"
             android:layout_width="match_parent"
             android:layout_height="100px"
             android:layout_gravity="center_horizontal"
@@ -168,6 +205,14 @@
                 android:padding="16px"
                 android:src="@drawable/ic_cross_et_selector"
                 android:tag="mwar" />
+
+                <ImageView
+                    android:id="@+id/ivSearch"
+                    android:layout_width="70px"
+                    android:layout_height="70px"
+                    android:padding="16px"
+                    android:src="@drawable/search_icon"
+                    android:tag="mwar" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -237,6 +282,14 @@
                     android:layout_height="70px"
                     android:padding="16px"
                     android:src="@drawable/ic_cross_et_selector"
+                    android:tag="mwar" />
+
+                <ImageView
+                    android:id="@+id/ivSearchDest"
+                    android:layout_width="70px"
+                    android:layout_height="70px"
+                    android:padding="16px"
+                    android:src="@drawable/search_icon"
                     android:tag="mwar" />
             </LinearLayout>
 
@@ -328,63 +381,6 @@
                             android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <TextView
-                                android:id="@+id/textViewSavedPlaces"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40px"
-                                android:layout_marginStart="30px"
-                                android:layout_marginTop="20px"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:text="@string/saved_places"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color_less_light"
-                                android:textSize="@dimen/text_size_24"
-                                android:visibility="visible" />
-
-
-                            <product.clicklabs.jugnoo.utils.NonScrollListView
-                                android:id="@+id/listViewSavedLocations"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:divider="@color/transparent"
-                                android:dividerHeight="0px"
-                                android:splitMotionEvents="false" />
-
-                            <TextView
-                                android:id="@+id/textViewRecentAddresses"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40px"
-                                android:layout_marginStart="30px"
-                                android:layout_marginTop="20px"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:text="@string/recent_locations"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color_less_light"
-                                android:textSize="@dimen/text_size_24"
-                                android:visibility="visible" />
-
-                            <product.clicklabs.jugnoo.utils.NonScrollListView
-                                android:id="@+id/listViewRecentAddresses"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:divider="@color/transparent"
-                                android:dividerHeight="0px"
-                                android:fadeScrollbars="true"
-                                android:scrollbars="vertical"
-                                android:splitMotionEvents="false"
-                                android:visibility="visible" />
-
-
-
-                            <View
-                                android:id="@+id/vSetLocationOnMapDiv"
-                                android:background="@color/fatafat_divider_color"
-                                android:layout_width="match_parent"
-                                android:layout_height="2px"
-                                android:layout_marginStart="40px"
-                                android:layout_marginEnd="40px"/>
 
                             <LinearLayout
                                 android:id="@+id/ll_set_location_on_map"
@@ -418,6 +414,61 @@
                                     android:layout_height="wrap_content" />
                             </LinearLayout>
 
+                            <View
+                                android:id="@+id/vSetLocationOnMapDiv"
+                                android:background="@color/fatafat_divider_color"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_marginStart="40px"
+                                android:layout_marginEnd="40px"/>
+
+                            <TextView
+                                android:id="@+id/textViewRecentAddresses"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40px"
+                                android:layout_marginStart="30px"
+                                android:layout_marginTop="20px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/recent_locations"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_less_light"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="visible" />
+
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewRecentAddresses"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:fadeScrollbars="true"
+                                android:scrollbars="vertical"
+                                android:splitMotionEvents="false"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/textViewSavedPlaces"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40px"
+                                android:layout_marginStart="30px"
+                                android:layout_marginTop="20px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/saved_places"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_less_light"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="visible" />
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewSavedLocations"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:splitMotionEvents="false" />
 
                         </LinearLayout>
 

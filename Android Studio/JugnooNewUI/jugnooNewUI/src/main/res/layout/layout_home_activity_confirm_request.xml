@@ -112,7 +112,7 @@
                     android:layout_toStartOf="@+id/layout_edit_destinationNew"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
-                    android:hint="@string/assigning_state_edit_text_hint"
+                    android:hint="@string/text_where_to_go"
                     android:paddingEnd="20px"
                     android:singleLine="true"
                     android:textColor="@color/text_color"

@@ -81,8 +81,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private ProgressWheel progressBarSearch;
 	private ImageView imageViewSearchCross, imageViewSearchGPSIcon;
 
-	private LinearLayout linearLayoutAddFav;
-	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutSavedPlaces;
+	private LinearLayout linearLayoutAddFav, llFinalAddress;
+	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutSavedPlaces, rlAddress;
 	private TextView textViewAddHome, textViewAddWork;
 	private ImageView imageViewSep, imageViewSep2, ivDivSavedPlaces;
 
@@ -91,7 +91,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private CardView cardViewSearch;
 
 	private NestedScrollView scrollViewSuggestions;
-	private TextView textViewSavedPlaces, textViewRecentAddresses;
+	private TextView textViewSavedPlaces, textViewRecentAddresses, tvFullAddress;
 	private NonScrollListView listViewSavedLocations, listViewRecentAddresses;
 	private SavedPlacesAdapter savedPlacesAdapter, savedPlacesAdapterRecent;
 	private CardView cardViewSavedPlaces;
@@ -109,10 +109,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private Button bNext;
 	private View mapFragment;
 	private ImageView imageViewSearchCrossDest;
-	private EditText editTextSearchDest;
+	private EditText editTextSearchDest, etPreAddress;
 	private ProgressWheel progressBarSearchDest;
 	private SearchResult searchResultPickup,searchResultDestination;
-	private ImageView ivLocationMarker;
+	private ImageView ivLocationMarker, ivSearch, ivSearchDest;
 	private boolean isMarkerSet = false;
 	private List<SearchLocation> searchLocations = new ArrayList<>();
 
@@ -121,6 +121,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private boolean setLocationOnMapOnTop = true;
 	private LatLng lastGeocodeLatLng;
 	private GoogleGeocodeResponse lastGeocodeResponse;
+	private boolean isNewUI = false;
 
 	private SearchListAdapter.SearchListActionsHandler searchAdapterListener = new SearchListAdapter.SearchListActionsHandler() {
 
@@ -287,8 +288,21 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		imageViewSearchCrossDest = (ImageView) rootView.findViewById(R.id.ivDeliveryAddressCrossDest); imageViewSearchCrossDest.setVisibility(View.GONE);
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
 		scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
+		rlAddress = rootView.findViewById(R.id.rlAddress);
+		etPreAddress = rootView.findViewById(R.id.etPreAddress);
+		tvFullAddress = rootView.findViewById(R.id.tvFullAddress);
+		llFinalAddress = rootView.findViewById(R.id.llFinalAddress);
+		ivSearch = rootView.findViewById(R.id.ivSearch);
+		ivSearchDest = rootView.findViewById(R.id.ivSearchDest);
 		scrollViewSearch.setVisibility(View.GONE);
 		cardViewSearch = (CardView) rootView.findViewById(R.id.cardViewSearch);
+
+
+		if(activity instanceof HomeActivity ) {
+			isNewUI = ((HomeActivity)activity).isNewUI() && Prefs.with(activity).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1;
+		}
+
+		rlAddress.setVisibility(isNewUI ? View.GONE : View.VISIBLE);
 
 		ivLocationMarker = rootView.findViewById(R.id.ivLocationMarker);
 
@@ -455,7 +469,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			public void onClick(View v) {
 				if(mapSettledCanForward){
 					Utils.hideSoftKeyboard(activity, editTextSearch);
-					String address = getFocusedEditText().getText().toString();
+					String address =  isNewUI ? (!TextUtils.isEmpty(etPreAddress.getText().toString()) ? etPreAddress.getText().toString().concat(", ") : "").concat(tvFullAddress.getText().toString()) : getFocusedEditText().getText().toString();
 					if(address.equalsIgnoreCase(Constants.UNNAMED)){
 						Utils.showToast(activity, getString(R.string.unable_to_fetch_address));
 						return;
@@ -505,8 +519,10 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			@Override
 			public void onClick(View v) {
-				editTextSearch.requestFocus();
-				Utils.showSoftKeyboard(activity, editTextSearch);
+				if(!isNewUI) {
+					editTextSearch.requestFocus();
+					Utils.showSoftKeyboard(activity, editTextSearch);
+				}
 			}
 		});
 
@@ -540,6 +556,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			public void onClick(View v) {
 				try {
 					clearExistingAddress(editTextSearch);
+					clearBottomAddress();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -555,9 +572,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    editTextSearch.requestFocus();
-                    editTextSearch.setSelection(editTextSearch.getText().length());
-                    Utils.showSoftKeyboard(activity, editTextSearch);
+                	if(!isNewUI) {
+						editTextSearch.requestFocus();
+						editTextSearch.setSelection(editTextSearch.getText().length());
+						Utils.showSoftKeyboard(activity, editTextSearch);
+					}
                 }
             }, 200);
 
@@ -576,6 +595,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	private void clearExistingAddress(EditText editTextSearch) {
 		editTextSearch.setText("");
+		getFocusedSearchIcon().setVisibility(View.VISIBLE);
+		getFocusedCross().setVisibility(View.GONE);
 		if(editTextSearch.getId()==PlaceSearchListFragment.this.editTextSearch.getId()){
             searchResultPickup = null;
         }else{
@@ -879,7 +900,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 						public void onMapUnsettled() {
 							mapSettledCanForward=false;
 							if(!showBouncingMarker()) {
-								setFetchedAddressToTextView("Loading...", true, true);
+								setFetchedAddressToTextView("Loading...", true, true, true);
 							}
 							/*mapSettledCanForward = false;
 							searchResultNearPin = null;*/
@@ -980,7 +1001,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			e.printStackTrace();
 		}
 	}
-	private void setFetchedAddressToTextView(String address, boolean isAddressConfirmed, boolean fromMapUnsettle){
+	private void setFetchedAddressToTextView(String address, final boolean isHint, boolean isAddressConfirmed, boolean fromMapUnsettle){
 		EditText editText = getFocusedEditText();
 		if(!fromMapUnsettle && TextUtils.isEmpty(address)){
 			address = Constants.UNNAMED;
@@ -988,15 +1009,32 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 		if(searchListAdapter!=null){
 			editText.removeTextChangedListener(searchListAdapter.getTextWatcherEditText(editText.getId()));
-			editText.setText(address);
-			editText.setSelection(address.length());
-			getFocusedCross().setVisibility(View.VISIBLE);
+			if(isHint) {
+				editText.setHint(address);
+				editText.setText("");
+				getFocusedSearchIcon().setVisibility(View.VISIBLE);
+				getFocusedCross().setVisibility(View.GONE);
+			} else {
+				editText.setText(address);
+				getFocusedSearchIcon().setVisibility(View.GONE);
+				getFocusedCross().setVisibility(View.VISIBLE);
+				editText.setSelection(address.length());
+			}
 			editText.addTextChangedListener(searchListAdapter.getTextWatcherEditText(editText.getId()));
 		}else{
-			editText.setText(address);
-			editText.setSelection(address.length());
-			getFocusedCross().setVisibility(View.VISIBLE);
+			if(isHint) {
+				editText.setHint(address);
+				editText.setText("");
+				getFocusedSearchIcon().setVisibility(View.VISIBLE);
+				getFocusedCross().setVisibility(View.GONE);
+			} else {
+				editText.setText(address);
+				getFocusedSearchIcon().setVisibility(View.GONE);
+				getFocusedCross().setVisibility(View.VISIBLE);
+				editText.setSelection(address.length());
+			}
 		}
+		setBottomAddressLayout(address, isHint, isAddressConfirmed);
 		if(!isAddressConfirmed){
 			if (getFocusedEditText().getId() == editTextSearch.getId()) {
 				searchResultPickup = null;
@@ -1007,6 +1045,32 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 	}
 
+	private void setBottomAddressLayout(String address, boolean isHint, boolean isAddressConfirmed) {
+		if(isHint || !isNewUI) {
+			llFinalAddress.setVisibility(View.GONE);
+		} else {
+			if (bNext.getVisibility() == View.VISIBLE) {
+				int index = address.indexOf(",");
+				if(index > 0) {
+					etPreAddress.setText(address.substring(0, index));
+					tvFullAddress.setText(address.substring(index + 1));
+				} else {
+					etPreAddress.setText("");
+					tvFullAddress.setText(address.substring(index));
+				}
+				llFinalAddress.setVisibility(View.VISIBLE);
+			} else {
+				clearBottomAddress();
+			}
+		}
+	}
+
+	private void clearBottomAddress() {
+		etPreAddress.setText("");
+		tvFullAddress.setText("");
+		llFinalAddress.setVisibility(View.GONE);
+	}
+
 	private EditText getFocusedEditText() {
 		return searchMode== PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()
 				&& editTextSearchDest.hasFocus()?editTextSearchDest:editTextSearch;
@@ -1015,6 +1079,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private View getFocusedCross() {
 		return searchMode== PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()
 				&& editTextSearchDest.hasFocus()?imageViewSearchCrossDest:imageViewSearchCross;
+	}
+
+	private View getFocusedSearchIcon() {
+		return searchMode== PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()
+				&& editTextSearchDest.hasFocus()?ivSearchDest:ivSearch;
 	}
 
 
@@ -1030,7 +1099,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		}
 		if(searchResult!=null){
-			setFetchedAddressToTextView(searchResult.getAddress(), true, false);
+			setFetchedAddressToTextView(searchResult.getAddress(), false, true, false);
 
 			if(searchMode==PlaceSearchMode.PICKUP_AND_DROP.getOrdinal()){
 				if(getFocusedEditText().getId()==editTextSearch.getId()){
@@ -1049,6 +1118,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	public void openSetLocationOnMapMode(){
 		try {
 			bNext.setVisibility(View.VISIBLE);
+			rlAddress.setVisibility(View.VISIBLE);
 			if(bottomSheetBehaviour!=null && bottomSheetBehaviour.getState()!=BottomSheetBehavior.STATE_COLLAPSED){
 				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
 			}
@@ -1068,7 +1138,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	private void startAnimation() {
 		if(showBouncingMarker()) {
-			setFetchedAddressToTextView(getString(R.string.tap_on_pin), true, true);
+			setFetchedAddressToTextView(getString(R.string.tap_on_pin), true,true, true);
 			if(ivLocationMarker.getAnimation() == null) {
 				ivLocationMarker.clearAnimation();
 				final Animation anim = AnimationUtils.loadAnimation(activity, R.anim.bounce_view);
@@ -1085,6 +1155,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	public void openBottomSheetMode(){
 		bNext.setVisibility(View.GONE);
+		rlAddress.setVisibility(isNewUI ? View.GONE : View.VISIBLE);
+		llFinalAddress.setVisibility(View.GONE);
 		if(bottomSheetBehaviour!=null && bottomSheetBehaviour.getState()!=BottomSheetBehavior.STATE_EXPANDED){
 			bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
 		}
@@ -1182,7 +1254,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				setFocusedSearchResult(searchResult, true);
 
 			} else {
-				setFetchedAddressToTextView(gapiAddress.formattedAddress, false, false);
+				setFetchedAddressToTextView(gapiAddress.formattedAddress, false, false, false);
 
 			}
 			lastGeocodeLatLng = latLng;
@@ -1190,7 +1262,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			mapSettledCanForward = true;
 		} else {
 			Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-			setFetchedAddressToTextView("", false, false);
+			setFetchedAddressToTextView("", false,false, false);
 		}
 		getFocussedProgressBar().setVisibility(View.GONE);
 

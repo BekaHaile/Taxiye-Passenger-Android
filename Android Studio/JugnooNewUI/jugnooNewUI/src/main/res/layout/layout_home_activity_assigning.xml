@@ -87,6 +87,7 @@
                         android:orientation="vertical">
 
                         <ImageView
+                            android:id="@+id/iv3NewUIPickupMarkAssigning"
                             android:layout_width="8dp"
                             android:layout_height="8dp"
                             android:src="@drawable/circle_theme" />

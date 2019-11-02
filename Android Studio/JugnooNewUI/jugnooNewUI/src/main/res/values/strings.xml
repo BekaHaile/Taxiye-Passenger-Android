@@ -2131,4 +2131,6 @@
     <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
 
 
+<!--    New UI changes-->
+    <string name="text_where_to_go">Where to go</string>
 </resources>

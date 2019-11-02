@@ -83,4 +83,7 @@
     <!--marker animation-->
     <bool name="show_bouncing_marker">true</bool>
 
+    <!--    UI changes-->
+    <integer name="remove_pickup_address_hit">1</integer>
+
 </resources>
