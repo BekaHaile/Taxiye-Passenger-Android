@@ -3313,6 +3313,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setDropAddressId(0);
             dropLocationSearched = false;
 
+
             textViewDestSearch.setText("");
             textViewDestSearchNew.setText("");
             imageViewDropCross.setVisibility(View.GONE);
@@ -7218,6 +7219,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     textView.setText(searchResult.getName());
                     if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                         tvPickupRentalOutstation.setText(searchResult.getName());
+                        textViewInitialSearchNew.setText(searchResult.getName());
 						Data.autoData.setPickupSearchResult(searchResult);
                     }
                     if(textView == textViewInitialSearch){
@@ -7239,6 +7241,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                                 tvPickupRentalOutstation.setHint(R.string.enter_pickup);
                                 tvPickupRentalOutstation.setText("");
+                                textViewInitialSearchNew.setHint(R.string.enter_pickup);
+                                textViewInitialSearchNew.setText("");
                             }
 						} else {
                             textView.setText(Data.autoData.getPickupSearchResult().getAddress());
@@ -7249,6 +7253,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         textView.setText(address);
                         if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                             tvPickupRentalOutstation.setText(address);
+                            textViewInitialSearchNew.setText(address);
                         }
                     }
                 }
@@ -7298,15 +7303,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textView.setText("");
                 textView.setHint(R.string.getting_address);
 
-				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
 					try {
-						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-						String address = gapiAddress.getSearchableAddress();
+						String address = null;
+						if(googleGeocodeResponse != null){
+							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse);
+							address = gapiAddress.getSearchableAddress();
+						} else if(singleAddress != null){
+							address = singleAddress;
+						}
 						textView.setText(address);
 						if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
 							textView.setHint(getResources().getString(R.string.enter_pickup));
                             tvPickupRentalOutstation.setHint(getResources().getString(R.string.enter_pickup));
                             tvPickupRentalOutstation.setText(address);
+                            textViewInitialSearchNew.setHint(getResources().getString(R.string.enter_pickup));
+                            textViewInitialSearchNew.setText(address);
 							Data.autoData.setPickupSearchResult(address, currentLatLng);
 						} else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
 							textView.setHint(getResources().getString(R.string.enter_destination));
@@ -9487,6 +9499,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             setUserData();
 
             resetPickupDropFeilds();
+			removeP2DPolyline();
 
             getHandler().postDelayed(new Runnable() {
                 @Override
@@ -10015,7 +10028,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(apiFareEstimate == null) {
 				apiFareEstimate = new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
 					@Override
-					public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+					public void onSuccess(List<LatLng> list, String distanceText,
 										  String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
 						mapTouched = false;
 						latLngBoundsBuilderPool = new LatLngBounds.Builder();
@@ -10601,7 +10614,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         getScheduleRideFragment().searchResultReceived(searchResult, searchMode);
                     }
                 }
-                if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+				removeP2DPolyline();
+				if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     passengerScreenMode = P_INITIAL;
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
@@ -10673,7 +10687,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    @Override
+	public void removeP2DPolyline() {
+		polylineOptionsP2D = null;
+		if(polylineP2D != null){
+			polylineP2D.remove();
+		}
+		polylineP2D = null;
+	}
+
+	@Override
     public void onPlaceSearchError() {
         if (P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {

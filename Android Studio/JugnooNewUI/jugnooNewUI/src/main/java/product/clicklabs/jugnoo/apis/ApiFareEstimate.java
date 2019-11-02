@@ -47,7 +47,7 @@ public class ApiFareEstimate {
 
     private Context context;
     private Callback callback;
-    private String startAddress, endAddress, distanceText, timeText;
+    private String distanceText, timeText;
     private List<LatLng> list;
     private double distanceValue, timeValue;
 
@@ -80,8 +80,6 @@ public class ApiFareEstimate {
 										if (list.size() > 0) {
 											ApiFareEstimate.this.sourceLatLng = sourceLatLng;
 											ApiFareEstimate.this.destLatLng = destLatLng;
-											startAddress = path.getStartAddress();
-											endAddress = path.getEndAddress();
 
 											distanceText = path.getDistanceText();
 											timeText = path.getTimeText();
@@ -124,7 +122,7 @@ public class ApiFareEstimate {
     }
 
 	public void directionsSuccess(PromoCoupon promoCoupon, boolean callFareEstimate, LatLng sourceLatLng, LatLng destLatLng, int isPooled, Region region, final Package selectedPackage) {
-		callback.onSuccess(list, startAddress, endAddress, distanceText, timeText,
+		callback.onSuccess(list, distanceText, timeText,
 				distanceValue, timeValue, promoCoupon);
 		if(callFareEstimate) {
 			getFareEstimate((Activity) context, sourceLatLng, destLatLng,
@@ -147,7 +145,7 @@ public class ApiFareEstimate {
     }
 
     public interface Callback{
-        void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText, String timeText,
+        void onSuccess(List<LatLng> list, String distanceText, String timeText,
                        double distanceValue, double timeValue, PromoCoupon promoCoupon);
         void onRetry();
         void onNoRetry();

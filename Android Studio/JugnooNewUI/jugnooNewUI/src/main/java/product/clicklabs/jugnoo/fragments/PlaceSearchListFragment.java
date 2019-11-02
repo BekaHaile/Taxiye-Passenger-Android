@@ -121,6 +121,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private boolean setLocationOnMapOnTop = true;
 	private LatLng lastGeocodeLatLng;
 	private GoogleGeocodeResponse lastGeocodeResponse;
+	private String lastSingleAddress;
 	private boolean isNewUI = false;
 
 	private SearchListAdapter.SearchListActionsHandler searchAdapterListener = new SearchListAdapter.SearchListActionsHandler() {
@@ -982,9 +983,8 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private Double lastLngFetched ;
 	private void fillAddressDetails(LatLng latLng, final boolean setSearchResult, final boolean isFromConfirm) {
 		try {
-			if(lastGeocodeLatLng != null && lastGeocodeResponse != null
-					&& MapUtils.distance(latLng, lastGeocodeLatLng) <= 100){
-				setAddressToUI(lastGeocodeLatLng, lastGeocodeResponse, setSearchResult, isFromConfirm);
+			if(lastGeocodeLatLng != null && MapUtils.distance(latLng, lastGeocodeLatLng) <= 100 && (lastGeocodeResponse != null || lastSingleAddress != null)){
+				setAddressToUI(lastGeocodeLatLng, lastGeocodeResponse, lastSingleAddress, setSearchResult, isFromConfirm);
 				return;
 			}
 			getFocussedProgressBar().setVisibility(View.VISIBLE);
@@ -995,7 +995,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			if(jobGeocode != null){
 				jobGeocode.cancel(new CancellationException());
 			}
-			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, address -> PlaceSearchListFragment.this.setAddressToUI(latLng, address, setSearchResult, isFromConfirm));
+			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, (googleGeocodeResponse, singleAddress) -> PlaceSearchListFragment.this.setAddressToUI(latLng, googleGeocodeResponse, singleAddress, setSearchResult, isFromConfirm));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1241,11 +1241,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 
-	private void setAddressToUI(LatLng latLng, GoogleGeocodeResponse address, boolean setSearchResult, final boolean isFromConfirm) {
+	private void setAddressToUI(LatLng latLng, GoogleGeocodeResponse address, String singleAddress, boolean setSearchResult, final boolean isFromConfirm) {
 		Log.i("PlaceSearchListFragment", "setAddressToUI address=" + address);
 		GAPIAddress gapiAddress = null;
 		if (address != null) {
 			gapiAddress = MapUtils.parseGAPIIAddress(address);
+		} else if(singleAddress != null){
+			gapiAddress = new GAPIAddress(singleAddress);
 		}
 		if (gapiAddress != null && !TextUtils.isEmpty(gapiAddress.formattedAddress)) {
 			if (setSearchResult) {
@@ -1259,6 +1261,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			}
 			lastGeocodeLatLng = latLng;
 			lastGeocodeResponse = address;
+			lastSingleAddress  = singleAddress;
 			mapSettledCanForward = true;
 		} else {
 			Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));

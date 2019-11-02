@@ -407,7 +407,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             selectedPackage?.isRoundTrip = if(isOneWay == 1) 0 else 1
             if(apiFareEstimate == null) {
                 apiFareEstimate = ApiFareEstimate(context, object : ApiFareEstimate.Callback {
-                    override fun onSuccess(list: List<LatLng>, startAddress: String, endAddress: String, distanceText: String,
+                    override fun onSuccess(list: List<LatLng>, distanceText: String,
                                            timeText: String, distanceValue: Double, timeValue: Double, promoCoupon: PromoCoupon) {
 
                     }

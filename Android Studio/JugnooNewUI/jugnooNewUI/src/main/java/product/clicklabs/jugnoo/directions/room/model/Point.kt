@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.directions.room.model
 import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import java.text.DecimalFormat
 
 @Entity(tableName = "tb_point")
 data class Point(
@@ -31,14 +32,6 @@ data class Path(
         val distance:Double,
         @ColumnInfo(name = "time")
         val time:Double,
-        @ColumnInfo(name = "startAddress")
-        val startAddress:String,
-        @ColumnInfo(name = "endAddress")
-        val endAddress:String,
-        @ColumnInfo(name = "distanceText")
-        val distanceText:String,
-        @ColumnInfo(name = "timeText")
-        val timeText:String,
         @ColumnInfo(name = "timeStamp")
         val timeStamp:Long
 
@@ -46,4 +39,14 @@ data class Path(
 ){
     @PrimaryKey(autoGenerate = true)
     var id:Long = 0
+
+
+    fun getDistanceText():String{
+        val df = DecimalFormat("#.##")
+        return df.format(distance/1000.0).plus(" km")
+    }
+
+    fun getTimeText():String{
+        return (time/60.0).toInt().toString().plus(" min")
+    }
 }

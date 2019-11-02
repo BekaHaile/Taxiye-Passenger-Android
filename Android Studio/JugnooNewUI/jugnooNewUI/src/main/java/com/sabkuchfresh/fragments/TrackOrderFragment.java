@@ -61,12 +61,12 @@ import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.directions.GAPIDirections;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.GoogleDirectionWayPointsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
@@ -627,32 +627,12 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 
 							try {
 								if (TextUtils.isEmpty(eta)) {
-									String origin = latLngDriver.latitude + "," + latLngDriver.longitude;
-									String destination = deliveryLatLng.latitude + "," + deliveryLatLng.longitude;
-									Response responseDM = GoogleRestApis.INSTANCE.getDistanceMatrix(origin,
-											destination, "EN", false, false
-									);
-									JSONObject jObjDM = new JSONObject(new String(((TypedByteArray)responseDM.getBody()).getBytes()));
-									if(jObjDM.getString("status").equals("OK")){
-										String durationText =  (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getString("text") );
-										String durations[] = durationText.split(" ");
-										if(destination.length()>1){
-											setEtaText(durations[0],durations[1]);
-										}else{
-											long minutes =  (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getLong("text") );
-											if(minutes>1){
-												minutes = minutes/60;
-											}
-											setEtaText(String.valueOf(minutes),getString(R.string.min));
+									GAPIDirections.DistanceMatrixResult distanceMatrixResult = GAPIDirections.INSTANCE.getDistanceMatrix(latLngDriver, deliveryLatLng);
 
-										}
+									setEtaText(String.valueOf((int)(distanceMatrixResult.getTimeValue()/60)),getString(R.string.min));
 
 
 
-
-									} else {
-										throw new Exception();
-									}
 //									GoogleDirectionWayPointsResponse googleDirectionWayPointsResponse = gson.fromJson(result, GoogleDirectionWayPointsResponse.class);
 //									Log.i("googleDirectionWayPointsResponse", "=" + googleDirectionWayPointsResponse);
 //									setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));
