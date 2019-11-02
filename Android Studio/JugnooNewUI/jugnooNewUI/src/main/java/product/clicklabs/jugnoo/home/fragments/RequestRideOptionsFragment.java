@@ -366,17 +366,21 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 			ArrayList<Region> regions = Data.autoData.getRegions();
             if(regions.size() > 1){
                 boolean matched = false;
+                int index = 0;
                 for (int i=0; i<regions.size(); i++) {
                     if(regions.get(i).getRegionId().equals(getRegionSelected().getRegionId())){
                         regionSelected = regions.get(i);
                         matched = true;
+						index = i;
                         break;
                     }
                 }
                 if(!matched){
                     regionSelected = regions.get(0);
                     activity.setVehicleTypeSelected(0, false, true);
-                }
+                } else {
+					activity.setVehicleTypeSelected(index, false, true);
+				}
 
 				vehiclesTabAdapter.setList(regions);
                 activity.updateFareEstimateHoverButton();

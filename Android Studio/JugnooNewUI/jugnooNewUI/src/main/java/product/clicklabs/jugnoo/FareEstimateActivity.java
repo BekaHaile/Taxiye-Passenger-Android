@@ -272,11 +272,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
+    private ApiFareEstimate apiFareEstimate;
     private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final String sourceAddress, final LatLng destLatLng, final String destAddress) {
         try {
-            new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
+        	if(apiFareEstimate == null){
+				apiFareEstimate = new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
                 @Override
-                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+                public void onSuccess(List<LatLng> list, String distanceText,
                                       String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
                     try {
 
@@ -338,19 +340,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             }, 500);
                         }
 
-                        if (!TextUtils.isEmpty(sourceAddress)) {
-                            startAddress = sourceAddress;
-                        }
-                        if (!TextUtils.isEmpty(destAddress)) {
-                            endAddress = destAddress;
-                        }
-                        textViewPickupLocation.setText(startAddress);
+                        textViewPickupLocation.setText(sourceAddress);
                         String startAdd = textViewPickupLocation.getText().toString();
                         if (startAdd.charAt(startAdd.length() - 1) == ',') {
                             textViewPickupLocation.setText(startAdd.substring(0, startAdd.length() - 1));
                         }
 
-                        textViewDropLocation.setText(endAddress);
+                        textViewDropLocation.setText(destAddress);
                         String endAdd = textViewDropLocation.getText().toString();
                         if (endAdd.charAt(endAdd.length() - 1) == ',') {
                             textViewDropLocation.setText(endAdd.substring(0, endAdd.length() - 1));
@@ -422,7 +418,9 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 public void onDirectionsFailure() {
 
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon, null);
+            });
+        	}
+        	apiFareEstimate.getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon, null, "c_fea");
 
         } catch (Exception e) {
             e.printStackTrace();

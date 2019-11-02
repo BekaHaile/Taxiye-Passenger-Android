@@ -732,7 +732,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             // saved addresses list
             if (activity instanceof FreshActivity) {
                 searchResultNearPin = HomeUtil.getNearBySavedAddress(activity, latLng,
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+						false);
                 if (searchResultNearPin != null) {
                     setFetchedAddressToTextView(searchResultNearPin.getName());
                     return;
@@ -752,30 +752,55 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 			if(jobGeocode != null){
 				jobGeocode.cancel(new CancellationException());
 			}
-			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, geocodeResponse -> {
+			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, (googleGeocodeResponse, singleAddress) -> {
 				try {
 					Log.e("DeliveryAddressFrag", "GoogleCachingApiKT success address received");
-					if (geocodeResponse != null && geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
+					if (googleGeocodeResponse != null && googleGeocodeResponse.results != null && googleGeocodeResponse.results.size() > 0) {
 						current_latitude = latLng.latitude;
 						current_longitude = latLng.longitude;
 
-						current_street = geocodeResponse.results.get(0).getStreetNumber();
-						current_route = geocodeResponse.results.get(0).getRoute();
-						current_area = geocodeResponse.results.get(0).getLocality();
-						current_city = geocodeResponse.results.get(0).getCity();
-						current_pincode = geocodeResponse.results.get(0).getCountry();
+						current_street = googleGeocodeResponse.results.get(0).getStreetNumber();
+						current_route = googleGeocodeResponse.results.get(0).getRoute();
+						current_area = googleGeocodeResponse.results.get(0).getLocality();
+						current_city = googleGeocodeResponse.results.get(0).getCity();
+						current_pincode = googleGeocodeResponse.results.get(0).getCountry();
 
 						setFetchedAddressToTextView(current_street + (current_street.length() > 0 ? ", " : "")
 								+ current_route + (current_route.length() > 0 ? ", " : "")
-								+ geocodeResponse.results.get(0).getAddAddress()
+								+ googleGeocodeResponse.results.get(0).getAddAddress()
 								+ ", " + current_city);
-					} else {
+					}
+					else if(singleAddress != null){
+						String[] arr = singleAddress.split(",");
+
+						current_latitude = latLng.latitude;
+						current_longitude = latLng.longitude;
+
+						if(arr.length > 0){
+							current_pincode = arr[arr.length-1];
+						}
+						if(arr.length > 1){
+							current_city = arr[arr.length-2];
+						}
+						if(arr.length > 2){
+							current_area = arr[arr.length-3];
+						}
+						if(arr.length > 3){
+							current_route = arr[arr.length-4];
+						}
+						if(arr.length > 4){
+							current_street = arr[arr.length-5];
+						}
+
+						setFetchedAddressToTextView(singleAddress);
+					}
+					else {
 						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 						tvDeliveryAddress.setText("");
 					}
 
 				} catch (Exception e) {
-					android.util.Log.e(TAG, "success: " + (geocodeResponse != null ? geocodeResponse.getErrorMessage() : ""));
+					android.util.Log.e(TAG, "error: " + (googleGeocodeResponse != null ? googleGeocodeResponse.getErrorMessage() : ""));
 					e.printStackTrace();
 					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 					tvDeliveryAddress.setText("");

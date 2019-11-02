@@ -307,18 +307,17 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         if (Data.autoData != null) {
             if (Data.autoData.pickupLatLng != null) {
                 val searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.pickupLatLng,
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false)
+                        true)
                 if (searchResult != null) {
                     searchResultPickup = searchResult
                 } else {
-                    searchResultPickup = SearchResult("", Data.autoData.getPickupAddress(Data.autoData.pickupLatLng), "",
-                            Data.autoData.pickupLatLng.latitude, Data.autoData.pickupLatLng.longitude)
+                    searchResultPickup = Data.autoData.pickupSearchResult
                 }
                 searchResultReceived(searchResultPickup!!, PlaceSearchListFragment.PlaceSearchMode.PICKUP)
             }
             if (Data.autoData.dropLatLng != null) {
                 val searchResult = HomeUtil.getNearBySavedAddress(getActivity(), Data.autoData.dropLatLng,
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false)
+                        true)
                 if (searchResult != null) {
                     searchResultDestination = searchResult
                 } else {
@@ -408,7 +407,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             selectedPackage?.isRoundTrip = if(isOneWay == 1) 0 else 1
             if(apiFareEstimate == null) {
                 apiFareEstimate = ApiFareEstimate(context, object : ApiFareEstimate.Callback {
-                    override fun onSuccess(list: List<LatLng>, startAddress: String, endAddress: String, distanceText: String,
+                    override fun onSuccess(list: List<LatLng>, distanceText: String,
                                            timeText: String, distanceValue: Double, timeValue: Double, promoCoupon: PromoCoupon) {
 
                     }
@@ -456,7 +455,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     }
                 })
             }
-            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage?: if(region != null) region.packages[0] else null)
+            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage?: if(region != null) region.packages[0] else null, "c_fe_sch")
 
         } catch (e: Exception) {
             e.printStackTrace()

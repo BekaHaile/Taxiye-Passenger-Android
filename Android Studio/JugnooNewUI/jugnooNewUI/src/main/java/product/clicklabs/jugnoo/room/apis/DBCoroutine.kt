@@ -5,8 +5,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import product.clicklabs.jugnoo.room.SearchLocation
 import product.clicklabs.jugnoo.room.database.SearchLocationDB
+import product.clicklabs.jugnoo.room.model.SearchLocation
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Utils
@@ -16,14 +16,17 @@ class DBCoroutine {
     companion object {
         fun insertLocation(searchLocationDB: SearchLocationDB, searchLocation: SearchLocation) {
             GlobalScope.launch(Dispatchers.IO) {
-                val search: List<SearchLocation> = if (searchLocation.type == 0) {
-                    searchLocationDB.getSearchLocation().getPickupLocations()
-                } else {
-                    searchLocationDB.getSearchLocation().getDropLocations()
-                }
+                try {
+                    val search: List<SearchLocation> = if (searchLocation.type == 0) {
+                        searchLocationDB.getSearchLocation().getPickupLocations()
+                    } else {
+                        searchLocationDB.getSearchLocation().getDropLocations()
+                    }
 
-                if(checkForAddLocation(search, searchLocation) == -1) {
-                    searchLocationDB.getSearchLocation().insertSearchedLocation(searchLocation)
+                    if(checkForAddLocation(search, searchLocation) == -1) {
+                        searchLocationDB.getSearchLocation().insertSearchedLocation(searchLocation)
+                    }
+                } catch (e: Exception) {
                 }
             }
         }
@@ -49,48 +52,63 @@ class DBCoroutine {
 
         fun deleteLocation(searchLocationDB: SearchLocationDB, searchLocation: SearchLocation) {
             GlobalScope.launch(Dispatchers.IO) {
-                val search = searchLocationDB.getSearchLocation().getLocation()
-                val id = checkForAddLocation(search, searchLocation)
-                if(id != -1) {
-                    searchLocationDB.getSearchLocation().deleteLocation(id)
+                try {
+                    val search = searchLocationDB.getSearchLocation().getLocation()
+                    val id = checkForAddLocation(search, searchLocation)
+                    if(id != -1) {
+                        searchLocationDB.getSearchLocation().deleteLocation(id)
+                    }
+                } catch (e: Exception) {
                 }
             }
         }
 
         fun deleteLocationIfDatePassed(searchLocationDB: SearchLocationDB) {
             GlobalScope.launch(Dispatchers.IO) {
-                val search = searchLocationDB.getSearchLocation().getLocation()
-                for (i in search.indices) {
-                    val time = DateOperations.getTimeDifference(DateOperations.getTimeStampUTCFromMillis(search[i].date, false), DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 15))
-                    if(time > 0) {
-                        deleteLocation(searchLocationDB, search[i])
+                try {
+                    val search = searchLocationDB.getSearchLocation().getLocation()
+                    for (i in search.indices) {
+                        val time = DateOperations.getTimeDifference(DateOperations.getTimeStampUTCFromMillis(search[i].date, false), DateOperations.getDaysAheadTime(DateOperations.getCurrentTime(), 15))
+                        if(time > 0) {
+                            deleteLocation(searchLocationDB, search[i])
+                        }
                     }
+                } catch (e: Exception) {
                 }
             }
         }
 
         fun getPickupLocation(searchLocationDB: SearchLocationDB, searchLocationCallback: SearchLocationCallback) {
             GlobalScope.launch(Dispatchers.Main) {
-                val searchLocation : List<SearchLocation> = withContext(Dispatchers.IO) {
-                   searchLocationDB.getSearchLocation().getPickupLocations()
+                try {
+                    val searchLocation : List<SearchLocation> = withContext(Dispatchers.IO) {
+                       searchLocationDB.getSearchLocation().getPickupLocations()
+                    }
+                    searchLocationCallback.onSearchLocationReceived(searchLocation)
+                } catch (e: Exception) {
                 }
-                searchLocationCallback.onSearchLocationReceived(searchLocation)
             }
         }
         fun getDropLocation(searchLocationDB: SearchLocationDB, searchLocationCallback: SearchLocationCallback) {
             GlobalScope.launch(Dispatchers.Main) {
-                val searchLocation : List<SearchLocation> = withContext(Dispatchers.IO) {
-                   searchLocationDB.getSearchLocation().getDropLocations()
+                try {
+                    val searchLocation : List<SearchLocation> = withContext(Dispatchers.IO) {
+                       searchLocationDB.getSearchLocation().getDropLocations()
+                    }
+                    searchLocationCallback.onSearchLocationReceived(searchLocation)
+                } catch (e: Exception) {
                 }
-                searchLocationCallback.onSearchLocationReceived(searchLocation)
             }
         }
         fun getAllLocations(searchLocationDB: SearchLocationDB, searchLocationCallback: SearchLocationCallback) {
             GlobalScope.launch(Dispatchers.Main) {
-                val searchLocation : List<SearchLocation> = withContext(Dispatchers.IO) {
-                   searchLocationDB.getSearchLocation().getLocation()
+                try {
+                    val searchLocation : List<SearchLocation> = withContext(Dispatchers.IO) {
+                       searchLocationDB.getSearchLocation().getLocation()
+                    }
+                    searchLocationCallback.onSearchLocationReceived(searchLocation)
+                } catch (e: Exception) {
                 }
-                searchLocationCallback.onSearchLocationReceived(searchLocation)
             }
         }
 

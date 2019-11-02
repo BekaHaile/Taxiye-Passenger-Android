@@ -559,6 +559,32 @@ public class JSONParser implements Constants {
 				context.getResources().getBoolean(R.bool.show_save_location_dialog)?1:0));
 
 		Prefs.with(context).save(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, 0));
+		Prefs.with(context).save(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0));
+		Prefs.with(context).save(KEY_CUSTOMER_DIRECTIONS_CACHING, autoData.optInt(KEY_CUSTOMER_DIRECTIONS_CACHING,
+				1));
+
+		parseJungleApiObjects(context, autoData);
+	}
+
+	private void parseJungleApiObjects(Context context, JSONObject userData) {
+		try {
+			//todo null case to block apis
+			String jungleObjStr = BuildConfig.DEBUG ? JUNGLE_JSON_OBJECT : EMPTY_JSON_OBJECT;
+			JSONObject jungleObj = userData.optJSONObject(KEY_JUNGLE_DIRECTIONS_OBJ);
+			if(jungleObj != null){
+				jungleObjStr = jungleObj.toString();
+			}
+
+			Prefs.with(context).save(KEY_JUNGLE_DIRECTIONS_OBJ, jungleObjStr);
+
+			JSONObject jungleDMObj = userData.optJSONObject(KEY_JUNGLE_DISTANCE_MATRIX_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_DISTANCE_MATRIX_OBJ, jungleDMObj!=null ? jungleDMObj.toString(): jungleObjStr);
+
+			JSONObject jungleGObj = userData.optJSONObject(KEY_JUNGLE_GEOCODE_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_GEOCODE_OBJ, jungleGObj!=null ? jungleGObj.toString(): jungleObjStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
@@ -937,8 +963,7 @@ public class JSONParser implements Constants {
             JSONObject jDriverInfo = jLastRideData.getJSONObject("driver_info");
             Data.autoData.setcDriverId(jDriverInfo.getString("id"));
 
-            Data.autoData.setPickupLatLng(new LatLng(0, 0));
-            Data.autoData.setPickupAddress("", null);
+            Data.autoData.setPickupSearchResult(null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
 
@@ -1268,9 +1293,9 @@ public class JSONParser implements Constants {
                             Log.e("assigningLatitude,assigningLongitude ====@@@", "" + assigningLatitude + "," + assigningLongitude);
                         }
 
-                        Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
-                        Log.w("pickuplogging", "state restore assigning"+Data.autoData.getPickupLatLng());
-                        Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""), Data.autoData.getPickupLatLng());
+                        LatLng assigningLatLng = new LatLng(assigningLatitude, assigningLongitude);
+                        Data.autoData.setPickupSearchResult(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""), assigningLatLng);
+                        Log.w("pickuplogging", "state restore assigning"+assigningLatLng);
                         parseDropLatLng(jObject1);
 
                         bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
@@ -1446,9 +1471,8 @@ public class JSONParser implements Constants {
                 Data.autoData.setcEngagementId(engagementId);
                 Data.autoData.setcDriverId(userId);
 
-                Data.autoData.setPickupLatLng(new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
+                Data.autoData.setPickupSearchResult(pickupAddress, new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
                 Log.w("pickuplogging", "state restore req final"+Data.autoData.getPickupLatLng());
-                Data.autoData.setPickupAddress(pickupAddress, Data.autoData.getPickupLatLng());
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
                     Data.autoData.setDropLatLng(null);
                     Data.autoData.setDropAddress("");
@@ -1889,8 +1913,12 @@ public class JSONParser implements Constants {
 							Prefs.with(context).save(SPLabels.ADD_WORK, "");
 						}
 						workSaved = true;
-					} else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+					} else if(!TextUtils.isEmpty(jsonObject.optString(KEY_TYPE)) && !jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
 						Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
+					} else if (TextUtils.isEmpty(jsonObject.optString(KEY_TYPE)) && !jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+						SearchResult searchResult = gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class);
+						searchResult.setType(SearchResult.Type.RECENT);
+						Data.userData.getSearchResultsRecent().add(searchResult);
 					}
 				}
 			}

@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
@@ -49,9 +51,9 @@ public class AutoData {
     private String cEngagementId = "", cDriverId = "", cSessionId = "";
     private DriverInfo assignedDriverInfo;
     private EndRideData endRideData;
-    private LatLng pickupLatLng, dropLatLng;
-    private String pickupAddress = "", dropAddress = "";
-    private LatLng pickupAddressMappedLatLng;
+    private SearchResult searchResultPickup;
+    private LatLng dropLatLng;
+    private String dropAddress = "";
     private int dropAddressId;
     private int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
     private CancelOptionsList cancelOptionsList;
@@ -505,12 +507,9 @@ public class AutoData {
     }
 
     public LatLng getPickupLatLng() {
-        return pickupLatLng;
+        return searchResultPickup != null ? searchResultPickup.getLatLng() : null;
     }
 
-    public void setPickupLatLng(LatLng pickupLatLng) {
-        this.pickupLatLng = pickupLatLng;
-    }
 
     public LatLng getDropLatLng() {
         return dropLatLng;
@@ -569,21 +568,26 @@ public class AutoData {
     }
 
     public String getPickupAddress(LatLng latLng) {
-        if(pickupAddressMappedLatLng == null || latLng == null){
-            return "";
-        }
-        if(MapUtils.distance(pickupAddressMappedLatLng, latLng) > 50){
-            return "";
-        }
-        return pickupAddress;
+		if(searchResultPickup == null || searchResultPickup.getAddress().equalsIgnoreCase(Constants.UNNAMED)){
+			return "";
+		}
+		if(latLng != null && MapUtils.distance(searchResultPickup.getLatLng(), latLng) > Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION){
+			return "";
+		}
+		return searchResultPickup != null ? searchResultPickup.getAddress() : "";
+    }
+    public SearchResult getPickupSearchResult() {
+		return searchResultPickup;
     }
 
-    public void setPickupAddress(String pickupAddress, LatLng latLng) {
-        if(latLng == null || pickupAddressMappedLatLng == null
-                || MapUtils.distance(pickupAddressMappedLatLng, latLng) > 50){
-            this.pickupAddress = pickupAddress;
-            this.pickupAddressMappedLatLng = latLng;
-        }
+    public void setPickupSearchResult(SearchResult searchResult) {
+    	if(searchResult != null && TextUtils.isEmpty(searchResult.getName())){
+    		searchResult.setName(searchResult.getAddress());
+		}
+    	this.searchResultPickup = searchResult;
+    }
+    public void setPickupSearchResult(String address, LatLng latLng) {
+		searchResultPickup = new SearchResult(address, address, "", latLng.latitude, latLng.longitude);
     }
 
     public String getDropAddress() {
