@@ -10003,6 +10003,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 						pickupLocationEtaMarker();
 
+						if(dropLocationMarker != null){
+							dropLocationMarker.remove();
+						}
 						MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
 						poolMarkerOptionEnd.title("End");
 						poolMarkerOptionEnd.position(Data.autoData.getDropLatLng());
@@ -10010,7 +10013,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this
 						)));
 						//map.addMarker(poolMarkerEnd);
-						map.addMarker(poolMarkerOptionEnd);
+						dropLocationMarker = map.addMarker(poolMarkerOptionEnd);
 
 						poolPathZoomAtConfirm();
 						closeFabView();
@@ -11624,9 +11627,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             driverMarkerInRide = null;
             polylineP2D = null;
-            if(polylineOptionsP2D != null && passengerScreenMode == P_INITIAL){
-				polylineP2D = map.addPolyline(polylineOptionsP2D);
-			}
         } catch (Exception e) {
             e.printStackTrace();
         }
