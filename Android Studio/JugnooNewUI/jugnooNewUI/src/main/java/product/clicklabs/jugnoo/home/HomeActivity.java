@@ -10916,12 +10916,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
 
 			View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+			ImageView iv3NewUIDropMark = findViewById(R.id.iv3NewUIDropMark);
 			if(viewDash != null){
                 if((Data.autoData.getDropLatLng() == null || Data.autoData.getDropAddress() == null)
                         && Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1 && !isPickupSet) {
                     viewDash.setVisibility(View.GONE);
+                    ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
+                    layoutParams.height = 160;
+                    relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
+                    ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
+                    params.height = 60;
+                    params.width = 60;
+                    iv3NewUIDropMark.setLayoutParams(params);
                 } else {
                     viewDash.setVisibility(View.VISIBLE);
+                    ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
+                    layoutParams.height = 140;
+                    relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
+                    ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
+                    params.height = 40;
+                    params.width = 40;
+                    iv3NewUIDropMark.setLayoutParams(params);
                 }
 			}
 			View viewDrop = findViewById(R.id.iv3NewUIDropMark);

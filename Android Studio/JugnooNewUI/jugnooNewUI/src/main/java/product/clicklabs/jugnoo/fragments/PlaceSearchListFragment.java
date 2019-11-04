@@ -557,6 +557,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			public void onClick(View v) {
 				try {
 					clearExistingAddress(editTextSearch);
+					startAnimation();
 					clearBottomAddress();
 				} catch (Exception e) {
 					e.printStackTrace();

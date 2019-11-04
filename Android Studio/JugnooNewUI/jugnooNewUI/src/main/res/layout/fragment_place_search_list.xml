@@ -211,10 +211,10 @@
 
                 <ImageView
                     android:id="@+id/ivSearch"
-                    android:layout_width="70px"
-                    android:layout_height="70px"
+                    android:layout_width="90px"
+                    android:layout_height="90px"
                     android:padding="16px"
-                    android:src="@drawable/search_icon"
+                    android:src="@drawable/ic_search"
                     android:tag="mwar" />
             </LinearLayout>
 
