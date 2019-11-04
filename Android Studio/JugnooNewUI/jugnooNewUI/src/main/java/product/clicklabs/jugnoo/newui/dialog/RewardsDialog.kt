@@ -199,7 +199,6 @@ class RewardsDialog : DialogFragment() {
     }
 
     private fun scratchCard(){
-        mExplosionField?.explode(rootView.ivOffer)
         rootView.tvSkip.visibility = View.GONE
         val params = HashMap<String, String>()
         params[Constants.KEY_ACCOUNT_ID] = promoData.promoCoupon.id.toString()
