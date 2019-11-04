@@ -3922,12 +3922,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType) {
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-			GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
-				Log.i(TAG, "getAddressAndFetchOfferingData address="+settleUserDebt);
+			GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
+				Log.i(TAG, "getAddressAndFetchOfferingData address="+googleGeocodeResponse);
 				try {
+					String address = null;
+					if(googleGeocodeResponse != null){
+						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse);
+						address = gapiAddress.getSearchableAddress();
+					} else if(singleAddress != null){
+						address = singleAddress;
+					}
+
 					DialogPopup.dismissLoadingDialog();
-					GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-					String address = gapiAddress.getSearchableAddress();
 					setSelectedAddress(address);
 					setSelectedLatLng(currentLatLng);
 					setSelectedAddressId(0);

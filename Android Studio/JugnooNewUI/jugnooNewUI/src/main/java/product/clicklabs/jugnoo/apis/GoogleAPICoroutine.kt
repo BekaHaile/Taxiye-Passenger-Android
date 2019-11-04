@@ -10,6 +10,7 @@ import org.json.JSONObject
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.MyApplication
+import product.clicklabs.jugnoo.directions.GAPIDirections
 import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
@@ -118,7 +119,12 @@ object GoogleAPICoroutine {
     fun hitGeocode(latLng: LatLng, callback: GeocodeCachingCallback): Job {
         return GlobalScope.launch(Dispatchers.Main) {
             var address: GoogleGeocodeResponse? = null
+            var singleAddress: String? = null
             try {
+                val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_GEOCODE_OBJ, Constants.EMPTY_JSON_OBJECT))
+                if(GAPIDirections.checkIfJungleApiEnabled(jungleObj)){
+                    throw Exception()
+                }
                 if(!isGoogleCachingEnabled()){
                     throw Exception()
                 }
@@ -133,25 +139,25 @@ object GoogleAPICoroutine {
                 val googleGeocodeResponse = gson.fromJson(responseCached, GoogleGeocodeResponse::class.java)
                 address = googleGeocodeResponse
             } catch (e: Exception) {
-                val response = withContext(Dispatchers.IO) {
-                    try {GoogleRestApis.geocode(latLng.latitude.toString()+","+latLng.longitude, "EN")} catch (e: Exception) {null}
+                val geocodeResult = withContext(Dispatchers.IO) {
+                    try { GAPIDirections.getGeocodeAddress(latLng, "EN")} catch (e: Exception) {null}
                 }
-                if (response != null) {
-                    val responseStr = String((response.body as TypedByteArray).bytes)
-                    val googleGeocodeResponse = gson.fromJson(responseStr, GoogleGeocodeResponse::class.java)
-                    if (googleGeocodeResponse.results != null && googleGeocodeResponse.results.size > 0) {
-                        address = googleGeocodeResponse
+                if (geocodeResult != null) {
+                    if(geocodeResult.googleGeocodeResponse != null && geocodeResult.googleGeocodeResponse.results != null && geocodeResult.googleGeocodeResponse.results!!.isNotEmpty()){
+                        address = geocodeResult.googleGeocodeResponse
 
-                        try{if(isGoogleCachingEnabled()) {
-                            val gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse)
-                            val body = InsertGeocode(JUNGOO_APP_PRODUCT_ID, TYPE_REVERSE_GEOCODING, gapiAddress.formattedAddress, getUserId(),
-                                    latLng.latitude, latLng.longitude, googleGeocodeResponse)
+                        if(isGoogleCachingEnabled()) {
+                            val gapiAddress = MapUtils.parseGAPIIAddress(geocodeResult.googleGeocodeResponse)
+                            val body = InsertGeocode(JUNGOO_APP_PRODUCT_ID, TYPE_REVERSE_GEOCODING, gapiAddress.searchableAddress, getUserId(),
+                                    latLng.latitude, latLng.longitude, geocodeResult.googleGeocodeResponse)
                             insertGeocodeCache(body)
-                        }} catch(e1:Exception){}
+                        }
+                    } else if(geocodeResult.singleAddress != null){
+                        singleAddress = geocodeResult.singleAddress
                     }
                 }
             }
-            callback.geocodeAddressFetched(address)
+            callback.geocodeAddressFetched(address, singleAddress)
         }
     }
 
@@ -192,7 +198,7 @@ interface PlaceDetailCallback{
     fun onPlaceDetailError()
 }
 interface GeocodeCachingCallback{
-    fun geocodeAddressFetched(address: GoogleGeocodeResponse?)
+    fun geocodeAddressFetched(address: GoogleGeocodeResponse?, singleAddress:String?)
 }
 
 class InsertGeocode(

@@ -3309,6 +3309,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setDropAddressId(0);
             dropLocationSearched = false;
 
+
             textViewDestSearch.setText("");
             textViewDestSearchNew.setText("");
             imageViewDropCross.setVisibility(View.GONE);
@@ -7271,10 +7272,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textView.setText("");
                 textView.setHint(R.string.getting_address);
 
-				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
 					try {
-						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-						String address = gapiAddress.getSearchableAddress();
+						String address = null;
+						if(googleGeocodeResponse != null){
+							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse);
+							address = gapiAddress.getSearchableAddress();
+						} else if(singleAddress != null){
+							address = singleAddress;
+						}
 						textView.setText(address);
 						if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
 							textView.setHint(getResources().getString(R.string.enter_pickup));
@@ -9455,6 +9461,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             setUserData();
 
             resetPickupDropFeilds();
+			removeP2DPolyline();
 
             getHandler().postDelayed(new Runnable() {
                 @Override
@@ -9977,7 +9984,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(apiFareEstimate == null) {
 				apiFareEstimate = new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
 					@Override
-					public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+					public void onSuccess(List<LatLng> list, String distanceText,
 										  String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
 						mapTouched = false;
 						latLngBoundsBuilderPool = new LatLngBounds.Builder();
@@ -9996,6 +10003,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 						pickupLocationEtaMarker();
 
+						if(dropLocationMarker != null){
+							dropLocationMarker.remove();
+						}
 						MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
 						poolMarkerOptionEnd.title("End");
 						poolMarkerOptionEnd.position(Data.autoData.getDropLatLng());
@@ -10003,7 +10013,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this
 						)));
 						//map.addMarker(poolMarkerEnd);
-						map.addMarker(poolMarkerOptionEnd);
+						dropLocationMarker = map.addMarker(poolMarkerOptionEnd);
 
 						poolPathZoomAtConfirm();
 						closeFabView();
@@ -10561,7 +10571,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         getScheduleRideFragment().searchResultReceived(searchResult, searchMode);
                     }
                 }
-                if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+				removeP2DPolyline();
+				if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
                     passengerScreenMode = P_INITIAL;
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
@@ -10633,7 +10644,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    @Override
+	public void removeP2DPolyline() {
+		polylineOptionsP2D = null;
+		if(polylineP2D != null){
+			polylineP2D.remove();
+		}
+		polylineP2D = null;
+	}
+
+	@Override
     public void onPlaceSearchError() {
         if (P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
@@ -11608,9 +11627,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             driverMarkerInRide = null;
             polylineP2D = null;
-            if(polylineOptionsP2D != null && passengerScreenMode == P_INITIAL){
-				polylineP2D = map.addPolyline(polylineOptionsP2D);
-			}
         } catch (Exception e) {
             e.printStackTrace();
         }

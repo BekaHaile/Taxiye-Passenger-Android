@@ -13,7 +13,7 @@ import product.clicklabs.jugnoo.directions.room.model.Point
     Point::class,
     Path::class
 ],//please update version number in any changes or addition to schema classes
-        version = 2)
+        version = 3)
 abstract class DirectionsPathDatabase: RoomDatabase(){
 
     companion object {

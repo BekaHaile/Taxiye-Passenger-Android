@@ -562,6 +562,29 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0));
 		Prefs.with(context).save(KEY_CUSTOMER_DIRECTIONS_CACHING, autoData.optInt(KEY_CUSTOMER_DIRECTIONS_CACHING,
 				1));
+
+		parseJungleApiObjects(context, autoData);
+	}
+
+	private void parseJungleApiObjects(Context context, JSONObject userData) {
+		try {
+			//todo null case to block apis
+			String jungleObjStr = BuildConfig.DEBUG ? JUNGLE_JSON_OBJECT : EMPTY_JSON_OBJECT;
+			JSONObject jungleObj = userData.optJSONObject(KEY_JUNGLE_DIRECTIONS_OBJ);
+			if(jungleObj != null){
+				jungleObjStr = jungleObj.toString();
+			}
+
+			Prefs.with(context).save(KEY_JUNGLE_DIRECTIONS_OBJ, jungleObjStr);
+
+			JSONObject jungleDMObj = userData.optJSONObject(KEY_JUNGLE_DISTANCE_MATRIX_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_DISTANCE_MATRIX_OBJ, jungleDMObj!=null ? jungleDMObj.toString(): jungleObjStr);
+
+			JSONObject jungleGObj = userData.optJSONObject(KEY_JUNGLE_GEOCODE_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_GEOCODE_OBJ, jungleGObj!=null ? jungleGObj.toString(): jungleObjStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {

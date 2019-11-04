@@ -88,6 +88,7 @@ public class SearchListAdapter extends BaseAdapter{
                 SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString().trim());
                 if (s.toString().trim().length() > 2) {
 					last_text_edit = System.currentTimeMillis();
+					handler.removeCallbacks(input_finish_checker);
 					handler.postDelayed(input_finish_checker.setTextToSearch(s.toString().trim()), delay);
                 } else {
                     searchResultsForSearch.clear();
@@ -404,6 +405,7 @@ public class SearchListAdapter extends BaseAdapter{
 							refreshingAutoComplete = false;
 
 							if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
+								handler.removeCallbacks(getTextWatcherEditText(editText.getId()).input_finish_checker);
 								handler.postDelayed(getTextWatcherEditText(editText.getId()).input_finish_checker.setTextToSearch(editText.getText().toString().trim()), delay);
 							}
 						} catch (Exception e) {
@@ -417,6 +419,7 @@ public class SearchListAdapter extends BaseAdapter{
 						refreshingAutoComplete = false;
 
 						if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
+							handler.removeCallbacks(getTextWatcherEditText(editText.getId()).input_finish_checker);
 							handler.postDelayed(getTextWatcherEditText(editText.getId()).input_finish_checker.setTextToSearch(editText.getText().toString().trim()), delay);
 						}
 						searchListActionsHandler.onSearchPost();
@@ -428,14 +431,6 @@ public class SearchListAdapter extends BaseAdapter{
         }
     }
 
-	private void recallSearch(final String searchText,final EditText editText){
-		((Activity)context).runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				getSearchResults(searchText, SearchListAdapter.this.getPivotLatLng(),editText);
-			}
-		});
-	}
 
 	private void setSearchResultsToList(final EditText editTextForSearch) {
 		((Activity) context).runOnUiThread(new Runnable() {
