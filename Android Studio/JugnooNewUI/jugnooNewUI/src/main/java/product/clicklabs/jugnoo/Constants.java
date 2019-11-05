@@ -1092,6 +1092,7 @@ public interface Constants {
 	String KEY_JUNGLE_DIRECTIONS_OBJ = "jungle_directions_obj";
 	String KEY_JUNGLE_DISTANCE_MATRIX_OBJ = "jungle_distance_matrix_obj";
 	String KEY_JUNGLE_GEOCODE_OBJ = "jungle_geocode_obj";
+	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";
 	String KEY_JUNGLE_POINTS = "points";
 	String KEY_JUNGLE_OPTIONS = "options";
 	String KEY_JUNGLE_APP_ID = "app_id";
@@ -1102,6 +1103,9 @@ public interface Constants {
 	String KEY_JUNGLE_ORIGIN_LNG = "originlongitude";
 	String KEY_JUNGLE_DEST_LAT = "destinationlatitude";
 	String KEY_JUNGLE_DEST_LNG = "destinationlongitude";
+	String KEY_JUNGLE_CURRENT_LAT = "currentlatitude";
+	String KEY_JUNGLE_CURRENT_LNG = "currentlongitude";
+	String KEY_JUNGLE_TEXT = "text";
 	String KEY_JUNGLE_LAT = "lat";
 	String KEY_JUNGLE_LNG = "lng";
 

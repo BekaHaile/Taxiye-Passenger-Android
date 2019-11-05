@@ -10,7 +10,7 @@ import org.json.JSONObject
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.MyApplication
-import product.clicklabs.jugnoo.directions.GAPIDirections
+import product.clicklabs.jugnoo.directions.JungleApisImpl
 import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
@@ -21,7 +21,7 @@ import product.clicklabs.jugnoo.utils.Prefs
 import retrofit.client.Response
 import retrofit.mime.TypedByteArray
 
-object GoogleAPICoroutine {
+object GoogleJungleCaching {
 
     private val gson = Gson()
 
@@ -40,6 +40,10 @@ object GoogleAPICoroutine {
             val arr = location.split(",")
             try{
                 try {
+                    val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_AUTOCOMPLETE_OBJ, Constants.EMPTY_JSON_OBJECT))
+                    if(JungleApisImpl.checkIfJungleApiEnabled(jungleObj)){
+                        throw Exception()
+                    }
                     if (!isGoogleCachingEnabled()) {
                         throw Exception()
                     }
@@ -52,22 +56,22 @@ object GoogleAPICoroutine {
                     val responseCached = jsonObject.getJSONArray("data").toString()
                     predictions = gson.fromJson(responseCached, object : TypeToken<MutableList<Prediction>>() {}.type)
                 } catch (e: Exception) {
-                    val response: Response? = withContext(Dispatchers.IO) {
-                        try { GoogleRestApis.getAutoCompletePredictions(input, sessiontoken, components, location, radius) } catch (e: Exception) { null }
+                    val response: JungleApisImpl.AutoCompleteResult? = withContext(Dispatchers.IO) {
+                        try { JungleApisImpl.getAutoCompletePredictions(input, sessiontoken, components, location, radius) } catch (e: Exception) { null }
                     }
-                    val responseStr = String((response!!.body as TypedByteArray).bytes)
-                    val placesResponse = gson.fromJson(responseStr, PlacesAutocompleteResponse::class.java)
-                    predictions = placesResponse.predictions
+                    if(response != null){
+                        predictions = response.placesAutocompleteResponse.predictions
 
-                    try{if(isGoogleCachingEnabled()
-                            && placesResponse.predictions != null && placesResponse.predictions!!.size > 0) {
-                        val param = InsertAutocomplete(JUNGOO_APP_PRODUCT_ID, TYPE_AUTO_COMPLETE, input, getUserId(),
-                                arr[0].toDouble(), arr[1].toDouble(), placesResponse)
-                        insertPlaceAutocompleteCache(param)
-                    }} catch(e1:Exception){}
+                        try{if(isGoogleCachingEnabled()
+                                && predictions != null && predictions.size > 0) {
+                            val param = InsertAutocomplete(JUNGOO_APP_PRODUCT_ID, TYPE_AUTO_COMPLETE, input, getUserId(),
+                                    arr[0].toDouble(), arr[1].toDouble(), response.placesAutocompleteResponse)
+                            insertPlaceAutocompleteCache(param)
+                        }} catch(e1:Exception){}
+                    }
 
                 }
-                callback.onAutocompletePredictionsReceived(predictions!!)
+                callback.onAutocompletePredictionsReceived(predictions)
             } catch (e: Exception) {
                 callback.onAutocompleteError()
             }
@@ -122,7 +126,7 @@ object GoogleAPICoroutine {
             var singleAddress: String? = null
             try {
                 val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_GEOCODE_OBJ, Constants.EMPTY_JSON_OBJECT))
-                if(GAPIDirections.checkIfJungleApiEnabled(jungleObj)){
+                if(JungleApisImpl.checkIfJungleApiEnabled(jungleObj)){
                     throw Exception()
                 }
                 if(!isGoogleCachingEnabled()){
@@ -140,7 +144,7 @@ object GoogleAPICoroutine {
                 address = googleGeocodeResponse
             } catch (e: Exception) {
                 val geocodeResult = withContext(Dispatchers.IO) {
-                    try { GAPIDirections.getGeocodeAddress(latLng, "EN")} catch (e: Exception) {null}
+                    try { JungleApisImpl.getGeocodeAddress(latLng, "EN")} catch (e: Exception) {null}
                 }
                 if (geocodeResult != null) {
                     if(geocodeResult.googleGeocodeResponse != null && geocodeResult.googleGeocodeResponse.results != null && geocodeResult.googleGeocodeResponse.results!!.isNotEmpty()){
@@ -190,7 +194,7 @@ object GoogleAPICoroutine {
 }
 
 interface PlacesCallback{
-    fun onAutocompletePredictionsReceived(predictions:MutableList<Prediction>)
+    fun onAutocompletePredictionsReceived(predictions:MutableList<Prediction>?)
     fun onAutocompleteError()
 }
 interface PlaceDetailCallback{
