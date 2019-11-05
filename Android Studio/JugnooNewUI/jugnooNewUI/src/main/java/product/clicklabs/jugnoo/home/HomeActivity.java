@@ -1543,10 +1543,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     Utils.hideKeyboard(HomeActivity.this);
-                    if(relativeLayoutInitialSearchBarNew.getVisibility() == View.GONE) {
-                        relativeLayoutInitialSearchBar.performClick();
-                        return;
-                    }
                     if(Prefs.with(HomeActivity.this).getInt(Constants.KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0) == 1
 							&& (Data.autoData.getPickupLatLng() == null || TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng())))){
 						Utils.showToast(HomeActivity.this,getString(R.string.please_confirm_you_have_selected_pickup_address));
@@ -1570,6 +1566,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							}
                     		return;
 						}
+
+                        if(relativeLayoutInitialSearchBarNew.getVisibility() == View.GONE) {
+                            relativeLayoutInitialSearchBarNew.setVisibility(View.VISIBLE);
+                            isPickupSet = true;
+                            setHeightDropAddress(1);
+                            setPickupLocationInitialUI();
+                            return;
+                        }
 
                             if (isNewUI && region.getReverseBid() == 1
                                 && !editTextBidValue.getText().toString().isEmpty()) {
@@ -10920,23 +10924,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			if(viewDash != null){
                 if((Data.autoData.getDropLatLng() == null || Data.autoData.getDropAddress() == null)
                         && Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1 && !isPickupSet) {
-                    viewDash.setVisibility(View.GONE);
-                    ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
-                    layoutParams.height = 160;
-                    relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
-                    ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
-                    params.height = 60;
-                    params.width = 60;
-                    iv3NewUIDropMark.setLayoutParams(params);
+                    setHeightDropAddress(0); // large
                 } else {
-                    viewDash.setVisibility(View.VISIBLE);
-                    ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
-                    layoutParams.height = 140;
-                    relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
-                    ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
-                    params.height = 40;
-                    params.width = 40;
-                    iv3NewUIDropMark.setLayoutParams(params);
+                    setHeightDropAddress(1); //Normal
                 }
 			}
 			View viewDrop = findViewById(R.id.iv3NewUIDropMark);
@@ -11024,6 +11014,35 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		}
 
         return changed;
+    }
+
+//    0 :- Height Large
+//    1 :- Normal Height
+    private void setHeightDropAddress(int caseVal) {
+
+        View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+        ImageView iv3NewUIDropMark = findViewById(R.id.iv3NewUIDropMark);
+        ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
+        ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
+        if(viewDash != null){
+            switch (caseVal) {
+                case 0 :
+                    viewDash.setVisibility(View.GONE);
+                    layoutParams.height = 160;
+                    params.height = 60;
+                    params.width = 60;
+                    break;
+
+                case 1:
+                default:
+                    viewDash.setVisibility(View.VISIBLE);
+                    layoutParams.height = 140;
+                    params.height = 40;
+                    params.width = 40;
+            }
+            relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
+            iv3NewUIDropMark.setLayoutParams(params);
+        }
     }
 
     public void updateFareEstimateHoverButton() {
