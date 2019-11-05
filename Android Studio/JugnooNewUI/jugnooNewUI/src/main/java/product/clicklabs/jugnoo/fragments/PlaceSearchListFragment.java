@@ -5,12 +5,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -39,6 +42,8 @@ import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CancellationException;
 
@@ -46,6 +51,7 @@ import kotlinx.coroutines.Job;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.LocationFetcher;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -57,9 +63,9 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.room.DBObject;
-import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.room.apis.DBCoroutine;
 import product.clicklabs.jugnoo.room.database.SearchLocationDB;
+import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -84,7 +90,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private LinearLayout linearLayoutAddFav, llFinalAddress;
 	private RelativeLayout relativeLayoutAddHome, relativeLayoutAddWork, relativeLayoutSavedPlaces, rlAddress;
 	private TextView textViewAddHome, textViewAddWork;
-	private ImageView imageViewSep, imageViewSep2, ivDivSavedPlaces;
+	private ImageView imageViewSep, imageViewSep2, ivDivSavedPlaces, imageViewShadow;
 
 	private ScrollView scrollViewSearch;
 	private NonScrollListView listViewSearch;
@@ -102,6 +108,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private SearchListAdapter.SearchListActionsHandler searchListActionsHandler;
 	private SearchListAdapter searchListAdapter;
 	private LockableBottomSheetBehavior<NestedScrollView> bottomSheetBehaviour;
+	private CoordinatorLayout coordinatorLayout;
 	private int newState;
 	private RelativeLayout rootLayout;
 	private GoogleMap googleMap;
@@ -303,7 +310,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			isNewUI = ((HomeActivity)activity).isNewUI() && Prefs.with(activity).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1;
 		}
 
-		rlAddress.setVisibility(isNewUI ? View.GONE : View.VISIBLE);
 
 		ivLocationMarker = rootView.findViewById(R.id.ivLocationMarker);
 
@@ -363,22 +369,21 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		}
 
-		searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), searchMode,
+		searchListAdapter = new SearchListAdapter(activity, getPivotLatLng(activity), searchMode,
 				searchAdapterListener, true, setLocationOnMapOnTop, editTextsForAdapter);
 
 
 		ViewGroup header = (ViewGroup)activity.getLayoutInflater().inflate(R.layout.header_place_search_list, listViewSearch, false);
 		header.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
-		ASSL.DoMagic(header);
 		listViewSavedLocations.addFooterView(header, null, false);
 
 		linearLayoutAddFav = (LinearLayout) header.findViewById(R.id.linearLayoutAddFav);
 		relativeLayoutAddHome = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddHome);
 		relativeLayoutAddWork = (RelativeLayout)header.findViewById(R.id.relativeLayoutAddWork);
 		relativeLayoutSavedPlaces = (RelativeLayout)header.findViewById(R.id.relativeLayoutSavedPlaces);
-		textViewAddHome = (TextView)header.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity));
-		textViewAddWork = (TextView)header.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity));
-		((TextView)header.findViewById(R.id.textViewSavedPlaces)).setTypeface(Fonts.mavenMedium(activity));
+		textViewAddHome = (TextView)header.findViewById(R.id.textViewAddHome); textViewAddHome.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+		textViewAddWork = (TextView)header.findViewById(R.id.textViewAddWork); textViewAddWork.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+		((TextView)header.findViewById(R.id.textViewSavedPlaces)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
 		imageViewSep = (ImageView) header.findViewById(R.id.imageViewSep);
 		imageViewSep2 = (ImageView) header.findViewById(R.id.imageViewSep2);
 		ivDivSavedPlaces = (ImageView) header.findViewById(R.id.ivDivSavedPlaces);
@@ -423,16 +428,16 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 
 
-		ImageView imageViewShadow = (ImageView) rootView.findViewById(R.id.imageViewShadow);
+		imageViewShadow = (ImageView) rootView.findViewById(R.id.imageViewShadow);
 		if(activity instanceof HomeActivity){
 			imageViewShadow.setVisibility(View.VISIBLE);
 		} else {
 			imageViewShadow.setVisibility(View.GONE);
 		}
 
+		coordinatorLayout = rootView.findViewById(R.id.coordinatorLayout);
 		bottomSheetBehaviour = (LockableBottomSheetBehavior)BottomSheetBehavior.from(scrollViewSuggestions);
 
-		bottomSheetBehaviour.setPeekHeight(0);
 		bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
 		bottomSheetBehaviour.setLocked(true);
 		bottomSheetBehaviour.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -462,10 +467,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		llSetLocationOnMap.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				bottomSheetBehaviour.setPeekHeight(0);
 				bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_COLLAPSED);
 			}
 		});
-		rootView.findViewById(R.id.bNext).setOnClickListener(new View.OnClickListener() {
+		bNext.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(mapSettledCanForward){
@@ -506,7 +512,64 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			llSavedPlaces.addView(vSetLocationOnMapDiv, 1, paramsV);
 		}
 
+		setNewUIChanges();
+
+
         return rootView;
+	}
+
+	public void setNewUIChanges() {
+		if(isNewUI){
+			if(bottomSheetBehaviour.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+				coordinatorLayout.getMeasuredHeight();
+				coordinatorLayout.post(new Runnable() {
+					@Override
+					public void run() {
+						bottomSheetBehaviour.setPeekHeight(coordinatorLayout.getMeasuredHeight());
+					}
+				});
+			} else {
+				bottomSheetBehaviour.setPeekHeight(0);
+			}
+
+			rlAddress.setVisibility(View.GONE);
+
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) cardViewSavedPlaces.getLayoutParams();
+			params.setMarginStart(0);
+			params.setMarginEnd(0);
+			params.bottomMargin = 0;
+			cardViewSavedPlaces.setLayoutParams(params);
+			cardViewSavedPlaces.setRadius(0);
+
+			llSavedPlaces.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+			imageViewShadow.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+			scrollViewSuggestions.setBackgroundColor(ContextCompat.getColor(activity, R.color.white));
+
+			imageViewSep.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+			imageViewSep2.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+			ivDivSavedPlaces.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+			vSetLocationOnMapDiv.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+		} else {
+			bottomSheetBehaviour.setPeekHeight(0);
+
+			rlAddress.setVisibility(View.VISIBLE);
+
+			LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) cardViewSavedPlaces.getLayoutParams();
+			params.setMarginStart((int)(ASSL.Xscale()*16F));
+			params.setMarginEnd((int)(ASSL.Xscale()*16F));
+			params.bottomMargin = (int)(ASSL.Xscale()*16F);
+			cardViewSavedPlaces.setLayoutParams(params);
+			cardViewSavedPlaces.setRadius(ASSL.minRatio()*4F);
+
+			llSavedPlaces.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+			imageViewShadow.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+			scrollViewSuggestions.setBackgroundColor(ContextCompat.getColor(activity, R.color.transparent));
+
+			imageViewSep.setBackgroundColor(ContextCompat.getColor(activity, R.color.fatafat_divider_color));
+			imageViewSep2.setBackgroundColor(ContextCompat.getColor(activity, R.color.fatafat_divider_color));
+			ivDivSavedPlaces.setBackgroundColor(ContextCompat.getColor(activity, R.color.fatafat_divider_color));
+			vSetLocationOnMapDiv.setBackgroundColor(ContextCompat.getColor(activity, R.color.fatafat_divider_color));
+		}
 	}
 
 	private ProgressWheel getFocussedProgressBar() {
@@ -584,11 +647,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		}
 
-		if(searchMode == PlaceSearchMode.DROP.getOrdinal()){
-			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_red);
-		} else{
-			imageViewSearchGPSIcon.setImageResource(R.drawable.circle_green);
-		}
 
 
 
@@ -821,7 +879,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 	private void setRecentList() {
-		ArrayList<SearchResult> searchResultList = getSearchResultsRecentAndSaved(searchLocations);
+		ArrayList<SearchResult> searchResultList = getSearchResultsRecentAndSaved(activity, searchLocations);
 		if(savedPlacesAdapterRecent == null) {
 
 			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, searchResultList, new SavedPlacesAdapter.Callback() {
@@ -859,7 +917,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	}
 
 	@NonNull
-	public static ArrayList<SearchResult> getSearchResultsRecentAndSaved(List<SearchLocation> searchLocations) {
+	public static ArrayList<SearchResult> getSearchResultsRecentAndSaved(Context context, List<SearchLocation> searchLocations) {
 		ArrayList<SearchResult> searchResultList = new ArrayList<>(Data.userData.getSearchResultsRecent());
 		if(searchLocations != null) {
 			for (int i = 0; i < searchLocations.size(); i++) {
@@ -869,7 +927,20 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				searchResultList.add(0, searchResult);
 			}
 		}
-		return searchResultList;
+		return sortSearchResults(searchResultList, getPivotLatLng(context));
+	}
+
+	public static ArrayList<SearchResult> sortSearchResults(ArrayList<SearchResult> searchResults, LatLng latLng){
+
+		Collections.sort(searchResults, new Comparator<SearchResult>() {
+			@Override
+			public int compare(SearchResult lhs, SearchResult rhs) {
+				double lhsDist = MapUtils.distance(latLng, lhs.getLatLng());
+				double rhsDist = MapUtils.distance(latLng, rhs.getLatLng());
+				return (int)(lhsDist - rhsDist);
+			}
+		});
+		return searchResults;
 	}
 
 	private boolean mapSettledCanForward;
@@ -1057,7 +1128,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					tvFullAddress.setText(address.substring(index + 1));
 				} else {
 					etPreAddress.setText("");
-					tvFullAddress.setText(address.substring(index));
+					tvFullAddress.setText(address);
 				}
 				llFinalAddress.setVisibility(View.VISIBLE);
 			} else {
@@ -1156,11 +1227,11 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	public void openBottomSheetMode(){
 		bNext.setVisibility(View.GONE);
-		rlAddress.setVisibility(isNewUI ? View.GONE : View.VISIBLE);
 		llFinalAddress.setVisibility(View.GONE);
 		if(bottomSheetBehaviour!=null && bottomSheetBehaviour.getState()!=BottomSheetBehavior.STATE_EXPANDED){
 			bottomSheetBehaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
 		}
+		setNewUIChanges();
 		rlMarkerPin.setVisibility(View.GONE);
 	}
 
@@ -1270,8 +1341,30 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}
 		getFocussedProgressBar().setVisibility(View.GONE);
 
-		if (isFromConfirm) {
+		if (isFromConfirm && !isNewUI) {
 			bNext.performClick();
+		}
+	}
+
+	public static LatLng getPivotLatLng(Context context){
+		if(Data.autoData != null){
+			if(Data.autoData.getLastRefreshLatLng() != null) {
+				return Data.autoData.getLastRefreshLatLng();
+			}
+			else if(Data.autoData.getPickupLatLng() != null) {
+				return Data.autoData.getPickupLatLng();
+			}
+			else if(HomeActivity.myLocation != null){
+				return new LatLng(HomeActivity.myLocation.getLatitude(), HomeActivity.myLocation.getLongitude());
+			}
+			else if(Math.abs(Data.latitude) > 0 &&  Math.abs(Data.longitude) > 0){
+				return new LatLng(Data.latitude, Data.longitude);
+			}
+			else {
+				return new LatLng(LocationFetcher.getSavedLatFromSP(context), LocationFetcher.getSavedLngFromSP(context));
+			}
+		} else{
+			return new LatLng(30.75, 76.78);
 		}
 	}
 }

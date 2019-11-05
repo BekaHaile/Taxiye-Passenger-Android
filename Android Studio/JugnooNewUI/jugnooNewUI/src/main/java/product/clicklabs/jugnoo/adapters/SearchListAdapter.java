@@ -2,7 +2,9 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -42,7 +43,6 @@ import product.clicklabs.jugnoo.retrofit.model.Prediction;
 import product.clicklabs.jugnoo.room.DBObject;
 import product.clicklabs.jugnoo.room.apis.DBCoroutine;
 import product.clicklabs.jugnoo.room.database.SearchLocationDB;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -173,7 +173,7 @@ public class SearchListAdapter extends BaseAdapter{
 			SearchLocationDB searchLocationDB = DBObject.INSTANCE.getInstance();
             if(searchLocationDB != null) {
 				DBCoroutine.Companion.getAllLocations(searchLocationDB, searchLocation -> {
-					searchResultRecent = PlaceSearchListFragment.getSearchResultsRecentAndSaved(searchLocation);
+					searchResultRecent = PlaceSearchListFragment.getSearchResultsRecentAndSaved(context, searchLocation);
 				});
 			} else {
             	searchResultRecent = new ArrayList<>(Data.userData.getSearchResultsRecent());
@@ -226,7 +226,7 @@ public class SearchListAdapter extends BaseAdapter{
             convertView = mInflater.inflate(R.layout.list_item_saved_place, null);
 
             holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName);
-            holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
+            holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
 			holder.textViewAddressUsed = (TextView) convertView.findViewById(R.id.textViewAddressUsed);
@@ -239,8 +239,6 @@ public class SearchListAdapter extends BaseAdapter{
 
             holder.relative.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
         } else {
@@ -256,17 +254,21 @@ public class SearchListAdapter extends BaseAdapter{
 				holder.textViewSearchName.setText(searchResult.getAddress());
 				holder.textViewSearchAddress.setVisibility(View.GONE);
 			} else {
-				holder.textViewSearchName.setText(searchResult.getName());
-				holder.textViewSearchAddress.setText(searchResult.getAddress());
-				if(searchResult.getAddress().equalsIgnoreCase("")){
-					holder.textViewSearchAddress.setVisibility(View.GONE);
-				}else {
-					holder.textViewSearchAddress.setVisibility(View.VISIBLE);
-				}
+				if(!TextUtils.isEmpty(searchResult.getName())
+						&& !searchResult.getAddress().contains(searchResult.getName())){
+					holder.textViewSearchName.setVisibility(View.VISIBLE);
+					holder.textViewSearchName.setText(searchResult.getName());
+					holder.textViewSearchAddress.setText(searchResult.getAddress());
+				} else {
+					String nameForDisp = (searchResult.getAddress().contains(",")) ?
+							searchResult.getAddress().substring(0, searchResult.getAddress().indexOf(","))
+							: searchResult.getAddress();
 
-				if(TextUtils.isEmpty(searchResult.getName())){
-					holder.textViewSearchName.setText(searchResult.getAddress());
-					holder.textViewSearchAddress.setVisibility(View.GONE);
+					holder.textViewSearchName.setVisibility(TextUtils.isEmpty(nameForDisp) ? View.GONE : View.VISIBLE);
+					holder.textViewSearchName.setText(nameForDisp);
+
+					holder.textViewSearchAddress.setText(TextUtils.isEmpty(nameForDisp) ? searchResult.getAddress()
+							: searchResult.getAddress().replace(nameForDisp+", ", ""));
 				}
 			}
 
@@ -308,6 +310,10 @@ public class SearchListAdapter extends BaseAdapter{
             } else{
                 holder.imageViewSep.setVisibility(View.VISIBLE);
             }
+
+			//seperator hidden by setting color transparent
+			holder.imageViewSep.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+
 
             holder.relative.setOnClickListener(new View.OnClickListener() {
 
@@ -366,13 +372,7 @@ public class SearchListAdapter extends BaseAdapter{
 		searchListActionsHandler.onNotifyDataSetChanged(getCount());
     }
 
-	private LatLng getPivotLatLng(){
-		if(Data.autoData != null && Data.autoData.getLastRefreshLatLng() != null){
-			return Data.autoData.getLastRefreshLatLng();
-		} else{
-			return defaultSearchPivotLatLng;
-		}
-	}
+
 
     private boolean refreshingAutoComplete = false;
 
@@ -600,7 +600,7 @@ public class SearchListAdapter extends BaseAdapter{
 		@Override
 		public void run() {
 			if (System.currentTimeMillis() > (last_text_edit + delay - 200) && textToSearch.length() > 2) {
-				getSearchResults(textToSearch, SearchListAdapter.this.getPivotLatLng(),editText);
+				getSearchResults(textToSearch, SearchListAdapter.this.defaultSearchPivotLatLng,editText);
 			}
 		}
 	}

@@ -2,13 +2,14 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -83,7 +84,7 @@ public class SavedPlacesAdapter extends BaseAdapter{
             convertView = mInflater.inflate(R.layout.list_item_saved_place, null);
 
             holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName);
-            holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
+            holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
             holder.textViewAddressUsed = (TextView) convertView.findViewById(R.id.textViewAddressUsed);
@@ -98,9 +99,6 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.ivDeleteAddress.setTag(holder);
             holder.ivAddAddress.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ASSL.DoMagic(holder.relative);
-
             convertView.setTag(holder);
         } else {
             holder = (ViewHolderSearchItem) convertView.getTag();
@@ -111,18 +109,29 @@ public class SavedPlacesAdapter extends BaseAdapter{
             holder.id = position;
 
             SearchResult searchResult = searchResults.get(position);
-            holder.textViewSearchName.setVisibility(View.GONE);
-            if(!TextUtils.isEmpty(searchResult.getName())){
+            if(!TextUtils.isEmpty(searchResult.getName())
+					&& !searchResult.getAddress().contains(searchResult.getName())){
                 holder.textViewSearchName.setVisibility(View.VISIBLE);
                 holder.textViewSearchName.setText(searchResult.getName());
-            }
-            if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){
-                holder.textViewSearchName.setText(R.string.home);
-            } else if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
-                holder.textViewSearchName.setText(R.string.work);
-            }
 
-            holder.textViewSearchAddress.setText(searchResult.getAddress());
+				if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_HOME)){
+					holder.textViewSearchName.setText(R.string.home);
+				} else if(searchResult.getName().equalsIgnoreCase(Constants.TYPE_WORK)){
+					holder.textViewSearchName.setText(R.string.work);
+				}
+
+				holder.textViewSearchAddress.setText(searchResult.getAddress());
+            } else {
+				String nameForDisp = (searchResult.getAddress().contains(",")) ?
+						searchResult.getAddress().substring(0, searchResult.getAddress().indexOf(","))
+						: searchResult.getAddress();
+
+				holder.textViewSearchName.setVisibility(TextUtils.isEmpty(nameForDisp) ? View.GONE : View.VISIBLE);
+				holder.textViewSearchName.setText(nameForDisp);
+
+				holder.textViewSearchAddress.setText(TextUtils.isEmpty(nameForDisp) ? searchResult.getAddress()
+						: searchResult.getAddress().replace(nameForDisp+", ", ""));
+			}
 
             holder.textViewAddressUsed.setVisibility(View.GONE);
             if(searchResult.getFreq() > 0) {
@@ -160,12 +169,16 @@ public class SavedPlacesAdapter extends BaseAdapter{
                 params.setMarginStart(margin);
                 params.setMarginEnd(margin);
                 holder.imageViewSep.setLayoutParams(params);
-                holder.imageViewSep.setBackgroundColor(context.getResources().getColor(R.color.stroke_light_grey_alpha));
+                holder.imageViewSep.setBackgroundColor(ContextCompat.getColor(context, R.color.stroke_light_grey_alpha));
             } else {
                 if(position == getCount()-1){
                     holder.imageViewSep.setVisibility(View.GONE);
                 }
             }
+
+            //seperator hidden by setting color transparent
+			holder.imageViewSep.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+
             holder.ivDeleteAddress.setVisibility(showDelete ? View.VISIBLE : View.GONE);
             holder.ivAddAddress.setVisibility(showAdd ? View.VISIBLE : View.GONE);
 

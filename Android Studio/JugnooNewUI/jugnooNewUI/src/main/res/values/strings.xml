@@ -2133,4 +2133,5 @@
 
 <!--    New UI changes-->
     <string name="text_where_to_go">Where to go</string>
+    <string name="add_favorite_place">Add Favorite Place</string>
 </resources>

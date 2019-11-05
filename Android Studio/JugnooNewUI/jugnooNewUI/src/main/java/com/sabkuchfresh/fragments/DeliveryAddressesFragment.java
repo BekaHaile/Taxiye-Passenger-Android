@@ -331,7 +331,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
-        searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78),
+        searchListAdapter = new SearchListAdapter(activity, PlaceSearchListFragment.getPivotLatLng(activity),
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 
