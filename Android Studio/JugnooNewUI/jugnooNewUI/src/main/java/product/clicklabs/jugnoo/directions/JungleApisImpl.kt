@@ -362,7 +362,7 @@ object JungleApisImpl {
                 val result = String((response.body as TypedByteArray).bytes)
                 val jObj = JSONObject(result)
 
-                val placeDetailsResponse = gson.fromJson(jObj.getJSONArray("data").get(0).toString(), PlaceDetailsResponse::class.java)
+                val placeDetailsResponse = gson.fromJson(jObj.getJSONObject("data").toString(), PlaceDetailsResponse::class.java)
                 if (placeDetailsResponse.results != null && placeDetailsResponse.results!!.isNotEmpty()) {
                     placeDetailResult = PlaceDetailResult(placeDetailsResponse, true)
                 } else {
