@@ -32,7 +32,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.apis.PlaceDetailCallback;
 import product.clicklabs.jugnoo.apis.PlacesCallback;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -388,16 +388,20 @@ public class SearchListAdapter extends BaseAdapter{
                 String location = latLng.latitude+","+latLng.longitude;
                 String radius = searchText.length() <= 3 ? "50" : (searchText.length() <= 5 ? "100": (searchText.length() <= 8 ? "1000" : "10000"));
 
-				GoogleAPICoroutine.INSTANCE.getAutoCompletePredictions(searchText, uuidVal, components, location, radius, new PlacesCallback() {
+				GoogleJungleCaching.INSTANCE.getAutoCompletePredictions(searchText, uuidVal, components, location, radius, new PlacesCallback() {
 					@Override
-					public void onAutocompletePredictionsReceived(@NotNull List<Prediction> predictions) {
+					public void onAutocompletePredictionsReceived(List<Prediction> predictions) {
 						try {
 							searchResultsForSearch.clear();
-							for (Prediction autocompletePrediction : predictions) {
-								String name = autocompletePrediction.getDescription().split(",")[0];
-								searchResultsForSearch.add(new SearchResult(name,
-										autocompletePrediction.getDescription(),
-										autocompletePrediction.getPlaceId(), 0, 0));
+							if(predictions != null) {
+								for (Prediction autocompletePrediction : predictions) {
+									String name = autocompletePrediction.getDescription().split(",")[0];
+									searchResultsForSearch.add(new SearchResult(name,
+											autocompletePrediction.getDescription(),
+											autocompletePrediction.getPlaceId(),
+											autocompletePrediction.getLat() != null ? autocompletePrediction.getLat() : 0,
+											autocompletePrediction.getLng() != null ? autocompletePrediction.getLng() : 0));
+								}
 							}
 							addFavoriteLocations(searchText,editText);
 
@@ -526,7 +530,7 @@ public class SearchListAdapter extends BaseAdapter{
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 			Log.v("after call back", "after call back");
 
-			GoogleAPICoroutine.INSTANCE.getPlaceById(placeId, placeAddress, new PlaceDetailCallback() {
+			GoogleJungleCaching.INSTANCE.getPlaceById(placeId, placeAddress, defaultSearchPivotLatLng, new PlaceDetailCallback() {
 				@Override
 				public void onPlaceDetailReceived(@NotNull PlaceDetailsResponse placeDetailsResponse) {
 					try {

@@ -176,7 +176,7 @@ import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
-import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
@@ -199,7 +199,7 @@ import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
-import product.clicklabs.jugnoo.directions.GAPIDirections;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
@@ -7338,7 +7338,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textView.setText("");
                 textView.setHint(R.string.getting_address);
 
-				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
+				GoogleJungleCaching.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
 					try {
 						String address = null;
 						if(googleGeocodeResponse != null){
@@ -8121,7 +8121,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
                             LatLng source = pickupLatLng;
-							GAPIDirections.DirectionsResult result = GAPIDirections.INSTANCE.getDirectionsPathSync(source, Data.autoData.getDropLatLng(), "metric", "c_p2d");
+							JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(source, Data.autoData.getDropLatLng(), "metric", "c_p2d");
                             if (result != null) {
                                 listPath = result.getLatLngs();
 								driverToDropPathShown = true;
@@ -10084,6 +10084,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 						pickupLocationEtaMarker();
 
+						if(dropLocationMarker != null){
+							dropLocationMarker.remove();
+						}
 						MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
 						poolMarkerOptionEnd.title("End");
 						poolMarkerOptionEnd.position(Data.autoData.getDropLatLng());
@@ -10091,7 +10094,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this
 						)));
 						//map.addMarker(poolMarkerEnd);
-						map.addMarker(poolMarkerOptionEnd);
+						dropLocationMarker = map.addMarker(poolMarkerOptionEnd);
 
 						poolPathZoomAtConfirm();
 						closeFabView();
@@ -11751,9 +11754,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             driverMarkerInRide = null;
             polylineP2D = null;
-            if(polylineOptionsP2D != null && passengerScreenMode == P_INITIAL){
-				polylineP2D = map.addPolyline(polylineOptionsP2D);
-			}
         } catch (Exception e) {
             e.printStackTrace();
         }

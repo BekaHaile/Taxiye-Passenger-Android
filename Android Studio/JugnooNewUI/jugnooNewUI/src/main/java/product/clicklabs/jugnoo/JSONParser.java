@@ -586,6 +586,9 @@ public class JSONParser implements Constants {
 
 			JSONObject jungleGObj = userData.optJSONObject(KEY_JUNGLE_GEOCODE_OBJ);
 			Prefs.with(context).save(KEY_JUNGLE_GEOCODE_OBJ, jungleGObj!=null ? jungleGObj.toString(): jungleObjStr);
+
+			JSONObject jungleACbj = userData.optJSONObject(KEY_JUNGLE_AUTOCOMPLETE_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_AUTOCOMPLETE_OBJ, jungleACbj!=null ? jungleACbj.toString(): jungleObjStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
