@@ -3061,7 +3061,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
         RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
                 region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
-                region.getRegionName(), "", region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString(): "");
+                region.getRegionName(), region.getDisclaimerText(), region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString(): "");
         DialogFragment dialogFragment = RideConfirmationDialog.newInstance(requestRideConfirm);
         dialogFragment.show(ft, "requestConfirmDialog");
     }
