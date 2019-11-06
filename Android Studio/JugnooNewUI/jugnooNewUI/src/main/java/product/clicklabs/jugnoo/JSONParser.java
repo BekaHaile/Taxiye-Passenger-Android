@@ -564,6 +564,8 @@ public class JSONParser implements Constants {
 				1));
 		Prefs.with(context).save(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, autoData.optInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT,
 				context.getResources().getInteger(R.integer.remove_pickup_address_hit)));
+		Prefs.with(context).save(KEY_CUSTOMER_REQUEST_RIDE_POPUP, autoData.optInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP,
+				context.getResources().getInteger(R.integer.show_confirm_popup_before_ride_request)));
 
 		parseJungleApiObjects(context, autoData);
 	}

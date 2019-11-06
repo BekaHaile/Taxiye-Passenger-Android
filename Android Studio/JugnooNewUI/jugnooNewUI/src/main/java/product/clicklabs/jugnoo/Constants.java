@@ -1107,4 +1107,5 @@ public interface Constants {
 
 	String JUNGLE_JSON_OBJECT = "{\""+KEY_JUNGLE_OPTIONS+"\":0}";
     String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
+    String KEY_CUSTOMER_REQUEST_RIDE_POPUP = "customer_request_ride_popup";
 }

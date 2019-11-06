@@ -220,6 +220,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
+import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
@@ -250,6 +251,7 @@ import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
+import product.clicklabs.jugnoo.retrofit.model.RequestRideConfirm;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -310,7 +312,8 @@ import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITI
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
-        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler, CoroutineScope {
+        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler, CoroutineScope,
+        RideConfirmationDialog.RideRequestConfirmListener {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -1574,60 +1577,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             setPickupLocationInitialUI();
                             return;
                         }
-
-                            if (isNewUI && region.getReverseBid() == 1
-                                && !editTextBidValue.getText().toString().isEmpty()) {
-								double innerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MIN_REGION_FARE, 20.0f);
-								double outerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MAX_REGION_FARE, 5000.0f);
-								if(region.getRegionFare()!= null) {
-									innerValue = Math.ceil(region.getRegionFare().getFare() * 0.8);
-									outerValue = Math.ceil(region.getRegionFare().getFare() * 10);
-								}
-								String minBidValueStr = Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue);
-								String innerStr = getString(R.string.bid_lower_value_err, minBidValueStr);
-								String outerStr = getString(R.string.bid_greater_amount_err);
-								if (Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
-									EnterBidDialog.INSTANCE.showRaiseFareDialog(HomeActivity.this, innerStr,
-											getString(R.string.raise_to_format, minBidValueStr), innerValue, false, value -> {
-												editTextBidValue.setText(value);
-												buttonConfirmRequest.performClick();
-											});
-
-								} else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue) {
-									EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
-											getString(R.string.suggested_fare)+": "+minBidValueStr, Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
-												editTextBidValue.setText(value);
-												buttonConfirmRequest.performClick();
-											});
-
-								} else {
-									if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-										findDriversETACall(true, true, false, getApiFindADriver().getParams());
-									} else {
-										if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-												.getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-											openBikeRentalScan();
-										} else {
-											requestRideClick();
-										}
-									}
-
-								}
-							} else if(isNewUI && region.getReverseBid() == 1
-										&& editTextBidValue.getText().toString().isEmpty()) {
-								Utils.showToast(HomeActivity.this,getString(R.string.error_bid_value));
-                        	} else {
-								if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-									findDriversETACall(true, true, false, getApiFindADriver().getParams());
-								} else {
-									if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-											.getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-										openBikeRentalScan();
-									} else {
-										requestRideClick();
-									}
-								}
-                        	}
+                        if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP, 0) == 1) {
+                            openRequestConfirmDialog();
+                        } else {
+                            onReqestRideConfirmClick();
+                        }
                     } else {
                         Utils.showToast(HomeActivity.this,getString(R.string.destination_required));
                     }
@@ -2476,6 +2430,63 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
+    private void onReqestRideConfirmClick() {
+        Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+        if (isNewUI && region.getReverseBid() == 1
+                && !editTextBidValue.getText().toString().isEmpty()) {
+            double innerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MIN_REGION_FARE, 20.0f);
+            double outerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MAX_REGION_FARE, 5000.0f);
+            if(region.getRegionFare()!= null) {
+                innerValue = Math.ceil(region.getRegionFare().getFare() * 0.8);
+                outerValue = Math.ceil(region.getRegionFare().getFare() * 10);
+            }
+            String minBidValueStr = Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue);
+            String innerStr = getString(R.string.bid_lower_value_err, minBidValueStr);
+            String outerStr = getString(R.string.bid_greater_amount_err);
+            if (Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
+                EnterBidDialog.INSTANCE.showRaiseFareDialog(HomeActivity.this, innerStr,
+                        getString(R.string.raise_to_format, minBidValueStr), innerValue, false, value -> {
+                            editTextBidValue.setText(value);
+                            buttonConfirmRequest.performClick();
+                        });
+
+            } else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue) {
+                EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
+                        getString(R.string.suggested_fare)+": "+minBidValueStr, Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
+                            editTextBidValue.setText(value);
+                            buttonConfirmRequest.performClick();
+                        });
+
+            } else {
+                if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                    findDriversETACall(true, true, false, getApiFindADriver().getParams());
+                } else {
+                    if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                            .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                        openBikeRentalScan();
+                    } else {
+                        requestRideClick();
+                    }
+                }
+
+            }
+        } else if(isNewUI && region.getReverseBid() == 1
+                && editTextBidValue.getText().toString().isEmpty()) {
+            Utils.showToast(HomeActivity.this,getString(R.string.error_bid_value));
+        } else {
+            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                findDriversETACall(true, true, false, getApiFindADriver().getParams());
+            } else {
+                if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                        .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                    openBikeRentalScan();
+                } else {
+                    requestRideClick();
+                }
+            }
+        }
+    }
+
     public void setServiceTypeAdapter(boolean setAdapter) {
         if(Data.autoData != null) {
             ArrayList<ServiceType> serviceTypesEligible = new ArrayList<>();
@@ -3038,6 +3049,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         String address = isPickup ? Data.autoData.getPickupAddress(latLng) : Data.autoData.getDropAddress();
         DialogFragment dialogFragment = SaveLocationDialog.newInstance(latLng.latitude,latLng.longitude, address, isPickup, googleMapPadding - 10);
         dialogFragment.show(ft, "dialog");
+    }
+
+    private void openRequestConfirmDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("requestConfirmDialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+        RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
+                region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
+                region.getRegionName(), "", region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString(): "");
+        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(requestRideConfirm);
+        dialogFragment.show(ft, "requestConfirmDialog");
     }
 
     private void enableMapMyLocation() {
@@ -4026,7 +4052,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             topBar.imageViewBack.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.VISIBLE);
                             buttonConfirmRequest.setBackground(ContextCompat.getDrawable(this, R.drawable.background_theme_gradient_selector));
-                            RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(int) (ASSL.Xscale()*96));
+                            RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(int) (ASSL.Xscale()*80));
                             buttonConfirmRequest.setTextSize(19);
                             params.setMargins(30,0,30,20);
                             params.addRule(RelativeLayout.BELOW,linearLayoutConfirmOption.getId());
@@ -6002,15 +6028,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             placeAdded = true;
                             if (passengerScreenMode == P_INITIAL) {
                                 if (likeClicked == 1) {
-                                    textViewInitialSearch.setText(searchResult.getName());
-                                    textViewInitialSearchNew.setText(searchResult.getName());
-                                    tvPickupRentalOutstation.setText(searchResult.getName());
+                                    textViewInitialSearch.setText(searchResult.getNameForText());
+                                    textViewInitialSearchNew.setText(searchResult.getNameForText());
+                                    tvPickupRentalOutstation.setText(searchResult.getNameForText());
                                     ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
                                     ivLikePickup.setTag("liked");
                                 } else if (likeClicked == 2) {
-                                    textViewDestSearch.setText(searchResult.getName());
-                                    textViewDestSearchNew.setText(searchResult.getName());
-                                    tvPickupRentalOutstation.setText(searchResult.getName());
+                                    textViewDestSearch.setText(searchResult.getNameForText());
+                                    textViewDestSearchNew.setText(searchResult.getNameForText());
+                                    tvPickupRentalOutstation.setText(searchResult.getNameForText());
                                     ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
                                     ivLikeDrop.setTag("liked");
                                 }
@@ -7220,10 +7246,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (passengerScreenMode == P_INITIAL) {
                 if (searchResult != null) {
                     addressNeeded = false;
-                    textView.setText(searchResult.getName());
+                    textView.setText(searchResult.getNameForText());
                     if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                        tvPickupRentalOutstation.setText(searchResult.getName());
-                        textViewInitialSearchNew.setText(searchResult.getName());
+                        tvPickupRentalOutstation.setText(searchResult.getNameForText());
+                        textViewInitialSearchNew.setText(searchResult.getNameForText());
 						Data.autoData.setPickupSearchResult(searchResult);
                     }
                     if(textView == textViewInitialSearch){
@@ -10157,6 +10183,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 					}
 				});
 			}
+
+            if(!Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()).equalsIgnoreCase("Current Location")) {
+                createDataAndInsert(0);
+            }
+            createDataAndInsert(1);
+
 			apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
 					region, promoCouponSelected, null, "c_fe_home");
         } else {
@@ -11028,15 +11060,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             switch (caseVal) {
                 case 0 :
                     viewDash.setVisibility(View.GONE);
-                    layoutParams.height = 160;
-                    params.height = 60;
-                    params.width = 60;
+                    layoutParams.height = 134;
+                    params.height = 30;
+                    params.width = 30;
                     break;
 
                 case 1:
                 default:
                     viewDash.setVisibility(View.VISIBLE);
-                    layoutParams.height = 140;
+                    layoutParams.height = 134;
                     params.height = 40;
                     params.width = 40;
             }
@@ -12846,6 +12878,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void onCancelClick(boolean isPickup) {
+
+    }
+
+    @Override
+    public void onOkClick(boolean isPickup) {
+        onReqestRideConfirmClick();
     }
 }
 

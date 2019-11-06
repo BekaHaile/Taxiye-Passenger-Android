@@ -809,7 +809,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	private void updateSavedPlacesLists(){
 		try {
-			ArrayList<SearchResult> searchResults = homeUtil.getSavedPlacesWithHomeWork(activity);
+			ArrayList<SearchResult> searchResults = sortSearchResults(homeUtil.getSavedPlacesWithHomeWork(activity), getPivotLatLng(activity));
 			int savedPlaces = searchResults.size();
 
 			if(savedPlacesAdapter == null) {
@@ -841,22 +841,24 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 			SearchLocationDB searchLocationDB = DBObject.INSTANCE.getInstance();
 
-			if(PlaceSearchMode.PICKUP.getOrdinal() == PlaceSearchListFragment.this.searchMode) {
-				DBCoroutine.Companion.getPickupLocation(searchLocationDB, searchLocation -> {
-					if(!searchLocations.isEmpty()) {
-						searchLocations.clear();
-					}
-					searchLocations.addAll(searchLocation);
-					setRecentList();
-				});
-			} else {
-				DBCoroutine.Companion.getDropLocation(searchLocationDB, searchLocation -> {
-					if(!searchLocations.isEmpty()) {
-						searchLocations.clear();
-					}
-					searchLocations.addAll(searchLocation);
-					setRecentList();
-				});
+			if(searchLocationDB != null) {
+				if (PlaceSearchMode.PICKUP.getOrdinal() == PlaceSearchListFragment.this.searchMode) {
+					DBCoroutine.Companion.getAllLocations(searchLocationDB, searchLocation -> {
+						if (!searchLocations.isEmpty()) {
+							searchLocations.clear();
+						}
+						searchLocations.addAll(searchLocation);
+						setRecentList();
+					});
+				} else {
+					DBCoroutine.Companion.getAllLocations(searchLocationDB, searchLocation -> {
+						if (!searchLocations.isEmpty()) {
+							searchLocations.clear();
+						}
+						searchLocations.addAll(searchLocation);
+						setRecentList();
+					});
+				}
 			}
 
 			if(savedPlaces > 0) {
@@ -896,7 +898,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				public void onAddClick(SearchResult searchResult) {
 					onSavedLocationEdit(searchResult);
 				}
-			}, false, false, false, true);
+			}, false, false, false, false);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 		} else {
 			savedPlacesAdapterRecent.setList(searchResultList);

@@ -86,4 +86,7 @@
     <!--    UI changes-->
     <integer name="remove_pickup_address_hit">1</integer>
 
+    <!--Confirm pop before request ride-->
+    <integer name="show_confirm_popup_before_ride_request">1</integer>
+
 </resources>

@@ -18,9 +18,9 @@ class DBCoroutine {
             GlobalScope.launch(Dispatchers.IO) {
                 try {
                     val search: List<SearchLocation> = if (searchLocation.type == 0) {
-                        searchLocationDB.getSearchLocation().getPickupLocations()
+                        searchLocationDB.getSearchLocation().getLocation()   // get all location rather than only pickup(display logic changed)
                     } else {
-                        searchLocationDB.getSearchLocation().getDropLocations()
+                        searchLocationDB.getSearchLocation().getLocation()   // get all location rather than only drop(display logic changed)
                     }
 
                     if(checkForAddLocation(search, searchLocation) == -1) {
