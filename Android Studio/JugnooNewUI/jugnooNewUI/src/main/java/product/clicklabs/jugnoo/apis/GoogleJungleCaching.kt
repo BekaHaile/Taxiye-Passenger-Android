@@ -15,10 +15,8 @@ import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
 import product.clicklabs.jugnoo.retrofit.model.Prediction
-import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Prefs
-import retrofit.client.Response
 import retrofit.mime.TypedByteArray
 
 object GoogleJungleCaching {
@@ -62,7 +60,7 @@ object GoogleJungleCaching {
                     if(response != null){
                         predictions = response.placesAutocompleteResponse.predictions
 
-                        try{if(isGoogleCachingEnabled()
+                        try{if(isGoogleCachingEnabled() && !response.junglePassed
                                 && predictions != null && predictions.size > 0) {
                             val param = InsertAutocomplete(JUNGOO_APP_PRODUCT_ID, TYPE_AUTO_COMPLETE, input, getUserId(),
                                     arr[0].toDouble(), arr[1].toDouble(), response.placesAutocompleteResponse)
@@ -81,11 +79,15 @@ object GoogleJungleCaching {
 
 
     //Ai for finding place details by place Id
-    fun getPlaceById(placeId:String, placeAddress:String, callback: PlaceDetailCallback): Job{
+    fun getPlaceById(placeId:String, placeAddress:String, latLng: LatLng, callback: PlaceDetailCallback): Job{
         return GlobalScope.launch(Dispatchers.Main){
             var placesResponse: PlaceDetailsResponse? = null
             try {
                 try{
+                    val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_AUTOCOMPLETE_OBJ, Constants.EMPTY_JSON_OBJECT))
+                    if(JungleApisImpl.checkIfJungleApiEnabled(jungleObj)){
+                        throw Exception()
+                    }
                     if (!isGoogleCachingEnabled()) {
                         throw Exception()
                     }
@@ -98,18 +100,22 @@ object GoogleJungleCaching {
                     val results: PlaceDetailsResponse = gson.fromJson(responseCached, PlaceDetailsResponse::class.java)
                     placesResponse = results
                 } catch(e:Exception){
-                    val response:Response? = withContext(Dispatchers.IO){
-                        try { GoogleRestApis.getPlaceDetails(placeId) } catch (e: Exception) { null }
+                    val response:JungleApisImpl.PlaceDetailResult? = withContext(Dispatchers.IO){
+                        try { JungleApisImpl.getPlaceById(placeId, latLng) } catch (e: Exception) { null }
                     }
-                    val responseStr = String((response!!.body as TypedByteArray).bytes)
-                    placesResponse = gson.fromJson(responseStr, PlaceDetailsResponse::class.java)
+                    if(response != null) {
+                        placesResponse = response.placeDetailsResponse
 
-                    try{if(isGoogleCachingEnabled()
-                            && placesResponse.results != null && placesResponse.results!!.size > 0) {
-                        val param = InsertPlaceDetail(JUNGOO_APP_PRODUCT_ID, TYPE_GEOCODING, placeAddress, getUserId(),
-                                placeId, placesResponse)
-                        insertPlaceDetailCache(param)
-                    }} catch(e1:Exception){}
+                        try {
+                            if (isGoogleCachingEnabled() && !response.junglePassed
+                                    && placesResponse.results != null && placesResponse.results!!.size > 0) {
+                                val param = InsertPlaceDetail(JUNGOO_APP_PRODUCT_ID, TYPE_GEOCODING, placeAddress, getUserId(),
+                                        placeId, placesResponse)
+                                insertPlaceDetailCache(param)
+                            }
+                        } catch (e1: Exception) {
+                        }
+                    }
                 }
                 callback.onPlaceDetailReceived(placesResponse!!)
             } catch (e: Exception) {
@@ -150,7 +156,7 @@ object GoogleJungleCaching {
                     if(geocodeResult.googleGeocodeResponse != null && geocodeResult.googleGeocodeResponse.results != null && geocodeResult.googleGeocodeResponse.results!!.isNotEmpty()){
                         address = geocodeResult.googleGeocodeResponse
 
-                        if(isGoogleCachingEnabled()) {
+                        if(isGoogleCachingEnabled() && !geocodeResult.junglePassed) {
                             val gapiAddress = MapUtils.parseGAPIIAddress(geocodeResult.googleGeocodeResponse)
                             val body = InsertGeocode(JUNGOO_APP_PRODUCT_ID, TYPE_REVERSE_GEOCODING, gapiAddress.searchableAddress, getUserId(),
                                     latLng.latitude, latLng.longitude, geocodeResult.googleGeocodeResponse)

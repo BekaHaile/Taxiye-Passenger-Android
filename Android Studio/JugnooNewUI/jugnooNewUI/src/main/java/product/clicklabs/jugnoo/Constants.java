@@ -1105,6 +1105,7 @@ public interface Constants {
 	String KEY_JUNGLE_DEST_LNG = "destinationlongitude";
 	String KEY_JUNGLE_CURRENT_LAT = "currentlatitude";
 	String KEY_JUNGLE_CURRENT_LNG = "currentlongitude";
+	String KEY_JUNGLE_PLACEID = "placeId";
 	String KEY_JUNGLE_TEXT = "text";
 	String KEY_JUNGLE_LAT = "lat";
 	String KEY_JUNGLE_LNG = "lng";

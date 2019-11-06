@@ -18,4 +18,7 @@ interface JungleMapsApi {
     @GET("/search")
     fun search(@QueryMap params: Map<String, String>): Response
 
+    @GET("/geocode")
+    fun geocodePlaceById(@QueryMap params: Map<String, String>): Response
+
 }
