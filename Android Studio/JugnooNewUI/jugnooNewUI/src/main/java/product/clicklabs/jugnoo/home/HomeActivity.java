@@ -5222,6 +5222,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 findViewById(R.id.iv1).setVisibility(View.VISIBLE);
                 findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.VISIBLE);
 			}
+            setHeightDropAddress(1); //Normal height
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -11064,15 +11065,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
         ImageView iv3NewUIDropMark = findViewById(R.id.iv3NewUIDropMark);
+        LinearLayout rlMark = findViewById(R.id.rlMark);
         ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
         ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
+        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
         if(viewDash != null){
             switch (caseVal) {
                 case 0 :
                     viewDash.setVisibility(View.GONE);
                     layoutParams.height = 134;
-                    params.height = 30;
-                    params.width = 30;
+                    params.height = 40;
+                    params.width = 40;
+                    params2.setMargins(30, 50, 30, 0);
                     break;
 
                 case 1:
@@ -11081,7 +11086,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     layoutParams.height = 134;
                     params.height = 40;
                     params.width = 40;
+                    params2.setMargins(30, 68, 30, 0);
             }
+            rlMark.setLayoutParams(params2);
             relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
             iv3NewUIDropMark.setLayoutParams(params);
         }

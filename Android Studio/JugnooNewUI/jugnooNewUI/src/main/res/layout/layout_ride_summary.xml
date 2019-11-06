@@ -865,7 +865,6 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="20px"
                         android:gravity="center"
-                        android:singleLine="true"
                         android:text="@string/priority_tip_1x"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_26"/>

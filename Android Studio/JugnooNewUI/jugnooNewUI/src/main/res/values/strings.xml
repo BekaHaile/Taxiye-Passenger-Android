@@ -2135,4 +2135,5 @@
     <string name="text_where_to_go">Where to go</string>
     <string name="add_favorite_place">Add Favorite Place</string>
     <string name="label_confirm_ride_request">Confirm Ride Request</string>
+    <string name="text_congestion_time">Congestion Time</string>
 </resources>

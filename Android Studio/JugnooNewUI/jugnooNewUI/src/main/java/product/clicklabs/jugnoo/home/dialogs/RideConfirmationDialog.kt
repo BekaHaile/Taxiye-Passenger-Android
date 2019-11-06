@@ -82,7 +82,7 @@ class RideConfirmationDialog : DialogFragment() {
                 rootView.tvEstimateFare.visibility = View.GONE
                 rootView.ivEstimateFare.visibility = View.GONE
             } else {
-                rootView.tvEstimateFare.text = requestRide.estimateFare
+                rootView.tvEstimateFare.text = requestRide.estimateFare.plus("*")
             }
 
             if(!requestRide.vehicleIcon.isNullOrEmpty()) {

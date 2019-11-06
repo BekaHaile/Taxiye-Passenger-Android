@@ -661,14 +661,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
                 textViewEndRideToBePaidValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.toPay));
 
-                if (!rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
-                    textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
-                } else {
-                    textViewEndRideFareFactorValue.setVisibility(View.GONE);
-                }
-
-                textViewEndRideFareFactorValue.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
-                        activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
                 textViewEndRideBaseFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.baseFare));
                 if(Prefs.with(activity).getInt(KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY, 1) != 1){
 					linearLayoutRideDetail.setVisibility(View.VISIBLE);
@@ -688,14 +680,30 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 } else {
                     linearLayoutEndRideTime.setVisibility(View.GONE);
                 }
+
+                boolean showSurge = Prefs.with(activity).getInt(KEY_CUSTOMER_SHOW_SURGE_ICON, 1) == 1;
+                textViewEndRideFareFactorValue.setVisibility(View.GONE);
                 if (endRideData.waitingChargesApplicable == 1 || endRideData.waitTime > 0) {
-                    relativeLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
-                    textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " "+getString(R.string.min));
-                    textViewEndRideTime.setText(R.string.total);
+                    relativeLayoutEndRideWaitTime.setVisibility(View.GONE);
+                    textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
+                    textViewEndRideFareFactorValue.setText(getString(R.string.text_congestion_time)+": "+decimalFormatNoDecimal.format(endRideData.waitTime) + " "+getString(R.string.min));
+                    textViewEndRideTime.setText(R.string.ride_time);
+                    if (showSurge && !rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
+                        textViewEndRideFareFactorValue.append("\n");
+                        textViewEndRideFareFactorValue.append(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
+                                activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
+                    }
                 } else {
                     relativeLayoutEndRideWaitTime.setVisibility(View.GONE);
                     textViewEndRideTime.setText(R.string.time);
+
+                    if (showSurge && !rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
+                        textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
+                    }
+                    textViewEndRideFareFactorValue.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
+                            activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
                 }
+
 
                 if(rideCancelled){
                     relativeLayoutConvenienceCharge.setVisibility(View.GONE);

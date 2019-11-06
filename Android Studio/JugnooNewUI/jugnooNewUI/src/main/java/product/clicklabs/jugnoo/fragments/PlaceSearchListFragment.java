@@ -910,7 +910,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				public void onAddClick(SearchResult searchResult) {
 					onSavedLocationEdit(searchResult);
 				}
-			}, false, false, false, false);
+			}, false, false, false, true);
 			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
 		} else {
 			savedPlacesAdapterRecent.setList(searchResultList);
