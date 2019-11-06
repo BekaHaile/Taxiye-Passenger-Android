@@ -115,7 +115,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private RelativeLayout rlMarkerPin;
 	private Button bNext;
 	private View mapFragment;
-	private ImageView imageViewSearchCrossDest;
+	private ImageView imageViewSearchCrossDest, imageViewType;
 	private EditText editTextSearchDest, etPreAddress;
 	private ProgressWheel progressBarSearchDest;
 	private SearchResult searchResultPickup,searchResultDestination;
@@ -294,6 +294,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		imageViewSearchCross = (ImageView) rootView.findViewById(R.id.ivDeliveryAddressCross); imageViewSearchCross.setVisibility(View.GONE);
 		progressBarSearchDest = (ProgressWheel) rootView.findViewById(R.id.progressBarSearchDest); progressBarSearchDest.setVisibility(View.GONE);
 		imageViewSearchCrossDest = (ImageView) rootView.findViewById(R.id.ivDeliveryAddressCrossDest); imageViewSearchCrossDest.setVisibility(View.GONE);
+		imageViewType = (ImageView) rootView.findViewById(R.id.imageViewType);
 		listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
 		scrollViewSearch = (ScrollView) rootView.findViewById(R.id.scrollViewSearch);
 		rlAddress = rootView.findViewById(R.id.rlAddress);
@@ -359,8 +360,19 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			ImageView imageViewSearchGPSIconDest = rootView.findViewById(R.id.imageViewSearchGPSIconDest);
 			initaliseAddressEditText(editTextSearchDest, imageViewSearchCrossDest,imageViewSearchGPSIconDest,hintDestination, hintDestination, PlaceSearchMode.DROP.getOrdinal());//For Drop
 			editTextsForAdapter = new EditText[]{editTextSearch,editTextSearchDest};
+			imageViewType.setImageResource(R.drawable.circle_theme);
 		}else{
-
+			ViewGroup.LayoutParams params = imageViewType.getLayoutParams();
+			if(searchMode == PlaceSearchMode.DROP.getOrdinal()) {
+				params.height = 30;
+				params.width = 30;
+				imageViewType.setImageResource(R.drawable.ic_shape);
+			} else {
+				params.height = 20;
+				params.width = 20;
+				imageViewType.setImageResource(R.drawable.circle_theme);
+			}
+			imageViewType.setLayoutParams(params);
 			String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
 			String hint = bundle.getString(KEY_SEARCH_FIELD_HINT, "");
 			editTextsForAdapter = new EditText[]{editTextSearch};

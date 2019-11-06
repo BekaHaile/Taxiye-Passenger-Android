@@ -4044,6 +4044,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             }
                         } else if(isNewUI) {
                             buttonConfirmRequest.setText(R.string.book);
+                            imageViewRideNow.setVisibility(View.GONE);
                             relativeLayoutSearchContainerNew.setVisibility(View.VISIBLE);
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
@@ -6669,6 +6670,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
                     relativeLayoutSearchContainer.setVisibility(View.GONE);
                     tvTermsAndConditions.setVisibility(View.GONE);
+                    imageViewRideNow.setVisibility(View.GONE);
                     linearLayoutConfirmOption.setBackground(ContextCompat.getDrawable(this,R.color.white));
                     if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
                         linearLayoutBidValue.setVisibility(View.VISIBLE);
@@ -6699,6 +6701,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
 
 
+                    if(!confirmedScreenOpened){
+                        imageViewRideNow.setVisibility(View.VISIBLE);
+                    }
                     relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
 
                     linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
@@ -6937,7 +6942,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             Prefs.with(this).getString(KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE, getString(R.string.customer_partner_dialog_message)), callbackPartner);
                 }
             } else {
-                if(!confirmedScreenOpened) {
+                if(!confirmedScreenOpened && !isNewUI()) {
                     imageViewRideNow.setVisibility(View.VISIBLE);
                 }
                 checkForMyLocationButtonVisibility();
@@ -8936,7 +8941,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void locationGotNow() {
         relativeLayoutLocationError.setVisibility(View.GONE);
         checkForMyLocationButtonVisibility();
-        imageViewRideNow.setVisibility(View.VISIBLE);
+        if(!confirmedScreenOpened && !isNewUI()) {
+            imageViewRideNow.setVisibility(View.VISIBLE);
+        }
         showCenterPickupPin(true);
     }
 
