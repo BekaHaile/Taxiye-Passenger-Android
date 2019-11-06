@@ -1125,4 +1125,15 @@ public interface Constants {
 	String KEY_C_2_D_REFERRAL_IMAGE = "c2d_referral_image";
 	String KEY_C_2_D_REFERRAL_INFO = "c2d_referral_info";
 	String KEY_C_2_D_REFERRAL_DETAILS = "c2d_referral_details";
+    String KEY_DELIVERIES = "deliveries";
+    String KEY_NOTES = "key_notes";
+    String KEY_IS_ONE_WAY = "is_oneway";
+    String KEY_IS_CORPORATE = "is_corporate";
+    String KEY_DETAILS = "details";
+
+    String KEY_IS_OPTIMIZED = "is_optimized";
+
+    String KEY_HISTORY_DATA = "history_data";
+    String KEY_BUNDLE_WITH_HISTORY_DATA = "bundle_with_history_data";
+    String KEY_CHAT_DELIVERY = "chat_delivery";
 }

@@ -63,6 +63,7 @@ import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
 import com.facebook.appevents.AppEventsLogger;
+import com.fugu.FuguConfig;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
@@ -125,6 +126,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import static product.clicklabs.jugnoo.Constants.KEY_DELIVERY_ID;
+
 
 import static com.fugu.FuguConfig.clearFuguData;
 
@@ -132,6 +135,7 @@ import static com.fugu.FuguConfig.clearFuguData;
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
 	private AlertDialog dialogLocationPermission;
+
 	private PermissionCommon.PermissionListener permissionListener = new PermissionCommon.PermissionListener() {
 				@Override
 				public void permissionGranted(int requestCode) {
@@ -469,7 +473,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
-					clearFuguData(SplashNewActivity.this);
+					FuguConfig.clearFuguData(SplashNewActivity.this);
 					Prefs.with(this).save(FUGU_CACHE_CLEARED,true);
 					Log.e("Splash","Fugu Data cleared on startup");
 				} catch (Exception e) {
@@ -526,8 +530,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			}
 
 
+			String deliveryId = getIntent().getStringExtra(Constants.KEY_DELIVERY_ID);
 
-
+			if(deliveryId!=null && !deliveryId.isEmpty())
+				startActivity(ChatActivity.createIntent(SplashNewActivity.this,deliveryId));
 
 
 			Data.locationSettingsNoPressed = false;
