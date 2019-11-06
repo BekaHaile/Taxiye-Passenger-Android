@@ -9475,10 +9475,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             Log.w("pickuplogging", "afterRideFeedbackSubmitted delayed runnable"+currentLatLng);
                             Log.w("findADriverAndGeocode", "afterRideFeedback");
                             findADriverAndGeocode(currentLatLng, true, true, true);
-
-							passengerScreenMode = P_INITIAL;
-							switchPassengerScreen(passengerScreenMode);
                         }
+						passengerScreenMode = P_INITIAL;
+						switchPassengerScreen(passengerScreenMode);
                     }
                 }
             }, 500);
