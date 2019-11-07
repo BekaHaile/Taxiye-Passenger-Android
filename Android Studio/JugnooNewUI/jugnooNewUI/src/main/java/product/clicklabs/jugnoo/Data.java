@@ -119,6 +119,8 @@ public class Data {
     public static boolean activityResumed = false;
     private static CaptureUserData fuguUserData;
 
+    public static int jungleApisDisable = 0;
+
     public static void clearDataOnLogout(Activity context) {
         try {
             userData = null;

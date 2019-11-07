@@ -41,7 +41,7 @@ class AppSignatureHelper {
                 for (signature in signatures) {
                     val hash = hash(packageName, signature.toCharsString())
                     if (hash != null) {
-                        appCodes.add(String.format("%s", hash))
+                        appCodes.add(hash)
                     }
                 }
             } catch (e: PackageManager.NameNotFoundException) {
