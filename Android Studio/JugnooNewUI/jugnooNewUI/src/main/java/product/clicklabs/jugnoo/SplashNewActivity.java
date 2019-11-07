@@ -501,6 +501,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			AppSignatureHelper.Companion.getAppSignatures(this);
 
 			MyApplication.getInstance().initializeServerURL(this);
+			Data.jungleApisDisable = 0;
 
 			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 			//clear Menu Reorder Prefs
@@ -2720,7 +2721,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							dialog.dismiss();
 							activity.startActivity(new Intent(activity, DebugOptionsActivity.class));
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							ActivityCompat.finishAffinity(activity);
 						} else {
 							etCode.requestFocus();
 							etCode.setError(getString(R.string.code_not_matched));
