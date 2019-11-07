@@ -120,6 +120,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 	private ProgressWheel progressBarSearchDest;
 	private SearchResult searchResultPickup,searchResultDestination;
 	private ImageView ivLocationMarker, ivSearch, ivSearchDest;
+	private TextView tvTapOnPin;
 	private boolean isMarkerSet = false;
 	private List<SearchLocation> searchLocations = new ArrayList<>();
 
@@ -313,6 +314,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 
 		ivLocationMarker = rootView.findViewById(R.id.ivLocationMarker);
+		tvTapOnPin = rootView.findViewById(R.id.tvTapOnPin);
+		tvTapOnPin.setTypeface(Fonts.mavenMedium(activity));
+		tvTapOnPin.setVisibility(View.GONE);
 
 		if(showBouncingMarker()) {
 			ivLocationMarker.setImageResource(R.drawable.ic_bounce_pin);
@@ -1225,11 +1229,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	private void startAnimation() {
 		if(showBouncingMarker()) {
-			setFetchedAddressToTextView(getString(R.string.tap_on_pin), true,true, true);
+			//getString(R.string.tap_on_pin)
+			setFetchedAddressToTextView(getString(R.string.type_atleast_4_characters), true,true, true);
 			if(ivLocationMarker.getAnimation() == null) {
 				ivLocationMarker.clearAnimation();
 				final Animation anim = AnimationUtils.loadAnimation(activity, R.anim.bounce_view);
 				ivLocationMarker.startAnimation(anim);
+				tvTapOnPin.setVisibility(View.VISIBLE);
 			}
 			isMarkerSet = false;
 		}
@@ -1237,6 +1243,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 	private void stopAnimation() {
 		ivLocationMarker.clearAnimation();
+		tvTapOnPin.setVisibility(View.GONE);
 		isMarkerSet = true;
 	}
 
