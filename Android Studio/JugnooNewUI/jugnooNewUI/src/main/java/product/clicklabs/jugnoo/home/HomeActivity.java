@@ -9535,6 +9535,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setDropAddressId(0);
             Data.setRecentAddressesFetched(false);
             Data.autoData.clearRegionFares();
+            if(getApiFindADriver().getParams() != null) {
+				getApiFindADriver().getParams().clear();
+			}
 
             if(!editTextBidValue.getText().toString().isEmpty()) {
                 editTextBidValue.setText("");

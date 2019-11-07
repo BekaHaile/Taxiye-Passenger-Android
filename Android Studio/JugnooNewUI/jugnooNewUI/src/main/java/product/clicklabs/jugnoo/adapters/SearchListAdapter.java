@@ -254,6 +254,7 @@ public class SearchListAdapter extends BaseAdapter{
 				holder.textViewSearchName.setText(searchResult.getAddress());
 				holder.textViewSearchAddress.setVisibility(View.GONE);
 			} else {
+				holder.textViewSearchAddress.setVisibility(View.VISIBLE);
 				if(!TextUtils.isEmpty(searchResult.getName())
 						&& !searchResult.getAddress().contains(searchResult.getName())){
 					holder.textViewSearchName.setVisibility(View.VISIBLE);

@@ -1136,6 +1136,7 @@ public class JSONParser implements Constants {
         String partnerName = jLastRideData.optString(Constants.KEY_PARTNER_NAME, "");
         int showTipOption = jLastRideData.optInt(Constants.KEY_SHOW_TIP_OPTION, 1);
         double paidUsingPOS = jLastRideData.optDouble(Constants.KEY_PAID_USING_POS, 0);
+		int meterFareApplicable = jLastRideData.optInt(Constants.KEY_METER_FARE_APPLICABLE, 0);
 
         JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
         ArrayList<DiscountType> stripeCardsAmount = new ArrayList<>();
@@ -1175,7 +1176,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable);
 	}
 
 

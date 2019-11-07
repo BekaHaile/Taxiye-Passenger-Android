@@ -86,6 +86,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             rlPaidUsingCorporate, rlPaidUsingPOS, rlToBePaid;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare,relativeLayoutDriverTip, relativeLayoutFinalFare;
+    LinearLayout llFareComponents;
     NonScrollListView listViewEndRideDiscounts, listViewStripeTxns;
     TextView textViewEndRideFareValue,textViewDriverTipValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
@@ -273,6 +274,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
             linearLayoutRideDetail = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideDetail);
             relativeLayoutFinalFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFinalFare);
+			llFareComponents = rootView.findViewById(R.id.llFareComponents);
 			rlToBePaid = (RelativeLayout) rootView.findViewById(R.id.rlToBePaid);
 
             textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue);
@@ -532,31 +534,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 }
 
 
-				/*if(endRideData.discountTypes.size() > 1){
-                    listViewEndRideDiscounts.setVisibility(View.VISIBLE);
-					endRideDiscountsAdapter.setList(endRideData.discountTypes);
-					textViewEndRideDiscount.setText("Discounts");
-					textViewEndRideDiscountValue.setVisibility(View.GONE);
-					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-				}
-				else if(endRideData.discountTypes.size() > 0){
-					listViewEndRideDiscounts.setVisibility(View.GONE);
-					textViewEndRideDiscount.setText(endRideData.discountTypes.get(0).name);
-					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
-					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-				}
-				else{
-					listViewEndRideDiscounts.setVisibility(View.GONE);
-					textViewEndRideDiscount.setText("Discounts");
-					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
-					if(endRideData.discount > 0){
-						relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-					} else{
-						relativeLayoutEndRideDiscount.setVisibility(View.GONE);
-					}
-				}*/
 
 
                 rlLuggageChargesNew.setVisibility(endRideData.getLuggageChargesNew() > 0.0 ? View.VISIBLE : View.GONE);
@@ -566,6 +543,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 if(Utils.compareDouble(endRideData.fare, endRideData.finalFare) == 0){
                     relativeLayoutFinalFare.setVisibility(View.GONE);
                 }
+				llFareComponents.setVisibility(endRideData.getMeterFareApplicable() == 0 ? View.VISIBLE : View.GONE);
+
 
                 if (Utils.compareDouble(endRideData.paidUsingWallet, 0) > 0) {
                     relativeLayoutPaidUsingJugnooCash.setVisibility(View.VISIBLE);

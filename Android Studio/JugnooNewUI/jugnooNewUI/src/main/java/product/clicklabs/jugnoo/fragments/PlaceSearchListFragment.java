@@ -503,8 +503,9 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					searchAdapterListener.onPlaceSearchPost(autoCompleteSearchResult, null);
 				}else{
 					if(showBouncingMarker()) {
-						if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet)
+						if (bottomSheetBehaviour.getState() == BottomSheetBehavior.STATE_COLLAPSED && !isMarkerSet) {
 							fillAddressDetails(PlaceSearchListFragment.this.googleMap.getCameraPosition().target, false, true);
+						}
 						stopAnimation();
 					}
 					Utils.showToast(activity, activity.getString(R.string.please_wait));
@@ -638,6 +639,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 					clearExistingAddress(editTextSearch);
 					startAnimation();
 					clearBottomAddress();
+					mapSettledCanForward = false;
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
