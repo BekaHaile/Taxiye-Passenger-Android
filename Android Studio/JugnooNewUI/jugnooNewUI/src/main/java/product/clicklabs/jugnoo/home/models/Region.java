@@ -165,6 +165,10 @@ public class Region {
 		return regionFare;
 	}
 
+	public void setRegionFare(RegionFare regionFare) {
+		this.regionFare = regionFare;
+	}
+
 	public ArrayList<Package> getPackages() {
 		return packages;
 	}

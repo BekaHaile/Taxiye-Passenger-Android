@@ -350,6 +350,14 @@ public class AutoData {
         return setNew;
     }
 
+    public void clearRegionFares(){
+    	if(regions != null){
+    		for(Region region : regions){
+    			region.setRegionFare(null);
+			}
+		}
+	}
+
     public ArrayList<Region> getRegions() {
         if(regionsTemp == null){
             regionsTemp = new ArrayList<>();

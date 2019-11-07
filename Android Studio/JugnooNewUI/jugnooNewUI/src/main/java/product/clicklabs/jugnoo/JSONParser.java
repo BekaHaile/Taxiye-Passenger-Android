@@ -808,7 +808,9 @@ public class JSONParser implements Constants {
             if(autos.getCityId() != null){
                 Data.userData.setCurrentCity(autos.getCityId());
             }
-            Data.autoData.setNewBottomRequestUIEnabled(autos.getBottomRequestUIEnabled());
+            if(autos.getBottomRequestUIEnabled() != null) {
+				Data.autoData.setNewBottomRequestUIEnabled(autos.getBottomRequestUIEnabled());
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }

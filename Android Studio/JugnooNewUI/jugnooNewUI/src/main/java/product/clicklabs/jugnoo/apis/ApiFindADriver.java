@@ -195,7 +195,9 @@ public class ApiFindADriver {
             if(findADriverResponse.getCityId() != null){
                 Data.userData.setCurrentCity(findADriverResponse.getCityId());
             }
-			Data.autoData.setNewBottomRequestUIEnabled(findADriverResponse.getBottomRequestUIEnabled());
+            if(findADriverResponse.getBottomRequestUIEnabled() != null) {
+				Data.autoData.setNewBottomRequestUIEnabled(findADriverResponse.getBottomRequestUIEnabled());
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

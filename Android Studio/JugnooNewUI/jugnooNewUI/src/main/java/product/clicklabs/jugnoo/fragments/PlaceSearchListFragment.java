@@ -878,15 +878,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			} else {
 				textViewSavedPlaces.setVisibility(View.GONE);
 			}
-
-			if (savedPlacesAdapterRecent.getCount() > 0) {
-				textViewRecentAddresses.setVisibility(View.VISIBLE);
-				listViewRecentAddresses.setVisibility(View.VISIBLE);
-				textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
-			} else {
-				textViewRecentAddresses.setVisibility(View.GONE);
-				listViewRecentAddresses.setVisibility(View.GONE);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -915,12 +906,22 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		} else {
 			savedPlacesAdapterRecent.setList(searchResultList);
 		}
-		if(searchResultList.size() > 0){
-//				cvRecentAddresses.setVisibility(View.VISIBLE);
+//		if(searchResultList.size() > 0){
+////				cvRecentAddresses.setVisibility(View.VISIBLE);
+//			textViewRecentAddresses.setVisibility(View.VISIBLE);
+//			listViewRecentAddresses.setVisibility(View.VISIBLE);
+//		} else{
+////				cvRecentAddresses.setVisibility(View.GONE);
+//			textViewRecentAddresses.setVisibility(View.GONE);
+//			listViewRecentAddresses.setVisibility(View.GONE);
+//		}
+
+
+		if (savedPlacesAdapterRecent.getCount() > 0) {
 			textViewRecentAddresses.setVisibility(View.VISIBLE);
 			listViewRecentAddresses.setVisibility(View.VISIBLE);
-		} else{
-//				cvRecentAddresses.setVisibility(View.GONE);
+			textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
+		} else {
 			textViewRecentAddresses.setVisibility(View.GONE);
 			listViewRecentAddresses.setVisibility(View.GONE);
 		}

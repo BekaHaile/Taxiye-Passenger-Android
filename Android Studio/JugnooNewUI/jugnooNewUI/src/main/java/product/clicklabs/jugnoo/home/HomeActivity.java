@@ -3385,7 +3385,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     centreLocationRl.setLayoutParams(params);
                     bottomPadding = (isNewUI() || confirmedScreenOpened) ? bottomPadding - (ASSL.Yscale() * 125F) : 0F;
                 } else {
-                    mapTopPadding = 100.0f;
+                    mapTopPadding = 230.0f;
                     if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
 						bottomPadding = bottomPadding - (ASSL.Yscale() * 125F);
 					}
@@ -5261,9 +5261,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             if(Data.autoData.getAssignedDriverInfo() != null
 					&& Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                Log.e("ride type", Data.autoData.getAssignedDriverInfo().getRideType()+"");
-                    dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
-            }
+            	dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
+            } else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+					&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()){
+				dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
+			}
 
         }
     }
@@ -7023,9 +7025,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void addUserCurrentLocationAddressMarker() {
         try {
-            if(passengerScreenMode == P_INITIAL
+            if((passengerScreenMode == P_INITIAL
                     && !confirmedScreenOpened
-                    && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0 || isNewUI) {
+                    && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) || isNewUI) {
                 LatLng latLng = Data.autoData.getPickupLatLng();
                 BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                         .getTextBitmap(HomeActivity.this,
@@ -9527,6 +9529,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             Data.autoData.setDropAddress("");
             Data.autoData.setDropAddressId(0);
             Data.setRecentAddressesFetched(false);
+            Data.autoData.clearRegionFares();
+
             if(!editTextBidValue.getText().toString().isEmpty()) {
                 editTextBidValue.setText("");
             }
@@ -10702,7 +10706,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 										|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1))) {
                             textViewTotalFareValue.setText("");
                             imageViewRideNow.performClick();
-                        } else if(!specialPickupScreenOpened && !confirmedScreenOpened) {
+                        } else if(!specialPickupScreenOpened && !confirmedScreenOpened && !isNewUI()) {
                             findDriversETACall(false, false, false, null);
                         }
                     }
@@ -11729,7 +11733,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private boolean isNormalRideWithDropAtConfirmation() {
         return P_INITIAL == passengerScreenMode
-                && confirmedScreenOpened || isNewUI
+                && (confirmedScreenOpened || isNewUI)
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()
                 && Data.autoData.getDropLatLng() != null
                 && Data.autoData.getPickupLatLng() != null;
