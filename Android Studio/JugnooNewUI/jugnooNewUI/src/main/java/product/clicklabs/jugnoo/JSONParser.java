@@ -805,17 +805,19 @@ public class JSONParser implements Constants {
             if(autos.getDriverFareFactor() != null) {
                 Data.autoData.setDriverFareFactor(autos.getDriverFareFactor());
             }
+
+			Data.autoData.setCampaigns(autos.getCampaigns());
+
+			if(autos.getCityId() != null){
+				Data.userData.setCurrentCity(autos.getCityId());
+			}
+
             if (autos.getFarAwayCity() == null) {
 				Data.autoData.setFarAwayCity("");
 			} else {
 				Data.autoData.setFarAwayCity(autos.getFarAwayCity());
 			}
 
-            Data.autoData.setCampaigns(autos.getCampaigns());
-
-            if(autos.getCityId() != null){
-                Data.userData.setCurrentCity(autos.getCityId());
-            }
             if(autos.getBottomRequestUIEnabled() != null) {
 				Data.autoData.setNewBottomRequestUIEnabled(autos.getBottomRequestUIEnabled());
 			}

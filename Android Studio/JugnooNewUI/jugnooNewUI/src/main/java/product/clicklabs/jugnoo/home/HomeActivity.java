@@ -3665,7 +3665,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void navigateToCurrLoc() {
-        if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
+        if (TextUtils.isEmpty(Data.autoData.getFarAwayCity()) && (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation())) {
             poolPathZoomAtConfirm();
             return;
         }
@@ -6929,6 +6929,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 changeLocalityLayout.setVisibility(View.VISIBLE);
+				relativeLayoutConfirmRequest.setVisibility(View.GONE);
                 textViewChangeLocality.setText(farAwayCity);
                 relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
                 textViewCentrePinETA.setText("-");
@@ -6955,6 +6956,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
+                if(passengerScreenMode == P_INITIAL && (confirmedScreenOpened || isNewUI())) {
+					relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
+				}
                 if(partnerWithJugnooDialog != null) {
                     partnerWithJugnooDialog.dismiss();
                 }
@@ -9387,13 +9391,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
         DBCoroutine.Companion.insertLocation(searchLocationDB, searchLocation);
-        DBCoroutine.Companion.getPickupLocation(searchLocationDB, new DBCoroutine.SearchLocationCallback() {
-            @Override
-            public void onSearchLocationReceived(@NotNull List<SearchLocation> searchLocation) {
-
-                Log.w("search Location:- ", searchLocation.toString());
-            }
-        });
+//        DBCoroutine.Companion.getPickupLocation(searchLocationDB, new DBCoroutine.SearchLocationCallback() {
+//            @Override
+//            public void onSearchLocationReceived(@NotNull List<SearchLocation> searchLocation) {
+//
+//                Log.w("search Location:- ", searchLocation.toString());
+//            }
+//        });
 
     }
 
@@ -10652,7 +10656,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
                 addressPopulatedFromDifferentOffering = false;
-                callMapTouchedRefreshDrivers(null);
+                if(Data.autoData.getDropLatLng() != null && passengerScreenMode == P_INITIAL && (confirmedScreenOpened || isNewUI())){
+					fareEstimatBeforeRequestRide();
+				} else {
+					callMapTouchedRefreshDrivers(null);
+				}
             }
         }
         return refresh;

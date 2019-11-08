@@ -180,23 +180,26 @@ public class ApiFindADriver {
 				Data.autoData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
 			}
 
+			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
+
+			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
+
+			if(findADriverResponse.getCityId() != null){
+				Data.userData.setCurrentCity(findADriverResponse.getCityId());
+			}
+
 			Data.autoData.setFarAwayCity("");
 			if (findADriverResponse.getFarAwayCity() == null) {
 				Data.autoData.setFarAwayCity("");
 			} else {
 				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
-			Data.autoData.setShowRegionSpecificFare(findADriverResponse.getShowRegionSpecificFare());
+			if(TextUtils.isEmpty(Data.autoData.getFarAwayCity())) {
+				Data.autoData.setShowRegionSpecificFare(findADriverResponse.getShowRegionSpecificFare());
 
-			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
-
-			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
-
-            if(findADriverResponse.getCityId() != null){
-                Data.userData.setCurrentCity(findADriverResponse.getCityId());
-            }
-            if(findADriverResponse.getBottomRequestUIEnabled() != null) {
-				Data.autoData.setNewBottomRequestUIEnabled(findADriverResponse.getBottomRequestUIEnabled());
+				if (findADriverResponse.getBottomRequestUIEnabled() != null) {
+					Data.autoData.setNewBottomRequestUIEnabled(findADriverResponse.getBottomRequestUIEnabled());
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

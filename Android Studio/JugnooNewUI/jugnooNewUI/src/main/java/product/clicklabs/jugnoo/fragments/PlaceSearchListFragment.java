@@ -912,15 +912,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		} else {
 			savedPlacesAdapterRecent.setList(searchResultList);
 		}
-//		if(searchResultList.size() > 0){
-////				cvRecentAddresses.setVisibility(View.VISIBLE);
-//			textViewRecentAddresses.setVisibility(View.VISIBLE);
-//			listViewRecentAddresses.setVisibility(View.VISIBLE);
-//		} else{
-////				cvRecentAddresses.setVisibility(View.GONE);
-//			textViewRecentAddresses.setVisibility(View.GONE);
-//			listViewRecentAddresses.setVisibility(View.GONE);
-//		}
 
 
 		if (savedPlacesAdapterRecent.getCount() > 0) {
