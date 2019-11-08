@@ -10042,7 +10042,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private boolean stopDefaultCoupon = false;
     public void callFindADriverAfterCouponSelect(){
-        if(confirmedScreenOpened) {
+        if(confirmedScreenOpened || isNewUI()) {
             if (Data.autoData.showRegionSpecificFare()) {
                 HashMap<String, String> params = new HashMap<>();
                 if (getApiFindADriver().getParams() != null) {
@@ -12475,7 +12475,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null
          && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
           || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))) {
-            slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
+//            slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
             promoCouponSelectedForRide = null;
             showPoolInforBar(false);
         }
