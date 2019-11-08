@@ -45,6 +45,9 @@ import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -175,6 +178,12 @@ public class HomeUtil {
 		GCMIntentService.clearNotifications(activity);
 
 		Data.clearDataOnLogout(activity);
+
+		if(DBObject.INSTANCE.getInstance() != null) {
+			DBCoroutine.Companion.deleteAll(DBObject.INSTANCE.getInstance());
+			SearchLocationDB.Companion.clearInstance();
+			DBObject.INSTANCE.clearInstance();
+		}
 
 		HomeActivity.userMode = UserMode.PASSENGER;
 		HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;

@@ -24,5 +24,7 @@ interface SearchLocationDao {
 
     @Query("DELETE FROM search_location WHERE id = :id")
     fun deleteLocation(id:Int)
+    @Query("DELETE FROM search_location")
+    fun deleteAll()
 
 }

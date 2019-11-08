@@ -14,7 +14,7 @@ import product.clicklabs.jugnoo.room.model.SearchLocation
 @Database(entities = [
     SearchLocation::class
 ],     //******* version should be increase if any change done with schema ***** //
-        version = 1)
+        version = 2)
 abstract class SearchLocationDB : RoomDatabase(){
 
     companion object {
@@ -33,6 +33,10 @@ abstract class SearchLocationDB : RoomDatabase(){
                 }
             }
             return instance
+        }
+
+        fun clearInstance(){
+            instance = null
         }
 
         private val callback: RoomDatabase.Callback = object : RoomDatabase.Callback(){

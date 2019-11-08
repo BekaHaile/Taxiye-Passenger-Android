@@ -240,7 +240,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 
 		@Override
 		public void onNotifyDataSetChanged(int count) {
-			if (count > 0) {
+			if (count > 0 && !isMarkerSet) {
 				cardViewSearch.setVisibility(View.VISIBLE);
 			} else {
 				cardViewSearch.setVisibility(View.GONE);

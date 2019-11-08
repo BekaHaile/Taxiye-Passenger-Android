@@ -127,6 +127,7 @@
             android:background="@drawable/bg_menu_item_color_f7_r"
             android:textColor="@color/text_color"
             android:drawableEnd="@drawable/ic_feed_edit_icon"
+            android:inputType="textCapWords"
             android:drawablePadding="@dimen/spacing_small"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"

@@ -8999,10 +8999,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
 
             //******************* TYPE : 0 for Pickup Location, TYPE :- 1 for Drop Location ********************//
-            if(!Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()).equalsIgnoreCase("Current Location")) {
-                createDataAndInsert(0);
-            }
-            createDataAndInsert(1);
+            callInsertData();
             requestRideLifeTime = Data.autoData.getIsReverseBid() == 1 ? Data.autoData.getBidRequestRideTimeout() : 3 * 60 * 1000;
             serverRequestStartTime = System.currentTimeMillis();
             serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
@@ -10085,6 +10082,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 										  String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
 						mapTouched = false;
 						latLngBoundsBuilderPool = new LatLngBounds.Builder();
+						callInsertData();
 
 						polylineOptionsP2D = new PolylineOptions();
 						polylineOptionsP2D.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
@@ -10153,6 +10151,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							textViewIncludes.setVisibility(View.GONE);
 						}
 						setTextTollCharges(currency, tollCharge);
+						callInsertData();
 					}
 
 					private void setTextTollCharges(String currency, double tollCharge) {
@@ -10186,6 +10185,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						textViewIncludes.setText(text);
 						setTextTollCharges(currency, tollCharge);
 						closeFabView();
+                        callInsertData();
 					}
 
 					@Override
@@ -10209,11 +10209,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 					}
 				});
 			}
-
-            if(!Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()).equalsIgnoreCase("Current Location")) {
-                createDataAndInsert(0);
-            }
-            createDataAndInsert(1);
 
 			apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
 					region, promoCouponSelected, null, "c_fe_home");
@@ -10240,6 +10235,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 e.printStackTrace();
             }
         }
+    }
+
+    private void callInsertData() {
+        if(!Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()).equalsIgnoreCase("Current Location")) {
+            createDataAndInsert(0);
+        }
+        createDataAndInsert(1);
     }
 
     public void pickupLocationEtaMarker() {
