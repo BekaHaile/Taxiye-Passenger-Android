@@ -41,6 +41,8 @@ import com.google.gson.Gson;
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -52,6 +54,7 @@ import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.LocationFetcher;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
@@ -60,6 +63,7 @@ import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.room.DBObject;
@@ -317,6 +321,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		tvTapOnPin = rootView.findViewById(R.id.tvTapOnPin);
 		tvTapOnPin.setTypeface(Fonts.mavenMedium(activity));
 		tvTapOnPin.setVisibility(View.GONE);
+		tvTapOnPin.setText(R.string.tap_on_pin);
+		try{
+			JSONObject jungleObj = new JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_GEOCODE_OBJ, Constants.EMPTY_JSON_OBJECT));
+			if(JungleApisImpl.INSTANCE.checkIfJungleApiEnabled(jungleObj)){
+				tvTapOnPin.setText(R.string.tap_on_pin_caps);
+			}
+		} catch(Exception ignored){}
 
 		if(showBouncingMarker()) {
 			ivLocationMarker.setImageResource(R.drawable.ic_bounce_pin);

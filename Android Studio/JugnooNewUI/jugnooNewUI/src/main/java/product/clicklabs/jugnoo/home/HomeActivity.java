@@ -1577,7 +1577,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             setPickupLocationInitialUI();
                             return;
                         }
-                        if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP, 0) == 1) {
+                        if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP, 0) == 1
+								&& region.getReverseBid() != 1 && region.getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
                             openRequestConfirmDialog();
                         } else {
                             onReqestRideConfirmClick();
@@ -11086,6 +11087,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
         ImageView iv3NewUIDropMark = findViewById(R.id.iv3NewUIDropMark);
         LinearLayout rlMark = findViewById(R.id.rlMark);
+
+		ViewGroup.LayoutParams layoutParamsInitial = relativeLayoutInitialSearchBarNew.getLayoutParams();
+		layoutParamsInitial.height = 134;
+
         ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
         ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
         RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
@@ -11111,6 +11116,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             rlMark.setLayoutParams(params2);
             relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
             iv3NewUIDropMark.setLayoutParams(params);
+			relativeLayoutInitialSearchBarNew.setLayoutParams(layoutParamsInitial);
         }
     }
 
