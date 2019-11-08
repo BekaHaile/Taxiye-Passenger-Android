@@ -25,7 +25,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.directions.GAPIDirections;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.directions.room.model.Path;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -72,7 +72,7 @@ public class ApiFareEstimate {
 						return;
 					}
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
-					GAPIDirections.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, new GAPIDirections.Callback() {
+					JungleApisImpl.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, new JungleApisImpl.Callback() {
 								@Override
 								public void onSuccess(@NotNull List<LatLng> latLngs, @NotNull Path path) {
 									try {

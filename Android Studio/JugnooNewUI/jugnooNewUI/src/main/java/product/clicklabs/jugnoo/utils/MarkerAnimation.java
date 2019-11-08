@@ -29,7 +29,7 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.MyApplication;
-import product.clicklabs.jugnoo.directions.GAPIDirections;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 
 public class MarkerAnimation {
@@ -225,7 +225,7 @@ public class MarkerAnimation {
                     straightLineCase();
                 }
                 else if(list == null || list.size() == 0) {
-					GAPIDirections.DirectionsResult result = GAPIDirections.INSTANCE.getDirectionsPathSync(source, destination, "metric", "c_manim");
+					JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(source, destination, "metric", "c_manim");
 					if(result != null){
 						list = result.getLatLngs();
 						totalDistance = result.getPath().getDistance();

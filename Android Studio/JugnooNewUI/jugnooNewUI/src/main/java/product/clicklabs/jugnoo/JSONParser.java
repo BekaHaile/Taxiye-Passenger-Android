@@ -562,13 +562,25 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0));
 		Prefs.with(context).save(KEY_CUSTOMER_DIRECTIONS_CACHING, autoData.optInt(KEY_CUSTOMER_DIRECTIONS_CACHING,
 				1));
+		Prefs.with(context).save(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, autoData.optInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT,
+				context.getResources().getInteger(R.integer.remove_pickup_address_hit)));
+		Prefs.with(context).save(KEY_CUSTOMER_REQUEST_RIDE_POPUP, autoData.optInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP,
+				context.getResources().getInteger(R.integer.show_confirm_popup_before_ride_request)));
 
 		parseJungleApiObjects(context, autoData);
 	}
 
 	private void parseJungleApiObjects(Context context, JSONObject userData) {
 		try {
-			//todo null case to block apis
+			if(Data.jungleApisDisable == 1){
+				Prefs.with(context).save(KEY_JUNGLE_DIRECTIONS_OBJ, EMPTY_JSON_OBJECT);
+				Prefs.with(context).save(KEY_JUNGLE_DISTANCE_MATRIX_OBJ, EMPTY_JSON_OBJECT);
+				Prefs.with(context).save(KEY_JUNGLE_GEOCODE_OBJ, EMPTY_JSON_OBJECT);
+				Prefs.with(context).save(KEY_JUNGLE_AUTOCOMPLETE_OBJ, EMPTY_JSON_OBJECT);
+				Data.jungleApisDisable = 0;
+				return;
+			}
+
 			String jungleObjStr = BuildConfig.DEBUG ? JUNGLE_JSON_OBJECT : EMPTY_JSON_OBJECT;
 			JSONObject jungleObj = userData.optJSONObject(KEY_JUNGLE_DIRECTIONS_OBJ);
 			if(jungleObj != null){
@@ -582,6 +594,9 @@ public class JSONParser implements Constants {
 
 			JSONObject jungleGObj = userData.optJSONObject(KEY_JUNGLE_GEOCODE_OBJ);
 			Prefs.with(context).save(KEY_JUNGLE_GEOCODE_OBJ, jungleGObj!=null ? jungleGObj.toString(): jungleObjStr);
+
+			JSONObject jungleACbj = userData.optJSONObject(KEY_JUNGLE_AUTOCOMPLETE_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_AUTOCOMPLETE_OBJ, jungleACbj!=null ? jungleACbj.toString(): jungleObjStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -790,18 +805,22 @@ public class JSONParser implements Constants {
             if(autos.getDriverFareFactor() != null) {
                 Data.autoData.setDriverFareFactor(autos.getDriverFareFactor());
             }
+
+			Data.autoData.setCampaigns(autos.getCampaigns());
+
+			if(autos.getCityId() != null){
+				Data.userData.setCurrentCity(autos.getCityId());
+			}
+
             if (autos.getFarAwayCity() == null) {
 				Data.autoData.setFarAwayCity("");
 			} else {
 				Data.autoData.setFarAwayCity(autos.getFarAwayCity());
 			}
 
-            Data.autoData.setCampaigns(autos.getCampaigns());
-
-            if(autos.getCityId() != null){
-                Data.userData.setCurrentCity(autos.getCityId());
-            }
-            Data.autoData.setNewBottomRequestUIEnabled(autos.getBottomRequestUIEnabled());
+            if(autos.getBottomRequestUIEnabled() != null) {
+				Data.autoData.setNewBottomRequestUIEnabled(autos.getBottomRequestUIEnabled());
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1119,6 +1138,7 @@ public class JSONParser implements Constants {
         String partnerName = jLastRideData.optString(Constants.KEY_PARTNER_NAME, "");
         int showTipOption = jLastRideData.optInt(Constants.KEY_SHOW_TIP_OPTION, 1);
         double paidUsingPOS = jLastRideData.optDouble(Constants.KEY_PAID_USING_POS, 0);
+		int meterFareApplicable = jLastRideData.optInt(Constants.KEY_METER_FARE_APPLICABLE, 0);
 
         JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
         ArrayList<DiscountType> stripeCardsAmount = new ArrayList<>();
@@ -1158,7 +1178,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable);
 	}
 
 
