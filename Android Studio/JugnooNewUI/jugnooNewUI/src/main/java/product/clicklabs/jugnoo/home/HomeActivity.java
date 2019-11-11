@@ -9045,14 +9045,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put("access_token", Data.userData.accessToken);
                                 nameValuePairs.put("latitude", "" + Data.autoData.getPickupLatLng().latitude);
                                 nameValuePairs.put("longitude", "" + Data.autoData.getPickupLatLng().longitude);
-                                String address = selectedSpecialPickup
-                                        + (Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()).equalsIgnoreCase("Current Location")
-                                        ? "" : Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
-                                if(!TextUtils.isEmpty(address) && !address.equalsIgnoreCase(Constants.UNNAMED)) {
-                                    nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, address);
-                                }
+								putSelectedPickupAddress(nameValuePairs);
 
-                                //30.7500, 76.7800
+								//30.7500, 76.7800
 //								nameValuePairs.add(new BasicNameValuePair("latitude", "30.7500"));
 //								nameValuePairs.add(new BasicNameValuePair("longitude", "76.7800"));
 
@@ -9072,12 +9067,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                         && Utils.compareDouble(Data.autoData.getDropLatLng().longitude, 0) != 0) {
                                     nameValuePairs.put(KEY_OP_DROP_LATITUDE, String.valueOf(Data.autoData.getDropLatLng().latitude));
                                     nameValuePairs.put(KEY_OP_DROP_LONGITUDE, String.valueOf(Data.autoData.getDropLatLng().longitude));
-                                    if(!Data.autoData.getDropAddress().equalsIgnoreCase(Constants.UNNAMED)) {
-                                        nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
-                                    } else {
-                                        nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, "");
-                                    }
-                                }
+									putSelectedDropAddress(nameValuePairs);
+								}
 
                                 if (promoCouponSelectedForRide != null && regionSelected.getReverseBid() == 0) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
@@ -9371,7 +9362,26 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private void createDataAndInsert(final int type) {
+	public void putSelectedDropAddress(HashMap<String, String> nameValuePairs) {
+		if (Data.autoData != null && !Data.autoData.getDropAddress().equalsIgnoreCase(Constants.UNNAMED)) {
+			nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
+		} else {
+			nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, "");
+		}
+	}
+
+	public void putSelectedPickupAddress(HashMap<String, String> nameValuePairs) {
+    	if(Data.autoData != null) {
+			String address = selectedSpecialPickup
+					+ (Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()).equalsIgnoreCase("Current Location")
+					? "" : Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+			if (!TextUtils.isEmpty(address) && !address.equalsIgnoreCase(Constants.UNNAMED)) {
+				nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, address);
+			}
+		}
+	}
+
+	private void createDataAndInsert(final int type) {
         SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, type == 0 ? Data.autoData.getPickupLatLng() : Data.autoData.getDropLatLng(), true);
         if(searchResult != null) {
             return;
@@ -10121,6 +10131,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							if (promoCoupon != null && promoCoupon.getId() != -1) {
 								params.put(promoCoupon instanceof CouponInfo ? Constants.KEY_COUPON_TO_APPLY : Constants.KEY_PROMO_TO_APPLY, String.valueOf(promoCoupon.getId()));
 							}
+							putSelectedPickupAddress(params);
+							putSelectedDropAddress(params);
 							findDriversETACall(false, false, false, params);
 						}
 					}
