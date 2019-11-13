@@ -9,7 +9,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatTextView;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -312,5 +318,29 @@ public class CustomMapMarkerCreator {
 
 		return marker;
 	}
+	public static Bitmap createCustomMarkerWithSavedLocation(final Context context, final boolean isPickup) {
 
+		View marker = ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.layout_save_location_marker, null);
+
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		marker.setLayoutParams(new ViewGroup.LayoutParams(220, ViewGroup.LayoutParams.WRAP_CONTENT));
+		marker.measure(displayMetrics.widthPixels, displayMetrics.heightPixels);
+		marker.layout(0, 0, displayMetrics.widthPixels, displayMetrics.heightPixels);
+		marker.buildDrawingCache();
+		ImageView ivMarker = marker.findViewById(R.id.ivMarker);
+		AppCompatTextView tvSavedLocation = marker.findViewById(R.id.tvSavedLocation);
+
+		if(isPickup) {
+			ivMarker.setImageResource(R.drawable.pin_ball_start);
+			tvSavedLocation.setText(context.getString(R.string.save_your_pickup_location));
+		} else {
+			tvSavedLocation.setText(context.getString(R.string.save_your_drop_location));
+		}
+
+		Bitmap bitmap = Bitmap.createBitmap(marker.getMeasuredWidth(), marker.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(bitmap);
+		marker.draw(canvas);
+		return bitmap;
+	}
 }

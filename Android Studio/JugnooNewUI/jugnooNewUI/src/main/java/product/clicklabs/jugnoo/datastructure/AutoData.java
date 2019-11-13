@@ -1,11 +1,14 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.text.TextUtils;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
@@ -16,12 +19,15 @@ import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.utils.Prefs;
 
 /**
  * Created by gurmail on 18/08/16.
  */
 public class AutoData {
-    private String fuguChannelId;
+	private int isReverseBid;
+	private long bidRequestRideTimeout, bidTimeout;
+	private String fuguChannelId;
     private String fuguChannelName;
     private ArrayList<String> fuguTags;
     private String destinationHelpText, rideSummaryBadText, cancellationChargesPopupTextLine1, cancellationChargesPopupTextLine2, inRideSendInviteTextBold,
@@ -45,9 +51,9 @@ public class AutoData {
     private String cEngagementId = "", cDriverId = "", cSessionId = "";
     private DriverInfo assignedDriverInfo;
     private EndRideData endRideData;
-    private LatLng pickupLatLng, dropLatLng;
-    private String pickupAddress = "", dropAddress = "";
-    private LatLng pickupAddressMappedLatLng;
+    private SearchResult searchResultPickup;
+    private LatLng dropLatLng;
+    private String dropAddress = "";
     private int dropAddressId;
     private int pickupPaymentOption = PaymentOption.PAYTM.getOrdinal();
     private CancelOptionsList cancelOptionsList;
@@ -74,7 +80,16 @@ public class AutoData {
     private String currency;
     private boolean isServiceAv;
     private int lock = 0;
+    private int bluetoothEnabled =0;
     private String  previousSelService = "";
+    private int resendEmailInvoiceEnabled;
+
+    // RENTAL
+
+    private List<String> FaultConditions;
+
+    private int newBottomRequestUIEnabled;
+    private double initialBidValue, changedBidValue;
     private int customerVerificationStatus = 0;
 
 
@@ -84,7 +99,8 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare,int customerVerificationStatus) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare, int resendEmailInvoiceEnabled,int bluetoothEnabled,int customerVerificationStatus) {
+        this.bluetoothEnabled = bluetoothEnabled;
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
         this.cancellationChargesPopupTextLine1 = cancellationChargesPopupTextLine1;
@@ -111,15 +127,22 @@ public class AutoData {
         this.isRazorpayEnabled = isRazorpayEnabled;
         this.isTipEnabled = isTipEnabled;
         this.showRegionSpecificFare = showRegionSpecificFare;
-        ArrayList<Integer> rideTypes = new ArrayList<>();
-        ArrayList<Integer> regionIds = new ArrayList<>();
-        rideTypes.add(ServiceTypeValue.NORMAL.getType());
-        rideTypes.add(ServiceTypeValue.POOL.getType());
-        serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", 0, true);
-        this.customerVerificationStatus = customerVerificationStatus;
-    }
+        this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
+		defaultServiceType();
+		this.customerVerificationStatus = customerVerificationStatus;
+	}
 
-    public String getDestinationHelpText() {
+	public void defaultServiceType() {
+		ArrayList<Integer> rideTypes = new ArrayList<>();
+		ArrayList<Integer> regionIds = new ArrayList<>();
+		rideTypes.add(ServiceTypeValue.NORMAL.getType());
+		rideTypes.add(ServiceTypeValue.POOL.getType());
+		rideTypes.add(ServiceTypeValue.BIKE_RENTAL.getType());
+		int scheduleRideEnabled = Prefs.with(MyApplication.getInstance()).getBoolean(Constants.SCHEDULE_RIDE_ENABLED, false) ? 1 : 0;
+		serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", scheduleRideEnabled, true);
+	}
+
+	public String getDestinationHelpText() {
         return destinationHelpText;
     }
 
@@ -133,6 +156,14 @@ public class AutoData {
 
     public void setRideSummaryBadText(String rideSummaryBadText) {
         this.rideSummaryBadText = rideSummaryBadText;
+    }
+
+    public int getBluetoothEnabled() {
+        return bluetoothEnabled;
+    }
+
+    public void setBluetoothEnabled(int bluetoothEnabled) {
+        this.bluetoothEnabled = bluetoothEnabled;
     }
 
     public String getCancellationChargesPopupTextLine1() {
@@ -311,6 +342,24 @@ public class AutoData {
         this.fareStructure = fareStructure;
     }
 
+    public boolean getNewUIFlag(){
+        boolean setNew = getNewBottomRequestUIEnabled() == 1;
+        for (Region region : Data.autoData.getRegions()) {
+            if (region.getReverseBid() == 1) {
+                setNew = true;
+            }
+        }
+        return setNew;
+    }
+
+    public void clearRegionFares(){
+    	if(regions != null){
+    		for(Region region : regions){
+    			region.setRegionFare(null);
+			}
+		}
+	}
+
     public ArrayList<Region> getRegions() {
         if(regionsTemp == null){
             regionsTemp = new ArrayList<>();
@@ -356,6 +405,10 @@ public class AutoData {
                         }
                     }
                 }
+            }
+            if(!isSelectedTypeAvailable && Data.autoData != null && (Data.autoData.getServiceTypes() == null || Data.autoData.getServiceTypes().isEmpty())) {
+                isSelectedTypeAvailable = true;
+				defaultServiceType();
             }
             if (!isSelectedTypeAvailable) {
                 if (getServiceTypes() != null && getServiceTypes().size() > 0) {
@@ -464,12 +517,9 @@ public class AutoData {
     }
 
     public LatLng getPickupLatLng() {
-        return pickupLatLng;
+        return searchResultPickup != null ? searchResultPickup.getLatLng() : null;
     }
 
-    public void setPickupLatLng(LatLng pickupLatLng) {
-        this.pickupLatLng = pickupLatLng;
-    }
 
     public LatLng getDropLatLng() {
         return dropLatLng;
@@ -528,21 +578,26 @@ public class AutoData {
     }
 
     public String getPickupAddress(LatLng latLng) {
-        if(pickupAddressMappedLatLng == null || latLng == null){
-            return "";
-        }
-        if(MapUtils.distance(pickupAddressMappedLatLng, latLng) > 50){
-            return "";
-        }
-        return pickupAddress;
+		if(searchResultPickup == null || searchResultPickup.getAddress().equalsIgnoreCase(Constants.UNNAMED)){
+			return "";
+		}
+		if(latLng != null && MapUtils.distance(searchResultPickup.getLatLng(), latLng) > Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION){
+			return "";
+		}
+		return searchResultPickup != null ? searchResultPickup.getAddress() : "";
+    }
+    public SearchResult getPickupSearchResult() {
+		return searchResultPickup;
     }
 
-    public void setPickupAddress(String pickupAddress, LatLng latLng) {
-        if(latLng == null || pickupAddressMappedLatLng == null
-                || MapUtils.distance(pickupAddressMappedLatLng, latLng) > 50){
-            this.pickupAddress = pickupAddress;
-            this.pickupAddressMappedLatLng = latLng;
-        }
+    public void setPickupSearchResult(SearchResult searchResult) {
+    	if(searchResult != null && TextUtils.isEmpty(searchResult.getName())){
+    		searchResult.setName(searchResult.getAddress());
+		}
+    	this.searchResultPickup = searchResult;
+    }
+    public void setPickupSearchResult(String address, LatLng latLng) {
+		searchResultPickup = new SearchResult(address, address, "", latLng.latitude, latLng.longitude);
     }
 
     public String getDropAddress() {
@@ -733,6 +788,72 @@ public class AutoData {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
+    public int getResendEmailInvoiceEnabled() {
+        return resendEmailInvoiceEnabled;
+    }
+
+    public void setResendEmailInvoiceEnabled(int resendEmailInvoiceEnabled) {
+        this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
+    }
+
+
+    public List<String> getFaultConditions() {
+        return FaultConditions;
+    }
+
+    public void setFaultConditions(List<String> faultConditions) {
+        FaultConditions = faultConditions;
+    }
+
+	public int getIsReverseBid() {
+		return isReverseBid;
+	}
+
+	public void setIsReverseBid(int isReverseBid) {
+		this.isReverseBid = isReverseBid;
+	}
+
+	public long getBidTimeout() {
+		return bidTimeout;
+	}
+
+	public void setBidTimeout(long bidTimeout) {
+		this.bidTimeout = bidTimeout;
+	}
+
+	public long getBidRequestRideTimeout() {
+		return bidRequestRideTimeout;
+	}
+
+	public void setBidRequestRideTimeout(long bidRequestRideTimeout) {
+		this.bidRequestRideTimeout = bidRequestRideTimeout;
+	}
+
+	public int getNewBottomRequestUIEnabled() {
+		return newBottomRequestUIEnabled;
+	}
+
+	public void setNewBottomRequestUIEnabled(int newBottomRequestUIEnabled) {
+		this.newBottomRequestUIEnabled = newBottomRequestUIEnabled;
+	}
+
+	public double getInitialBidValue() {
+		return initialBidValue;
+	}
+
+	public void setInitialBidValue(double initialBidValue) {
+		this.initialBidValue = initialBidValue;
+		setChangedBidValue(initialBidValue);
+	}
+
+	public double getChangedBidValue() {
+		return changedBidValue;
+	}
+
+	public void setChangedBidValue(double changedBidValue) {
+		this.changedBidValue = changedBidValue;
+	}
 
     public int getCustomerVerificationStatus() {
         return customerVerificationStatus;

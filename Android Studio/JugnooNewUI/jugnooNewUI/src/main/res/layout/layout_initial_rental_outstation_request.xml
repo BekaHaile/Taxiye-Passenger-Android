@@ -59,7 +59,7 @@
         android:layout_marginEnd="10dp"
         android:textSize="16sp"
         android:textColor="@color/text_color"
-        tools:text="@string/package_starting_at_format"
+        tools:text=""
         />
 
     <View
@@ -132,6 +132,7 @@
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/viewSepRideType"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
         app:layout_constraintBottom_toTopOf="@+id/viewSepRideType"/>
@@ -147,6 +148,7 @@
         android:gravity="center_vertical"
         android:textColor="@color/text_color"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/viewSepRideType"
         app:layout_constraintStart_toEndOf="@+id/viewSepRideType"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
@@ -163,10 +165,43 @@
         android:text="@string/always_available"
         android:textColor="@color/text_color"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
         app:layout_constraintBottom_toTopOf="@+id/viewSepRideType"
         app:layout_constraintEnd_toEndOf="@+id/viewSepRideType"
         />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivPickup"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/circle_theme"
+        android:layout_marginStart="@dimen/spacing_normal"
+        app:layout_constraintTop_toTopOf="@+id/tvPickupRentalOutstation"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPickupRentalOutstation"
+        app:layout_constraintEnd_toStartOf="@+id/tvPickupRentalOutstation"/>
+
+    <TextView
+        android:id="@+id/tvPickupRentalOutstation"
+        android:layout_width="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
+        app:layout_constraintBottom_toTopOf="@+id/buttonConfirmRideType"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:padding="@dimen/spacing_small"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toEndOf="@+id/ivPickup"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/menu_item_selector_color_F7"
+        android:layout_marginStart="@dimen/spacing_tiny"
+        android:gravity="center_vertical"
+        android:hint="@string/set_pickup_location"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:singleLine="true"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/font_normal" />
+
 
     <Button
         android:id="@+id/buttonConfirmRideType"
@@ -176,13 +211,13 @@
         android:textColor="@color/white"
         android:textSize="19sp"
         android:textAllCaps="false"
-        app:layout_constraintTop_toBottomOf="@+id/viewSepRideType"
+        app:layout_constraintTop_toBottomOf="@+id/tvPickupRentalOutstation"
         app:layout_constraintEnd_toStartOf="@+id/viewSepRideType"
         app:layout_constraintStart_toEndOf="@+id/viewSepRideType"
         android:layout_marginTop="28dp"
         android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/ride_now" />
+        android:text="@string/select_package" />
 
 
 </android.support.constraint.ConstraintLayout>

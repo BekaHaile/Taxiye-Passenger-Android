@@ -23,7 +23,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
@@ -70,7 +69,6 @@ public class ApiFetchWalletBalance {
 					@Override
 					public void success(SettleUserDebt settleUserDebt, Response response) {
 						String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-						Log.i(TAG, "fetchWalletBalance response = " + responseStr);
 						try {
 							JSONObject jObj = new JSONObject(responseStr);
 							if (Data.userData != null) {
@@ -83,34 +81,39 @@ public class ApiFetchWalletBalance {
 									}
 									MyApplication.getInstance().getWalletCore().parsePaymentModeConfigDatas(jObj);
 									Prefs.with(activity).save(SPLabels.CHECK_BALANCE_LAST_TIME, System.currentTimeMillis());
-								} else {
+								} else if(showDialog){
 									DialogPopup.alertPopup(activity, "", message);
 								}
 							}
 							callback.onSuccess();
 						} catch (Exception e) {
 							e.printStackTrace();
-							retryDialog(DialogErrorType.SERVER_ERROR);
+							if(showDialog) {
+								retryDialog(DialogErrorType.SERVER_ERROR);
+							}
 						}
 						try{if(showDialog && finalProgressDialog != null){
 							finalProgressDialog.dismiss();
-						}} catch (Exception e){}
+						}} catch (Exception ignored){}
 						callback.onFinish();
 					}
 
 					@Override
 					public void failure(RetrofitError error) {
-						Log.e(TAG, "fetchWalletBalance error=" + error.toString());
 						try{if(showDialog && finalProgressDialog != null){
 							finalProgressDialog.dismiss();
-						}} catch (Exception e){}
-						retryDialog(DialogErrorType.CONNECTION_LOST);
+						}} catch (Exception ignored){}
+						if(showDialog) {
+							retryDialog(DialogErrorType.CONNECTION_LOST);
+						}
 						callback.onFailure();
 					}
 				});
 
 			} else {
-				retryDialog(DialogErrorType.NO_NET);
+				if(showDialog) {
+					retryDialog(DialogErrorType.NO_NET);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

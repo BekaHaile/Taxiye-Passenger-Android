@@ -562,20 +562,7 @@ public class AddToAddressBookFragment extends Fragment {
         return true;
     }
 
-    private Bundle createAddressBundle(String placeId){
-        Bundle bundle = new Bundle();
-        bundle.putString("current_street", current_street);
-        bundle.putString("current_route", current_route);
-        bundle.putString("current_area", current_area);
-        bundle.putString("current_city", current_city);
-        bundle.putString("current_pincode", current_pincode);
-        bundle.putDouble("current_latitude", current_latitude);
-        bundle.putDouble("current_longitude", current_longitude);
-        bundle.putString(Constants.KEY_PLACEID, placeId);
-        return bundle;
-    }
-
-    private void fetchAddressBundle(Bundle bundle){
+	private void fetchAddressBundle(Bundle bundle){
         current_street = bundle.getString("current_street", current_street);
         current_route = bundle.getString("current_route", current_route);
         current_area = bundle.getString("current_area", current_area);

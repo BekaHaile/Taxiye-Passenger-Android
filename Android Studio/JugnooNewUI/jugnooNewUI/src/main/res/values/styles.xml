@@ -288,6 +288,27 @@
         </item>
     </style>
 
+    <style name="ButtonThemeCapsuleRectangle" parent="@android:style/Widget.Button">
+        <item name="android:layout_width">
+            @dimen/button_width
+        </item>
+        <item name="android:layout_height">
+            @dimen/splash_button_height
+        </item>
+        <item name="android:background">
+            @drawable/background_theme_gradient_selector
+        </item>
+        <item name="android:textColor">
+            @color/white
+        </item>
+        <item name="android:textSize">
+            @dimen/text_size_34
+        </item>
+        <item name="android:textAllCaps">
+            true
+        </item>
+    </style>
+
 
     <style name="ButtonThemeCapsuleWrap" parent="@android:style/Widget.Button">
         <item name="android:layout_width">
@@ -474,10 +495,10 @@
 
     <style name="payment_option_icon_small">
         <item name="android:layout_width">
-            101px
+            70px
         </item>
         <item name="android:layout_height">
-            37px
+            34px
         </item>
         <item name="android:src">
             @drawable/ic_cash_small
@@ -712,7 +733,7 @@
         <item name="android:textSize">
             9sp
         </item>
-        <item name="textColorError">
+        <item name="android:textColorHighlight">
             @color/design_textinput_error_color_light
         </item>
         <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
@@ -1026,13 +1047,49 @@
         <item name="android:textColor">@color/text_color_light</item>
     </style>
 
-    <style name="TextNormal">
+
+    <style name="TextTitle">
+        <item name="android:tag">@string/dont_touch_me</item>
         <item name="android:textColor">@color/text_color</item>
-        <item name="android:textColorHint">@color/text_color_hint</item>
+        <item name="android:textColorHint">@color/text_color_light</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/maven_pro_medium</item>
+    </style>
+    <style name="TextLarge">
+        <item name="android:tag">@string/dont_touch_me</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorHint">@color/text_color_light</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:fontFamily">@font/maven_pro_medium</item>
+    </style>
+    <style name="TextNormal">
+        <item name="android:tag">@string/dont_touch_me</item>
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textColorHint">@color/text_color_light</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/maven_pro_regular</item>
+        <item name="colorControlHighlight">@color/grey_light_more</item>
+    </style>
+    <style name="TextMedium">
+        <item name="android:tag">@string/dont_touch_me</item>
+        <item name="android:textColor">@color/text_color_less_light</item>
+        <item name="android:textColorHint">@color/text_color_light</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/maven_pro_regular</item>
+    </style>
+    <style name="TextSmall">
+        <item name="android:tag">@string/dont_touch_me</item>
+        <item name="android:textColor">@color/text_color_light</item>
+        <item name="android:textColorHint">@color/text_color_light</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:fontFamily">@font/maven_pro_regular</item>
     </style>
 
 
+    <style name="fullscreen_dialog" parent="android:Theme" >
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
 
 </resources>

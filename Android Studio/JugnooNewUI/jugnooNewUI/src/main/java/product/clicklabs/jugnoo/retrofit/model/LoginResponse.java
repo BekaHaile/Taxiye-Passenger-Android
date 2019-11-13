@@ -849,6 +849,11 @@ public class LoginResponse {
 		@SerializedName("services")
 		@Expose
 		private ArrayList<ServiceType> serviceTypes;
+		@SerializedName("fault_conditions")
+		@Expose
+		private List<String> faultConditions;
+		@SerializedName("bottom_request_ui_enabled_v2")
+		private Integer bottomRequestUIEnabled;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -1039,6 +1044,22 @@ public class LoginResponse {
 
 		public void setServiceTypes(ArrayList<ServiceType> serviceTypes) {
 			this.serviceTypes = serviceTypes;
+		}
+
+		public List<String> getFaultConditions() {
+			return faultConditions;
+		}
+
+		public void setFaultConditions(List<String> faultConditions) {
+			this.faultConditions = faultConditions;
+		}
+
+		public Integer getBottomRequestUIEnabled() {
+			return bottomRequestUIEnabled;
+		}
+
+		public void setBottomRequestUIEnabled(Integer bottomRequestUIEnabled) {
+			this.bottomRequestUIEnabled = bottomRequestUIEnabled;
 		}
 	}
 

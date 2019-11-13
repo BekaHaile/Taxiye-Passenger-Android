@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/transparent">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivMarker"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/llSavedLocation"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="-3dp"
+        android:src="@drawable/pin_ball_end" />
+
+    <RelativeLayout
+        android:id="@+id/llSavedLocation"
+        android:layout_width="175dp"
+        android:layout_height="45dp"
+        android:background="@drawable/bg_saved_location_marker"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvSavedLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="12sp"
+            android:paddingBottom="4.4dp"
+            android:text="@string/save_your_pickup_location"
+            android:textColor="@color/white" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="35dp"
+            android:visibility="gone"
+            android:src="@drawable/ic_save_location_heart"
+            android:layout_centerVertical="true"
+            android:paddingEnd="2dp"
+            android:layout_marginEnd="5dp"
+            android:layout_height="@dimen/dp_35"
+            android:layout_alignParentEnd="true"/>
+    </RelativeLayout>
+</RelativeLayout>

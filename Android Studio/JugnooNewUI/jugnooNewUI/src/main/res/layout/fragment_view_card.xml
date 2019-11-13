@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:tag="@string/dont_touch_me"
+    android:id="@+id/rl_stripe_cards"
     android:background="@color/white"
     android:layout_height="match_parent">
 
@@ -14,7 +15,7 @@
 
         <TextView
             android:id="@+id/textViewTitle"
-            android:text="@string/view_card_title"
+            android:text="@string/cards"
             android:textSize="18sp"
             app:typekitFont="@string/maven_r"
             style="@style/title"/>
@@ -39,46 +40,24 @@
             android:layout_width="wrap_content"
             android:id="@+id/ivMore"
             android:padding="10dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:visibility="gone"
-            android:layout_marginEnd="10dp"
             android:layout_centerVertical="true"
-           android:src="@drawable/ic_more_vert"/>
+            android:src="@drawable/ic_add"
+            android:background="?attr/selectableItemBackground"
+            android:theme="@style/GreyHighlight"
+            />
 
 
     </RelativeLayout>
 
 
-
-
-
-    <TextView
-        android:id="@+id/tv_card"
-        android:layout_marginTop="20dp"
-        android:textAllCaps="true"
-        android:textSize="20sp"
-        android:maxLines="1"
-        android:gravity="left"
-        android:text="eqeqweqwe"
-        android:paddingStart="5dp"
-        android:paddingEnd="5dp"
-        android:paddingBottom="15dp"
-        android:drawablePadding="5dp"
-        android:layout_margin="20dp"
-        android:background="@drawable/bottom_border_grey"
-        android:layout_marginRight="20dp"
-        android:layout_below="@id/topBar"
-        android:visibility="gone"
-        app:typekitFont="@string/maven_r"
-        android:textColor="@color/text_color"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/cards_view_recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-
-
-
-
-
+        android:layout_height="match_parent"
+        android:background="@color/menu_item_selector_color"
+        android:layout_below="@+id/topBar"/>
 
 
 

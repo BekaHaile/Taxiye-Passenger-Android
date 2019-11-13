@@ -25,6 +25,7 @@ import product.clicklabs.jugnoo.home.dialogs.VehicleFareEstimateDialog;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 
 public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.ViewHolder> implements GAAction, GACategory{
 
@@ -40,9 +41,19 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         this.estimateDialog = new VehicleFareEstimateDialog();
     }
 
+    public void setList(ArrayList<Region> regions){
+		this.regions = regions;
+		notifyDataSetChanged();
+	}
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
+        View v = null;
+        if(activity.isNewUI()) {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicles_new,parent,false);
+        } else {
+            v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_vehicle, parent, false);
+        }
 
         RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT,
                 showRegionFares ?RecyclerView.LayoutParams.WRAP_CONTENT:125);
@@ -54,6 +65,9 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
 
     @Override
     public void onBindViewHolder(VehiclesTabAdapter.ViewHolder holder, int position) {
+        if(position >= regions.size()){
+            return;
+        }
         Region region = regions.get(position);
 
         boolean selected = region.getOperatorId() == activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getOperatorId()
@@ -61,16 +75,22 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 && region.getRegionId().equals(activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRegionId())
                 ;
 
-        holder.textViewVehicleName.setText(region.getRegionName());
         holder.relative.setTag(position);
         int visibility = showRegionFares && region.getRegionFare()!=null ?View.VISIBLE:View.GONE;
-        holder.tvVehicleFare.setVisibility(visibility);
+        holder.tvVehicleFare.setVisibility(activity.isNewUI() && region.getRegionFare() != null && region.getReverseBid() == 1 ? View.INVISIBLE: visibility);
         holder.tvVehicleFareStrike.setVisibility(View.GONE);
-        holder.tvETA.setVisibility(visibility);
-        holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
+        if(region.getEta()!= null && !region.getEta().isEmpty() && !region.getEta().equals("-")&& activity.isNewUI()) {
+            holder.textViewVehicleName.setText(region.getRegionName() + " - " + region.getEta() + " " + activity.getString(R.string.min));
+        } else {
+            holder.textViewVehicleName.setText(region.getRegionName());
+        }
+        if(!activity.isNewUI()) {
+            holder.tvETA.setVisibility(visibility);
+            holder.tvETA.setText(region.getEta() + " " + activity.getString(R.string.min));
+        }
         holder.tvOfferTag.setVisibility(View.GONE);
-        if(showRegionFares && region.getRegionFare() != null){
-            holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()));
+        if(showRegionFares && region.getRegionFare() != null && region.getReverseBid() == 0){
+            holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()).toString().concat(activity.isNewUI() ? "*" : ""));
             holder.tvVehicleFareStrike.setText(region.getRegionFare().getStrikedFareText(region.getFareMandatory()));
             holder.tvVehicleFareStrike.setVisibility(holder.tvVehicleFareStrike.getText().length() > 0 ? View.VISIBLE : View.GONE);
             String discount = region.getRegionFare().getDiscountText(region.getFareMandatory());
@@ -78,6 +98,22 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 holder.tvOfferTag.setVisibility(View.VISIBLE);
                 holder.tvOfferTag.setText(discount);
             }
+        } else if(activity.isNewUI() && region.getRegionFare() != null && region.getReverseBid() == 1) {
+            holder.tvVehicleFare.setVisibility(View.INVISIBLE);
+            holder.tvVehicleFareStrike.setVisibility(View.GONE);
+        }
+        if(activity.isNewUI()) {
+            holder.imageViewSep.setVisibility(View.GONE);
+            RelativeLayout.LayoutParams params = ((RelativeLayout.LayoutParams)holder.relativeIn.getLayoutParams());
+            params.setMargins(((int) (ASSL.Xscale()*(position == 0 ? 10f : 5f))),((int) (ASSL.Yscale()*10)),((int) (ASSL.Xscale()*(position == getItemCount()-1 ? 10f : 5f))),((int) (ASSL.Yscale()*10)));
+            params.setMarginStart((int) (ASSL.Xscale()*(position == 0 ? 10f : 5f)));
+            params.setMarginEnd((int) (ASSL.Xscale()*(position == getItemCount()-1 ? 10f : 5f)));
+            holder.relativeIn.setLayoutParams(params);
+        } else {
+            holder.imageViewSep.setVisibility(View.VISIBLE);
+            RelativeLayout.LayoutParams params = ((RelativeLayout.LayoutParams)holder.relativeIn.getLayoutParams());
+            params.setMargins(0,0,0,0);
+            holder.relativeIn.setLayoutParams(params);
         }
 
 
@@ -92,15 +128,27 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
             if(selected){
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColor(R.color.theme_color));
-                holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
+                if(activity.isNewUI() && showRegionFares) {
+                    holder.relativeIn.setBackground(activity.getResources().getDrawable(R.drawable.background_cornered_theme_stroke_white_in));
+                    holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
+                } else {
+                    holder.relativeIn.setBackground(null);
+                    holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
+                }
+
                 Picasso.with(activity)
                         .load(region.getImages().getTabHighlighted())
                         .placeholder(region.getTabSelected())
                         .into(holder.imageViewTab);
-                if(showRegionFares){
+                if(showRegionFares && region.getRegionFare() != null && region.getReverseBid() == 0){
                     holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_info_grey, 0);
                 }
             } else{
+                if(activity.isNewUI() && showRegionFares) {
+                    holder.relativeIn.setBackground(activity.getResources().getDrawable(R.drawable.background_cornered_grey_stroke_white_theme));
+                } else {
+                    holder.relativeIn.setBackground(null);
+                }
                 holder.textViewVehicleName.setTextColor(activity.getResources().getColorStateList(R.color.text_color_theme_color_selector));
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.white));
                 Picasso.with(activity)
@@ -116,10 +164,13 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         holder.relative.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("clicked main button","----------");
                 int position = (int) v.getTag();
-                boolean changed = activity.setVehicleTypeSelected(position, true);
+                boolean changed = activity.setVehicleTypeSelected(position, true, false);
                 if(showRegionFares && !changed){
-                    estimateDialog.show(activity, regions.get(position));
+                    if(regions.size() > position && regions.get(position).getReverseBid() == 0) {
+                        estimateDialog.show(activity, regions.get(position));
+                    }
                 }
                 try {
                     GAUtils.event(RIDES, HOME, regions.get(position).getRegionName()+" "+CLICKED);
@@ -154,6 +205,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         public ImageView imageViewSelected;
         public TextView tvETA, textViewVehicleName,tvVehicleFare, tvOfferTag;
         public DiscountedFareTextView tvVehicleFareStrike;
+        public RelativeLayout relativeIn;
 
         public ViewHolder(View itemView, Activity activity,boolean showingConfirmLayout) {
             super(itemView);
@@ -172,6 +224,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             tvOfferTag.setTypeface(Fonts.mavenRegular(activity));
             tvVehicleFareStrike = (DiscountedFareTextView)itemView.findViewById(R.id.tvVehicleFareStrike);
             tvVehicleFareStrike.setTypeface(Fonts.mavenRegular(activity));
+            relativeIn = itemView.findViewById(R.id.relativeIn);
             View linearLayoutContainer= itemView.findViewById(R.id.linearLayoutContainer);
             if(showingConfirmLayout){
                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) imageViewSelected.getLayoutParams();

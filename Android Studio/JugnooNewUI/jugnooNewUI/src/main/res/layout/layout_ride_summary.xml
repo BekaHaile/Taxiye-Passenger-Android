@@ -179,6 +179,14 @@
                         </RelativeLayout>
 
 
+                        <LinearLayout
+                            android:id="@+id/llFareComponents"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+
                         <!-- luggage charge -->
                         <RelativeLayout
                             android:id="@+id/relativeLayoutLuggageCharge"
@@ -275,10 +283,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:divider="@color/transparent"
-                            android:dividerHeight="2dp"
-                            android:layout_marginTop="4px"
+                            android:dividerHeight="3dp"
+                            android:layout_marginTop="6px"
                             android:splitMotionEvents="false"/>
 
+                        <!-- tax-->
                         <RelativeLayout
                             android:id="@+id/rlTaxNet"
                             android:layout_width="match_parent"
@@ -309,7 +318,6 @@
                                 android:textSize="@dimen/text_size_26"
                                 />
                         </RelativeLayout>
-
 
                         <!-- tip -->
                         <RelativeLayout
@@ -402,6 +410,7 @@
                                 android:textColor="@color/text_color"
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
+                        </LinearLayout>
 
                         <!-- jugnoo cash deducted -->
                         <RelativeLayout
@@ -433,6 +442,7 @@
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
 
+                        <!-- paytm-->
                         <RelativeLayout
                             android:id="@+id/relativeLayoutPaidUsingPaytm"
                             android:layout_width="match_parent"
@@ -462,6 +472,7 @@
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
 
+                        <!-- mobikwik-->
                         <RelativeLayout
                             android:id="@+id/relativeLayoutPaidUsingMobikwik"
                             android:layout_width="match_parent"
@@ -491,6 +502,7 @@
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
 
+                        <!-- freecharge-->
                         <RelativeLayout
                             android:id="@+id/relativeLayoutPaidUsingFreeCharge"
                             android:layout_width="match_parent"
@@ -520,6 +532,7 @@
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
 
+                        <!-- mpesa-->
                         <RelativeLayout
                             android:id="@+id/relativeLayoutPaidUsingMpesa"
                             android:layout_width="match_parent"
@@ -549,6 +562,7 @@
                                 android:textSize="@dimen/text_size_26" />
                         </RelativeLayout>
 
+                        <!-- razorpay-->
                         <RelativeLayout
                             android:id="@+id/rlPaidUsingRazorpay"
                             android:layout_width="match_parent"
@@ -580,36 +594,17 @@
                                 />
                         </RelativeLayout>
 
-                        <RelativeLayout
-                            android:id="@+id/rlPaidUsingStripeCard"
+                        <!-- stripe-->
+                        <product.clicklabs.jugnoo.utils.NonScrollListView
+                            android:id="@+id/listViewStripeTxns"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6px">
+                            android:divider="@color/transparent"
+                            android:dividerHeight="3dp"
+                            android:layout_marginTop="6px"
+                            android:splitMotionEvents="false"/>
 
-                            <TextView
-                                android:id="@+id/tvEndRideStripeCard"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="30px"
-                                android:gravity="center_vertical"
-                                android:text="@string/card"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26"
-                                />
-
-
-                            <TextView
-                                android:id="@+id/tvEndRideStripeCardValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="40px"
-                                android:gravity="center_vertical|end"
-                                android:text="0"
-                                android:textColor="@color/text_color"
-                                android:textSize="@dimen/text_size_26"
-                                />
-                        </RelativeLayout>
+                        <!-- corporate-->
                         <RelativeLayout
                             android:id="@+id/rlPaidUsingCorporate"
                             android:layout_width="match_parent"
@@ -640,6 +635,8 @@
                                 android:textSize="@dimen/text_size_26"
                                 />
                         </RelativeLayout>
+
+                        <!-- pos-->
                         <RelativeLayout
                             android:id="@+id/rlPaidUsingPOS"
                             android:layout_width="match_parent"
@@ -886,7 +883,6 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="20px"
                         android:gravity="center"
-                        android:singleLine="true"
                         android:text="@string/priority_tip_1x"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_26"/>
@@ -1023,12 +1019,30 @@
 
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/buttonEndRideOk"
-        style="@style/ButtonThemeCapsule"
+    <LinearLayout
+        android:layout_width="660px"
         android:layout_below="@+id/linearLayoutReceipt"
         android:layout_centerHorizontal="true"
+        android:gravity="center"
         android:layout_marginTop="15px"
-        android:text="@string/ok" />
+        android:layout_height="wrap_content">
+        <Button
+            android:layout_width="320px"
+            android:id="@+id/buttonEndRideOk"
+            style="@style/ButtonThemeCapsule"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textSize="30px"
+            android:text="@string/ok" />
+
+        <Button
+            android:id="@+id/btnSendInvoice"
+            style="@style/ButtonThemeCapsule"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_width="320px"
+            android:textSize="30px"
+            android:text="@string/send_invoice" />
+    </LinearLayout>
 
 </RelativeLayout>

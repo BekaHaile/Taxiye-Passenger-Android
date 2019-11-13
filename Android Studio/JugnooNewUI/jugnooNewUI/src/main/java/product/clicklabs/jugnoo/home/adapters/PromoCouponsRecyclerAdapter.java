@@ -23,6 +23,7 @@ import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
@@ -32,51 +33,51 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
-public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener{
+public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener {
 
-	private int layoutRID;
-	private Activity activity;
-	private ArrayList<PromoCoupon> offerList = new ArrayList<>();
-	private PromoCouponsAdapter.Callback callback;
-	private LayoutInflater mInflater;
-	private static final  int REFFERAL_ITEM = 1;
-	private static final  int OFFER_ITEM = 0;
-	private RecyclerView recyclerView;
-
-
-	public PromoCouponsRecyclerAdapter(Activity activity, int layoutRID, ArrayList<PromoCoupon> offerList, PromoCouponsAdapter.Callback callback, RecyclerView recyclerView) {
-		this.activity = activity;
-		this.recyclerView = recyclerView;
-		this.layoutRID = layoutRID;
-		this.offerList = offerList;
-		this.callback = callback;
-		this.mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
-
-	public void setList(ArrayList<PromoCoupon> offerList){
-		this.offerList = offerList;
-		notifyDataSetChanged();
-	}
+    private int layoutRID;
+    private Activity activity;
+    private ArrayList<PromoCoupon> offerList = new ArrayList<>();
+    private PromoCouponsAdapter.Callback callback;
+    private LayoutInflater mInflater;
+    private static final int REFFERAL_ITEM = 1;
+    private static final int OFFER_ITEM = 0;
+    private RecyclerView recyclerView;
 
 
+    public PromoCouponsRecyclerAdapter(Activity activity, int layoutRID, ArrayList<PromoCoupon> offerList, PromoCouponsAdapter.Callback callback, RecyclerView recyclerView) {
+        this.activity = activity;
+        this.recyclerView = recyclerView;
+        this.layoutRID = layoutRID;
+        this.offerList = offerList;
+        this.callback = callback;
+        this.mInflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
 
-	@Override
-	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public void setList(ArrayList<PromoCoupon> offerList) {
+        this.offerList = offerList;
+        notifyDataSetChanged();
+    }
 
-		RecyclerView.ViewHolder viewHolder;
-		switch (viewType){
-			case REFFERAL_ITEM:
-				View referalView = mInflater.inflate(R.layout.order_place_referal,parent,false);
-				viewHolder = new ReferalViewHolder(referalView,this);
-				break;
-			case OFFER_ITEM:
-				View promoView = mInflater.inflate(layoutRID,parent,false);
-				viewHolder = new PromoViewHolder(promoView,this);
-				((PromoViewHolder)viewHolder).relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
-				ASSL.DoMagic(((PromoViewHolder)viewHolder).relative);
-				break;
-			default:
-				throw new IllegalArgumentException();
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        RecyclerView.ViewHolder viewHolder;
+        switch (viewType) {
+            case REFFERAL_ITEM:
+                View referalView = mInflater.inflate(R.layout.order_place_referal, parent, false);
+                viewHolder = new ReferalViewHolder(referalView, this);
+                viewHolder.itemView.setVisibility(View.GONE);
+                break;
+            case OFFER_ITEM:
+                View promoView = mInflater.inflate(layoutRID, parent, false);
+                viewHolder = new PromoViewHolder(promoView, this);
+                ((PromoViewHolder) viewHolder).relative.setLayoutParams(new ListView.LayoutParams(ListView.LayoutParams.MATCH_PARENT, ListView.LayoutParams.WRAP_CONTENT));
+                ASSL.DoMagic(((PromoViewHolder) viewHolder).relative);
+                break;
+            default:
+                throw new IllegalArgumentException();
 
 
 		}

@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.retrofit.model
 
-import android.content.Context
+import android.text.TextUtils
 import com.google.gson.annotations.SerializedName
 import product.clicklabs.jugnoo.utils.Utils
 import kotlin.math.roundToInt
@@ -29,6 +29,8 @@ class Package {
     var farePerWaitingMin: Double? = null
     @SerializedName("fare_threshold_waiting_time")
     var fareThresholdWaitingTime: Double? = null
+    @SerializedName("package_name")
+    var packageName: String? = null
     @SerializedName("start_time")
     var startTime: String? = null
     @SerializedName("end_time")
@@ -52,14 +54,14 @@ class Package {
     @SerializedName("return_trip")
     var returnTrip: Int? = null
     var selected: Boolean = false
+    var isRoundTrip : Int = 0
 
-    //    fun getPackageName(context: Context, currency:String?, distanceUnit:String?):String{
-//        return context.getString(R.string.fare_fixed) + " " + Utils.formatCurrencyValue(currency, fareFixed!!, false) +
-//                " " + context.getString(R.string.for_str) + " " + Utils.getDecimalFormat2Decimal().format(fareThresholdDistance) + Utils.getDistanceUnit(distanceUnit) +
-//                " " + context.getString(R.string.then) + " " + Utils.formatCurrencyValue(currency, farePerKmAfterThreshold!!, false) + " " +
-//                context.getString(R.string.per_format, Utils.getDistanceUnit(distanceUnit))
-//    }
-    fun getPackageName(context: Context, currency: String?, distanceUnit: String?): String {
+    //NOTE: remember to initialize any new member variables in ScheduleRideFragment one way and round trip functions also
+
+    fun getPackageName(distanceUnit: String?): String {
+        if(!TextUtils.isEmpty(packageName)){
+            return packageName!!;
+        }
         val fareThrTime: String
         if (fareThresholdTime!!.roundToInt() >= 60) {
             if (fareThresholdTime!!.roundToInt() == 60) {

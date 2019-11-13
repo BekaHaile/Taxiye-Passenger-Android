@@ -294,7 +294,7 @@ public class AddPlaceActivity extends BaseFragmentActivity {
         if(apiAddHomeWorkAddress == null){
             apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
                 @Override
-                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, final String serverMsg) {
                     try {
                         Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
                         if(deliveryAddressesFragment != null) {

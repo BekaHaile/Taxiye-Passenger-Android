@@ -86,6 +86,7 @@
 
     <color name="white">#FFFFFF</color>
     <color name="white_alpha">#99FFFFFF</color>
+    <color name="white_alpha_light">#66FFFFFF</color>
     <color name="white_light_grey">#FFFFFF</color>
 
 
@@ -94,6 +95,7 @@
 
     </color>
     <color name="black_text_alpha">#99242424</color>
+    <color name="black_alpha_less">#AA000000</color>
 
 
     <color name="grey_light_more_alpha">#88BBBBBB</color>

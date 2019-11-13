@@ -556,7 +556,11 @@ public class DialogPopup {
 				textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
 
 				textHead.setText(title);
-				textMessage.setText(message);
+				if(message.contains("<br/>") || message.contains("<br>")){
+					textMessage.setText(Utils.trimHTML(Utils.fromHtml(message)));
+				} else {
+					textMessage.setText(message);
+				}
 
 				if (showTitle && !TextUtils.isEmpty(title)) {
 					textHead.setVisibility(View.VISIBLE);
@@ -1025,6 +1029,7 @@ public class DialogPopup {
             e.printStackTrace();
         }
     }
+
 
 
 

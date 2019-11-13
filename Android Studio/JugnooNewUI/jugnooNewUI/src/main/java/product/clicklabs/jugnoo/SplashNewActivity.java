@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +24,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.widget.AppCompatTextView;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -61,7 +63,6 @@ import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
 import com.facebook.appevents.AppEventsLogger;
-import com.fugu.FuguConfig;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
@@ -92,9 +93,11 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
+import product.clicklabs.jugnoo.rentals.InstructionDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
@@ -122,6 +125,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static com.fugu.FuguConfig.clearFuguData;
 
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
@@ -258,7 +263,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	View extra;
 
 
-	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
+	public boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
 	int debugState = 0, userVerfied = 0;
 	boolean hold1 = false, hold2 = false;
@@ -319,7 +324,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private int nextPermissionsRequestCode = 4000;
 	private FBAccountKit fbAccountKit;
 	private EditText editTextPhoneNumber;
-	private TextView textViewPhoneNumberRequired;
+	private AppCompatTextView textViewPhoneNumberRequired;
+
 	private static final int REQUEST_CODE_RECIEVE_SMS = 0x123;
 	private static final int REQUEST_CODE_LOCATION = 0x124;
 
@@ -463,7 +469,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
-					FuguConfig.clearFuguData(SplashNewActivity.this);
+					clearFuguData(SplashNewActivity.this);
 					Prefs.with(this).save(FUGU_CACHE_CLEARED,true);
 					Log.e("Splash","Fugu Data cleared on startup");
 				} catch (Exception e) {
@@ -487,12 +493,15 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			Data.splashIntentUri = getIntent().getData();
 
+			InstructionDialog.shownInSession = false;
+
 
 			Data.getDeepLinkIndexFromIntent(this, getIntent());
 			// TODO: 08/12/18 remove this
 			AppSignatureHelper.Companion.getAppSignatures(this);
 
 			MyApplication.getInstance().initializeServerURL(this);
+			Data.jungleApisDisable = 0;
 
 			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 			//clear Menu Reorder Prefs
@@ -529,6 +538,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 			LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
+
+			JungleApisImpl.INSTANCE.deleteDirectionsPathOld();
 
 
 			setContentView(R.layout.activity_splash_new);
@@ -1433,32 +1444,35 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				}
 			}));
 		}
+        if(llLoginContainer!=null) {
+			llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+				@SuppressLint("NewApi")
+				@SuppressWarnings("deprecation")
+				@Override
+				public void keyboardOpened() {
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
+					params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+					params.setMargins(0, (int) (ASSL.Yscale() * 150), 0, 0);
+					params.setMarginStart(0);
+					params.setMarginEnd(0);
+					llLoginContainer.setLayoutParams(params);
+				}
 
-		llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
-				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
-				params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-				params.setMargins(0, (int)(ASSL.Yscale()*150), 0, 0);
-				params.setMarginStart(0);
-				params.setMarginEnd(0);
-				llLoginContainer.setLayoutParams(params);
-			}
-
-			@Override
-			public void keyBoardClosed() {
-				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
-				params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
-				params.setMargins(0, 0, 0, 0);
-				params.setMarginStart(0);
-				params.setMarginEnd(0);
-				llLoginContainer.setLayoutParams(params);
-			}
-		}));
+				@Override
+				public void keyBoardClosed() {
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
+					params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+					params.setMargins(0, 0, 0, 0);
+					params.setMarginStart(0);
+					params.setMarginEnd(0);
+					llLoginContainer.setLayoutParams(params);
+				}
+			}));
+		}
 		Prefs.with(this).save(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,true);
 
 
-		textViewPhoneNumberRequired = (TextView) findViewById(R.id.textViewPhoneNumberRequired);
+		textViewPhoneNumberRequired = findViewById(R.id.textViewPhoneNumberRequired);
 		editTextPhoneNumber.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -2094,12 +2108,19 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	protected void onResume() {
 		super.onResume();
 
+		//hack for entering operator token
+		/*if(Prefs.with(this).getString(Constants.KEY_OPERATOR_TOKEN, "not_here").equalsIgnoreCase("not_here")) {
+			ActivityCompat.finishAffinity(this);
+			startActivity(new Intent(this, EnterOperatorActivity.class));
+			return;
+		}*/
+
 		requestLocationUpdatesExplicit();
 
 		retryAccessTokenLogin();
 		resumed = true;
 		userVerfied = 0;
-		AppEventsLogger.activateApp(this);
+		AppEventsLogger.activateApp(getApplication());
 
 		if(OTPConfirmScreen.backToSplashOboarding){
 			OTPConfirmScreen.backToSplashOboarding = false;
@@ -2216,8 +2237,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void success(String clientId) {
 					loginDataFetched = true;
-					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
-					DialogPopup.dismissLoadingDialog();
+					onWindowFocusChanged(true);
+//					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
+//					DialogPopup.dismissLoadingDialog();
 				}
 
 				@Override
@@ -2509,6 +2531,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					if(activity instanceof SplashNewActivity){
+						((SplashNewActivity)activity).loginDataFetched = false;
+					} else if(activity instanceof OTPConfirmScreen){
+						((OTPConfirmScreen)activity).loginDataFetched = false;
+					}
 					dialog.dismiss();
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID));
@@ -2694,7 +2721,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							dialog.dismiss();
 							activity.startActivity(new Intent(activity, DebugOptionsActivity.class));
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							ActivityCompat.finishAffinity(activity);
 						} else {
 							etCode.requestFocus();
 							etCode.setError(getString(R.string.code_not_matched));
@@ -3254,10 +3280,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								//sendToOtpScreen = true;
 								goToLoginUsingPhone(phoneNo);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
+									loginDataFetched = true;
 
 
 								}

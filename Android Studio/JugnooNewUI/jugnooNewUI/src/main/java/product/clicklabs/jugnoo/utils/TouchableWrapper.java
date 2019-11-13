@@ -41,6 +41,7 @@ public class TouchableWrapper extends FrameLayout {
                     onTouchListener.onTouch();
                     break;
                 case MotionEvent.ACTION_MOVE:
+                	onTouchListener.onMoveMap();
                     if (event.getPointerCount() >= 2) {
                         return true;
                     } else {
@@ -48,6 +49,9 @@ public class TouchableWrapper extends FrameLayout {
                     }
                 case MotionEvent.ACTION_UP:
                     onTouchListener.onRelease();
+                    break;
+                case MotionEvent.ACTION_CANCEL:
+                    onTouchListener.onCancel();
                     break;
             }
         } catch(Exception e){
@@ -60,8 +64,11 @@ public class TouchableWrapper extends FrameLayout {
 		public void onTouch();
 
 		public void onRelease();
+		public void onCancel();
 
 		public void onDoubleTap();
+
+		public void onMoveMap();
 
 		public void onTwoFingerDoubleTap();
 

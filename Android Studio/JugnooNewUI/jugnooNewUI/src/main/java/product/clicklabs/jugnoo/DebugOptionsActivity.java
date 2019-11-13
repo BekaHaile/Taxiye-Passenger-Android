@@ -1,11 +1,18 @@
 package product.clicklabs.jugnoo;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,14 +22,18 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppSignatureHelper;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.utils.UniqueIMEIID;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -73,10 +84,14 @@ public class DebugOptionsActivity extends BaseActivity {
 
     ScrollView scrollView;
     LinearLayout linearLayoutMain;
-    TextView textViewScroll;
+    TextView textViewScroll, tvDeviceID, tvFBKeyHash, tvSMSHash;
+    RelativeLayout rlJungleApisDisable;
+    ImageView ivJungleApisDisable;
+    String smsHash;
 
     int showAllDriversValue = 0;
     int showDriverInfoValue = 0;
+    int jungleApisDisable = 0;
 
     String selectedServer = Config.getDefaultServerUrl();
     String selectedServerFresh = Config.getFreshDefaultServerUrl();
@@ -96,12 +111,12 @@ public class DebugOptionsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug_options);
 
-        relative = (RelativeLayout) findViewById(R.id.relative);
+        relative = findViewById(R.id.relative);
         new ASSL(this, relative, 1134, 720, false);
 
-        textViewTitle = (TextView) findViewById(R.id.textViewTitle);
+        textViewTitle = findViewById(R.id.textViewTitle);
         textViewTitle.setTypeface(Fonts.avenirNext(this));
-        imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
+        imageViewBack = findViewById(R.id.imageViewBack);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
 
@@ -112,191 +127,240 @@ public class DebugOptionsActivity extends BaseActivity {
         ((TextView) findViewById(R.id.textViewServerEnvFatafat)).setTypeface(Fonts.mavenRegular(this));
 
 
-        relativeLayoutDebugOptions = (RelativeLayout) findViewById(R.id.relativeLayoutDebugOptions);
-        imageViewArrowDebugOptions = (ImageView) findViewById(R.id.imageViewArrowDebugOptions);
-        linearLayoutDebugOptionsBelow = (LinearLayout) findViewById(R.id.linearLayoutDebugOptionsBelow);
-        relativeLayoutShowAllDrivers = (RelativeLayout) findViewById(R.id.relativeLayoutShowAllDrivers);
-        relativeLayoutShowDriverInfo = (RelativeLayout) findViewById(R.id.relativeLayoutShowDriverInfo);
-        imageViewShowAllDrivers = (ImageView) findViewById(R.id.imageViewShowAllDrivers);
-        imageViewShowDriverInfo = (ImageView) findViewById(R.id.imageViewShowDriverInfo);
+        relativeLayoutDebugOptions = findViewById(R.id.relativeLayoutDebugOptions);
+        imageViewArrowDebugOptions = findViewById(R.id.imageViewArrowDebugOptions);
+        linearLayoutDebugOptionsBelow = findViewById(R.id.linearLayoutDebugOptionsBelow);
+        relativeLayoutShowAllDrivers = findViewById(R.id.relativeLayoutShowAllDrivers);
+        relativeLayoutShowDriverInfo = findViewById(R.id.relativeLayoutShowDriverInfo);
+        imageViewShowAllDrivers = findViewById(R.id.imageViewShowAllDrivers);
+        imageViewShowDriverInfo = findViewById(R.id.imageViewShowDriverInfo);
         ((TextView) findViewById(R.id.textViewShowAllDrivers)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewShowDriverInfo)).setTypeface(Fonts.mavenLight(this));
 
 
 
-        relativeLayoutServerEnv = (RelativeLayout) findViewById(R.id.relativeLayoutServerEnv);
-        imageViewArrowServerEnv = (ImageView) findViewById(R.id.imageViewArrowServerEnv);
-        linearLayoutServerEnvBelow = (LinearLayout) findViewById(R.id.linearLayoutServerEnvBelow);
-        relativeLayoutLive4012 = (RelativeLayout) findViewById(R.id.relativeLayoutLive4012);
-        relativeLayoutTest8012 = (RelativeLayout) findViewById(R.id.relativeLayoutTest8012);
-        relativeLayoutCustom = (RelativeLayout) findViewById(R.id.relativeLayoutCustom);
-        imageViewLive4012 = (ImageView) findViewById(R.id.imageViewLive4012);
-        imageViewTest8012 = (ImageView) findViewById(R.id.imageViewTest8012);
-        imageViewCustom = (ImageView) findViewById(R.id.imageViewCustom);
+        relativeLayoutServerEnv = findViewById(R.id.relativeLayoutServerEnv);
+        imageViewArrowServerEnv = findViewById(R.id.imageViewArrowServerEnv);
+        linearLayoutServerEnvBelow = findViewById(R.id.linearLayoutServerEnvBelow);
+        relativeLayoutLive4012 = findViewById(R.id.relativeLayoutLive4012);
+        relativeLayoutTest8012 = findViewById(R.id.relativeLayoutTest8012);
+        relativeLayoutCustom = findViewById(R.id.relativeLayoutCustom);
+        imageViewLive4012 = findViewById(R.id.imageViewLive4012);
+        imageViewTest8012 = findViewById(R.id.imageViewTest8012);
+        imageViewCustom = findViewById(R.id.imageViewCustom);
         ((TextView) findViewById(R.id.textViewLive4012)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewTest8012)).setTypeface(Fonts.mavenLight(this));
-        editTextCustom = (EditText) findViewById(R.id.editTextCustom);
+        editTextCustom = findViewById(R.id.editTextCustom);
         editTextCustom.setTypeface(Fonts.mavenMedium(this));
 
 
-        relativeLayoutServerEnvFresh = (RelativeLayout) findViewById(R.id.relativeLayoutServerEnvFresh);
-        imageViewArrowServerEnvFresh = (ImageView) findViewById(R.id.imageViewArrowServerEnvFresh);
-        linearLayoutServerEnvFreshBelow = (LinearLayout) findViewById(R.id.linearLayoutServerEnvFreshBelow);
-        relativeLayoutLiveFresh = (RelativeLayout) findViewById(R.id.relativeLayoutLiveFresh);
-        relativeLayoutTestFresh = (RelativeLayout) findViewById(R.id.relativeLayoutTestFresh);
-        relativeLayoutCustomFresh = (RelativeLayout) findViewById(R.id.relativeLayoutCustomFresh);
-        imageViewLiveFresh = (ImageView) findViewById(R.id.imageViewLiveFresh);
-        imageViewTestFresh = (ImageView) findViewById(R.id.imageViewTestFresh);
-        imageViewCustomFresh = (ImageView) findViewById(R.id.imageViewCustomFresh);
+        relativeLayoutServerEnvFresh = findViewById(R.id.relativeLayoutServerEnvFresh);
+        imageViewArrowServerEnvFresh = findViewById(R.id.imageViewArrowServerEnvFresh);
+        linearLayoutServerEnvFreshBelow = findViewById(R.id.linearLayoutServerEnvFreshBelow);
+        relativeLayoutLiveFresh = findViewById(R.id.relativeLayoutLiveFresh);
+        relativeLayoutTestFresh = findViewById(R.id.relativeLayoutTestFresh);
+        relativeLayoutCustomFresh = findViewById(R.id.relativeLayoutCustomFresh);
+        imageViewLiveFresh = findViewById(R.id.imageViewLiveFresh);
+        imageViewTestFresh = findViewById(R.id.imageViewTestFresh);
+        imageViewCustomFresh = findViewById(R.id.imageViewCustomFresh);
         ((TextView) findViewById(R.id.textViewLiveFresh)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewTestFresh)).setTypeface(Fonts.mavenLight(this));
-        editTextCustomFresh = (EditText) findViewById(R.id.editTextCustomFresh);
+        editTextCustomFresh = findViewById(R.id.editTextCustomFresh);
         editTextCustomFresh.setTypeface(Fonts.mavenMedium(this));
 
 
-        relativeLayoutServerEnvMenus = (RelativeLayout) findViewById(R.id.relativeLayoutServerEnvMenus);
-        imageViewArrowServerEnvMenus = (ImageView) findViewById(R.id.imageViewArrowServerEnvMenus);
-        linearLayoutServerEnvMenusBelow = (LinearLayout) findViewById(R.id.linearLayoutServerEnvMenusBelow);
-        relativeLayoutLiveMenus = (RelativeLayout) findViewById(R.id.relativeLayoutLiveMenus);
-        relativeLayoutTestMenus = (RelativeLayout) findViewById(R.id.relativeLayoutTestMenus);
-        relativeLayoutCustomMenus = (RelativeLayout) findViewById(R.id.relativeLayoutCustomMenus);
-        imageViewLiveMenus = (ImageView) findViewById(R.id.imageViewLiveMenus);
-        imageViewTestMenus = (ImageView) findViewById(R.id.imageViewTestMenus);
-        imageViewCustomMenus = (ImageView) findViewById(R.id.imageViewCustomMenus);
+        relativeLayoutServerEnvMenus = findViewById(R.id.relativeLayoutServerEnvMenus);
+        imageViewArrowServerEnvMenus = findViewById(R.id.imageViewArrowServerEnvMenus);
+        linearLayoutServerEnvMenusBelow = findViewById(R.id.linearLayoutServerEnvMenusBelow);
+        relativeLayoutLiveMenus = findViewById(R.id.relativeLayoutLiveMenus);
+        relativeLayoutTestMenus = findViewById(R.id.relativeLayoutTestMenus);
+        relativeLayoutCustomMenus = findViewById(R.id.relativeLayoutCustomMenus);
+        imageViewLiveMenus = findViewById(R.id.imageViewLiveMenus);
+        imageViewTestMenus = findViewById(R.id.imageViewTestMenus);
+        imageViewCustomMenus = findViewById(R.id.imageViewCustomMenus);
         ((TextView) findViewById(R.id.textViewLiveMenus)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewTestMenus)).setTypeface(Fonts.mavenLight(this));
-        editTextCustomMenus = (EditText) findViewById(R.id.editTextCustomMenus);
+        editTextCustomMenus = findViewById(R.id.editTextCustomMenus);
         editTextCustomMenus.setTypeface(Fonts.mavenMedium(this));
 
 
-        relativeLayoutServerEnvFatafat = (RelativeLayout) findViewById(R.id.relativeLayoutServerEnvFatafat);
-        imageViewArrowServerEnvFatafat = (ImageView) findViewById(R.id.imageViewArrowServerEnvFatafat);
-        linearLayoutServerEnvFatafatBelow = (LinearLayout) findViewById(R.id.linearLayoutServerEnvFatafatBelow);
-        relativeLayoutLiveFatafat = (RelativeLayout) findViewById(R.id.relativeLayoutLiveFatafat);
-        relativeLayoutTestFatafat = (RelativeLayout) findViewById(R.id.relativeLayoutTestFatafat);
-        relativeLayoutCustomFatafat = (RelativeLayout) findViewById(R.id.relativeLayoutCustomFatafat);
-        imageViewLiveFatafat = (ImageView) findViewById(R.id.imageViewLiveFatafat);
-        imageViewTestFatafat = (ImageView) findViewById(R.id.imageViewTestFatafat);
-        imageViewCustomFatafat = (ImageView) findViewById(R.id.imageViewCustomFatafat);
+        relativeLayoutServerEnvFatafat = findViewById(R.id.relativeLayoutServerEnvFatafat);
+        imageViewArrowServerEnvFatafat = findViewById(R.id.imageViewArrowServerEnvFatafat);
+        linearLayoutServerEnvFatafatBelow = findViewById(R.id.linearLayoutServerEnvFatafatBelow);
+        relativeLayoutLiveFatafat = findViewById(R.id.relativeLayoutLiveFatafat);
+        relativeLayoutTestFatafat = findViewById(R.id.relativeLayoutTestFatafat);
+        relativeLayoutCustomFatafat = findViewById(R.id.relativeLayoutCustomFatafat);
+        imageViewLiveFatafat = findViewById(R.id.imageViewLiveFatafat);
+        imageViewTestFatafat = findViewById(R.id.imageViewTestFatafat);
+        imageViewCustomFatafat = findViewById(R.id.imageViewCustomFatafat);
         ((TextView) findViewById(R.id.textViewLiveFatafat)).setTypeface(Fonts.mavenLight(this));
         ((TextView) findViewById(R.id.textViewTestFatafat)).setTypeface(Fonts.mavenLight(this));
-        editTextCustomFatafat = (EditText) findViewById(R.id.editTextCustomFatafat);
+        editTextCustomFatafat = findViewById(R.id.editTextCustomFatafat);
         editTextCustomFatafat.setTypeface(Fonts.mavenMedium(this));
         
 
-        relativeLayoutAuto = (RelativeLayout) findViewById(R.id.relativeLayoutAuto);
-        buttonSave = (Button) findViewById(R.id.buttonSave);
+        relativeLayoutAuto = findViewById(R.id.relativeLayoutAuto);
+        buttonSave = findViewById(R.id.buttonSave);
         buttonSave.setTypeface(Fonts.mavenRegular(this));
-        buttonSaveTop = (Button) findViewById(R.id.buttonSaveTop);
+        buttonSaveTop = findViewById(R.id.buttonSaveTop);
         buttonSaveTop.setTypeface(Fonts.mavenRegular(this));
-        buttonCancel = (Button) findViewById(R.id.buttonCancel);
+        buttonCancel = findViewById(R.id.buttonCancel);
         buttonCancel.setTypeface(Fonts.mavenRegular(this));
 
 
-        scrollView = (ScrollView) findViewById(R.id.scrollView);
-        linearLayoutMain = (LinearLayout) findViewById(R.id.linearLayoutMain);
-        textViewScroll = (TextView) findViewById(R.id.textViewScroll);
+        scrollView = findViewById(R.id.scrollView);
+        linearLayoutMain = findViewById(R.id.linearLayoutMain);
+        textViewScroll = findViewById(R.id.textViewScroll);
+		tvDeviceID = findViewById(R.id.tvDeviceID); tvDeviceID.setTypeface(Fonts.mavenMedium(this));
+		tvFBKeyHash = findViewById(R.id.tvFBKeyHash); tvFBKeyHash.setTypeface(Fonts.mavenMedium(this));
+		tvSMSHash = findViewById(R.id.tvSMSHash); tvSMSHash.setTypeface(Fonts.mavenMedium(this));
+
+		setBoldText(tvDeviceID, "Device ID: ", UniqueIMEIID.getUniqueIMEIId(this));
+		tvDeviceID.setOnLongClickListener(v -> {
+			try {
+				ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				ClipData clip = ClipData.newPlainText(UniqueIMEIID.getUniqueIMEIId(this), UniqueIMEIID.getUniqueIMEIId(this));
+				if (clipboard != null) {
+					clipboard.setPrimaryClip(clip);
+				}
+				Utils.showToast(DebugOptionsActivity.this, getString(R.string.copied));
+			} catch (Exception ignored) {}
+			return false;
+		});
+
+		setBoldText(tvFBKeyHash, "FB Keyhash: ", Utils.generateKeyHash(this));
+		tvFBKeyHash.setOnLongClickListener(v -> {
+			try {
+				ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				ClipData clip = ClipData.newPlainText(Utils.generateKeyHash(this), Utils.generateKeyHash(this));
+				if (clipboard != null) {
+					clipboard.setPrimaryClip(clip);
+				}
+				Utils.showToast(DebugOptionsActivity.this, getString(R.string.copied));
+			} catch (Exception ignored) {}
+			return false;
+		});
 
 
-        imageViewBack.setOnClickListener(new OnClickListener() {
+		tvSMSHash.setVisibility(View.GONE);
+		ArrayList<String> smsHashes = AppSignatureHelper.Companion.getAppSignatures(this);
+		if(smsHashes != null && smsHashes.size() > 0){
+			smsHash = smsHashes.get(0);
+			setBoldText(tvSMSHash, "SMS Hash: ", smsHash);
+			tvSMSHash.setVisibility(View.VISIBLE);
+			tvSMSHash.setOnLongClickListener(v -> {
+				try {
+					ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+					ClipData clip = ClipData.newPlainText(smsHash, smsHash);
+					if (clipboard != null) {
+						clipboard.setPrimaryClip(clip);
+					}
+					Utils.showToast(DebugOptionsActivity.this, getString(R.string.copied));
+				} catch (Exception ignored) {}
+				return false;
+			});
+		}
 
-            @Override
-            public void onClick(View v) {
-                performBackPressed();
-            }
-        });
 
 
-        buttonSave.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean stop = false;
-                if (!selectedServer.equalsIgnoreCase(Config.getLiveServerUrl())
-                        && !selectedServer.equalsIgnoreCase(Config.getDevServerUrl())
-                        && !selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())
-                        && !selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())
-                        && !selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())) {
-                    String customUrl = editTextCustom.getText().toString().trim();
-                    if ("".equalsIgnoreCase(customUrl)) {
-                        editTextCustom.requestFocus();
-                        editTextCustom.setError(getString(R.string.please_enter_something));
-                        stop = true;
-                    } else {
-                        selectedServer = customUrl;
-                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
-                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
-                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
-                    }
-                } else {
-                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
-                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
-                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
-                }
+		rlJungleApisDisable = findViewById(R.id.rlJungleApisDisable);
+		ivJungleApisDisable = findViewById(R.id.ivJungleApisDisable);
+		rlJungleApisDisable.setOnClickListener(v -> {
+			if(jungleApisDisable == 1){
+				jungleApisDisable = 0;
+			} else {
+				jungleApisDisable = 1;
+			}
+			toggleJungleApisDisableUI(jungleApisDisable, rlJungleApisDisable, ivJungleApisDisable);
+		});
 
-                if (!selectedServerFresh.equalsIgnoreCase(Config.getFreshLiveServerUrl())
-                        && !selectedServerFresh.equalsIgnoreCase(Config.getFreshDevServerUrl())) {
-                    String customUrl = editTextCustomFresh.getText().toString().trim();
-                    if ("".equalsIgnoreCase(customUrl)) {
-                        editTextCustomFresh.requestFocus();
-                        editTextCustomFresh.setError(getString(R.string.please_enter_something));
-                        stop = true;
-                    } else {
-                        selectedServerFresh = customUrl;
-                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.FRESH_SERVER_SELECTED, selectedServerFresh);
-                    }
-                } else {
-                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.FRESH_SERVER_SELECTED, selectedServerFresh);
-                }
 
-                if (!selectedServerMenus.equalsIgnoreCase(Config.getMenusLiveServerUrl())
-                        && !selectedServerMenus.equalsIgnoreCase(Config.getMenusDevServerUrl())) {
-                    String customUrl = editTextCustomMenus.getText().toString().trim();
-                    if ("".equalsIgnoreCase(customUrl)) {
-                        editTextCustomMenus.requestFocus();
-                        editTextCustomMenus.setError(getString(R.string.please_enter_something));
-                        stop = true;
-                    } else {
-                        selectedServerMenus = customUrl;
-                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.MENUS_SERVER_SELECTED, selectedServerMenus);
-                    }
-                } else {
-                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.MENUS_SERVER_SELECTED, selectedServerMenus);
-                }
+		jungleApisDisable = Data.jungleApisDisable;
+		toggleJungleApisDisableUI(jungleApisDisable, rlJungleApisDisable, ivJungleApisDisable);
 
-                if (!selectedServerFatafat.equalsIgnoreCase(Config.getFatafatLiveServerUrl())
-                        && !selectedServerFatafat.equalsIgnoreCase(Config.getFatafatDevServerUrl())) {
-                    String customUrl = editTextCustomFatafat.getText().toString().trim();
-                    if ("".equalsIgnoreCase(customUrl)) {
-                        editTextCustomFatafat.requestFocus();
-                        editTextCustomFatafat.setError(getString(R.string.please_enter_something));
-                        stop = true;
-                    } else {
-                        selectedServerFatafat = customUrl;
-                        Prefs.with(DebugOptionsActivity.this).save(SPLabels.FATAFAT_SERVER_SELECTED, selectedServerFatafat);
-                    }
-                } else {
-                    Prefs.with(DebugOptionsActivity.this).save(SPLabels.FATAFAT_SERVER_SELECTED, selectedServerFatafat);
-                }
+		imageViewBack.setOnClickListener(v -> performBackPressed());
 
-                if(!stop){
-                    performBackPressed();
-                }
-            }
-        });
 
-        buttonSaveTop.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                buttonSave.performClick();
-            }
-        });
+        buttonSave.setOnClickListener(v -> {
+			boolean stop = false;
+			if (!selectedServer.equalsIgnoreCase(Config.getLiveServerUrl())
+					&& !selectedServer.equalsIgnoreCase(Config.getDevServerUrl())
+					&& !selectedServer.equalsIgnoreCase(Config.getDev1ServerUrl())
+					&& !selectedServer.equalsIgnoreCase(Config.getDev2ServerUrl())
+					&& !selectedServer.equalsIgnoreCase(Config.getDev3ServerUrl())) {
+				String customUrl = editTextCustom.getText().toString().trim();
+				if ("".equalsIgnoreCase(customUrl)) {
+					editTextCustom.requestFocus();
+					editTextCustom.setError(getString(R.string.please_enter_something));
+					stop = true;
+				} else {
+					selectedServer = customUrl;
+					Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
+					Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
+					Data.jungleApisDisable = jungleApisDisable;
+					Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
+				}
+			} else {
+				Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_ALL_DRIVERS, showAllDriversValue);
+				Prefs.with(DebugOptionsActivity.this).save(SPLabels.SHOW_DRIVER_INFO, showDriverInfoValue);
+				Data.jungleApisDisable = jungleApisDisable;
+				Prefs.with(DebugOptionsActivity.this).save(SPLabels.SERVER_SELECTED, selectedServer);
+			}
 
-        buttonCancel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performBackPressed();
-            }
-        });
+			if (!selectedServerFresh.equalsIgnoreCase(Config.getFreshLiveServerUrl())
+					&& !selectedServerFresh.equalsIgnoreCase(Config.getFreshDevServerUrl())) {
+				String customUrl = editTextCustomFresh.getText().toString().trim();
+				if ("".equalsIgnoreCase(customUrl)) {
+					editTextCustomFresh.requestFocus();
+					editTextCustomFresh.setError(getString(R.string.please_enter_something));
+					stop = true;
+				} else {
+					selectedServerFresh = customUrl;
+					Prefs.with(DebugOptionsActivity.this).save(SPLabels.FRESH_SERVER_SELECTED, selectedServerFresh);
+				}
+			} else {
+				Prefs.with(DebugOptionsActivity.this).save(SPLabels.FRESH_SERVER_SELECTED, selectedServerFresh);
+			}
+
+			if (!selectedServerMenus.equalsIgnoreCase(Config.getMenusLiveServerUrl())
+					&& !selectedServerMenus.equalsIgnoreCase(Config.getMenusDevServerUrl())) {
+				String customUrl = editTextCustomMenus.getText().toString().trim();
+				if ("".equalsIgnoreCase(customUrl)) {
+					editTextCustomMenus.requestFocus();
+					editTextCustomMenus.setError(getString(R.string.please_enter_something));
+					stop = true;
+				} else {
+					selectedServerMenus = customUrl;
+					Prefs.with(DebugOptionsActivity.this).save(SPLabels.MENUS_SERVER_SELECTED, selectedServerMenus);
+				}
+			} else {
+				Prefs.with(DebugOptionsActivity.this).save(SPLabels.MENUS_SERVER_SELECTED, selectedServerMenus);
+			}
+
+			if (!selectedServerFatafat.equalsIgnoreCase(Config.getFatafatLiveServerUrl())
+					&& !selectedServerFatafat.equalsIgnoreCase(Config.getFatafatDevServerUrl())) {
+				String customUrl = editTextCustomFatafat.getText().toString().trim();
+				if ("".equalsIgnoreCase(customUrl)) {
+					editTextCustomFatafat.requestFocus();
+					editTextCustomFatafat.setError(getString(R.string.please_enter_something));
+					stop = true;
+				} else {
+					selectedServerFatafat = customUrl;
+					Prefs.with(DebugOptionsActivity.this).save(SPLabels.FATAFAT_SERVER_SELECTED, selectedServerFatafat);
+				}
+			} else {
+				Prefs.with(DebugOptionsActivity.this).save(SPLabels.FATAFAT_SERVER_SELECTED, selectedServerFatafat);
+			}
+
+			if(!stop){
+				MyApplication.getInstance().initializeServerURL(this);
+				performBackPressed();
+			}
+		});
+
+        buttonSaveTop.setOnClickListener(v -> buttonSave.performClick());
+
+        buttonCancel.setOnClickListener(v -> performBackPressed());
 
 
 
@@ -308,23 +372,11 @@ public class DebugOptionsActivity extends BaseActivity {
         selectedServerMenus = Prefs.with(this).getString(SPLabels.MENUS_SERVER_SELECTED, Config.getMenusDefaultServerUrl());
         selectedServerFatafat = Prefs.with(this).getString(SPLabels.FATAFAT_SERVER_SELECTED, Config.getFatafatDefaultServerUrl());
 
-        if (showAllDriversValue == 1) {
-            relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
-            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
-        } else {
-            relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
-            imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
-        }
+		toggleJungleApisDisableUI(showAllDriversValue, relativeLayoutShowAllDrivers, imageViewShowAllDrivers);
 
-        if (showDriverInfoValue == 1) {
-            relativeLayoutShowDriverInfo.setBackgroundColor(Color.WHITE);
-            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked);
-        } else {
-            relativeLayoutShowDriverInfo.setBackgroundColor(Color.TRANSPARENT);
-            imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked);
-        }
+		toggleJungleApisDisableUI(showDriverInfoValue, relativeLayoutShowDriverInfo, imageViewShowDriverInfo);
 
-        setServerUI(selectedServer);
+		setServerUI(selectedServer);
         setFreshServerUI(selectedServerFresh);
         setMenusServerUI(selectedServerMenus);
         setFatafatServerUI(selectedServerFatafat);
@@ -341,76 +393,50 @@ public class DebugOptionsActivity extends BaseActivity {
         linearLayoutServerEnvFatafatBelow.setVisibility(View.VISIBLE);
 
 
-        relativeLayoutShowAllDrivers.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (showAllDriversValue == 0) {
-                    showAllDriversValue = 1;
-                    relativeLayoutShowAllDrivers.setBackgroundColor(Color.WHITE);
-                    imageViewShowAllDrivers.setImageResource(R.drawable.check_box_checked);
-                } else {
-                    showAllDriversValue = 0;
-                    relativeLayoutShowAllDrivers.setBackgroundColor(Color.TRANSPARENT);
-                    imageViewShowAllDrivers.setImageResource(R.drawable.check_box_unchecked);
-                }
-            }
-        });
+        relativeLayoutShowAllDrivers.setOnClickListener(v -> {
+			if (showAllDriversValue == 0) {
+				showAllDriversValue = 1;
+			} else {
+				showAllDriversValue = 0;
+			}
+			toggleJungleApisDisableUI(showAllDriversValue, relativeLayoutShowAllDrivers, imageViewShowAllDrivers);
+		});
 
 
-        relativeLayoutShowDriverInfo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (showDriverInfoValue == 0) {
-                    showDriverInfoValue = 1;
-                    relativeLayoutShowDriverInfo.setBackgroundColor(Color.WHITE);
-                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_checked);
-                } else {
-                    showDriverInfoValue = 0;
-                    relativeLayoutShowDriverInfo.setBackgroundColor(Color.TRANSPARENT);
-                    imageViewShowDriverInfo.setImageResource(R.drawable.check_box_unchecked);
-                }
-            }
-        });
+        relativeLayoutShowDriverInfo.setOnClickListener(v -> {
+			if (showDriverInfoValue == 0) {
+				showDriverInfoValue = 1;
+			} else {
+				showDriverInfoValue = 0;
+			}
+			toggleJungleApisDisableUI(showDriverInfoValue, relativeLayoutShowDriverInfo, imageViewShowDriverInfo);
+		});
 
 
-        relativeLayoutLive4012.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServer = Config.getLiveServerUrl();
-                setServerUI(selectedServer);
-                setAllServersToSame(ProductType.AUTO, ConfigMode.LIVE);
-            }
-        });
+        relativeLayoutLive4012.setOnClickListener(v -> {
+			selectedServer = Config.getLiveServerUrl();
+			setServerUI(selectedServer);
+			setAllServersToSame(ProductType.AUTO, ConfigMode.LIVE);
+		});
 
-        relativeLayoutTest8012.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServer = Config.getDevServerUrl();
-                setServerUI(selectedServer);
-                setAllServersToSame(ProductType.AUTO, ConfigMode.DEV);
-            }
-        });
+        relativeLayoutTest8012.setOnClickListener(v -> {
+			selectedServer = Config.getDevServerUrl();
+			setServerUI(selectedServer);
+			setAllServersToSame(ProductType.AUTO, ConfigMode.DEV);
+		});
 
-        relativeLayoutCustom.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String customUrl = editTextCustom.getText().toString().trim();
-                if ("".equalsIgnoreCase(customUrl)) {
-                    editTextCustom.requestFocus();
-                    editTextCustom.setError(getString(R.string.please_enter_something));
-                } else {
-                    selectedServer = customUrl;
-                    setServerUI(selectedServer);
-                }
-            }
-        });
+        relativeLayoutCustom.setOnClickListener(v -> {
+			String customUrl = editTextCustom.getText().toString().trim();
+			if ("".equalsIgnoreCase(customUrl)) {
+				editTextCustom.requestFocus();
+				editTextCustom.setError(getString(R.string.please_enter_something));
+			} else {
+				selectedServer = customUrl;
+				setServerUI(selectedServer);
+			}
+		});
 
-        editTextCustom.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServer = editTextCustom.getText().toString().trim();
-            }
-        });
+        editTextCustom.setOnClickListener(v -> selectedServer = editTextCustom.getText().toString().trim());
 
 
 
@@ -418,206 +444,174 @@ public class DebugOptionsActivity extends BaseActivity {
 
 
 
-        relativeLayoutLiveFresh.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerFresh = Config.getFreshLiveServerUrl();
-                setFreshServerUI(selectedServerFresh);
-                setAllServersToSame(ProductType.FRESH, ConfigMode.LIVE);
-            }
-        });
+        relativeLayoutLiveFresh.setOnClickListener(v -> {
+			selectedServerFresh = Config.getFreshLiveServerUrl();
+			setFreshServerUI(selectedServerFresh);
+			setAllServersToSame(ProductType.FRESH, ConfigMode.LIVE);
+		});
 
-        relativeLayoutTestFresh.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerFresh = Config.getFreshDevServerUrl();
-                setFreshServerUI(selectedServerFresh);
-                setAllServersToSame(ProductType.FRESH, ConfigMode.DEV);
-            }
-        });
+        relativeLayoutTestFresh.setOnClickListener(v -> {
+			selectedServerFresh = Config.getFreshDevServerUrl();
+			setFreshServerUI(selectedServerFresh);
+			setAllServersToSame(ProductType.FRESH, ConfigMode.DEV);
+		});
 
-        relativeLayoutCustomFresh.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String customUrl = editTextCustomFresh.getText().toString().trim();
-                if ("".equalsIgnoreCase(customUrl)) {
-                    editTextCustomFresh.requestFocus();
-                    editTextCustomFresh.setError(getString(R.string.please_enter_something));
-                } else {
-                    selectedServerFresh = customUrl;
-                    setFreshServerUI(selectedServerFresh);
-                }
-            }
-        });
+        relativeLayoutCustomFresh.setOnClickListener(v -> {
+			String customUrl = editTextCustomFresh.getText().toString().trim();
+			if ("".equalsIgnoreCase(customUrl)) {
+				editTextCustomFresh.requestFocus();
+				editTextCustomFresh.setError(getString(R.string.please_enter_something));
+			} else {
+				selectedServerFresh = customUrl;
+				setFreshServerUI(selectedServerFresh);
+			}
+		});
 
-        editTextCustomFresh.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerFresh = editTextCustomFresh.getText().toString().trim();
-            }
-        });
+        editTextCustomFresh.setOnClickListener(v -> selectedServerFresh = editTextCustomFresh.getText().toString().trim());
 
 
 
 
 
 
-        relativeLayoutLiveMenus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerMenus = Config.getMenusLiveServerUrl();
-                setMenusServerUI(selectedServerMenus);
-                setAllServersToSame(ProductType.MENUS, ConfigMode.LIVE);
-            }
-        });
+        relativeLayoutLiveMenus.setOnClickListener(v -> {
+			selectedServerMenus = Config.getMenusLiveServerUrl();
+			setMenusServerUI(selectedServerMenus);
+			setAllServersToSame(ProductType.MENUS, ConfigMode.LIVE);
+		});
 
-        relativeLayoutTestMenus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerMenus = Config.getMenusDevServerUrl();
-                setMenusServerUI(selectedServerMenus);
-                setAllServersToSame(ProductType.MENUS, ConfigMode.DEV);
-            }
-        });
+        relativeLayoutTestMenus.setOnClickListener(v -> {
+			selectedServerMenus = Config.getMenusDevServerUrl();
+			setMenusServerUI(selectedServerMenus);
+			setAllServersToSame(ProductType.MENUS, ConfigMode.DEV);
+		});
 
-        relativeLayoutCustomMenus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String customUrl = editTextCustomMenus.getText().toString().trim();
-                if ("".equalsIgnoreCase(customUrl)) {
-                    editTextCustomMenus.requestFocus();
-                    editTextCustomMenus.setError(getString(R.string.please_enter_something));
-                } else {
-                    selectedServerMenus = customUrl;
-                    setMenusServerUI(selectedServerMenus);
-                }
-            }
-        });
+        relativeLayoutCustomMenus.setOnClickListener(v -> {
+			String customUrl = editTextCustomMenus.getText().toString().trim();
+			if ("".equalsIgnoreCase(customUrl)) {
+				editTextCustomMenus.requestFocus();
+				editTextCustomMenus.setError(getString(R.string.please_enter_something));
+			} else {
+				selectedServerMenus = customUrl;
+				setMenusServerUI(selectedServerMenus);
+			}
+		});
 
-        editTextCustomMenus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerMenus = editTextCustomMenus.getText().toString().trim();
-            }
-        });
+        editTextCustomMenus.setOnClickListener(v -> selectedServerMenus = editTextCustomMenus.getText().toString().trim());
 
 
 
         
         
-        relativeLayoutLiveFatafat.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerFatafat = Config.getFatafatLiveServerUrl();
-                setFatafatServerUI(selectedServerFatafat);
-                setAllServersToSame(ProductType.FEED, ConfigMode.LIVE);
-            }
-        });
+        relativeLayoutLiveFatafat.setOnClickListener(v -> {
+			selectedServerFatafat = Config.getFatafatLiveServerUrl();
+			setFatafatServerUI(selectedServerFatafat);
+			setAllServersToSame(ProductType.FEED, ConfigMode.LIVE);
+		});
 
-        relativeLayoutTestFatafat.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerFatafat = Config.getFatafatDevServerUrl();
-                setFatafatServerUI(selectedServerFatafat);
-                setAllServersToSame(ProductType.FEED, ConfigMode.DEV);
-            }
-        });
+        relativeLayoutTestFatafat.setOnClickListener(v -> {
+			selectedServerFatafat = Config.getFatafatDevServerUrl();
+			setFatafatServerUI(selectedServerFatafat);
+			setAllServersToSame(ProductType.FEED, ConfigMode.DEV);
+		});
 
-        relativeLayoutCustomFatafat.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String customUrl = editTextCustomFatafat.getText().toString().trim();
-                if ("".equalsIgnoreCase(customUrl)) {
-                    editTextCustomFatafat.requestFocus();
-                    editTextCustomFatafat.setError(getString(R.string.please_enter_something));
-                } else {
-                    selectedServerFatafat = customUrl;
-                    setFatafatServerUI(selectedServerFatafat);
-                }
-            }
-        });
+        relativeLayoutCustomFatafat.setOnClickListener(v -> {
+			String customUrl = editTextCustomFatafat.getText().toString().trim();
+			if ("".equalsIgnoreCase(customUrl)) {
+				editTextCustomFatafat.requestFocus();
+				editTextCustomFatafat.setError(getString(R.string.please_enter_something));
+			} else {
+				selectedServerFatafat = customUrl;
+				setFatafatServerUI(selectedServerFatafat);
+			}
+		});
 
-        editTextCustomFatafat.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedServerFatafat = editTextCustomFatafat.getText().toString().trim();
-            }
-        });
+        editTextCustomFatafat.setOnClickListener(v -> selectedServerFatafat = editTextCustomFatafat.getText().toString().trim());
         
         
 
 
-        relativeLayoutDebugOptions.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(linearLayoutDebugOptionsBelow.getVisibility() == View.VISIBLE){
-                    imageViewArrowDebugOptions.setRotation(270);
-                    linearLayoutDebugOptionsBelow.setVisibility(View.GONE);
-                } else{
-                    imageViewArrowDebugOptions.setRotation(90);
-                    linearLayoutDebugOptionsBelow.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        relativeLayoutDebugOptions.setOnClickListener(v -> {
+			if(linearLayoutDebugOptionsBelow.getVisibility() == View.VISIBLE){
+				imageViewArrowDebugOptions.setRotation(270);
+				linearLayoutDebugOptionsBelow.setVisibility(View.GONE);
+			} else{
+				imageViewArrowDebugOptions.setRotation(90);
+				linearLayoutDebugOptionsBelow.setVisibility(View.VISIBLE);
+			}
+		});
+		imageViewArrowDebugOptions.setRotation(270);
+		linearLayoutDebugOptionsBelow.setVisibility(View.GONE);
 
-        relativeLayoutServerEnv.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(linearLayoutServerEnvBelow.getVisibility() == View.VISIBLE){
-                    imageViewArrowServerEnv.setRotation(270);
-                    linearLayoutServerEnvBelow.setVisibility(View.GONE);
-                } else{
-                    imageViewArrowServerEnv.setRotation(90);
-                    linearLayoutServerEnvBelow.setVisibility(View.VISIBLE);
-                }
-            }
-        });
 
-        relativeLayoutServerEnvFresh.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(linearLayoutServerEnvFreshBelow.getVisibility() == View.VISIBLE){
-                    imageViewArrowServerEnvFresh.setRotation(270);
-                    linearLayoutServerEnvFreshBelow.setVisibility(View.GONE);
-                } else{
-                    imageViewArrowServerEnvFresh.setRotation(90);
-                    linearLayoutServerEnvFreshBelow.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        relativeLayoutServerEnv.setOnClickListener(v -> {
+			if(linearLayoutServerEnvBelow.getVisibility() == View.VISIBLE){
+				imageViewArrowServerEnv.setRotation(270);
+				linearLayoutServerEnvBelow.setVisibility(View.GONE);
+			} else{
+				imageViewArrowServerEnv.setRotation(90);
+				linearLayoutServerEnvBelow.setVisibility(View.VISIBLE);
+			}
+		});
 
-        relativeLayoutServerEnvMenus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(linearLayoutServerEnvMenusBelow.getVisibility() == View.VISIBLE){
-                    imageViewArrowServerEnvMenus.setRotation(270);
-                    linearLayoutServerEnvMenusBelow.setVisibility(View.GONE);
-                } else{
-                    imageViewArrowServerEnvMenus.setRotation(90);
-                    linearLayoutServerEnvMenusBelow.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        relativeLayoutServerEnvFresh.setOnClickListener(v -> {
+			if(linearLayoutServerEnvFreshBelow.getVisibility() == View.VISIBLE){
+				imageViewArrowServerEnvFresh.setRotation(270);
+				linearLayoutServerEnvFreshBelow.setVisibility(View.GONE);
+			} else{
+				imageViewArrowServerEnvFresh.setRotation(90);
+				linearLayoutServerEnvFreshBelow.setVisibility(View.VISIBLE);
+			}
+		});
 
-        relativeLayoutServerEnvFatafat.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(linearLayoutServerEnvFatafatBelow.getVisibility() == View.VISIBLE){
-                    imageViewArrowServerEnvFatafat.setRotation(270);
-                    linearLayoutServerEnvFatafatBelow.setVisibility(View.GONE);
-                } else{
-                    imageViewArrowServerEnvFatafat.setRotation(90);
-                    linearLayoutServerEnvFatafatBelow.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        relativeLayoutServerEnvMenus.setOnClickListener(v -> {
+			if(linearLayoutServerEnvMenusBelow.getVisibility() == View.VISIBLE){
+				imageViewArrowServerEnvMenus.setRotation(270);
+				linearLayoutServerEnvMenusBelow.setVisibility(View.GONE);
+			} else{
+				imageViewArrowServerEnvMenus.setRotation(90);
+				linearLayoutServerEnvMenusBelow.setVisibility(View.VISIBLE);
+			}
+		});
+
+        relativeLayoutServerEnvFatafat.setOnClickListener(v -> {
+			if(linearLayoutServerEnvFatafatBelow.getVisibility() == View.VISIBLE){
+				imageViewArrowServerEnvFatafat.setRotation(270);
+				linearLayoutServerEnvFatafatBelow.setVisibility(View.GONE);
+			} else{
+				imageViewArrowServerEnvFatafat.setRotation(90);
+				linearLayoutServerEnvFatafatBelow.setVisibility(View.VISIBLE);
+			}
+		});
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
 
+	private void setBoldText(TextView tvDeviceID, String prefix, String value) {
+		tvDeviceID.setText(prefix);
+		SpannableStringBuilder ssbId = new SpannableStringBuilder(value);
+		ssbId.setSpan(new StyleSpan(Typeface.BOLD), 0, ssbId.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvDeviceID.append(ssbId);
 
-    public void setAllServersToSame(ProductType productType, ConfigMode configMode){
+		SpannableStringBuilder ssb = new SpannableStringBuilder("Long press to copy");
+		ssb.setSpan(new RelativeSizeSpan(0.7f), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvDeviceID.append("\n");
+		tvDeviceID.append(ssb);
+	}
+
+	private void toggleJungleApisDisableUI(int jungleApisDisable, RelativeLayout rlJungleApisDisable, ImageView ivJungleApisDisable) {
+		if (jungleApisDisable == 1) {
+			rlJungleApisDisable.setBackgroundColor(Color.WHITE);
+			ivJungleApisDisable.setImageResource(R.drawable.check_box_checked);
+		} else {
+			rlJungleApisDisable.setBackgroundColor(Color.TRANSPARENT);
+			ivJungleApisDisable.setImageResource(R.drawable.check_box_unchecked);
+		}
+	}
+
+
+	public void setAllServersToSame(ProductType productType, ConfigMode configMode){
         if(configMode == ConfigMode.LIVE){
             if(productType != ProductType.AUTO){
                 selectedServer = Config.getLiveServerUrl();
@@ -759,7 +753,6 @@ public class DebugOptionsActivity extends BaseActivity {
 
 
     public void performBackPressed() {
-        startActivity(new Intent(this, SplashNewActivity.class));
         finish();
         overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }

@@ -61,8 +61,6 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -88,7 +86,6 @@ import com.sabkuchfresh.commoncalls.ApiFetchRestaurantMenu;
 import com.sabkuchfresh.datastructure.CheckoutSaveData;
 import com.sabkuchfresh.datastructure.FilterCuisine;
 import com.sabkuchfresh.datastructure.FuguCustomActionModel;
-import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.dialogs.FreshSortDialog;
 import com.sabkuchfresh.feed.ui.fragments.FeedAddPostFragment;
@@ -180,7 +177,6 @@ import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.DeleteCacheIntentService;
-import product.clicklabs.jugnoo.GeocodeCallback;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.OrderStatusFragment;
@@ -189,6 +185,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -218,14 +215,10 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
-import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 
 /**
@@ -315,7 +308,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return feedHomeAddPostView;
     }
 
-    private GeoDataClient mGeoDataClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -340,7 +332,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             new ASSL(this, drawerLayout, 1134, 720, false);
             scale = getResources().getDisplayMetrics().density;
 
-            mGeoDataClient = Places.getGeoDataClient(this, null);
 
             relativeLayoutContainer = (RelativeLayout) findViewById(R.id.relativeLayoutContainer);
 
@@ -860,7 +851,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setReorderLatlngToAdrress(LatLng reorderLatLng,String  reoderAddress) {
         if(reorderLatLng!=null){
             SearchResult searchResult = homeUtil.getNearBySavedAddress(this, reorderLatLng,
-                    Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+					true);
             if (searchResult!=null) {
                 setSelectedAddress(searchResult.getAddress());
                 setSelectedLatLng(searchResult.getLatLng());
@@ -1250,7 +1241,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 // else find any tagged address near current set location, if that is not tagged
                 else if(getSelectedAddressId() == 0){
                     SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
-                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+							false);
                     if(searchResult != null){
                         setSelectedAddress(searchResult.getAddress());
                         setSelectedLatLng(searchResult.getLatLng());
@@ -3408,7 +3399,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         if (apiAddHomeWorkAddress == null) {
             apiAddHomeWorkAddress = new ApiAddHomeWorkAddress(this, new ApiAddHomeWorkAddress.Callback() {
                 @Override
-                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted) {
+                public void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, final String serverMsg) {
                     try {
                         Fragment deliveryAddressesFragment = getDeliveryAddressesFragment();
                         if (deliveryAddressesFragment != null) {
@@ -3931,32 +3922,29 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType) {
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-            GoogleRestApis.INSTANCE.geocode(currentLatLng.latitude + "," + currentLatLng.longitude,
-                    LocaleHelper.getLanguage(this), new GeocodeCallback(mGeoDataClient) {
-                        @Override
-                        public void onSuccess(GoogleGeocodeResponse settleUserDebt, Response response) {
-                            try {
-                                DialogPopup.dismissLoadingDialog();
-                                GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-                                String address = gapiAddress.getSearchableAddress();
-                                setSelectedAddress(address);
-                                setSelectedLatLng(currentLatLng);
-                                setSelectedAddressId(0);
-                                setSelectedAddressType("");
-                                setAddressAndFetchOfferingData(appType);
+			GoogleJungleCaching.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
+				Log.i(TAG, "getAddressAndFetchOfferingData address="+googleGeocodeResponse);
+				try {
+					String address = null;
+					if(googleGeocodeResponse != null){
+						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse);
+						address = gapiAddress.getSearchableAddress();
+					} else if(singleAddress != null){
+						address = singleAddress;
+					}
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                retryDialogLocationFetch(DialogErrorType.SERVER_ERROR, currentLatLng, appType);
-                            }
-                        }
+					DialogPopup.dismissLoadingDialog();
+					setSelectedAddress(address);
+					setSelectedLatLng(currentLatLng);
+					setSelectedAddressId(0);
+					setSelectedAddressType("");
+					setAddressAndFetchOfferingData(appType);
 
-                        @Override
-                        public void failure(RetrofitError error) {
-                            DialogPopup.dismissLoadingDialog();
-                            retryDialogLocationFetch(DialogErrorType.CONNECTION_LOST, currentLatLng, appType);
-                        }
-                    });
+				} catch (Exception e) {
+					e.printStackTrace();
+					retryDialogLocationFetch(DialogErrorType.SERVER_ERROR, currentLatLng, appType);
+				}
+			});
         } catch (Exception e) {
             e.printStackTrace();
             DialogPopup.dismissLoadingDialog();
@@ -4074,7 +4062,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
                 SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+						true);
                 if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
 					saveOfferingLastAddress(appType);

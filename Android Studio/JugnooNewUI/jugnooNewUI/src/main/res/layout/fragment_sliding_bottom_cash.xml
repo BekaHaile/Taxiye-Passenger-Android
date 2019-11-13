@@ -20,16 +20,13 @@
         android:orientation="vertical"
         android:paddingTop="10px"
         android:paddingBottom="10px"
-        android:animateLayoutChanges="true"
-        >
-
+        android:animateLayoutChanges="true">
 
 
         <RelativeLayout
             android:id="@+id/relativeLayoutStripeCard"
             android:layout_width="664px"
             android:layout_height="87px"
-            
             android:layout_gravity="center_horizontal"
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackground"
@@ -61,20 +58,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10px"
-                    tools:text="**** **** **** ****"
+                    tools:text="@string/add_card_payments"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/text_size_30"/>
 
             </LinearLayout>
 
-
-
         </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvStripeCardsSlidingBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:tag="@string/dont_touch_me"
+            android:nestedScrollingEnabled="false"/>
+
+
         <RelativeLayout
             android:id="@+id/relativeLayoutAcceptCard"
             android:layout_width="664px"
             android:layout_height="87px"
-            
             android:layout_gravity="center_horizontal"
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackground"
@@ -115,11 +119,11 @@
 
 
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/relativeLayoutPayStack"
             android:layout_width="664px"
             android:layout_height="87px"
-            
             android:layout_gravity="center_horizontal"
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackground"
@@ -160,11 +164,11 @@
 
 
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/relativeLayoutPaytm"
             android:layout_width="664px"
             android:layout_height="87px"
-            
             android:layout_gravity="center_horizontal"
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackground"
@@ -213,11 +217,11 @@
                 android:textSize="@dimen/text_size_30"/>
 
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/relativeLayoutMpesa"
             android:layout_width="664px"
             android:layout_height="87px"
-            
             android:layout_gravity="center_horizontal"
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackground"
@@ -270,7 +274,6 @@
             android:id="@+id/relativeLayoutMobikwik"
             android:layout_width="664px"
             android:layout_height="87px"
-            
             android:layout_gravity="center_horizontal"
             android:theme="@style/GreyHighlight"
             android:background="?attr/selectableItemBackground"
@@ -445,6 +448,7 @@
                 />
 
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/llCorporate"
             android:layout_width="match_parent"
@@ -518,10 +522,10 @@
                 />
 
             <ImageView
-                style="@style/payment_option_icon_small"
-                android:layout_marginStart="10px"
-                android:src="@drawable/ic_pos"
-                android:layout_height="45px"
+                android:layout_width="51dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_corporate"
+                android:layout_height="18dp"
                 />
 
             <TextView

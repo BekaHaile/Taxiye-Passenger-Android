@@ -99,6 +99,7 @@ public class UserData {
 	private String upiHandle;
 	private int showJugnooStarInAcccount;
 	private String fuguChannelInfoJson;
+	private int regAs;
 
 	public String getFuguChannelInfoJson() {
 		return fuguChannelInfoJson;
@@ -126,7 +127,8 @@ public class UserData {
 					int payEnabled, int feedEnabled, int prosEnabled, int deliveryCustomerEnabled,
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
-					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding, int autosEnabled, String countryCode){
+					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding, int autosEnabled,
+					String countryCode, int regAs){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -211,6 +213,7 @@ public class UserData {
 		this.showOfferDialog = showOfferDialog;
 		this.showTutorial = showTutorial;
 		this.signupOnboarding = signupOnboarding;
+		this.regAs = regAs;
 
 
 
@@ -1151,5 +1154,13 @@ public class UserData {
 
 	public void setmPesaBalance(double mPesaBalance) {
 		this.mPesaBalance = mPesaBalance;
+	}
+
+	public int getRegAs() {
+		return regAs;
+	}
+
+	public void setRegAs(int regAs) {
+		this.regAs = regAs;
 	}
 }

@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.home.dialogs
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.DialogInterface
 import android.view.WindowManager
 import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.dialog_partner.*
@@ -18,7 +17,7 @@ class PartnerWithJugnooDialog {
 
     var dialog:Dialog? = null
 
-    fun show(activity: Activity, callback: Callback) {
+    fun show(activity: Activity, title:String, message:String, callback: Callback) {
         try {
             if(dialog != null && dialog!!.isShowing){
                 return
@@ -33,6 +32,10 @@ class PartnerWithJugnooDialog {
                 setCanceledOnTouchOutside(true)
 
                 ivClose.setOnClickListener { dialog!!.dismiss() }
+
+                tvTitle.text = title
+                tvMessage.text = message
+                bPartnerWithJugnoo.text = activity.getString(R.string.partner_with_format, activity.getString(R.string.app_name))
                 bPartnerWithJugnoo.setOnClickListener {
                     try {
                         Utils.openUrl(activity, Prefs.with(activity)
@@ -44,14 +47,18 @@ class PartnerWithJugnooDialog {
                 }
                 relative.setOnClickListener { dialog!!.dismiss() }
 
-                setOnDismissListener(DialogInterface.OnDismissListener {
+                setOnDismissListener {
                     callback.dialogDismissed()
-                })
+                }
             }
             dialog!!.show()
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun dismiss(){
+        dialog?.dismiss()
     }
 
     interface Callback{

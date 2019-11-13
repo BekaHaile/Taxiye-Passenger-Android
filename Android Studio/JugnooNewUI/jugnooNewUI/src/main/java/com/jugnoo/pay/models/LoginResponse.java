@@ -323,6 +323,19 @@ public class LoginResponse {
 		@SerializedName("priority_tip_category")
 		@Expose
 		private Integer priorityTipCategory;
+
+		public Integer getBluetooth_tracker_enabled() {
+			return bluetooth_tracker_enabled;
+		}
+
+		public void setBluetooth_tracker_enabled(Integer bluetooth_tracker_enabled) {
+			this.bluetooth_tracker_enabled = bluetooth_tracker_enabled;
+		}
+
+		@SerializedName("bluetooth_tracker_enabled")
+		@Expose
+		private Integer bluetooth_tracker_enabled;
+
 		@SerializedName("fare_factor")
 		@Expose
 		private Double fareFactor;

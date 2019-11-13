@@ -10,6 +10,7 @@ import android.provider.ContactsContract;
 import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -117,6 +118,12 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 		set.addAll(list);
 
 		final ArrayList<ContactBean> newList = new ArrayList<ContactBean>(set);
+		Collections.sort(newList, new Comparator<ContactBean>() {
+			@Override
+			public int compare(ContactBean o1, ContactBean o2) {
+				return o1.getName().compareToIgnoreCase(o2.getName());
+			}
+		});
 		contactBeans.addAll(newList);
 	}
 

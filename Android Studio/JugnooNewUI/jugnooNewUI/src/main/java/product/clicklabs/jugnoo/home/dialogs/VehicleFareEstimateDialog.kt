@@ -41,6 +41,8 @@ class VehicleFareEstimateDialog {
                 tvPerKmValue.typeface = Fonts.mavenMedium(activity)
                 tvPerMin.typeface = Fonts.mavenMedium(activity)
                 tvPerMinValue.typeface = Fonts.mavenMedium(activity)
+                tvPerWait.typeface = Fonts.mavenMedium(activity)
+                tvPerWaitMinValue.typeface = Fonts.mavenMedium(activity)
                 textViewThreshold.typeface = Fonts.mavenMedium(activity)
                 textViewPoolMessage.typeface = Fonts.mavenMedium(activity)
                 imageViewClose.setOnClickListener { dialog.dismiss() }
@@ -51,7 +53,7 @@ class VehicleFareEstimateDialog {
                         .loadSelector(ivVehicleType, region.images.rideNowNormal, region.images.rideNowHighlighted, {}, true)
 
                 tvVehicle.text = region.regionName
-                tvEstimate.text = region.regionFare.getFareText(region.fareMandatory)
+                tvEstimate.text = region.regionFare?.getFareText(region.fareMandatory)
                 tvInfo.text = if(region.description.isNullOrEmpty()) activity.getString(R.string.vehicle_fare_estimate_alert) else region.description
                 tvInfo.visibility = if(tvInfo.text.isNullOrEmpty()) View.GONE else View.VISIBLE
                 tvBaseFareValue.text = Utils.fromHtml(region.fareStructure.getDisplayBaseFare(activity))
@@ -72,6 +74,12 @@ class VehicleFareEstimateDialog {
                     textViewThreshold.text = region.fareStructure.getDisplayFareText(activity)
                 } else {
                     textViewThreshold.visibility = View.GONE
+                }
+                if(region.fareStructure.farePerWaitingMin > 0){
+                    llWaitCharges.visibility = View.VISIBLE
+                    tvPerWaitMinValue.text = Utils.formatCurrencyValue(region.fareStructure.currency, region.fareStructure.farePerWaitingMin, false)
+                } else {
+                    llWaitCharges.visibility = View.GONE
                 }
 
             }

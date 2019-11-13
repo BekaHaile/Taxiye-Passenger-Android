@@ -26,12 +26,14 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
     LayoutInflater mInflater;
 	ViewHolderDiscount holder;
     Context context;
+    boolean showNegativeValues;
 
     ArrayList<DiscountType> discountTypes;
     String currency;
 
-    public EndRideDiscountsAdapter(Context context) {
+    public EndRideDiscountsAdapter(Context context, boolean showNegativeValues) {
         this.context = context;
+        this.showNegativeValues = showNegativeValues;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.discountTypes = new ArrayList<>();
     }
@@ -87,7 +89,7 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
 //                    Utils.getMoneyDecimalFormat().format(discountType.value)));
 //        } else{
             holder.textViewDiscount.setText(discountType.getName());
-            holder.textViewDiscountValue.setText(Utils.formatCurrencyValue(currency, -discountType.value));
+            holder.textViewDiscountValue.setText(Utils.formatCurrencyValue(currency, showNegativeValues ? -discountType.value : discountType.value));
 //        }
 
         return convertView;

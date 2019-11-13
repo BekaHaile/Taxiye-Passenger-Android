@@ -74,6 +74,7 @@ public interface Constants {
     String KEY_ERROR = "error";
 
     String KEY_ACCESS_TOKEN = "access_token";
+    String KEY_SESSION_ID = "session_id";
     String KEY_UPDATE_CONTACTS="update_contacts";
     String KEY_CONTACTS_LIST="contacts_list";
     String KEY_ENGAGEMENT_ID = "engagement_id";
@@ -231,6 +232,7 @@ public interface Constants {
     String KEY_EMERGENCY_LOC = "emergency_loc";
     String SP_CURRENT_ENGAGEMENT_ID = "current_engagement_id";
     String SP_CONTACTS_SYNCED="contacts_syned";
+    String STRIPE_SELECTED_POS ="selected_stripe_card";
 
     String KEY_URL = "url";
     String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
@@ -302,6 +304,7 @@ public interface Constants {
 
     String SP_REFERRAL_CODE = "sp_referral_code";
     String KEY_COUPON_SELECTED = "coupon_selected";
+    String KEY_IS_COUPON = "is_coupon";
 
     String SP_PUSH_DIALOG_CONTENT = "push_dialog_content";
     String KEY_SHOW_DIALOG = "show_dialog";
@@ -930,6 +933,7 @@ public interface Constants {
     String KEY_CUSTOMER_SUPPORT_NUMBER = "customer_support_number";
     String KEY_TIP_AMOUNT = "tip_amount";
     String KEY_TIP_ENABLED = "tip_enabled";
+    String KEY_RESEND_EMAIL_INVOICE_ENABLED = "resend_email_invoice_enabled";
     String KEY_CURRENCY_PRECISION = "currency_precision";
     String KEY_DEFAULT_COUNTRY_CODE = "default_country_code";
     String KEY_DEFAULT_SUB_COUNTRY_CODE = "default_sub_country_code";
@@ -1031,18 +1035,98 @@ public interface Constants {
     String KEY_CUSTOMER_PARTNER_URL = "customer_partner_url";
     String KEY_CUSTOMER_OPEN_PARTNER_DIALOG = "customer_open_partner_dialog";
     String KEY_CUSTOMER_PARTNER_DIALOG_VIEW_COUNT = "customer_partner_dialog_view_count";
-    String MIME_TYPE = "application/octet-stream";
+    String KEY_CUSTOMER_PARTNER_DIALOG_TITLE = "customer_partner_dialog_title";
+    String KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE = "customer_partner_dialog_message";
 
-    enum DocStatuses {
-        UPLOADED(4), VERIFIED(3), REJECTED(2), APPROVAL_PENDING(1), NOT_UPLOADED(0);
-        int i;
+    String KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE = "customer_show_convenience_charge_fare_estimate";
+    String KEY_REG_AS = "reg_as";
+    String KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT = "customer_reg_as_driver_phone_edit_alert";
+    String KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE = "customer_reg_as_driver_phone_edit_alert_message";
+    String KEY_CARD_ID = "card_id";
+    String KEY_CARD_DETAILS = "card_details";
+    String KEY_AMOUNT_PAID = "amount_paid";
+    String KEY_LNG = "lng";
+	String KEY_JSONDATA = "jsonData";
+	String KEY_CUSTOMER_GOOGLE_CACHING_ENABLED = "customer_google_caching_enabled";
 
-        DocStatuses(int i) {
-            this.i = i;
-        }
+    //    save location
+    String SKIP_SAVE_PICKUP_LOCATION = "skip_save_pickup_location";
+    String SKIP_SAVE_DROP_LOCATION = "skip_save_drop_location";
 
-        public int getStatus() {
-            return this.i;
-        }
-    }
+    String KEY_GPS_LOCK_STATUS = "gps_lock_status";
+    String KEY_EXTERNAL_ID = "external_id";
+    String KEY_LOCK_STATUS = "lock_status";
+    String KEY_FAULT_CONDITION = "fault_condition";
+
+
+    String KEY_LOCATION_ID = "location_id";
+    String KEY_DAMAGE_IMAGE = "damage_image";
+
+
+    String KEY_CUSTOMER_GPS_LOCK_STATUS_POLLING_INTERVAL = "customer_gps_lock_status_polling_interval";
+	String KEY_DRIVER_IMAGE = "driver_image";
+	String KEY_DRIVER_NAME = "driver_name";
+	String KEY_VEHICLE_NAME = "vehicle_name";
+	String KEY_DRIVER_ETA = "driver_eta";
+	String KEY_BID_REQUEST_RIDE_TIMEOUT = "bid_request_ride_timeout";
+	String KEY_BID_TIMEOUT = "bid_timeout";
+	String KEY_REQUEST_RIDE_START_TIME = "request_ride_start_time";
+    String KEY_INITIAL_BID_VALUE = "initial_bid_value";
+
+	String KEY_CUSTOMER_TUTORIAL_BANNER_TEXT = "customer_tutorial_banner_text";
+	String KEY_SECTION = "section";
+	String KEY_TUTORIAL_SKIPPED = "tutorial_skipped";
+
+	String KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP = "customer_set_location_on_map_on_top";
+	String KEY_CUSTOMER_BID_INCREMENT = "customer_bid_increment";
+	String KEY_MIN_REGION_FARE = "min_region_fare";
+	String KEY_MAX_REGION_FARE = "max_region_fare";
+	String KEY_IS_ROUND_TRIP = "is_round_trip";
+	String KEY_CUSTOMER_SHOW_BOUNCING_MARKER = "customer_show_bouncing_marker";
+	String KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG = "customer_show_save_location_dialog";
+
+	String KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED = "customer_region_fare_check_enabled";
+	String KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED = "customer_pickup_address_empty_check_enabled";
+	String KEY_CUSTOMER_DIRECTIONS_CACHING = "customer_directions_caching";
+
+	String KEY_JUNGLE_DIRECTIONS_OBJ = "jungle_directions_obj";
+	String KEY_JUNGLE_DISTANCE_MATRIX_OBJ = "jungle_distance_matrix_obj";
+	String KEY_JUNGLE_GEOCODE_OBJ = "jungle_geocode_obj";
+	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";
+	String KEY_JUNGLE_POINTS = "points";
+	String KEY_JUNGLE_OPTIONS = "options";
+	String KEY_JUNGLE_APP_ID = "app_id";
+	String KEY_JUNGLE_APP_CODE = "app_code";
+	String KEY_JUNGLE_API_KEY = "api_key";
+	String KEY_JUNGLE_ACCESS_TOKEN = "access_token";
+	String KEY_JUNGLE_ORIGIN_LAT = "originlatitude";
+	String KEY_JUNGLE_ORIGIN_LNG = "originlongitude";
+	String KEY_JUNGLE_DEST_LAT = "destinationlatitude";
+	String KEY_JUNGLE_DEST_LNG = "destinationlongitude";
+	String KEY_JUNGLE_CURRENT_LAT = "currentlatitude";
+	String KEY_JUNGLE_CURRENT_LNG = "currentlongitude";
+	String KEY_JUNGLE_PLACEID = "placeId";
+	String KEY_JUNGLE_TEXT = "text";
+	String KEY_JUNGLE_LAT = "lat";
+	String KEY_JUNGLE_LNG = "lng";
+
+	String JUNGLE_JSON_OBJECT = "{\""+KEY_JUNGLE_OPTIONS+"\":0}";
+    String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
+    String KEY_CUSTOMER_REQUEST_RIDE_POPUP = "customer_request_ride_popup";
+	String KEY_METER_FARE_APPLICABLE = "meter_fare_applicable";
+
+	String MIME_TYPE = "application/octet-stream";
+
+	enum DocStatuses {
+		UPLOADED(4), VERIFIED(3), REJECTED(2), APPROVAL_PENDING(1), NOT_UPLOADED(0);
+		int i;
+
+		DocStatuses(int i) {
+			this.i = i;
+		}
+
+		public int getStatus() {
+			return this.i;
+		}
+	}
 }

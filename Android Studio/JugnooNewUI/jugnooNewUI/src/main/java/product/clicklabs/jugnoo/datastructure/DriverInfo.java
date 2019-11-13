@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.datastructure;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -18,6 +19,7 @@ import com.squareup.picasso.Target;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -26,6 +28,7 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.utils.BitmapUtils;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class DriverInfo {
@@ -51,6 +54,30 @@ public class DriverInfo {
 	private String markerUrl;
 	private int paymentMethod;
 	private Double tipAmount;
+	private int rideType;
+	private int gpsLockStatus;
+
+	public String getDeviceToken() {
+		return deviceToken;
+	}
+
+	public void setDeviceToken(String deviceToken) {
+		this.deviceToken = deviceToken;
+	}
+
+	public String getExternalId() {
+		return externalId;
+	}
+
+	public void setExternalId(String externalId) {
+		this.externalId = externalId;
+	}
+
+	private String deviceToken;
+	private String externalId;
+
+
+
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -59,7 +86,7 @@ public class DriverInfo {
 	public DriverInfo(String userId, double latitude, double longitude, 
 			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
 			int freeRide, double bearing, int vehicleType, ArrayList<Integer> regionIds, String brandingStatus, int operatorId,
-					  int paymentMethod){
+					  int paymentMethod,String deviceToken,String externalId){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -75,15 +102,17 @@ public class DriverInfo {
 		this.brandingStatus = brandingStatus;
 		this.operatorId = operatorId;
 		this.paymentMethod = paymentMethod;
+		this.externalId=externalId;
+		this.deviceToken=deviceToken;
 	}
 
 	//for engagement
-	public DriverInfo(String userId, double latitude, double longitude,
-			String name, String image, String carImage, String phoneNumber, String rating, String carNumber, 
-			int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
+	public DriverInfo(Context context, String userId, double latitude, double longitude,
+					  String name, String image, String carImage, String phoneNumber, String rating, String carNumber,
+					  int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
-					  String currency, String markerUrl,Double tipAmount, int isCorporateRide){
+					  String currency, String markerUrl, Double tipAmount, int isCorporateRide, String cardId, int rideType, int gpsLockStatus){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -116,6 +145,9 @@ public class DriverInfo {
 		this.markerUrl = markerUrl;
 		this.tipAmount = tipAmount;
 		this.isCorporateRide = isCorporateRide;
+		Prefs.with(context).save(Constants.STRIPE_SELECTED_POS, cardId);
+		this.rideType = rideType;
+		this.gpsLockStatus = gpsLockStatus;
 	}
 
 	//for last ride data
@@ -316,6 +348,14 @@ public class DriverInfo {
 		this.isCorporateRide = isCorporateRide;
 	}
 
+	public int getRideType() {
+		return rideType;
+	}
+
+	public void setRideType(int rideType) {
+		this.rideType = rideType;
+	}
+
 	public enum PaymentMethod{
 		CASH(1),
 		BOTH(2); // default
@@ -373,6 +413,14 @@ public class DriverInfo {
 
 	public void setTipAmount(Double tipAmount) {
 		this.tipAmount = tipAmount;
+	}
+
+	public int getGpsLockStatus() {
+		return gpsLockStatus;
+	}
+
+	public void setGpsLockStatus(int gpsLockStatus) {
+		this.gpsLockStatus = gpsLockStatus;
 	}
 
 }

@@ -559,6 +559,7 @@
     <string name="contacts">Contacts</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="add_card">Add Card</string>
     <string name="send">Send</string>
     <string name="send_invites">Send invites</string>
     <string name="send_invites_2">to friends who haven\'t tried %s</string>
@@ -1076,7 +1077,7 @@
     <string name="shares">Shares</string>
     <string name="share">Share</string>
     <string name="renew">Renew</string>
-    <string name="invoice_amount_excluding_any_toll_taxes">*Invoice amount is excluding any toll taxes which are to be borne directly by the customer.</string>
+    <string name="invoice_amount_excluding_any_toll_taxes">*Invoice amount will include any applicable toll taxes.</string>
     <string name="previous_plan">Previous plan</string>
     <string name="star_info_text">Shows the total amount you\'ve saved by subscribing to star</string>
     <string name="delivery_from">Delivery from</string>
@@ -1101,6 +1102,9 @@
     <string name="permissions_read_phone_state_title">Read Phone Number</string>
     <string name="permissions_receive_sms_message">
         Grant permission to read your SMS code from your device to pre-fill.
+    </string>
+    <string name="camera_permission_required">
+        Camera permission is required to capture image for uploading.
     </string>
     <string name="permissions_receive_sms_title">Read SMS Code</string>
     <string name="permission_grant_sms_phone_settings">You have disabled permissions for SMS and Phone. Please grant them from app settings to allow access.</string>
@@ -1846,10 +1850,11 @@
     <string name="select_a_bid">Select a bid</string>
     <string name="stripe">Stripe</string>
     <string name="view_card_title">CREDIT CARD</string>
-    <string name="action_add_card_stripe">Add Card</string>
+    <string name="action_add_card_stripe">Add Cards</string>
     <string name="action_add_card_accept_card">Add Card</string>
     <string name="action_add_card_pay_stack">Add Card</string>
     <string name="view_card_wallet">View Card</string>
+    <string name="view_cards">View Cards</string>
     <string name="add_card_payments">Add Card</string>
     <string name="tap_a_bid">Tap a bid</string>
     <string name="ride_in_progress">Ride in progress</string>
@@ -1970,11 +1975,11 @@
     <string name="are_you_sure_delete_schedule_ride">Are you sure you want to cancel the scheduled ride?</string>
     <string name="booking_scheduled_successfully">Booking scheduled successfully.</string>
     <string name="no_scheduled_rides">No Rides Scheduled currently</string>
-    <string name="bid_fare">Bid Fare</string>
+    <string name="bid_fare">Offer Fare</string>
     <string name="expected_toll_charge">Expected Toll Charges</string>
     <string name="schedule_ride_alert">*We cannot always guarantee that a driver will be available</string>
     <string name="vehicle">Vehicle</string>
-    <string name="vehicle_fare_estimate_alert">The estimated fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
+    <string name="vehicle_fare_estimate_alert">The fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
     <string name="choose_a_place">Choose a place</string>
     <string name="add_saved_place">Add Saved Place</string>
     <string name="tip_the_driver">Tip the Driver</string>
@@ -2014,6 +2019,126 @@
     <string name="round_trips">Round\nTrips</string>
     <string name="one_way_trips">One Way\nTrips</string>
     <string name="this_service_not_available">%s service is not available in this area</string>
+    <string name="partner_with_format">Partner with %s</string>
+    <string name="registered_as_driver_phone_number_will_be_edited">You are registered as Driver,\nBy editing this account\'s phone number, Driver app account will also get linked to the edited phone number.\nAre you sure you want to edit phone number?</string>
+    <string name="send_invoice">Send Invoice</string>
+    <string name="please_select_a_card">Please select a card</string>
+    <string name="cards">Cards</string>
+    <string name="pay_for_tip_using">Pay for tip using</string>
+    <string name="confirm_payment_via_card_ending_format">Confirm payment via card ending with %s</string>
+    <string name="please_select_some_amount">Please select some amount</string>
+
+  <!--Notes-->
+    <string name="notes">Notes</string>
+    <string name="write_notes_here">Write notes here...</string>
+    <string name="save_notes">Save notes</string>
+    <string name="alert_provide_some_notes">Please add some notes</string>
+    <string name="offers_and_coupons">Offers and Coupons</string>
+
+
+    <!--save location-->
+    <string name="save_your_pickup_location">Save your pickup location</string>
+    <string name="save_your_drop_location">Save your drop location</string>
+    <string name="tap_on_pin">Tap on pin</string>
+    <string name="tap_on_pin_caps">Tap On Pin</string>
+    <string name="favourite">Favourite%s</string>
+
+
+    <!-- Scanner Layout -->
+    <string name="enter_number">Enter Number</string>
+    <string name="info_message_qr">Place a QR code inside the rectangle to scan it.</string>
+
+    <string name="turn_flashlight_off">Flashlight Off</string>
+    <string name="turn_flashlight_on">Flashlight On</string>
+
+
+    <!-- Enter QR Number Activity -->
+    <!-- <string name="next">Next</string>     String Resource already present-->
+    <string name="info_message">Input the code mentioned below the QR to start</string>
+    <string name="bike_number_colon">Bike Number :</string>
+
+
+    <!--Instruction Dialog List Item Layout-->
+    <string name="how_to_ride">How to ride</string>
+    <string name="find_a_bike_near_you_and_tap_to_unlock">Find a bike near you and tap to unlock</string>
+    <string name="got_it">Got It</string>
+
+    <!-- Damage Report Activity -->
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="select_file">Select File</string>
+    <string name="incorrect_qr_code">Incorrect QR Code</string>
+    <string name="scan_not_complete">Scan Not Complete</string>
+    <string name="cant_upload_more_than_five_pictures">Can\'t Upload More Than 5 pictures</string>
+    <string name="bike_number_required">Bike Number Required</string>
+    <string name="permissions_required">Permissions Required</string>
+
+
+    <!-- Damage Report Image Adapter-->
+    <string name="remove_image">Remove Image</string>
+
+
+    <!-- Damage Report Layout -->
+    <string name="fault_condition_colon">Fault Condtion:</string>
+    <string name="bike_info_colon">Bike Info:</string>
+    <string name="click_to_add_vehicle_number">Click to add Vehicle number</string>
+    <string name="add_description_colon">Add Description:</string>
+    <string name="trouble_description">Trouble description</string>
+    <string name="add_image_colon">Add Image:</string>
+    <string name="add_image">Add Image</string>
+    <string name="report">Report</string>
+
+    <!-- Damage Report List Item Layout-->
+    <string name="damage_report_item">Damage Report</string>
+    <string name="please_enter_qr_number_to_continue">Please Enter QR Number To Continue</string>
+
+
+    <!-- Scanner Activity -->
+
+    <string name="enter_qr_number">Enter QR Number</string>
+    <string name="lock">lock</string>
+
+    <string name="drop_stations">Drop Stations</string>
+
+    <!-- Rental In Ride Layout -->
+    <string name="lock_ride">Lock Ride</string>
+    <string name="unlock_ride">Unlock Ride</string>
+    <string name="end_ride">End Ride</string>
+
+    <string name="booking_a_bike">Booking a bike...</string>
+    <string name="ending_ride">Ending Ride</string>
+    <string name="unlocking_ride">Unlocking Ride</string>
+    <string name="locking_ride">Locking Ride</string>
+    <string name="select_drop_off_station">Select Drop Off Station</string>
+    <string name="no_nearby_drop_off_stations">No nearby drop off stations available</string>
+    <string name="qr_code_too_small">QR Number too small</string>
+    <string name="please_lock_the_bike_and_proceed">Please lock the bike and proceed</string>
+    <string name="bike_lock_alert_message">Make sure the bike is locked and parked safely</string>
+    <string name="request_ride">Request Ride</string>
+    <string name="enter_bid">Please offer your fare</string>
+    <string name="error_bid_value">Please enter valid fare value before proceeding</string>
+    <string name="you_can_accept_or_decline_bids_from_drivers">You can accept or decline offers\nfrom drivers</string>
+    <string name="bid_lower_value_err">Minimum fare for this route is %s. Raise your offer to this.</string>
+    <string name="bid_greater_amount_err">The price is too high for this route. Please offer lower fare.</string>
+    <string name="raise_to_format">Raise to %s</string>
+    <string name="drop_location">Drop Location</string>
+    <string name="raise_fare">Raise Fare</string>
+    <string name="offer_cannot_be_less_than_min_value">Offer can\'t be less than minimum value</string>
+    <string name="offer_cannot_be_more_than_max_value">Offer can\'t be more than max value</string>
+    <string name="copied">Copied</string>
+    <string name="select_drop_location_estimate_fare">Select drop location to find estimate fare</string>
+    <string name="text_terms_and_conditions_apply"><![CDATA[*Terms & Conditions Apply]]></string>
+    <string name="suggested_fare">Suggested Fare</string>
+    <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
+
+
+<!--    New UI changes-->
+    <string name="text_where_to_go">Where to go</string>
+    <string name="add_favorite_place">Add Favorite Place</string>
+    <string name="label_confirm_ride_request">Confirm Ride Request</string>
+    <string name="text_congestion_time">Congestion Time</string>
+    <string name="type_atleast_4_characters">Type atleast 4 characters</string>
+    <string name="congestion_charges_per_min">Congestion charges per min</string>
     <string name="service_unavailable_in_this_area">Service unavailable in this area</string>
     <string name="want_to_earn_money_from_transport_business">Want to Earn Money from transport business in your city?</string>
     <string name="partner_with_jugnoo">Partner with Jugnoo</string>

@@ -23,7 +23,7 @@ object GoogleRestApis {
         return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_CLIENT, BuildConfig.MAPS_CLIENT)
     }
 
-    private fun MAPS_BROWSER_KEY(): String {
+    public fun MAPS_BROWSER_KEY(): String {
         return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_BROWSER_KEY, BuildConfig.MAPS_BROWSER_KEY)
     }
 
@@ -34,13 +34,17 @@ object GoogleRestApis {
     private fun MAPS_PRIVATE_KEY(): String {
         return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_PRIVATE_KEY, BuildConfig.MAPS_PRIVATE_KEY)
     }
+    private fun CHANNEL(): String {
+        return BuildConfig.FLAVOR + "-android-customer"
+    }
 
     /**
      * for driver animation, and path animation
      */
     fun getDirections(originLatLng: String, destLatLng: String, sensor: Boolean?,
-                      mode: String, alternatives: Boolean?, units: String): Response {
+                      mode: String, alternatives: Boolean?, units: String, source:String): Response {
         val response:Response
+        Log.i(GoogleRestApis::class.java.simpleName, "getDirections")
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/directions/json?" +
                     "origin=" + originLatLng
@@ -49,7 +53,8 @@ object GoogleRestApis {
                     + "&mode=" + mode
                     + "&alternatives=" + alternatives
                     + "&units=" + units
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
@@ -57,50 +62,21 @@ object GoogleRestApis {
             }
 
             response = RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-                    sensor, mode, alternatives, units, MAPS_CLIENT(), googleSignature)
+                    sensor, mode, alternatives, units, MAPS_CLIENT(), CHANNEL(), googleSignature)
         } else {
             response = RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
                     sensor, mode, alternatives, units, MAPS_BROWSER_KEY())
         }
         if(originLatLng.contains(",")) {
-            logGoogleRestAPI(originLatLng.split(",")[0], originLatLng.split(",")[1], API_NAME_DIRECTIONS)
+            logGoogleRestAPI(originLatLng.split(",")[0], originLatLng.split(",")[1], API_NAME_DIRECTIONS+"_"+source)
         }
         return response
     }
 
-    /**
-     * for fare estimate
-     */
-    fun getDirections(originLatLng: String, destLatLng: String, sensor: Boolean?,
-                      mode: String, alternatives: Boolean?, units: String, callback: Callback<SettleUserDebt>) {
-        if (MAPS_APIS_SIGN()) {
-            val urlToSign = ("/maps/api/directions/json?" +
-                    "origin=" + originLatLng
-                    + "&destination=" + destLatLng
-                    + "&sensor=" + sensor
-                    + "&mode=" + mode
-                    + "&alternatives=" + alternatives
-                    + "&units=" + units
-                    + "&client=" + MAPS_CLIENT())
-            var googleSignature: String? = null
-            try {
-                googleSignature = generateGoogleSignature(urlToSign)
-            } catch (ignored: Exception) {
-            }
-
-            RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-                    sensor, mode, alternatives, units, MAPS_CLIENT(), googleSignature, callback)
-        } else {
-            RestClient.getGoogleApiService().getDirections(originLatLng, destLatLng,
-                    sensor, mode, alternatives, units, MAPS_BROWSER_KEY(), callback)
-        }
-        if(originLatLng.contains(",")) {
-            logGoogleRestAPIC(originLatLng.split(",")[0], originLatLng.split(",")[1], API_NAME_DIRECTIONS)
-        }
-    }
 
     fun getDistanceMatrix(originLatLng: String, destLatLng: String, language: String,
                           sensor: Boolean?, alternatives: Boolean?): Response {
+        Log.i(GoogleRestApis::class.java.simpleName, "getDistanceMatrix")
         val response:Response
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/distancematrix/json?" +
@@ -109,7 +85,8 @@ object GoogleRestApis {
                     + "&language=" + language
                     + "&sensor=" + sensor
                     + "&alternatives=" + alternatives
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
@@ -117,7 +94,7 @@ object GoogleRestApis {
             }
 
             response = RestClient.getGoogleApiService().getDistanceMatrix(originLatLng, destLatLng, language,
-                    sensor, alternatives, MAPS_CLIENT(), googleSignature)
+                    sensor, alternatives, MAPS_CLIENT(), CHANNEL(), googleSignature)
         } else {
             response = RestClient.getGoogleApiService().getDistanceMatrix(originLatLng, destLatLng, language,
                     sensor, alternatives, MAPS_BROWSER_KEY())
@@ -128,7 +105,10 @@ object GoogleRestApis {
         return response
     }
 
-    fun geocode(latLng: String, language: String): Response {
+    fun geocode(latLng: String, language: String): Response? {
+        Log.i(GoogleRestApis::class.java.simpleName, "geocode")
+        if (checkApiLimit(null)) return null
+
         Log.i("GoogleRestApi", "geocode")
         val response:Response
         if (MAPS_APIS_SIGN()) {
@@ -136,14 +116,15 @@ object GoogleRestApis {
                     "latlng=" + latLng
                     + "&language=" + language
                     + "&sensor=" + false
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
             } catch (ignored: Exception) {
             }
 
-            response = RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), googleSignature)
+            response = RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), CHANNEL(), googleSignature)
         } else {
             response = RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_BROWSER_KEY())
         }
@@ -153,32 +134,8 @@ object GoogleRestApis {
         return response
     }
 
-    fun geocode(latLng: String, language: String, callback: Callback<GoogleGeocodeResponse>) {
-        if (checkApiLimit(callback)) return
 
-        Log.i("GoogleRestApi", "geocode")
-        if (MAPS_APIS_SIGN()) {
-            val urlToSign = ("/maps/api/geocode/json?" +
-                    "latlng=" + latLng
-                    + "&language=" + language
-                    + "&sensor=" + false
-                    + "&client=" + MAPS_CLIENT())
-            var googleSignature: String? = null
-            try {
-                googleSignature = generateGoogleSignature(urlToSign)
-            } catch (ignored: Exception) {
-            }
-
-            RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_CLIENT(), googleSignature, callback)
-        } else {
-            RestClient.getGoogleApiService().geocode(latLng, language, false, MAPS_BROWSER_KEY(), callback)
-        }
-        if(latLng.contains(",")) {
-            logGoogleRestAPIC(latLng.split(",")[0], latLng.split(",")[1], API_NAME_GEOCODE)
-        }
-    }
-
-    private fun checkApiLimit(callback: Callback<GoogleGeocodeResponse>): Boolean {
+    private fun checkApiLimit(callback: Callback<GoogleGeocodeResponse>?): Boolean {
         if(Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_GEOCODE_LIMIT_ENABLED, 0) == 0){
             return false
         }
@@ -194,7 +151,7 @@ object GoogleRestApis {
             val t = GoogleGeocodeResponse()
             t.status = "DENIED"
             t.results = arrayListOf()
-            callback.success(t, null)
+            callback?.success(t, null)
             return true
         } else if (firstTime == 0L || timeDIff >= timeLimitMillis) {
             Prefs.with(MyApplication.getInstance()).save(Constants.SP_FIRST_GEOCODE_TIMESTAMP, currentTime)
@@ -208,13 +165,16 @@ object GoogleRestApis {
 
 
     fun getDirectionsWaypoints(strOrigin: String, strDestination: String, strWaypoints: String): Response {
+
+        Log.i(GoogleRestApis::class.java.simpleName, "getDirectionsWaypoints")
         val response:Response
         if (MAPS_APIS_SIGN()) {
             val urlToSign = ("/maps/api/directions/json?" +
                     "origin=" + strOrigin
                     + "&destination=" + strDestination
                     + "&waypoints=" + strWaypoints
-                    + "&client=" + MAPS_CLIENT())
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
             var googleSignature: String? = null
             try {
                 googleSignature = generateGoogleSignature(urlToSign)
@@ -223,7 +183,7 @@ object GoogleRestApis {
 
 
             response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination,
-                    strWaypoints, MAPS_CLIENT(), googleSignature)
+                    strWaypoints, MAPS_CLIENT(), CHANNEL(), googleSignature)
         } else {
             response = RestClient.getGoogleApiService().getDirectionsWaypoints(strOrigin, strDestination,
                     strWaypoints, MAPS_BROWSER_KEY())
@@ -231,6 +191,58 @@ object GoogleRestApis {
         if(strOrigin.contains(",")) {
             logGoogleRestAPI(strOrigin.split(",")[0], strOrigin.split(",")[1], API_NAME_DIRECTIONS)
         }
+        return response
+    }
+
+    fun getAutoCompletePredictions(input:String, sessiontoken:String, components:String, location:String, radius:String): Response {
+
+        Log.i(GoogleRestApis::class.java.simpleName, "getAutoCompletePredictions")
+        val response:Response
+//        if (MAPS_APIS_SIGN()) {
+//            val urlToSign = ("/maps/api/place/autocomplete/json?" +
+//                    "input=" + input
+//                    + "&sessiontoken=" + sessiontoken
+//                    + "&components=" + components
+//                    + "&location=" + location
+//                    + "&radius=" + radius
+//                    + "&client=" + MAPS_CLIENT()
+//                    + "&channel=" + CHANNEL())
+//            var googleSignature: String? = null
+//            try {
+//                googleSignature = generateGoogleSignature(urlToSign)
+//            } catch (ignored: Exception) {
+//            }
+//
+//
+//            response = RestClient.getGoogleApiService().autocompletePredictions(input, sessiontoken, components, location, radius, MAPS_CLIENT(), CHANNEL(), googleSignature)
+//        } else {
+            response = RestClient.getGoogleApiService().autocompletePredictions(input, sessiontoken, components, location, radius, MAPS_BROWSER_KEY())
+//        }
+        logGoogleRestAPI("0", "0", API_NAME_AUTOCOMPLETE)
+        return response
+    }
+    fun getPlaceDetails(placeId:String): Response {
+
+        Log.i(GoogleRestApis::class.java.simpleName, "getPlaceDetails")
+        val response:Response
+        if (MAPS_APIS_SIGN()) {
+            val urlToSign = ("/maps/api/geocode/json?" +
+                    "place_id=" + placeId
+                    + "&client=" + MAPS_CLIENT()
+                    + "&channel=" + CHANNEL())
+            var googleSignature: String? = null
+            try {
+                googleSignature = generateGoogleSignature(urlToSign)
+            } catch (ignored: Exception) {
+            }
+
+
+            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_CLIENT(), CHANNEL(), googleSignature)
+        } else {
+            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_BROWSER_KEY())
+        }
+
+        logGoogleRestAPI("0", "0", API_NAME_PLACES)
         return response
     }
 

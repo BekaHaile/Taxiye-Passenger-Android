@@ -23,8 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,7 +34,6 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.bus.AddressAdded;
-import com.sabkuchfresh.datastructure.GoogleGeocodeResponse;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.widgets.UserLockBottomSheetBehavior;
@@ -44,15 +41,14 @@ import com.squareup.otto.Bus;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.concurrent.CancellationException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import kotlinx.coroutines.Job;
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -61,6 +57,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -71,8 +68,6 @@ import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
-import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapStateListener;
 import product.clicklabs.jugnoo.utils.MapUtils;
@@ -81,9 +76,6 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
 import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by ankit on 14/09/16.
@@ -137,7 +129,6 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
     private boolean autoCompleteResultClicked = false;
     private boolean canProceedWithUnsavedAddressMode;
     public static final String KEY_ARGS_PROCEED_WITHOUT_UNSAVED_ADDRESS = "key_args_proceed_without_unsaved_address";
-    private GeoDataClient geoDataClient;
 
     @OnClick(R.id.bMyLocation)
     void zoomToCurrentLocation(){
@@ -198,7 +189,6 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
         activity = getActivity();
         mBus = MyApplication.getInstance().getBus();
-        geoDataClient = Places.getGeoDataClient(getActivity(), null);
 
         if(activity instanceof FreshActivity) {
             ((FreshActivity)activity).fragmentUISetup(this);
@@ -341,7 +331,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
-        searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78), geoDataClient,
+        searchListAdapter = new SearchListAdapter(activity, PlaceSearchListFragment.getPivotLatLng(activity),
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 
@@ -445,7 +435,12 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
                             cardViewSearch.setVisibility(View.GONE);
                         }
                     }
-                }, showSavedPlaces,editTextDeliveryAddress);
+
+					@Override
+					public void onSetLocationOnMapClicked() {
+
+					}
+				}, showSavedPlaces,false, editTextDeliveryAddress);
 
         listViewSearch = (NonScrollListView) rootView.findViewById(R.id.listViewSearch);
         listViewSearch.setAdapter(searchListAdapter);
@@ -491,6 +486,11 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
                         public void onMapUnsettled() {
                             mapSettledCanForward = false;
                             searchResultNearPin = null;
+                        }
+
+                        @Override
+                        public void moveMap() {
+
                         }
 
                         @Override
@@ -723,6 +723,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
     }
 
 
+    private Job jobGeocode = null;
     private void fillAddressDetails(final LatLng latLng) {
         try {
             // This will happen only in FreshActivity case
@@ -730,8 +731,8 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             // in searchResultNearPin to direct back to offering fragment with address selected same as clicking on
             // saved addresses list
             if (activity instanceof FreshActivity) {
-                searchResultNearPin = homeUtil.getNearBySavedAddress(activity, latLng,
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+                searchResultNearPin = HomeUtil.getNearBySavedAddress(activity, latLng,
+						false);
                 if (searchResultNearPin != null) {
                     setFetchedAddressToTextView(searchResultNearPin.getName());
                     return;
@@ -748,53 +749,64 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             if(isVisible() && !isRemoving()) {
                 showProgressWheelDeliveryPin();
             }
-            final Map<String, String> params = new HashMap<String, String>(6);
+			if(jobGeocode != null){
+				jobGeocode.cancel(new CancellationException());
+			}
+			jobGeocode = GoogleJungleCaching.INSTANCE.hitGeocode(latLng, (googleGeocodeResponse, singleAddress) -> {
+				try {
+					Log.e("DeliveryAddressFrag", "GoogleCachingApiKT success address received");
+					if (googleGeocodeResponse != null && googleGeocodeResponse.results != null && googleGeocodeResponse.results.size() > 0) {
+						current_latitude = latLng.latitude;
+						current_longitude = latLng.longitude;
 
-            params.put(Data.LATLNG, latLng.latitude + "," + latLng.longitude);
-            params.put("language", Locale.getDefault().getCountry());
-            params.put("sensor", "false");
+						current_street = googleGeocodeResponse.results.get(0).getStreetNumber();
+						current_route = googleGeocodeResponse.results.get(0).getRoute();
+						current_area = googleGeocodeResponse.results.get(0).getLocality();
+						current_city = googleGeocodeResponse.results.get(0).getCity();
+						current_pincode = googleGeocodeResponse.results.get(0).getCountry();
 
+						setFetchedAddressToTextView(current_street + (current_street.length() > 0 ? ", " : "")
+								+ current_route + (current_route.length() > 0 ? ", " : "")
+								+ googleGeocodeResponse.results.get(0).getAddAddress()
+								+ ", " + current_city);
+					}
+					else if(singleAddress != null){
+						String[] arr = singleAddress.split(",");
 
-            GoogleRestApis.INSTANCE.geocode(latLng.latitude + "," + latLng.longitude, LocaleHelper.getLanguage(activity), new Callback<GoogleGeocodeResponse>() {
-                @Override
-                public void success(GoogleGeocodeResponse geocodeResponse, Response response) {
-                    try {
-                        if(geocodeResponse.results != null && geocodeResponse.results.size() > 0){
-                            current_latitude = latLng.latitude;
-                            current_longitude = latLng.longitude;
+						current_latitude = latLng.latitude;
+						current_longitude = latLng.longitude;
 
-                            current_street = geocodeResponse.results.get(0).getStreetNumber();
-                            current_route = geocodeResponse.results.get(0).getRoute();
-                            current_area = geocodeResponse.results.get(0).getLocality();
-                            current_city = geocodeResponse.results.get(0).getCity();
-                            current_pincode = geocodeResponse.results.get(0).getCountry();
+						if(arr.length > 0){
+							current_pincode = arr[arr.length-1];
+						}
+						if(arr.length > 1){
+							current_city = arr[arr.length-2];
+						}
+						if(arr.length > 2){
+							current_area = arr[arr.length-3];
+						}
+						if(arr.length > 3){
+							current_route = arr[arr.length-4];
+						}
+						if(arr.length > 4){
+							current_street = arr[arr.length-5];
+						}
 
-                            setFetchedAddressToTextView(current_street + (current_street.length()>0?", ":"")
-                                    + current_route + (current_route.length()>0?", ":"")
-                                    + geocodeResponse.results.get(0).getAddAddress()
-                                    + ", " + current_city);
-                        } else {
-                            Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-                            tvDeliveryAddress.setText("");
-                        }
+						setFetchedAddressToTextView(singleAddress);
+					}
+					else {
+						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+						tvDeliveryAddress.setText("");
+					}
 
-                    } catch (Exception e) {
-                        android.util.Log.e(TAG, "success: "+ geocodeResponse.getErrorMessage());
-                        e.printStackTrace();
-                        Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-                        tvDeliveryAddress.setText("");
-                    }
-                    progressWheelDeliveryAddressPin.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e("DeliveryAddressFragment", "error=" + error.toString());
-                    Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
-                    progressWheelDeliveryAddressPin.setVisibility(View.GONE);
-                    tvDeliveryAddress.setText("");
-                }
-            });
+				} catch (Exception e) {
+					android.util.Log.e(TAG, "error: " + (googleGeocodeResponse != null ? googleGeocodeResponse.getErrorMessage() : ""));
+					e.printStackTrace();
+					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
+					tvDeliveryAddress.setText("");
+				}
+				progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+			});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1011,6 +1023,9 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
         super.onDestroyView();
         try {
             progressWheelDeliveryAddressPin.setVisibility(View.GONE);
+            if(jobGeocode != null) {
+				jobGeocode.cancel(new CancellationException());
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }

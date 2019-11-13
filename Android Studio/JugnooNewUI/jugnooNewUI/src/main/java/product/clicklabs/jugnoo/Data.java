@@ -119,6 +119,8 @@ public class Data {
     public static boolean activityResumed = false;
     private static CaptureUserData fuguUserData;
 
+    public static int jungleApisDisable = 0;
+
     public static void clearDataOnLogout(Activity context) {
         try {
             userData = null;
@@ -160,6 +162,7 @@ public class Data {
             Prefs.with(context).remove(SPLabels.ADD_GYM);
             Prefs.with(context).remove(SPLabels.ADD_FRIEND);
             Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
+			Prefs.with(context).remove(Constants.KEY_USER_ID);
 
             Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
             Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
@@ -251,6 +254,7 @@ public class Data {
             Prefs.with(context).remove(Constants.SP_PAYTM_LAST_BALANCE);
             Prefs.with(context).remove(Constants.SP_MOBIKWIK_LAST_BALANCE);
             Prefs.with(context).remove(Constants.SP_FREECHARGE_LAST_BALANCE);
+            Prefs.with(context).remove(Constants.KEY_TUTORIAL_SKIPPED);
 
             context.getSharedPreferences(Data.SHARED_PREF_NAME, context.MODE_PRIVATE).edit()
                     .remove(Constants.SP_CONTACTS_SYNCED).commit();

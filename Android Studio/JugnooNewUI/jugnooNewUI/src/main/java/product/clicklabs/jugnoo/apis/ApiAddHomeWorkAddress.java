@@ -22,6 +22,10 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.model.SearchLocation;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -44,11 +48,13 @@ public class ApiAddHomeWorkAddress {
 	private Activity activity;
 	private Callback callback;
 	private Gson gson;
+	private SearchLocationDB searchLocationDB;
 
 	public ApiAddHomeWorkAddress(Activity activity, Callback callback){
 		this.activity = activity;
 		this.callback = callback;
 		this.gson = new Gson();
+		searchLocationDB = DBObject.INSTANCE.getInstance();
 	}
 
 	public void addHomeAndWorkAddress(final SearchResult searchResult, final boolean deleteAddress, final int matchedWithOtherId,
@@ -104,6 +110,10 @@ public class ApiAddHomeWorkAddress {
 							int flag = jObj.optInt("", ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
 							String message = JSONParser.getServerMessage(jObj);
 							if(ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag){
+
+								SearchLocation searchLocation = new SearchLocation(searchResult.getLatitude(), searchResult.getLongitude(), "",
+										searchResult.getAddress(), searchResult.getPlaceId(), System.currentTimeMillis(), 0);
+								DBCoroutine.Companion.deleteLocation(searchLocationDB, searchLocation);
 
 								if(matchedWithOtherId > 0){
 									String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
@@ -161,7 +171,7 @@ public class ApiAddHomeWorkAddress {
 
 									new JSONParser().parseSavedAddressesFromNew(activity, fetchUserAddressResponse);
 
-									callback.onSuccess(searchResult, strResult, deleteAddress);
+									callback.onSuccess(searchResult, strResult, deleteAddress, message);
 								}
 
 							} else{
@@ -214,7 +224,7 @@ public class ApiAddHomeWorkAddress {
 
 
 	public interface Callback{
-		void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted);
+		void onSuccess(SearchResult searchResult, String strResult, boolean addressDeleted, String serverMsg);
 		void onFailure();
 		void onRetry(View view);
 		void onNoRetry(View view);

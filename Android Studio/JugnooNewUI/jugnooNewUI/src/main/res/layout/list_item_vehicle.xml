@@ -4,8 +4,14 @@
     android:id="@+id/relative"
     android:layout_width="185px"
     android:layout_height="125px"
+
     android:theme="@style/GreyHighlight"
     android:background="?attr/selectableItemBackground">
+
+    <RelativeLayout
+        android:id="@+id/relativeIn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <LinearLayout
         android:id="@+id/linearLayoutContainer"
@@ -120,5 +126,6 @@
         android:layout_alignParentBottom="true"
         android:layout_height="10px"
         android:background="@color/white" />
+    </RelativeLayout>
 
 </RelativeLayout>

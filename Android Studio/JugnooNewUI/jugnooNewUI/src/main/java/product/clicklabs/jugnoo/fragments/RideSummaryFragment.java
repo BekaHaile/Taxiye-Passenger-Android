@@ -26,9 +26,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
+import com.sabkuchfresh.feed.models.FeedCommonResponse;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -37,6 +42,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.apis.ApiGetRideSummary;
+import product.clicklabs.jugnoo.datastructure.DiscountType;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
@@ -51,6 +57,7 @@ import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -75,21 +82,22 @@ public class RideSummaryFragment extends Fragment implements Constants {
     TextView textViewEndRideSummary, textViewEndRideDriverName, textViewEndRideDriverCarNumber;
     RelativeLayout relativeLayoutTollCharge, relativeLayoutLuggageCharge, relativeLayoutConvenienceCharge,
             relativeLayoutPaidUsingJugnooCash, relativeLayoutPaidUsingPaytm,
-            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay,rlPaidUsingStripeCard, rlTaxNet,relativeLayoutPaidUsingMpesa,
+            relativeLayoutPaidUsingMobikwik, relativeLayoutPaidUsingFreeCharge, rlPaidUsingRazorpay, rlTaxNet,relativeLayoutPaidUsingMpesa,
             rlPaidUsingCorporate, rlPaidUsingPOS, rlToBePaid;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare,relativeLayoutDriverTip, relativeLayoutFinalFare;
-    NonScrollListView listViewEndRideDiscounts;
+    LinearLayout llFareComponents;
+    NonScrollListView listViewEndRideDiscounts, listViewStripeTxns;
     TextView textViewEndRideFareValue,textViewDriverTipValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
             textViewEndRideMobikwikValue, textViewEndRideFreeChargeValue,
             textViewEndRideToBePaidValue, textViewEndRideBaseFare, textViewEndRideBaseFareValue,
             textViewEndRideDistanceValue, textViewEndRideTime, textViewEndRideTimeValue, textViewEndRideWaitTimeValue, textViewEndRideFareFactorValue,
-            tvIncludeToll, tvEndRideRazorpay,tvEndRideStripeCard, tvEndRideTaxNet, tvEndRideRazorpayValue,tvEndRideStripeCardValue, tvEndRideTaxNetValue,textViewEndRideMpesaValue;
+            tvIncludeToll, tvEndRideRazorpay, tvEndRideTaxNet, tvEndRideRazorpayValue, tvEndRideTaxNetValue,textViewEndRideMpesaValue;
     TextView textViewEndRideStartLocationValue, textViewEndRideEndLocationValue, textViewEndRideStartTimeValue, textViewEndRideEndTimeValue,
             tvEndRideCorporate, tvEndRideCorporateValue, tvEndRidePOS, tvEndRidePOSValue;
-    Button buttonEndRideOk;
-    EndRideDiscountsAdapter endRideDiscountsAdapter;
+    Button buttonEndRideOk, btnSendInvoice;
+    EndRideDiscountsAdapter endRideDiscountsAdapter, stripeTxnsAdapter;
 
     RelativeLayout rlLuggageChargesNew;
     TextView tvLuggageChargesNewValue;
@@ -226,14 +234,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideMpesaValue = (TextView) rootView.findViewById(R.id.textViewEndRideMpesaValue);
             textViewEndRideMpesaValue.setTypeface(Fonts.mavenRegular(activity));
             tvEndRideRazorpay = (TextView) rootView.findViewById(R.id.tvEndRideRazorpay); tvEndRideRazorpay.setTypeface(Fonts.mavenLight(activity));
-            tvEndRideStripeCard = (TextView) rootView.findViewById(R.id.tvEndRideStripeCard); tvEndRideStripeCard.setTypeface(Fonts.mavenLight(activity));
             tvEndRideCorporate = (TextView) rootView.findViewById(R.id.tvEndRideCorporate); tvEndRideCorporate.setTypeface(Fonts.mavenLight(activity));
             tvEndRideCorporateValue = (TextView) rootView.findViewById(R.id.tvEndRideCorporateValue); tvEndRideCorporateValue.setTypeface(Fonts.mavenRegular(activity));
             tvEndRidePOS = (TextView) rootView.findViewById(R.id.tvEndRidePOS); tvEndRidePOS.setTypeface(Fonts.mavenLight(activity));
             tvEndRidePOSValue = (TextView) rootView.findViewById(R.id.tvEndRidePOSValue); tvEndRidePOSValue.setTypeface(Fonts.mavenRegular(activity));
             tvEndRideTaxNet = (TextView) rootView.findViewById(R.id.tvEndRideTaxNet); tvEndRideTaxNet.setTypeface(Fonts.mavenLight(activity));
             tvEndRideRazorpayValue = (TextView) rootView.findViewById(R.id.tvEndRideRazorpayValue); tvEndRideRazorpayValue.setTypeface(Fonts.mavenRegular(activity));
-            tvEndRideStripeCardValue = (TextView) rootView.findViewById(R.id.tvEndRideStripeCardValue); tvEndRideStripeCardValue.setTypeface(Fonts.mavenRegular(activity));
             tvEndRideTaxNetValue = (TextView) rootView.findViewById(R.id.tvEndRideTaxNetValue); tvEndRideTaxNetValue.setTypeface(Fonts.mavenRegular(activity));
             textViewEndRideToBePaidValue = (TextView) rootView.findViewById(R.id.textViewEndRideToBePaidValue);
             textViewEndRideToBePaidValue.setTypeface(Fonts.mavenRegular(activity));
@@ -260,7 +266,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
             relativeLayoutPaidUsingFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingFreeCharge);
             relativeLayoutPaidUsingMpesa = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaidUsingMpesa);
             rlPaidUsingRazorpay = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingRazorpay);
-            rlPaidUsingStripeCard = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingStripeCard);
             rlPaidUsingCorporate = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingCorporate);
             rlPaidUsingPOS = (RelativeLayout) rootView.findViewById(R.id.rlPaidUsingPOS);
             rlTaxNet = (RelativeLayout) rootView.findViewById(R.id.rlTaxNet);
@@ -269,6 +274,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
             linearLayoutRideDetail = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideDetail);
             relativeLayoutFinalFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFinalFare);
+			llFareComponents = rootView.findViewById(R.id.llFareComponents);
 			rlToBePaid = (RelativeLayout) rootView.findViewById(R.id.rlToBePaid);
 
             textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue);
@@ -277,11 +283,17 @@ public class RideSummaryFragment extends Fragment implements Constants {
             textViewEndRideConvenienceChargeValue.setTypeface(Fonts.mavenRegular(activity));
 
             listViewEndRideDiscounts = (NonScrollListView) rootView.findViewById(R.id.listViewEndRideDiscounts);
-            endRideDiscountsAdapter = new EndRideDiscountsAdapter(activity);
+            endRideDiscountsAdapter = new EndRideDiscountsAdapter(activity, true);
             listViewEndRideDiscounts.setAdapter(endRideDiscountsAdapter);
+
+            listViewStripeTxns = (NonScrollListView) rootView.findViewById(R.id.listViewStripeTxns);
+            stripeTxnsAdapter = new EndRideDiscountsAdapter(activity, false);
+            listViewStripeTxns.setAdapter(stripeTxnsAdapter);
 
             buttonEndRideOk = (Button) rootView.findViewById(R.id.buttonEndRideOk);
             buttonEndRideOk.setTypeface(Fonts.mavenRegular(activity));
+            btnSendInvoice = (Button) rootView.findViewById(R.id.btnSendInvoice);
+            btnSendInvoice.setTypeface(Fonts.mavenRegular(activity));
 
             rlLuggageChargesNew = (RelativeLayout) rootView.findViewById(R.id.rlLuggageChargesNew);
             tvLuggageChargesNewValue = (TextView) rootView.findViewById(R.id.tvLuggageChargesNewValue);
@@ -338,6 +350,18 @@ public class RideSummaryFragment extends Fragment implements Constants {
 					}
 				}
 			});
+            if(Data.autoData.getResendEmailInvoiceEnabled() == 1) {
+                btnSendInvoice.setVisibility(View.VISIBLE);
+            } else {
+                btnSendInvoice.setVisibility(View.GONE);
+            }
+            btnSendInvoice.setOnClickListener(new View.OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+				    sendEmailInvoice();
+				}
+			});
 
             try {
 				if (engagementId == -1 && Data.autoData.getEndRideData() != null) {
@@ -374,6 +398,33 @@ public class RideSummaryFragment extends Fragment implements Constants {
         return rootView;
     }
 
+    private void sendEmailInvoice() {
+        final HashMap<String, String> params = new HashMap<>();
+        params.put(Constants.KEY_ENGAGEMENT_ID, String.valueOf(engagementId));
+
+        new ApiCommon<>(activity).showLoader(true).execute(params, ApiName.SEND_EMAIL_INVOICE,
+                new APICommonCallback<FeedCommonResponse>() {
+
+                    @Override
+                    public void onSuccess(final FeedCommonResponse response, String message, int flag) {
+
+                        DialogPopup.alertPopupWithListener(activity,"",
+                                message, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public boolean onError(FeedCommonResponse feedCommonResponse, String message, int flag) {
+                        return false;
+                    }
+
+                });
+
+
+    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -483,31 +534,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 }
 
 
-				/*if(endRideData.discountTypes.size() > 1){
-                    listViewEndRideDiscounts.setVisibility(View.VISIBLE);
-					endRideDiscountsAdapter.setList(endRideData.discountTypes);
-					textViewEndRideDiscount.setText("Discounts");
-					textViewEndRideDiscountValue.setVisibility(View.GONE);
-					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-				}
-				else if(endRideData.discountTypes.size() > 0){
-					listViewEndRideDiscounts.setVisibility(View.GONE);
-					textViewEndRideDiscount.setText(endRideData.discountTypes.get(0).name);
-					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
-					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-				}
-				else{
-					listViewEndRideDiscounts.setVisibility(View.GONE);
-					textViewEndRideDiscount.setText("Discounts");
-					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
-					if(endRideData.discount > 0){
-						relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-					} else{
-						relativeLayoutEndRideDiscount.setVisibility(View.GONE);
-					}
-				}*/
 
 
                 rlLuggageChargesNew.setVisibility(endRideData.getLuggageChargesNew() > 0.0 ? View.VISIBLE : View.GONE);
@@ -517,6 +543,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 if(Utils.compareDouble(endRideData.fare, endRideData.finalFare) == 0){
                     relativeLayoutFinalFare.setVisibility(View.GONE);
                 }
+				llFareComponents.setVisibility(endRideData.getMeterFareApplicable() == 0 ? View.VISIBLE : View.GONE);
+
 
                 if (Utils.compareDouble(endRideData.paidUsingWallet, 0) > 0) {
                     relativeLayoutPaidUsingJugnooCash.setVisibility(View.VISIBLE);
@@ -555,18 +583,32 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 } else{
                     rlPaidUsingRazorpay.setVisibility(View.GONE);
                 }
-                if(Utils.compareDouble(endRideData.getPaidUsingStripe(), 0) > 0){
-                    rlPaidUsingStripeCard.setVisibility(View.VISIBLE);
-                    if(!TextUtils.isEmpty(endRideData.getLast_4())){
-                        tvEndRideStripeCard.setText(WalletCore.getStripeCardDisplayString(activity,endRideData.getLast_4()));
 
+                if(endRideData.getStripeCardsAmount().size() > 0){
+                    listViewStripeTxns.setVisibility(View.VISIBLE);
+                    stripeTxnsAdapter.setList(endRideData.getStripeCardsAmount(), endRideData.getCurrency());
+                }
+                else if(Utils.compareDouble(endRideData.getPaidUsingStripe(), 0) > 0){
+                    listViewStripeTxns.setVisibility(View.VISIBLE);
+                    ArrayList<DiscountType> discountTypes = new ArrayList<>();
+
+                    if(!TextUtils.isEmpty(endRideData.getLast_4())){
+                        discountTypes.add(new DiscountType(WalletCore.getStripeCardDisplayString(activity,endRideData.getLast_4()),
+                                endRideData.getPaidUsingStripe(), 0));
                     }else{
-                        tvEndRideStripeCard.setText(MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(activity, PaymentOption.STRIPE_CARDS.getOrdinal()));
+                        String card = MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(activity, PaymentOption.STRIPE_CARDS.getOrdinal());
+                        if(TextUtils.isDigitsOnly(card)){
+                            card = WalletCore.getStripeCardDisplayString(activity, card);
+                        }
+                        discountTypes.add(new DiscountType(card,
+                                endRideData.getPaidUsingStripe(), 0));
 
                     }
-                    tvEndRideStripeCardValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getPaidUsingStripe()));
-                } else{
-                    rlPaidUsingStripeCard.setVisibility(View.GONE);
+                    stripeTxnsAdapter.setList(discountTypes, endRideData.getCurrency());
+//                    tvEndRideStripeCardValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getPaidUsingStripe()));
+                }
+                else{
+                    listViewStripeTxns.setVisibility(View.GONE);
                 }
                 if(endRideData.getIsCorporateRide() == 1){
                     rlPaidUsingCorporate.setVisibility(View.VISIBLE);
@@ -598,14 +640,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
                 textViewEndRideToBePaidValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.toPay));
 
-                if (!rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
-                    textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
-                } else {
-                    textViewEndRideFareFactorValue.setVisibility(View.GONE);
-                }
-
-                textViewEndRideFareFactorValue.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
-                        activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
                 textViewEndRideBaseFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.baseFare));
                 if(Prefs.with(activity).getInt(KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY, 1) != 1){
 					linearLayoutRideDetail.setVisibility(View.VISIBLE);
@@ -625,14 +659,30 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 } else {
                     linearLayoutEndRideTime.setVisibility(View.GONE);
                 }
+
+                boolean showSurge = Prefs.with(activity).getInt(KEY_CUSTOMER_SHOW_SURGE_ICON, 1) == 1;
+                textViewEndRideFareFactorValue.setVisibility(View.GONE);
                 if (endRideData.waitingChargesApplicable == 1 || endRideData.waitTime > 0) {
-                    relativeLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
-                    textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " "+getString(R.string.min));
-                    textViewEndRideTime.setText(R.string.total);
+                    relativeLayoutEndRideWaitTime.setVisibility(View.GONE);
+                    textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
+                    textViewEndRideFareFactorValue.setText(getString(R.string.text_congestion_time)+": "+decimalFormatNoDecimal.format(endRideData.waitTime) + " "+getString(R.string.min));
+                    textViewEndRideTime.setText(R.string.ride_time);
+                    if (showSurge && !rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
+                        textViewEndRideFareFactorValue.append("\n");
+                        textViewEndRideFareFactorValue.append(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
+                                activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
+                    }
                 } else {
                     relativeLayoutEndRideWaitTime.setVisibility(View.GONE);
                     textViewEndRideTime.setText(R.string.time);
+
+                    if (showSurge && !rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
+                        textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
+                    }
+                    textViewEndRideFareFactorValue.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
+                            activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
                 }
+
 
                 if(rideCancelled){
                     relativeLayoutConvenienceCharge.setVisibility(View.GONE);

@@ -438,7 +438,7 @@ public class Utils implements GAAction, GACategory{
 
 
 
-    public static void generateKeyHash(Context context){
+    public static String generateKeyHash(Context context){
         try { // single sign-on for fb application
             PackageInfo info = context.getPackageManager().getPackageInfo(
                 context.getPackageName(),
@@ -446,15 +446,16 @@ public class Utils implements GAAction, GACategory{
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
-                android.util.Log.e("KeyHash", ","
-                    + Base64.encodeToString(md.digest(),
-                    Base64.DEFAULT));
+                String keyhash = Base64.encodeToString(md.digest(), Base64.DEFAULT);
+                android.util.Log.e("KeyHash", "," + keyhash);
+                return keyhash;
             }
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("error", "," + e.toString());
         } catch (NoSuchAlgorithmException e) {
             Log.e("error", "," + e.toString());
         }
+        return "";
     }
 
 
@@ -783,6 +784,18 @@ public class Utils implements GAAction, GACategory{
 		context.getResources().getColor(R.color.text_color),
 				context.getResources().getColor(R.color.text_color), tile_mode);
 		shader = lin_grad;
+
+		return shader;
+	}
+
+	public static Shader textColorGradient(Context context, TextView textView, int colorRes0, int colorRes1){
+		textView.measure(0, 0);
+		int mWidth = textView.getMeasuredWidth();
+		Shader shader;
+		Shader.TileMode tile_mode = Shader.TileMode.CLAMP; // or TileMode.REPEAT;
+		shader = new LinearGradient(0, 0, (int)(mWidth/1.3), 0,
+		context.getResources().getColor(colorRes0),
+				context.getResources().getColor(colorRes1), tile_mode);
 
 		return shader;
 	}

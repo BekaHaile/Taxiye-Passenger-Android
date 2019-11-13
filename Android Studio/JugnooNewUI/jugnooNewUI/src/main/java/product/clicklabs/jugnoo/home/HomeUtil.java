@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.branch.referral.Branch;
@@ -41,8 +42,12 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.support.models.ActionType;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -53,6 +58,7 @@ import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedString;
 
@@ -107,7 +113,7 @@ public class HomeUtil {
 		}
 	}
 
-	public static SearchResult getNearBySavedAddress(Context context, LatLng latLng, double compareDistance, boolean includeRecent){
+	public static SearchResult getNearBySavedAddress(Context context, LatLng latLng, boolean includeRecent){
 		try {
 			ArrayList<SearchResult> searchResults = new ArrayList<>();
 			if (!Prefs.with(context).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
@@ -121,6 +127,7 @@ public class HomeUtil {
 				searchResults.add(searchResult);
 			}
 			searchResults.addAll(Data.userData.getSearchResults());
+			double compareDistance = Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION;
 			if(includeRecent) {
 				searchResults.addAll(Data.userData.getSearchResultsRecent());
 				if(Data.autoData.getUseRecentLocAtRequest() == 1){
@@ -171,6 +178,12 @@ public class HomeUtil {
 		GCMIntentService.clearNotifications(activity);
 
 		Data.clearDataOnLogout(activity);
+
+		if(DBObject.INSTANCE.getInstance() != null) {
+			DBCoroutine.Companion.deleteAll(DBObject.INSTANCE.getInstance());
+			SearchLocationDB.Companion.clearInstance();
+			DBObject.INSTANCE.clearInstance();
+		}
 
 		HomeActivity.userMode = UserMode.PASSENGER;
 		HomeActivity.passengerScreenMode = PassengerScreenMode.P_INITIAL;
@@ -489,4 +502,26 @@ public class HomeUtil {
 		}
 	}
 
+
+	public static int chooseNextEligiblePaymentOption(int paymentOption, HomeActivity activity) {
+		ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
+		if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
+			List<Integer> restrictedPaymentMode = new ArrayList<>();
+			ArrayList<Region> regions = Data.autoData.getRegions();
+			if (regions.size() > 1) {
+				restrictedPaymentMode = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
+			} else if (regions.size() > 0) {
+				restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
+			}
+			for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
+				if (paymentModeConfigData.getEnabled() == 1) {
+					if ((restrictedPaymentMode.size() > 0 && !restrictedPaymentMode.contains(paymentModeConfigData.getPaymentOption())) || restrictedPaymentMode.size() == 0) {
+						paymentOption = paymentModeConfigData.getPaymentOption();
+						break;
+					}
+				}
+			}
+		}
+		return paymentOption;
+	}
 }

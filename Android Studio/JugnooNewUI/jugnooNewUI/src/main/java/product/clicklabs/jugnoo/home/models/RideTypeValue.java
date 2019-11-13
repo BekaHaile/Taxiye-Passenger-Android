@@ -5,7 +5,11 @@ package product.clicklabs.jugnoo.home.models;
  */
 public enum RideTypeValue {
     NORMAL(0),
-    POOL(2);
+    POOL(2),
+
+    // todo BIKE_RENTAL ride type
+    BIKE_RENTAL(5)
+    ;
 
 
     private int ordinal;

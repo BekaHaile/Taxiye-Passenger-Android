@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.location.places.GeoDataClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,7 +39,9 @@ import java.util.List;
 
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -79,7 +79,6 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
     private SearchResult searchResultGlobal;
     private Region region;
     private PromoCoupon promoCoupon;
-    private GeoDataClient geoDataClient;
     private LatLng pickupLatLng, dropLatLng;
     private String pickupAddress, dropAddress;
     private boolean isScheduleRide;
@@ -112,7 +111,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 isPooled = 1;
             }
             if (getIntent().hasExtra(Constants.KEY_COUPON_SELECTED)) {
-                promoCoupon = (PromoCoupon) getIntent().getSerializableExtra(Constants.KEY_COUPON_SELECTED);
+                boolean isCoupon = getIntent().getBooleanExtra(Constants.KEY_IS_COUPON, true);
+                promoCoupon = gson.fromJson(getIntent().getStringExtra(Constants.KEY_COUPON_SELECTED), isCoupon ? CouponInfo.class : PromotionInfo.class);
 
             }
             if (getIntent().hasExtra(Constants.KEY_SCHEDULE_RIDE)) {
@@ -133,7 +133,6 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
         }
 
 
-        geoDataClient = Places.getGeoDataClient(this, null);
 
         relative = findViewById(R.id.relative);
         assl = new ASSL(this, relative, 1134, 720, false);
@@ -250,6 +249,9 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
             }
         });
 
+        textViewConvenienceCharge.setVisibility(Prefs.with(this)
+                .getInt(Constants.KEY_CUSTOMER_SHOW_CONVENIENCE_CHARGE_FARE_ESTIMATE, 0) == 1?View.VISIBLE:View.INVISIBLE);
+
         try {
             if (dropLatLng != null) {
                 getDirectionsAndComputeFare(pickupLatLng, pickupAddress, dropLatLng, dropAddress);
@@ -270,11 +272,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
+    private ApiFareEstimate apiFareEstimate;
     private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final String sourceAddress, final LatLng destLatLng, final String destAddress) {
         try {
-            new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
+        	if(apiFareEstimate == null){
+				apiFareEstimate = new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
                 @Override
-                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+                public void onSuccess(List<LatLng> list, String distanceText,
                                       String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
                     try {
 
@@ -336,19 +340,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             }, 500);
                         }
 
-                        if (!TextUtils.isEmpty(sourceAddress)) {
-                            startAddress = sourceAddress;
-                        }
-                        if (!TextUtils.isEmpty(destAddress)) {
-                            endAddress = destAddress;
-                        }
-                        textViewPickupLocation.setText(startAddress);
+                        textViewPickupLocation.setText(sourceAddress);
                         String startAdd = textViewPickupLocation.getText().toString();
                         if (startAdd.charAt(startAdd.length() - 1) == ',') {
                             textViewPickupLocation.setText(startAdd.substring(0, startAdd.length() - 1));
                         }
 
-                        textViewDropLocation.setText(endAddress);
+                        textViewDropLocation.setText(destAddress);
                         String endAdd = textViewDropLocation.getText().toString();
                         if (endAdd.charAt(endAdd.length() - 1) == ',') {
                             textViewDropLocation.setText(endAdd.substring(0, endAdd.length() - 1));
@@ -420,7 +418,9 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 public void onDirectionsFailure() {
 
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon);
+            });
+        	}
+        	apiFareEstimate.getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon, null, "c_fea");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -523,9 +523,6 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
-    public GeoDataClient getGeoDataClient(){
-        return geoDataClient;
-    }
 
     private void scheduleRide(int regionId, String finalDateTime) {
         final HashMap<String, String> params = new HashMap<>();
@@ -592,4 +589,8 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
+	@Override
+	public void onSetLocationOnMapClicked() {
+
+	}
 }
