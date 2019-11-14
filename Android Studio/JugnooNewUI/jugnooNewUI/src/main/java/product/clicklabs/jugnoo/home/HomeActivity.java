@@ -11100,8 +11100,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         ImageView iv3NewUIDropMark = findViewById(R.id.iv3NewUIDropMark);
         LinearLayout rlMark = findViewById(R.id.rlMark);
 
+        int dp70 = Utils.dpToPx(this, 55);
+        int dp40 = Utils.dpToPx(this, 20);
+        int dp30 = Utils.dpToPx(this, 15);
+        int dp50 = Utils.dpToPx(this, 18);
+        int dp68 = Utils.dpToPx(this, 27);
+
 		ViewGroup.LayoutParams layoutParamsInitial = relativeLayoutInitialSearchBarNew.getLayoutParams();
-		layoutParamsInitial.height = 134;
+		layoutParamsInitial.height = dp70;
 
         ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
         ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
@@ -11111,19 +11117,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             switch (caseVal) {
                 case 0 :
                     viewDash.setVisibility(View.GONE);
-                    layoutParams.height = 134;
-                    params.height = 40;
-                    params.width = 40;
-                    params2.setMargins(30, 50, 30, 0);
+                    layoutParams.height = dp70;
+                    params.height = dp40;
+                    params.width = dp40;
+                    params2.setMargins(dp30, dp50, dp30, 0);
                     break;
 
                 case 1:
                 default:
                     viewDash.setVisibility(View.VISIBLE);
-                    layoutParams.height = 134;
-                    params.height = 40;
-                    params.width = 40;
-                    params2.setMargins(30, 68, 30, 0);
+                    layoutParams.height = dp70;
+                    params.height = dp40;
+                    params.width = dp40;
+                    params2.setMargins(dp30, dp68, dp30, 0);
             }
             rlMark.setLayoutParams(params2);
             relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
