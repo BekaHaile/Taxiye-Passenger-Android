@@ -9535,6 +9535,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             firstTimeZoom = false;
             dropLocationSearchText = "";
+			isPickupSet = false;
 
             slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
 

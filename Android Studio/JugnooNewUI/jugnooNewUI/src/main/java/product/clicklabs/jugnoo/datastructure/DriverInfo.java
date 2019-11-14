@@ -296,7 +296,7 @@ public class DriverInfo {
 	private Bitmap getMarkerBitmap(Activity activity, boolean loader){
 		if(loader) {
 			return CustomMapMarkerCreator.createMarkerBitmapForResource(activity,
-					R.drawable.ic_vehicle_loader, 51f, 71f);
+					R.drawable.ic_marker_transparent, 51f, 71f);
 		} else {
 			if (vehicleIconSet == VehicleIconSet.ERICKSHAW) {
 				return CustomMapMarkerCreator.createMarkerBitmapForResource(activity,

@@ -374,7 +374,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								} else {
 									if (Data.deepLinkIndex == -1) {
 										Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
-										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
+										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
 										Log.v("deepLinkReferralCode", "---> "+Data.deepLinkReferralCode);
 										refreeUserId = referringParams.optString(KEY_USER_ID, "");
 									}
