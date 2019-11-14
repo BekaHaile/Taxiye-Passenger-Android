@@ -23,7 +23,7 @@ object GoogleRestApis {
         return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_CLIENT, BuildConfig.MAPS_CLIENT)
     }
 
-    private fun MAPS_BROWSER_KEY(): String {
+    public fun MAPS_BROWSER_KEY(): String {
         return Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_MAPS_API_BROWSER_KEY, BuildConfig.MAPS_BROWSER_KEY)
     }
 

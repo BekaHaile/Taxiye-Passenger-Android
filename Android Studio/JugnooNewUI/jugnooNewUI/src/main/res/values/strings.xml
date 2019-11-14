@@ -2039,7 +2039,8 @@
     <!--save location-->
     <string name="save_your_pickup_location">Save your pickup location</string>
     <string name="save_your_drop_location">Save your drop location</string>
-    <string name="tap_on_pin">Tap on pin...</string>
+    <string name="tap_on_pin">Tap on pin</string>
+    <string name="tap_on_pin_caps">Tap On Pin</string>
     <string name="favourite">Favourite%s</string>
 
 
@@ -2136,4 +2137,11 @@
     <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
 
 
+<!--    New UI changes-->
+    <string name="text_where_to_go">Where to go</string>
+    <string name="add_favorite_place">Add Favorite Place</string>
+    <string name="label_confirm_ride_request">Confirm Ride Request</string>
+    <string name="text_congestion_time">Congestion Time</string>
+    <string name="type_atleast_4_characters">Type atleast 4 characters</string>
+    <string name="congestion_charges_per_min">Congestion charges per min</string>
 </resources>

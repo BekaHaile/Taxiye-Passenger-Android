@@ -104,6 +104,9 @@ public class Region {
     @SerializedName("restricted_payment_modes")
     @Expose
 	private ArrayList<Integer> restrictedPaymentModes;
+    @SerializedName("disclaimer_text")
+    @Expose
+	private String disclaimerText;
 
 	private boolean isDefault = false;
 
@@ -162,6 +165,10 @@ public class Region {
 		return regionFare;
 	}
 
+	public void setRegionFare(RegionFare regionFare) {
+		this.regionFare = regionFare;
+	}
+
 	public ArrayList<Package> getPackages() {
 		return packages;
 	}
@@ -191,6 +198,14 @@ public class Region {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getDisclaimerText() {
+		return disclaimerText;
+	}
+
+	public void setDisclaimerText(String disclaimerText) {
+		this.disclaimerText = disclaimerText;
 	}
 
 	public class OfferTexts {

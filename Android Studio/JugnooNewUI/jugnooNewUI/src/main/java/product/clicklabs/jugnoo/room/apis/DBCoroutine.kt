@@ -5,6 +5,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import product.clicklabs.jugnoo.room.DBObject
 import product.clicklabs.jugnoo.room.database.SearchLocationDB
 import product.clicklabs.jugnoo.room.model.SearchLocation
 import product.clicklabs.jugnoo.utils.DateOperations
@@ -14,19 +15,31 @@ import product.clicklabs.jugnoo.utils.Utils
 class DBCoroutine {
 
     companion object {
+        var exceptionCount : Int = 0
         fun insertLocation(searchLocationDB: SearchLocationDB, searchLocation: SearchLocation) {
             GlobalScope.launch(Dispatchers.IO) {
                 try {
                     val search: List<SearchLocation> = if (searchLocation.type == 0) {
-                        searchLocationDB.getSearchLocation().getPickupLocations()
+                        searchLocationDB.getSearchLocation().getLocation()   // get all location rather than only pickup(display logic changed)
                     } else {
-                        searchLocationDB.getSearchLocation().getDropLocations()
+                        searchLocationDB.getSearchLocation().getLocation()   // get all location rather than only drop(display logic changed)
                     }
 
                     if(checkForAddLocation(search, searchLocation) == -1) {
                         searchLocationDB.getSearchLocation().insertSearchedLocation(searchLocation)
                     }
                 } catch (e: Exception) {
+                    if(exceptionCount == 0) {
+                        exceptionCount += 1
+                        SearchLocationDB.clearInstance()
+                        DBObject.clearInstance()
+                        val searchDB = DBObject.getInstance()
+                        if(searchDB != null) {
+                            insertLocation(searchDB, searchLocation)
+                        }
+                    } else {
+                        exceptionCount = 0
+                    }
                 }
             }
         }
@@ -73,6 +86,15 @@ class DBCoroutine {
                             deleteLocation(searchLocationDB, search[i])
                         }
                     }
+                } catch (e: Exception) {
+                }
+            }
+        }
+
+        fun deleteAll(searchLocationDB: SearchLocationDB) {
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    searchLocationDB.getSearchLocation().deleteAll()
                 } catch (e: Exception) {
                 }
             }

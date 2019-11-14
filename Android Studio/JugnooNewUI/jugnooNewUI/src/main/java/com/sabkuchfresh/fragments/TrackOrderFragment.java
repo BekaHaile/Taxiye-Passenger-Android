@@ -61,7 +61,7 @@ import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
-import product.clicklabs.jugnoo.directions.GAPIDirections;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.GoogleDirectionWayPointsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -627,7 +627,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 
 							try {
 								if (TextUtils.isEmpty(eta)) {
-									GAPIDirections.DistanceMatrixResult distanceMatrixResult = GAPIDirections.INSTANCE.getDistanceMatrix(latLngDriver, deliveryLatLng);
+									JungleApisImpl.DistanceMatrixResult distanceMatrixResult = JungleApisImpl.INSTANCE.getDistanceMatrix(latLngDriver, deliveryLatLng);
 
 									setEtaText(String.valueOf((int)(distanceMatrixResult.getTimeValue()/60)),getString(R.string.min));
 

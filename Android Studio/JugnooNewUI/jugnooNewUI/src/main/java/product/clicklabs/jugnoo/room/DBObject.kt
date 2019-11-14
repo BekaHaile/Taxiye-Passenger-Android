@@ -20,4 +20,8 @@ object DBObject {
         return searchLocationDB
     }
 
+    fun clearInstance(){
+        searchLocationDB = null
+    }
+
 }

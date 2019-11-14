@@ -57,7 +57,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
-import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -331,7 +331,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
-        searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78),
+        searchListAdapter = new SearchListAdapter(activity, PlaceSearchListFragment.getPivotLatLng(activity),
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 
@@ -752,7 +752,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 			if(jobGeocode != null){
 				jobGeocode.cancel(new CancellationException());
 			}
-			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, (googleGeocodeResponse, singleAddress) -> {
+			jobGeocode = GoogleJungleCaching.INSTANCE.hitGeocode(latLng, (googleGeocodeResponse, singleAddress) -> {
 				try {
 					Log.e("DeliveryAddressFrag", "GoogleCachingApiKT success address received");
 					if (googleGeocodeResponse != null && googleGeocodeResponse.results != null && googleGeocodeResponse.results.size() > 0) {
