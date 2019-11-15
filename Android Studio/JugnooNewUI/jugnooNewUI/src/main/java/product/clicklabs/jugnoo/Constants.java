@@ -1114,4 +1114,5 @@ public interface Constants {
     String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
     String KEY_CUSTOMER_REQUEST_RIDE_POPUP = "customer_request_ride_popup";
 	String KEY_METER_FARE_APPLICABLE = "meter_fare_applicable";
+	String KEY_REFERRAL_CORRECT = "referral_correct";
 }

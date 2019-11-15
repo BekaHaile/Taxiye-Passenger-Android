@@ -1757,6 +1757,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				if(Prefs.with(this).getInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1) == 1){
 					tvReferralTitle.setVisibility(View.VISIBLE);
 					etReferralCode.setVisibility(View.VISIBLE);
+					etReferralCode.setText(Data.deepLinkReferralCode);
 					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
 				} else {
 					tvReferralTitle.setVisibility(View.GONE);
@@ -2281,7 +2282,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	public static boolean allowedAuthChannelsHitOnce = false;
 	private boolean allowedAuthChannelsHitInProgress = false;
-	public void getAllowedAuthChannels(final Activity activity){
+	public void getAllowedAuthChannels(final Activity activity, final boolean claimGIftClicked){
 		if (MyApplication.getInstance().isOnline()) {
 			if(allowedAuthChannelsHitOnce || allowedAuthChannelsHitInProgress){
 				return;
@@ -2420,7 +2421,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						activity.onConfigurationChanged(config);
 
 						allowedAuthChannelsHitOnce = true;
-						splashLSState(false);
+						splashLSState(claimGIftClicked);
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -3493,7 +3494,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				changeUIState(State.SPLASH_LS_NEW);
 			}
 		} else {
-			getAllowedAuthChannels(this);
+			getAllowedAuthChannels(this, claimGIftClicked);
 		}
 	}
 
@@ -4339,6 +4340,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								if((jObj.has("username_correct")) && (jObj.optInt("username_correct", 0) == 1)){
 									if(!TextUtils.isEmpty(updatedName)) {
 										Data.userData.userName = updatedName;
+									}
+								}
+								if(jObj.optInt(KEY_REFERRAL_CORRECT, 0) == 1){
+									if(Data.userData != null){
+										Data.userData.setPromoSuccess(1);
 									}
 								}
 								onWindowFocusChanged(true);
