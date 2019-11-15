@@ -2126,9 +2126,14 @@
     <string name="offer_cannot_be_less_than_min_value">Offer can\'t be less than minimum value</string>
     <string name="offer_cannot_be_more_than_max_value">Offer can\'t be more than max value</string>
     <string name="copied">Copied</string>
+    <string name="text_rewards">Rewards</string>
+    <string name="you_have_scratch_cards">You have scratch cards</string>
+    <string name="no_scratch_coupon">No Scratch Coupon!!\nTake rides to earn more coupons.</string>
     <string name="select_drop_location_estimate_fare">Select drop location to find estimate fare</string>
     <string name="text_terms_and_conditions_apply"><![CDATA[*Terms & Conditions Apply]]></string>
     <string name="suggested_fare">Suggested Fare</string>
+    <string name="tap_to_scratch">Tap to Scratch</string>
+    <string name="text_no_internet_connection">No Internet Connection</string>
     <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
 
 

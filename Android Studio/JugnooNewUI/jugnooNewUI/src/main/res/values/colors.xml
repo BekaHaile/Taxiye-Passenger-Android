@@ -9,5 +9,7 @@
         #eeeeee
     </color>
 
+    <color name="scratch_start_gradient">#e5e5e5</color>
+    <color name="scratch_end_gradient">#cccccc</color>
 
 </resources>

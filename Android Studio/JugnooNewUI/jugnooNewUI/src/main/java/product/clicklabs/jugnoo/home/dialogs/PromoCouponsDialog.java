@@ -58,8 +58,18 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 		this.callback = callback;
 	}
 
-	public PromoCouponsDialog show(final ArrayList<PromoCoupon> promoCoupons) {
+	public PromoCouponsDialog show(final ArrayList<PromoCoupon> promoCouponsTemp) {
 		try {
+			ArrayList<PromoCoupon> promoCoupons = new ArrayList<>();
+			if(promoCouponsTemp != null) {
+				promoCoupons.clear();
+				for (int i = 0; i < promoCouponsTemp.size(); i++) {
+					if ((promoCouponsTemp.get(i).getCouponCardType() == 1 && promoCouponsTemp.get(i).isScratched())
+							|| promoCouponsTemp.get(i).getCouponCardType() == 0) {
+						promoCoupons.add(promoCouponsTemp.get(i));
+					}
+				}
+			}
 			onDialogOpenPromoSelectOperation = ((HomeActivity)activity).promoSelectionLastOperation;
 			couponSelectedWhenDialogShown =((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);

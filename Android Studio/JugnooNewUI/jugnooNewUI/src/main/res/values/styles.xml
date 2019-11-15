@@ -1092,4 +1092,12 @@
         <item name="android:windowIsFloating">false</item>
     </style>
 
+    <style name="ScratchCardDialog" parent="@android:style/Theme.Panel">
+        <item name="android:windowAnimationStyle">@style/ScratchCardDialog.Window</item>
+    </style>
+
+    <style name="ScratchCardDialog.Window" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/scratch_fad_in</item>
+        <item name="android:windowExitAnimation">@anim/scratch_fade_out</item>
+    </style>
 </resources>

@@ -236,9 +236,11 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
+import product.clicklabs.jugnoo.newui.dialog.RewardsDialog;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.promotion.models.Promo;
 import product.clicklabs.jugnoo.rentals.InstructionDialog;
 import product.clicklabs.jugnoo.rentals.RentalStationAdapter;
 import product.clicklabs.jugnoo.rentals.damagereport.DamageReportActivity;
@@ -312,7 +314,8 @@ import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITI
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
-        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler, CoroutineScope,
+        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,
+        RewardsDialog.ScratchCardRevealedListener, CoroutineScope,
         RideConfirmationDialog.RideRequestConfirmListener {
 
 
@@ -2618,7 +2621,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 public void onConfirmed(Double amount, String engagementId) {
 
                     if(passengerScreenMode==PassengerScreenMode.P_RIDE_END){
-                        getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId());
+                        getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId(), null);
                     }else{
                         updateDriverTipUI(passengerScreenMode);
 
@@ -5723,6 +5726,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     protected void onResume() {
         super.onResume();
 
+        new Handler().postDelayed(() -> {
+            if(Prefs.with(HomeActivity.this).getBoolean(Constants.SP_PROMO_SCRATCHED, false)) {
+                slidingBottomPanel.getRequestRideOptionsFragment().selectAutoSelectedCouponAtRequestRide();
+                Prefs.with(HomeActivity.this).save(Constants.SP_PROMO_SCRATCHED, false);
+            }
+        }, 400);
 
         try {
 
@@ -7574,7 +7583,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    public void getRideSummaryAPI(final Activity activity, final String engagementId) {
+    public void getRideSummaryAPI(final Activity activity, final String engagementId, final Promo promo) {
         if (!checkIfUserDataNull(activity)) {
             if (MyApplication.getInstance().isOnline()) {
 
@@ -7621,17 +7630,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                     setUserData();
 
+                                    showScratchCard(promo);
+
                                 } else {
                                     Log.d("HomeActivityRental","GetRideSummmary Offline 1");
 
-                                    endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                                    endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             Log.d("HomeActivityRental","GetRideSummmary offline 2");
 
-                            endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                            endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                         }
                     }
 
@@ -7641,21 +7652,33 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         Log.e(TAG, "getRideSummary error=" + error);
                         DialogPopup.dismissLoadingDialog();
-                        endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                        endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                     }
                 });
             } else {
-                endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_desc));
+                endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_desc), promo);
             }
         }
     }
 
-    public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage) {
+    private void showScratchCard(Promo promo) {
+        if(promo != null) {
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    RewardsDialog dialogFragment = RewardsDialog.newInstance(promo, true, true);
+                    dialogFragment.show(getSupportFragmentManager(), "scratchDialog");
+                }
+            }, 10);
+        }
+    }
+
+    public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage, final Promo promo) {
         DialogPopup.alertPopupWithListener(activity, "", errorMessage, new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                getRideSummaryAPI(activity, engagementId);
+                getRideSummaryAPI(activity, engagementId, promo);
             }
         });
     }
@@ -8765,7 +8788,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     @Override
-    public void customerEndRideInterrupt(final String engagementId) {
+    public void customerEndRideInterrupt(final String engagementId, final Promo promo) {
         try {
             Log.d("HomeActivityRental","CustomerEndRIde");
             if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.autoData.getcEngagementId())) {
@@ -8779,8 +8802,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if(rentalLockDialog != null){
                             rentalLockDialog.dismiss();
                         }
-
-                        getRideSummaryAPI(HomeActivity.this, engagementId);
+                        getRideSummaryAPI(HomeActivity.this, engagementId, promo);
                         if(driverTipInteractor != null) {
 							driverTipInteractor.dismissDialog();
 						}
@@ -9162,6 +9184,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("qr_code_details",qrCodeDetails);
                                 }
                                 nameValuePairs.put("is_bluetooth_tracker",""+Data.autoData.getBluetoothEnabled());
+                                nameValuePairs.put("is_scratch_coupon_applicable", "" + true); // key added for differentiating request ride call from new scratch App and old App
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
                                 try {
@@ -12936,6 +12959,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    @Override
+    public void onScratchCardRevealed() {
 
     }
 

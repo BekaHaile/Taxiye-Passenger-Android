@@ -314,6 +314,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
 			case CANCEL_BID:
                 RestClient.getApiService().cancelBid(params, callback);
                 break;
+            case SCRATCH_CARD:
+                RestClient.getApiService().scratchCard(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

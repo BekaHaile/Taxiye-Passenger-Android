@@ -102,12 +102,22 @@
 
     </RelativeLayout>
 
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/tvScratchCards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_banner"
+        android:textSize="@dimen/font_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_below="@+id/rlEnterPromo"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerViewOffers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/textViewFreeRides"
-        android:layout_below="@+id/rlEnterPromo"
+        android:layout_below="@+id/tvScratchCards"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
         android:visibility="visible"/>
