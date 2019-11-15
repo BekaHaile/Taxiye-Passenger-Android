@@ -2002,7 +2002,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //				changeUIState(State.SIGNUP);
     //			}
             } else if(openLS){
-				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this) && state != State.SPLASH_LS_NEW) {
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)
+						&& state != State.SPLASH_LS_NEW && state != State.CLAIM_GIFT && state != State.SPLASH_ONBOARDING) {
 					splashLSState(false);
 				}
 			}
@@ -2118,7 +2119,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 		requestLocationUpdatesExplicit();
 
-		retryAccessTokenLogin();
+		if(state != State.SPLASH_ONBOARDING && state != State.CLAIM_GIFT){
+			retryAccessTokenLogin();
+		}
 		resumed = true;
 		userVerfied = 0;
 		AppEventsLogger.activateApp(getApplication());
