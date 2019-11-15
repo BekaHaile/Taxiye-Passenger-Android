@@ -429,6 +429,10 @@ public class JSONParser implements Constants {
              Prefs.with(context).save(Constants.SCHEDULE_DAYS_LIMIT,
                     autoData.optInt(Constants.SCHEDULE_DAYS_LIMIT,2));
 
+             Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_IMAGE, autoData.optString(Constants.KEY_C_2_D_REFERRAL_IMAGE, ""));
+             Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_INFO, autoData.optString(Constants.KEY_C_2_D_REFERRAL_INFO, ""));
+             Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_DETAILS, autoData.optString(Constants.KEY_C_2_D_REFERRAL_DETAILS, ""));
+
             parseConfigParams(context, autoData);
         } catch (Exception e) {
             e.printStackTrace();

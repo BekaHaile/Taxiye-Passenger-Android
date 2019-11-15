@@ -191,7 +191,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginBottom="20px"
                     android:layout_marginTop="20px"
-                    android:src="@color/stroke_color_dark" />
+                    android:src="@color/stroke_color_light" />
 
                 <LinearLayout
                     android:id="@+id/linearLayoutRefer"
@@ -230,12 +230,6 @@
             android:layout_marginEnd="27px"
             android:visibility="gone">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_above="@+id/textViewReferDriver"
-                android:background="@color/stroke_color_light" />
-
             <TextView
                 android:id="@+id/textViewReferDriver"
                 android:layout_width="match_parent"
@@ -249,8 +243,9 @@
                 android:textSize="@dimen/text_size_30" />
 
             <ImageView
-                android:layout_width="108px"
-                android:layout_height="109px"
+                android:layout_width="88px"
+                android:layout_height="88px"
+                android:layout_marginTop="20px"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="30px"
                 android:background="@drawable/ic_slide_up"
@@ -264,14 +259,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="27px"
             android:layout_marginEnd="27px"
-            android:visibility="visible">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_above="@+id/textViewLeaderboardSingle"
-                android:visibility="gone"
-                android:background="@color/stroke_color_light" />
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textViewLeaderboardSingle"
@@ -285,8 +273,9 @@
                 android:textSize="@dimen/text_size_44" />
 
             <ImageView
-                android:layout_width="108px"
-                android:layout_height="109px"
+                android:layout_width="88px"
+                android:layout_height="88px"
+                android:layout_marginTop="20px"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="30px"
                 android:background="@drawable/ic_slide_up"

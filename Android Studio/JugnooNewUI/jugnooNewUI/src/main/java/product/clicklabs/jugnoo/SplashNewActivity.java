@@ -1986,7 +1986,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	private void sendToRegisterThroughSms(boolean openLS) {
 		try {
-			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+			if (state != State.SPLASH_ONBOARDING && !"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				Log.e("Data.deepLinkReferralCode value in sendToRegisterThroughSms", "--->"+Data.deepLinkReferralCode);
                 Data.deepLinkIndex = -1;
                 SplashNewActivity.registerationType = RegisterationType.EMAIL;

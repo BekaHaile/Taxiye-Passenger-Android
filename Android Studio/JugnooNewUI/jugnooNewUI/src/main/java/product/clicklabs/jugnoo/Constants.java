@@ -1115,4 +1115,8 @@ public interface Constants {
     String KEY_CUSTOMER_REQUEST_RIDE_POPUP = "customer_request_ride_popup";
 	String KEY_METER_FARE_APPLICABLE = "meter_fare_applicable";
 	String KEY_REFERRAL_CORRECT = "referral_correct";
+
+	String KEY_C_2_D_REFERRAL_IMAGE = "c2d_referral_image";
+	String KEY_C_2_D_REFERRAL_INFO = "c2d_referral_info";
+	String KEY_C_2_D_REFERRAL_DETAILS = "c2d_referral_details";
 }
