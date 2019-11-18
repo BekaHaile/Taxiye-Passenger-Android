@@ -77,6 +77,9 @@ public class Item {
 	@SerializedName("show_food_type")
 	@Expose
 	private int showFoodType = 1;
+	@SerializedName("restaurant_id")
+	@Expose
+	private int restaurantId;
 
 	private Boolean expanded = false;
 
@@ -249,6 +252,21 @@ public class Item {
 		this.displayPrice = displayPrice;
 	}
 
+	public int getRestaurantId() {
+		return restaurantId;
+	}
+
+	public void setRestaurantId(int restaurantId) {
+		this.restaurantId = restaurantId;
+	}
+
+	public Item() {
+
+	}
+	public Item(final int id, final int resId){
+		this.restaurantItemId = id;
+		this.restaurantId = resId;
+	}
 
 	public double getCustomizeItemsSelectedTotalPriceForItemSelected(ItemSelected itemSelected){
 		double totalPrice = getPrice();

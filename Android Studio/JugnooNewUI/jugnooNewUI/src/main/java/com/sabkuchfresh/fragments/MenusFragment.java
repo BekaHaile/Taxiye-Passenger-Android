@@ -41,6 +41,7 @@ import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
+import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.AppConstant;
 import com.sabkuchfresh.utils.PushDialog;
@@ -121,6 +122,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private int widthFatafatChatIconText;
     private TextView tvSuggestStore;
     private LinearLayout llNoMenusAddStore;
+    public int mBannerId;
 
     public MenusResponse.StripInfo getCurrentStripInfo() {
         return currentStripInfo;
@@ -141,7 +143,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_menus, container, false);
         activity = (FreshActivity) getActivity();
-        activity.fragmentUISetup(this);setUpUIforCategoriesOpened(activity.getCategoryOpened());
+        activity.fragmentUISetup(this);setUpUIforCategoriesOpened(activity.getCategoryOpened(), false);
+        mBannerId = -1;
 //        activity.setDeliveryAddressView(rootView);
         activity.setCategoryIdOpened(null);
         activity.rlfabViewFatafat.setVisibility(View.GONE);
@@ -153,7 +156,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
       /*  deliveryDisplayCategoriesView = new DeliveryDisplayCategoriesView(activity,
                 rootView.findViewById(R.id.rLCategoryDropDown), this);*/
 
-        Data.AppType = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId()) 
+        Data.AppType = Config.getLastOpenedClientId(activity).equals(Config.getDeliveryCustomerClientId())
                 ? AppConstant.ApplicationType.DELIVERY_CUSTOMER : AppConstant.ApplicationType.MENUS;
         Prefs.with(activity).save(Constants.APP_TYPE, Data.AppType);
         GAUtils.trackScreenView(activity.getGaCategory() + HOME);
@@ -212,6 +215,20 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }
 
             @Override
+            public void onRestaurantSelected(Item selItem, int vendorId, boolean shouldOpenMerchantInfo) {
+
+                activity.setMenusIsOpenMerchantInfo(shouldOpenMerchantInfo);
+
+                VendorDirectSearch vendorDirectSearch = new VendorDirectSearch();
+                vendorDirectSearch.setVendorId(selItem.getRestaurantId());
+                vendorDirectSearch.setCategoryId(-1);
+                vendorDirectSearch.setSubcategoryId(-1);
+                vendorDirectSearch.setItemId(selItem.getRestaurantItemId());
+                activity.fetchRestaurantMenuAPI(vendorId, false, null, null, -1, null, vendorDirectSearch);
+                Utils.hideSoftKeyboard(activity, relativeLayoutNoMenus);
+            }
+
+            @Override
             public void onBannerInfoDeepIndexClick(int deepIndex) {
                 Data.deepLinkIndex = deepIndex;
                 if (activity != null) {
@@ -222,6 +239,12 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             @Override
             public void openCategory(MenusResponse.Category category) {
                 switchCategory(category);
+            }
+
+            @Override
+            public void onBannerClickForViewType(int bannerId) {
+                mBannerId = bannerId;
+                getAllMenusOnBannerClicked(true, activity.getSelectedLatLng(), true,bannerId, MenusFragment.TYPE_API_MENUS_CATEGORY_CHANGE);
             }
 
             @Override
@@ -443,6 +466,187 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         return rootView;
     }
 
+    public void getAllMenusOnBannerClicked(final boolean loader, final LatLng latLng, final boolean scrollToTop, final int bannerId, final int typeApi) {
+
+        Log.d(TAG, "getAllMenus: init"+System.currentTimeMillis());
+        if (isMenusApiInProgress)
+            return;
+
+        if (typeApi == TYPE_API_MENUS_ADDRESS_CHANGE || typeApi == TYPE_API_MENUS_CATEGORY_CHANGE) {
+            if (activity.getMenusFilterFragment() != null) {
+                activity.getMenusFilterFragment().resetAllFilters();
+            }
+            if (searchOpened) {
+                toggleSearch(true, false);
+
+            }
+        }
+
+        int banId = bannerId;
+
+
+        final String searchTextCurr = searchText;
+        try {
+
+
+            if (!MyApplication.getInstance().isOnline()) {
+//                retryDialog(DialogErrorType.NO_NET, latLng, loader, false, scrollToTop, banId, typeApi);
+                swipeRefreshLayout.setRefreshing(false);
+                return;
+            }
+
+
+            if (loader)
+                DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
+
+            HashMap<String, String> params = getMenusApiHashMap(latLng, banId, true);
+            Callback<MenusResponse> callback = new Callback<MenusResponse>() {
+                @Override
+                public void success(final MenusResponse menusResponse, Response response) {
+                    Log.d(TAG, "getAllMenus: success"+System.currentTimeMillis());
+                    boolean shouldRecallSearchAPI = false;
+                    lastTimeRefreshed = System.currentTimeMillis();
+                    if (typeApi == TYPE_API_MENUS_ADDRESS_CHANGE || typeApi == TYPE_API_MENUS_CATEGORY_CHANGE) {
+                        activity.setOfferingsVisibility(menusResponse.getOfferingsVisibilityData());
+                        serviceUnavailable = (menusResponse.getServiceUnavailable() == 1);
+                        chatAvailable = menusResponse.getChatAvailable() ==1;
+
+                        if (activity.getCategoryIdOpened() < 0) {
+                            //IF single offering don't show categories bar and display this category on home page instead
+//                            if (menusResponse.getCategories() != null && menusResponse.getCategories().size() == 1) {
+//                                activity.setCategoryIdOpened(menusResponse.getCategories().get(0));
+//                            }
+                            noOfCategories = menusResponse.getCategories() == null ? 0 : menusResponse.getCategories().size();
+                            activity.setMenusResponse(menusResponse);
+                        }
+
+                        status.clear();
+                        status.addAll(menusResponse.getRecentOrdersPossibleStatus());
+                        statusMeals.clear();
+                        statusMeals.addAll(menusResponse.getRecentOrdersPossibleMealsStatus());
+                        statusFatafat.clear();
+                        statusFatafat.addAll(menusResponse.getRecentOrdersPossibleFatafatStatus());
+                        currentStripInfo = null;
+                        currentStripInfo = menusResponse.getStripInfo();
+                        activity.setCurrentDeliveryStripToMinOrder();
+                        setUpUIforCategoriesOpened(activity.getCategoryOpened(), true);
+                        setSearcHintText();
+
+
+                    }
+
+                    swipeRefreshLayout.setRefreshing(false);
+                    activity.getTopBar().setPBSearchVisibility(View.GONE);
+
+                    relativeLayoutNoMenus.setVisibility(View.GONE);
+                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                    try {
+                        JSONObject jObj = new JSONObject(responseStr);
+                        String message = menusResponse.getMessage();
+                        if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                            if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == menusResponse.getFlag()) {
+
+
+                                currentPageCount = 1;
+                                hasMorePages = menusResponse.isPageLengthComplete();
+
+                                if (activity.getMenusResponse() == null) {
+                                    activity.setMenusResponse(menusResponse);
+                                }
+
+                                if (activity.getMenusFilterFragment() != null && typeApi != TYPE_API_MENUS_REFRESH && typeApi != TYPE_API_MENUS_SEARCH) {
+                                    activity.getMenusFilterFragment().updateDataLists(menusResponse);
+                                }
+
+                                deliveryHomeAdapter.setList(menusResponse, false, hasMorePages);
+//                                menuCategoryAdapter.updateData(new DeliveryHomeAdapter.CategoriesData(new ArrayList<MenusResponse.Category>(), true));
+
+
+                                activity.setMenuRefreshLatLng(latLng);
+                                currentMenusLatLngData = latLng;
+                                setUpServiceUnavailability(menusResponse);
+                                checkIciciPaymentStatusApi(activity);
+
+
+                                if (scrollToTop && linearLayoutManager != null) {
+                                    linearLayoutManager.scrollToPositionWithOffset(0, 0);
+                                }
+                                shouldRecallSearchAPI = true;
+
+                            } else {
+                                if (!searchOpened) {
+                                    DialogPopup.alertPopup(activity, "", message);
+
+                                }
+                            }
+
+
+
+                        }
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+//                        retryDialog(DialogErrorType.SERVER_ERROR, latLng, loader, false, scrollToTop, categoryObject, typeApi);
+                    }
+                    isMenusApiInProgress = false;
+                    if(noOfCategories==1){
+                        //only one category exists no need to hit again
+                        pendingCategoryApi=null;
+                    }
+                    if(pendingCategoryApi!=null){
+                        MenusResponse.Category category = new MenusResponse.Category(pendingCategoryApi.getId(),pendingCategoryApi.getCategoryName());
+                        pendingCategoryApi=null;
+                        switchCategory(category);
+
+
+                    }else if(shouldRecallSearchAPI){
+                        recallSearch(searchTextCurr);
+
+                    }
+
+                    Log.d(TAG, "getAllMenus: success"+System.currentTimeMillis());
+                    DialogPopup.dismissLoadingDialog();
+
+
+                }
+
+                @Override
+                public void failure(RetrofitError error) {
+
+                    relativeLayoutNoMenus.setVisibility(View.GONE);
+                    Log.e(TAG, "paytmAuthenticateRecharge error" + error.toString());
+                    swipeRefreshLayout.setRefreshing(false);
+                    activity.getTopBar().setPBSearchVisibility(View.GONE);
+                    isMenusApiInProgress = false;
+                    DialogPopup.dismissLoadingDialog();
+//                    retryDialog(DialogErrorType.CONNECTION_LOST, latLng, loader, false, scrollToTop, categoryObject, typeApi);
+
+
+                }
+            };
+
+            if (searchOpened && !swipeRefreshLayout.isRefreshing()) {
+                activity.getTopBar().setPBSearchVisibility(View.VISIBLE);
+            }
+
+
+            isMenusApiInProgress = true;
+            Log.d(TAG, "getAllMenus: hit"+System.currentTimeMillis());
+            if (isSearchingCase(searchText)) {
+                params.put(Constants.KEY_SEARCH_TEXT, searchText);
+                RestClient.getMenusApiService().fetchRestaurantViaSearchV2(params, callback);
+            } else {
+                DialogPopup.dismissLoadingDialog();
+                RestClient.getMenusApiService().nearbyRestaurants(params, callback);
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            swipeRefreshLayout.setRefreshing(false);
+            isMenusApiInProgress = false;
+        }
+    }
+
     @Nullable
     private String pendingFeedbackClientId() {
 
@@ -566,7 +770,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 });
     }
 
-    private void setUpUIforCategoriesOpened(MenusResponse.Category category) {
+    private void setUpUIforCategoriesOpened(MenusResponse.Category category, final boolean isForBannerId) {
         if (activity.getTopFragment() instanceof MenusFragment) {
             if (activity.getAppType()== AppConstant.ApplicationType.DELIVERY_CUSTOMER) {
                 if(activity.getCategoryIdOpened()<0 || noOfCategories==1){
@@ -574,10 +778,19 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         activity.getTopBar().imageViewMenu.setVisibility(View.GONE);
                         activity.getTopBar().imageViewBack.setVisibility(View.VISIBLE);
                     }else{
-                        activity.getTopBar().imageViewMenu.setVisibility(View.VISIBLE);
-                        activity.getTopBar().imageViewBack.setVisibility(View.GONE);
+                        activity.getTopBar().imageViewMenu.setVisibility(isForBannerId ? View.GONE : View.VISIBLE);
+                        activity.getTopBar().imageViewBack.setVisibility(isForBannerId ? View.VISIBLE : View.GONE);
                     }
 
+                    if(isForBannerId) {
+                        activity.getTopBar().getLlTopBarDeliveryAddress().setVisibility(View.GONE);
+                        activity.getTopBar().getIvSearch().setVisibility(View.GONE);
+                        activity.getTopBar().rlFilter.setVisibility(View.GONE);
+                    } else {
+                        activity.getTopBar().getLlTopBarDeliveryAddress().setVisibility(View.VISIBLE);
+                        activity.getTopBar().getIvSearch().setVisibility(View.VISIBLE);
+                        activity.getTopBar().rlFilter.setVisibility(View.VISIBLE);
+                    }
                     activity.getTopBar().ivFilterApplied.setVisibility(View.GONE);
                     activity.getTopBar().title.setText(activity.getString(R.string.delivery_new_name));
                     /*String titleToSet = noOfCategories==1 && category!=null?category.getCategoryName():activity.getString(R.string.title_fatafat_home_page);
@@ -665,7 +878,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
 
                 }
-                setUpUIforCategoriesOpened(activity.getCategoryOpened());
+                setUpUIforCategoriesOpened(activity.getCategoryOpened(), mBannerId != -1);
                 activity.setCurrentDeliveryStripToMinOrder();
                 if (!activity.isOrderJustCompleted()) {
                     activity.setAddressTextToLocationPlaceHolder();
@@ -740,7 +953,11 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-        getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_REFRESH);
+        if(mBannerId != -1){
+            getAllMenusOnBannerClicked(true, activity.getSelectedLatLng(), true,mBannerId, MenusFragment.TYPE_API_MENUS_REFRESH);
+        } else {
+            getAllMenus(false, activity.getSelectedLatLng(), true, activity.getCategoryOpened(), MenusFragment.TYPE_API_MENUS_REFRESH);
+        }
     }
 
     private int currentPageCount = 1;
@@ -780,7 +997,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 DialogPopup.showLoadingDialog(activity, activity.getResources().getString(R.string.loading));
 
 
-            HashMap<String, String> params = getMenusApiHashMap(latLng, categoryId);
+            HashMap<String, String> params = getMenusApiHashMap(latLng, categoryId, false);
             Callback<MenusResponse> callback = new Callback<MenusResponse>() {
                 @Override
                 public void success(final MenusResponse menusResponse, Response response) {
@@ -812,7 +1029,8 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         currentStripInfo = null;
                         currentStripInfo = menusResponse.getStripInfo();
                         activity.setCurrentDeliveryStripToMinOrder();
-                        setUpUIforCategoriesOpened(activity.getCategoryOpened());
+                        setUpUIforCategoriesOpened(activity.getCategoryOpened(), false);
+                        mBannerId = -1;
                         setSearcHintText();
 
 
@@ -971,7 +1189,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     @NonNull
-    private HashMap<String, String> getMenusApiHashMap(LatLng latLng, int categoryId) {
+    private HashMap<String, String> getMenusApiHashMap(LatLng latLng, int categoryId, final boolean isForBannerId) {
         HashMap<String, String> params = new HashMap<>();
 
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
@@ -981,7 +1199,9 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         params.put(Constants.INTERATED, "1");
         params.put(Constants.PAGE_NO, String.valueOf(0));
 
-        if(categoryId > 0){
+        if(isForBannerId) {
+            params.put("banner_id", String.valueOf(categoryId));
+        } else if(categoryId > 0){
             params.put(Constants.KEY_MERCHANT_CATEGORY_ID, String.valueOf(categoryId));
         }
         //Sort Keys
@@ -1026,7 +1246,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             return;
         }
 
-        HashMap<String, String> params = getMenusApiHashMap(activity.getMenuRefreshLatLng(), activity.getCategoryIdOpened());
+        HashMap<String, String> params = getMenusApiHashMap(activity.getMenuRefreshLatLng(), activity.getCategoryIdOpened(), false);
         params.put(Constants.PAGE_NO, String.valueOf(currentPageCount));
         deliveryHomeAdapter.showPaginationProgressBar(true, true);
         isPagingApiInProgress = true;

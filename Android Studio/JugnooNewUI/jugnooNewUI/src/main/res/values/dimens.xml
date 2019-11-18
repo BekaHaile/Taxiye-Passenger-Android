@@ -889,4 +889,5 @@
     <dimen name="height_pay_slider">64dp</dimen>
 
     <dimen name="otp_country_code_text_size">17sp</dimen>
+    <dimen name="banner_height">220dp</dimen>
 </resources>

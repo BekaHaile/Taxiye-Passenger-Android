@@ -1840,7 +1840,6 @@
     <string name="search">"Buscar "</string>
     <string name="country_picker_header">"Seleccionar país "</string>
     <string name="no_country_found">No country found</string>
-    <string name="pay_via_format">Pay via %s</string>
     <string name="jugnoo_cash_added">%s Cash added</string>
     <string name="finding_a_driver">%sEncontrar un conductor de taxi Progressive ...</string>
     <string name="confirm_ride_request">"Confirmar solicitud de viaje "</string>
