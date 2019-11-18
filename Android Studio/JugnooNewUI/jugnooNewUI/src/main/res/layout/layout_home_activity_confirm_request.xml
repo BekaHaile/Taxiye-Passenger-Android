@@ -29,6 +29,26 @@
         android:visibility="gone"
         />
 
+
+    <TextView
+        android:id="@+id/tvFreeRidesForLife"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tag="@string/dont_touch_me"
+        android:textColor="@color/white"
+        android:background="@drawable/capsule_theme_color_selector"
+        android:text="@string/free_rides_for_life"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:textSize="14sp"
+        android:layout_above="@+id/relativeLayoutConfirmBottom"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:visibility="gone"
+        />
+
     <RelativeLayout
         android:id="@+id/relativeLayoutConfirmBottom"
         android:layout_width="match_parent"

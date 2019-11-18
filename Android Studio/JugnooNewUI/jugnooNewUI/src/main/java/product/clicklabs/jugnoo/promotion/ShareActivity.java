@@ -60,6 +60,7 @@ public class ShareActivity extends BaseFragmentActivity {
 
     private CallbackManager callbackManager;
 	public boolean fromDeepLink = false;
+	public boolean isNewReferral = false;
 
 	public LeaderboardResponse leaderboardResponse;
 	public LeaderboardActivityResponse leaderboardActivityResponse;
@@ -87,6 +88,9 @@ public class ShareActivity extends BaseFragmentActivity {
 			if(getIntent().hasExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK)){
 				fromDeepLink = getIntent().getBooleanExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
 			}
+			if(getIntent().hasExtra(Constants.KEY_IS_NEW_REFERRAL)){
+				isNewReferral = getIntent().getBooleanExtra(Constants.KEY_IS_NEW_REFERRAL, false);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -97,7 +101,7 @@ public class ShareActivity extends BaseFragmentActivity {
         callbackManager = CallbackManager.Factory.create();
 
 		viewPager = (ViewPager) findViewById(R.id.viewPager);
-		promotionsFragmentAdapter = new PromotionsFragmentAdapter(this, getSupportFragmentManager());
+		promotionsFragmentAdapter = new PromotionsFragmentAdapter(this, getSupportFragmentManager(), isNewReferral);
 		viewPager.setAdapter(promotionsFragmentAdapter);
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);

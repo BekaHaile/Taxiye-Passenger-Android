@@ -407,7 +407,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ImageView ivMoreOptions;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat;
     LinearLayout relativeLayoutTotalFare;
-    TextView textViewIRPaymentOptionValue, textViewRupee;
+    TextView textViewIRPaymentOptionValue, textViewRupee, tvFreeRidesForLife;
     ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm, imageViewNotes;
     PopupMenu popupInRide;
 
@@ -866,6 +866,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutTotalFare = findViewById(R.id.relativeLayoutTotalFare);
 		textViewRupee = findViewById(R.id.textViewRupee);
 		textViewRupee.setTypeface(Fonts.mavenMedium(this));
+		tvFreeRidesForLife = findViewById(R.id.tvFreeRidesForLife); tvFreeRidesForLife.setTypeface(Fonts.mavenMedium(this));
         buttonConfirmRequest = (Button) findViewById(R.id.buttonConfirmRequest);
         buttonConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         linearLayoutPaymentModeConfirm = (LinearLayout) findViewById(R.id.linearLayoutPaymentModeConfirm);
@@ -1826,6 +1827,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 locationGotNow();
             }
         });
+
+		tvFreeRidesForLife.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MenuAdapter.onClickAction(MenuInfoTags.FREE_RIDES_NEW.getTag(),0,0,HomeActivity.this,getCurrentPlaceLatLng());
+			}
+		});
 
 
         // Assigning layout events
@@ -6685,6 +6693,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 					textViewRupee.setText(Utils.getCurrencySymbol(Data.autoData.getCurrency()));
 
+					if(Data.userData != null && Data.userData.getReferralMessages().getNewReferralEnabled()){
+						tvFreeRidesForLife.setVisibility(View.VISIBLE);
+					}
+
                     relativeLayoutTotalFare.setVisibility(View.GONE);
                     linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
                     relativeLayoutSearchContainer.setVisibility(View.GONE);
@@ -6719,6 +6731,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 } else {
 
+					tvFreeRidesForLife.setVisibility(View.GONE);
 
                     if(!confirmedScreenOpened){
                         imageViewRideNow.setVisibility(View.VISIBLE);

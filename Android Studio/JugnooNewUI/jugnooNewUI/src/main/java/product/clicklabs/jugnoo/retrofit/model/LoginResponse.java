@@ -855,6 +855,24 @@ public class LoginResponse {
 		@SerializedName("bottom_request_ui_enabled_v2")
 		private Integer bottomRequestUIEnabled;
 
+
+		@SerializedName("new_referral_enabled")
+		@Expose
+		private int newReferralEnabled;
+		@SerializedName("referral_images")
+		@Expose
+		private ArrayList<MediaInfo> referralImages;
+		@SerializedName("referrals_count")
+		@Expose
+		private double referralsCount;
+		@SerializedName("referral_earned_total")
+		@Expose
+		private double referralEarnedTotal;
+		@SerializedName("referral_earned_today")
+		@Expose
+		private double referralEarnedToday;
+
+
 		public List<Driver> getDrivers() {
 			return drivers;
 		}
@@ -1060,6 +1078,26 @@ public class LoginResponse {
 
 		public void setBottomRequestUIEnabled(Integer bottomRequestUIEnabled) {
 			this.bottomRequestUIEnabled = bottomRequestUIEnabled;
+		}
+
+		public int getNewReferralEnabled() {
+			return newReferralEnabled;
+		}
+
+		public ArrayList<MediaInfo> getReferralImages() {
+			return referralImages;
+		}
+
+		public double getReferralsCount() {
+			return referralsCount;
+		}
+
+		public double getReferralEarnedTotal() {
+			return referralEarnedTotal;
+		}
+
+		public double getReferralEarnedToday() {
+			return referralEarnedToday;
 		}
 	}
 

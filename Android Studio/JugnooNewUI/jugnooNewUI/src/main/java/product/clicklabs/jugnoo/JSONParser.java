@@ -434,6 +434,14 @@ public class JSONParser implements Constants {
              Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_DETAILS, autoData.optString(Constants.KEY_C_2_D_REFERRAL_DETAILS, ""));
 
             parseConfigParams(context, autoData);
+
+            if(Data.userData != null){
+            	Data.userData.getReferralMessages().setNewReferralEnabled(autosData.getNewReferralEnabled());
+            	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
+            	Data.userData.getReferralMessages().setReferralsCount(autosData.getReferralsCount());
+            	Data.userData.getReferralMessages().setReferralEarnedToday(autosData.getReferralEarnedToday());
+            	Data.userData.getReferralMessages().setReferralEarnedTotal(autosData.getReferralEarnedTotal());
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
