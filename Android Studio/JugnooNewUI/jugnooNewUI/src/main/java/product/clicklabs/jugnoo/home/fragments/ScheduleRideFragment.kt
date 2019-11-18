@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.Constants.SCHEDULE_DAYS_LIMIT
 import product.clicklabs.jugnoo.adapters.RentalPackagesAdapter
 import product.clicklabs.jugnoo.apis.ApiFareEstimate
 import product.clicklabs.jugnoo.datastructure.CouponInfo
+import product.clicklabs.jugnoo.datastructure.MapsApiSources
 import product.clicklabs.jugnoo.datastructure.PromoCoupon
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
@@ -455,7 +456,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     }
                 })
             }
-            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage?: if(region != null) region.packages[0] else null, "c_fe_sch")
+            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage?: if(region != null) region.packages[0] else null,
+                    MapsApiSources.CUSTOMER_FARE_ESTIMATE_SCHEDULE)
 
         } catch (e: Exception) {
             e.printStackTrace()
