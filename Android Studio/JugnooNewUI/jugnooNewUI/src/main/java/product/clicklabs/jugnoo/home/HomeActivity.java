@@ -5735,6 +5735,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
 
+            if(pushDialog != null) {
+                pushDialog.showLoading();
+            }
             removeSaveLocationDialog();
 
             if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null) {

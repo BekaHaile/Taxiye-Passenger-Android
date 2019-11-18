@@ -235,6 +235,7 @@ public interface Constants {
     String STRIPE_SELECTED_POS ="selected_stripe_card";
 
     String KEY_URL = "url";
+    String KEY_VIDEO = "video";
     String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
     String KEY_LAST_PUSH_TIME_DIFF = "last_push_time_diff";
     String KEY_PUSH_CLICKED = "push_clicked";
