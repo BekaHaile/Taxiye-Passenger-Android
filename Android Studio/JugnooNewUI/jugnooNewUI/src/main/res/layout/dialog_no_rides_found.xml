@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/mainView"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_draw_corner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:gravity="center_horizontal"
+            android:text="@string/oops"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_extra_large"
+            app:layout_constraintEnd_toEndOf="@id/mainView"
+            app:layout_constraintStart_toStartOf="@+id/mainView"
+            app:layout_constraintTop_toTopOf="@id/mainView" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvNoRidesFound"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/text_color_red"
+            android:gravity="center_horizontal"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/tvLabel"
+            android:text="@string/no_rides_found_at_this_rate" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvEnterManualFare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/text_color"
+            android:gravity="center_horizontal"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/tvNoRidesFound"
+            android:text="@string/you_can_enter_manual_fare" />
+
+
+        <EditText
+            android:id="@+id/etAdditionalFare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textSize="14sp"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/text_color_hint"
+            android:hint="@string/fare_addition"
+            android:background="@drawable/bg_menu_item_selector_f7_r"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintEnd_toEndOf="@id/glMid"
+            app:layout_constraintTop_toBottomOf="@+id/tvEnterManualFare"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginEnd="5dp"
+            android:drawableStart="@drawable/ic_money"
+            android:drawablePadding="5dp"
+            />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivVehicle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:paddingTop="@dimen/spacing_dimin"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:src="@drawable/ic_auto_grey"
+            app:layout_constraintStart_toStartOf="@+id/glMid"
+            app:layout_constraintTop_toBottomOf="@+id/tvEnterManualFare" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvVehicleName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="13sp"
+            android:layout_marginStart="3dp"
+            app:layout_constraintStart_toEndOf="@+id/ivVehicle"
+            app:layout_constraintEnd_toStartOf="@id/glEnd"
+            app:layout_constraintTop_toTopOf="@+id/ivVehicle"
+            app:layout_constraintBottom_toBottomOf="@+id/ivVehicle"
+            tools:text="Auto" />
+
+        <View
+            android:id="@+id/viewSeparator"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:background="@color/divider_color"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@id/tvVehicleName" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivPickup"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:padding="@dimen/spacing_tiny"
+            android:src="@drawable/circle_theme"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@id/viewSeparator" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvPickup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_tiny"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/font_large"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toEndOf="@+id/ivPickup"
+            app:layout_constraintTop_toTopOf="@id/ivPickup"
+            tools:text="@string/label_confirm_ride_request" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivDottedLine"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_car_pooling_dotted_line"
+            app:layout_constraintBottom_toTopOf="@+id/ivDrop"
+            app:layout_constraintEnd_toEndOf="@id/ivPickup"
+            app:layout_constraintStart_toStartOf="@id/ivPickup"
+            app:layout_constraintTop_toBottomOf="@id/ivPickup" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivDrop"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:padding="@dimen/spacing_tiny"
+            android:src="@drawable/ic_shape"
+            app:layout_constraintEnd_toEndOf="@id/ivPickup"
+            app:layout_constraintStart_toStartOf="@+id/ivPickup"
+            app:layout_constraintTop_toTopOf="@id/tvDrop" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvDrop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/font_large"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/tvPickup"
+            app:layout_constraintTop_toBottomOf="@id/tvPickup"
+            tools:text="@string/label_confirm_ride_request" />
+
+
+
+
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnOk"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:background="@drawable/button_theme"
+            android:text="@string/ok"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@+id/tvDrop"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toEndOf="@+id/btnCancel"
+            app:layout_constraintBottom_toTopOf="@+id/glBottomEnd" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:background="@drawable/button_grey"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/glBottomEnd"
+            app:layout_constraintEnd_toStartOf="@+id/btnOk"
+            app:layout_constraintStart_toStartOf="@id/glStart" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/glBottomEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="@dimen/spacing_normal" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/glStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".03" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/glEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".97" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/glMid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.60" />
+
+        <android.support.constraint.Group
+            android:id="@+id/groupDrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="tvDrop,ivDrop,ivDottedLine" />
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>
+

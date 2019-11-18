@@ -2144,4 +2144,10 @@
     <string name="text_congestion_time">Congestion Time</string>
     <string name="type_atleast_4_characters">Type atleast 4 characters</string>
     <string name="congestion_charges_per_min">Congestion charges per min</string>
+    <string name="oops">Oops!</string>
+    <string name="no_rides_found_at_this_rate">No rides found at this rate!</string>
+    <string name="you_can_enter_manual_fare">You can enter manual fare for higher\nprobability of booking</string>
+    <string name="fare_addition">Fare Addition</string>
+    <string name="no_rides_found">No rides found!</string>
+    <string name="here_is_list_of_some_drivers_nearby">Here is a list of some nearby drivers</string>
 </resources>
