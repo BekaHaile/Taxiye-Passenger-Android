@@ -52,6 +52,7 @@ public class PushDialog {
 	private Runnable updateCurrentPosition;
 	private ScheduledExecutorService mScheduledExecutorService;
 	private VideoView simpleVideoView;
+	private RelativeLayout rlSimpleVideoView;
 
 	public PushDialog(Activity activity, Callback callback) {
 		this.activity = activity;
@@ -62,9 +63,6 @@ public class PushDialog {
 		try {
 			String pushDialogContent = Prefs.with(activity).getString(Constants.SP_PUSH_DIALOG_CONTENT,
 					Constants.EMPTY_JSON_OBJECT);
-			if(pushDialogContent.equalsIgnoreCase(Constants.EMPTY_JSON_OBJECT)) {
-				pushDialogContent = "{\"title\":\"jugnoo\",\"message\":\"bsbjxb\",\"deepindex\":-1,\"show_dialog\":1}";
-			}
 			JSONObject jObj = new JSONObject(pushDialogContent);
 			if(!pushDialogContent.equalsIgnoreCase(Constants.EMPTY_JSON_OBJECT)
 					&& jObj.optInt(Constants.KEY_SHOW_DIALOG, 0) == 1){
@@ -96,6 +94,7 @@ public class PushDialog {
 
 				LinearLayout linearLayoutInner = dialog.findViewById(R.id.linearLayoutInner);
 				ImageView imageView = dialog.findViewById(R.id.imageView);
+				rlSimpleVideoView = dialog.findViewById(R.id.rlSimpleVideoView);
 				simpleVideoView = dialog.findViewById(R.id.simpleVideoView);
 				progressWheel = dialog.findViewById(R.id.progressWheel);
 				progressWheel.setVisibility(View.GONE);
@@ -111,13 +110,14 @@ public class PushDialog {
 
 				try {
 					if(!"".equalsIgnoreCase(picture) && Utils.isImageFile(picture)) {
-						simpleVideoView.setVisibility(View.GONE);
+						rlSimpleVideoView.setVisibility(View.GONE);
 						Picasso.with(activity).load(picture)
 								.placeholder(R.drawable.ic_notification_placeholder)
 								.error(R.drawable.ic_notification_placeholder)
 								.into(imageView);
 						isVideoViewSet = false;
 					} else if ((!"".equalsIgnoreCase(video) && Utils.isVideoFile(video)) || (!"".equalsIgnoreCase(picture) && Utils.isVideoFile(picture))) {
+						rlSimpleVideoView.setVisibility(View.VISIBLE);
 						imageView.setVisibility(View.GONE);
 						simpleVideoView.setSecure(true);
 						simpleVideoView.setVideoPath(!video.isEmpty() ? video : picture);
@@ -166,7 +166,7 @@ public class PushDialog {
 					}else{
 						isVideoViewSet = false;
 						imageView.setVisibility(View.GONE);
-						simpleVideoView.setVisibility(View.GONE);
+						rlSimpleVideoView.setVisibility(View.GONE);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

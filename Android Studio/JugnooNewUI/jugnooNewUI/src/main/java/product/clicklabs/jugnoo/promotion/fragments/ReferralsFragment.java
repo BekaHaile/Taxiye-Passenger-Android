@@ -4,11 +4,16 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +27,13 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.squareup.picasso.Picasso;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.promotion.adapters.MediaInfoFragmentAdapter;
 import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -47,7 +54,23 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
     private Bundle bundle;
 
 	private LinearLayout llWhatsappShare, llReferralCode;
-	private TextView tvMoreSharingOptions, tvReferralCodeValue;
+	private TextView tvMoreSharingOptions, tvReferralCodeValue, textViewReferDriver;
+	private boolean isNewReferral;
+	private LinearLayout llUserReferralData;
+	private TextView tvReferralsCount, tvCashEarned, tvCashEarnedToday;
+	private RelativeLayout rlViewPager;
+	private ViewPager viewPagerImageVideo;
+	private MediaInfoFragmentAdapter mediaInfoFragmentAdapter;
+	private TabLayout tabDots;
+
+
+	public static ReferralsFragment newInstance(boolean isNewReferral){
+		ReferralsFragment fragment = new ReferralsFragment();
+		Bundle bundle = new Bundle();
+		bundle.putBoolean(Constants.KEY_IS_NEW_REFERRAL, isNewReferral);
+		fragment.setArguments(bundle);
+		return fragment;
+	}
 
 
     @Override
@@ -66,6 +89,10 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 			e.printStackTrace();
 		}
 
+		if(getArguments() != null){
+			isNewReferral = getArguments().getBoolean(Constants.KEY_IS_NEW_REFERRAL, false);
+		}
+
 		GAUtils.trackScreenView(REFERRAL+HOME);
 
 		imageViewLogo = (ImageView) rootView.findViewById(R.id.imageViewLogo);
@@ -80,7 +107,17 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 		linearLayoutLeaderBoard = (LinearLayout) rootView.findViewById(R.id.linearLayoutLeaderBoard);
 		((TextView)rootView.findViewById(R.id.textViewLeaderboard)).setTypeface(Fonts.mavenMedium(activity));
 		linearLayoutRefer = (LinearLayout)rootView.findViewById(R.id.linearLayoutRefer);
-		((TextView)rootView.findViewById(R.id.textViewReferDriver)).setTypeface(Fonts.mavenMedium(activity));
+		textViewReferDriver = rootView.findViewById(R.id.textViewReferDriver);
+		textViewReferDriver.setTypeface(Fonts.mavenMedium(activity));
+
+		llUserReferralData = rootView.findViewById(R.id.llUserReferralData);
+		tvReferralsCount = rootView.findViewById(R.id.tvReferralsCount);
+		tvCashEarned = rootView.findViewById(R.id.tvCashEarned);
+		tvCashEarnedToday = rootView.findViewById(R.id.tvCashEarnedToday);
+		rlViewPager = rootView.findViewById(R.id.rlViewPager);
+		viewPagerImageVideo = rootView.findViewById(R.id.viewPagerImageVideo);
+		tabDots = rootView.findViewById(R.id.tabDots);
+
 
 		llWhatsappShare = (LinearLayout) rootView.findViewById(R.id.llWhatsappShare);
 		llReferralCode = (LinearLayout) rootView.findViewById(R.id.llReferralCode);
@@ -160,7 +197,7 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 			}
 		});
 
-		relativeLayoutReferSingle.setOnClickListener(new View.OnClickListener() {
+		textViewReferDriver.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getReferDriverDialog().show();
@@ -168,6 +205,38 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 		});
 
 		try {
+
+			if(Data.userData != null && isNewReferral){
+				llUserReferralData.setVisibility(View.VISIBLE);
+
+				setHighlightText(tvReferralsCount, getString(R.string.referrals), String.valueOf((int)Data.userData.getReferralMessages().getReferralsCount()));
+				setHighlightText(tvCashEarned, getString(R.string.cash_earned), Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.userData.getReferralMessages().getReferralEarnedTotal()));
+				setHighlightText(tvCashEarnedToday, getString(R.string.earned_today), Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.userData.getReferralMessages().getReferralEarnedToday()));
+
+
+
+				if(Data.userData.getReferralMessages().getReferralImages() == null
+						|| Data.userData.getReferralMessages().getReferralImages().size() == 0){  // images length 0
+					rlViewPager.setVisibility(View.GONE);
+					imageViewLogo.setVisibility(View.VISIBLE);
+				} else {
+					rlViewPager.setVisibility(View.VISIBLE);
+					imageViewLogo.setVisibility(View.GONE);
+
+					mediaInfoFragmentAdapter = new MediaInfoFragmentAdapter(getChildFragmentManager(), Data.userData.getReferralMessages().getReferralImages());
+					viewPagerImageVideo.setAdapter(mediaInfoFragmentAdapter);
+					tabDots.setupWithViewPager(viewPagerImageVideo);
+
+					setTabLayoutMargin(tabDots);
+				}
+
+			} else {
+				llUserReferralData.setVisibility(View.GONE);
+				rlViewPager.setVisibility(View.GONE);
+				imageViewLogo.setVisibility(View.VISIBLE);
+			}
+
+
 			tvReferralCodeValue.setText(Data.userData.referralCode);
 			textViewDesc.setText(Data.userData.getReferralMessages().referralShortMessage+" "+getString(R.string.details));
 
@@ -238,5 +307,29 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
         System.gc();
 	}
 
+	private void setHighlightText(TextView textView, String normal, String highlight){
+		textView.setText(normal);
+		SpannableStringBuilder ssb = new SpannableStringBuilder(highlight);
+		ssb.setSpan(new RelativeSizeSpan(1.2f), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+		textView.append("\n");
+		textView.append(ssb);
+	}
+
+	private void setTabLayoutMargin(TabLayout tabDots){
+		if (tabDots.getTabCount() == 1) {
+			tabDots.setVisibility(View.GONE);
+		} else {
+			tabDots.setVisibility(View.VISIBLE);
+			for (int i = 0; i < tabDots.getTabCount(); i++) {
+				View tab = ((ViewGroup) tabDots.getChildAt(0)).getChildAt(i);
+				ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) tab.getLayoutParams();
+				p.setMargins(activity.getResources().getDimensionPixelSize(R.dimen.dp_4), 0, 0, 0);
+				p.setMarginStart(activity.getResources().getDimensionPixelSize(R.dimen.dp_4));
+				p.setMarginEnd(0);
+				tab.requestLayout();
+			}
+		}
+	}
 
 }

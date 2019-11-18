@@ -1121,4 +1121,5 @@ public interface Constants {
 	String KEY_C_2_D_REFERRAL_IMAGE = "c2d_referral_image";
 	String KEY_C_2_D_REFERRAL_INFO = "c2d_referral_info";
 	String KEY_C_2_D_REFERRAL_DETAILS = "c2d_referral_details";
+	String KEY_IS_NEW_REFERRAL = "is_new_referral";
 }

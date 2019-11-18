@@ -1,5 +1,9 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import java.util.ArrayList;
+
+import product.clicklabs.jugnoo.retrofit.model.MediaInfo;
+
 public class ReferralMessages{
 	
 	public String referralSharingMessage;
@@ -9,6 +13,13 @@ public class ReferralMessages{
     public String referralShortMessage;
     public String referralMoreInfoMessage;
 	private String title;
+	private ArrayList<MediaInfo> referralImages;
+	private int newReferralEnabled;
+
+	private double referralsCount;
+	private double referralEarnedTotal;
+	private double referralEarnedToday;
+
 
 
 	public ReferralMessages(String referralSharingMessage, String fbShareCaption, String fbShareDescription,
@@ -29,5 +40,45 @@ public class ReferralMessages{
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public ArrayList<MediaInfo> getReferralImages() {
+		return referralImages;
+	}
+
+	public boolean getNewReferralEnabled() {
+		return newReferralEnabled == 1;
+	}
+
+	public void setReferralImages(ArrayList<MediaInfo> referralImages) {
+		this.referralImages = referralImages;
+	}
+
+	public void setNewReferralEnabled(int newReferralEnabled) {
+		this.newReferralEnabled = newReferralEnabled;
+	}
+
+	public double getReferralsCount() {
+		return referralsCount;
+	}
+
+	public void setReferralsCount(double referralsCount) {
+		this.referralsCount = referralsCount;
+	}
+
+	public double getReferralEarnedTotal() {
+		return referralEarnedTotal;
+	}
+
+	public void setReferralEarnedTotal(double referralEarnedTotal) {
+		this.referralEarnedTotal = referralEarnedTotal;
+	}
+
+	public double getReferralEarnedToday() {
+		return referralEarnedToday;
+	}
+
+	public void setReferralEarnedToday(double referralEarnedToday) {
+		this.referralEarnedToday = referralEarnedToday;
 	}
 }

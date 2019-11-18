@@ -18,18 +18,20 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 
 	private Context context;
 //	private LayoutInflater inflater;
+	private boolean isNewReferral;
 
-	public PromotionsFragmentAdapter(Context context, FragmentManager fm) {
+	public PromotionsFragmentAdapter(Context context, FragmentManager fm, boolean isNewReferral) {
 		super(fm);
 		this.context = context;
 //		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.isNewReferral = isNewReferral;
 	}
 
 	@Override
 	public Fragment getItem(int position) {
 		switch(position){
 			case 0:
-				return new ReferralsFragment();
+				return ReferralsFragment.newInstance(isNewReferral);
 
 			case 1:
 				if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1) {
