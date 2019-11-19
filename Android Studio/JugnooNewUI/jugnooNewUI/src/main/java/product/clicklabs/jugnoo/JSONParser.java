@@ -601,6 +601,9 @@ public class JSONParser implements Constants {
 
 			Prefs.with(context).save(KEY_JUNGLE_DIRECTIONS_OBJ, jungleObjStr);
 
+			JSONObject jungleCFEDirectionsObj = userData.optJSONObject(KEY_CFE_JUNGLE_DIRECTIONS_OBJ);
+			Prefs.with(context).save(KEY_CFE_JUNGLE_DIRECTIONS_OBJ, jungleCFEDirectionsObj!=null ? jungleCFEDirectionsObj.toString(): jungleObjStr);
+
 			JSONObject jungleDMObj = userData.optJSONObject(KEY_JUNGLE_DISTANCE_MATRIX_OBJ);
 			Prefs.with(context).save(KEY_JUNGLE_DISTANCE_MATRIX_OBJ, jungleDMObj!=null ? jungleDMObj.toString(): jungleObjStr);
 

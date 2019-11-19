@@ -1092,6 +1092,7 @@ public interface Constants {
 	String KEY_CUSTOMER_DIRECTIONS_CACHING = "customer_directions_caching";
 
 	String KEY_JUNGLE_DIRECTIONS_OBJ = "jungle_directions_obj";
+	String KEY_CFE_JUNGLE_DIRECTIONS_OBJ = "c_fe_jungle_directions_obj";
 	String KEY_JUNGLE_DISTANCE_MATRIX_OBJ = "jungle_distance_matrix_obj";
 	String KEY_JUNGLE_GEOCODE_OBJ = "jungle_geocode_obj";
 	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";

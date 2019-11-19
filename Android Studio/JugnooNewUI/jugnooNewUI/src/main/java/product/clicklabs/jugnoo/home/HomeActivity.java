@@ -187,6 +187,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.LatLngCoordinates;
+import product.clicklabs.jugnoo.datastructure.MapsApiSources;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -8173,7 +8174,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
                             LatLng source = pickupLatLng;
-							JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(source, Data.autoData.getDropLatLng(), "metric", "c_p2d");
+							JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(source, Data.autoData.getDropLatLng(), "metric", MapsApiSources.CUSTOMER_PICKUP_TO_DROP);
                             if (result != null) {
                                 listPath = result.getLatLngs();
 								driverToDropPathShown = true;
@@ -10264,7 +10265,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			}
 
 			apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
-					region, promoCouponSelected, null, "c_fe_home");
+					region, promoCouponSelected, null, MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME);
         } else {
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
