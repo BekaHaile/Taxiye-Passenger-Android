@@ -579,6 +579,9 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_REQUEST_RIDE_POPUP, autoData.optInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP,
 				context.getResources().getInteger(R.integer.show_confirm_popup_before_ride_request)));
 
+		Prefs.with(context).save(KEY_CUSTOMER_YOUTUBE_API_KEY, autoData.optString(KEY_CUSTOMER_YOUTUBE_API_KEY,
+				context.getString(R.string.youtube_api_key)));
+
 		parseJungleApiObjects(context, autoData);
 	}
 

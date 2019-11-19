@@ -2149,4 +2149,7 @@
     <string name="cash_earned_today">Cash Earned Today</string>
     <string name="earned_today">Earned Today</string>
     <string name="free_rides_for_life">Free Rides for Life</string>
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="watch_how_to_earn_free_rides">Watch How to Earn Free Rides for Life!</string>
+    <string name="no_i_already_know"><u>No, I already know</u></string>
 </resources>

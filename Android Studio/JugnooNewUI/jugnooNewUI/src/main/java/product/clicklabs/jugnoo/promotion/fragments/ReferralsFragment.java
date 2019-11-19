@@ -310,7 +310,7 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 	private void setHighlightText(TextView textView, String normal, String highlight){
 		textView.setText(normal);
 		SpannableStringBuilder ssb = new SpannableStringBuilder(highlight);
-		ssb.setSpan(new RelativeSizeSpan(1.2f), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssb.setSpan(new RelativeSizeSpan(1f), 0, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		textView.append("\n");
 		textView.append(ssb);

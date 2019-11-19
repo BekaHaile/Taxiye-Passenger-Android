@@ -251,6 +251,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
+import product.clicklabs.jugnoo.retrofit.model.MediaInfo;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
@@ -300,6 +301,7 @@ import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.MySpinner;
 import product.clicklabs.jugnoo.widgets.PrefixedEditText;
+import product.clicklabs.jugnoo.youtube.YoutubeVideoActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -2441,6 +2443,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
         }
 
+
+        checkForYoutubeIntent();
 
     }
 
@@ -12999,5 +13003,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onOkClick(boolean isPickup) {
         onReqestRideConfirmClick();
     }
+
+    private void checkForYoutubeIntent(){
+		if(!Prefs.with(this).getBoolean(Constants.SP_YOUTUBE_TUTORIAL_SKIPPED, false)
+				&& Data.userData != null
+				&& Data.userData.getReferralMessages().getNewReferralEnabled()
+				&& Data.userData.getReferralMessages().getReferralImages() != null){
+			String youtubeId = "";
+			for(MediaInfo mi : Data.userData.getReferralMessages().getReferralImages()){
+				if(mi.checkIsYoutubeVideo()){
+					youtubeId = mi.getYoutubeId();
+				}
+			}
+			if(!TextUtils.isEmpty(youtubeId)) {
+				startActivity(YoutubeVideoActivity.createIntent(this, youtubeId));
+			}
+		}
+	}
 }
 

@@ -1123,4 +1123,7 @@ public interface Constants {
 	String KEY_C_2_D_REFERRAL_INFO = "c2d_referral_info";
 	String KEY_C_2_D_REFERRAL_DETAILS = "c2d_referral_details";
 	String KEY_IS_NEW_REFERRAL = "is_new_referral";
+
+	String KEY_CUSTOMER_YOUTUBE_API_KEY = "customer_youtube_api_key";
+	String SP_YOUTUBE_TUTORIAL_SKIPPED = "sp_youtube_tutorial_skipped";
 }
