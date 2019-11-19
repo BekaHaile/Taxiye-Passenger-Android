@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_media_info.*
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.promotion.VideoActivity
 import product.clicklabs.jugnoo.retrofit.model.MediaInfo
+import product.clicklabs.jugnoo.utils.Log
 import product.clicklabs.jugnoo.utils.Prefs
 import product.clicklabs.jugnoo.youtube.YoutubeVideoFragment
 import java.util.concurrent.Executors
@@ -141,6 +142,10 @@ class MediaInfoFragment:Fragment(){
 
                 }
                 else if(mediaInfo.checkIsYoutubeVideo()){
+                    Log.e(MediaInfoFragment::class.java.simpleName, "mediaInfo="+mediaInfo.url)
+                    Log.e(MediaInfoFragment::class.java.simpleName, "mediaInfo="+mediaInfo.checkIsYoutubeVideo())
+                    Log.e(MediaInfoFragment::class.java.simpleName, "mediaInfo="+mediaInfo.getYoutubeId())
+
                     rlVideoView.visibility = View.GONE
                     rlYoutubeContainer.visibility = View.VISIBLE
                     imageView.visibility = View.GONE
@@ -171,6 +176,7 @@ class MediaInfoFragment:Fragment(){
                 imageView.visibility = View.GONE
             }
         } catch (e: Exception) {
+            e.printStackTrace()
         }
 
     }

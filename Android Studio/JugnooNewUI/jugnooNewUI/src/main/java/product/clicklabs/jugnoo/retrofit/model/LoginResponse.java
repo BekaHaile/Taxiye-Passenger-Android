@@ -862,15 +862,6 @@ public class LoginResponse {
 		@SerializedName("referral_images")
 		@Expose
 		private ArrayList<MediaInfo> referralImages;
-		@SerializedName("referrals_count")
-		@Expose
-		private double referralsCount;
-		@SerializedName("referral_earned_total")
-		@Expose
-		private double referralEarnedTotal;
-		@SerializedName("referral_earned_today")
-		@Expose
-		private double referralEarnedToday;
 
 
 		public List<Driver> getDrivers() {
@@ -1088,17 +1079,6 @@ public class LoginResponse {
 			return referralImages;
 		}
 
-		public double getReferralsCount() {
-			return referralsCount;
-		}
-
-		public double getReferralEarnedTotal() {
-			return referralEarnedTotal;
-		}
-
-		public double getReferralEarnedToday() {
-			return referralEarnedToday;
-		}
 	}
 
 	public class UserData{
@@ -1184,6 +1164,15 @@ public class LoginResponse {
 		@SerializedName("show_home")
 		@Expose
 		private int showHome;
+		@SerializedName("referrals_count")
+		@Expose
+		private double referralsCount;
+		@SerializedName("referral_earned_total")
+		@Expose
+		private double referralEarnedTotal;
+		@SerializedName("referral_earned_today")
+		@Expose
+		private double referralEarnedToday;
 
 
 		@SerializedName("show_jstar_in_account")
@@ -1399,6 +1388,18 @@ public class LoginResponse {
 
 		public void setShowHome(int showHome) {
 			this.showHome = showHome;
+		}
+
+		public double getReferralsCount() {
+			return referralsCount;
+		}
+
+		public double getReferralEarnedTotal() {
+			return referralEarnedTotal;
+		}
+
+		public double getReferralEarnedToday() {
+			return referralEarnedToday;
 		}
 	}
 

@@ -304,6 +304,9 @@ public class JSONParser implements Constants {
 				Config.saveSupportNumber(context, loginUserData.getSupportNumber());
 			}
             Data.userData.setReferralMessages(parseReferralMessages(context, loginUserData));
+            Data.userData.getReferralMessages().setReferralsCount(loginUserData.getReferralsCount());
+            Data.userData.getReferralMessages().setReferralEarnedToday(loginUserData.getReferralEarnedToday());
+            Data.userData.getReferralMessages().setReferralEarnedTotal(loginUserData.getReferralEarnedTotal());
             performUserAppMonitoring(context, userData);
 
 //            if(Prefs.with(context).getString(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "").equals("")) {
@@ -438,9 +441,6 @@ public class JSONParser implements Constants {
             if(Data.userData != null){
             	Data.userData.getReferralMessages().setNewReferralEnabled(autosData.getNewReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
-            	Data.userData.getReferralMessages().setReferralsCount(autosData.getReferralsCount());
-            	Data.userData.getReferralMessages().setReferralEarnedToday(autosData.getReferralEarnedToday());
-            	Data.userData.getReferralMessages().setReferralEarnedTotal(autosData.getReferralEarnedTotal());
 			}
         } catch (Exception e) {
             e.printStackTrace();

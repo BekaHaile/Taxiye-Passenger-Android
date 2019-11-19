@@ -69,7 +69,7 @@ class YoutubeVideoActivity : YouTubeFailureRecoveryActivity(){
                 }
 
                 override fun onVideoEnded() {
-                    tvSkip.postDelayed({ tvSkip.performClick() }, 2000)
+                    tvSkip.postDelayed({ tvSkip.performClick() }, 1500)
                 }
 
                 override fun onError(p0: YouTubePlayer.ErrorReason?) {
