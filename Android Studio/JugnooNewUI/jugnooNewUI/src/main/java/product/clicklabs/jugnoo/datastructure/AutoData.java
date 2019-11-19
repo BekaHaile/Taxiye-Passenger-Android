@@ -83,6 +83,7 @@ public class AutoData {
     private int bluetoothEnabled =0;
     private String  previousSelService = "";
     private int resendEmailInvoiceEnabled;
+    private double noDriverFoundTip;
 
     // RENTAL
 
@@ -852,4 +853,12 @@ public class AutoData {
 	public void setChangedBidValue(double changedBidValue) {
 		this.changedBidValue = changedBidValue;
 	}
+
+    public double getNoDriverFoundTip() {
+        return noDriverFoundTip;
+    }
+
+    public void setNoDriverFoundTip(double noDriverFoundTip) {
+        this.noDriverFoundTip = noDriverFoundTip;
+    }
 }

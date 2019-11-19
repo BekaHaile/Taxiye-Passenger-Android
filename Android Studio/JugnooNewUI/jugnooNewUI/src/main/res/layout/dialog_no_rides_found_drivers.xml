@@ -55,32 +55,38 @@
             app:layout_constraintTop_toBottomOf="@id/tvListOfSomeDriversNearby" />
 
 
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rvNearbyDrivers"
+        <product.clicklabs.jugnoo.utils.MaxHeightScrollView
+            android:id="@+id/programmaticScrollView"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="10dp"
             app:layout_constraintStart_toEndOf="@id/glStart"
             app:layout_constraintEnd_toStartOf="@id/glEnd"
             app:layout_constraintTop_toBottomOf="@+id/viewSeparator"
             app:layout_constraintHeight_max="300dp"
             app:layout_constraintHeight_min="70dp"
             android:layout_marginTop="10dp"
-            />
+            app:maxHeight="300dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvNearbyDrivers"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </product.clicklabs.jugnoo.utils.MaxHeightScrollView>
 
 
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btnOk"
+            android:id="@+id/btnCancel"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_marginTop="@dimen/spacing_large"
             android:background="@drawable/button_theme"
-            android:text="@string/ok"
+            android:text="@string/cancel"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="14sp"
-            app:layout_constraintTop_toBottomOf="@+id/rvNearbyDrivers"
+            app:layout_constraintTop_toBottomOf="@+id/programmaticScrollView"
             app:layout_constraintEnd_toEndOf="@id/glEnd"
             app:layout_constraintBottom_toTopOf="@+id/glBottomEnd"
             app:layout_constraintStart_toStartOf="@+id/glStart"

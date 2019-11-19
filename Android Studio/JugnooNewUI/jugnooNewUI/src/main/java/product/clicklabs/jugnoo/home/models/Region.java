@@ -262,6 +262,12 @@ public class Region {
 		@SerializedName("fare")
 		@Expose
 		private double fare;
+		@SerializedName("min_fare")
+		@Expose
+		private double minFare;
+		@SerializedName("max_fare")
+		@Expose
+		private double maxFare;
 		@SerializedName("fare_without_discount")
 		@Expose
 		private double fareWithoutDiscount;
@@ -312,6 +318,14 @@ public class Region {
 
 		public void setPoolFareId(int poolFareId) {
 			this.poolFareId = poolFareId;
+		}
+
+		public double getMinFare() {
+			return minFare;
+		}
+
+		public double getMaxFare() {
+			return maxFare;
 		}
 	}
 
