@@ -321,6 +321,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
+    private static final int REQ_CODE_VIDEO = 9112, RESULT_PAUSE = 5;
     private final String TAG = "Home Screen";
     private String macId ="";
 
@@ -5744,7 +5745,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
 
             if(pushDialog != null) {
-                pushDialog.showLoading();
+                pushDialog.onResume();
             }
             removeSaveLocationDialog();
 
@@ -6144,7 +6145,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
                 }
-            }else{
+            } else if(resultCode == RESULT_PAUSE && requestCode == REQ_CODE_VIDEO && pushDialog != null) {
+                pushDialog.onActivityResult();
+            } else{
                 if(requestCode==REQ_BLE_ENABLE){
                     Log.e(TAG,"bluetooth permission result failed");
                     Data.autoData.setBluetoothEnabled(0);
@@ -6353,6 +6356,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(pushDialog != null) {
+            pushDialog.onPause();
         }
         super.onPause();
     }

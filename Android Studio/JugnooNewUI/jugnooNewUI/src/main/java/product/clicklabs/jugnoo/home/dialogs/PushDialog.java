@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,12 +48,13 @@ public class PushDialog {
 	private ProgressWheel progressWheel;
 	private Dialog dialog = null;
     private String title = "";
-    private boolean isVideoViewSet = false;
+    private boolean isVideoViewSet = false, isVideoPaused = false;
 	private int mCurrentposition = 0;
 	private Runnable updateCurrentPosition;
 	private ScheduledExecutorService mScheduledExecutorService;
 	private VideoView simpleVideoView;
 	private RelativeLayout rlSimpleVideoView;
+	private int duration, watchedVideo = 0;
 
 	public PushDialog(Activity activity, Callback callback) {
 		this.activity = activity;
@@ -75,8 +77,8 @@ public class PushDialog {
 					picture = jObj.optString(Constants.KEY_IMAGE, "");
 				}
 				String buttonText = jObj.optString(Constants.KEY_BUTTON_TEXT, activity.getString(R.string.ok));
-				final String url = jObj.optString(Constants.KEY_URL, "");
-				final String video = jObj.optString(Constants.KEY_VIDEO, "");
+				final String url =  jObj.optString(Constants.KEY_URL, "");
+				final String video = "https://www.radiantmediaplayer.com/media/bbb-360p.mp4"; //jObj.optString(Constants.KEY_VIDEO, "");
 
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -134,14 +136,20 @@ public class PushDialog {
 
 						updateCurrentPosition = () -> {
 							mCurrentposition = (simpleVideoView.getCurrentPosition() * PERCENTAGE_CONSTANT) / simpleVideoView.getDuration();
-							Prefs.with(activity).save("videoTime", mCurrentposition);
 						};
 
 						mScheduledExecutorService = Executors.newScheduledThreadPool(1);
 						mScheduledExecutorService.scheduleWithFixedDelay(() -> simpleVideoView.post(updateCurrentPosition), INIT_DELAY, DELAY, TimeUnit.MILLISECONDS);
 
 						simpleVideoView.setOnPreparedListener(mp -> {
-							simpleVideoView.seekTo(Prefs.with(activity).getInt("videoTime", 0));
+							new Handler().postDelayed(new Runnable() {
+								@Override
+								public void run() {
+									duration = (int)TimeUnit.MILLISECONDS.toMillis(simpleVideoView.getDuration());
+									long multi = (watchedVideo * duration) / PERCENTAGE_CONSTANT;
+									simpleVideoView.seekTo((int) multi);
+								}
+							}, 400);
 
 							LinearLayout viewGroupLevel1 = (LinearLayout)  mediaController.getChildAt(0);
 							//Set your color with desired transparency here:
@@ -156,8 +164,14 @@ public class PushDialog {
 								}
 							});
 							mp.setOnSeekCompleteListener(mp1 -> {
+								Prefs.with(activity).save("videoTime", 0);
 								progressWheel.setVisibility(View.GONE);
-								mp1.start();
+								if(isVideoPaused) {
+									mp1.pause();
+									isVideoPaused = false;
+								} else {
+									mp1.start();
+								}
 							});
 						});
 
@@ -208,11 +222,30 @@ public class PushDialog {
 		return this;
 	}
 
-	public void showLoading() {
+	private void showLoading() {
 		if(progressWheel != null && isVideoViewSet) {
 			progressWheel.setVisibility(View.VISIBLE);
-			simpleVideoView.seekTo(Prefs.with(activity).getInt("videoTime", 0));
-			isVideoViewSet = false;
+		}
+	}
+
+	public void onResume() {
+		if(progressWheel != null && isVideoViewSet) {
+			watchedVideo = Prefs.with(activity).getInt("videoTime", 0);
+			showLoading();
+			simpleVideoView.start();
+		}
+	}
+
+	public void onPause() {
+		if(simpleVideoView != null && isVideoViewSet) {
+			Prefs.with(activity).save("videoTime", (simpleVideoView.getCurrentPosition() * PERCENTAGE_CONSTANT) / duration);
+		}
+	}
+
+	public void onActivityResult() {
+		if(simpleVideoView != null && isVideoViewSet) {
+			simpleVideoView.pause();
+			isVideoPaused = true;
 		}
 	}
 
