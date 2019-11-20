@@ -880,6 +880,15 @@ public class UserData {
 				e.printStackTrace();
 			}
 		}
+
+		ArrayList<PromoCoupon> couponsTemp = new ArrayList<>(coupons);
+		coupons.clear();
+		for (int i = 0; i < couponsTemp.size(); i++) {
+				if ((couponsTemp.get(i).getCouponCardType() == 1 && couponsTemp.get(i).isScratched())
+						|| couponsTemp.get(i).getCouponCardType() == 0) {
+					coupons.add(couponsTemp.get(i));
+				}
+			}
 		coupons.addAll(invalidPC);
 
 		return coupons;

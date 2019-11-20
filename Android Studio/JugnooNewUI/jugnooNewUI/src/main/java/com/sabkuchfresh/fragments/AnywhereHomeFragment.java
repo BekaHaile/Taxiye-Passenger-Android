@@ -529,7 +529,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     }
 
     private void setCurrentSelectedAddressToDelivery() {
-        SearchResult searchResult = HomeUtil.getNearBySavedAddress(activity, activity.getSelectedLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+        SearchResult searchResult = HomeUtil.getNearBySavedAddress(activity, activity.getSelectedLatLng(), true);
         setAddress(true, searchResult);
 
     }

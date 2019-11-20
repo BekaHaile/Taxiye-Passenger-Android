@@ -2,7 +2,9 @@ package product.clicklabs.jugnoo.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,7 +32,7 @@ import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.apis.PlaceDetailCallback;
 import product.clicklabs.jugnoo.apis.PlacesCallback;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -39,10 +40,13 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse;
 import product.clicklabs.jugnoo.retrofit.model.Prediction;
-import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -57,11 +61,11 @@ public class SearchListAdapter extends BaseAdapter{
 
     private SparseArray<TextWatcherEditText> textWatcherMap = new SparseArray<>();
 
-    public TextWatcher getTextWatcherEditText(int editTextId){
+    public TextWatcherEditText getTextWatcherEditText(int editTextId){
         return textWatcherMap.get(editTextId);
     }
      class TextWatcherEditText implements  TextWatcher {
-        private CustomRunnable input_finish_checker;
+        public CustomRunnable input_finish_checker;
 
          public TextWatcherEditText(CustomRunnable input_finish_checker) {
              this.input_finish_checker = input_finish_checker;
@@ -84,6 +88,7 @@ public class SearchListAdapter extends BaseAdapter{
                 SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString().trim());
                 if (s.toString().trim().length() > 2) {
 					last_text_edit = System.currentTimeMillis();
+					handler.removeCallbacks(input_finish_checker);
 					handler.postDelayed(input_finish_checker.setTextToSearch(s.toString().trim()), delay);
                 } else {
                     searchResultsForSearch.clear();
@@ -126,6 +131,7 @@ public class SearchListAdapter extends BaseAdapter{
 	private final String SET_LOCATION_ON_MAP = "<set_location_on_map>";
 	private SearchResult searchResultSetLocationOnMap;
 	boolean setLocationOnMapOnTop;
+	private ArrayList<SearchResult> searchResultRecent;
     /**
      * Constructor for initializing search base adapter
      *
@@ -164,6 +170,15 @@ public class SearchListAdapter extends BaseAdapter{
             }
 
 			this.setLocationOnMapOnTop = setLocationOnMapOnTop;
+			SearchLocationDB searchLocationDB = DBObject.INSTANCE.getInstance();
+            if(searchLocationDB != null) {
+				DBCoroutine.Companion.getAllLocations(searchLocationDB, searchLocation -> {
+					searchResultRecent = PlaceSearchListFragment.getSearchResultsRecentAndSaved(context, searchLocation);
+				});
+			} else {
+            	searchResultRecent = new ArrayList<>(Data.userData.getSearchResultsRecent());
+			}
+
 
             this.showSavedPlaces = showSavedPlaces;
 			uuidVal = UUID.randomUUID().toString();
@@ -211,7 +226,7 @@ public class SearchListAdapter extends BaseAdapter{
             convertView = mInflater.inflate(R.layout.list_item_saved_place, null);
 
             holder.textViewSearchName = (TextView) convertView.findViewById(R.id.textViewSearchName);
-            holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context));
+            holder.textViewSearchName.setTypeface(Fonts.mavenMedium(context), Typeface.BOLD);
             holder.textViewSearchAddress = (TextView) convertView.findViewById(R.id.textViewSearchAddress);
             holder.textViewSearchAddress.setTypeface(Fonts.mavenMedium(context));
 			holder.textViewAddressUsed = (TextView) convertView.findViewById(R.id.textViewAddressUsed);
@@ -224,8 +239,6 @@ public class SearchListAdapter extends BaseAdapter{
 
             holder.relative.setTag(holder);
 
-            holder.relative.setLayoutParams(new ListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            ASSL.DoMagic(holder.relative);
 
             convertView.setTag(holder);
         } else {
@@ -241,17 +254,22 @@ public class SearchListAdapter extends BaseAdapter{
 				holder.textViewSearchName.setText(searchResult.getAddress());
 				holder.textViewSearchAddress.setVisibility(View.GONE);
 			} else {
-				holder.textViewSearchName.setText(searchResult.getName());
-				holder.textViewSearchAddress.setText(searchResult.getAddress());
-				if(searchResult.getAddress().equalsIgnoreCase("")){
-					holder.textViewSearchAddress.setVisibility(View.GONE);
-				}else {
-					holder.textViewSearchAddress.setVisibility(View.VISIBLE);
-				}
+				holder.textViewSearchAddress.setVisibility(View.VISIBLE);
+				if(!TextUtils.isEmpty(searchResult.getName())
+						&& !searchResult.getAddress().contains(searchResult.getName())){
+					holder.textViewSearchName.setVisibility(View.VISIBLE);
+					holder.textViewSearchName.setText(searchResult.getName());
+					holder.textViewSearchAddress.setText(searchResult.getAddress());
+				} else {
+					String nameForDisp = (searchResult.getAddress().contains(",")) ?
+							searchResult.getAddress().substring(0, searchResult.getAddress().indexOf(","))
+							: searchResult.getAddress();
 
-				if(TextUtils.isEmpty(searchResult.getName())){
-					holder.textViewSearchName.setText(searchResult.getAddress());
-					holder.textViewSearchAddress.setVisibility(View.GONE);
+					holder.textViewSearchName.setVisibility(TextUtils.isEmpty(nameForDisp) ? View.GONE : View.VISIBLE);
+					holder.textViewSearchName.setText(nameForDisp);
+
+					holder.textViewSearchAddress.setText(TextUtils.isEmpty(nameForDisp) ? searchResult.getAddress()
+							: searchResult.getAddress().replace(nameForDisp+", ", ""));
 				}
 			}
 
@@ -294,6 +312,10 @@ public class SearchListAdapter extends BaseAdapter{
                 holder.imageViewSep.setVisibility(View.VISIBLE);
             }
 
+			//seperator hidden by setting color transparent
+			holder.imageViewSep.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent));
+
+
             holder.relative.setOnClickListener(new View.OnClickListener() {
 
                 @Override
@@ -313,7 +335,8 @@ public class SearchListAdapter extends BaseAdapter{
                                 @Override
                                 public void run() {
                                     if (autoCompleteSearchResult.getPlaceId() != null
-                                            && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())) {
+                                            && !"".equalsIgnoreCase(autoCompleteSearchResult.getPlaceId())
+                                            && MapUtils.distance(autoCompleteSearchResult.getLatLng(), new LatLng(0,0)) <= 10) {
                                         searchListActionsHandler.onPlaceClick(autoCompleteSearchResult);
                                         getSearchResultFromPlaceId(autoCompleteSearchResult.getName(),autoCompleteSearchResult.getAddress(), autoCompleteSearchResult.getPlaceId());
                                     } else{
@@ -350,13 +373,7 @@ public class SearchListAdapter extends BaseAdapter{
 		searchListActionsHandler.onNotifyDataSetChanged(getCount());
     }
 
-	private LatLng getPivotLatLng(){
-		if(Data.autoData != null && Data.autoData.getLastRefreshLatLng() != null){
-			return Data.autoData.getLastRefreshLatLng();
-		} else{
-			return defaultSearchPivotLatLng;
-		}
-	}
+
 
     private boolean refreshingAutoComplete = false;
 
@@ -372,16 +389,20 @@ public class SearchListAdapter extends BaseAdapter{
                 String location = latLng.latitude+","+latLng.longitude;
                 String radius = searchText.length() <= 3 ? "50" : (searchText.length() <= 5 ? "100": (searchText.length() <= 8 ? "1000" : "10000"));
 
-				GoogleAPICoroutine.INSTANCE.getAutoCompletePredictions(searchText, uuidVal, components, location, radius, new PlacesCallback() {
+				GoogleJungleCaching.INSTANCE.getAutoCompletePredictions(searchText, uuidVal, components, location, radius, new PlacesCallback() {
 					@Override
-					public void onAutocompletePredictionsReceived(@NotNull List<Prediction> predictions) {
+					public void onAutocompletePredictionsReceived(List<Prediction> predictions) {
 						try {
 							searchResultsForSearch.clear();
-							for (Prediction autocompletePrediction : predictions) {
-								String name = autocompletePrediction.getDescription().split(",")[0];
-								searchResultsForSearch.add(new SearchResult(name,
-										autocompletePrediction.getDescription(),
-										autocompletePrediction.getPlaceId(), 0, 0));
+							if(predictions != null) {
+								for (Prediction autocompletePrediction : predictions) {
+									String name = autocompletePrediction.getDescription().split(",")[0];
+									searchResultsForSearch.add(new SearchResult(name,
+											autocompletePrediction.getDescription(),
+											autocompletePrediction.getPlaceId(),
+											autocompletePrediction.getLat() != null ? autocompletePrediction.getLat() : 0,
+											autocompletePrediction.getLng() != null ? autocompletePrediction.getLng() : 0));
+								}
 							}
 							addFavoriteLocations(searchText,editText);
 
@@ -389,7 +410,8 @@ public class SearchListAdapter extends BaseAdapter{
 							refreshingAutoComplete = false;
 
 							if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
-								recallSearch(editText.getText().toString().trim(),editText);
+								handler.removeCallbacks(getTextWatcherEditText(editText.getId()).input_finish_checker);
+								handler.postDelayed(getTextWatcherEditText(editText.getId()).input_finish_checker.setTextToSearch(editText.getText().toString().trim()), delay);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -402,7 +424,8 @@ public class SearchListAdapter extends BaseAdapter{
 						refreshingAutoComplete = false;
 
 						if (!editText.getText().toString().trim().equalsIgnoreCase(searchText)) {
-							recallSearch(editText.getText().toString().trim(),editText);
+							handler.removeCallbacks(getTextWatcherEditText(editText.getId()).input_finish_checker);
+							handler.postDelayed(getTextWatcherEditText(editText.getId()).input_finish_checker.setTextToSearch(editText.getText().toString().trim()), delay);
 						}
 						searchListActionsHandler.onSearchPost();
 					}
@@ -413,14 +436,6 @@ public class SearchListAdapter extends BaseAdapter{
         }
     }
 
-	private void recallSearch(final String searchText,final EditText editText){
-		((Activity)context).runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				getSearchResults(searchText, SearchListAdapter.this.getPivotLatLng(),editText);
-			}
-		});
-	}
 
 	private void setSearchResultsToList(final EditText editTextForSearch) {
 		((Activity) context).runOnUiThread(new Runnable() {
@@ -447,14 +462,16 @@ public class SearchListAdapter extends BaseAdapter{
             if(showSavedPlaces && editTextForSearch.getText().length() > 0) {
 				favLocationsCount = 0;
 				try {
-					for(int i = Data.userData.getSearchResultsRecent().size()-1; i >= 0; i--){
-						SearchResult searchResult = Data.userData.getSearchResultsRecent().get(i);
-						if(searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
-								|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
-								|| searchText.equalsIgnoreCase("")){
-							searchResult.setType(SearchResult.Type.RECENT);
-							searchResultsForSearch.add(0, searchResult);
-							favLocationsCount++;
+					if(searchResultRecent != null) {
+						for (int i = searchResultRecent.size() - 1; i >= 0; i--) {
+							SearchResult searchResult = searchResultRecent.get(i);
+							if (searchResult.getName().toLowerCase().contains(searchText.toLowerCase())
+									|| searchResult.getAddress().toLowerCase().contains(searchText.toLowerCase())
+									|| searchText.equalsIgnoreCase("")) {
+								searchResult.setType(SearchResult.Type.RECENT);
+								searchResultsForSearch.add(0, searchResult);
+								favLocationsCount++;
+							}
 						}
 					}
 				} catch (Exception e) {
@@ -514,7 +531,7 @@ public class SearchListAdapter extends BaseAdapter{
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 			Log.v("after call back", "after call back");
 
-			GoogleAPICoroutine.INSTANCE.getPlaceById(placeId, placeAddress, new PlaceDetailCallback() {
+			GoogleJungleCaching.INSTANCE.getPlaceById(placeId, placeAddress, defaultSearchPivotLatLng, new PlaceDetailCallback() {
 				@Override
 				public void onPlaceDetailReceived(@NotNull PlaceDetailsResponse placeDetailsResponse) {
 					try {
@@ -588,7 +605,7 @@ public class SearchListAdapter extends BaseAdapter{
 		@Override
 		public void run() {
 			if (System.currentTimeMillis() > (last_text_edit + delay - 200) && textToSearch.length() > 2) {
-				getSearchResults(textToSearch, SearchListAdapter.this.getPivotLatLng(),editText);
+				getSearchResults(textToSearch, SearchListAdapter.this.defaultSearchPivotLatLng,editText);
 			}
 		}
 	}

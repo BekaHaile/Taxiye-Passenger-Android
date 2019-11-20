@@ -283,6 +283,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
     private void setSelectedPaymentOptionUI() {
         try {
+			ArrayList<Region> regions = Data.autoData.getRegions();
             int selectedPaymentOption = callbackPaymentOptionSelector.getSelectedPaymentOption();
             if(activity instanceof HomeActivity) {
                 Region region = (Data.autoData.getRegions().size() > 1) ? ((HomeActivity) activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()

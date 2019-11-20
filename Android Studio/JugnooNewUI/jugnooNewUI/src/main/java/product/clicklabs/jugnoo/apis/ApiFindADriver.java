@@ -180,22 +180,27 @@ public class ApiFindADriver {
 				Data.autoData.setDriverFareFactor(findADriverResponse.getDriverFareFactor());
 			}
 
+			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
+
+			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
+
+			if(findADriverResponse.getCityId() != null){
+				Data.userData.setCurrentCity(findADriverResponse.getCityId());
+			}
+
 			Data.autoData.setFarAwayCity("");
 			if (findADriverResponse.getFarAwayCity() == null) {
 				Data.autoData.setFarAwayCity("");
 			} else {
 				Data.autoData.setFarAwayCity(findADriverResponse.getFarAwayCity());
 			}
-			Data.autoData.setShowRegionSpecificFare(findADriverResponse.getShowRegionSpecificFare());
+			if(TextUtils.isEmpty(Data.autoData.getFarAwayCity())) {
+				Data.autoData.setShowRegionSpecificFare(findADriverResponse.getShowRegionSpecificFare());
 
-			Data.autoData.setIsRazorpayEnabled(findADriverResponse.getIsRazorpayEnabled());
-
-			Data.autoData.setCampaigns(findADriverResponse.getCampaigns());
-
-            if(findADriverResponse.getCityId() != null){
-                Data.userData.setCurrentCity(findADriverResponse.getCityId());
-            }
-			Data.autoData.setNewBottomRequestUIEnabled(findADriverResponse.getBottomRequestUIEnabled());
+				if (findADriverResponse.getBottomRequestUIEnabled() != null) {
+					Data.autoData.setNewBottomRequestUIEnabled(findADriverResponse.getBottomRequestUIEnabled());
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -401,13 +406,14 @@ public class ApiFindADriver {
 								fareStructure.getDisplayBaseFare(),
 								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(),
 								findADriverResponse.getCurrency(), findADriverResponse.getDistanceUnit());
-						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
+						ArrayList<Region> regions = Data.autoData.getRegions();
+						for (int i = 0; i < regions.size(); i++) {
 							try {
-								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
-										&& Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
+								if (regions.get(i).getOperatorId() == fareStructure.getOperatorId()
+										&& regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& regions.get(i).getRideType().equals(fareStructure.getRideType())
 										) {
-									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
+									regions.get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();

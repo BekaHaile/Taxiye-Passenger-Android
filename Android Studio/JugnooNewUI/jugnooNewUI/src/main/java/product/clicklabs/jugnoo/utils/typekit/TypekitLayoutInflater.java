@@ -3,10 +3,12 @@ package product.clicklabs.jugnoo.utils.typekit;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.os.BuildCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Field;
@@ -28,6 +30,7 @@ public class TypekitLayoutInflater extends LayoutInflater {
     // Reflection Hax
     private boolean mSetPrivateFactory = false;
     private Field mConstructorArgs = null;
+    private boolean IS_AT_LEAST_Q = Build.VERSION.SDK_INT > Build.VERSION_CODES.P || BuildCompat.isAtLeastQ();
 
     public TypekitLayoutInflater(Context context) {
         super(context);
@@ -275,7 +278,15 @@ public class TypekitLayoutInflater extends LayoutInflater {
 
         if (view == null && name.indexOf('.') > -1) {
             if (mConstructorArgs == null)
-                mConstructorArgs = ReflectionUtils.getField(LayoutInflater.class, "mConstructorArgs");
+                if(IS_AT_LEAST_Q) {
+                    try {
+                        return cloneInContext(viewContext).createView(name, null, attrs);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    mConstructorArgs = ReflectionUtils.getField(LayoutInflater.class, "mConstructorArgs");
+                }
 
             final Object[] mConstructorArgsArr = (Object[]) ReflectionUtils.getValue(mConstructorArgs, this);
             Object lastContext = new Object();

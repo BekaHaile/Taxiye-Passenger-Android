@@ -429,6 +429,10 @@ public class JSONParser implements Constants {
              Prefs.with(context).save(Constants.SCHEDULE_DAYS_LIMIT,
                     autoData.optInt(Constants.SCHEDULE_DAYS_LIMIT,2));
 
+             Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_IMAGE, autoData.optString(Constants.KEY_C_2_D_REFERRAL_IMAGE, ""));
+             Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_INFO, autoData.optString(Constants.KEY_C_2_D_REFERRAL_INFO, ""));
+             Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_DETAILS, autoData.optString(Constants.KEY_C_2_D_REFERRAL_DETAILS, ""));
+
             parseConfigParams(context, autoData);
         } catch (Exception e) {
             e.printStackTrace();
@@ -552,6 +556,57 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, autoData.optString(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, ""));
 		Prefs.with(context).save(KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP, autoData.optInt(KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP, 1));
 		Prefs.with(context).save(KEY_CUSTOMER_BID_INCREMENT, autoData.optString(KEY_CUSTOMER_BID_INCREMENT, String.valueOf(0D)));
+
+		Prefs.with(context).save(KEY_CUSTOMER_SHOW_BOUNCING_MARKER, autoData.optInt(KEY_CUSTOMER_SHOW_BOUNCING_MARKER,
+				context.getResources().getBoolean(R.bool.show_bouncing_marker)?1:0));
+		Prefs.with(context).save(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG, autoData.optInt(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG,
+				context.getResources().getBoolean(R.bool.show_save_location_dialog)?1:0));
+
+		Prefs.with(context).save(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, 0));
+		Prefs.with(context).save(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0));
+		Prefs.with(context).save(KEY_CUSTOMER_DIRECTIONS_CACHING, autoData.optInt(KEY_CUSTOMER_DIRECTIONS_CACHING,
+				1));
+		Prefs.with(context).save(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, autoData.optInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT,
+				context.getResources().getInteger(R.integer.remove_pickup_address_hit)));
+		Prefs.with(context).save(KEY_CUSTOMER_REQUEST_RIDE_POPUP, autoData.optInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP,
+				context.getResources().getInteger(R.integer.show_confirm_popup_before_ride_request)));
+
+		parseJungleApiObjects(context, autoData);
+	}
+
+	private void parseJungleApiObjects(Context context, JSONObject userData) {
+		try {
+			if(Data.jungleApisDisable == 1){
+				Prefs.with(context).save(KEY_JUNGLE_DIRECTIONS_OBJ, EMPTY_JSON_OBJECT);
+				Prefs.with(context).save(KEY_JUNGLE_DISTANCE_MATRIX_OBJ, EMPTY_JSON_OBJECT);
+				Prefs.with(context).save(KEY_JUNGLE_GEOCODE_OBJ, EMPTY_JSON_OBJECT);
+				Prefs.with(context).save(KEY_JUNGLE_AUTOCOMPLETE_OBJ, EMPTY_JSON_OBJECT);
+				Data.jungleApisDisable = 0;
+				return;
+			}
+
+			String jungleObjStr = BuildConfig.DEBUG ? JUNGLE_JSON_OBJECT : EMPTY_JSON_OBJECT;
+			JSONObject jungleObj = userData.optJSONObject(KEY_JUNGLE_DIRECTIONS_OBJ);
+			if(jungleObj != null){
+				jungleObjStr = jungleObj.toString();
+			}
+
+			Prefs.with(context).save(KEY_JUNGLE_DIRECTIONS_OBJ, jungleObjStr);
+
+			JSONObject jungleCFEDirectionsObj = userData.optJSONObject(KEY_CFE_JUNGLE_DIRECTIONS_OBJ);
+			Prefs.with(context).save(KEY_CFE_JUNGLE_DIRECTIONS_OBJ, jungleCFEDirectionsObj!=null ? jungleCFEDirectionsObj.toString(): jungleObjStr);
+
+			JSONObject jungleDMObj = userData.optJSONObject(KEY_JUNGLE_DISTANCE_MATRIX_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_DISTANCE_MATRIX_OBJ, jungleDMObj!=null ? jungleDMObj.toString(): jungleObjStr);
+
+			JSONObject jungleGObj = userData.optJSONObject(KEY_JUNGLE_GEOCODE_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_GEOCODE_OBJ, jungleGObj!=null ? jungleGObj.toString(): jungleObjStr);
+
+			JSONObject jungleACbj = userData.optJSONObject(KEY_JUNGLE_AUTOCOMPLETE_OBJ);
+			Prefs.with(context).save(KEY_JUNGLE_AUTOCOMPLETE_OBJ, jungleACbj!=null ? jungleACbj.toString(): jungleObjStr);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
@@ -920,18 +975,22 @@ public class JSONParser implements Constants {
             if(autos.getDriverFareFactor() != null) {
                 Data.autoData.setDriverFareFactor(autos.getDriverFareFactor());
             }
+
+			Data.autoData.setCampaigns(autos.getCampaigns());
+
+			if(autos.getCityId() != null){
+				Data.userData.setCurrentCity(autos.getCityId());
+			}
+
             if (autos.getFarAwayCity() == null) {
 				Data.autoData.setFarAwayCity("");
 			} else {
 				Data.autoData.setFarAwayCity(autos.getFarAwayCity());
 			}
 
-            Data.autoData.setCampaigns(autos.getCampaigns());
-
-            if(autos.getCityId() != null){
-                Data.userData.setCurrentCity(autos.getCityId());
-            }
-            Data.autoData.setNewBottomRequestUIEnabled(autos.getBottomRequestUIEnabled());
+            if(autos.getBottomRequestUIEnabled() != null) {
+				Data.autoData.setNewBottomRequestUIEnabled(autos.getBottomRequestUIEnabled());
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -988,13 +1047,14 @@ public class JSONParser implements Constants {
 								fareStructure.getDisplayBaseFare(),
 								fareStructure.getDisplayFareText(), fareStructure.getOperatorId(), autos.getCurrency(),
                                 autos.getDistanceUnit());
-						for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
+						ArrayList<Region> regions = Data.autoData.getRegions();
+						for (int i = 0; i < regions.size(); i++) {
 							try {
-								if (Data.autoData.getRegions().get(i).getOperatorId() == fareStructure.getOperatorId()
-                                        && Data.autoData.getRegions().get(i).getVehicleType().equals(fareStructure.getVehicleType())
-										&& Data.autoData.getRegions().get(i).getRideType().equals(fareStructure.getRideType())
+								if (regions.get(i).getOperatorId() == fareStructure.getOperatorId()
+                                        && regions.get(i).getVehicleType().equals(fareStructure.getVehicleType())
+										&& regions.get(i).getRideType().equals(fareStructure.getRideType())
 										) {
-									Data.autoData.getRegions().get(i).setFareStructure(fareStructure1);
+									regions.get(i).setFareStructure(fareStructure1);
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -1092,8 +1152,7 @@ public class JSONParser implements Constants {
             JSONObject jDriverInfo = jLastRideData.getJSONObject("driver_info");
             Data.autoData.setcDriverId(jDriverInfo.getString("id"));
 
-            Data.autoData.setPickupLatLng(new LatLng(0, 0));
-            Data.autoData.setPickupAddress("", null);
+            Data.autoData.setPickupSearchResult(null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
 
@@ -1249,6 +1308,7 @@ public class JSONParser implements Constants {
         String partnerName = jLastRideData.optString(Constants.KEY_PARTNER_NAME, "");
         int showTipOption = jLastRideData.optInt(Constants.KEY_SHOW_TIP_OPTION, 1);
         double paidUsingPOS = jLastRideData.optDouble(Constants.KEY_PAID_USING_POS, 0);
+		int meterFareApplicable = jLastRideData.optInt(Constants.KEY_METER_FARE_APPLICABLE, 0);
 
         JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
         ArrayList<DiscountType> stripeCardsAmount = new ArrayList<>();
@@ -1288,7 +1348,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable);
 	}
 
 
@@ -1423,9 +1483,9 @@ public class JSONParser implements Constants {
                             Log.e("assigningLatitude,assigningLongitude ====@@@", "" + assigningLatitude + "," + assigningLongitude);
                         }
 
-                        Data.autoData.setPickupLatLng(new LatLng(assigningLatitude, assigningLongitude));
-                        Log.w("pickuplogging", "state restore assigning"+Data.autoData.getPickupLatLng());
-                        Data.autoData.setPickupAddress(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""), Data.autoData.getPickupLatLng());
+                        LatLng assigningLatLng = new LatLng(assigningLatitude, assigningLongitude);
+                        Data.autoData.setPickupSearchResult(jObject1.optString(KEY_PICKUP_LOCATION_ADDRESS, ""), assigningLatLng);
+                        Log.w("pickuplogging", "state restore assigning"+assigningLatLng);
                         parseDropLatLng(jObject1);
 
                         bidInfos = JSONParser.parseBids(context, Constants.KEY_BIDS, jObject1);
@@ -1601,9 +1661,8 @@ public class JSONParser implements Constants {
                 Data.autoData.setcEngagementId(engagementId);
                 Data.autoData.setcDriverId(userId);
 
-                Data.autoData.setPickupLatLng(new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
+                Data.autoData.setPickupSearchResult(pickupAddress, new LatLng(Double.parseDouble(pickupLatitude), Double.parseDouble(pickupLongitude)));
                 Log.w("pickuplogging", "state restore req final"+Data.autoData.getPickupLatLng());
-                Data.autoData.setPickupAddress(pickupAddress, Data.autoData.getPickupLatLng());
                 if((Utils.compareDouble(dropLatitude, 0) == 0) && (Utils.compareDouble(dropLongitude, 0) == 0)){
                     Data.autoData.setDropLatLng(null);
                     Data.autoData.setDropAddress("");
@@ -2044,8 +2103,12 @@ public class JSONParser implements Constants {
 							Prefs.with(context).save(SPLabels.ADD_WORK, "");
 						}
 						workSaved = true;
-					} else if(!jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+					} else if(!TextUtils.isEmpty(jsonObject.optString(KEY_TYPE)) && !jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
 						Data.userData.getSearchResults().add(gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class));
+					} else if (TextUtils.isEmpty(jsonObject.optString(KEY_TYPE)) && !jsonObject.optString(KEY_ADDRESS).equalsIgnoreCase("")) {
+						SearchResult searchResult = gson.fromJson(getSearchResultStringFromJSON(jsonObject), SearchResult.class);
+						searchResult.setType(SearchResult.Type.RECENT);
+						Data.userData.getSearchResultsRecent().add(searchResult);
 					}
 				}
 			}

@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 
 class PlacesAutocompleteResponse {
 
-    @SerializedName("predictions")
+    @SerializedName(value = "predictions", alternate = ["data"])
     @Expose
     var predictions: MutableList<Prediction>? = null
     @SerializedName("status")
@@ -15,24 +15,17 @@ class PlacesAutocompleteResponse {
 }
 class Prediction {
 
-    @SerializedName("description")
+    @SerializedName(value = "description", alternate = ["address"])
     @Expose
     var description: String? = null
     @SerializedName("place_id")
     @Expose
     var placeId: String? = null
-    @SerializedName("structured_formatting")
+    @SerializedName("lat")
     @Expose
-    var structuredFormatting: StructuredFormatting? = null
-
-}
-class StructuredFormatting {
-
-    @SerializedName("main_text")
+    var lat: Double? = null
+    @SerializedName("lng")
     @Expose
-    var mainText: String? = null
-    @SerializedName("secondary_text")
-    @Expose
-    var secondaryText: String? = null
+    var lng: Double? = null
 
 }

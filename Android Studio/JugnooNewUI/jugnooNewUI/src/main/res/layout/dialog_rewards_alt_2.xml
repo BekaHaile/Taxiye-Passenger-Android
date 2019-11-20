@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/card"
+    android:tag="@string/dont_touch_me"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/mainView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="120dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/bg_rewards_white_round_layer_shadow" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivClose"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_cross_white"
+        android:padding="5dp"
+        android:layout_margin="@dimen/spacing_large"
+        android:layout_width="25dp"
+        android:layout_height="25dp"/>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/ivOffer"
+        android:layout_width="0dp"
+        app:layout_constraintStart_toStartOf="@id/mainView"
+        app:layout_constraintEnd_toEndOf="@id/mainView"
+        app:layout_constraintTop_toTopOf="@id/mainView"
+        app:layout_constraintBottom_toBottomOf="@id/mainView"
+        android:src="@drawable/ic_rewards_offer"
+        android:layout_height="90dp" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@id/mainView"
+        app:layout_constraintEnd_toEndOf="@id/mainView"
+        android:textSize="@dimen/font_extra_large"
+        android:textColor="@color/black"
+        android:text="100"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/spacing_normal"
+        app:layout_constraintTop_toBottomOf="@+id/ivOffer"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvRewardInfo"
+        android:layout_width="0dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/mainView"
+        app:layout_constraintEnd_toEndOf="@id/mainView"
+        android:textSize="@dimen/font_small"
+        android:textColor="@color/text_color"
+        android:text="Cashback won"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/tvAmount"/>
+
+    <product.clicklabs.jugnoo.newui.utils.customview.ScratchView
+        android:id="@+id/scratch_view"
+        app:overlay_height="280dp"
+        app:overlay_width="280dp"
+        app:overlay_image="@drawable/ic_scratch_pattern"
+        app:tile_mode="CLAMP"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginStart="20dp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/scratchTemp"
+        android:background="@drawable/ic_scratch_pattern"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvScratchSuccessMsg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/mainView"
+        app:layout_constraintEnd_toEndOf="@id/mainView"
+        android:textSize="@dimen/font_large"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/spacing_extra_large"
+        app:layout_constraintTop_toBottomOf="@+id/mainView"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvSkip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/mainView"
+        app:layout_constraintEnd_toEndOf="@id/mainView"
+        android:textSize="@dimen/font_large"
+        android:textColor="@color/white"
+        android:text="@string/skip"
+        android:paddingStart="@dimen/spacing_large"
+        android:paddingEnd="@dimen/spacing_large"
+        android:paddingTop="@dimen/spacing_small"
+        android:paddingBottom="@dimen/spacing_small"
+        android:background="@drawable/capsule_white_skip_btn"
+        android:gravity="center"
+        android:visibility="gone"
+        android:fontFamily="@string/maven_r"
+        android:layout_marginTop="@dimen/spacing_extra_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvScratchSuccessMsg"/>
+</android.support.constraint.ConstraintLayout>

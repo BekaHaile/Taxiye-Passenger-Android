@@ -208,6 +208,38 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/llWaitCharges"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp">
+
+                    <TextView
+                        android:id="@+id/tvPerWait"
+                        android:layout_width="0dp"
+                        android:layout_weight="1.4"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color_light"
+                        android:textSize="12sp"
+                        android:text="@string/congestion_charges_per_min"
+                        android:gravity="start"
+                        />
+
+
+                    <TextView
+                        android:id="@+id/tvPerWaitMinValue"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.6"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
+                        android:textSize="12sp"
+                        tools:text="10"
+                        android:gravity="end"
+                        />
+
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/textViewThreshold"

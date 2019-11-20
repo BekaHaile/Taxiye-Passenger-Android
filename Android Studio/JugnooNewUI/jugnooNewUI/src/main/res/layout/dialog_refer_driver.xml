@@ -45,34 +45,30 @@
                 android:textSize="@dimen/text_size_30" />
 
             <ImageView
-                android:layout_width="459px"
-                android:layout_height="239px"
+                android:id="@+id/ivC2DReferralImage"
+                android:layout_width="match_parent"
+                android:layout_height="310px"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="35px"
                 android:src="@drawable/ic_promotions_driver_refer"
+                android:scaleType="centerInside"
                 android:tag="mwar" />
 
-            <TextView
-                android:id="@+id/textViewKindlyRecommend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="25px"
-                android:gravity="center"
-                android:text="@string/kindly_recommend_us_to_them"
-                android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_30" />
 
             <TextView
-                android:id="@+id/textViewIfTheyAreInterested"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvC2DReferralMessage"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="20px"
+                android:layout_marginTop="56px"
                 android:gravity="center"
-                android:text="@string/if_they_are_interested"
+                android:paddingStart="20px"
+                android:paddingEnd="20px"
+                android:lineSpacingExtra="1dp"
+                android:textColorLink="@color/theme_color"
+                android:text="@string/free_ride_desc"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="@dimen/text_size_34"
+                />
 
 
             <RelativeLayout

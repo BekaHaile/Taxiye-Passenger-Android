@@ -41,6 +41,11 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         this.estimateDialog = new VehicleFareEstimateDialog();
     }
 
+    public void setList(ArrayList<Region> regions){
+		this.regions = regions;
+		notifyDataSetChanged();
+	}
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = null;
@@ -85,7 +90,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
         }
         holder.tvOfferTag.setVisibility(View.GONE);
         if(showRegionFares && region.getRegionFare() != null && region.getReverseBid() == 0){
-            holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()));
+            holder.tvVehicleFare.setText(region.getRegionFare().getFareText(region.getFareMandatory()).toString().concat(activity.isNewUI() ? "*" : ""));
             holder.tvVehicleFareStrike.setText(region.getRegionFare().getStrikedFareText(region.getFareMandatory()));
             holder.tvVehicleFareStrike.setVisibility(holder.tvVehicleFareStrike.getText().length() > 0 ? View.VISIBLE : View.GONE);
             String discount = region.getRegionFare().getDiscountText(region.getFareMandatory());
@@ -163,7 +168,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 int position = (int) v.getTag();
                 boolean changed = activity.setVehicleTypeSelected(position, true, false);
                 if(showRegionFares && !changed){
-                    if(showRegionFares && regions.size() > position && regions.get(position).getReverseBid() == 0) {
+                    if(regions.size() > position && regions.get(position).getReverseBid() == 0) {
                         estimateDialog.show(activity, regions.get(position));
                     }
                 }

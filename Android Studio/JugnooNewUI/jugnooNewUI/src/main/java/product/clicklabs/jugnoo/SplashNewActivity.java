@@ -93,6 +93,7 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
@@ -373,7 +374,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								} else {
 									if (Data.deepLinkIndex == -1) {
 										Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
-										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
+										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
 										Log.v("deepLinkReferralCode", "---> "+Data.deepLinkReferralCode);
 										refreeUserId = referringParams.optString(KEY_USER_ID, "");
 									}
@@ -500,6 +501,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			AppSignatureHelper.Companion.getAppSignatures(this);
 
 			MyApplication.getInstance().initializeServerURL(this);
+			Data.jungleApisDisable = 0;
 
 			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 			//clear Menu Reorder Prefs
@@ -536,6 +538,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 			LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
+
+			JungleApisImpl.INSTANCE.deleteDirectionsPathOld();
 
 
 			setContentView(R.layout.activity_splash_new);
@@ -1753,6 +1757,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				if(Prefs.with(this).getInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1) == 1){
 					tvReferralTitle.setVisibility(View.VISIBLE);
 					etReferralCode.setVisibility(View.VISIBLE);
+					etReferralCode.setText(Data.deepLinkReferralCode);
 					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
 				} else {
 					tvReferralTitle.setVisibility(View.GONE);
@@ -1981,7 +1986,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	private void sendToRegisterThroughSms(boolean openLS) {
 		try {
-			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+			if (state != State.SPLASH_ONBOARDING && !"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				Log.e("Data.deepLinkReferralCode value in sendToRegisterThroughSms", "--->"+Data.deepLinkReferralCode);
                 Data.deepLinkIndex = -1;
                 SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -1997,7 +2002,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //				changeUIState(State.SIGNUP);
     //			}
             } else if(openLS){
-				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this) && state != State.SPLASH_LS_NEW) {
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)
+						&& state != State.SPLASH_LS_NEW && state != State.CLAIM_GIFT && state != State.SPLASH_ONBOARDING) {
 					splashLSState(false);
 				}
 			}
@@ -2113,7 +2119,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 		requestLocationUpdatesExplicit();
 
-		retryAccessTokenLogin();
+		if(state != State.SPLASH_ONBOARDING && state != State.CLAIM_GIFT){
+			retryAccessTokenLogin();
+		}
 		resumed = true;
 		userVerfied = 0;
 		AppEventsLogger.activateApp(getApplication());
@@ -2233,8 +2241,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void success(String clientId) {
 					loginDataFetched = true;
-					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
-					DialogPopup.dismissLoadingDialog();
+					onWindowFocusChanged(true);
+//					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
+//					DialogPopup.dismissLoadingDialog();
 				}
 
 				@Override
@@ -2276,7 +2285,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	public static boolean allowedAuthChannelsHitOnce = false;
 	private boolean allowedAuthChannelsHitInProgress = false;
-	public void getAllowedAuthChannels(final Activity activity){
+	public void getAllowedAuthChannels(final Activity activity, final boolean claimGIftClicked){
 		if (MyApplication.getInstance().isOnline()) {
 			if(allowedAuthChannelsHitOnce || allowedAuthChannelsHitInProgress){
 				return;
@@ -2415,7 +2424,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						activity.onConfigurationChanged(config);
 
 						allowedAuthChannelsHitOnce = true;
-						splashLSState(false);
+						splashLSState(claimGIftClicked);
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -2716,7 +2725,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							dialog.dismiss();
 							activity.startActivity(new Intent(activity, DebugOptionsActivity.class));
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							ActivityCompat.finishAffinity(activity);
 						} else {
 							etCode.requestFocus();
 							etCode.setError(getString(R.string.code_not_matched));
@@ -3489,7 +3497,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				changeUIState(State.SPLASH_LS_NEW);
 			}
 		} else {
-			getAllowedAuthChannels(this);
+			getAllowedAuthChannels(this, claimGIftClicked);
 		}
 	}
 
@@ -4335,6 +4343,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								if((jObj.has("username_correct")) && (jObj.optInt("username_correct", 0) == 1)){
 									if(!TextUtils.isEmpty(updatedName)) {
 										Data.userData.userName = updatedName;
+									}
+								}
+								if(jObj.optInt(KEY_REFERRAL_CORRECT, 0) == 1){
+									if(Data.userData != null){
+										Data.userData.setPromoSuccess(1);
 									}
 								}
 								onWindowFocusChanged(true);

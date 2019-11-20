@@ -185,7 +185,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
-import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -852,7 +852,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setReorderLatlngToAdrress(LatLng reorderLatLng,String  reoderAddress) {
         if(reorderLatLng!=null){
             SearchResult searchResult = homeUtil.getNearBySavedAddress(this, reorderLatLng,
-                    Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+					true);
             if (searchResult!=null) {
                 setSelectedAddress(searchResult.getAddress());
                 setSelectedLatLng(searchResult.getLatLng());
@@ -1242,7 +1242,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 // else find any tagged address near current set location, if that is not tagged
                 else if(getSelectedAddressId() == 0){
                     SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
-                            Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+							false);
                     if(searchResult != null){
                         setSelectedAddress(searchResult.getAddress());
                         setSelectedLatLng(searchResult.getLatLng());
@@ -3951,12 +3951,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void getAddressAndFetchOfferingData(final LatLng currentLatLng, final int appType) {
         try {
             DialogPopup.showLoadingDialog(this, "Loading...");
-			GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
-				Log.i(TAG, "getAddressAndFetchOfferingData address="+settleUserDebt);
+			GoogleJungleCaching.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
+				Log.i(TAG, "getAddressAndFetchOfferingData address="+googleGeocodeResponse);
 				try {
+					String address = null;
+					if(googleGeocodeResponse != null){
+						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse);
+						address = gapiAddress.getSearchableAddress();
+					} else if(singleAddress != null){
+						address = singleAddress;
+					}
+
 					DialogPopup.dismissLoadingDialog();
-					GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-					String address = gapiAddress.getSearchableAddress();
 					setSelectedAddress(address);
 					setSelectedLatLng(currentLatLng);
 					setSelectedAddressId(0);
@@ -4085,7 +4091,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 setSearchResultToActVarsAndFetchData(searchResultLocality, appType);
             } else {
                 SearchResult searchResult = homeUtil.getNearBySavedAddress(FreshActivity.this, getSelectedLatLng(),
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, true);
+						true);
                 if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
                     setSearchResultToActVarsAndFetchData(searchResult, appType);
 					saveOfferingLastAddress(appType);

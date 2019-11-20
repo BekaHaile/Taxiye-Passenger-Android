@@ -318,6 +318,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 RestClient.getFatafatApiService().nearbyAgents(params,callback);
                 break;
 
+            case SCRATCH_CARD:
+                RestClient.getApiService().scratchCard(params, callback);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

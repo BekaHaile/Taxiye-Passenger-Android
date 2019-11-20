@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -53,6 +55,7 @@ import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
+import product.clicklabs.jugnoo.newui.activity.RewardsActivity;
 import product.clicklabs.jugnoo.promotion.adapters.PromoAdapter;
 import product.clicklabs.jugnoo.promotion.fragments.PromoDescriptionFragment;
 import product.clicklabs.jugnoo.promotion.models.Promo;
@@ -74,6 +77,7 @@ import retrofit.mime.TypedByteArray;
 public class PromotionActivity extends BaseFragmentActivity implements Constants,  GAAction, GACategory {
 
     private final String TAG = PromotionActivity.class.getSimpleName();
+    private static final int REQ_CODE_REWARDS = 1090;
     private Button buttonApplyPromo;
     private EditText editTextPromoCode;
 
@@ -82,6 +86,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
     private RecyclerView recyclerViewOffers;
     private ImageView imageViewBack, imageViewFreeRideAuto;
     private TextView textViewTitle, textViewFreeRides;
+    private ImageView tvScratchCards;
     private LinearLayout llContainer;
 
 
@@ -123,6 +128,8 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
         editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode);
         textViewFreeRides = (TextView) findViewById(R.id.textViewFreeRides); textViewFreeRides.setTypeface(Fonts.mavenMedium(this));
+        tvScratchCards =  findViewById(R.id.tvScratchCards);
+        tvScratchCards.setVisibility(View.GONE);
         textViewFreeRides.setText(getString(R.string.want_free_rides, getString(R.string.app_name)));
         imageViewFreeRideAuto = (ImageView) findViewById(R.id.imageViewFreeRideAuto);
 
@@ -226,6 +233,11 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             }
         });
 
+        tvScratchCards.setOnClickListener(view -> {
+            startActivityForResult(new Intent(PromotionActivity.this, RewardsActivity.class), REQ_CODE_REWARDS);
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        });
+
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -245,6 +257,14 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         } else {
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQ_CODE_REWARDS && resultCode == RESULT_OK) {
+            getCouponsAndPromotions(PromotionActivity.this);
         }
     }
 
@@ -643,7 +663,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         if(pcAll.size() > 0){
             pcAll = countAndRemoveDuplicatePromoCoupons(pcAll);
             for(PromoCoupon pc : pcAll){
-                promosList.add(new Promo(getString(R.string.all), "", pc, R.drawable.ic_promo_all, -1));
+                promosList.add(new Promo(getString(R.string.all), "", pc, R.drawable.ic_promo_all, -1, false, 0));
             }
         }
         if(pcRides.size() > 0) {
@@ -658,31 +678,31 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     }
                 }
 
-                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, id, R.color.theme_color));
+                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, id, R.color.theme_color, false, 0));
             }
         }
         if(pcMeals.size() > 0) {
             pcMeals = countAndRemoveDuplicatePromoCoupons(pcMeals);
             for(PromoCoupon pc : pcMeals){
-                promosList.add(new Promo(getString(R.string.meals), Config.getMealsClientId(), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab));
+                promosList.add(new Promo(getString(R.string.meals), Config.getMealsClientId(), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab, false, 0));
             }
         }
         if(pcFatafat.size() > 0) {
             pcFatafat = countAndRemoveDuplicatePromoCoupons(pcFatafat);
             for(PromoCoupon pc : pcFatafat){
-                promosList.add(new Promo(getString(R.string.fatafat), Config.getFreshClientId(), pc, R.drawable.ic_promo_fresh, R.color.fresh_promotions_green));
+                promosList.add(new Promo(getString(R.string.fatafat), Config.getFreshClientId(), pc, R.drawable.ic_promo_fresh, R.color.fresh_promotions_green, false, 0));
             }
         }
         if(pcMenus.size() > 0) {
             pcMenus = countAndRemoveDuplicatePromoCoupons(pcMenus);
             for(PromoCoupon pc : pcMenus){
-                promosList.add(new Promo(getString(R.string.menus), Config.getMenusClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+                promosList.add(new Promo(getString(R.string.menus), Config.getMenusClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab, false, 0));
             }
         }
         if(pcDeliveryCustomer.size() > 0) {
             pcDeliveryCustomer = countAndRemoveDuplicatePromoCoupons(pcDeliveryCustomer);
             for(PromoCoupon pc : pcDeliveryCustomer){
-                promosList.add(new Promo(getString(R.string.delivery_new_name), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+                promosList.add(new Promo(getString(R.string.delivery_new_name), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab, false, 0));
             }
         }
 
@@ -708,10 +728,21 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             }
         });
         set.addAll(promoCoupons);
-        promoCoupons = new ArrayList<>(set);
+        ArrayList<PromoCoupon> promoCouponsTemp = new ArrayList<>(set);
+        promoCoupons.clear();
+        for (int i = 0; i < promoCouponsTemp.size(); i++) {
+            if((promoCouponsTemp.get(i).getCouponCardType() == 1 && promoCouponsTemp.get(i).isScratched())
+             || promoCouponsTemp.get(i).getCouponCardType() == 0) {
+                promoCoupons.add(promoCouponsTemp.get(i));
+            }
+        }
+
+        if(promoCouponsTemp.size() != promoCoupons.size()) {
+            tvScratchCards.setVisibility(View.VISIBLE);
+        } else {
+            tvScratchCards.setVisibility(View.GONE);
+        }
         return promoCoupons;
     }
-
-
 
 }

@@ -101,4 +101,11 @@
     <color name="yellow_jugnoo">@color/colorPrimary</color>
     <color name="text_color_orange">@color/colorPrimary</color>
 
+    <!--    UI changes-->
+    <integer name="remove_pickup_address_hit">1</integer>
+    <integer name="customer_show_add_saved_place">0</integer>
+
+    <!--Confirm pop before request ride-->
+    <integer name="show_confirm_popup_before_ride_request">1</integer>
+
 </resources>

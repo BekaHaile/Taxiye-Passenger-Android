@@ -740,6 +740,7 @@ public interface Constants {
     String KEY_OFFERING_NAME = "offering_name";
     String KEY_PROMO_COUPON = "promo_coupon";
     String SP_USE_COUPON_ = "sp_use_coupon_";
+    String SP_PROMO_SCRATCHED = "sp_promo_scratched";
     String SP_USE_COUPON_IS_COUPON_ = "sp_use_coupon_is_coupon_";
     String KEY_ANIMATE_ASK_LOCAL_POST_TEXT = "key_animate_ask_local_post_text";
     String KEY_POST_NOTIFICATION_ID = "post_notification_id";
@@ -1085,4 +1086,43 @@ public interface Constants {
 	String KEY_CUSTOMER_BID_INCREMENT = "customer_bid_increment";
 	String KEY_MIN_REGION_FARE = "min_region_fare";
 	String KEY_MAX_REGION_FARE = "max_region_fare";
+	String KEY_IS_ROUND_TRIP = "is_round_trip";
+	String KEY_CUSTOMER_SHOW_BOUNCING_MARKER = "customer_show_bouncing_marker";
+	String KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG = "customer_show_save_location_dialog";
+
+	String KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED = "customer_region_fare_check_enabled";
+	String KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED = "customer_pickup_address_empty_check_enabled";
+	String KEY_CUSTOMER_DIRECTIONS_CACHING = "customer_directions_caching";
+
+	String KEY_JUNGLE_DIRECTIONS_OBJ = "jungle_directions_obj";
+	String KEY_CFE_JUNGLE_DIRECTIONS_OBJ = "c_fe_jungle_directions_obj";
+	String KEY_JUNGLE_DISTANCE_MATRIX_OBJ = "jungle_distance_matrix_obj";
+	String KEY_JUNGLE_GEOCODE_OBJ = "jungle_geocode_obj";
+	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";
+	String KEY_JUNGLE_POINTS = "points";
+	String KEY_JUNGLE_OPTIONS = "options";
+	String KEY_JUNGLE_APP_ID = "app_id";
+	String KEY_JUNGLE_APP_CODE = "app_code";
+	String KEY_JUNGLE_API_KEY = "api_key";
+	String KEY_JUNGLE_ACCESS_TOKEN = "access_token";
+	String KEY_JUNGLE_ORIGIN_LAT = "originlatitude";
+	String KEY_JUNGLE_ORIGIN_LNG = "originlongitude";
+	String KEY_JUNGLE_DEST_LAT = "destinationlatitude";
+	String KEY_JUNGLE_DEST_LNG = "destinationlongitude";
+	String KEY_JUNGLE_CURRENT_LAT = "currentlatitude";
+	String KEY_JUNGLE_CURRENT_LNG = "currentlongitude";
+	String KEY_JUNGLE_PLACEID = "placeId";
+	String KEY_JUNGLE_TEXT = "text";
+	String KEY_JUNGLE_LAT = "lat";
+	String KEY_JUNGLE_LNG = "lng";
+
+	String JUNGLE_JSON_OBJECT = "{\""+KEY_JUNGLE_OPTIONS+"\":0}";
+    String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
+    String KEY_CUSTOMER_REQUEST_RIDE_POPUP = "customer_request_ride_popup";
+	String KEY_METER_FARE_APPLICABLE = "meter_fare_applicable";
+	String KEY_REFERRAL_CORRECT = "referral_correct";
+
+	String KEY_C_2_D_REFERRAL_IMAGE = "c2d_referral_image";
+	String KEY_C_2_D_REFERRAL_INFO = "c2d_referral_info";
+	String KEY_C_2_D_REFERRAL_DETAILS = "c2d_referral_details";
 }

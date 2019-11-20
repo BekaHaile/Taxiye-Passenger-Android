@@ -870,7 +870,7 @@ public class LoginResponse {
 		@Expose
 		private List<String> faultConditions;
 		@SerializedName("bottom_request_ui_enabled_v2")
-		private int bottomRequestUIEnabled;
+		private Integer bottomRequestUIEnabled;
 
 		public List<Driver> getDrivers() {
 			return drivers;
@@ -1071,11 +1071,11 @@ public class LoginResponse {
 			this.faultConditions = faultConditions;
 		}
 
-		public int getBottomRequestUIEnabled() {
+		public Integer getBottomRequestUIEnabled() {
 			return bottomRequestUIEnabled;
 		}
 
-		public void setBottomRequestUIEnabled(int bottomRequestUIEnabled) {
+		public void setBottomRequestUIEnabled(Integer bottomRequestUIEnabled) {
 			this.bottomRequestUIEnabled = bottomRequestUIEnabled;
 		}
 	}

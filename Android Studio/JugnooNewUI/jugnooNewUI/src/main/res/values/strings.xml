@@ -1979,7 +1979,7 @@
     <string name="expected_toll_charge">Expected Toll Charges</string>
     <string name="schedule_ride_alert">*We cannot always guarantee that a driver will be available</string>
     <string name="vehicle">Vehicle</string>
-    <string name="vehicle_fare_estimate_alert">The estimated fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
+    <string name="vehicle_fare_estimate_alert">The fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
     <string name="choose_a_place">Choose a place</string>
     <string name="add_saved_place">Add Saved Place</string>
     <string name="tip_the_driver">Tip the Driver</string>
@@ -2039,7 +2039,8 @@
     <!--save location-->
     <string name="save_your_pickup_location">Save your pickup location</string>
     <string name="save_your_drop_location">Save your drop location</string>
-    <string name="tap_on_pin">Tap on pin...</string>
+    <string name="tap_on_pin">Tap on pin</string>
+    <string name="tap_on_pin_caps">Tap On Pin</string>
     <string name="favourite">Favourite%s</string>
     <string name="text_disclaimer">We will dispatching Taxi with class 4 license with authorisation Taxi companies only</string>
     <string name="select_pickup_address">Select pickup address</string>
@@ -2132,6 +2133,15 @@
     <string name="offer_cannot_be_less_than_min_value">Offer can\'t be less than minimum value</string>
     <string name="offer_cannot_be_more_than_max_value">Offer can\'t be more than max value</string>
     <string name="copied">Copied</string>
+    <string name="text_rewards">Rewards</string>
+    <string name="you_have_scratch_cards">You have scratch cards</string>
+    <string name="no_scratch_coupon">No Scratch Coupon!!\nTake rides to earn more coupons.</string>
+    <string name="select_drop_location_estimate_fare">Select drop location to find estimate fare</string>
+    <string name="text_terms_and_conditions_apply"><![CDATA[*Terms & Conditions Apply]]></string>
+    <string name="suggested_fare">Suggested Fare</string>
+    <string name="tap_to_scratch">Tap to Scratch</string>
+    <string name="text_no_internet_connection">No Internet Connection</string>
+    <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
 
     <string name="text_no_delivery_available">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="fatafat_text">Delivery</string>
@@ -2142,4 +2152,11 @@
     <string name="pay_for_delivery">Pay For Your Delivery Using</string>
     <string name="offers_and_coupons_applied_colon">Offers Applied: \n<b>%s</b></string>
 
+<!--    New UI changes-->
+    <string name="text_where_to_go">Where to go</string>
+    <string name="add_favorite_place">Add Favorite Place</string>
+    <string name="label_confirm_ride_request">Confirm Ride Request</string>
+    <string name="text_congestion_time">Congestion Time</string>
+    <string name="type_atleast_4_characters">Type atleast 4 characters</string>
+    <string name="congestion_charges_per_min">Congestion charges per min</string>
 </resources>
