@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -61,6 +62,7 @@ import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.GoogleDirectionWayPointsResponse;
@@ -78,6 +80,10 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static product.clicklabs.jugnoo.ChatActivity.KEY_DELIVERY_ID;
+import static product.clicklabs.jugnoo.ChatActivity.KEY_ORDER_TYPE;
+import static product.clicklabs.jugnoo.Constants.KEY_CHAT_COUNT;
 
 /**
  * Created by shankar on 29/05/17.
@@ -175,7 +181,12 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		bCallDriver = (LinearLayout) rootView.findViewById(R.id.bCallDriver);
 		bCallDriver.setVisibility(View.GONE);
 
-
+rootView.findViewById(R.id.bChatDriver).setOnClickListener(new View.OnClickListener() {
+	@Override
+	public void onClick(View view) {
+openChatScreen();
+	}
+});
 
 		bMyLocation.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -189,6 +200,20 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		return rootView;
 	}
 
+	public void openChatScreen() {
+		Prefs.with(getActivity()).save(KEY_CHAT_COUNT, 0);
+//		tvChatCount.setVisibility(View.GONE);
+		Intent intent=new Intent(getActivity(),ChatActivity.class);
+		Bundle bundle=new Bundle();
+		bundle.putInt(KEY_ORDER_TYPE,ChatActivity.ORDER_TYPE_DELIVERY);
+//		intent.putExtra(KEY_ORDER_TYPE,ChatActivity.ORDER_TYPE_DELIVERY);
+bundle.putString(KEY_DELIVERY_ID,String.valueOf(deliveryId));
+
+intent.putExtras(bundle);
+		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		GAUtils.event(RIDES, DRIVER_ENROUTE, CHAT + GAAction.BUTTON + CLICKED);
+	}
 	@Override
 	public void permissionGranted(int requestCode) {
 		if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){

@@ -46,6 +46,14 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class ChatActivity extends BaseFragmentActivity implements View.OnClickListener, GAAction, GACategory{
 
+	public static final String KEY_ORDER_TYPE = "key_order_type";
+	public static final String KEY_DELIVERY_ID = "key_delivery_id";
+
+	public static final int ORDER_TYPE_RIDE = 0;
+	public static final int ORDER_TYPE_DELIVERY = 1;
+
+
+
 	private EditText input;
 
 	RecyclerView recyclerViewChat, recyclerViewChatOptions;
@@ -57,6 +65,16 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 	ChatSuggestionAdapter chatSuggestionAdapter;
 	ArrayList<FetchChatResponse.Suggestion> chatSuggestions = new ArrayList<>();
 
+	private int orderType = ORDER_TYPE_RIDE;
+	private String orderId;
+	private String  phone;
+
+	public static Intent createIntent(final Context context, final String id) {
+		Intent intent = new Intent(context, ChatActivity.class);
+		intent.putExtra(KEY_ORDER_TYPE, ORDER_TYPE_DELIVERY);
+		intent.putExtra(KEY_DELIVERY_ID, id);
+		return intent;
+	}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +94,13 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			imageViewBack.setOnClickListener(this);
 			ImageView ivCallDriver = (ImageView) findViewById(R.id.ivCallDriver);
 			ivCallDriver.setOnClickListener(this);
+
+			if (getIntent().getExtras() != null) {
+				orderType = getIntent().getExtras().getInt(KEY_ORDER_TYPE, ORDER_TYPE_RIDE);
+				if (orderType != ORDER_TYPE_RIDE) {
+					orderId = getIntent().getExtras().getString(KEY_DELIVERY_ID);
+				}
+			}
 
 			recyclerViewChat = (RecyclerView) findViewById(R.id.recyclerViewChat);
 			linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
@@ -161,7 +186,15 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 				sendChatClick();
 				break;
 			case R.id.ivCallDriver:
-				Utils.callDriverDuringRide(ChatActivity.this);
+				if (orderType == ORDER_TYPE_RIDE) {
+					Utils.callDriverDuringRide(ChatActivity.this);
+				} else {
+					try {
+						Utils.openCallIntent(ChatActivity.this, phone);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 				GAUtils.event(RIDES, CHAT, CALL+BUTTON+CLICKED);
 				break;
         }
@@ -255,7 +288,16 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 			params.put("login_type", LOGIN_TYPE);
-			params.put("engagement_id", Data.autoData.getcEngagementId());
+
+			switch (orderType) {
+				case ORDER_TYPE_RIDE:
+					params.put("engagement_id", Data.autoData.getcEngagementId());
+					break;
+				case ORDER_TYPE_DELIVERY:
+					params.put("delivery_id", orderId);
+					params.put("is_delivery", "1");
+					break;
+			}
 
 			new HomeUtil().putDefaultParams(params);
 
@@ -283,8 +325,15 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 				}
 
 				@Override
-				public boolean onError(FetchChatResponse fetchChatResponse, String message, int flag) {
-					return false;
+				public boolean onError(FetchChatResponse fetchChatResponse, String message, final int flag) {
+
+					DialogPopup.alertPopupWithListener(ChatActivity.this, "", message, new View.OnClickListener() {
+						@Override
+						public void onClick(final View v) {
+							if (flag == 144) finish();
+						}
+					});
+					return true;
 				}
 			});
         } catch (Exception e) {
@@ -297,8 +346,17 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
 			params.put("login_type", LOGIN_TYPE);
-			params.put("engagement_id", Data.autoData.getcEngagementId());
 			params.put("message", message);
+
+			switch (orderType) {
+				case ORDER_TYPE_RIDE:
+					params.put("engagement_id", Data.autoData.getcEngagementId());
+					break;
+				case ORDER_TYPE_DELIVERY:
+					params.put("delivery_id", orderId);
+					params.put("is_delivery", "1");
+					break;
+			}
 
 			new HomeUtil().putDefaultParams(params);
 			getApiCommon().showLoader(false).execute(params, ApiName.POST_CHAT, new APICommonCallback<FetchChatResponse>() {
