@@ -251,6 +251,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
+import product.clicklabs.jugnoo.retrofit.model.MediaInfo;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
@@ -300,6 +301,7 @@ import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.MySpinner;
 import product.clicklabs.jugnoo.widgets.PrefixedEditText;
+import product.clicklabs.jugnoo.youtube.YoutubeVideoActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -322,6 +324,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
+    private static final int REQ_CODE_VIDEO = 9112, RESULT_PAUSE = 5;
     private final String TAG = "Home Screen";
     private String macId ="";
 
@@ -407,7 +410,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ImageView ivMoreOptions;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat;
     LinearLayout relativeLayoutTotalFare;
-    TextView textViewIRPaymentOptionValue, textViewRupee;
+    TextView textViewIRPaymentOptionValue, textViewRupee, tvFreeRidesForLife;
     ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm, imageViewNotes;
     PopupMenu popupInRide;
 
@@ -866,6 +869,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutTotalFare = findViewById(R.id.relativeLayoutTotalFare);
 		textViewRupee = findViewById(R.id.textViewRupee);
 		textViewRupee.setTypeface(Fonts.mavenMedium(this));
+		tvFreeRidesForLife = findViewById(R.id.tvFreeRidesForLife); tvFreeRidesForLife.setTypeface(Fonts.mavenMedium(this));
         buttonConfirmRequest = (Button) findViewById(R.id.buttonConfirmRequest);
         buttonConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         linearLayoutPaymentModeConfirm = (LinearLayout) findViewById(R.id.linearLayoutPaymentModeConfirm);
@@ -1827,6 +1831,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
+		tvFreeRidesForLife.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MenuAdapter.onClickAction(MenuInfoTags.FREE_RIDES_NEW.getTag(),0,0,HomeActivity.this,getCurrentPlaceLatLng());
+			}
+		});
+
 
         // Assigning layout events
         textViewCancellation.setOnClickListener(new OnClickListener() {
@@ -2432,6 +2443,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
         }
 
+
+        checkForYoutubeIntent();
 
     }
 
@@ -5736,6 +5749,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
 
+            if(pushDialog != null) {
+                pushDialog.onResume();
+            }
             removeSaveLocationDialog();
 
             if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null) {
@@ -6134,7 +6150,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
                 }
-            }else{
+            } else if(resultCode == RESULT_PAUSE && requestCode == REQ_CODE_VIDEO && pushDialog != null) {
+                pushDialog.onActivityResult();
+            } else{
                 if(requestCode==REQ_BLE_ENABLE){
                     Log.e(TAG,"bluetooth permission result failed");
                     Data.autoData.setBluetoothEnabled(0);
@@ -6343,6 +6361,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if(pushDialog != null) {
+            pushDialog.onPause();
         }
         super.onPause();
     }
@@ -6685,6 +6706,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 					textViewRupee.setText(Utils.getCurrencySymbol(Data.autoData.getCurrency()));
 
+					if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
+						tvFreeRidesForLife.setVisibility(View.VISIBLE);
+					}
+
                     relativeLayoutTotalFare.setVisibility(View.GONE);
                     linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
                     relativeLayoutSearchContainer.setVisibility(View.GONE);
@@ -6719,6 +6744,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
                 } else {
 
+					tvFreeRidesForLife.setVisibility(View.GONE);
 
                     if(!confirmedScreenOpened){
                         imageViewRideNow.setVisibility(View.VISIBLE);
@@ -12977,5 +13003,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onOkClick(boolean isPickup) {
         onReqestRideConfirmClick();
     }
+
+    private void checkForYoutubeIntent(){
+		if(!Prefs.with(this).getBoolean(Constants.SP_YOUTUBE_TUTORIAL_SKIPPED, false)
+				&& Data.userData != null
+				&& Data.userData.getReferralMessages().getMultiLevelReferralEnabled()
+				&& Data.userData.getReferralMessages().getReferralImages() != null){
+			String youtubeId = "";
+			for(MediaInfo mi : Data.userData.getReferralMessages().getReferralImages()){
+				if(mi.checkIsYoutubeVideo()){
+					youtubeId = mi.getYoutubeId();
+				}
+			}
+			if(!TextUtils.isEmpty(youtubeId)) {
+				startActivity(YoutubeVideoActivity.createIntent(this, youtubeId));
+			}
+		}
+	}
 }
 

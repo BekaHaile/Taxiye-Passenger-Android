@@ -66,6 +66,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -1154,6 +1155,15 @@ public class Utils implements GAAction, GACategory{
 		}
 	}
 
+	public static boolean isImageFile(String path) {
+		String mimeType = URLConnection.guessContentTypeFromName(path);
+		return mimeType != null && mimeType.startsWith("image");
+	}
+
+	public static boolean isVideoFile(String path) {
+		String mimeType = URLConnection.guessContentTypeFromName(path);
+		return mimeType != null && mimeType.startsWith("video");
+	}
 }
 
 

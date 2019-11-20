@@ -29,7 +29,7 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 	public Fragment getItem(int position) {
 		switch(position){
 			case 0:
-				return new ReferralsFragment();
+				return ReferralsFragment.newInstance();
 
 			case 1:
 				if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1) {

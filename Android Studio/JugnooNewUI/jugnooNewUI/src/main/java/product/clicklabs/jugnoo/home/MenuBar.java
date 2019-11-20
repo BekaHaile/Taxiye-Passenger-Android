@@ -90,11 +90,12 @@ public class MenuBar {
 
 			recyclerViewMenu.setAdapter(menuAdapter);
 			setProfileData();
+
+			setActivityNames(itemsToShow);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		setActivityNames();
 
 		menuLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -168,31 +169,31 @@ public class MenuBar {
 	}
 
 
-	private void setActivityNames(){
+	private void setActivityNames(ArrayList<MenuInfo> menuInfos){
 		try {
-			for(int i=0; i<Data.userData.getMenuInfoList().size(); i++){
-                if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.GAME.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_PLAY = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_WALLET = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_INBOX = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_PROMOTIONS = Data.userData.getMenuInfoList().get(i).getName();
-                }else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
-					MyApplication.getInstance().ACTIVITY_NAME_OFFERS = Data.userData.getMenuInfoList().get(i).getName();
-				} else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_HISTORY = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.REFER_A_DRIVER.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_REFER_A_DRIVER = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.SUPPORT.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_SUPPORT = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.ABOUT.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_ABOUT = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())){
-					MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR = Data.userData.getMenuInfoList().get(i).getName();
+			for(MenuInfo menuInfo : menuInfos){
+                if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.GAME.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_PLAY = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_WALLET = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_INBOX = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_PROMOTIONS = menuInfo.getName();
+                }else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
+					MyApplication.getInstance().ACTIVITY_NAME_OFFERS = menuInfo.getName();
+				} else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_HISTORY = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.REFER_A_DRIVER.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_REFER_A_DRIVER = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.SUPPORT.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_SUPPORT = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.ABOUT.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_ABOUT = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())){
+					MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR = menuInfo.getName();
 				}
             }
 		} catch (Exception e) {
@@ -217,6 +218,19 @@ public class MenuBar {
 			if(AppMenuTagNames.APP_TAG_NAMES.containsKey(menuInfo.getTag())){
 
 				menuInfo.setName(AppMenuTagNames.APP_TAG_NAMES.get(menuInfo.getTag()));
+			}
+		}
+
+		if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
+			int index = itemsToShow.indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES.getTag()));
+			if(index > -1){
+				MenuInfo menuInfo = itemsToShow.remove(index);
+				menuInfo.setTag(MenuInfoTags.FREE_RIDES_NEW.getTag());
+				menuInfo.setName(activity.getString(R.string.free_rides_for_life));
+				itemsToShow.add(0, menuInfo);
+			} else {
+				MenuInfo menuInfo = new MenuInfo(activity.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
+				itemsToShow.add(0, menuInfo);
 			}
 		}
 
