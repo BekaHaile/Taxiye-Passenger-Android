@@ -101,7 +101,7 @@ public class ShareActivity extends BaseFragmentActivity {
         callbackManager = CallbackManager.Factory.create();
 
 		viewPager = (ViewPager) findViewById(R.id.viewPager);
-		promotionsFragmentAdapter = new PromotionsFragmentAdapter(this, getSupportFragmentManager(), isNewReferral);
+		promotionsFragmentAdapter = new PromotionsFragmentAdapter(this, getSupportFragmentManager());
 		viewPager.setAdapter(promotionsFragmentAdapter);
 
 		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);

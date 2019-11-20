@@ -221,7 +221,7 @@ public class MenuBar {
 			}
 		}
 
-		if(Data.userData != null && Data.userData.getReferralMessages().getNewReferralEnabled()){
+		if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
 			int index = itemsToShow.indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES.getTag()));
 			if(index > -1){
 				MenuInfo menuInfo = itemsToShow.remove(index);

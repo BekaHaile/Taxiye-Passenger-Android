@@ -856,9 +856,9 @@ public class LoginResponse {
 		private Integer bottomRequestUIEnabled;
 
 
-		@SerializedName("new_referral_enabled")
+		@SerializedName("multi_level_referral_enabled")
 		@Expose
-		private int newReferralEnabled;
+		private int multiLevelReferralEnabled;
 		@SerializedName("referral_images")
 		@Expose
 		private ArrayList<MediaInfo> referralImages;
@@ -1071,8 +1071,8 @@ public class LoginResponse {
 			this.bottomRequestUIEnabled = bottomRequestUIEnabled;
 		}
 
-		public int getNewReferralEnabled() {
-			return newReferralEnabled;
+		public int getMultiLevelReferralEnabled() {
+			return multiLevelReferralEnabled;
 		}
 
 		public ArrayList<MediaInfo> getReferralImages() {

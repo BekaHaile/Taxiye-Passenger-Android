@@ -6706,7 +6706,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 					textViewRupee.setText(Utils.getCurrencySymbol(Data.autoData.getCurrency()));
 
-					if(Data.userData != null && Data.userData.getReferralMessages().getNewReferralEnabled()){
+					if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
 						tvFreeRidesForLife.setVisibility(View.VISIBLE);
 					}
 
@@ -13007,7 +13007,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void checkForYoutubeIntent(){
 		if(!Prefs.with(this).getBoolean(Constants.SP_YOUTUBE_TUTORIAL_SKIPPED, false)
 				&& Data.userData != null
-				&& Data.userData.getReferralMessages().getNewReferralEnabled()
+				&& Data.userData.getReferralMessages().getMultiLevelReferralEnabled()
 				&& Data.userData.getReferralMessages().getReferralImages() != null){
 			String youtubeId = "";
 			for(MediaInfo mi : Data.userData.getReferralMessages().getReferralImages()){

@@ -14,7 +14,7 @@ public class ReferralMessages{
     public String referralMoreInfoMessage;
 	private String title;
 	private ArrayList<MediaInfo> referralImages;
-	private int newReferralEnabled;
+	private int multiLevelReferralEnabled;
 
 	private double referralsCount;
 	private double referralEarnedTotal;
@@ -46,16 +46,16 @@ public class ReferralMessages{
 		return referralImages;
 	}
 
-	public boolean getNewReferralEnabled() {
-		return newReferralEnabled == 1;
+	public boolean getMultiLevelReferralEnabled() {
+		return multiLevelReferralEnabled == 1;
 	}
 
 	public void setReferralImages(ArrayList<MediaInfo> referralImages) {
 		this.referralImages = referralImages;
 	}
 
-	public void setNewReferralEnabled(int newReferralEnabled) {
-		this.newReferralEnabled = newReferralEnabled;
+	public void setMultiLevelReferralEnabled(int multiLevelReferralEnabled) {
+		this.multiLevelReferralEnabled = multiLevelReferralEnabled;
 	}
 
 	public double getReferralsCount() {

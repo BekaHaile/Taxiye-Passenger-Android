@@ -27,7 +27,6 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.squareup.picasso.Picasso;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -55,7 +54,6 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 
 	private LinearLayout llWhatsappShare, llReferralCode;
 	private TextView tvMoreSharingOptions, tvReferralCodeValue, textViewReferDriver;
-	private boolean isNewReferral;
 	private LinearLayout llUserReferralData;
 	private TextView tvReferralsCount, tvCashEarned, tvCashEarnedToday;
 	private RelativeLayout rlViewPager;
@@ -64,10 +62,9 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 	private TabLayout tabDots;
 
 
-	public static ReferralsFragment newInstance(boolean isNewReferral){
+	public static ReferralsFragment newInstance(){
 		ReferralsFragment fragment = new ReferralsFragment();
 		Bundle bundle = new Bundle();
-		bundle.putBoolean(Constants.KEY_IS_NEW_REFERRAL, isNewReferral);
 		fragment.setArguments(bundle);
 		return fragment;
 	}
@@ -89,9 +86,6 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 			e.printStackTrace();
 		}
 
-		if(getArguments() != null){
-			isNewReferral = getArguments().getBoolean(Constants.KEY_IS_NEW_REFERRAL, false);
-		}
 
 		GAUtils.trackScreenView(REFERRAL+HOME);
 
@@ -206,7 +200,7 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 
 		try {
 
-			if(Data.userData != null && isNewReferral){
+			if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
 				llUserReferralData.setVisibility(View.VISIBLE);
 
 				setHighlightText(tvReferralsCount, getString(R.string.referrals), String.valueOf((int)Data.userData.getReferralMessages().getReferralsCount()));

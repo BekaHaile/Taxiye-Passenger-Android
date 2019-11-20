@@ -439,7 +439,7 @@ public class JSONParser implements Constants {
             parseConfigParams(context, autoData);
 
             if(Data.userData != null){
-            	Data.userData.getReferralMessages().setNewReferralEnabled(autosData.getNewReferralEnabled());
+            	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
 			}
         } catch (Exception e) {
