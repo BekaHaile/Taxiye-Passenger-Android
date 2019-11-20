@@ -1840,7 +1840,6 @@
     <string name="search">"Buscar "</string>
     <string name="country_picker_header">"Seleccionar país "</string>
     <string name="no_country_found">No country found</string>
-    <string name="pay_via_format">Pay via %s</string>
     <string name="jugnoo_cash_added">%s Cash added</string>
     <string name="finding_a_driver">%sEncontrar un conductor de taxi Progressive ...</string>
     <string name="confirm_ride_request">"Confirmar solicitud de viaje "</string>
@@ -1887,7 +1886,7 @@
     <string name="net_tax">Impuesto neto</string>
     <string name="pay_via_format">Pagar a través de %s</string>
 
-    <string name="email_support">Enviar email a Patio</string>
+    <string name="email_support">Enviar email a Delivery</string>
     <string name="schedule_ride">Schedule Ride</string>
     <string name="language">Configuración Regional</string>
     <string name="refer_and_earn">Referir &amp; Ganar</string>
