@@ -1774,6 +1774,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						tvReferralTitle.setText(R.string.referral_code_applied);
 						etReferralCode.setEnabled(false);
 						etReferralCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_tick_coupon, 0);
+						findViewById(R.id.ivEtPromoDiv).setVisibility(View.GONE);
 					} else {
 						tvReferralTitle.setText(R.string.do_you_have_a_referral_code);
 						etReferralCode.setEnabled(true);
