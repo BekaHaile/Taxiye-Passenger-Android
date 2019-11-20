@@ -9444,6 +9444,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             searchLocation = new SearchLocation(Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude, "",
                     Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), 0 + "", System.currentTimeMillis(), type);
         } else {
+            if(Data.autoData.getDropLatLng() == null){
+                return;
+            }
             searchLocation = new SearchLocation(Data.autoData.getDropLatLng().latitude, Data.autoData.getDropLatLng().longitude, "",
                     Data.autoData.getDropAddress(), Data.autoData.getDropAddressId() + "", System.currentTimeMillis(), type);
         }
