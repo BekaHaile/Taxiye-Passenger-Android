@@ -1178,6 +1178,9 @@ public class LoginResponse {
 		@SerializedName("show_jstar_in_account")
 		@Expose
 		private int showJugnooStarInAccount;
+		@SerializedName("promo_success")
+		@Expose
+		private int promoSuccess;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -1400,6 +1403,10 @@ public class LoginResponse {
 
 		public double getReferralEarnedToday() {
 			return referralEarnedToday;
+		}
+
+		public int getPromoSuccess() {
+			return promoSuccess;
 		}
 	}
 
