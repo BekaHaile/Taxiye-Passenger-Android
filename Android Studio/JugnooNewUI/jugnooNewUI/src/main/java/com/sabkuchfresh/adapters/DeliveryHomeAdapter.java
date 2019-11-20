@@ -38,8 +38,10 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.datastructure.SearchSuggestion;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
+import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.RecentOrder;
+import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
 import com.squareup.picasso.Picasso;
@@ -52,6 +54,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +66,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.WebActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -130,6 +136,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private int mBannerPositionInList = -1;
     private FormAddRestaurantModel formAddRestaurantModel;
     private Handler timerHandler;
+    private int viewPagerRotateCount = 0;
     private Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
@@ -421,7 +428,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (!hasMorePages) {
 
 
-            boolean showAddStoreLayout = activity.isDeliveryOpenInBackground() && Data.getDeliveryCustomerData() != null && Data.getDeliveryCustomerData().getShowAddStore();
+            boolean showAddStoreLayout = activity.isDeliveryOpenInBackground() && Data.getDeliveryCustomerData() != null && Data.getDeliveryCustomerData().getShowAddStore() && activity.getMenusFragment().mBannerId == -1;
 
             if (menusResponse.getServiceUnavailable() != 1) {
                 boolean isCustomOrderModel = activity.isDeliveryOpenInBackground() && activity.getMenusFragment().chatAvailable;
@@ -1006,14 +1013,41 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             List<MenusResponse.BannerInfo> bannerInfos = ((BannerInfosModel) dataToDisplay.get(position)).getBannerInfos();
             ViewHolderOffers holderOffers = (ViewHolderOffers) mholder;
             if (holderOffers.menusVendorOffersAdapter == null) {
+//                holderOffers.menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, bannerInfos, new MenusVendorOffersAdapter.Callback() {
+//                    @Override
+//                    public void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo) {
+//                        if (bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1) {
+//                            callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
+//                        } else if (bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1) {
+//                            callback.onRestaurantSelected(bannerInfo.getRestaurantId(),
+//                                    bannerInfo.getShouldOpenMerchantInfo());
+//                        }
+//                    }
+//                });
+
                 holderOffers.menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, bannerInfos, new MenusVendorOffersAdapter.Callback() {
                     @Override
                     public void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo) {
                         if (bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1) {
                             callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
-                        } else if (bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1) {
+                        } else if (bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1 && bannerInfo.getRestaurantItemId() == -1) {
+//                            callback.onRestaurantSelected(bannerInfo.getRestaurantId(),
+//                                    bannerInfo.getShouldOpenMerchantInfo());
                             callback.onRestaurantSelected(bannerInfo.getRestaurantId(),
-                                    bannerInfo.getShouldOpenMerchantInfo());
+                                    false);
+                        } else if(bannerInfo.getRestaurantId() != -1 && bannerInfo.getRestaurantItemId() != -1) {
+                            callback.onRestaurantSelected(new Item(bannerInfo.getRestaurantItemId(), bannerInfo.getRestaurantId()), bannerInfo.getRestaurantId(), false);
+
+//                        } else if (bannerInfo.getWebViewLink() != null && !bannerInfo.getWebViewLink().isEmpty() && bannerInfo.getRestaurantId() == -1) {
+//                            activity.startActivity(WebActivity.callingIntent(activity, bannerInfo.getWebViewLink()));
+//
+//                        } else if(bannerInfo.getExtLink() != null && !bannerInfo.getExtLink().isEmpty() && bannerInfo.getRestaurantId() == -1) {
+//                            activity.startActivity(WebActivity.callingIntent(activity, bannerInfo.getExtLink()));
+                        } else if( bannerInfo.getRestaurantId() == -1 && bannerInfo.getViewType() == 1) {
+                            callback.onBannerClickForViewType(bannerInfo.getBannerId());
+
+                        } else if( bannerInfo.getRestaurantId() == -1 && bannerInfo.getViewType() == 2) {
+                            callback.onBannerClickForViewType(bannerInfo.getBannerId());
                         }
                     }
                 });
@@ -1036,6 +1070,31 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 holderOffers.tabDots.setVisibility(View.VISIBLE);
             }
+
+            final Timer timer = new Timer();
+            final List<MenusResponse.BannerInfo> bannerInfoFinal = bannerInfos;
+            final ViewHolderOffers holderOffersFinal = holderOffers;
+
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    holderOffersFinal.pagerMenusVendorOffers.post(new Runnable(){
+
+                        @Override
+                        public void run() {
+                            if(viewPagerRotateCount < 3) {
+                                holderOffersFinal.pagerMenusVendorOffers.setCurrentItem((holderOffersFinal.pagerMenusVendorOffers.getCurrentItem() + 1) % bannerInfoFinal.size());
+                                if((holderOffersFinal.pagerMenusVendorOffers.getCurrentItem() + 1) % bannerInfoFinal.size() == 0) {
+                                    viewPagerRotateCount += 1;
+                                }
+                            } else {
+                                timer.cancel();
+                            }
+                        }
+                    });
+                }
+            };
+            timer.schedule(timerTask, 3000, 3000);
         } else if (mholder instanceof ViewHolderOfferStrip) {
             MenusResponse.StripInfo stripInfo = (MenusResponse.StripInfo) dataToDisplay.get(position);
             ViewHolderOfferStrip holderStrip = (ViewHolderOfferStrip) mholder;
@@ -1592,9 +1651,13 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public interface Callback {
         void onRestaurantSelected(int vendorId, final boolean shouldOpenMerchantInfo);
 
+        void onRestaurantSelected(Item selItem, int vendorId, final boolean shouldOpenMerchantInfo);
+
         void onBannerInfoDeepIndexClick(int deepIndex);
 
         void openCategory(MenusResponse.Category categoryId);
+
+        void onBannerClickForViewType(int bannerId);
 
         void onVendorDirectSearchClicked(VendorDirectSearch vendorDirectSearch);
 

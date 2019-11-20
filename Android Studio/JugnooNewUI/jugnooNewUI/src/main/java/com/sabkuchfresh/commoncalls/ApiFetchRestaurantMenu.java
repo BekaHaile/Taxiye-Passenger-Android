@@ -17,6 +17,7 @@ import com.sabkuchfresh.retrofit.model.menus.CustomiseOptionsId;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
+import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.retrofit.model.menus.VendorMenuResponse;
 import com.sabkuchfresh.utils.AppConstant;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -221,26 +223,55 @@ public class ApiFetchRestaurantMenu {
     private void openNextFragment(boolean goToCheckout, VendorDirectSearch vendorDirectSearch) {
 
         // if from direct search open vendor
-        if(vendorDirectSearch!=null){
-            Bundle args = new Bundle();
-            args.putInt(Constants.ITEM_CATEGORY_ID,vendorDirectSearch.getCategoryId());
-            args.putInt(Constants.ITEM_SUB_CATEGORY_ID,vendorDirectSearch.getSubcategoryId());
-            args.putInt(Constants.ITEM_RESTAURANT_ITEM_ID,vendorDirectSearch.getItemId());
-            activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer(),args);
-            return;
-        }
+//        if(vendorDirectSearch!=null){
+//            Bundle args = new Bundle();
+//            args.putInt(Constants.ITEM_CATEGORY_ID,vendorDirectSearch.getCategoryId());
+//            args.putInt(Constants.ITEM_SUB_CATEGORY_ID,vendorDirectSearch.getSubcategoryId());
+//            args.putInt(Constants.ITEM_RESTAURANT_ITEM_ID,vendorDirectSearch.getItemId());
+//            activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer(),args);
+//            return;
+//        }
+//
+//        if (goToCheckout) {
+//            activity.openCart(activity.getAppType(), true);
+//        } else {
+//            if(activity.isMenusIsOpenMerchantInfo()
+//                    && activity.getMerchantInfoFragment() == null){
+//                //if(activity.shouldOpenMerchantInfoFragment()
+//                       // && activity.getMerchantInfoFragment() == null){
+//                activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());
+//            } else {
+//                activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+//            }
+//        }
 
-        if (goToCheckout) {
-            activity.openCart(activity.getAppType(), true);
-        } else {
-            if(activity.isMenusIsOpenMerchantInfo()
-                    && activity.getMerchantInfoFragment() == null){
-                //if(activity.shouldOpenMerchantInfoFragment()
-                       // && activity.getMerchantInfoFragment() == null){
-                activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());
-            } else {
-                activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+        // if from direct search open vendor
+        if(activity.getMenuProductsResponse().getVendor().getActivationStatus() == 1) {
+            if (vendorDirectSearch != null) {
+                Bundle args = new Bundle();
+                args.putInt(Constants.ITEM_CATEGORY_ID, vendorDirectSearch.getCategoryId());
+                args.putInt(Constants.ITEM_SUB_CATEGORY_ID, vendorDirectSearch.getSubcategoryId());
+                args.putInt(Constants.ITEM_RESTAURANT_ITEM_ID, vendorDirectSearch.getItemId());
+                activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer(), args);
+                return;
             }
+
+            if (goToCheckout) {
+                activity.openCart(activity.getAppType(), true);
+            } else {
+                if (activity.isMenusIsOpenMerchantInfo()
+                        && activity.getMerchantInfoFragment() == null) {
+                    //if(activity.shouldOpenMerchantInfoFragment()
+                    // && activity.getMerchantInfoFragment() == null){
+                    activity.getTransactionUtils().openMerchantInfoFragment(activity, activity.getRelativeLayoutContainer());
+                } else {
+                    activity.getTransactionUtils().openVendorMenuFragment(activity, activity.getRelativeLayoutContainer());
+                }
+            }
+        } else {
+            MenusResponse menusResponse = activity.getMenusResponse();
+            menusResponse.setVendors(new ArrayList<MenusResponse.Vendor>());
+//            activity.getMenusFragment().getDeliveryHomeAdapter().setList(menusResponse, false, true, false);
         }
     }
 

@@ -35,10 +35,14 @@ import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -412,6 +416,34 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                                 break;
                             }
                         }
+                    } else if(itemId != -1) {
+                        for (int i = 0; i < activity.getMenuProductsResponse().getCategories().size(); i++) {
+                            List<Subcategory> subcategories = activity.getMenuProductsResponse().getCategories().get(i).getSubcategories();
+                            List<Item> items = activity.getMenuProductsResponse().getCategories().get(i).getItems();
+                            boolean isTabFound = false;
+                            if (subcategories != null) {
+                                for (int k = 0; k < subcategories.size(); k++) {
+                                    for (int j = 0; j < subcategories.get(k).getItems().size(); j++) {
+                                        if (subcategories.get(k).getItems().get(j).getRestaurantItemId() == itemId) {
+                                            tabPosition = i;
+                                            isTabFound = true;
+                                            break;
+                                        }
+                                    }
+                                    if (isTabFound) {
+                                        break;
+                                    }
+                                }
+                            } else if (items != null) {
+                                for (int j = 0; j < items.size(); j++) {
+                                    if (items.get(j).getRestaurantItemId() == itemId) {
+                                        tabPosition = i;
+                                        break;
+                                    }
+                                }
+                            }
+
+                        }
                     }
 
                     menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories(), -1,tabPosition);
@@ -425,6 +457,11 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     if (menusCategoryFragmentsAdapter != null && categoryId != -1) {
                         // scroll to correct category
                         if(tabPosition!=-1){
+                            viewPager.setCurrentItem(tabPosition);
+                        }
+                    } else if(menusCategoryFragmentsAdapter != null && itemId != -1) {
+                        // scroll to correct category
+                        if (tabPosition != -1) {
                             viewPager.setCurrentItem(tabPosition);
                         }
                     }
@@ -469,6 +506,17 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                         }
                     });
                     activity.getSlots().get(activity.menusSort).setCheck(true);
+
+                    if(menusCategoryFragmentsAdapter != null && itemId != -1) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Fragment page = (Fragment) menusCategoryFragmentsAdapter.instantiateItem(viewPager, viewPager.getCurrentItem());
+                                ((MenusCategoryItemsFragment) page).setSelectedItem(itemId);
+                            }
+                        }, 100);
+
+                    }
                 }
             }
         } catch (Exception exception) {
