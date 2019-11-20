@@ -4,6 +4,8 @@ import android.app.Dialog
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.text.Editable
+import android.text.InputFilter
+import android.text.Spanned
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +18,7 @@ import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.retrofit.model.RequestRideConfirm
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
+import java.util.regex.Pattern
 
 
 class DriverNotFoundDialog : DialogFragment() {
@@ -82,6 +85,8 @@ class DriverNotFoundDialog : DialogFragment() {
         var isTotalInRange = false
         var requestRide : RequestRideConfirm? = null
 
+        rootView.etAdditionalFare.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(5, 2))
+
         rootView.tvLabel.visibility = View.INVISIBLE
 
         if(arguments != null) {
@@ -118,7 +123,7 @@ class DriverNotFoundDialog : DialogFragment() {
         var countBeforeChange: Int? = 0
         rootView.etAdditionalFare.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                if(p0.toString().isNotEmpty()) {
+                if(p0.toString().isNotEmpty() && p0.toString() != ".") {
                     addedTip = p0.toString().toDouble()
                     setTotalFare(requestRide, addedTip, isTotalInRange)
                 } else {
@@ -173,5 +178,17 @@ class DriverNotFoundDialog : DialogFragment() {
     interface RideRequestConfirmListener {
         fun onCancelClick()
         fun onOkClick()
+    }
+
+    inner class DecimalDigitsInputFilter(digitsBeforeZero: Int, digitsAfterZero: Int) : InputFilter {
+
+        private var mPattern: Pattern = Pattern.compile("[0-9]{0," + (digitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (digitsAfterZero - 1) + "})?)||(\\.)?")
+
+        override fun filter(source: CharSequence, start: Int, end: Int, dest: Spanned, dstart: Int, dend: Int): CharSequence? {
+
+            val matcher = mPattern.matcher(dest)
+            return if (!matcher.matches()) "" else null
+        }
+
     }
 }

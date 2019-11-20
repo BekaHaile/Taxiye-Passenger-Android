@@ -666,7 +666,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private SearchLocationDB searchLocationDB;
 
     private CardView cvTutorialBanner;
-    private TextView tvTutorialBanner;
+    private TextView tvTutorialBanner, tvAddedTip;
     private ImageView ivCrossTutorialBanner;
 
     @SuppressLint("NewApi")
@@ -2297,6 +2297,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 		cvTutorialBanner = findViewById(R.id.cvTutorialBanner);
 		tvTutorialBanner = findViewById(R.id.tvTutorialBanner);
+        tvAddedTip = findViewById(R.id.tvAddedTip);
+        tvAddedTip.setVisibility(View.GONE);
 		ivCrossTutorialBanner = findViewById(R.id.ivCrossTutorialBanner);
 
 		ivCrossTutorialBanner.setOnClickListener(v -> {
@@ -3084,16 +3086,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
         boolean isNotInRange = region.getRideType() == RideTypeValue.POOL.getOrdinal() || region.getFareMandatory() == 1;
 
-        if(region.getRegionFare() != null) {
-            RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
-                    region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
-                    region.getRegionName(), region.getDisclaimerText(), region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString() : "",
-                    isNotInRange ? region.getRegionFare().getFare() : 0.0,
-                    region.getRegionFare().getMinFare(), region.getRegionFare().getMaxFare(), "");
+        RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
+                region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
+                region.getRegionName(), region.getDisclaimerText(), region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString() : "",
+                isNotInRange && region.getRegionFare() != null ? region.getRegionFare().getFare() : 0.0,
+                region.getRegionFare() != null ? region.getRegionFare().getMinFare() : 0.0,
+                region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, "");
 
-            DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(requestRideConfirm);
-            dialogFragment.show(ft, DriverNotFoundDialog.class.getSimpleName());
-        }
+        DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(requestRideConfirm);
+        dialogFragment.show(ft, DriverNotFoundDialog.class.getSimpleName());
     }
 
     private void openDriverContactListDialog() {
@@ -4264,6 +4265,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         }
                         updateBidsView();
 
+                        checkForAddedTip();
+
                         getHandler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -4688,6 +4691,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void checkForAddedTip() {
+        if(Data.autoData != null && Data.autoData.getNoDriverFoundTip() > 0.0) {
+            tvAddedTip.setVisibility(View.VISIBLE);
+            tvAddedTip.setText(getString(R.string.text_you_have_added_tip, Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getNoDriverFoundTip())));
+        } else {
+            tvAddedTip.setVisibility(View.GONE);
         }
     }
 
@@ -7546,77 +7558,84 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby, String message) {
+    void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby, String message, int requestType) {
         try {
-            if (noDriversDialog != null && noDriversDialog.isShowing()) {
-                noDriversDialog.dismiss();
-            }
-            noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-            noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-            noDriversDialog.setContentView(R.layout.dialog_custom_one_button);
-
-            RelativeLayout frameLayout = (RelativeLayout) noDriversDialog.findViewById(R.id.rv);
-            new ASSL(activity, frameLayout, 1134, 720, true);
-
-            WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
-            layoutParams.dimAmount = 0.6f;
-            noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            noDriversDialog.setCancelable(true);
-            noDriversDialog.setCanceledOnTouchOutside(true);
-
-            TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
-            textHead.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-            textHead.setVisibility(View.GONE);
-
-            TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
-            textMessage.setTypeface(Fonts.mavenMedium(activity));
-
-            textMessage.setMovementMethod(LinkMovementMethod.getInstance());
-            textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
-
-            if (zeroDriversNearby) {
-                textMessage.setText(R.string.sorry_no_drivers_available_nearby);
+            Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+            if(requestType == 0 && region.getRegionFare() != null && region.getRegionFare().getPoolFareId() != 0) {
+                openDriverNotFoundTipDialog();
+            } else if(requestType == 1) {
+                openDriverContactListDialog();
             } else {
-                if ("".equalsIgnoreCase(message)) {
-                    textMessage.setText(R.string.sorry_all_drivers_busy);
+                if (noDriversDialog != null && noDriversDialog.isShowing()) {
+                    noDriversDialog.dismiss();
+                }
+                noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+                noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+                noDriversDialog.setContentView(R.layout.dialog_custom_one_button);
+
+                RelativeLayout frameLayout = (RelativeLayout) noDriversDialog.findViewById(R.id.rv);
+                new ASSL(activity, frameLayout, 1134, 720, true);
+
+                WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
+                layoutParams.dimAmount = 0.6f;
+                noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                noDriversDialog.setCancelable(true);
+                noDriversDialog.setCanceledOnTouchOutside(true);
+
+                TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
+                textHead.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+                textHead.setVisibility(View.GONE);
+
+                TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
+                textMessage.setTypeface(Fonts.mavenMedium(activity));
+
+                textMessage.setMovementMethod(LinkMovementMethod.getInstance());
+                textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+                if (zeroDriversNearby) {
+                    textMessage.setText(R.string.sorry_no_drivers_available_nearby);
                 } else {
-                    textMessage.setText(message);
+                    if ("".equalsIgnoreCase(message)) {
+                        textMessage.setText(R.string.sorry_all_drivers_busy);
+                    } else {
+                        textMessage.setText(message);
+                    }
                 }
+
+
+                Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
+                btnOk.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+
+                btnOk.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (noDriversDialog != null) {
+                            noDriversDialog.dismiss();
+                        }
+                        noDriversDialog = null;
+                    }
+                });
+
+                frameLayout.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (noDriversDialog != null) {
+                            noDriversDialog.dismiss();
+                        }
+                        noDriversDialog = null;
+                    }
+                });
+
+                noDriversDialog.findViewById(R.id.rl1).setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+                slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(null);
+                noDriversDialog.show();
             }
-
-
-            Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
-            btnOk.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-
-            btnOk.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (noDriversDialog != null) {
-                        noDriversDialog.dismiss();
-                    }
-                    noDriversDialog = null;
-                }
-            });
-
-            frameLayout.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if (noDriversDialog != null) {
-                        noDriversDialog.dismiss();
-                    }
-                    noDriversDialog = null;
-                }
-            });
-
-            noDriversDialog.findViewById(R.id.rl1).setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                }
-            });
-            slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(null);
-            noDriversDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -8670,6 +8689,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             cancelTimerRequestRide();
             ArrayList<String> fellowRiders = new ArrayList<>();
             Data.autoData.setcSessionId(jObj.getString("session_id"));
+            Data.autoData.setNoDriverFoundTip(0.0);
             Data.autoData.setcEngagementId(jObj.getString("engagement_id"));
             Data.autoData.setcDriverId(jObj.getString("driver_id"));
 
@@ -9089,7 +9109,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 public void run() {
                                     try {
                                         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                            noDriverAvailablePopup(HomeActivity.this, false, "");
+                                            noDriverAvailablePopup(HomeActivity.this, false, "", 0);
                                             HomeActivity.passengerScreenMode = P_INITIAL;
                                             switchPassengerScreen(passengerScreenMode);
                                         }
@@ -9227,6 +9247,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 nameValuePairs.put("is_scratch_coupon_applicable", "" + true); // key added for differentiating request ride call from new scratch App and old App
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
+
+                                if(Data.autoData.getNoDriverFoundTip() > 0.0) {
+                                    nameValuePairs.put("tip_amount","" + Data.autoData.getNoDriverFoundTip());
+                                    nameValuePairs.put("request_type","" + 1);
+                                }
                                 try {
                                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                                 } catch (Exception e) {
@@ -9321,7 +9346,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     	Data.autoData.setInitialBidValue(0);
                                                     }
 												}
+                                                checkForAddedTip();
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
+                                                Data.autoData.setNoDriverFoundTip(jObj.optDouble("tip_amount", 0.0));
                                                 Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
                                                 runOnUiThread(new Runnable() {
                                                     @Override
@@ -9342,6 +9369,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 }
                                             } else if (ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
+                                                final int requestType = jObj.optInt("request_type", -1);
                                                 Log.e("NO_DRIVERS_AVAILABLE log", "=" + log);
                                                 cancelTimerRequestRide();
                                                 runOnUiThread(new Runnable() {
@@ -9349,7 +9377,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     public void run() {
                                                         try {
                                                             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                                                noDriverAvailablePopup(HomeActivity.this, false, log);
+                                                                noDriverAvailablePopup(HomeActivity.this, false, log, requestType);
                                                                 firstTimeZoom = false;
                                                                 HomeActivity.passengerScreenMode = P_INITIAL;
                                                                 switchPassengerScreen(passengerScreenMode);
@@ -9546,7 +9574,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     @Override
-    public void onNoDriversAvailablePushRecieved(final String logMessage) {
+    public void onNoDriversAvailablePushRecieved(final String logMessage, final int requestType) {
         cancelTimerRequestRide();
         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
             firstTimeZoom = false;
@@ -9555,7 +9583,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void run() {
                     try {
-                        noDriverAvailablePopup(HomeActivity.this, false, logMessage);
+                        noDriverAvailablePopup(HomeActivity.this, false, logMessage, requestType);
                         HomeActivity.passengerScreenMode = P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                     } catch (Exception e) {

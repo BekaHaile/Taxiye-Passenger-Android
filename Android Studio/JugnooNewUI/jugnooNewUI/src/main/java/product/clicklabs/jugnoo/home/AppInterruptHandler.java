@@ -16,7 +16,7 @@ public interface AppInterruptHandler {
 	
 	void rideRequestAcceptedInterrupt(JSONObject jObj);
 	
-	void onNoDriversAvailablePushRecieved(String logMessage);
+	void onNoDriversAvailablePushRecieved(String logMessage, int requestType);
 	
 	void startRideForCustomer(int flag, String message, PlaceOrderResponse.ReferralPopupContent popupContent);
 	
