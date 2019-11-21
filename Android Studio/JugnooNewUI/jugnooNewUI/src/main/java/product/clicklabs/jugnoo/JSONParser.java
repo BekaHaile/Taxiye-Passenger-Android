@@ -1268,7 +1268,7 @@ public class JSONParser implements Constants {
 			String promoName = "", eta = "";
             double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0, bearing = 0.0, tip = 0.0;
             Schedule scheduleT20 = null;
-            int vehicleType = VEHICLE_AUTO;
+            int vehicleType = VEHICLE_AUTO, regionId;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
             String cancelRideThrashHoldTime = "", poolStatusString = "";
             int cancellationCharges = 0, isPooledRide = 0, chatEnabled = 0;
@@ -1313,6 +1313,8 @@ public class JSONParser implements Constants {
 
                         sessionId = jObject1.getString("session_id");
                         tip = jObject1.optDouble("tip_amount", 0.0);
+                        regionId = jObject1.optInt("region_id", -1);
+                        Prefs.with(context).save(KEY_REGION_ID, regionId);
                         double assigningLatitude = 0, assigningLongitude = 0;
                         if (jObject1.has(KEY_LATITUDE) && jObject1.has(KEY_LONGITUDE)) {
                             assigningLatitude = jObject1.getDouble(KEY_LATITUDE);

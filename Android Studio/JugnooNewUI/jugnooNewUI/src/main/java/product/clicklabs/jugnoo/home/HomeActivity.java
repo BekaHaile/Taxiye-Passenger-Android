@@ -668,6 +668,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private CardView cvTutorialBanner;
     private TextView tvTutorialBanner, tvAddedTip;
     private ImageView ivCrossTutorialBanner;
+    private String mLogMsg;
+    private Integer mRequestType;
 
     @SuppressLint("NewApi")
     @Override
@@ -4146,6 +4148,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             relativeLayoutSearchContainer.setVisibility(View.GONE);
                             hideCenterPickupPin();
                             setPickupLocationInitialUI();
+                            if(Data.autoData != null) {
+                                if (!TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()))) {
+                                    textViewInitialSearchNew.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+                                }
+                                if(!TextUtils.isEmpty(Data.autoData.getDropAddress())) {
+                                    textViewDestSearchNew.setText(Data.autoData.getDropAddress());
+                                }
+                            }
                         } else {
                             if (!specialPickupScreenOpened && map != null) {
                                 if (!searchedALocation) {
@@ -6590,6 +6600,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         public void onCompleteFindADriver() {
                             findADriverFinishing(true, false);
                             addUserCurrentLocationAddressMarker();
+                            if(mLogMsg != null && mRequestType != null) {
+                                noDriverAvailablePopup(HomeActivity.this, false, mLogMsg, mRequestType);
+                                mLogMsg = null;
+                                mRequestType = null;
+                            }
                             try {
 
                                 if(getScheduleRideFragment()!=null){
@@ -7560,10 +7575,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby, String message, int requestType) {
         try {
-            Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
-            if(requestType == 0 && region.getRegionFare() != null && region.getRegionFare().getPoolFareId() != 0) {
+            if(requestType == 0 && isNewUI) {
                 openDriverNotFoundTipDialog();
-            } else if(requestType == 1) {
+            } else if(requestType == 1 && isNewUI) {
                 openDriverContactListDialog();
             } else {
                 if (noDriversDialog != null && noDriversDialog.isShowing()) {
@@ -9109,7 +9123,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 public void run() {
                                     try {
                                         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                            noDriverAvailablePopup(HomeActivity.this, false, "", 0);
+                                            noDriverAvailablePopup(HomeActivity.this, false, "", -1);
                                             HomeActivity.passengerScreenMode = P_INITIAL;
                                             switchPassengerScreen(passengerScreenMode);
                                         }
@@ -9377,7 +9391,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     public void run() {
                                                         try {
                                                             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                                                noDriverAvailablePopup(HomeActivity.this, false, log, requestType);
+                                                                if((requestType == 0 || requestType == 1) && isNewUI) {
+                                                                    mLogMsg = log;
+                                                                    mRequestType = requestType;
+                                                                } else {
+                                                                    noDriverAvailablePopup(HomeActivity.this, false, log, requestType);
+                                                                }
                                                                 firstTimeZoom = false;
                                                                 HomeActivity.passengerScreenMode = P_INITIAL;
                                                                 switchPassengerScreen(passengerScreenMode);
@@ -9583,7 +9602,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 @Override
                 public void run() {
                     try {
-                        noDriverAvailablePopup(HomeActivity.this, false, logMessage, requestType);
+                        if((requestType == 0 || requestType == 1) && isNewUI) {
+                            mLogMsg = logMessage;
+                            mRequestType = requestType;
+                        } else {
+                            noDriverAvailablePopup(HomeActivity.this, false, logMessage, requestType);
+                        }
                         HomeActivity.passengerScreenMode = P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                     } catch (Exception e) {

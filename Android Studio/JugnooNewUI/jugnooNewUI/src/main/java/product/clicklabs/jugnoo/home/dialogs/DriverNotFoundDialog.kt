@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home.dialogs
 
 import android.app.Dialog
+import android.graphics.Typeface.BOLD
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.text.Editable
@@ -75,6 +76,7 @@ class DriverNotFoundDialog : DialogFragment() {
         rootView.tvDrop.typeface = Fonts.mavenRegular(rootView.context)
         rootView.tvTipLabel.typeface = Fonts.mavenRegular(rootView.context)
         rootView.etAdditionalFare.typeface = Fonts.mavenRegular(rootView.context)
+        rootView.tvNoRidesFound.setTypeface(Fonts.mavenRegular(rootView.context), BOLD)
     }
 
     /**
@@ -87,7 +89,7 @@ class DriverNotFoundDialog : DialogFragment() {
 
         rootView.etAdditionalFare.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(5, 2))
 
-        rootView.tvLabel.visibility = View.INVISIBLE
+        rootView.tvLabel.visibility = View.GONE
 
         if(arguments != null) {
             requestRide = arguments?.getParcelable("requestRide")!!

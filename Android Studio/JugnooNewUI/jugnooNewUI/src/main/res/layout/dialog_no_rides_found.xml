@@ -7,7 +7,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/mainView"
-        android:layout_width="300dp"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/bg_draw_corner"
@@ -34,10 +34,10 @@
             android:id="@+id/tvNoRidesFound"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="18dp"
             android:textColor="@color/home_switcher_feed"
             android:gravity="center_horizontal"
-            android:textSize="14sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/glEnd"
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@+id/tvLabel"
@@ -47,10 +47,10 @@
             android:id="@+id/tvEnterManualFare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
             android:textColor="@color/text_color"
             android:gravity="center_horizontal"
-            android:textSize="15sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="@id/glEnd"
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@+id/tvNoRidesFound"
@@ -66,7 +66,7 @@
             android:paddingBottom="5dp"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:singleLine="true"
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
@@ -98,7 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:layout_marginStart="3dp"
             app:layout_constraintStart_toEndOf="@+id/ivVehicle"
             app:layout_constraintEnd_toStartOf="@id/glMid"
@@ -111,7 +111,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
-            android:textSize="13sp"
+            android:textSize="16sp"
             android:layout_marginStart="3dp"
             android:gravity="end"
             app:layout_constraintStart_toEndOf="@+id/glMid"
@@ -136,7 +136,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:layout_marginStart="3dp"
             app:layout_constraintStart_toEndOf="@+id/ivTip"
             app:layout_constraintEnd_toStartOf="@id/glMid"
@@ -159,7 +159,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:layout_marginStart="3dp"
             android:layout_marginTop="@dimen/spacing_small"
             app:layout_constraintStart_toEndOf="@+id/glStart"
@@ -172,7 +172,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:layout_marginStart="3dp"
             android:layout_marginTop="@dimen/spacing_small"
             android:gravity="end"
@@ -259,7 +259,7 @@
             android:id="@+id/btnOk"
             android:layout_width="0dp"
             android:layout_height="36dp"
-            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginTop="@dimen/spacing_extra_large"
             android:background="@drawable/button_theme"
             android:text="@string/ok"
             android:textAllCaps="false"
@@ -268,6 +268,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvDrop"
             app:layout_constraintEnd_toEndOf="@id/glEnd"
             app:layout_constraintStart_toEndOf="@+id/btnCancel"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/glBottomEnd" />
 
         <android.support.v7.widget.AppCompatButton
@@ -282,6 +283,7 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/glBottomEnd"
             app:layout_constraintEnd_toStartOf="@+id/btnOk"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/glStart" />
 
         <android.support.constraint.Guideline
@@ -296,21 +298,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".03" />
+            app:layout_constraintGuide_percent=".05" />
 
         <android.support.constraint.Guideline
             android:id="@+id/glEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".97" />
+            app:layout_constraintGuide_percent=".95" />
 
         <android.support.constraint.Guideline
             android:id="@+id/glMid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.45" />
+            app:layout_constraintGuide_percent="0.44" />
 
         <android.support.constraint.Group
             android:id="@+id/groupDrop"
