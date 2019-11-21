@@ -886,7 +886,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								return;
 							}
 
-							if(loginResponseData != null
+							if(!TextUtils.isEmpty(Data.deepLinkReferralCode)
+									&& loginResponseData != null
 									&& loginResponseData.getUserData() != null
 									&& loginResponseData.getUserData().getPromoSuccess() == 1){
 								referralCode = "";
