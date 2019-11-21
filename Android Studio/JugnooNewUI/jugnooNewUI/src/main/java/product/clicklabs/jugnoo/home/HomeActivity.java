@@ -6784,7 +6784,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     dontCallRefreshDriver = false;
 
                     updateImageViewRideNowIcon();
-                    setupFreshUI();
                     setupInAppCampaignUI();
                     Log.e(TAG, "findADriverFinishing");
                     fabViewTest = new FABViewTest(this, fabViewIntial);

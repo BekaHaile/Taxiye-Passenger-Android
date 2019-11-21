@@ -104,7 +104,6 @@ public class MenuBar {
 			}
 		});
 
-		setupFreshUI();
 	}
 
 
@@ -176,6 +175,8 @@ public class MenuBar {
                     MyApplication.getInstance().ACTIVITY_NAME_PLAY = menuInfo.getName();
                 } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())){
                     MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES_NEW.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES = menuInfo.getName();
                 } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
                     MyApplication.getInstance().ACTIVITY_NAME_WALLET = menuInfo.getName();
                 } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
@@ -223,12 +224,12 @@ public class MenuBar {
 
 		if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
 			int index = itemsToShow.indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES.getTag()));
+			int indexNew = itemsToShow.indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES_NEW.getTag()));
 			if(index > -1){
-				MenuInfo menuInfo = itemsToShow.remove(index);
-				menuInfo.setTag(MenuInfoTags.FREE_RIDES_NEW.getTag());
-				menuInfo.setName(activity.getString(R.string.free_rides_for_life));
+				itemsToShow.remove(index);
+				MenuInfo menuInfo = new MenuInfo(activity.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
 				itemsToShow.add(0, menuInfo);
-			} else {
+			} else if(indexNew == -1){
 				MenuInfo menuInfo = new MenuInfo(activity.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
 				itemsToShow.add(0, menuInfo);
 			}
