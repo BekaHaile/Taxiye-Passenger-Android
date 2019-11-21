@@ -450,6 +450,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onCreate(savedInstanceState);
 
 		try {
+			MyApplication.getInstance().setmActivity(this);
 			HashMap<String,String> rationalMap = (new HashMap<>());
 			rationalMap.put(Manifest.permission.ACCESS_FINE_LOCATION,
 			BuildConfig.FLAVOR.equals("jugnoo")?getString(R.string.perm_location_rational_splash_jugnoo,getString(R.string.app_name)):
