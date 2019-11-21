@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.directions.room.model.Path
 import product.clicklabs.jugnoo.directions.room.model.Point
 import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
+import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponseGoogle
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
 import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.Log
@@ -370,7 +371,7 @@ object JungleApisImpl {
         return autoCompleteResult
     }
 
-    fun getPlaceById(placeId:String, latLng:LatLng) : PlaceDetailResult? {
+    fun getPlaceById(placeId:String, latLng:LatLng, sessiontoken:String) : PlaceDetailResult? {
         var placeDetailResult:PlaceDetailResult? = null
         try {
             val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_AUTOCOMPLETE_OBJ, Constants.EMPTY_JSON_OBJECT))
@@ -404,10 +405,15 @@ object JungleApisImpl {
 
         } catch (e: Exception) {
             try {//google auto-complete hit
-                val response = GoogleRestApis.getPlaceDetails(placeId)
+                val response = GoogleRestApis.getPlaceDetails(placeId, sessiontoken)
                 val result = String((response.body as TypedByteArray).bytes)
-                val placeDetailResponse = gson.fromJson(result, PlaceDetailsResponse::class.java)
-                if (placeDetailResponse.results != null && placeDetailResponse.results!!.isNotEmpty()) {
+                val placeDetailsResponseGoogle = gson.fromJson(result, PlaceDetailsResponseGoogle::class.java)
+                if (placeDetailsResponseGoogle.result != null) {
+
+                    val placeDetailResponse = PlaceDetailsResponse()
+                    placeDetailResponse.results = mutableListOf()
+                    placeDetailResponse.results!!.add(placeDetailsResponseGoogle.result!!)
+
                     placeDetailResult = PlaceDetailResult(placeDetailResponse, false)
                 }
             } catch (e: Exception) {

@@ -79,7 +79,7 @@ object GoogleJungleCaching {
 
 
     //Ai for finding place details by place Id
-    fun getPlaceById(placeId:String, placeAddress:String, latLng: LatLng, callback: PlaceDetailCallback): Job{
+    fun getPlaceById(placeId:String, placeAddress:String, latLng: LatLng, sessiontoken:String, callback: PlaceDetailCallback): Job{
         return GlobalScope.launch(Dispatchers.Main){
             var placesResponse: PlaceDetailsResponse? = null
             try {
@@ -101,7 +101,7 @@ object GoogleJungleCaching {
                     placesResponse = results
                 } catch(e:Exception){
                     val response:JungleApisImpl.PlaceDetailResult? = withContext(Dispatchers.IO){
-                        try { JungleApisImpl.getPlaceById(placeId, latLng) } catch (e: Exception) { null }
+                        try { JungleApisImpl.getPlaceById(placeId, latLng, sessiontoken) } catch (e: Exception) { null }
                     }
                     if(response != null) {
                         placesResponse = response.placeDetailsResponse
