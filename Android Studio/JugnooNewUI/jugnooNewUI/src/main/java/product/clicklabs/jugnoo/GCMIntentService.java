@@ -60,6 +60,7 @@ import product.clicklabs.jugnoo.promotion.models.Promo;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Foreground;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SoundMediaPlayer;
@@ -942,6 +943,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+					} else if(PushFlags.NO_DRIVER_FOUND_HELP.getOrdinal() == flag) {
+						if(HomeActivity.appInterruptHandler != null && Foreground.get(MyApplication.getInstance()).isForeground()) {
+							HomeActivity.appInterruptHandler.onNoDriverHelpPushReceived(new JSONObject());
+						} else {
+							notificationManager(this, title, message1, 0);
+							Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, message);
+						}
 					}
 
 					incrementPushCounter(jObj, flag);

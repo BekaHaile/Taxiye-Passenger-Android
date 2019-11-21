@@ -4156,6 +4156,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     textViewDestSearchNew.setText(Data.autoData.getDropAddress());
                                 }
                             }
+                            String msg = Prefs.with(this).getString(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
+                            if(msg != null && !msg.isEmpty()) {
+                                onNoDriverHelpPushReceived(new JSONObject(msg));
+                                Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
+                            }
                         } else {
                             if (!specialPickupScreenOpened && map != null) {
                                 if (!searchedALocation) {
@@ -13020,6 +13025,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             buttonLockRide.setVisibility(View.VISIBLE);
             buttonUnlockRide.setVisibility(View.GONE);
         }
+
+    }
+
+    @Override
+    public void onNoDriverHelpPushReceived(JSONObject jsonObject) {
 
     }
 
