@@ -531,7 +531,7 @@ public class SearchListAdapter extends BaseAdapter{
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 			Log.v("after call back", "after call back");
 
-			GoogleJungleCaching.INSTANCE.getPlaceById(placeId, placeAddress, defaultSearchPivotLatLng, new PlaceDetailCallback() {
+			GoogleJungleCaching.INSTANCE.getPlaceById(placeId, placeAddress, defaultSearchPivotLatLng, uuidVal, new PlaceDetailCallback() {
 				@Override
 				public void onPlaceDetailReceived(@NotNull PlaceDetailsResponse placeDetailsResponse) {
 					try {

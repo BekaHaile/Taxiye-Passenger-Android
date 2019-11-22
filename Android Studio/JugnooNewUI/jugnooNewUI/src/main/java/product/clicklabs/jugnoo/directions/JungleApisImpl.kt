@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.directions.room.model.Path
 import product.clicklabs.jugnoo.directions.room.model.Point
 import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
+import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponseGoogle
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
 import product.clicklabs.jugnoo.utils.GoogleRestApis
 import product.clicklabs.jugnoo.utils.Log
@@ -30,6 +31,9 @@ import kotlin.collections.HashMap
 object JungleApisImpl {
 
     private val gson = Gson()
+
+    private const val JUNGLE_TYPE_VALUE = "android"
+    private const val JUNGLE_OFFERING_VALUE = "18"
 
     private var db: DirectionsPathDatabase? = null
         get() {
@@ -71,6 +75,8 @@ object JungleApisImpl {
     fun putJungleOptionsParams(params:HashMap<String, String>, jungleObj:JSONObject){
         val option = jungleObj.optInt(Constants.KEY_JUNGLE_OPTIONS, 0)
         params[Constants.KEY_JUNGLE_OPTIONS] = option.toString()
+        params[Constants.KEY_JUNGLE_TYPE] = JUNGLE_TYPE_VALUE
+        params[Constants.KEY_JUNGLE_OFFERING] = JUNGLE_OFFERING_VALUE
 
         when(option){
             1 -> { //here map
@@ -370,7 +376,7 @@ object JungleApisImpl {
         return autoCompleteResult
     }
 
-    fun getPlaceById(placeId:String, latLng:LatLng) : PlaceDetailResult? {
+    fun getPlaceById(placeId:String, latLng:LatLng, sessiontoken:String) : PlaceDetailResult? {
         var placeDetailResult:PlaceDetailResult? = null
         try {
             val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_AUTOCOMPLETE_OBJ, Constants.EMPTY_JSON_OBJECT))
@@ -386,6 +392,9 @@ object JungleApisImpl {
                 } else {
                     GoogleRestApis.MAPS_BROWSER_KEY()
                 }
+
+                params[Constants.KEY_JUNGLE_TYPE] = JUNGLE_TYPE_VALUE
+                params[Constants.KEY_JUNGLE_OFFERING] = JUNGLE_OFFERING_VALUE
 
                 val response = RestClient.getJungleMapsApi().geocodePlaceById(params)
 
@@ -404,10 +413,15 @@ object JungleApisImpl {
 
         } catch (e: Exception) {
             try {//google auto-complete hit
-                val response = GoogleRestApis.getPlaceDetails(placeId)
+                val response = GoogleRestApis.getPlaceDetails(placeId, sessiontoken)
                 val result = String((response.body as TypedByteArray).bytes)
-                val placeDetailResponse = gson.fromJson(result, PlaceDetailsResponse::class.java)
-                if (placeDetailResponse.results != null && placeDetailResponse.results!!.isNotEmpty()) {
+                val placeDetailsResponseGoogle = gson.fromJson(result, PlaceDetailsResponseGoogle::class.java)
+                if (placeDetailsResponseGoogle.result != null) {
+
+                    val placeDetailResponse = PlaceDetailsResponse()
+                    placeDetailResponse.results = mutableListOf()
+                    placeDetailResponse.results!!.add(placeDetailsResponseGoogle.result!!)
+
                     placeDetailResult = PlaceDetailResult(placeDetailResponse, false)
                 }
             } catch (e: Exception) {
