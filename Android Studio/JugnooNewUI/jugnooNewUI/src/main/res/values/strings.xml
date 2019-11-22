@@ -2144,6 +2144,15 @@
     <string name="text_congestion_time">Congestion Time</string>
     <string name="type_atleast_4_characters">Type atleast 4 characters</string>
     <string name="congestion_charges_per_min">Congestion charges per min</string>
+    <string name="referrals">Referrals</string>
+    <string name="cash_earned">Cash Earned</string>
+    <string name="cash_earned_today">Cash Earned Today</string>
+    <string name="earned_today">Earned Today</string>
+    <string name="free_rides_for_life">Free Rides for Life</string>
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="watch_how_to_earn_free_rides">Watch How to Earn Free Rides for Life!</string>
+    <string name="no_i_already_know"><u>No, I already know how to get Free Rides ></u></string>
+    <string name="referral_code_applied">Promocode Applied</string>
     <string name="oops">Oops!</string>
     <string name="no_rides_found_at_this_rate">No rides found at this rate!</string>
     <string name="you_can_enter_manual_fare">You can enter manual fare for higher\nprobability of booking</string>

@@ -49,7 +49,6 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRidesActivity;
-import product.clicklabs.jugnoo.newui.activity.RewardsActivity;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -189,9 +188,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fatafat_menu_selector);
                     Data.webActivityTitle = menuInfo.getName();
-                }else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                }
+                else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())
+						||MenuInfoTags.FREE_RIDES_NEW.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_share_selector);
-                } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                }
+                else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_wallet_selector);
                     try {
                         holder.textViewValue.setText(!activity.getResources().getBoolean(R.bool.wallet_amount_sidemenu)? Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance()):String.format(activity.getResources()
@@ -537,6 +539,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(tag)){
                 Intent intent = new Intent(activity, ShareActivity.class);
                 intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+            else if(MenuInfoTags.FREE_RIDES_NEW.getTag().equalsIgnoreCase(tag)){
+                Intent intent = new Intent(activity, ShareActivity.class);
+				intent.putExtra(Constants.KEY_IS_NEW_REFERRAL, true);
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }

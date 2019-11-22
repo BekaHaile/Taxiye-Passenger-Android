@@ -40,6 +40,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.MapsApiSources;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -420,7 +421,7 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 }
             });
         	}
-        	apiFareEstimate.getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon, null, "c_fea");
+        	apiFareEstimate.getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon, null, MapsApiSources.CUSTOMER_FARE_ESTIMATE_ACTIVITY);
 
         } catch (Exception e) {
             e.printStackTrace();

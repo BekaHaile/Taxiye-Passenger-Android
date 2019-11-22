@@ -304,6 +304,9 @@ public class JSONParser implements Constants {
 				Config.saveSupportNumber(context, loginUserData.getSupportNumber());
 			}
             Data.userData.setReferralMessages(parseReferralMessages(context, loginUserData));
+            Data.userData.getReferralMessages().setReferralsCount(loginUserData.getReferralsCount());
+            Data.userData.getReferralMessages().setReferralEarnedToday(loginUserData.getReferralEarnedToday());
+            Data.userData.getReferralMessages().setReferralEarnedTotal(loginUserData.getReferralEarnedTotal());
             performUserAppMonitoring(context, userData);
 
 //            if(Prefs.with(context).getString(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "").equals("")) {
@@ -434,6 +437,11 @@ public class JSONParser implements Constants {
              Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_DETAILS, autoData.optString(Constants.KEY_C_2_D_REFERRAL_DETAILS, ""));
 
             parseConfigParams(context, autoData);
+
+            if(Data.userData != null){
+            	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
+            	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -571,6 +579,9 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_REQUEST_RIDE_POPUP, autoData.optInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP,
 				context.getResources().getInteger(R.integer.show_confirm_popup_before_ride_request)));
 
+		Prefs.with(context).save(KEY_CUSTOMER_YOUTUBE_API_KEY, autoData.optString(KEY_CUSTOMER_YOUTUBE_API_KEY,
+				context.getString(R.string.youtube_api_key)));
+
 		parseJungleApiObjects(context, autoData);
 	}
 
@@ -592,6 +603,9 @@ public class JSONParser implements Constants {
 			}
 
 			Prefs.with(context).save(KEY_JUNGLE_DIRECTIONS_OBJ, jungleObjStr);
+
+			JSONObject jungleCFEDirectionsObj = userData.optJSONObject(KEY_CFE_JUNGLE_DIRECTIONS_OBJ);
+			Prefs.with(context).save(KEY_CFE_JUNGLE_DIRECTIONS_OBJ, jungleCFEDirectionsObj!=null ? jungleCFEDirectionsObj.toString(): jungleObjStr);
 
 			JSONObject jungleDMObj = userData.optJSONObject(KEY_JUNGLE_DISTANCE_MATRIX_OBJ);
 			Prefs.with(context).save(KEY_JUNGLE_DISTANCE_MATRIX_OBJ, jungleDMObj!=null ? jungleDMObj.toString(): jungleObjStr);

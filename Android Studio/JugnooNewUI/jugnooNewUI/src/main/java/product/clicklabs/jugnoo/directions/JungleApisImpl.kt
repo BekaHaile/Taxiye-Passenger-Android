@@ -10,6 +10,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.MyApplication
+import product.clicklabs.jugnoo.datastructure.MapsApiSources
 import product.clicklabs.jugnoo.directions.room.database.DirectionsPathDatabase
 import product.clicklabs.jugnoo.directions.room.model.Path
 import product.clicklabs.jugnoo.directions.room.model.Point
@@ -105,7 +106,14 @@ object JungleApisImpl {
         if(!cachingEnabled || paths == null || paths.isEmpty()){
 
             try {
-                val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_DIRECTIONS_OBJ, Constants.EMPTY_JSON_OBJECT))
+                var objKey = Constants.KEY_JUNGLE_DIRECTIONS_OBJ
+                if(apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME, true)
+                        || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_SCHEDULE, true)
+                        || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_ACTIVITY, true)){
+                    objKey = Constants.KEY_CFE_JUNGLE_DIRECTIONS_OBJ
+                }
+
+                val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(objKey, Constants.EMPTY_JSON_OBJECT))
                 if(checkIfJungleApiEnabled(jungleObj)){
 
                     val pointsJ = JSONArray()
