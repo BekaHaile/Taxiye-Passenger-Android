@@ -1126,4 +1126,6 @@ public interface Constants {
 
 	String KEY_CUSTOMER_YOUTUBE_API_KEY = "customer_youtube_api_key";
 	String SP_YOUTUBE_TUTORIAL_SKIPPED = "sp_youtube_tutorial_skipped";
+
+	String KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD = "directions_max_distance_threshold";
 }

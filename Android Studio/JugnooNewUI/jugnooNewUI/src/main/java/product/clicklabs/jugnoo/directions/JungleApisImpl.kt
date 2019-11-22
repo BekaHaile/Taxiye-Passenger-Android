@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
 import product.clicklabs.jugnoo.utils.GoogleRestApis
+import product.clicklabs.jugnoo.utils.Log
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Prefs
 import retrofit.mime.TypedByteArray
@@ -54,7 +55,7 @@ object JungleApisImpl {
 
         GlobalScope.launch(Dispatchers.IO){
             try {
-                val directionsResult = getDirectionsPathSync(source, destination, units, apiSource)
+                val directionsResult = getDirectionsPathSync(source, destination, units, apiSource, true)
                 if(directionsResult != null){
                     launch(Dispatchers.Main){callback?.onSuccess(directionsResult.latLngs, directionsResult.path)}
                 } else {
@@ -85,8 +86,18 @@ object JungleApisImpl {
         }
     }
 
-    fun getDirectionsPathSync(source:LatLng, destination:LatLng, units:String, apiSource:String) : DirectionsResult? {
+    fun getDirectionsPathSync(source:LatLng, destination:LatLng, units:String, apiSource:String, fallbackNeeded:Boolean = true) : DirectionsResult? {
         var directionsResult:DirectionsResult? = null
+
+        //safety check to not hit directions api if distance between source and destination is more than 200Kms(server configurable)
+        try {
+            val directionsDistanceThreshold = Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0")
+            if(MapUtils.distance(source, destination) > directionsDistanceThreshold.toDouble()){
+                Log.e(JungleApisImpl::class.java.simpleName+"_distance_threshold_case", "directionsDistanceThreshold=$directionsDistanceThreshold, distance="+MapUtils.distance(source, destination))
+                return directionsResult
+            }
+        } catch (e: Exception) {}
+
         val timeStamp = System.currentTimeMillis()
 
         val sourceLat = numberFormat!!.format(source.latitude).toDouble()
@@ -105,15 +116,20 @@ object JungleApisImpl {
         //path is not found
         if(!cachingEnabled || paths == null || paths.isEmpty()){
 
-            try {
-                var objKey = Constants.KEY_JUNGLE_DIRECTIONS_OBJ
-                if(apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME, true)
-                        || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_SCHEDULE, true)
-                        || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_ACTIVITY, true)){
-                    objKey = Constants.KEY_CFE_JUNGLE_DIRECTIONS_OBJ
-                }
+            //separate configuration for directions api in case of fare estimate
+            var objKey = Constants.KEY_JUNGLE_DIRECTIONS_OBJ
+            if(apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME, true)
+                    || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_SCHEDULE, true)
+                    || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_ACTIVITY, true)){
+                objKey = Constants.KEY_CFE_JUNGLE_DIRECTIONS_OBJ
+            }
 
-                val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(objKey, Constants.EMPTY_JSON_OBJECT))
+            val jungleObj = try{JSONObject(Prefs.with(MyApplication.getInstance()).getString(objKey, Constants.EMPTY_JSON_OBJECT))}
+                            catch(e:java.lang.Exception){JSONObject(Constants.EMPTY_JSON_OBJECT)}
+            Log.e(JungleApisImpl::class.java.simpleName, "jungleObj=$jungleObj, objKey=$objKey")
+
+
+            try {
                 if(checkIfJungleApiEnabled(jungleObj)){
 
                     val pointsJ = JSONArray()
@@ -154,6 +170,12 @@ object JungleApisImpl {
                 }
 
             } catch (e: Exception) {
+                //if exception encountered in jungle directions api and fallback to google is not needed then return error case
+                if(checkIfJungleApiEnabled(jungleObj) && !fallbackNeeded){
+                    Log.e(JungleApisImpl::class.java.simpleName, "_fallback_not_needed_case")
+                    return directionsResult
+                }
+
                 //google directions hit
                 try {
                     val response = GoogleRestApis.getDirections("$sourceLat,$sourceLng", "$destinationLat,$destinationLng",
