@@ -32,6 +32,9 @@ object JungleApisImpl {
 
     private val gson = Gson()
 
+    private const val JUNGLE_TYPE_VALUE = "android"
+    private const val JUNGLE_OFFERING_VALUE = "18"
+
     private var db: DirectionsPathDatabase? = null
         get() {
             if (field == null) {
@@ -72,6 +75,8 @@ object JungleApisImpl {
     fun putJungleOptionsParams(params:HashMap<String, String>, jungleObj:JSONObject){
         val option = jungleObj.optInt(Constants.KEY_JUNGLE_OPTIONS, 0)
         params[Constants.KEY_JUNGLE_OPTIONS] = option.toString()
+        params[Constants.KEY_JUNGLE_TYPE] = JUNGLE_TYPE_VALUE
+        params[Constants.KEY_JUNGLE_OFFERING] = JUNGLE_OFFERING_VALUE
 
         when(option){
             1 -> { //here map
@@ -387,6 +392,9 @@ object JungleApisImpl {
                 } else {
                     GoogleRestApis.MAPS_BROWSER_KEY()
                 }
+
+                params[Constants.KEY_JUNGLE_TYPE] = JUNGLE_TYPE_VALUE
+                params[Constants.KEY_JUNGLE_OFFERING] = JUNGLE_OFFERING_VALUE
 
                 val response = RestClient.getJungleMapsApi().geocodePlaceById(params)
 

@@ -1098,6 +1098,8 @@ public interface Constants {
 	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";
 	String KEY_JUNGLE_POINTS = "points";
 	String KEY_JUNGLE_OPTIONS = "options";
+	String KEY_JUNGLE_TYPE = "type";
+	String KEY_JUNGLE_OFFERING = "offering";
 	String KEY_JUNGLE_APP_ID = "app_id";
 	String KEY_JUNGLE_APP_CODE = "app_code";
 	String KEY_JUNGLE_API_KEY = "api_key";
