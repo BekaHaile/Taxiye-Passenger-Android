@@ -13063,7 +13063,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onNoDriverHelpPushReceived(JSONObject jsonObject) {
         runOnUiThread(new Runnable() {
             public void run() {
-                dialogNoDriverHelp(jsonObject);
+                if(isNewUI) {
+                    dialogNoDriverHelp(jsonObject);
+                }
             }
         });
     }
