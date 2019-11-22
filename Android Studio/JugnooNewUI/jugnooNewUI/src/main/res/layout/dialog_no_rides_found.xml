@@ -67,6 +67,8 @@
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:textSize="16sp"
+            android:maxLength="3"
+            android:digits="1234506789"
             android:singleLine="true"
             android:textColor="@color/text_color"
             android:textColorHint="@color/text_color_hint"
@@ -283,6 +285,7 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@+id/glBottomEnd"
             app:layout_constraintEnd_toStartOf="@+id/btnOk"
+            app:layout_constraintTop_toTopOf="@+id/btnOk"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/glStart" />
 

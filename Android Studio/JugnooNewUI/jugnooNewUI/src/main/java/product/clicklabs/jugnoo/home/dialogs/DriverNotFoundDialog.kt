@@ -87,7 +87,7 @@ class DriverNotFoundDialog : DialogFragment() {
         var isTotalInRange = false
         var requestRide : RequestRideConfirm? = null
 
-        rootView.etAdditionalFare.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(5, 2))
+//        rootView.etAdditionalFare.filters = arrayOf<InputFilter>(DecimalDigitsInputFilter(5, 2))
 
         rootView.tvLabel.visibility = View.GONE
 

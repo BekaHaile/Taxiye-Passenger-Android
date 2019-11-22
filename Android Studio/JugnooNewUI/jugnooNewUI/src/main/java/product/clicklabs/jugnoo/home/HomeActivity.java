@@ -125,6 +125,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.Target;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -4712,7 +4713,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void checkForAddedTip() {
         if(Data.autoData != null && Data.autoData.getNoDriverFoundTip() > 0.0) {
             tvAddedTip.setVisibility(View.VISIBLE);
-            tvAddedTip.setText(getString(R.string.text_you_have_added_tip, Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getNoDriverFoundTip())));
+            tvAddedTip.setText(getString(R.string.label_tip_added, Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getNoDriverFoundTip())));
         } else {
             tvAddedTip.setVisibility(View.GONE);
         }
@@ -6724,10 +6725,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private ApiFindADriver apiFindADriver = null;
 
     private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened, boolean savedAddressUsed, HashMap<String, String> params) {
+        boolean showLoader = mLogMsg != null && mRequestType != null;
         getApiFindADriver()
 				.hit(Data.userData.accessToken, Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), showAllDrivers, showDriverInfo,
                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(), beforeRequestRide,
-                confirmedScreenOpened, savedAddressUsed, params);
+                confirmedScreenOpened, savedAddressUsed, params, showLoader);
     }
 
     private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon) {
@@ -13030,7 +13032,72 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onNoDriverHelpPushReceived(JSONObject jsonObject) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                dialogNoDriverHelp(jsonObject);
+            }
+        });
+    }
 
+    Dialog noDriverFoundHelpDialog;
+    private void dialogNoDriverHelp(final JSONObject jsonObject) {
+        try {
+            if(noDriverFoundHelpDialog != null && noDriverFoundHelpDialog.isShowing()) {
+                noDriverFoundHelpDialog.dismiss();
+            }
+            String msg = jsonObject.optString(KEY_MESSAGE, "");
+            String title = jsonObject.optString(KEY_TITLE, "");
+            String fuguChannelId = jsonObject.optString("fugu_channel_id", "");
+            String fuguChannelName = jsonObject.optString("fugu_channel_name", "");
+            String pickupAddress = jsonObject.optString("pickup_address", "");
+            String fuguTags = jsonObject.getString("fugu_tags");
+            JSONArray arrTags = new JSONArray(fuguTags);
+            ArrayList<String> tags = new ArrayList<>();
+            for(int i = 0; i < arrTags.length(); i++) {
+                tags.add(arrTags.get(i).toString());
+            }
+            String altMessage = getString(R.string.text_help_me_to_book_a_ride, pickupAddress);
+            noDriverFoundHelpDialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+            noDriverFoundHelpDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+            noDriverFoundHelpDialog.setContentView(R.layout.dialog_rentals_lock);
+
+            RelativeLayout relative = (RelativeLayout) noDriverFoundHelpDialog.findViewById(R.id.relative);
+
+            WindowManager.LayoutParams layoutParams = noDriverFoundHelpDialog.getWindow().getAttributes();
+            layoutParams.dimAmount = 0.6f;
+            noDriverFoundHelpDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            noDriverFoundHelpDialog.setCancelable(false);
+            noDriverFoundHelpDialog.setCanceledOnTouchOutside(false);
+
+
+            Button buttonOk = noDriverFoundHelpDialog.findViewById(R.id.bOk);
+            TextView tvTitle = noDriverFoundHelpDialog.findViewById(R.id.tvTitle);
+            TextView tvMessage = noDriverFoundHelpDialog.findViewById(R.id.tvMessage);
+            TextView tvTitleHelp = noDriverFoundHelpDialog.findViewById(R.id.tvTitleHelp);
+            tvTitleHelp.setVisibility(View.VISIBLE);
+            ImageView imageViewLock = noDriverFoundHelpDialog.findViewById(R.id.image_view_lock);
+            tvMessage.setText(msg);
+            tvTitle.setText(title);
+            imageViewLock.setBackgroundResource(R.drawable.ic_support);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (ASSL.Xscale() * 260), (int) (ASSL.Xscale() * 260));
+            params.setMargins((int) (ASSL.Xscale() * 40), (int) (ASSL.Xscale() * 40), 0, 0);
+            imageViewLock.setLayoutParams(params);
+            buttonOk.setText(getString(R.string.chat_with_us));
+            ImageView imageViewClose = noDriverFoundHelpDialog.findViewById(R.id.ivClose);
+
+            imageViewClose.setOnClickListener(v -> noDriverFoundHelpDialog.dismiss());
+            buttonOk.setOnClickListener(v -> {
+                FuguConfig.getInstance().openChatByTransactionId(fuguChannelId, String.valueOf(Data.getFuguUserData().getUserId()),
+                        fuguChannelName, tags, new String[]{altMessage});
+                noDriverFoundHelpDialog.dismiss();
+            });
+            relative.setOnClickListener(v -> noDriverFoundHelpDialog.dismiss());
+
+            noDriverFoundHelpDialog.show();
+            Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

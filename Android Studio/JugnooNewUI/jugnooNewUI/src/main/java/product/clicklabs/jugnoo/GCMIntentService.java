@@ -946,7 +946,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 					} else if(PushFlags.NO_DRIVER_FOUND_HELP.getOrdinal() == flag) {
 						if(HomeActivity.appInterruptHandler != null && Foreground.get(MyApplication.getInstance()).isForeground()) {
-							HomeActivity.appInterruptHandler.onNoDriverHelpPushReceived(new JSONObject());
+							HomeActivity.appInterruptHandler.onNoDriverHelpPushReceived(new JSONObject(message));
 						} else {
 							notificationManager(this, title, message1, 0);
 							Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, message);

@@ -22,7 +22,7 @@
             android:layout_marginTop="@dimen/spacing_normal"
             android:layout_marginBottom="@dimen/spacing_normal"
             android:gravity="center_horizontal"
-            android:text="@string/no_rides_found"
+            android:text="@string/no_drivers_found"
             android:textColor="@color/black"
             android:textSize="@dimen/font_extra_large"
             app:layout_constraintEnd_toEndOf="@id/mainView"
@@ -40,7 +40,7 @@
             app:layout_constraintEnd_toEndOf="@id/glEnd"
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@+id/tvLabel"
-            android:text="@string/here_is_list_of_some_drivers_nearby" />
+            android:text="@string/you_can_connect_the_nearby_drivers" />
 
 
         <View

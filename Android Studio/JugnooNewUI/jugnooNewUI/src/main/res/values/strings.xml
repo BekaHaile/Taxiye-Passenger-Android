@@ -2148,11 +2148,11 @@
     <string name="no_rides_found_at_this_rate">No rides found at this rate!</string>
     <string name="you_can_enter_manual_fare">You can enter manual fare for higher\nprobability of booking</string>
     <string name="fare_addition">Fare Addition</string>
-    <string name="no_rides_found">No rides found!</string>
-    <string name="here_is_list_of_some_drivers_nearby">Here is a list of some nearby drivers</string>
+    <string name="no_drivers_found">No Drivers found!</string>
+    <string name="you_can_connect_the_nearby_drivers">You can connect with nearby drivers directly</string>
     <string name="hint_tip_amount">Tip amount</string>
-    <string name="text_want_to_prioritize_your_request">Want to prioritize your request?</string>
+    <string name="text_want_to_prioritize_your_request">Drivers are not accepting your request currently!</string>
     <string name="text_you_can_add_a_tip_to">You can add a tip to current fare for higher probability of booking</string>
-    <string name="text_you_have_added_tip">Added Tip: %s</string>
     <string name="text_help_me_to_book_a_ride">Unable to book a ride from %s. Please help me to book a ride.</string>
+    <string name="unable_to_book_a_ride">Unable to book a Ride?</string>
 </resources>

@@ -1,4 +1,4 @@
-package product.clicklabs.jugnoo.utils
+package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
 import android.app.Application;
