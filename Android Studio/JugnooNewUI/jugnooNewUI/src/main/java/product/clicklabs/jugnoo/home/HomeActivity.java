@@ -4171,11 +4171,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     textViewDestSearchNew.setText(Data.autoData.getDropAddress());
                                 }
                             }
-                            String msg = Prefs.with(this).getString(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
-                            if(msg != null && !msg.isEmpty()) {
-                                onNoDriverHelpPushReceived(new JSONObject(msg));
-                                Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
-                            }
+                            checkForNoDriverFoundHelp();
                         } else {
                             if (!specialPickupScreenOpened && map != null) {
                                 if (!searchedALocation) {
@@ -5822,6 +5818,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
             removeSaveLocationDialog();
 
+            checkForNoDriverFoundHelp();
+
             if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null) {
                 isScheduleRideEnabled = Data.autoData.getServiceTypeSelected().getScheduleAvailable() == 1;
             } else if(Data.autoData != null && Data.autoData.getServiceTypes() != null && Data.autoData.getServiceTypes().size() > 0
@@ -5967,6 +5965,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+    }
+
+    private void checkForNoDriverFoundHelp() {
+        String msg = Prefs.with(this).getString(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
+        if(msg != null && !msg.isEmpty()) {
+            try {
+                onNoDriverHelpPushReceived(new JSONObject(msg));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
+        }
     }
 
     private void removeSaveLocationDialog() {
@@ -7572,6 +7582,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			callMapTouchedRefreshDrivers(null);
 		}
 		setTextToPickupDropTVs();
+        Data.autoData.setNoDriverFoundTip(0.0);
 
 	}
 
@@ -7611,6 +7622,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(requestType == 0 && isNewUI) {
                 openDriverNotFoundTipDialog();
             } else if(requestType == 1 && isNewUI) {
+                Data.autoData.setNoDriverFoundTip(0.0);
                 openDriverContactListDialog();
             } else {
                 if (noDriversDialog != null && noDriversDialog.isShowing()) {
@@ -13063,7 +13075,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void onNoDriverHelpPushReceived(JSONObject jsonObject) {
         runOnUiThread(new Runnable() {
             public void run() {
-                if(isNewUI) {
+                if(isNewUI && P_INITIAL == passengerScreenMode) {
                     dialogNoDriverHelp(jsonObject);
                 }
             }
