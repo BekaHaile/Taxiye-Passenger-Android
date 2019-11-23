@@ -1130,4 +1130,6 @@ public interface Constants {
 	String SP_YOUTUBE_TUTORIAL_SKIPPED = "sp_youtube_tutorial_skipped";
 
 	String KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD = "directions_max_distance_threshold";
+
+	String KEY_PUSH_NO_DRIVER_FOUND_HELP = "no_driver_found_help";
 }

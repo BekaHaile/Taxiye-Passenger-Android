@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="8dp"
+    android:tag="@string/dont_touch_me"
+    android:background="?attr/selectableItemBackground"
+    android:theme="@style/GreyHighlight"
+    >
+
+    <ImageView
+        android:id="@+id/ivDriverImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        />
+
+
+    <TextView
+        android:id="@+id/tvDriverName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/ivDriverImage"
+        app:layout_constraintEnd_toStartOf="@+id/ivCallDriver"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        tools:text="hello\nabc\nasc"
+        android:textSize="14sp"
+        android:textColor="@color/text_color"
+        />
+
+
+    <ImageView
+        android:id="@+id/ivCallDriver"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/ic_ride_screen_call_pressed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+
+        />
+
+
+</android.support.constraint.ConstraintLayout>

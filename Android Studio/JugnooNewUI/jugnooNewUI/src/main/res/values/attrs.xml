@@ -173,4 +173,8 @@
         <attr name="overlay_height" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="MaxHeightScrollView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
+
 </resources>

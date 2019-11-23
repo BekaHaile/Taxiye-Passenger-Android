@@ -46,6 +46,7 @@ import product.clicklabs.jugnoo.home.AppSwitcher;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.AnalyticsTrackers;
+import product.clicklabs.jugnoo.utils.Foreground;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.Typekit;
 import product.clicklabs.jugnoo.wallet.WalletCore;
@@ -96,6 +97,7 @@ public class MyApplication extends MultiDexApplication {
 
 
         super.onCreate();
+        Foreground.init(this);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
         Checkout.clearUserData(getApplicationContext());

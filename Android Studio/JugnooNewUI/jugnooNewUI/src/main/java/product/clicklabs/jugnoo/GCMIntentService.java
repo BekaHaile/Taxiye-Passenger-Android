@@ -60,6 +60,7 @@ import product.clicklabs.jugnoo.promotion.models.Promo;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Foreground;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SoundMediaPlayer;
@@ -615,8 +616,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String log = jObj.getString("log");
+						int requestType = jObj.optInt("request_type", -1);
 						if (HomeActivity.appInterruptHandler != null) {
-							HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
+							HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log, requestType);
 						}
 					} else if (PushFlags.CHANGE_STATE.getOrdinal() == flag) {
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
@@ -941,6 +943,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+					} else if(PushFlags.NO_DRIVER_FOUND_HELP.getOrdinal() == flag) {
+						if(HomeActivity.appInterruptHandler != null && Foreground.get(MyApplication.getInstance()).isForeground()) {
+							HomeActivity.appInterruptHandler.onNoDriverHelpPushReceived(new JSONObject(message));
+						} else {
+							notificationManager(this, title, message1, 0);
+							Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, message);
+						}
 					}
 
 					incrementPushCounter(jObj, flag);
