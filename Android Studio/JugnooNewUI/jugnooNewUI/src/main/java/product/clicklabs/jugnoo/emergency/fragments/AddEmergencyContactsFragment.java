@@ -458,13 +458,11 @@ public class AddEmergencyContactsFragment extends Fragment {
             textHead.setText(title);
             textMessage.setText(message);
             if(contactBean.getPhoneNo().contains("+")){
-                contactBean.setCountryCode("");
                 llCountryCode.setVisibility(View.GONE);
-                contactBean.setPhoneNo( editTextPhoneNumber.getText().toString());
+//                contactBean.setPhoneNo( editTextPhoneNumber.getText().toString());
             }else {
                 llCountryCode.setVisibility(View.VISIBLE);
-                contactBean.setCountryCode(tvCountryCode.getText().toString());
-                contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
+//                contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
             }
             Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.mavenRegular(activity));
