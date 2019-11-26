@@ -1,49 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="product.clicklabs.jugnoo"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="product.clicklabs.jugnoo">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.CLEAR_APP_CACHE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
-
+    <uses-feature
+        android:name="android.hardware.bluetooth_le"
+        android:required="false" />
 
     <permission
         android:name="${applicationId}.MAPS_RECEIVE"
-        android:protectionLevel="signature"/>
+        android:protectionLevel="signature" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
-        android:required="true"/>
+        android:required="true" />
 
-    <uses-permission android:name="${applicationId}.MAPS_RECEIVE"/>
-    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+    <uses-permission android:name="${applicationId}.MAPS_RECEIVE" />
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="true"/>
+        android:required="true" />
 
     <application
         android:name=".MyApplication"
@@ -51,34 +56,40 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:screenOrientation="portrait"
-        android:theme="@style/AppThemePay"
-        tools:replace="android:allowBackup"
-        android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security_config"
-        >
+        android:screenOrientation="portrait"
+        android:supportsRtl="true"
+        android:theme="@style/AppThemePay"
+        tools:replace="android:allowBackup">
+
+        <activity
+            android:name=".tutorials.newtutorials.activities.TutorialActivites"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
         <meta-data
             android:name="payu_merchant_id"
-            android:value="HjlOjY"/>
+            android:value="HjlOjY" />
 
         <activity
             android:name=".wallet.PaymentActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
 
         <service
             android:name=".GCMIntentService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
             android:name=".MyInstanceIDListenerService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -88,38 +99,36 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseAppCompatTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter android:label="@string/app_name">
-                <data android:scheme="@string/app_scheme"/>
+                <data android:scheme="@string/app_scheme" />
 
+                <action android:name="android.intent.action.VIEW" />
 
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".home.HomeActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".ChatActivity"
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ForgotPasswordScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".OTPConfirmScreen"
             android:label="@string/app_name"
@@ -128,169 +137,167 @@
 
             <!-- jugnooautos-verify://app?otp=1234 -->
             <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="app"
-                    android:scheme="jugnautos-verify"/>
+                    android:scheme="jugnautos-verify" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".promotion.ShareActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".promotion.PromotionActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"/>
+            android:theme="@style/BaseAppCompatTheme" />
         <activity
             android:name=".HelpParticularActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AddPlaceActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".JugnooStarActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".JugnooStarSubscribedActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".support.SupportActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".support.SupportMailActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".WebActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AboutActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ChangeLanguageActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".AccountActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"/>
+            android:theme="@style/BaseAppCompatTheme" />
         <activity
             android:name=".PhoneNoOTPConfirmScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".RideTransactionsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".RideCancellationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".MultipleAccountsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".RequestDuplicateRegistrationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ChangePhoneBeforeOTPActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".DebugOptionsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".FareEstimateActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".ReferDriverActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".NotificationCenterActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name=".emergency.EmergencyActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"/>
+            android:theme="@style/BaseAppCompatTheme" />
         <activity
             android:name=".t20.T20Activity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".wallet.WalletRechargeWebViewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".utils.CallActivity"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent"/>
+            android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".utils.GoogleSigninActivity"
             android:label="@string/app_name"
-            android:theme="@style/TransparentCompat"/>
+            android:theme="@style/TransparentCompat" />
         <activity
             android:name="com.sabkuchfresh.fatafatchatpay.FatafatChatPayActivity"
             android:label="@string/app_name"
-            android:theme="@style/TransparentCompat"/>
+            android:theme="@style/TransparentCompat" />
 
-        <receiver android:name=".home.LocationReceiverBG"/>
+        <receiver android:name=".home.LocationReceiverBG" />
 
         <service
             android:name=".home.ContactsUploadService"
-            android:enabled="true"/>
+            android:enabled="true" />
         <service
             android:name=".home.SyncIntentService"
-            android:enabled="true"/>
+            android:enabled="true" />
         <service
             android:name=".PushPendingCallsService"
             android:enabled="true"
-            android:exported="true"/>
-
-<!--
+            android:exported="true" />
+        <!--
         <receiver android:name="com.sabkuchfresh.fatafatchatpay.ChatCustomActionBroadCastReceiver"
             android:enabled="true"
             android:exported="false">
@@ -298,68 +305,63 @@
                 <action android:name="FUGU_CUSTOM_ACTION_SELECTED"/>
             </intent-filter>
 
-        </receiver>-->
-
+        </receiver>
+        -->
         <service
             android:name=".FetchAppDataService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version"/>
-
-        <!-- <meta-data -->
+            android:value="@integer/google_play_services_version" /> <!-- <meta-data -->
         <!-- android:name="com.google.android.maps.v2.API_KEY" -->
         <!-- android:value="@string/google_maps_api_key" /> -->
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_api_key"/>
+            android:value="@string/google_maps_api_key" />
 
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"/>
+            android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/ak_login_protocol_scheme" />
             </intent-filter>
         </activity>
         <activity android:name="com.facebook.accountkit.ui.AccountKitEmailRedirectActivity">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="@string/ak_login_protocol_scheme"/>
+                <data android:scheme="@string/ak_login_protocol_scheme" />
             </intent-filter>
         </activity>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/fb_app_id"/>
-        <!--<meta-data-->
-            <!--android:name="io.fabric.ApiKey"-->
-            <!--android:value="f96b4d9d9886e413041e7b14fa52434b87709356"/>-->
+            android:value="@string/fb_app_id" /> <!-- <meta-data -->
+        <!-- android:name="io.fabric.ApiKey" -->
+        <!-- android:value="f96b4d9d9886e413041e7b14fa52434b87709356"/> -->
         <meta-data
             android:name="io.branch.sdk.BranchKey"
-            android:value="@string/branch_key"/>
+            android:value="@string/branch_key" />
         <meta-data
             android:name="com.facebook.accountkit.ApplicationName"
-            android:value="@string/app_name"/>
+            android:value="@string/app_name" />
         <meta-data
             android:name="com.facebook.accountkit.ClientToken"
-            android:value="@string/fb_client_token"/>
-        <!-- key_test_dnhuSIzZt72MRWW4YrSlpddcrDn5yjio -->
+            android:value="@string/fb_client_token" /> <!-- key_test_dnhuSIzZt72MRWW4YrSlpddcrDn5yjio -->
         <!-- key_live_gakuNv1i2YftSl1HHcnvojaeAzo2Aq7J -->
-
-
         <!--
           Optionally, register AnalyticsReceiver and AnalyticsService to support background
           dispatching on non-Google Play devices
@@ -368,15 +370,14 @@
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
             android:enabled="true">
             <intent-filter>
-                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH"/>
+                <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
         </receiver>
 
         <service
             android:name="com.google.android.gms.analytics.AnalyticsService"
             android:enabled="true"
-            android:exported="false"/>
-
+            android:exported="false" />
         <!--
              Optionally, register CampaignTrackingReceiver and CampaignTrackingService to enable
              installation campaign reporting
@@ -390,98 +391,90 @@
             </intent-filter>
         </receiver>
         -->
-
         <receiver
             android:name=".CustomCampaignTrackingReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.android.vending.INSTALL_REFERRER"/>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
 
-        <service android:name="com.google.android.gms.analytics.CampaignTrackingService"/>
+        <service android:name="com.google.android.gms.analytics.CampaignTrackingService" />
         <service
             android:name=".home.LocationUpdateService"
             android:enabled="true"
-            android:exported="false"/>
-
-        <!-- for fresh Application -->
+            android:exported="false" /> <!-- for fresh Application -->
         <activity
             android:name="com.sabkuchfresh.home.FreshActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
-
-        <activity android:name="com.sabkuchfresh.fatafatchatpay.NewConversationActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/TransparentTheme"/>
-
+            android:theme="@style/TransparentTheme" />
+        <activity
+            android:name="com.sabkuchfresh.fatafatchatpay.NewConversationActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme" />
 
         <service
             android:name=".home.trackinglog.TrackingLogSyncIntentService"
-            android:enabled="true"/>
+            android:enabled="true" />
 
         <activity
             android:name=".home.trackinglog.TrackingLogActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".HomeSwitcherActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/TransparentTheme"/>
+            android:theme="@style/TransparentTheme" />
         <activity
             android:name="com.jugnoo.pay.activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.jugnoo.pay.activities.SelectContactActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.jugnoo.pay.activities.SendMoneyActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.jugnoo.pay.activities.TranscCompletedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.jugnoo.pay.activities.AddPaymentAddressActivity"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.jugnoo.pay.activities.AddBeneficiaryAccount"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name="com.jugnoo.pay.activities.PayTutorial"
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".tutorials.NewUserFlow"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".FareDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"
-            />
-
+            android:theme="@style/BaseAppCompatTheme" />
         <activity
             android:name=".home.schedulerides.UpcomingRidesActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"
-            />
-        <!-- <activity -->
+            android:theme="@style/BaseAppCompatTheme" /> <!-- <activity -->
         <!-- android:name="com.sabkuchfresh.home.TrackOrderActivity" -->
         <!-- android:label="@string/app_name" -->
         <!-- android:screenOrientation="portrait" -->
@@ -490,14 +483,14 @@
             android:name="com.picker.image.ui.PickerActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemePicker.NoActionBar"/>
+            android:theme="@style/AppThemePicker.NoActionBar" />
 
         <service
             android:name="com.sabkuchfresh.home.FeedContactsUploadService"
-            android:enabled="true"/>
+            android:enabled="true" />
         <service
             android:name="com.picker.image.util.OfflineSpiceService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -506,80 +499,79 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <meta-data
             android:name="com.razorpay.ApiKey"
-            android:value="@string/razorpay_key"/>
+            android:value="@string/razorpay_key" />
 
         <service
             android:name="com.sabkuchfresh.home.RazorpayCallbackService"
-            android:enabled="true"/>
+            android:enabled="true" />
         <service
             android:name=".DeleteCacheIntentService"
-            android:enabled="true"/>
-
-        <!-- https://www.jugnoo.in/menus/ -->
-        <activity android:name=".DeeplinkingActivity"
-                  android:theme="@android:style/Theme.Translucent.NoTitleBar">
+            android:enabled="true" /> <!-- https://www.jugnoo.in/menus/ -->
+        <activity
+            android:name=".DeeplinkingActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter android:label="@string/app_name">
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
                     android:host="@string/app_host_name"
                     android:pathPrefix="/menus"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="@string/app_host_name"
                     android:pathPrefix="/meals"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="@string/app_host_name"
                     android:pathPrefix="/fatafat"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="@string/app_host_name"
                     android:pathPrefix="/asklocal"
-                    android:scheme="https"/>
+                    android:scheme="https" />
                 <data
                     android:host="@string/app_host_name"
                     android:pathPrefix="/rides"
-                    android:scheme="https"/>
+                    android:scheme="https" />
             </intent-filter>
         </activity>
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-        <activity android:name=".rentals.qrscanner.ScannerActivity"
+
+        <activity
+            android:name=".rentals.qrscanner.ScannerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-
-        <activity android:name=".rentals.damagereport.DamageReportActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".rentals.damagereport.DamageReportActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            />
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".newui.activity.RewardsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".promotion.VideoActivity"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
-            android:name="product.clicklabs.jugnoo.youtube.YoutubeVideoActivity"
+            android:name=".youtube.YoutubeVideoActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
     </application>
 
 </manifest>

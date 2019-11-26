@@ -1,7 +1,9 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -13,7 +15,6 @@ import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.fugu.constant.FuguAppConstant;
@@ -37,7 +38,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
-import io.fabric.sdk.android.Fabric;
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -77,7 +77,24 @@ public class MyApplication extends MultiDexApplication {
     private Bus mBus;
     public Branch branch;
     private BroadcastReceiver fuguChatCustomActionReceiver;
+    private Activity mCurrentActivity;
+    private Intent mOpenActivityAfterFinishTutorial;
 
+    public Activity getmCurrentActivity() {
+        return this.mCurrentActivity;
+    }
+
+    public void setmCurrentActivity(final Activity mCurrentActivity) {
+        this.mCurrentActivity = mCurrentActivity;
+    }
+
+    public Intent getmOpenActivityAfterFinishTutorial() {
+        return this.mOpenActivityAfterFinishTutorial;
+    }
+
+    public void setmOpenActivityAfterFinishTutorial(final Intent mOpenActivityAfterFinishTutorial) {
+        this.mOpenActivityAfterFinishTutorial = mOpenActivityAfterFinishTutorial;
+    }
 
     @Override
     public void onCreate() {

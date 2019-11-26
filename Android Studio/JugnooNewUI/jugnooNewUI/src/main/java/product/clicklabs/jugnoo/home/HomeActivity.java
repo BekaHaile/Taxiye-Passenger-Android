@@ -275,6 +275,7 @@ import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.tutorials.NewUserFlow;
+import product.clicklabs.jugnoo.tutorials.newtutorials.activities.TutorialActivites;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -2452,7 +2453,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         checkForYoutubeIntent();
-
+        startActivity(new Intent(this, TutorialActivites.class));
     }
 
     private void onReqestRideConfirmClick() {

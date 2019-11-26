@@ -2028,7 +2028,7 @@
     <string name="confirm_payment_via_card_ending_format">Confirm payment via card ending with %s</string>
     <string name="please_select_some_amount">Please select some amount</string>
 
-  <!--Notes-->
+    <!--Notes-->
     <string name="notes">Notes</string>
     <string name="write_notes_here">Write notes here...</string>
     <string name="save_notes">Save notes</string>
@@ -2137,7 +2137,7 @@
     <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
 
 
-<!--    New UI changes-->
+    <!--    New UI changes-->
     <string name="text_where_to_go">Where to go</string>
     <string name="add_favorite_place">Add Favorite Place</string>
     <string name="label_confirm_ride_request">Confirm Ride Request</string>
