@@ -96,7 +96,7 @@ public class ApiFareEstimate {
 									} catch (Exception e) {
 										e.printStackTrace();
 										DialogPopup.dismissLoadingDialog();
-										retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+										retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
 										callback.onDirectionsFailure();
 									}
 								}
@@ -104,7 +104,7 @@ public class ApiFareEstimate {
 								@Override
 								public void onFailure() {
 									DialogPopup.dismissLoadingDialog();
-									retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+									retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
 									callback.onDirectionsFailure();
 								}
 							});
