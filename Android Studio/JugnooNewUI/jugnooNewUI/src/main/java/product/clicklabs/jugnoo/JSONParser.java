@@ -812,7 +812,7 @@ public class JSONParser implements Constants {
         try {
             parseDriversToShow(autos.getDrivers());
 
-            Data.autoData.setNoDriverFoundTip(0.0);
+//            Data.autoData.setNoDriverFoundTip(0.0);
             Data.autoData.setServiceTypes(autos.getServiceTypes());
 
             Data.autoData.setFareFactor(1);

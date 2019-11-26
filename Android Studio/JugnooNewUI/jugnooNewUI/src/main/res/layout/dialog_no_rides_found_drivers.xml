@@ -273,7 +273,7 @@
                     android:textSize="14sp"
                     android:textColor="@color/text_color"
                     android:layout_margin="@dimen/spacing_normal"
-                    android:text="@string/sorry_no_drivers_available_nearby"/>
+                    android:text="@string/no_drivers_found"/>
             </android.support.v7.widget.LinearLayoutCompat>
 
         </product.clicklabs.jugnoo.utils.MaxHeightScrollView>

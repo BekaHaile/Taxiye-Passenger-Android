@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home.dialogs
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
 import android.os.Handler
@@ -13,17 +14,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.inputmethod.InputMethodManager
+import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import com.bumptech.glide.Glide
-import com.sabkuchfresh.utils.Utils
 import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.*
-import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.btnCancel
-import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.etAdditionalFare
-import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.ivVehicle
-import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvFare
-import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvLabel
-import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvTotalFare
-import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvTotalFareLabel
-import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvVehicleName
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.datastructure.DriverInfo
@@ -32,6 +26,7 @@ import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.adapters.DriverListAdapter
 import product.clicklabs.jugnoo.retrofit.model.RequestRideConfirm
 import product.clicklabs.jugnoo.utils.Fonts
+import product.clicklabs.jugnoo.utils.Utils
 
 
 class DriverCallDialog : DialogFragment() {
@@ -190,6 +185,8 @@ class DriverCallDialog : DialogFragment() {
             } else {
                 rootView.groupCallDriver.visibility = View.VISIBLE
                 rootView.groupTip.visibility = View.GONE
+                rootView.etAdditionalFare.clearFocus()
+                hideKeyboard()
                 isCallDriverVisible = true
                 isTipVisible = false
             }
@@ -198,6 +195,8 @@ class DriverCallDialog : DialogFragment() {
         rootView.tvTipMessage.setOnClickListener {
             if(isTipVisible) {
                 rootView.groupTip.visibility = View.GONE
+                rootView.etAdditionalFare.clearFocus()
+                hideKeyboard()
                 isTipVisible = false
             } else {
                 rootView.groupTip.visibility = View.VISIBLE
@@ -207,6 +206,7 @@ class DriverCallDialog : DialogFragment() {
             }
         }
 
+        if(addedTip > 0.0){ rootView.etAdditionalFare.setText(addedTip.toInt().toString()) }
         rootView.etAdditionalFare.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if(p0.toString().isNotEmpty() && p0.toString() != ".") {
@@ -240,6 +240,11 @@ class DriverCallDialog : DialogFragment() {
 
         })
 
+    }
+
+    private fun hideKeyboard() {
+        val imm = rootView.etAdditionalFare.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        if (imm.isActive) imm.toggleSoftInput(0, HIDE_NOT_ALWAYS)
     }
 
     private fun setTotalFare(requestRide: RequestRideConfirm?, addedTip: Double, totalInRange: Boolean) {

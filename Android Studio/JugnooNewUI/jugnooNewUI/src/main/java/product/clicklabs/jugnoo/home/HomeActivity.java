@@ -674,7 +674,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TextView tvTutorialBanner, tvAddedTip;
     private ImageView ivCrossTutorialBanner;
     private String mLogMsg;
-    private Integer mRequestType;
+    private Integer mRequestType = -1;
 
     @SuppressLint("NewApi")
     @Override
@@ -3077,6 +3077,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void openRequestConfirmDialog() {
+        setTipAmountToZero();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(RideConfirmationDialog.class.getSimpleName());
         if (prev != null) {
@@ -3679,6 +3680,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(Data.autoData != null) {
             Data.autoData.setNoDriverFoundTip(0.0);
         }
+        mRequestType = -1;
     }
 
     private boolean addressMatchedWithSavedAddresses(String address) {
@@ -6646,7 +6648,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             if(mLogMsg != null && mRequestType != null) {
                                 noDriverAvailablePopup(HomeActivity.this, false, mLogMsg, mRequestType);
                                 mLogMsg = null;
-                                mRequestType = null;
                             }
                             try {
 
@@ -7627,7 +7628,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(requestType == 0 && isNewUI) {
                 openDriverNotFoundTipDialog();
             } else if(requestType == 1 && isNewUI) {
-                setTipAmountToZero();
+//                setTipAmountToZero();
                 openDriverContactListDialog();
             } else {
                 if (noDriversDialog != null && noDriversDialog.isShowing()) {
@@ -9314,7 +9315,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 if(Data.autoData.getNoDriverFoundTip() > 0.0) {
                                     nameValuePairs.put("tip_amount","" + Data.autoData.getNoDriverFoundTip());
-                                    nameValuePairs.put("request_type","" + 1);
+                                }
+                                if(regionSelected.getReverseBid() == 0 && regionSelected.getFareMandatory() == 1 && Data.autoData.getTipEnabledBeforeRequestRide()) {
+                                    nameValuePairs.put("request_level", (mRequestType + 1) + "");
+                                }
+                                if(mRequestType + 1 >= 2) {
+                                    mRequestType = -1;
                                 }
                                 try {
                                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -9435,7 +9441,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 setTipAmountToZero();
                                             } else if (ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
-                                                final int requestType = jObj.optInt("request_type", -1);
+                                                final int requestType = jObj.optInt("request_level", -1);
                                                 Log.e("NO_DRIVERS_AVAILABLE log", "=" + log);
                                                 cancelTimerRequestRide();
                                                 runOnUiThread(new Runnable() {
@@ -13189,7 +13195,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onCancelClick(boolean isPickup) {
-
+        setTipAmountToZero();
     }
 
     @Override
