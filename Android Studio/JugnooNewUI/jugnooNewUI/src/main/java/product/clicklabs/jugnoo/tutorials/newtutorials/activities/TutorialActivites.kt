@@ -64,7 +64,7 @@ class TutorialActivites : BaseAppCompatActivity() {
         when (intent != null) {
             true -> when (intent.hasExtra(TutorialActivites::class.java.simpleName.plus("position"))) {
                 true -> {
-                    mSavePosition = intent.getStringExtra(TutorialActivites::class.simpleName.plus("position"))!!
+                    mSavePosition = intent.getStringExtra(TutorialActivites::class.java.simpleName.plus("position"))!!
                     checkIsUserAlredyViewTutorialAtPosition()
                 }
             }
@@ -100,11 +100,7 @@ class TutorialActivites : BaseAppCompatActivity() {
 
     private fun initView() {
         btSkip.setOnClickListener {
-            when (MyApplication.getInstance().getmOpenActivityAfterFinishTutorial() != null) {
-                true -> {
-                    openFinalActivity()
-                }
-            }
+            openFinalActivity()
         }
         btNextText.setOnClickListener {
             if (viewpager.currentItem == pListOfTutorialImages.size - 1) {
@@ -126,5 +122,11 @@ class TutorialActivites : BaseAppCompatActivity() {
                 startActivity(MyApplication.getInstance().getmOpenActivityAfterFinishTutorial())
             }
         }
+        finish()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
     }
 }

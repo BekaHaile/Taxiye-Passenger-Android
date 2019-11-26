@@ -2453,7 +2453,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         checkForYoutubeIntent();
-        startActivity(new Intent(this, TutorialActivites.class));
+        Intent intent=new Intent(this, TutorialActivites.class);
+        intent.putExtra(TutorialActivites.class.getSimpleName().concat("position"),Constants.FIRSTTIME_LOGIN);
+        startActivity(intent);
     }
 
     private void onReqestRideConfirmClick() {
