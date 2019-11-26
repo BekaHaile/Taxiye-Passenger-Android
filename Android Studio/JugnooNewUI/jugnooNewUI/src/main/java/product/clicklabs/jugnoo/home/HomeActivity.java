@@ -3084,22 +3084,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         ft.addToBackStack(null);
 
-        Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
-        RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
-                region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
-                region.getRegionName(), region.getDisclaimerText(), region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString(): "",
-                0.0, 0.0, 0.0, "");
-        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(requestRideConfirm);
+        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(getRequestRideObject());
         dialogFragment.show(ft, RideConfirmationDialog.class.getSimpleName());
     }
 
-    private void openDriverNotFoundTipDialog() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment prev = getSupportFragmentManager().findFragmentByTag(DriverNotFoundDialog.class.getSimpleName());
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
+    private RequestRideConfirm getRequestRideObject() {
         Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
         boolean isNotInRange = region.getRideType() == RideTypeValue.POOL.getOrdinal() || region.getFareMandatory() == 1;
 
@@ -3110,7 +3099,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 region.getRegionFare() != null ? region.getRegionFare().getMinFare() : 0.0,
                 region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, "");
 
-        DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(requestRideConfirm);
+        return requestRideConfirm;
+    }
+
+    private void openDriverNotFoundTipDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(DriverNotFoundDialog.class.getSimpleName());
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(getRequestRideObject());
         dialogFragment.show(ft, DriverNotFoundDialog.class.getSimpleName());
     }
 
@@ -3121,10 +3121,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             ft.remove(prev);
         }
         ft.addToBackStack(null);
-        Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
-        boolean isNotInRange = region.getRideType() != RideTypeValue.POOL.getOrdinal() && region.getFareMandatory() == 0;
 
-        DialogFragment dialogFragment = DriverCallDialog.newInstance();
+        DialogFragment dialogFragment = DriverCallDialog.newInstance(getRequestRideObject());
         dialogFragment.show(ft, DriverCallDialog.class.getSimpleName());
     }
 
@@ -13228,6 +13226,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void onCancelClicked() {
         setTipAmountToZero();
+    }
+
+    @Override
+    public void onCallDriverOkClicked() {
+        onReqestRideConfirmClick();
     }
 }
 

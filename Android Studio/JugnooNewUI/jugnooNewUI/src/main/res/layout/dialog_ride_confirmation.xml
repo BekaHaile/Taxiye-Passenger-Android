@@ -7,7 +7,7 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/mainView"
-        android:layout_width="300dp"
+        android:layout_width="330dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="@drawable/bg_draw_corner"
@@ -102,14 +102,87 @@
             tools:text="@string/label_confirm_ride_request" />
 
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivTip"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_money"
+            android:padding="@dimen/spacing_tiny"
+            android:layout_marginTop="@dimen/spacing_large"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/tvDrop" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvTipLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="15sp"
+            android:layout_marginStart="3dp"
+            app:layout_constraintStart_toEndOf="@+id/ivTip"
+            app:layout_constraintEnd_toStartOf="@id/glMid"
+            app:layout_constraintTop_toTopOf="@+id/ivTip"
+            app:layout_constraintBottom_toBottomOf="@+id/ivTip"
+            android:text="@string/action_add_tip" />
+
+        <product.clicklabs.jugnoo.widgets.PrefixedEditText
+            android:id="@+id/etAdditionalFare"
+            android:layout_width="wrap_content"
+            app:layout_constrainedWidth="true"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textSize="16sp"
+            android:maxLength="3"
+            android:digits="1234506789"
+            android:singleLine="true"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/text_color_hint"
+            android:hint="@string/hint_tip_amount"
+            android:inputType="numberDecimal"
+            android:gravity="end"
+            android:background="@drawable/bg_menu_item_selector_f7_r"
+            app:layout_constraintStart_toStartOf="@+id/glMid"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constraintTop_toTopOf="@+id/ivTip"
+            app:layout_constraintBottom_toBottomOf="@id/ivTip"
+            android:layout_marginEnd="5dp"
+            android:drawablePadding="5dp"
+            />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvTipMsg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/home_switcher_feed"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/ivTip"
+            android:text="@string/msg_adding_tip_can_increase_the_chances_of_booking" />
+
+        <View
+            android:id="@+id/viewSeparatorVehicle"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:background="@color/divider_color"
+            app:layout_constraintEnd_toEndOf="@id/mainView"
+            app:layout_constraintStart_toStartOf="@+id/mainView"
+            app:layout_constraintTop_toBottomOf="@id/tvTipMsg" />
+
+        <android.support.v7.widget.AppCompatImageView
             android:id="@+id/ivVehicle"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginTop="@dimen/spacing_huge"
+            android:layout_marginTop="@dimen/spacing_small"
             android:paddingTop="@dimen/spacing_dimin"
             android:src="@drawable/ic_auto_grey"
             app:layout_constraintStart_toStartOf="@+id/glStart"
-            app:layout_constraintTop_toBottomOf="@id/tvDrop" />
+            app:layout_constraintTop_toBottomOf="@id/viewSeparatorVehicle" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tvVehicleName"
@@ -144,6 +217,7 @@
             android:layout_marginStart="@dimen/spacing_tiny"
             app:layout_constraintStart_toEndOf="@+id/ivEstimateFare"
             android:textStyle="bold"
+            android:gravity="end"
             app:layout_constraintEnd_toEndOf="@id/glEnd"
             app:layout_constraintBottom_toBottomOf="@+id/ivVehicle"
             app:layout_constraintTop_toTopOf="@id/ivVehicle"
@@ -209,14 +283,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".03" />
+            app:layout_constraintGuide_percent=".05" />
 
         <android.support.constraint.Guideline
             android:id="@+id/glEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".97" />
+            app:layout_constraintGuide_percent=".95" />
 
         <android.support.constraint.Guideline
             android:id="@+id/glMid"

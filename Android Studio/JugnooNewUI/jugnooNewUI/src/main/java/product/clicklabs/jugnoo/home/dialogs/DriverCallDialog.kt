@@ -3,28 +3,41 @@ package product.clicklabs.jugnoo.home.dialogs
 import android.app.Dialog
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.DialogFragment
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import com.bumptech.glide.Glide
 import com.sabkuchfresh.utils.Utils
-import kotlinx.android.synthetic.main.dialog_no_rides_found.view.tvLabel
 import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.*
+import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.btnCancel
+import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.etAdditionalFare
+import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.ivVehicle
+import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvFare
+import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvLabel
+import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvTotalFare
+import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvTotalFareLabel
+import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.tvVehicleName
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.datastructure.DriverInfo
 import product.clicklabs.jugnoo.datastructure.PaymentOption
 import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.adapters.DriverListAdapter
+import product.clicklabs.jugnoo.retrofit.model.RequestRideConfirm
 import product.clicklabs.jugnoo.utils.Fonts
-import android.os.Handler
-import android.util.DisplayMetrics
 
 
 class DriverCallDialog : DialogFragment() {
     private lateinit var rootView : View
+    private var isCallDriverVisible : Boolean = false
+    private var isTipVisible : Boolean = false
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         // The only reason you might override this method when using onCreateView() is
@@ -38,8 +51,12 @@ class DriverCallDialog : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(): DriverCallDialog {
-            return DriverCallDialog()
+        fun newInstance(requestRide : RequestRideConfirm): DriverCallDialog {
+            val driverCallDialog = DriverCallDialog()
+            val bundle = Bundle()
+            bundle.putParcelable("requestRide", requestRide)
+            driverCallDialog.arguments = bundle
+            return driverCallDialog
         }
     }
 
@@ -65,13 +82,51 @@ class DriverCallDialog : DialogFragment() {
 
     private fun setFonts() {
         rootView.tvLabel.setTypeface(Fonts.mavenMedium(rootView.context), BOLD)
-        rootView.tvListOfSomeDriversNearby.typeface = Fonts.mavenRegular(rootView.context)
+        rootView.tvCallDriver.setTypeface(Fonts.mavenMedium(rootView.context), BOLD)
+        rootView.tvTipMessage.setTypeface(Fonts.mavenMedium(rootView.context), BOLD)
+        rootView.tvListOfSomeDriversNearby.typeface = Fonts.mavenMedium(rootView.context)
+        rootView.tvFare.typeface = Fonts.mavenMedium(rootView.context)
+        rootView.tvLabel.typeface = Fonts.mavenMedium(rootView.context)
+        rootView.tvVehicleName.typeface = Fonts.mavenMedium(rootView.context)
+        rootView.tvTotalFareLabel.typeface = Fonts.mavenMedium(rootView.context)
+        rootView.tvTotalFare.typeface = Fonts.mavenMedium(rootView.context)
+        rootView.tvTipLabel.typeface = Fonts.mavenRegular(rootView.context)
+        rootView.etAdditionalFare.typeface = Fonts.mavenRegular(rootView.context)
     }
 
     /**
      *
      */
     private fun setData() {
+        var requestRide : RequestRideConfirm? = null
+        var addedTip = 0.0
+        var isTotalInRange = false
+
+        if(arguments != null) {
+            requestRide  = arguments?.getParcelable("requestRide")!!
+            rootView.tvVehicleName.text = requestRide.vehicleName
+
+
+            if(requestRide.fare != 0.0) {
+                isTotalInRange = false
+                rootView.tvFare.text = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(requestRide.currency, requestRide.fare)
+            } else if(requestRide.fare == 0.0 && requestRide.minFare != 0.0 && requestRide.maxFare != 0.0) {
+                isTotalInRange = true
+                rootView.tvFare.text = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(requestRide.currency, requestRide.minFare).plus(" - ")
+                        .plus(product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(requestRide.currency, requestRide.maxFare))
+            } else {
+                isTotalInRange = false
+                rootView.tvFare.visibility = View.GONE
+                rootView.tvFare.visibility = View.GONE
+            }
+
+            setTotalFare(requestRide, addedTip, isTotalInRange)
+
+            if(!requestRide.vehicleIcon.isNullOrEmpty()) {
+                Glide.with(rootView.context).load(requestRide.vehicleIcon?.replace("http:", "https:"))
+                        .into(rootView.ivVehicle)
+            }
+        }
         rootView.rvNearbyDrivers.layoutManager = LinearLayoutManager(activity)
         rootView.rvNearbyDrivers.isNestedScrollingEnabled = false
         val driverList : ArrayList<DriverInfo> = ArrayList()
@@ -87,17 +142,31 @@ class DriverCallDialog : DialogFragment() {
                 }
             }
         }
-        rootView.rvNearbyDrivers.adapter = DriverListAdapter(activity, driverList, object : DriverListAdapter.DriverContactListener {
-            override fun onCallClicked(driverInfo: DriverInfo) {
-                if(!driverInfo.phoneNumber.isNullOrEmpty()) {
-                    Utils.openCallIntent(activity, driverInfo.phoneNumber)
-                    dismiss()
+        if(!driverList.isEmpty()) {
+            rootView.rvNearbyDrivers.visibility = View.VISIBLE
+            rootView.tvNoDriverNearBy.visibility = View.GONE
+            rootView.rvNearbyDrivers.adapter = DriverListAdapter(activity, driverList, object : DriverListAdapter.DriverContactListener {
+                override fun onCallClicked(driverInfo: DriverInfo) {
+                    if (!driverInfo.phoneNumber.isNullOrEmpty()) {
+                        Utils.openCallIntent(activity, driverInfo.phoneNumber)
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            rootView.rvNearbyDrivers.visibility = View.GONE
+            rootView.tvNoDriverNearBy.visibility = View.VISIBLE
+        }
         rootView.btnCancel.setOnClickListener {
             (context as CallDriverListener).onCancelClicked()
             dismiss()
+        }
+
+        rootView.btnOk.setOnClickListener {
+            if(addedTip > 0.0) {
+                Data.autoData.noDriverFoundTip = addedTip
+                (context as CallDriverListener).onCallDriverOkClicked()
+                dismiss()
+            }
         }
 
         Handler().postDelayed(Runnable {
@@ -109,9 +178,82 @@ class DriverCallDialog : DialogFragment() {
                 e.printStackTrace()
             }
         }, 1000)
+
+        rootView.groupCallDriver.visibility = View.VISIBLE
+        rootView.groupTip.visibility = View.GONE
+        isCallDriverVisible = true
+
+        rootView.tvCallDriver.setOnClickListener {
+            if(isCallDriverVisible) {
+                rootView.groupCallDriver.visibility = View.GONE
+                isCallDriverVisible = false
+            } else {
+                rootView.groupCallDriver.visibility = View.VISIBLE
+                rootView.groupTip.visibility = View.GONE
+                isCallDriverVisible = true
+                isTipVisible = false
+            }
+        }
+
+        rootView.tvTipMessage.setOnClickListener {
+            if(isTipVisible) {
+                rootView.groupTip.visibility = View.GONE
+                isTipVisible = false
+            } else {
+                rootView.groupTip.visibility = View.VISIBLE
+                rootView.groupCallDriver.visibility = View.GONE
+                isCallDriverVisible = false
+                isTipVisible = true
+            }
+        }
+
+        rootView.etAdditionalFare.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if(p0.toString().isNotEmpty() && p0.toString() != ".") {
+                    addedTip = p0.toString().toDouble()
+                    setTotalFare(requestRide, addedTip, isTotalInRange)
+                } else {
+                    addedTip = 0.0
+                    setTotalFare(requestRide, addedTip, isTotalInRange)
+                }
+            }
+
+            var countBeforeChange: Int? = 0
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                countBeforeChange = p0.toString().length
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.toString().isNotEmpty() && countBeforeChange == 0) {
+                    rootView.etAdditionalFare.hint = null
+                    if (rootView.etAdditionalFare.textDrawable == null) {
+                        rootView.etAdditionalFare.setPrefix(product.clicklabs.jugnoo.utils.Utils.getCurrencySymbol(requestRide?.currency))
+
+                    } else {
+                        rootView.etAdditionalFare.setCompoundDrawables(rootView.etAdditionalFare.textDrawable, null, null, null)
+                    }
+                } else if (p0.toString().isEmpty()) {
+                    rootView.etAdditionalFare.setHint(R.string.hint_tip_amount)
+                    rootView.etAdditionalFare.setCompoundDrawables(null, null, null, null)
+                }
+            }
+
+        })
+
+    }
+
+    private fun setTotalFare(requestRide: RequestRideConfirm?, addedTip: Double, totalInRange: Boolean) {
+        if (totalInRange) {
+            rootView.tvTotalFare.text = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(requestRide?.currency, (requestRide?.minFare!! + addedTip))
+                    .plus(" - ")
+                    .plus(product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(requestRide.currency, (requestRide.maxFare + addedTip)))
+        } else {
+            rootView.tvTotalFare.text = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(requestRide?.currency, (requestRide?.fare!! + addedTip))
+        }
     }
 
     interface CallDriverListener {
+        fun onCallDriverOkClicked();
         fun onCancelClicked()
     }
 }
