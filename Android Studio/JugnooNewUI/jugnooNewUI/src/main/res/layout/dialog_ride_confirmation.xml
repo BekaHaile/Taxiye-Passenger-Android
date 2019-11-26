@@ -304,6 +304,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="tvDrop,ivDrop,ivDottedLine" />
+
+        <android.support.constraint.Group
+            android:id="@+id/groupTip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="viewSeparatorVehicle,ivTip,tvTipLabel,etAdditionalFare,tvTipMsg" />
     </android.support.constraint.ConstraintLayout>
 
 </RelativeLayout>

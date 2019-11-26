@@ -89,7 +89,7 @@ class RideConfirmationDialog : DialogFragment() {
      */
     private fun setData() {
         var requestRide : RequestRideConfirm? = null
-        var addedTip = 0.0
+        var addedTip = Data.autoData.noDriverFoundTip
         var isTotalInRange = false
         if(arguments != null) {
             requestRide  = arguments?.getParcelable("requestRide")!!
@@ -122,11 +122,16 @@ class RideConfirmationDialog : DialogFragment() {
                 rootView.tvNotes.text = requestRide.note
             } else {
                 rootView.tvNotes.visibility = View.GONE
-//                rootView.viewSeparatorNotes.visibility = View.GONE
             }
 
             if(requestRide.drop.isNullOrEmpty()) {
                 rootView.groupDrop.visibility = View.GONE
+            }
+
+            if(requestRide.showTip) {
+                rootView.groupTip.visibility = View.VISIBLE
+            } else {
+                rootView.groupTip.visibility = View.GONE
             }
         }
         rootView.btnCancel.setOnClickListener {

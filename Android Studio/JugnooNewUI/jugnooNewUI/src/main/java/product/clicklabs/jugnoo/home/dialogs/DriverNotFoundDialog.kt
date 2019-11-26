@@ -83,7 +83,7 @@ class DriverNotFoundDialog : DialogFragment() {
      *
      */
     private fun setData() {
-        var addedTip = 0.0
+        var addedTip = Data.autoData.noDriverFoundTip
         var isTotalInRange = false
         var requestRide : RequestRideConfirm? = null
 

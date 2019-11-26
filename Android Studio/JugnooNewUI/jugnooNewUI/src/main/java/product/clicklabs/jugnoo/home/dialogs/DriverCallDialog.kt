@@ -99,7 +99,7 @@ class DriverCallDialog : DialogFragment() {
      */
     private fun setData() {
         var requestRide : RequestRideConfirm? = null
-        var addedTip = 0.0
+        var addedTip = Data.autoData.noDriverFoundTip
         var isTotalInRange = false
 
         if(arguments != null) {

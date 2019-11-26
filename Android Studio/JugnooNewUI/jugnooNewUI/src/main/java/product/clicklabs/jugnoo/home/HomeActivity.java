@@ -3091,13 +3091,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private RequestRideConfirm getRequestRideObject() {
         Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
         boolean isNotInRange = region.getRideType() == RideTypeValue.POOL.getOrdinal() || region.getFareMandatory() == 1;
+        boolean showTip = region.getReverseBid() == 0 && region.getFareMandatory() == 1 && Data.autoData.getTipEnabledBeforeRequestRide();
 
         RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
                 region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
                 region.getRegionName(), region.getDisclaimerText(), region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString() : "",
                 isNotInRange && region.getRegionFare() != null ? region.getRegionFare().getFare() : 0.0,
                 region.getRegionFare() != null ? region.getRegionFare().getMinFare() : 0.0,
-                region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, "");
+                region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, "", showTip);
 
         return requestRideConfirm;
     }
