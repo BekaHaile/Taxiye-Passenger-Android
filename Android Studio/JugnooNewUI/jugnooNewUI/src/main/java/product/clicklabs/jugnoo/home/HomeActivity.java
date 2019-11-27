@@ -3077,7 +3077,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void openRequestConfirmDialog() {
-        setTipAmountToZero();
+        setTipAmountToZero(true);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag(RideConfirmationDialog.class.getSimpleName());
         if (prev != null) {
@@ -3661,12 +3661,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             @Override
                             public void neutralClick(View v) {
-                                setTipAmountToZero();
+                                setTipAmountToZero(true);
                             }
 
                             @Override
                             public void negativeClick(View v) {
-                                setTipAmountToZero();
+                                setTipAmountToZero(true);
                             }
                         });
                     }
@@ -3676,11 +3676,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
     }
 
-    private void setTipAmountToZero() {
+    private void setTipAmountToZero(boolean isResetRequest) {
         if(Data.autoData != null) {
             Data.autoData.setNoDriverFoundTip(0.0);
         }
-        mRequestType = -1;
+        if(isResetRequest) mRequestType = -1;
     }
 
     private boolean addressMatchedWithSavedAddresses(String address) {
@@ -7588,7 +7588,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			callMapTouchedRefreshDrivers(null);
 		}
 		setTextToPickupDropTVs();
-        setTipAmountToZero();
+        setTipAmountToZero(true);
 
 	}
 
@@ -7625,10 +7625,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby, String message, int requestType) {
         try {
+            setTipAmountToZero(false);
             if(requestType == 0 && isNewUI) {
                 openDriverNotFoundTipDialog();
             } else if(requestType == 1 && isNewUI) {
-//                setTipAmountToZero();
                 openDriverContactListDialog();
             } else {
                 if (noDriversDialog != null && noDriversDialog.isShowing()) {
@@ -8517,12 +8517,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         @Override
                         public void neutralClick(View v) {
-                            setTipAmountToZero();
+                            setTipAmountToZero(true);
                         }
 
                         @Override
                         public void negativeClick(View v) {
-                            setTipAmountToZero();
+                            setTipAmountToZero(true);
                         }
                     });
         }
@@ -8754,7 +8754,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             cancelTimerRequestRide();
             ArrayList<String> fellowRiders = new ArrayList<>();
             Data.autoData.setcSessionId(jObj.getString("session_id"));
-            setTipAmountToZero();
+            setTipAmountToZero(true);
             Data.autoData.setcEngagementId(jObj.getString("engagement_id"));
             Data.autoData.setcDriverId(jObj.getString("driver_id"));
 
@@ -9369,7 +9369,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                                     DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
                                                                     HomeActivity.passengerScreenMode = P_INITIAL;
                                                                     switchPassengerScreen(passengerScreenMode);
-                                                                    setTipAmountToZero();
+                                                                    setTipAmountToZero(true);
                                                                     DialogPopup.dismissLoadingDialog();
                                                                 }
                                                             } catch (Exception e) {
@@ -9438,7 +9438,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     cancelTimerRequestRide();
                                                     fetchAcceptedDriverInfoAndChangeState(jObj, flag);
                                                 }
-                                                setTipAmountToZero();
+                                                setTipAmountToZero(true);
                                             } else if (ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
                                                 final int requestType = jObj.optInt("request_level", -1);
@@ -9490,7 +9490,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                         }
                                                     }
                                                 });
-                                                setTipAmountToZero();
+                                                setTipAmountToZero(true);
                                             }
 
                                         }
@@ -13195,7 +13195,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onCancelClick(boolean isPickup) {
-        setTipAmountToZero();
+        setTipAmountToZero(true);
     }
 
     @Override
@@ -13222,7 +13222,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onCancelClick() {
-        setTipAmountToZero();
+        setTipAmountToZero(true);
     }
 
     @Override
@@ -13232,7 +13232,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onCancelClicked() {
-        setTipAmountToZero();
+        setTipAmountToZero(true);
     }
 
     @Override
