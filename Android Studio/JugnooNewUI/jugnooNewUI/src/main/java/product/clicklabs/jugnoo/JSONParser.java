@@ -304,6 +304,9 @@ public class JSONParser implements Constants {
 				Config.saveSupportNumber(context, loginUserData.getSupportNumber());
 			}
             Data.userData.setReferralMessages(parseReferralMessages(context, loginUserData));
+            Data.userData.getReferralMessages().setReferralsCount(loginUserData.getReferralsCount());
+            Data.userData.getReferralMessages().setReferralEarnedToday(loginUserData.getReferralEarnedToday());
+            Data.userData.getReferralMessages().setReferralEarnedTotal(loginUserData.getReferralEarnedTotal());
             performUserAppMonitoring(context, userData);
 
 //            if(Prefs.with(context).getString(Constants.KEY_SP_PUSH_OPENED_CLIENT_ID, "").equals("")) {
@@ -415,6 +418,7 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(KEY_MAPS_API_PRIVATE_KEY, autoData.optString(KEY_MAPS_API_PRIVATE_KEY, BuildConfig.MAPS_PRIVATE_KEY));
             Prefs.with(context).save(KEY_MAPS_API_BROWSER_KEY, autoData.optString(KEY_MAPS_API_BROWSER_KEY, BuildConfig.MAPS_BROWSER_KEY));
             Prefs.with(context).save(KEY_MAPS_API_SIGN, autoData.optInt(KEY_MAPS_API_SIGN, BuildConfig.MAPS_APIS_SIGN ? 1 : 0));
+
             Prefs.with(context).save(KEY_STRIPE_KEY_LIVE, autoData.optString(KEY_STRIPE_KEY_LIVE, BuildConfig.STRIPE_KEY_LIVE));
             Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_NUMBER, ""));
 
@@ -434,6 +438,11 @@ public class JSONParser implements Constants {
              Prefs.with(context).save(Constants.KEY_C_2_D_REFERRAL_DETAILS, autoData.optString(Constants.KEY_C_2_D_REFERRAL_DETAILS, ""));
 
             parseConfigParams(context, autoData);
+
+            if(Data.userData != null){
+            	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
+            	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -571,6 +580,10 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_REQUEST_RIDE_POPUP, autoData.optInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP,
 				context.getResources().getInteger(R.integer.show_confirm_popup_before_ride_request)));
 
+		Prefs.with(context).save(KEY_CUSTOMER_YOUTUBE_API_KEY, autoData.optString(KEY_CUSTOMER_YOUTUBE_API_KEY,
+				context.getString(R.string.youtube_api_key)));
+		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
+
 		parseJungleApiObjects(context, autoData);
 	}
 
@@ -578,6 +591,7 @@ public class JSONParser implements Constants {
 		try {
 			if(Data.jungleApisDisable == 1){
 				Prefs.with(context).save(KEY_JUNGLE_DIRECTIONS_OBJ, EMPTY_JSON_OBJECT);
+				Prefs.with(context).save(KEY_CFE_JUNGLE_DIRECTIONS_OBJ, EMPTY_JSON_OBJECT);
 				Prefs.with(context).save(KEY_JUNGLE_DISTANCE_MATRIX_OBJ, EMPTY_JSON_OBJECT);
 				Prefs.with(context).save(KEY_JUNGLE_GEOCODE_OBJ, EMPTY_JSON_OBJECT);
 				Prefs.with(context).save(KEY_JUNGLE_AUTOCOMPLETE_OBJ, EMPTY_JSON_OBJECT);
@@ -962,6 +976,7 @@ public class JSONParser implements Constants {
         try {
             parseDriversToShow(autos.getDrivers());
 
+            Data.autoData.setNoDriverFoundTip(0.0);
             Data.autoData.setServiceTypes(autos.getServiceTypes());
 
             Data.autoData.setFareFactor(1);
@@ -1147,6 +1162,7 @@ public class JSONParser implements Constants {
         try {
             JSONObject jLastRideData = jObj.getJSONObject("last_ride");
             Data.autoData.setcSessionId("");
+            Data.autoData.setNoDriverFoundTip(0.0);
             Data.autoData.setcEngagementId(jLastRideData.getString("engagement_id"));
 
             JSONObject jDriverInfo = jLastRideData.getJSONObject("driver_info");
@@ -1430,9 +1446,9 @@ public class JSONParser implements Constants {
                     pickupLatitude = "", pickupLongitude = "", pickupAddress = "", dropAddress = "";
             int freeRide = 0, preferredPaymentMode = PaymentOption.CASH.getOrdinal();
 			String promoName = "", eta = "";
-            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0, bearing = 0.0;
+            double fareFactor = 1.0, dropLatitude = 0, dropLongitude = 0, fareFixed = 0, bearing = 0.0, tip = 0.0;
             Schedule scheduleT20 = null;
-            int vehicleType = VEHICLE_AUTO;
+            int vehicleType = VEHICLE_AUTO, regionId;
             String iconSet = VehicleIconSet.ORANGE_AUTO.getName();
             String cancelRideThrashHoldTime = "", poolStatusString = "";
             int cancellationCharges = 0, isPooledRide = 0, chatEnabled = 0;
@@ -1476,6 +1492,9 @@ public class JSONParser implements Constants {
                     if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
 
                         sessionId = jObject1.getString("session_id");
+                        tip = jObject1.optDouble("tip_amount", 0.0);
+                        regionId = jObject1.optInt("region_id", -1);
+                        Prefs.with(context).save(KEY_REGION_ID, regionId);
                         double assigningLatitude = 0, assigningLongitude = 0;
                         if (jObject1.has(KEY_LATITUDE) && jObject1.has(KEY_LONGITUDE)) {
                             assigningLatitude = jObject1.getDouble(KEY_LATITUDE);
@@ -1652,6 +1671,7 @@ public class JSONParser implements Constants {
             } else if (Data.P_ASSIGNING.equalsIgnoreCase(screenMode)) {
                 HomeActivity.passengerScreenMode = PassengerScreenMode.P_ASSIGNING;
                 Data.autoData.setcSessionId(sessionId);
+                Data.autoData.setNoDriverFoundTip(tip);
                 Data.autoData.setBidInfos(bidInfos);
                 Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
                 clearSPData(context);

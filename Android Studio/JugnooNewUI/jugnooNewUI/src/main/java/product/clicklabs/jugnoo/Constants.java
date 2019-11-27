@@ -235,6 +235,7 @@ public interface Constants {
     String STRIPE_SELECTED_POS ="selected_stripe_card";
 
     String KEY_URL = "url";
+    String KEY_VIDEO = "video";
     String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
     String KEY_LAST_PUSH_TIME_DIFF = "last_push_time_diff";
     String KEY_PUSH_CLICKED = "push_clicked";
@@ -1101,6 +1102,8 @@ public interface Constants {
 	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";
 	String KEY_JUNGLE_POINTS = "points";
 	String KEY_JUNGLE_OPTIONS = "options";
+	String KEY_JUNGLE_TYPE = "type";
+	String KEY_JUNGLE_OFFERING = "offering";
 	String KEY_JUNGLE_APP_ID = "app_id";
 	String KEY_JUNGLE_APP_CODE = "app_code";
 	String KEY_JUNGLE_API_KEY = "api_key";
@@ -1136,4 +1139,12 @@ public interface Constants {
     String KEY_HISTORY_DATA = "history_data";
     String KEY_BUNDLE_WITH_HISTORY_DATA = "bundle_with_history_data";
     String KEY_CHAT_DELIVERY = "chat_delivery";
+	String KEY_IS_NEW_REFERRAL = "is_new_referral";
+
+	String KEY_CUSTOMER_YOUTUBE_API_KEY = "customer_youtube_api_key";
+	String SP_YOUTUBE_TUTORIAL_SKIPPED = "sp_youtube_tutorial_skipped";
+
+	String KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD = "directions_max_distance_threshold";
+
+	String KEY_PUSH_NO_DRIVER_FOUND_HELP = "no_driver_found_help";
 }

@@ -446,19 +446,19 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     }
 
                     override fun onNoRetry() {
-                        tvFareEstimate.visibility = View.GONE
+                        tvFareEstimate?.visibility = View.GONE
                     }
 
                     override fun onRetry() {
-                        tvFareEstimate.visibility = View.GONE
+                        tvFareEstimate?.visibility = View.GONE
                     }
 
                     override fun onFareEstimateFailure() {
-                        tvFareEstimate.visibility = View.GONE
+                        tvFareEstimate?.visibility = View.GONE
                     }
 
                     override fun onDirectionsFailure() {
-                        tvFareEstimate.visibility = View.GONE
+                        tvFareEstimate?.visibility = View.GONE
                     }
                 })
             }

@@ -958,7 +958,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                     Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
                     Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), SplashNewActivity.openHomeSwitcher);
         } else if (hasFocus && backToSplashOboarding) {
-            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
             finish();
         }
     }

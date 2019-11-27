@@ -892,6 +892,14 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								tvSkip.performClick();
 								return;
 							}
+
+							if(!TextUtils.isEmpty(Data.deepLinkReferralCode)
+									&& loginResponseData != null
+									&& loginResponseData.getUserData() != null
+									&& loginResponseData.getUserData().getPromoSuccess() == 1){
+								referralCode = "";
+							}
+
 							apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
 							Utils.hideSoftKeyboard(SplashNewActivity.this, etOnboardingName);
 							GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SUBMIT+CLICKED);
@@ -1766,6 +1774,21 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					etReferralCode.setVisibility(View.VISIBLE);
 					etReferralCode.setText(Data.deepLinkReferralCode);
 					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
+
+					if(etReferralCode.getText().length() > 0
+							&& loginResponseData != null
+							&& loginResponseData.getUserData() != null
+							&& loginResponseData.getUserData().getPromoSuccess() == 1){
+						tvReferralTitle.setText(R.string.referral_code_applied);
+						etReferralCode.setEnabled(false);
+						etReferralCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_tick_coupon, 0);
+						findViewById(R.id.ivEtPromoDiv).setVisibility(View.GONE);
+					} else {
+						tvReferralTitle.setText(R.string.do_you_have_a_referral_code);
+						etReferralCode.setEnabled(true);
+						etReferralCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+					}
+
 				} else {
 					tvReferralTitle.setVisibility(View.GONE);
 					etReferralCode.setVisibility(View.GONE);
@@ -3157,7 +3180,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									if(jObj.optJSONObject(KEY_USER_DATA).optInt(KEY_SIGNUP_ONBOARDING, 0) == 1){
 										JSONParser.parseSignupOnboardingKeys(activity, jObj);
-										changeUIState(State.SPLASH_ONBOARDING);
 
 										String authKey = jObj.optJSONObject(KEY_USER_DATA).optString("auth_key", "");
 										if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){
@@ -3165,6 +3187,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 										}
 										String authSecret = authKey + Config.getClientSharedSecret();
 										accessToken = SHA256Convertor.getSHA256String(authSecret);
+										changeUIState(State.SPLASH_ONBOARDING);
 									} else{
 										loginDataFetched = true;
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,

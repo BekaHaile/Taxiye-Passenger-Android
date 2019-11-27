@@ -211,7 +211,7 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 public void run() {
 					try {
 						if(Data.autoData != null && regions.size() > 1) {
-							activity.setVehicleTypeSelected(0, false, true);
+							activity.setVehicleTypeSelected(checkForRequestedRegion(Data.autoData.getRegions()), false, true);
 						}
 					} catch (Exception ignored) {}
 				}
@@ -409,6 +409,21 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             }
         }
         return regionSelected;
+    }
+
+    private int checkForRequestedRegion(ArrayList<Region> regions) {
+        int requestedRegionId = Prefs.with(activity).getInt(KEY_REGION_ID, -1);
+        int index = 0;
+        if(requestedRegionId != -1) {
+            for (int i = 0; i < regions.size(); i++) {
+                if(regions.get(i).getRegionId() == requestedRegionId) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        Prefs.with(activity).save(KEY_REGION_ID, -1);
+        return index;
     }
 
     public void updateSupplyUI(int supplyCount){

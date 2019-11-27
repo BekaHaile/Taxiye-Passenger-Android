@@ -16,8 +16,10 @@ import product.clicklabs.jugnoo.directions.room.model.Path
 import product.clicklabs.jugnoo.directions.room.model.Point
 import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponse
+import product.clicklabs.jugnoo.retrofit.model.PlaceDetailsResponseGoogle
 import product.clicklabs.jugnoo.retrofit.model.PlacesAutocompleteResponse
 import product.clicklabs.jugnoo.utils.GoogleRestApis
+import product.clicklabs.jugnoo.utils.Log
 import product.clicklabs.jugnoo.utils.MapUtils
 import product.clicklabs.jugnoo.utils.Prefs
 import retrofit.mime.TypedByteArray
@@ -29,6 +31,9 @@ import kotlin.collections.HashMap
 object JungleApisImpl {
 
     private val gson = Gson()
+
+    private const val JUNGLE_TYPE_VALUE = "android"
+    private const val JUNGLE_OFFERING_VALUE = "18"
 
     private var db: DirectionsPathDatabase? = null
         get() {
@@ -54,7 +59,7 @@ object JungleApisImpl {
 
         GlobalScope.launch(Dispatchers.IO){
             try {
-                val directionsResult = getDirectionsPathSync(source, destination, units, apiSource)
+                val directionsResult = getDirectionsPathSync(source, destination, units, apiSource, true)
                 if(directionsResult != null){
                     launch(Dispatchers.Main){callback?.onSuccess(directionsResult.latLngs, directionsResult.path)}
                 } else {
@@ -70,6 +75,8 @@ object JungleApisImpl {
     fun putJungleOptionsParams(params:HashMap<String, String>, jungleObj:JSONObject){
         val option = jungleObj.optInt(Constants.KEY_JUNGLE_OPTIONS, 0)
         params[Constants.KEY_JUNGLE_OPTIONS] = option.toString()
+        params[Constants.KEY_JUNGLE_TYPE] = JUNGLE_TYPE_VALUE
+        params[Constants.KEY_JUNGLE_OFFERING] = JUNGLE_OFFERING_VALUE
 
         when(option){
             1 -> { //here map
@@ -85,8 +92,18 @@ object JungleApisImpl {
         }
     }
 
-    fun getDirectionsPathSync(source:LatLng, destination:LatLng, units:String, apiSource:String) : DirectionsResult? {
+    fun getDirectionsPathSync(source:LatLng, destination:LatLng, units:String, apiSource:String, fallbackNeeded:Boolean = true) : DirectionsResult? {
         var directionsResult:DirectionsResult? = null
+
+        //safety check to not hit directions api if distance between source and destination is more than 200Kms(server configurable)
+        try {
+            val directionsDistanceThreshold = Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0")
+            if(MapUtils.distance(source, destination) > directionsDistanceThreshold.toDouble()){
+                Log.e(JungleApisImpl::class.java.simpleName+"_distance_threshold_case", "directionsDistanceThreshold=$directionsDistanceThreshold, distance="+MapUtils.distance(source, destination))
+                return directionsResult
+            }
+        } catch (e: Exception) {}
+
         val timeStamp = System.currentTimeMillis()
 
         val sourceLat = numberFormat!!.format(source.latitude).toDouble()
@@ -105,15 +122,20 @@ object JungleApisImpl {
         //path is not found
         if(!cachingEnabled || paths == null || paths.isEmpty()){
 
-            try {
-                var objKey = Constants.KEY_JUNGLE_DIRECTIONS_OBJ
-                if(apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME, true)
-                        || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_SCHEDULE, true)
-                        || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_ACTIVITY, true)){
-                    objKey = Constants.KEY_CFE_JUNGLE_DIRECTIONS_OBJ
-                }
+            //separate configuration for directions api in case of fare estimate
+            var objKey = Constants.KEY_JUNGLE_DIRECTIONS_OBJ
+            if(apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME, true)
+                    || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_SCHEDULE, true)
+                    || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_ACTIVITY, true)){
+                objKey = Constants.KEY_CFE_JUNGLE_DIRECTIONS_OBJ
+            }
 
-                val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(objKey, Constants.EMPTY_JSON_OBJECT))
+            val jungleObj = try{JSONObject(Prefs.with(MyApplication.getInstance()).getString(objKey, Constants.EMPTY_JSON_OBJECT))}
+                            catch(e:java.lang.Exception){JSONObject(Constants.EMPTY_JSON_OBJECT)}
+            Log.e(JungleApisImpl::class.java.simpleName, "jungleObj=$jungleObj, objKey=$objKey")
+
+
+            try {
                 if(checkIfJungleApiEnabled(jungleObj)){
 
                     val pointsJ = JSONArray()
@@ -154,6 +176,12 @@ object JungleApisImpl {
                 }
 
             } catch (e: Exception) {
+                //if exception encountered in jungle directions api and fallback to google is not needed then return error case
+                if(checkIfJungleApiEnabled(jungleObj) && !fallbackNeeded){
+                    Log.e(JungleApisImpl::class.java.simpleName, "_fallback_not_needed_case")
+                    return directionsResult
+                }
+
                 //google directions hit
                 try {
                     val response = GoogleRestApis.getDirections("$sourceLat,$sourceLng", "$destinationLat,$destinationLng",
@@ -348,7 +376,7 @@ object JungleApisImpl {
         return autoCompleteResult
     }
 
-    fun getPlaceById(placeId:String, latLng:LatLng) : PlaceDetailResult? {
+    fun getPlaceById(placeId:String, latLng:LatLng, sessiontoken:String) : PlaceDetailResult? {
         var placeDetailResult:PlaceDetailResult? = null
         try {
             val jungleObj = JSONObject(Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_AUTOCOMPLETE_OBJ, Constants.EMPTY_JSON_OBJECT))
@@ -364,6 +392,9 @@ object JungleApisImpl {
                 } else {
                     GoogleRestApis.MAPS_BROWSER_KEY()
                 }
+
+                params[Constants.KEY_JUNGLE_TYPE] = JUNGLE_TYPE_VALUE
+                params[Constants.KEY_JUNGLE_OFFERING] = JUNGLE_OFFERING_VALUE
 
                 val response = RestClient.getJungleMapsApi().geocodePlaceById(params)
 
@@ -382,10 +413,15 @@ object JungleApisImpl {
 
         } catch (e: Exception) {
             try {//google auto-complete hit
-                val response = GoogleRestApis.getPlaceDetails(placeId)
+                val response = GoogleRestApis.getPlaceDetails(placeId, sessiontoken)
                 val result = String((response.body as TypedByteArray).bytes)
-                val placeDetailResponse = gson.fromJson(result, PlaceDetailsResponse::class.java)
-                if (placeDetailResponse.results != null && placeDetailResponse.results!!.isNotEmpty()) {
+                val placeDetailsResponseGoogle = gson.fromJson(result, PlaceDetailsResponseGoogle::class.java)
+                if (placeDetailsResponseGoogle.result != null) {
+
+                    val placeDetailResponse = PlaceDetailsResponse()
+                    placeDetailResponse.results = mutableListOf()
+                    placeDetailResponse.results!!.add(placeDetailsResponseGoogle.result!!)
+
                     placeDetailResult = PlaceDetailResult(placeDetailResponse, false)
                 }
             } catch (e: Exception) {

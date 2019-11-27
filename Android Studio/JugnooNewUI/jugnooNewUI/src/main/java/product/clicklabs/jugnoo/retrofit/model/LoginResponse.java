@@ -872,6 +872,15 @@ public class LoginResponse {
 		@SerializedName("bottom_request_ui_enabled_v2")
 		private Integer bottomRequestUIEnabled;
 
+
+		@SerializedName("multi_level_referral_enabled")
+		@Expose
+		private int multiLevelReferralEnabled;
+		@SerializedName("referral_images")
+		@Expose
+		private ArrayList<MediaInfo> referralImages;
+
+
 		public List<Driver> getDrivers() {
 			return drivers;
 		}
@@ -1078,6 +1087,15 @@ public class LoginResponse {
 		public void setBottomRequestUIEnabled(Integer bottomRequestUIEnabled) {
 			this.bottomRequestUIEnabled = bottomRequestUIEnabled;
 		}
+
+		public int getMultiLevelReferralEnabled() {
+			return multiLevelReferralEnabled;
+		}
+
+		public ArrayList<MediaInfo> getReferralImages() {
+			return referralImages;
+		}
+
 	}
 
 	public class UserData{
@@ -1163,11 +1181,23 @@ public class LoginResponse {
 		@SerializedName("show_home")
 		@Expose
 		private int showHome;
+		@SerializedName("referrals_count")
+		@Expose
+		private double referralsCount;
+		@SerializedName("referral_earned_total")
+		@Expose
+		private double referralEarnedTotal;
+		@SerializedName("referral_earned_today")
+		@Expose
+		private double referralEarnedToday;
 
 
 		@SerializedName("show_jstar_in_account")
 		@Expose
 		private int showJugnooStarInAccount;
+		@SerializedName("promo_success")
+		@Expose
+		private int promoSuccess;
 
 		public List<MenuInfo> getMenuInfoList() {
 			return menuInfoList;
@@ -1378,6 +1408,22 @@ public class LoginResponse {
 
 		public void setShowHome(int showHome) {
 			this.showHome = showHome;
+		}
+
+		public double getReferralsCount() {
+			return referralsCount;
+		}
+
+		public double getReferralEarnedTotal() {
+			return referralEarnedTotal;
+		}
+
+		public double getReferralEarnedToday() {
+			return referralEarnedToday;
+		}
+
+		public int getPromoSuccess() {
+			return promoSuccess;
 		}
 	}
 
