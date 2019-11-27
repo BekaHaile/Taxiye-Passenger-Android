@@ -206,7 +206,6 @@ class DriverCallDialog : DialogFragment() {
             }
         }
 
-        if(addedTip > 0.0){ rootView.etAdditionalFare.setText(addedTip.toInt().toString()) }
         rootView.etAdditionalFare.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 if(p0.toString().isNotEmpty() && p0.toString() != ".") {
@@ -227,7 +226,7 @@ class DriverCallDialog : DialogFragment() {
                 if (p0.toString().isNotEmpty() && countBeforeChange == 0) {
                     rootView.etAdditionalFare.hint = null
                     if (rootView.etAdditionalFare.textDrawable == null) {
-                        rootView.etAdditionalFare.setPrefix(product.clicklabs.jugnoo.utils.Utils.getCurrencySymbol(requestRide?.currency))
+                        rootView.etAdditionalFare.setPrefix(Utils.getCurrencySymbol(requestRide?.currency))
 
                     } else {
                         rootView.etAdditionalFare.setCompoundDrawables(rootView.etAdditionalFare.textDrawable, null, null, null)
@@ -240,11 +239,16 @@ class DriverCallDialog : DialogFragment() {
 
         })
 
+        if(addedTip > 0.0){
+            rootView.etAdditionalFare.setText(addedTip.toInt().toString())
+            rootView.etAdditionalFare.setPrefix(Utils.getCurrencySymbol(requestRide?.currency))
+        }
+
     }
 
     private fun hideKeyboard() {
         val imm = rootView.etAdditionalFare.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (imm.isActive) imm.toggleSoftInput(0, HIDE_NOT_ALWAYS)
+        if (imm.isActive) imm.hideSoftInputFromWindow(rootView.etAdditionalFare.windowToken, 0)
     }
 
     private fun setTotalFare(requestRide: RequestRideConfirm?, addedTip: Double, totalInRange: Boolean) {
@@ -258,7 +262,7 @@ class DriverCallDialog : DialogFragment() {
     }
 
     interface CallDriverListener {
-        fun onCallDriverOkClicked();
+        fun onCallDriverOkClicked()
         fun onCancelClicked()
     }
 }

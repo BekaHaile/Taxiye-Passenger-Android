@@ -122,7 +122,6 @@ class DriverNotFoundDialog : DialogFragment() {
             }
         }
 
-        if(addedTip > 0.0) { rootView.etAdditionalFare.setText(addedTip.toInt().toString()) }
         var countBeforeChange: Int? = 0
         rootView.etAdditionalFare.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
@@ -165,6 +164,11 @@ class DriverNotFoundDialog : DialogFragment() {
                 (context as RideRequestConfirmListener).onOkClick()
                 dismiss()
             }
+        }
+
+        if(addedTip > 0.0){
+            rootView.etAdditionalFare.setText(addedTip.toInt().toString())
+            rootView.etAdditionalFare.setPrefix(Utils.getCurrencySymbol(requestRide?.currency))
         }
     }
 
