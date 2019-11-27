@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import com.squareup.picasso.Picasso
 import product.clicklabs.jugnoo.R
 
@@ -30,6 +31,8 @@ class TutorialPageAdapter(private var dataObjectList: ArrayList<TutorialDAO>) : 
         Picasso.with(pContext).load(dataObjectList[pPosition].pImageUrl)
                 .placeholder(R.drawable.ic_fresh_item_placeholder).fit()
                 .into(pLayout.findViewById(R.id.iv_tut) as ImageView)
+        val tapDesc = (pLayout.findViewById(R.id.tvTutDescription) as TextView);
+        tapDesc.text = dataObjectList[pPosition].pDescription
 
     }
 
