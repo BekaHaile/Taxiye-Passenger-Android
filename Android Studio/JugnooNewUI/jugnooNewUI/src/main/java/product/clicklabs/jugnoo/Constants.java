@@ -1132,4 +1132,5 @@ public interface Constants {
 	String KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD = "directions_max_distance_threshold";
 
 	String KEY_PUSH_NO_DRIVER_FOUND_HELP = "no_driver_found_help";
+	String KEY_TIP_ENABLED_BEFORE_REQUEST_RIDE = "tip_enabled_before_request_ride";
 }

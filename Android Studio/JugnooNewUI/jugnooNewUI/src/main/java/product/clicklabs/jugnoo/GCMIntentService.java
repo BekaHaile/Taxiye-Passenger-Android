@@ -616,7 +616,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String log = jObj.getString("log");
-						int requestType = jObj.optInt("request_type", -1);
+						int requestType = jObj.optInt("request_level", -1);
 						if (HomeActivity.appInterruptHandler != null) {
 							HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log, requestType);
 						}

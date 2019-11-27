@@ -2164,4 +2164,8 @@
     <string name="text_you_can_add_a_tip_to">You can add a tip to current fare for higher probability of booking</string>
     <string name="text_help_me_to_book_a_ride">Unable to book a ride from %s. Please help me to book a ride.</string>
     <string name="unable_to_book_a_ride">Unable to book a Ride?</string>
+    <string name="msg_adding_tip_can_increase_the_chances_of_booking">Adding tip to the driver can increase the chances of booking.</string>
+    <string name="text_here_is_what_you_can_do">Here\'s what you can do</string>
+    <string name="text_call_nearby_drivers">Call nearby drivers</string>
+    <string name="add_more_tip_for_better_acceptance">Add more tip to the current fare for better acceptance of ride</string>
 </resources>
