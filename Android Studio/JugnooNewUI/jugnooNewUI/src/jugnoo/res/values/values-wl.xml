@@ -93,5 +93,7 @@
 
     <!--    Tip-->
     <integer name="show_tip_on_confirm_ride">1</integer>
+    <integer name="show_tip_on_confirm_ride_level_1">1</integer>
+    <integer name="show_tip_on_confirm_ride_level_2">1</integer>
 
 </resources>

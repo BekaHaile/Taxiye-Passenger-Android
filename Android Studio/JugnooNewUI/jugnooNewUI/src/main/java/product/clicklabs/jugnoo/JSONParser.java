@@ -361,7 +361,6 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(Constants.KEY_FUGU_APP_TYPE, fuguAppType);
             int isTipEnabled = autoData.optInt(KEY_TIP_ENABLED, 0);
             int resendEmailInvoiceEnabled = autoData.optInt(KEY_RESEND_EMAIL_INVOICE_ENABLED, context.getResources().getInteger(R.integer.resend_email_invoice_enabled));
-            boolean showTipOnConfirmRide = autoData.optInt(KEY_TIP_ENABLED_BEFORE_REQUEST_RIDE, context.getResources().getInteger(R.integer.show_tip_on_confirm_ride)) == 1;
 
 //            int gpsLockStatus;
 //            try {
@@ -393,7 +392,6 @@ public class JSONParser implements Constants {
             Data.autoData.setUseRecentLocAutoSnapMaxDistance(autosData.getUseRecentLocAutoSnapMaxDistance());
             Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
             Data.autoData.setFaultConditions(autosData.getFaultConditions());
-            Data.autoData.setTipEnabledBeforeRequestRide(showTipOnConfirmRide);
 
 			long bidRequestRideTimeout = autoData.optLong(KEY_BID_REQUEST_RIDE_TIMEOUT, 420000);
 			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
@@ -583,6 +581,12 @@ public class JSONParser implements Constants {
 
 		Prefs.with(context).save(KEY_CUSTOMER_YOUTUBE_API_KEY, autoData.optString(KEY_CUSTOMER_YOUTUBE_API_KEY,
 				context.getString(R.string.youtube_api_key)));
+		Prefs.with(context).save(KEY_TIP_ENABLED_FOR_LEVEL_0, autoData.optInt(KEY_TIP_ENABLED_FOR_LEVEL_0,
+				context.getResources().getInteger(R.integer.show_tip_on_confirm_ride)));
+        Prefs.with(context).save(KEY_TIP_ENABLED_FOR_LEVEL_1, autoData.optInt(KEY_TIP_ENABLED_FOR_LEVEL_1,
+                context.getResources().getInteger(R.integer.show_tip_on_confirm_ride_level_1)));
+        Prefs.with(context).save(KEY_TIP_ENABLED_FOR_LEVEL_2, autoData.optInt(KEY_TIP_ENABLED_FOR_LEVEL_2,
+                context.getResources().getInteger(R.integer.show_tip_on_confirm_ride_level_2)));
 
 		parseJungleApiObjects(context, autoData);
 	}

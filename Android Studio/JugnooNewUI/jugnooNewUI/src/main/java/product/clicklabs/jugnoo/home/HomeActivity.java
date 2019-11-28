@@ -3085,14 +3085,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         ft.addToBackStack(null);
 
-        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(getRequestRideObject());
+        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(getRequestRideObject(Prefs.with(this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_0, 0) == 1));
         dialogFragment.show(ft, RideConfirmationDialog.class.getSimpleName());
     }
 
-    private RequestRideConfirm getRequestRideObject() {
+    private RequestRideConfirm getRequestRideObject(boolean showTipLevelWise) {
         Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
         boolean isNotInRange = region.getRideType() == RideTypeValue.POOL.getOrdinal() || region.getFareMandatory() == 1;
-        boolean showTip = region.getReverseBid() == 0 && region.getFareMandatory() == 1 && Data.autoData.getTipEnabledBeforeRequestRide();
+        boolean showTip = region.getReverseBid() == 0 && region.getFareMandatory() == 1 && showTipLevelWise;
 
         RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
                 region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
@@ -3112,7 +3112,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         ft.addToBackStack(null);
 
-        DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(getRequestRideObject());
+        DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(getRequestRideObject(true));
         dialogFragment.show(ft, DriverNotFoundDialog.class.getSimpleName());
     }
 
@@ -3124,7 +3124,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         ft.addToBackStack(null);
 
-        DialogFragment dialogFragment = DriverCallDialog.newInstance(getRequestRideObject());
+        DialogFragment dialogFragment = DriverCallDialog.newInstance(getRequestRideObject(Prefs.with(this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_2, 0) == 1));
         dialogFragment.show(ft, DriverCallDialog.class.getSimpleName());
     }
 
@@ -7627,7 +7627,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             setTipAmountToZero(false);
             if(requestType == 0 && isNewUI) {
-                openDriverNotFoundTipDialog();
+                if(Prefs.with(this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_1, 0) == 1) {
+                    openDriverNotFoundTipDialog();
+                } else {
+                    openDriverContactListDialog();
+                }
             } else if(requestType == 1 && isNewUI) {
                 openDriverContactListDialog();
             } else {
@@ -9316,7 +9320,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if(Data.autoData.getNoDriverFoundTip() > 0.0) {
                                     nameValuePairs.put("tip_amount","" + Data.autoData.getNoDriverFoundTip());
                                 }
-                                if(regionSelected.getReverseBid() == 0 && regionSelected.getFareMandatory() == 1 && Data.autoData.getTipEnabledBeforeRequestRide()) {
+                                if(regionSelected.getReverseBid() == 0 && regionSelected.getFareMandatory() == 1 && (Prefs.with(HomeActivity.this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_0, 0) == 1
+                                        || Prefs.with(HomeActivity.this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_1, 0) == 1 || Prefs.with(HomeActivity.this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_2, 0) == 1)) {
                                     nameValuePairs.put("request_level", (mRequestType + 1) + "");
                                 }
                                 if(mRequestType + 1 >= 2) {

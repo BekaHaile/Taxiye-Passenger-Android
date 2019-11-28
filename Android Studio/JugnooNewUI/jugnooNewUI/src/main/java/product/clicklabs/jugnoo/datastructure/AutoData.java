@@ -84,7 +84,6 @@ public class AutoData {
     private String  previousSelService = "";
     private int resendEmailInvoiceEnabled;
     private double noDriverFoundTip;
-    private boolean tipEnabledBeforeRequestRide;
 
     // RENTAL
 
@@ -861,13 +860,5 @@ public class AutoData {
 
     public void setNoDriverFoundTip(double noDriverFoundTip) {
         this.noDriverFoundTip = noDriverFoundTip;
-    }
-
-    public boolean getTipEnabledBeforeRequestRide() {
-        return tipEnabledBeforeRequestRide;
-    }
-
-    public void setTipEnabledBeforeRequestRide(boolean tipEnabledBeforeRequestRide) {
-        this.tipEnabledBeforeRequestRide = tipEnabledBeforeRequestRide;
     }
 }

@@ -15,18 +15,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.inputmethod.InputMethodManager
-import android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS
 import com.bumptech.glide.Glide
+import com.sabkuchfresh.feed.models.FeedCommonResponse
 import kotlinx.android.synthetic.main.dialog_no_rides_found_drivers.view.*
+import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.datastructure.DriverInfo
 import product.clicklabs.jugnoo.datastructure.PaymentOption
 import product.clicklabs.jugnoo.home.HomeActivity
+import product.clicklabs.jugnoo.home.HomeUtil
 import product.clicklabs.jugnoo.home.adapters.DriverListAdapter
+import product.clicklabs.jugnoo.retrofit.RestClient
 import product.clicklabs.jugnoo.retrofit.model.RequestRideConfirm
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
+import retrofit.Callback
+import retrofit.RetrofitError
+import retrofit.client.Response
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.set
 
 
 class DriverCallDialog : DialogFragment() {
@@ -137,13 +146,14 @@ class DriverCallDialog : DialogFragment() {
                 }
             }
         }
-        if(!driverList.isEmpty()) {
+        if(driverList.isNotEmpty()) {
             rootView.rvNearbyDrivers.visibility = View.VISIBLE
             rootView.tvNoDriverNearBy.visibility = View.GONE
             rootView.rvNearbyDrivers.adapter = DriverListAdapter(activity, driverList, object : DriverListAdapter.DriverContactListener {
                 override fun onCallClicked(driverInfo: DriverInfo) {
                     if (!driverInfo.phoneNumber.isNullOrEmpty()) {
                         Utils.openCallIntent(activity, driverInfo.phoneNumber)
+                        logDriverCall(driverInfo.userId)
                     }
                 }
             })
@@ -177,6 +187,11 @@ class DriverCallDialog : DialogFragment() {
         rootView.groupCallDriver.visibility = View.VISIBLE
         rootView.groupTip.visibility = View.GONE
         isCallDriverVisible = true
+
+        if(!requestRide?.showTip!!) {
+            rootView.groupTip.visibility = View.GONE
+            rootView.tvTipMessage.visibility = View.GONE
+        }
 
         rootView.tvCallDriver.setOnClickListener {
             if(isCallDriverVisible) {
@@ -244,6 +259,26 @@ class DriverCallDialog : DialogFragment() {
             rootView.etAdditionalFare.setPrefix(Utils.getCurrencySymbol(requestRide?.currency))
         }
 
+    }
+
+    private fun logDriverCall(userId: String) {
+        if(Data.autoData != null) {
+            val params = HashMap<String, String>()
+            params[Constants.KEY_ACCESS_TOKEN] = Data.userData.accessToken
+            params[Constants.KEY_SESSION_ID] = Data.autoData.getcSessionId()
+            params[Constants.KEY_DRIVER_ID] = userId
+            HomeUtil.addDefaultParams(params)
+            RestClient.getApiService().logDriverCall(params, object : Callback<FeedCommonResponse> {
+                override fun success(t: FeedCommonResponse?, response: Response?) {
+
+                }
+
+                override fun failure(error: RetrofitError?) {
+
+                }
+
+            })
+        }
     }
 
     private fun hideKeyboard() {
