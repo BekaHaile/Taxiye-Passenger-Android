@@ -911,7 +911,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
 
 						if(!name.equalsIgnoreCase(this.getPackageName()) ||
-								Data.context == null || !(Data.context instanceof ChatActivity)){
+								Data.context == null){
 							String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
 							notificationManagerCustomID(this, title, chatMessage, PROMOTION_NOTIFICATION_ID, AppLinkIndex.CHAT_PAGE.getOrdinal(),
 									null, "", playSound, 0, 1, tabIndex, flag);
