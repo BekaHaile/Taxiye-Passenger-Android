@@ -292,7 +292,7 @@
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@+id/programmaticScrollView"
             app:layout_constraintEnd_toEndOf="@id/glEnd"
-            app:layout_constraintStart_toEndOf="@+id/glMid"
+            app:layout_constraintStart_toEndOf="@+id/btnCancel"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/glBottomEnd" />
 
@@ -308,7 +308,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             app:layout_constraintTop_toBottomOf="@+id/programmaticScrollView"
-            app:layout_constraintEnd_toEndOf="@id/glMid"
+            app:layout_constraintEnd_toStartOf="@id/btnOk"
             app:layout_constraintBottom_toTopOf="@+id/glBottomEnd"
             app:layout_constraintStart_toStartOf="@+id/glStart"
             />

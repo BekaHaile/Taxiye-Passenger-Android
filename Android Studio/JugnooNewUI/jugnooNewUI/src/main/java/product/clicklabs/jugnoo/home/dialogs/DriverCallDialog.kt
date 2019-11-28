@@ -191,6 +191,7 @@ class DriverCallDialog : DialogFragment() {
         if(!requestRide?.showTip!!) {
             rootView.groupTip.visibility = View.GONE
             rootView.tvTipMessage.visibility = View.GONE
+            rootView.btnOk.visibility = View.GONE
         }
 
         rootView.tvCallDriver.setOnClickListener {
