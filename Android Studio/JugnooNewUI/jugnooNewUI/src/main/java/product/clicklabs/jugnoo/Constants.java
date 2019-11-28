@@ -1131,4 +1131,6 @@ public interface Constants {
 	String KEY_TIP_ENABLED_FOR_LEVEL_0 = "tip_enabled_for_level_0";
 	String KEY_TIP_ENABLED_FOR_LEVEL_1 = "tip_enabled_for_level_1";
 	String KEY_TIP_ENABLED_FOR_LEVEL_2 = "tip_enabled_for_level_2";
+
+	String KEY_SESSIONTOKEN = "sessiontoken";
 }
