@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:padding="@dimen/spacing_tiny"
+        android:textColor="@color/text_color"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@id/glDateAmount"
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="November 21st, 2019" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:padding="@dimen/spacing_tiny"
+        android:textColor="@color/text_color"
+        android:textSize="18sp"
+        android:gravity="end"
+        app:layout_constraintEnd_toEndOf="@id/glEnd"
+        app:layout_constraintStart_toStartOf="@id/glDateAmount"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_tiny"
+        android:textColor="@color/text_color"
+        android:textSize="14sp"
+        android:layout_marginBottom="@dimen/spacing_large"
+        app:layout_constraintEnd_toEndOf="@id/glTimeAndMsg"
+        app:layout_constraintStart_toStartOf="@id/glStart"
+        app:layout_constraintTop_toBottomOf="@+id/tvDate"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="11:15 AM" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tvInfo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_tiny"
+        android:textColor="@color/text_color"
+        android:textSize="14sp"
+        android:gravity="end"
+        app:layout_constraintEnd_toEndOf="@id/glEnd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/spacing_large"
+        app:layout_constraintStart_toStartOf="@id/glTimeAndMsg"
+        app:layout_constraintTop_toBottomOf="@+id/tvAmount"
+        tools:text="Referral: Credited for referring Ram" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="25dp"
+        app:layout_constraintStart_toStartOf="@id/glEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="@dimen/spacing_tiny"
+        app:layout_constraintTop_toTopOf="@+id/tvDate"
+        app:layout_constraintBottom_toBottomOf="@+id/tvInfo"
+        android:src="@drawable/ic_arrow_grey"
+        android:layout_height="25dp"/>
+
+    <android.support.constraint.Guideline
+        android:id="@+id/glStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".05" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/glEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".95" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/glDateAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.65" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/glTimeAndMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.35" />
+
+</android.support.constraint.ConstraintLayout>
