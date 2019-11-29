@@ -6765,6 +6765,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened, boolean savedAddressUsed, HashMap<String, String> params) {
         boolean showLoader = mLogMsg != null && mRequestType != null;
         int isSkip = mRequestType == 0 && Prefs.with(HomeActivity.this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_1, 0) == 0 ? 1 : 0;
+        if(params == null) {
+            params = new HashMap<>();
+        }
         params.put("skip", isSkip + "");
         getApiFindADriver()
 				.hit(Data.userData.accessToken, Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), showAllDrivers, showDriverInfo,
