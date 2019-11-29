@@ -3099,7 +3099,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 region.getRegionName(), region.getDisclaimerText(), region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString() : "",
                 isNotInRange && region.getRegionFare() != null ? region.getRegionFare().getFare() : 0.0,
                 region.getRegionFare() != null ? region.getRegionFare().getMinFare() : 0.0,
-                region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, "", showTip);
+                region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, Data.autoData.getCurrency(), showTip);
 
         return requestRideConfirm;
     }
@@ -9322,6 +9322,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
+
+                                //add tip feature keys in /request_ride
                                 if(Data.autoData.getNoDriverFoundTip() > 0.0) {
                                     nameValuePairs.put("tip_amount","" + Data.autoData.getNoDriverFoundTip());
                                 }
@@ -9336,6 +9338,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if(mRequestType + 1 >= 2) {
                                     mRequestType = -1;
                                 }
+
+
+
                                 try {
                                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                                 } catch (Exception e) {
