@@ -530,11 +530,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
 			}
 
-
-			String deliveryId = getIntent().getStringExtra(Constants.KEY_DELIVERY_ID);
-
-			if(deliveryId!=null && !deliveryId.isEmpty())
-				startActivity(ChatActivity.createIntent(SplashNewActivity.this,deliveryId));
+			handleChatActivityFromPush();
 
 
 			Data.locationSettingsNoPressed = false;
@@ -4581,5 +4577,29 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		textViewPhoneNumberRequired.setText(R.string.nl_splash_required);
 		btnPhoneLogin.setText(R.string.continue_text);
 
+	}
+
+	Handler handlerToOpenChatActivity;
+	private void handleChatActivityFromPush() {
+		//Opens Chat Activity after receiving Access Token.
+		int delayForChatActivity = 0;
+		if(handlerToOpenChatActivity == null) {
+			handlerToOpenChatActivity = new Handler();
+		}
+		handlerToOpenChatActivity.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(Data.userData!= null && Data.userData.accessToken != null) {
+					String deliveryId = getIntent().getStringExtra(Constants.KEY_DELIVERY_ID);
+					if(deliveryId!=null && !deliveryId.isEmpty()) {
+						startActivity(ChatActivity.createIntent(SplashNewActivity.this,deliveryId));
+						handlerToOpenChatActivity.removeCallbacks(null);
+					}
+				} else {
+					handleChatActivityFromPush();
+				}
+
+			}
+		}, 50);
 	}
 }
