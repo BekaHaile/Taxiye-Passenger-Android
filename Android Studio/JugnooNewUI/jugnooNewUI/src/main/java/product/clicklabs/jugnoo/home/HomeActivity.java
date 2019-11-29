@@ -3085,7 +3085,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         ft.addToBackStack(null);
 
-        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(getRequestRideObject(Prefs.with(this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_0, 0) == 1));
+        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(getRequestRideObject(Prefs.with(this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_0, 0) == 1 && Data.autoData.getDropLatLng() != null));
         dialogFragment.show(ft, RideConfirmationDialog.class.getSimpleName());
     }
 
@@ -9327,7 +9327,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                                 if(regionSelected.getReverseBid() == 0 && regionSelected.getFareMandatory() == 1 && (Prefs.with(HomeActivity.this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_0, 0) == 1
                                         || Prefs.with(HomeActivity.this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_1, 0) == 1 || Prefs.with(HomeActivity.this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_2, 0) == 1)) {
-                                    nameValuePairs.put("request_level", (mRequestType + 1) + "");
+                                    int tempRequestLevel = mRequestType + 1;
+                                    if(mRequestType == 0 && Prefs.with(HomeActivity.this).getInt(KEY_TIP_ENABLED_FOR_LEVEL_1, 0) == 0) {
+                                        tempRequestLevel = tempRequestLevel + 1;
+                                    }
+                                    nameValuePairs.put("request_level", tempRequestLevel + "");
                                 }
                                 if(mRequestType + 1 >= 2) {
                                     mRequestType = -1;
