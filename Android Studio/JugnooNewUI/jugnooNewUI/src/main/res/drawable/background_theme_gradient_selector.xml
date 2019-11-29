@@ -4,7 +4,8 @@
     <item android:state_enabled="false">
         <shape android:shape="rectangle">
 
-            <gradient android:endColor="@color/grey_969696" android:startColor="@color/grey_969696"/>
+            <gradient android:endColor="@color/grey_969696" android:startColor="@color/grey_969696"
+                android:angle="0"/>
             <corners android:radius="@dimen/button_corner_radius"/>
 
         </shape>
@@ -12,7 +13,8 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
 
-            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
+            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"
+                android:angle="0"/>
             <corners android:radius="@dimen/button_corner_radius"/>
 
         </shape>
@@ -20,7 +22,8 @@
     <item>
         <shape android:shape="rectangle">
 
-            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"/>
+            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"
+                android:angle="0"/>
             <corners android:radius="@dimen/button_corner_radius"/>
 
         </shape>

@@ -3,7 +3,8 @@
 
     <item  android:state_pressed="true">
         <shape xmlns:android="http://schemas.android.com/apk/res/android" >
-            <gradient android:startColor="@color/gradient_normal_start" android:endColor="@color/gradient_normal_end"/>
+            <gradient android:startColor="@color/gradient_normal_start" android:endColor="@color/gradient_normal_end"
+                android:angle="0"/>
 
         </shape>
 
