@@ -157,8 +157,6 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:tag="@string/dont_touch_me"
-                            android:layout_marginStart="10px"
-                            android:layout_toEndOf="@+id/imageViewAddressType"
                             android:text="@string/please_confirm_delivery_address"
                             android:textColor="@color/red_alert_no_address"
                             android:textSize="14.5sp"
@@ -792,7 +790,6 @@
                         android:textSize="@dimen/sp_12"/>
 
 
-
                 </android.support.v7.widget.CardView>
 
 
@@ -846,6 +843,58 @@
                         android:textColorHint="@color/text_color_hint"
                         android:textCursorDrawable="@drawable/cursor_black"
                         android:textSize="@dimen/text_size_30" />
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linearLayoutDeliveryVehicles"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32px"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/textViewChooseVehicle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingStart="26px"
+                    android:text="@string/choose_vehicle_type"
+                    android:textAllCaps="true"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/text_size_26"
+                    android:visibility="visible" />
+
+                <android.support.v7.widget.CardView
+                    android:id="@+id/cvVehicles"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="@dimen/dp_25"
+                    android:paddingBottom="5dp"
+                    android:visibility="visible"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:cardCornerRadius="2dp">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rvVehicles"
+                        android:layout_width="match_parent"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"
+                        tools:listitem="@layout/list_item_vehicle"
+                        android:layout_alignParentBottom="true"
+                        />
+
+                    <include
+                        android:visibility="gone"
+                        layout="@layout/order_place_referal" />
 
                 </android.support.v7.widget.CardView>
 

@@ -162,12 +162,8 @@
         <LinearLayout
             android:id="@+id/llWhatsappShare"
             android:layout_width="@dimen/px_500"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/px_82"
             android:orientation="horizontal"
-            android:paddingStart="20px"
-            android:paddingEnd="10px"
-            android:paddingTop="20px"
-            android:paddingBottom="20px"
             android:gravity="center"
             android:background="@drawable/capsule_green_color_selector"
             >

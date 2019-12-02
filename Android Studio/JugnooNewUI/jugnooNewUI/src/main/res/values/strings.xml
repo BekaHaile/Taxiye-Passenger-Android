@@ -2433,4 +2433,5 @@
     <string name="text_you_can_add_a_tip_to">You can add a tip to current fare for higher probability of booking</string>
     <string name="text_help_me_to_book_a_ride">Unable to book a ride from %s. Please help me to book a ride.</string>
     <string name="unable_to_book_a_ride">Unable to book a Ride?</string>
+    <string name="choose_vehicle_type">Choose Vehicle Type</string>
 </resources>

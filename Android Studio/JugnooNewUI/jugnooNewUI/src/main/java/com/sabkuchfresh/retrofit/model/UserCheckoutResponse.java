@@ -97,6 +97,11 @@ public class UserCheckoutResponse{
 	@SerializedName("currency")
 	private String currency;
 
+	@SerializedName("vehicles_list")
+	@Expose
+	private List<VehiclesList> vehiclesList = null;
+
+
 	public VendorInfo getVendorInfo() {
 		return vendorInfo;
 	}
@@ -177,6 +182,14 @@ public class UserCheckoutResponse{
 			subscription = new Subscription();
 		}
 		return subscription;
+	}
+
+	public List<VehiclesList> getVehiclesList() {
+		return vehiclesList;
+	}
+
+	public void setVehiclesList(List<VehiclesList> vehiclesList) {
+		this.vehiclesList = vehiclesList;
 	}
 
 	public DeliveryInfo getDeliveryInfo() {
@@ -705,4 +718,102 @@ public class UserCheckoutResponse{
 			this.address = address;
 		}
 	}
+
+	public class VehiclesList {
+
+		@SerializedName("type")
+		@Expose
+		private Integer type;
+		@SerializedName("name")
+		@Expose
+		private String name;
+		@SerializedName("images")
+		@Expose
+		private Images images;
+		@SerializedName("is_selected")
+		@Expose
+		private Integer isSelected;
+
+		public Integer getType() {
+			return type;
+		}
+
+		public void setType(Integer type) {
+			this.type = type;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public Images getImages() {
+			return images;
+		}
+
+		public void setImages(Images images) {
+			this.images = images;
+		}
+
+		public Integer getIsSelected() {
+			return isSelected;
+		}
+
+		public void setIsSelected(Integer isSelected) {
+			this.isSelected = isSelected;
+		}
+
+	}
+
+	public class Images {
+
+		@SerializedName("tab_normal")
+		@Expose
+		private String tabNormal;
+		@SerializedName("tab_highlighted")
+		@Expose
+		private String tabHighlighted;
+		@SerializedName("ride_now_normal")
+		@Expose
+		private String rideNowNormal;
+		@SerializedName("ride_now_highlighted")
+		@Expose
+		private String rideNowHighlighted;
+		@SerializedName("driver_icon")
+		@Expose
+		private String driverIcon;
+		@SerializedName("invoice_icon")
+		@Expose
+		private String invoiceIcon;
+		@SerializedName("marker_icon")
+		@Expose
+		private String markerIcon;
+		@SerializedName("history_icon")
+		@Expose
+		private String historyIcon;
+
+		public String getTabNormal() {
+			return tabNormal;
+		}
+
+		public void setTabNormal(String tabNormal) {
+			this.tabNormal = tabNormal;
+		}
+
+		public String getTabHighlighted() {
+			return tabHighlighted;
+		}
+
+		public void setTabHighlighted(String tabHighlighted) {
+			this.tabHighlighted = tabHighlighted;
+		}
+
+		public String getRideNowNormal() {
+			return rideNowNormal;
+		}
+	}
+
 }

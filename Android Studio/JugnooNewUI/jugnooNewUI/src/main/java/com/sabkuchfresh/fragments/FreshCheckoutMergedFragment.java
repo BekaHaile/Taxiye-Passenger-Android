@@ -53,6 +53,7 @@ import com.sabkuchfresh.adapters.CheckoutChargesAdapter;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
+import com.sabkuchfresh.adapters.VehicleTypeAdapterMenus;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -64,6 +65,9 @@ import com.sabkuchfresh.dialogs.CheckoutPriceMismatchDialog;
 import com.sabkuchfresh.dialogs.CheckoutRequestPaymentDialog;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -77,6 +81,7 @@ import com.sabkuchfresh.retrofit.model.SlotViewType;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
+import com.sabkuchfresh.retrofit.model.feed.NearbyDriversResponse;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
@@ -126,6 +131,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -256,6 +262,21 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private TextView tvUPICashback;
     private String currencyCode = "", currency = "";
 
+    private LinearLayout linearLayoutDeliveryVehicles;
+    private TextView textViewChooseVehicle;
+    private CardView cvVehicles;
+    private RecyclerView rvVehicles;
+    private SearchResult pickUpAddress;
+    private int currentVehicleTypePos = -1;
+    private VehicleTypeAdapterMenus vehicleTypeAdapterMenus;
+    private List<UserCheckoutResponse.VehiclesList> vehicleInfoList;
+    private int vehicleType ;
+    private boolean isPickUpSet = false;
+    private int checkCount = 0;
+
+
+
+
     @Override
     public void onStart() {
         LocalBroadcastManager.getInstance(activity).registerReceiver(broadcastReceiverWalletUpdate,
@@ -330,8 +351,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     itemsInCart = new ArrayList<>();
                 }
                 itemsInCart.clear();
-
-
+                vehicleTypeAdapterMenus = null;
+                vehicleType = 2217;
+                currentVehicleTypePos = -1;
+                vehicleInfoList = null;
+                isPickUpSet = false;
+                checkCount = 0;
+                setCurrentSelectedAddressToMenus();
                 itemsInCart = prepareItemsInCartForMenus(activity,itemsInCart);
 
             } catch (Exception e) {
@@ -514,6 +540,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         cvBecomeStar.setVisibility(View.GONE);
         spin = (MySpinner) rootView.findViewById(R.id.simpleSpinner);
         btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
+
+        linearLayoutDeliveryVehicles = (LinearLayout) rootView.findViewById(R.id.linearLayoutDeliveryVehicles);
+        textViewChooseVehicle = (TextView) rootView.findViewById(R.id.textViewChooseVehicle);
+        cvVehicles = (CardView) rootView.findViewById(R.id.cvVehicles);
+        rvVehicles = (RecyclerView) rootView.findViewById(R.id.rvVehicles);
+        rvVehicles.setVisibility(View.GONE);
+        rvVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
+                LinearLayoutManager.HORIZONTAL, false));
+        rvVehicles.setItemAnimator(new DefaultItemAnimator());
+
 
 
         try {
@@ -715,6 +751,92 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         return rootView;
     }
 
+
+    private void fetchDrivers() {
+        HashMap<String, String> params = new HashMap<>();
+
+        if (pickUpAddress != null) {
+            params.put(Constants.KEY_LATITUDE, String.valueOf(pickUpAddress.getLatitude()));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(pickUpAddress.getLongitude()));
+        } else {
+            params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+        }
+
+        new HomeUtil().putDefaultParams(params);
+
+        new ApiCommon<NearbyDriversResponse>(activity).showLoader(false).execute(params, ApiName.NEARBY_AGENTS_MENUS, new APICommonCallback<NearbyDriversResponse>() {
+            @Override
+            public void onSuccess(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
+
+            }
+
+            @Override
+            public boolean onFailure(final RetrofitError error) {
+                return true;
+            }
+
+            @Override
+            public boolean onError(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
+                return true;
+            }
+        });
+    }
+
+    public void handleVehiclesList(List<UserCheckoutResponse.VehiclesList> vehiclesListFromResponse) {
+
+        vehicleInfoList = vehiclesListFromResponse;
+        for (int i = 0; i < vehiclesListFromResponse.size(); i++) {
+            if (vehiclesListFromResponse.get(i).getIsSelected() != null && vehiclesListFromResponse.get(i).getIsSelected() == 1) {
+                currentVehicleTypePos = i;
+                break;
+            }
+            else {
+                currentVehicleTypePos = 0;
+            }
+        }
+        vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+        if(vehicleInfoList != null && vehicleInfoList.size() > 1){
+            if (vehicleTypeAdapterMenus == null) {
+
+                vehicleTypeAdapterMenus = new VehicleTypeAdapterMenus((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterMenus.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(UserCheckoutResponse.VehiclesList item, int pos) {
+                        currentVehicleTypePos = pos;
+                        vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+                        getCheckoutDataAPI(selectedSubscription, false);
+                    }
+                });
+            }
+            if(isPickUpSet) {
+                if(checkCount == 0) {
+                    linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
+                    rvVehicles.setVisibility(View.VISIBLE);
+                    rvVehicles.setAdapter(vehicleTypeAdapterMenus);
+                    checkCount++;
+                }
+                else {
+                    linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
+                    rvVehicles.setVisibility(View.VISIBLE);
+                    textViewChooseVehicle.setVisibility(View.GONE);
+                    vehicleTypeAdapterMenus.updateList(vehicleInfoList);
+                }
+            }
+        }
+        else {
+            textViewChooseVehicle.setVisibility(View.GONE);
+            linearLayoutDeliveryVehicles.setVisibility(View.GONE);
+            rvVehicles.setVisibility(View.GONE);
+        }
+
+        rvVehicles.post(new Runnable() {
+            @Override
+            public void run() {
+                rvVehicles.smoothScrollToPosition(currentVehicleTypePos);
+            }
+        });
+    }
+
     private void setSliderCompleteState() {
         activity.relativeLayoutSlider.setBackgroundResource(R.drawable.capsule_slider_confirm_color_bg);
         activity.rlSliderContainer.setBackgroundResource(R.color.slider_green);
@@ -913,9 +1035,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         taxTotal.setValue((double) Math.round(payableAmount()));
         chargesList.add(taxTotal);
         chargesListForFatafat.add(taxTotal);
-        chargesAdapter.notifyDataSetChanged();
-
-
+        if (chargesAdapter != null) {
+            chargesAdapter.notifyDataSetChanged();
+        }
         if (dialogOrderComplete == null || dialogOrderComplete.getDialog()==null ||!dialogOrderComplete.getDialog().isShowing()) {
             if (payableAmount() > 0) {
 //                Utils.getDoubleTwoDigits((double)Math.round(payableAmount()));
@@ -1479,6 +1601,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 params.put(Constants.DELIVERY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.DELIVERY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                if(vehicleInfoList != null && !vehicleInfoList.isEmpty() && currentVehicleTypePos != -1 && vehicleType != 2217) {
+                    params.put(Constants.KEY_VEHICLE_TYPE, ""+vehicleType);
+                }
 
                 if (activity.getPaymentOption().getOrdinal() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()) {
                     params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(PaymentOption.RAZOR_PAY.getOrdinal()));
@@ -2412,8 +2537,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 }
 
-
-
+                if(vehicleInfoList != null && !vehicleInfoList.isEmpty() && currentVehicleTypePos != -1 && vehicleType != 2217) {
+                    params.put(Constants.KEY_VEHICLE_TYPE, ""+vehicleType);
+                }
 
                 if (isMenusOrDeliveryOpen()) {
                     params.put(Constants.KEY_CART, cartItemsMenus());
@@ -2652,6 +2778,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             DialogPopup.dismissLoadingDialog();
                         }
                         linearLayoutMain.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+                        //TODO handle vehicles here.
+                        handleVehiclesList(userCheckoutResponse.getVehiclesList());
+
                     }
 
                     @Override
@@ -2900,6 +3029,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             imageViewDeliveryAddressForward.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_back_pay_selector));
             imageViewDeliveryAddressForward.setVisibility(View.VISIBLE);
             textViewAddressValue.setText(activity.getSelectedAddress());
+            setCurrentSelectedAddressToMenus();
             imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
             if (!TextUtils.isEmpty(activity.getSelectedAddressType())) {
                 textViewAddressName.setVisibility(View.VISIBLE);
@@ -3019,6 +3149,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if (!rehitCheckoutApi()) {
                 removeCouponWithCheck();
             }
+        }
+    }
+
+    private void setCurrentSelectedAddressToMenus() {
+        SearchResult searchResult = HomeUtil.getNearBySavedAddress(activity, activity.getSelectedLatLng(), false);
+        pickUpAddress = searchResult;
+        if(searchResult != null) {
+//            fetchDrivers();
+            isPickUpSet = true;
         }
     }
 
@@ -3142,7 +3281,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         noOfItemsInCart =pair.second;
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
         taxTotal.setValue(pair.first);
-        chargesAdapter.notifyDataSetChanged();
+        if (chargesAdapter != null) {
+            chargesAdapter.notifyDataSetChanged();
+        }
     }
 
     private void updateCartDataView() {

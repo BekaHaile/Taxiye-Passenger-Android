@@ -29,8 +29,6 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/menu_text_margin_left"
         android:text="@string/t20_world_cup_2016"
-        android:maxLines="1"
-        android:ellipsize="end"
         android:textColor="@color/side_menu_text_color"
         android:textSize="@dimen/text_size_38" />
 

@@ -232,9 +232,9 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 
 
 			tvReferralCodeValue.setText(Data.userData.referralCode);
-			textViewDesc.setText(Data.userData.getReferralMessages().referralShortMessage+ (Data.userData.getReferralMessages().referralShortMessage.isEmpty()?"":" ")+getString(R.string.details));
+			textViewDesc.setText(Data.userData.getReferralMessages().referralShortMessage+" "+getString(R.string.details));
 
-			SpannableString ss = new SpannableString(Data.userData.getReferralMessages().referralShortMessage+"\n"+(Data.userData.getReferralMessages().referralShortMessage.isEmpty()?"":" ")+getString(R.string.details));
+			SpannableString ss = new SpannableString(Data.userData.getReferralMessages().referralShortMessage+"\n "+getString(R.string.details));
 			ClickableSpan clickableSpan = new ClickableSpan() {
 				@Override
 				public void onClick(View textView) {
@@ -248,7 +248,7 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 					}
 				}
 			};
-			ss.setSpan(clickableSpan, (textViewDesc.getText().length() - getString(R.string.details).length()), textViewDesc.getText().length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+			ss.setSpan(clickableSpan, (textViewDesc.getText().length() - 6), textViewDesc.getText().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 			textViewDesc.setText(ss);
 			textViewDesc.setMovementMethod(LinkMovementMethod.getInstance());
