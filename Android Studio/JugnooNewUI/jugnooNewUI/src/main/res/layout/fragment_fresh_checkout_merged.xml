@@ -157,6 +157,8 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:tag="@string/dont_touch_me"
+                            android:layout_marginStart="10px"
+                            android:layout_toEndOf="@+id/imageViewAddressType"
                             android:text="@string/please_confirm_delivery_address"
                             android:textColor="@color/red_alert_no_address"
                             android:textSize="14.5sp"

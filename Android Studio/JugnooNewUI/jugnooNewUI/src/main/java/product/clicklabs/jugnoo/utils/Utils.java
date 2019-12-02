@@ -78,6 +78,7 @@ import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -531,7 +532,8 @@ public class Utils implements GAAction, GACategory{
 	private static DecimalFormat decimalFormatMoney;
 	public static DecimalFormat getMoneyDecimalFormat(){
 		if(decimalFormatMoney == null){
-			decimalFormatMoney = new DecimalFormat("#.##");
+			decimalFormatMoney=(DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+			decimalFormatMoney.applyPattern("#.##");
 		}
 		return decimalFormatMoney;
 	}
@@ -1084,7 +1086,7 @@ public class Utils implements GAAction, GACategory{
 	private static NumberFormat currencyNumberFormat = null;
 	public static String formatCurrencyValue(String currency, double value, boolean setPrecision){
 		if(currencyNumberFormat == null){
-			currencyNumberFormat = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
+			currencyNumberFormat = NumberFormat.getCurrencyInstance(Locale.ENGLISH);
 			currencyNumberFormat.setRoundingMode(RoundingMode.HALF_UP);
 			currencyNumberFormat.setGroupingUsed(false);
 		}
