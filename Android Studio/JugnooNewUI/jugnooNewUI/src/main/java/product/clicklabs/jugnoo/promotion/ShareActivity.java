@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.promotion.adapters.PromotionsFragmentAdapter;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralLeaderboardFragment;
+import product.clicklabs.jugnoo.promotion.fragments.ReferralTxnFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
@@ -55,7 +56,7 @@ public class ShareActivity extends BaseFragmentActivity {
 	ViewPager viewPager;
 	PromotionsFragmentAdapter promotionsFragmentAdapter;
 	PagerSlidingTabStrip tabs;
-	RelativeLayout relativeLayoutFragContainer;
+	RelativeLayout relativeLayoutFragContainer, rlContainer;
 	View viewGreyBG;
 
     private CallbackManager callbackManager;
@@ -111,15 +112,11 @@ public class ShareActivity extends BaseFragmentActivity {
 		tabs.setViewPager(viewPager);
 
 		relativeLayoutFragContainer = (RelativeLayout) findViewById(R.id.relativeLayoutFragContainer);
+		rlContainer = (RelativeLayout) findViewById(R.id.rlContainer);
 		relativeLayoutFragContainer.setVisibility(View.GONE);
+		rlContainer.setVisibility(View.GONE);
 		viewGreyBG = findViewById(R.id.viewGreyBG);
 		viewGreyBG.setVisibility(View.GONE);
-		getSupportFragmentManager().beginTransaction()
-				.add(relativeLayoutFragContainer.getId(),
-						new ReferralLeaderboardFragment(),
-						ReferralLeaderboardFragment.class.getName())
-				.addToBackStack(ReferralLeaderboardFragment.class.getName())
-				.commitAllowingStateLoss();
 
 
 		imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
@@ -176,7 +173,11 @@ public class ShareActivity extends BaseFragmentActivity {
 
 
 	public void performBackPressed(){
-		if(relativeLayoutFragContainer.getVisibility() == View.VISIBLE){
+		if(getSupportFragmentManager().getBackStackEntryCount() == 1
+				&& rlContainer.getVisibility() == View.VISIBLE){
+			closeReferralTxnFragment();
+		} else if(getSupportFragmentManager().getBackStackEntryCount() == 1
+				&& relativeLayoutFragContainer.getVisibility() == View.VISIBLE){
 			closeLeaderboardFragment();
 		} else {
 			finish();
@@ -359,6 +360,14 @@ public class ShareActivity extends BaseFragmentActivity {
 		alphaSlow.setDuration(400);
 
 		relativeLayoutFragContainer.setVisibility(View.VISIBLE);
+
+		getSupportFragmentManager().beginTransaction()
+				.add(relativeLayoutFragContainer.getId(),
+						new ReferralLeaderboardFragment(),
+						ReferralLeaderboardFragment.class.getName())
+				.addToBackStack(ReferralLeaderboardFragment.class.getName())
+				.commitAllowingStateLoss();
+
 		relativeLayoutFragContainer.clearAnimation();
 		viewGreyBG.setVisibility(View.VISIBLE);
 		viewGreyBG.clearAnimation();
@@ -369,6 +378,7 @@ public class ShareActivity extends BaseFragmentActivity {
 	}
 
 	public void closeLeaderboardFragment(){
+		super.onBackPressed();
 		Animation anim = AnimationUtils.loadAnimation(this, R.anim.bottom_out);
 		anim.setAnimationListener(new Animation.AnimationListener() {
 			@Override
@@ -406,6 +416,25 @@ public class ShareActivity extends BaseFragmentActivity {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	public void openReferralTxnFragment(){
+		rlContainer.setVisibility(View.VISIBLE);
+
+		getSupportFragmentManager().beginTransaction()
+				.add(rlContainer.getId(),
+						ReferralTxnFragment.newInstance(0),
+						ReferralTxnFragment.class.getName())
+				.addToBackStack(ReferralTxnFragment.class.getName())
+				.commitAllowingStateLoss();
+		textViewTitle.setText(R.string.earnings);
+	}
+
+	public void closeReferralTxnFragment(){
+		super.onBackPressed();
+		textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES);
+		rlContainer.setVisibility(View.GONE);
 	}
 
 }

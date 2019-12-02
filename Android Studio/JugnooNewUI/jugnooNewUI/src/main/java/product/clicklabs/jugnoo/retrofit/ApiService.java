@@ -9,6 +9,7 @@ import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRideResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.promotion.models.ReferralTxnResponse;
 import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
@@ -700,5 +701,10 @@ public interface ApiService {
 	@FormUrlEncoded
 	@POST("/customer/scratch_coupon")
 	void scratchCard(@FieldMap Map<String, String> params, Callback<ScratchCard> callback);
+
+
+	@FormUrlEncoded
+	@POST("/customer/referral_transactions")
+	void referralTransactions(@FieldMap Map<String, String> params, Callback<ReferralTxnResponse> callback);
 
 }

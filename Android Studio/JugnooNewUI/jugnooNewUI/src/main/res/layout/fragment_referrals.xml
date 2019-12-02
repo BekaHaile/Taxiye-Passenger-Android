@@ -35,6 +35,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 app:typekitFont="@string/maven"
+                android:background="?attr/selectableItemBackground"
+                android:theme="@style/GreyHighlight"
                 />
 
             <View

@@ -198,6 +198,8 @@ public class ReferralsFragment extends Fragment implements  GACategory, GAAction
 			}
 		});
 
+		tvReferralsCount.setOnClickListener(v -> activity.openReferralTxnFragment());
+
 		try {
 
 			if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
