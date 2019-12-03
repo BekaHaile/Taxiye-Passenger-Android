@@ -3465,4 +3465,5 @@ from %s in your UPI app.
     <string name="please_enter_first_name">S\'il vous plaît entrer le prénom</string>
     <string name="please_enter_last_name">Veuillez entrer le nom de famille</string>
     <string name="we_are_unable_to_process_your_request">Nous ne sommes pas en mesure de traiter votre demande pour le moment. Veuillez réessayer plus tard.</string>
+    <string name="please_select_appropriate_pickup_and_drop_location_to_continue">Veuillez sélectionner le lieu de collecte et de dépose approprié pour continuer.</string>
 </resources>

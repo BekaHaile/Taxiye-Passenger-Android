@@ -10387,6 +10387,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						textViewIncludes.setVisibility(View.GONE);
 						textViewIncludes.setText("");
 						closeFabView();
+						if(Data.autoData != null) {
+							Data.autoData.clearRegionFares();
+							if(vehiclesTabAdapterConfirmRide != null) {
+								vehiclesTabAdapterConfirmRide.setList(Data.autoData.getRegions());
+							}
+						}
 					}
 
 					@Override
