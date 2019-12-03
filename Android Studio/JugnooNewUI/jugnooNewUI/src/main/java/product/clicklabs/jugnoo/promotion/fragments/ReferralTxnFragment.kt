@@ -64,8 +64,9 @@ class ReferralTxnFragment : Fragment(), GAAction {
 
     var totalTransactions = 0
     var pageSize = 0
-    internal var transactionInfoList: ArrayList<ReferralTxn>? = ArrayList()
+    internal var transactionInfoList: MutableList<ReferralTxn> = mutableListOf()
 
+    private var state:Int = STATE_REFERRALS
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_referral_txn, container, false)
@@ -74,9 +75,10 @@ class ReferralTxnFragment : Fragment(), GAAction {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        state = arguments?.getInt(KEY_STATE, STATE_REFERRALS) ?: STATE_REFERRALS
+
         rvTransactions.layoutManager = LinearLayoutManager(requireActivity())
 
-        tvNoData.typeface = Fonts.mavenRegular(requireActivity())
         groupNoData.visibility = View.GONE
 
         adapter = ReferralTxnAdapter(requireActivity(), object : ReferralTxnAdapter.Callback {
@@ -90,10 +92,7 @@ class ReferralTxnFragment : Fragment(), GAAction {
         totalTransactions = 0
         pageSize = 0
 
-        if (transactionInfoList == null) {
-            transactionInfoList = ArrayList()
-        }
-        transactionInfoList!!.clear()
+        transactionInfoList.clear()
         getTransactionInfoAsync(requireActivity())
     }
     
@@ -106,11 +105,11 @@ class ReferralTxnFragment : Fragment(), GAAction {
                     { getTransactionInfoAsync(requireActivity()) },
                     { requireActivity().onBackPressed() }, false, false)
 
-            transactionInfoList!!.clear()
+            transactionInfoList.clear()
             adapter!!.notifyList(transactionInfoList, totalTransactions)
             groupNoData.visibility = View.GONE
         } else {
-            if (transactionInfoList!!.size == 0) {
+            if (transactionInfoList.size == 0) {
                 groupNoData.visibility = View.VISIBLE
             } else {
                 groupNoData.visibility = View.GONE
@@ -150,16 +149,25 @@ class ReferralTxnFragment : Fragment(), GAAction {
         try {
             if (!HomeActivity.checkIfUserDataNull(activity)) {
                 val params = HashMap<String, String>()
-                params["start_from"] = "" + transactionInfoList!!.size
+                params["start_from"] = transactionInfoList.size.toString()
+                params[KEY_STATE] = state.toString()
 
                 ApiCommon<ReferralTxnResponse>(requireActivity()).showLoader(true)
                         .execute(params, ApiName.REFERRAL_TXNS, object:APICommonCallback<ReferralTxnResponse>(){
                             override fun onSuccess(t: ReferralTxnResponse?, message: String?, flag: Int) {
+                                transactionInfoList.addAll(t!!.referralTxns!!)
 
+                                updateListData("", false)
                             }
 
                             override fun onError(t: ReferralTxnResponse?, message: String?, flag: Int): Boolean {
+                                updateListData("", false)
                                 return false
+                            }
+
+                            override fun onFailure(error: RetrofitError?): Boolean {
+                                updateListData("", false)
+                                return super.onFailure(error)
                             }
 
                         })
@@ -172,11 +180,16 @@ class ReferralTxnFragment : Fragment(), GAAction {
 
     companion object {
 
+        const val KEY_STATE = "state"
+        const val STATE_REFERRALS = 0
+        const val STATE_TOTAL = 1
+        const val STATE_TODAY = 2
+
         @JvmStatic
-        fun newInstance(pay: Int): ReferralTxnFragment {
+        fun newInstance(state:Int = 0): ReferralTxnFragment {
             val fragment = ReferralTxnFragment()
             val bundle = Bundle()
-            bundle.putInt(Constants.KEY_PAY, pay)
+            bundle.putInt(KEY_STATE, state)
             fragment.arguments = bundle
             return fragment
         }

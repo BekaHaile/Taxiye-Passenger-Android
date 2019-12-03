@@ -13,14 +13,13 @@ import product.clicklabs.jugnoo.utils.ASSL
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
-import java.util.*
 
 
 class ReferralTxnAdapter(private val context: Context, private val callback: Callback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var transactionInfoList: ArrayList<ReferralTxn>? = null
+    private var transactionInfoList: MutableList<ReferralTxn>? = null
     private var totalTransactions: Int? = null
 
-    fun notifyList(transactionInfoList: ArrayList<ReferralTxn>?, totalTransactions: Int) {
+    fun notifyList(transactionInfoList: MutableList<ReferralTxn>?, totalTransactions: Int) {
         this.transactionInfoList = transactionInfoList
         this.totalTransactions = totalTransactions
         this.notifyDataSetChanged()

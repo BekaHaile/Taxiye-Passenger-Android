@@ -17,7 +17,7 @@ import com.facebook.CallbackManager;
 
 import org.json.JSONObject;
 
-import product.clicklabs.jugnoo.BaseFragmentActivity;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -46,7 +46,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class ShareActivity extends BaseFragmentActivity {
+public class ShareActivity extends BaseAppCompatActivity {
 	
 	RelativeLayout relative;
 
@@ -419,16 +419,28 @@ public class ShareActivity extends BaseFragmentActivity {
 	}
 
 
-	public void openReferralTxnFragment(){
+	public void openReferralTxnFragment(int state){
 		rlContainer.setVisibility(View.VISIBLE);
 
 		getSupportFragmentManager().beginTransaction()
 				.add(rlContainer.getId(),
-						ReferralTxnFragment.newInstance(0),
+						ReferralTxnFragment.newInstance(state),
 						ReferralTxnFragment.class.getName())
 				.addToBackStack(ReferralTxnFragment.class.getName())
 				.commitAllowingStateLoss();
-		textViewTitle.setText(R.string.earnings);
+		switch(state){
+			case ReferralTxnFragment.STATE_REFERRALS:
+				textViewTitle.setText(R.string.referrals);
+				break;
+			case ReferralTxnFragment.STATE_TOTAL:
+				textViewTitle.setText(R.string.total_earnings);
+				break;
+			case ReferralTxnFragment.STATE_TODAY:
+				textViewTitle.setText(R.string.earnings_today);
+				break;
+			default:
+				textViewTitle.setText(R.string.earnings);
+		}
 	}
 
 	public void closeReferralTxnFragment(){
