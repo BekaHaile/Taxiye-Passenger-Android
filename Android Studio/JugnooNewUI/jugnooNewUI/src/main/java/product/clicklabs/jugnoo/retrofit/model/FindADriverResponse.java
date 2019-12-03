@@ -144,6 +144,8 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
     private ArrayList<ServiceType> serviceTypes;
     @SerializedName("bottom_request_ui_enabled_v2")
 	private Integer bottomRequestUIEnabled;
+    @SerializedName("request_levels")
+	private ArrayList<RequestLevels> requestLevels;
 
     public List<CouponInfo> getDeliveryCoupons() {
         return deliveryCoupons;
@@ -545,4 +547,43 @@ public class FindADriverResponse  extends OfferingsVisibilityResponse.OfferingsV
 	public void setBottomRequestUIEnabled(Integer bottomRequestUIEnabled) {
 		this.bottomRequestUIEnabled = bottomRequestUIEnabled;
 	}
+
+    public ArrayList<RequestLevels> getRequestLevels() {
+        return requestLevels;
+    }
+
+    public class RequestLevels {
+        @SerializedName("level")
+        @Expose
+        private int level;
+        @SerializedName("enabled")
+        private int enabled;
+        @SerializedName("tip_enabled")
+        private int tipEnabled;
+
+        public int getLevel() {
+            return level;
+        }
+
+        public int getEnabled() {
+            return enabled;
+        }
+
+        public int getTipEnabled() {
+            return tipEnabled;
+        }
+
+        public void setLevel(int level) {
+            this.level = level;
+        }
+
+        public void setEnabled(int enabled) {
+            this.enabled = enabled;
+        }
+
+        public void setTipEnabled(int tipEnabled) {
+            this.tipEnabled = tipEnabled;
+        }
+    }
+
 }
