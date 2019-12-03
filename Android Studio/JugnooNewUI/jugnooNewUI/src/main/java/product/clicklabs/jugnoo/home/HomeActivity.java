@@ -254,6 +254,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
+import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.MediaInfo;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
@@ -674,7 +675,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TextView tvTutorialBanner, tvAddedTip;
     private ImageView ivCrossTutorialBanner;
     private String mLogMsg;
-    private Integer mRequestType = -1;
+    private Integer mRequestType = 0, mRequestLevelndex = 0;
 
     @SuppressLint("NewApi")
     @Override
@@ -3085,21 +3086,26 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         ft.addToBackStack(null);
 
-        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(getRequestRideObject());
+        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(getRequestRideObject(checkForTipEnabled()));
         dialogFragment.show(ft, RideConfirmationDialog.class.getSimpleName());
     }
 
-    private RequestRideConfirm getRequestRideObject() {
+    private boolean checkForTipEnabled() {
+        return mRequestLevelndex != -1 && mRequestLevelndex < Data.autoData.getRequestLevels().size()
+                ? Data.autoData.getRequestLevels().get(mRequestLevelndex).getTipEnabled() == 1 && Data.autoData.getDropLatLng() != null : false;
+    }
+
+    private RequestRideConfirm getRequestRideObject(boolean showTipLevelWise) {
         Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
         boolean isNotInRange = region.getRideType() == RideTypeValue.POOL.getOrdinal() || region.getFareMandatory() == 1;
-        boolean showTip = region.getReverseBid() == 0 && region.getFareMandatory() == 1 && Data.autoData.getTipEnabledBeforeRequestRide();
+        boolean showTip = region.getReverseBid() == 0 && region.getFareMandatory() == 1 && showTipLevelWise;
 
         RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
                 region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
                 region.getRegionName(), region.getDisclaimerText(), region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString() : "",
                 isNotInRange && region.getRegionFare() != null ? region.getRegionFare().getFare() : 0.0,
                 region.getRegionFare() != null ? region.getRegionFare().getMinFare() : 0.0,
-                region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, "", showTip);
+                region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, Data.autoData.getCurrency(), showTip);
 
         return requestRideConfirm;
     }
@@ -3112,7 +3118,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         ft.addToBackStack(null);
 
-        DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(getRequestRideObject());
+        DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(getRequestRideObject(checkForTipEnabled()));
         dialogFragment.show(ft, DriverNotFoundDialog.class.getSimpleName());
     }
 
@@ -3124,7 +3130,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         ft.addToBackStack(null);
 
-        DialogFragment dialogFragment = DriverCallDialog.newInstance(getRequestRideObject());
+        DialogFragment dialogFragment = DriverCallDialog.newInstance(getRequestRideObject(checkForTipEnabled()));
         dialogFragment.show(ft, DriverCallDialog.class.getSimpleName());
     }
 
@@ -3661,12 +3667,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                             @Override
                             public void neutralClick(View v) {
-                                setTipAmountToZero(true);
+
                             }
 
                             @Override
                             public void negativeClick(View v) {
-                                setTipAmountToZero(true);
+
                             }
                         });
                     }
@@ -3680,7 +3686,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(Data.autoData != null) {
             Data.autoData.setNoDriverFoundTip(0.0);
         }
-        if(isResetRequest) mRequestType = -1;
+        if(isResetRequest) mRequestType = 0;
+        mRequestLevelndex = 0;
     }
 
     private boolean addressMatchedWithSavedAddresses(String address) {
@@ -7626,9 +7633,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby, String message, int requestType) {
         try {
             setTipAmountToZero(false);
-            if(requestType == 0 && isNewUI) {
+            ArrayList<FindADriverResponse.RequestLevels> requestLevels = Data.autoData.getRequestLevels();
+
+            int nextLevelIndex = getNextRequestLevel(requestType, requestLevels);
+
+            // set requestType that is required for request Ride Api hit
+            mRequestType = nextLevelIndex != -1 ? requestLevels.get(nextLevelIndex).getLevel() : 0;
+            mRequestLevelndex = nextLevelIndex;
+
+            if(mRequestType == 1) {
                 openDriverNotFoundTipDialog();
-            } else if(requestType == 1 && isNewUI) {
+            } else if(mRequestType == 2) {
                 openDriverContactListDialog();
             } else {
                 if (noDriversDialog != null && noDriversDialog.isShowing()) {
@@ -7704,6 +7719,41 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private int getNextRequestLevel(int requestType, ArrayList<FindADriverResponse.RequestLevels> requestLevels) {
+        Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+        if(regionSelected.getReverseBid() == 1 || regionSelected.getFareMandatory() == 0 ||  Data.autoData.getDropLatLng() == null) {
+            return -1;
+        }
+        int index = -1;
+        // check for next level
+        for(int i = 0; i < requestLevels.size(); i++) {
+            if(requestLevels.get(i).getLevel() == requestType) {
+                index = i + 1;
+                break;
+            } else {
+                index = -1;
+            }
+        }
+        // check index with size of arrayList
+        if(index > requestLevels.size() - 1 || !isNewUI) {
+            index = -1;
+        }
+        //check if next level enabled or not
+        if(index != -1 && requestLevels.get(index).getEnabled() == 0) {
+            int tempIndex = index;
+            index = -1;
+            for(int i = tempIndex + 1; i < requestLevels.size(); i++) {
+                if(requestLevels.get(i).getEnabled() == 1) {
+                    index = i;
+                    break;
+                } else {
+                    continue;
+                }
+            }
+        }
+        return index;
     }
 
 
@@ -8517,12 +8567,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         @Override
                         public void neutralClick(View v) {
-                            setTipAmountToZero(true);
                         }
 
                         @Override
                         public void negativeClick(View v) {
-                            setTipAmountToZero(true);
                         }
                     });
         }
@@ -9313,15 +9361,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
+
+                                //add tip feature keys in /request_ride
                                 if(Data.autoData.getNoDriverFoundTip() > 0.0) {
                                     nameValuePairs.put("tip_amount","" + Data.autoData.getNoDriverFoundTip());
                                 }
-                                if(regionSelected.getReverseBid() == 0 && regionSelected.getFareMandatory() == 1 && Data.autoData.getTipEnabledBeforeRequestRide()) {
-                                    nameValuePairs.put("request_level", (mRequestType + 1) + "");
+                                if(regionSelected.getReverseBid() == 0 && regionSelected.getFareMandatory() == 1) {
+                                    nameValuePairs.put("request_level", mRequestType + "");
                                 }
                                 if(mRequestType + 1 >= 2) {
-                                    mRequestType = -1;
+                                    mRequestType = 0;
                                 }
+
+
+
                                 try {
                                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                                 } catch (Exception e) {
@@ -9369,7 +9422,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                                     DialogPopup.alertPopup(HomeActivity.this, "", errorMessage);
                                                                     HomeActivity.passengerScreenMode = P_INITIAL;
                                                                     switchPassengerScreen(passengerScreenMode);
-                                                                    setTipAmountToZero(true);
                                                                     DialogPopup.dismissLoadingDialog();
                                                                 }
                                                             } catch (Exception e) {
@@ -9438,7 +9490,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     cancelTimerRequestRide();
                                                     fetchAcceptedDriverInfoAndChangeState(jObj, flag);
                                                 }
-                                                setTipAmountToZero(true);
                                             } else if (ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
                                                 final int requestType = jObj.optInt("request_level", -1);
@@ -9490,7 +9541,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                         }
                                                     }
                                                 });
-                                                setTipAmountToZero(true);
                                             }
 
                                         }
@@ -13247,6 +13297,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onOkClick() {
+        mRequestType = 1;
         onReqestRideConfirmClick();
     }
 
@@ -13257,6 +13308,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     @Override
     public void onCallDriverOkClicked() {
+        mRequestType = 2;
         onReqestRideConfirmClick();
     }
 }

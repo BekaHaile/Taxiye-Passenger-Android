@@ -1133,4 +1133,9 @@ public interface Constants {
 
 	String KEY_PUSH_NO_DRIVER_FOUND_HELP = "no_driver_found_help";
 	String KEY_TIP_ENABLED_BEFORE_REQUEST_RIDE = "tip_enabled_before_request_ride";
+	String KEY_TIP_ENABLED_FOR_LEVEL_0 = "tip_enabled_for_level_0";
+	String KEY_TIP_ENABLED_FOR_LEVEL_1 = "tip_enabled_for_level_1";
+	String KEY_TIP_ENABLED_FOR_LEVEL_2 = "tip_enabled_for_level_2";
+
+	String KEY_SESSIONTOKEN = "sessiontoken";
 }

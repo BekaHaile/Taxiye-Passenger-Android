@@ -701,4 +701,8 @@ public interface ApiService {
 	@POST("/customer/scratch_coupon")
 	void scratchCard(@FieldMap Map<String, String> params, Callback<ScratchCard> callback);
 
+	@FormUrlEncoded
+	@POST("/customer/add_drivers_contacted_on_timeout")
+	void logDriverCall(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
 }
