@@ -2900,9 +2900,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     try {
                         checkForMyLocationButtonVisibility();
                         if((Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1 && !isNewUI) || fromNaviCurrentLocation) {
-                            fromNaviCurrentLocation = false;
                             Log.w("findADriverAndGeocode", "onMapSettled");
-                            refresh = findADriverAndGeocode(map.getCameraPosition().target, mapTouched, touchCalled, releaseCalled);
+                            refresh = findADriverAndGeocode(fromNaviCurrentLocation ? getCurrentLatLng() : map.getCameraPosition().target, mapTouched, touchCalled, releaseCalled);
+							fromNaviCurrentLocation = false;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -11593,6 +11593,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else {
             return new LatLng(Data.latitude, Data.longitude);
         }
+    }
+
+    public LatLng getCurrentLatLng() {
+    	LatLng latLng;
+        if (myLocation != null) {
+			latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        } else {
+			latLng = new LatLng(Data.latitude, Data.longitude);
+        }
+        if(MapUtils.distance(latLng, new LatLng(0,0)) > 10){
+        	return latLng;
+		} else {
+        	return new LatLng(LocationFetcher.getSavedLatFromSP(this), LocationFetcher.getSavedLngFromSP(this));
+		}
     }
 
 
