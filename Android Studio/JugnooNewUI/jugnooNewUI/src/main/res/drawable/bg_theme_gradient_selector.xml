@@ -4,14 +4,16 @@
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
 
-            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
+            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"
+                android:angle="0"/>
 
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
 
-            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"/>
+            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"
+                android:angle="0"/>
 
         </shape>
     </item>

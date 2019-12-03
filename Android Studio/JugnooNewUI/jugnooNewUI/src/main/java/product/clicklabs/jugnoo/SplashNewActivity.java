@@ -3055,7 +3055,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.we_are_unable_to_process_your_request));
 				}
 			});
 		} else{

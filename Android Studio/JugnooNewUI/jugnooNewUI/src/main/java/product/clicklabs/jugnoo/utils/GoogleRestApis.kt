@@ -224,26 +224,28 @@ object GoogleRestApis {
         } catch (e: Exception) {}
         return response
     }
-    fun getPlaceDetails(placeId:String): Response {
+    fun getPlaceDetails(placeId:String, sessiontoken:String): Response {
 
         Log.i(GoogleRestApis::class.java.simpleName, "getPlaceDetails")
         val response:Response
-        if (MAPS_APIS_SIGN()) {
-            val urlToSign = ("/maps/api/geocode/json?" +
-                    "place_id=" + placeId
-                    + "&client=" + MAPS_CLIENT()
-                    + "&channel=" + CHANNEL())
-            var googleSignature: String? = null
-            try {
-                googleSignature = generateGoogleSignature(urlToSign)
-            } catch (ignored: Exception) {
-            }
-
-
-            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_CLIENT(), CHANNEL(), googleSignature)
-        } else {
-            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_BROWSER_KEY())
-        }
+//        if (MAPS_APIS_SIGN()) {
+//            val urlToSign = ("/maps/api/place/details/json?fields=geometry&" +
+//                    "place_id=" + placeId
+//                    + "&sessiontoken=" + sessiontoken
+//                    + "&client=" + MAPS_CLIENT()
+//                    + "&channel=" + CHANNEL())
+//            var googleSignature: String? = null
+//            try {
+//                googleSignature = generateGoogleSignature(urlToSign)
+//            } catch (ignored: Exception) {
+//            }
+//            Log.e(GoogleRestApis::class.java.simpleName, "urlToSign=$urlToSign")
+//
+//
+//            response = RestClient.getGoogleApiService().placeDetailsByPlaceId(placeId, sessiontoken, MAPS_CLIENT(), CHANNEL(), googleSignature)
+//        } else {
+            response = RestClient.getGoogleApiService().placeDetailsByPlaceId(placeId, sessiontoken, MAPS_BROWSER_KEY())
+//        }
 
         logGoogleRestAPI("0", "0", API_NAME_PLACES)
         return response

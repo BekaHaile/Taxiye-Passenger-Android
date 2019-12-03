@@ -737,7 +737,7 @@ public class AutoData {
     }
 
     public boolean showRegionSpecificFare() {
-        return showRegionSpecificFare == 1;
+        return getNewUIFlag() || showRegionSpecificFare == 1;
     }
 
     public void setShowRegionSpecificFare(int showRegionSpecificFare) {
