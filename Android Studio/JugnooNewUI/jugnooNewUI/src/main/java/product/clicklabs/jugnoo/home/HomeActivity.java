@@ -10442,6 +10442,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							if(vehiclesTabAdapterConfirmRide != null) {
 								vehiclesTabAdapterConfirmRide.setList(Data.autoData.getRegions());
 							}
+							if(getApiFindADriver().getParams() != null) {
+								getApiFindADriver().getParams().clear();
+							}
 						}
 					}
 
