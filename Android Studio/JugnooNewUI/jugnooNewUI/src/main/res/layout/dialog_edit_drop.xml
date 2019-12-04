@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/mainView"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_draw_corner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            android:gravity="center_horizontal"
+            android:text="@string/new_destination_fare"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_extra_large"
+            android:fontFamily="@font/maven_pro_medium"
+            app:layout_constraintEnd_toEndOf="@id/mainView"
+            app:layout_constraintStart_toStartOf="@+id/mainView"
+            app:layout_constraintTop_toTopOf="@id/mainView" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/text_color"
+            android:gravity="center_horizontal"
+            android:textSize="14sp"
+            android:fontFamily="@font/maven_pro_regular"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/tvLabel"
+            android:text="@string/change_in_fare_on_drop_change" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivPickup"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:padding="@dimen/spacing_tiny"
+            android:src="@drawable/circle_theme"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@id/tvMessage" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvPickup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_tiny"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/font_large"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:fontFamily="@font/maven_pro_medium"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toEndOf="@+id/ivPickup"
+            app:layout_constraintTop_toTopOf="@id/ivPickup"
+            tools:text="@string/label_confirm_ride_request" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivDottedLine"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_car_pooling_dotted_line"
+            app:layout_constraintBottom_toTopOf="@+id/ivDrop"
+            app:layout_constraintEnd_toEndOf="@id/ivPickup"
+            app:layout_constraintStart_toStartOf="@id/ivPickup"
+            app:layout_constraintTop_toBottomOf="@id/ivPickup" />
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivDrop"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:padding="@dimen/spacing_tiny"
+            android:src="@drawable/ic_shape"
+            app:layout_constraintEnd_toEndOf="@id/ivPickup"
+            app:layout_constraintStart_toStartOf="@+id/ivPickup"
+            app:layout_constraintTop_toTopOf="@id/tvDrop" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvDrop"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/font_large"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:fontFamily="@font/maven_pro_medium"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/tvPickup"
+            app:layout_constraintTop_toBottomOf="@id/tvPickup"
+            tools:text="@string/label_confirm_ride_request" />
+
+
+        <View
+            android:id="@+id/viewDropSep"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:background="@color/divider_color"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@id/tvDrop" />
+
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivOldFare"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="@dimen/spacing_tiny"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:src="@drawable/ic_money"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/viewDropSep" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvOldFare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="15sp"
+            android:layout_marginStart="3dp"
+            android:fontFamily="@font/maven_pro_regular"
+            app:layout_constraintStart_toEndOf="@+id/ivOldFare"
+            app:layout_constraintEnd_toStartOf="@id/glMid"
+            app:layout_constraintTop_toTopOf="@+id/ivOldFare"
+            app:layout_constraintBottom_toBottomOf="@+id/ivOldFare"
+            android:text="@string/previous_fare" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvOldFareValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            android:layout_marginStart="3dp"
+            android:gravity="end"
+            android:fontFamily="@font/maven_pro_medium"
+            app:layout_constraintStart_toEndOf="@+id/glMid"
+            app:layout_constraintEnd_toStartOf="@id/glEnd"
+            app:layout_constraintTop_toTopOf="@+id/ivOldFare"
+            app:layout_constraintBottom_toBottomOf="@+id/ivOldFare"
+            tools:text="Rs 100" />
+
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/ivNewFare"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_money"
+            android:padding="@dimen/spacing_tiny"
+            android:layout_marginTop="@dimen/spacing_small"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/ivOldFare" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvNewFare"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="15sp"
+            android:layout_marginStart="3dp"
+            android:fontFamily="@font/maven_pro_regular"
+            app:layout_constraintStart_toEndOf="@+id/ivNewFare"
+            app:layout_constraintEnd_toStartOf="@id/glMid"
+            app:layout_constraintTop_toTopOf="@+id/ivNewFare"
+            app:layout_constraintBottom_toBottomOf="@+id/ivNewFare"
+            android:text="@string/updated_fare" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvNewFareValue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:textSize="16sp"
+            android:layout_marginStart="3dp"
+            android:gravity="end"
+            android:fontFamily="@font/maven_pro_medium"
+            app:layout_constraintStart_toEndOf="@+id/glMid"
+            app:layout_constraintEnd_toStartOf="@id/glEnd"
+            app:layout_constraintTop_toTopOf="@+id/tvNewFare"
+            app:layout_constraintBottom_toBottomOf="@+id/tvNewFare"
+            tools:text="Rs 110" />
+
+        <View
+            android:id="@+id/viewFareSep"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:background="@color/divider_color"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@id/ivNewFare" />
+
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tvMessage2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:textColor="@color/text_color"
+            android:gravity="center_horizontal"
+            android:textSize="14sp"
+            android:fontFamily="@font/maven_pro_regular"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/viewFareSep"
+            android:text="@string/please_confirm_the_fare_update" />
+
+
+
+
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnOk"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:background="@drawable/button_theme"
+            android:text="@string/confirm"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:fontFamily="@font/maven_pro_medium"
+            app:layout_constraintTop_toBottomOf="@+id/tvMessage2"
+            app:layout_constraintEnd_toEndOf="@id/glEnd"
+            app:layout_constraintStart_toEndOf="@+id/btnCancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/glBottomEnd" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:background="@drawable/button_grey"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:fontFamily="@font/maven_pro_medium"
+            app:layout_constraintBottom_toTopOf="@+id/glBottomEnd"
+            app:layout_constraintEnd_toStartOf="@+id/btnOk"
+            app:layout_constraintTop_toTopOf="@+id/btnOk"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/glStart" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/glBottomEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="@dimen/spacing_normal" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/glStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".05" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/glEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".95" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/glMid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.44" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>
+
