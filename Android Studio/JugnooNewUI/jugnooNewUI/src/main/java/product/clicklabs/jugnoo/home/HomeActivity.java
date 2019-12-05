@@ -10845,8 +10845,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-            textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
-            dropAddressName = autoCompleteSearchResult.getNameForText();
         }
     }
 
@@ -11017,6 +11015,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
 			zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
 		}
+
+		textViewFinalDropLocationClick.setText(searchResult.getNameForText());
+		dropAddressName = searchResult.getNameForText();
 
 		sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 				getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true,

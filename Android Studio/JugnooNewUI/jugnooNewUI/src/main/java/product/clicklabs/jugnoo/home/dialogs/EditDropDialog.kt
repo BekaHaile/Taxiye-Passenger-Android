@@ -82,6 +82,7 @@ class EditDropDialog :DialogFragment(){
                 callback?.onEditDropConfirm(editDropDatum!!.dropLatLng, editDropDatum!!.dropAddress,
                         editDropDatum!!.dropName, editDropDatum!!.poolFareId)
             }
+            dismiss()
         }
         btnCancel.setOnClickListener{
             dismiss()
