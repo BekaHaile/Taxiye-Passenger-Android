@@ -79,7 +79,7 @@ class EditDropDialog :DialogFragment(){
 
         btnOk.setOnClickListener{
             if(editDropDatum != null) {
-                callback?.onEditDropConfirm(editDropDatum!!.dropLatLng, editDropDatum!!.dropAddress)
+                callback?.onEditDropConfirm(editDropDatum!!.dropLatLng, editDropDatum!!.dropAddress, editDropDatum!!.dropName)
             }
         }
         btnCancel.setOnClickListener{
@@ -100,13 +100,14 @@ class EditDropDialog :DialogFragment(){
 
     class EditDropDatum(var engagementId:Int?,
                         var pickupLatLng: LatLng?, var pickupAddress:String?,
-                        var dropLatLng: LatLng?, var dropAddress:String?,
+                        var dropLatLng: LatLng?, var dropAddress:String?, var dropName:String?,
                         var currency:String?, var oldFare:Double?, var newFare:Double?):Serializable, Parcelable {
         constructor(parcel: Parcel) : this(
                 parcel.readValue(Int::class.java.classLoader) as? Int,
                 parcel.readParcelable(LatLng::class.java.classLoader),
                 parcel.readString(),
                 parcel.readParcelable(LatLng::class.java.classLoader),
+                parcel.readString(),
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readValue(Double::class.java.classLoader) as? Double,
@@ -119,6 +120,7 @@ class EditDropDialog :DialogFragment(){
             parcel.writeString(pickupAddress)
             parcel.writeParcelable(dropLatLng, flags)
             parcel.writeString(dropAddress)
+            parcel.writeString(dropName)
             parcel.writeString(currency)
             parcel.writeValue(oldFare)
             parcel.writeValue(newFare)
@@ -140,19 +142,19 @@ class EditDropDialog :DialogFragment(){
     }
 
     interface Callback{
-        fun onEditDropConfirm(dropLatLng:LatLng?, dropAddress:String?)
+        fun onEditDropConfirm(dropLatLng:LatLng?, dropAddress:String?, dropName:String?)
     }
 }
 
-object DropChangeConfirm{
+object EditDropConfirmation{
 
 
-    fun fareEstimateAndConfirmDialog(activity:AppCompatActivity, engagementId:Int?,
+    fun fareEstimateAndConfirm(activity:AppCompatActivity, engagementId:Int?,
                                      pickupLatLng: LatLng?, pickupAddress:String?,
-                                     dropLatLng: LatLng?, dropAddress:String?,
+                                     dropLatLng: LatLng?, dropAddress:String?, dropName:String?,
                                      currency:String?){
 
-        val editDropDatum = EditDropDialog.EditDropDatum(engagementId, pickupLatLng, pickupAddress, dropLatLng, dropAddress, currency, null, null)
+        val editDropDatum = EditDropDialog.EditDropDatum(engagementId, pickupLatLng, pickupAddress, dropLatLng, dropAddress, dropName, currency, null, null)
         estimateFare(activity, editDropDatum)
 
     }
