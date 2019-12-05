@@ -707,7 +707,7 @@ public interface ApiService {
 	void logDriverCall(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
 
 	@FormUrlEncoded
-	@POST("/fare_estimate_for_engagement")
-	void fareEstimateForEngagement(@FieldMap Map<String, String> params, Callback<FareEstimateResponse> callback);
+	@POST("/get_fare_estimate_with_new_drop_location")
+	void fareEstimateWithNewDrop(@FieldMap Map<String, String> params, Callback<FareEstimateResponse> callback);
 
 }

@@ -79,7 +79,8 @@ class EditDropDialog :DialogFragment(){
 
         btnOk.setOnClickListener{
             if(editDropDatum != null) {
-                callback?.onEditDropConfirm(editDropDatum!!.dropLatLng, editDropDatum!!.dropAddress, editDropDatum!!.dropName)
+                callback?.onEditDropConfirm(editDropDatum!!.dropLatLng, editDropDatum!!.dropAddress,
+                        editDropDatum!!.dropName, editDropDatum!!.poolFareId)
             }
         }
         btnCancel.setOnClickListener{
@@ -101,7 +102,7 @@ class EditDropDialog :DialogFragment(){
     class EditDropDatum(var engagementId:Int?,
                         var pickupLatLng: LatLng?, var pickupAddress:String?,
                         var dropLatLng: LatLng?, var dropAddress:String?, var dropName:String?,
-                        var currency:String?, var oldFare:Double?, var newFare:Double?):Serializable, Parcelable {
+                        var currency:String?, var oldFare:Double?, var newFare:Double?, var poolFareId:Int?):Serializable, Parcelable {
         constructor(parcel: Parcel) : this(
                 parcel.readValue(Int::class.java.classLoader) as? Int,
                 parcel.readParcelable(LatLng::class.java.classLoader),
@@ -111,7 +112,8 @@ class EditDropDialog :DialogFragment(){
                 parcel.readString(),
                 parcel.readString(),
                 parcel.readValue(Double::class.java.classLoader) as? Double,
-                parcel.readValue(Double::class.java.classLoader) as? Double) {
+                parcel.readValue(Double::class.java.classLoader) as? Double,
+                parcel.readValue(Int::class.java.classLoader) as? Int) {
         }
 
         override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -124,6 +126,7 @@ class EditDropDialog :DialogFragment(){
             parcel.writeString(currency)
             parcel.writeValue(oldFare)
             parcel.writeValue(newFare)
+            parcel.writeValue(poolFareId)
         }
 
         override fun describeContents(): Int {
@@ -142,7 +145,7 @@ class EditDropDialog :DialogFragment(){
     }
 
     interface Callback{
-        fun onEditDropConfirm(dropLatLng:LatLng?, dropAddress:String?, dropName:String?)
+        fun onEditDropConfirm(dropLatLng:LatLng?, dropAddress:String?, dropName:String?, poolFareId:Int?)
     }
 }
 
@@ -154,7 +157,7 @@ object EditDropConfirmation{
                                      dropLatLng: LatLng?, dropAddress:String?, dropName:String?,
                                      currency:String?){
 
-        val editDropDatum = EditDropDialog.EditDropDatum(engagementId, pickupLatLng, pickupAddress, dropLatLng, dropAddress, dropName, currency, null, null)
+        val editDropDatum = EditDropDialog.EditDropDatum(engagementId, pickupLatLng, pickupAddress, dropLatLng, dropAddress, dropName, currency, null, null, null)
         estimateFare(activity, editDropDatum)
 
     }
@@ -162,15 +165,16 @@ object EditDropConfirmation{
     private fun estimateFare(activity:AppCompatActivity, editDropDatum : EditDropDialog.EditDropDatum){
         val params = hashMapOf(
                 Constants.KEY_ENGAGEMENT_ID to editDropDatum.engagementId.toString(),
-                Constants.KEY_OP_DROP_LATITUDE to editDropDatum.dropLatLng!!.latitude.toString(),
-                Constants.KEY_OP_DROP_LONGITUDE to editDropDatum.dropLatLng!!.longitude.toString()
+                Constants.KEY_LATITUDE to editDropDatum.dropLatLng!!.latitude.toString(),
+                Constants.KEY_LONGITUDE to editDropDatum.dropLatLng!!.longitude.toString()
         )
-        ApiCommon<FareEstimateResponse>(activity).execute(params, ApiName.FARE_ESTIMATE_FOR_ENGAGEMENT,
+        ApiCommon<FareEstimateResponse>(activity).execute(params, ApiName.FARE_ESTIMATE_WITH_NEW_DROP,
                 object : APICommonCallback<FareEstimateResponse>(){
                     override fun onSuccess(t: FareEstimateResponse?, message: String?, flag: Int) {
                         if(t != null){
                             editDropDatum.oldFare = t.oldFare
-                            editDropDatum.newFare = t.fare
+                            editDropDatum.newFare = t.newFare
+                            editDropDatum.poolFareId = t.poolFareId
                             val ft = activity.supportFragmentManager.beginTransaction()
                             val dialogFragment = EditDropDialog.newInstance(editDropDatum)
                             dialogFragment.show(ft, EditDropDialog::class.java.simpleName)

@@ -317,8 +317,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case SCRATCH_CARD:
                 RestClient.getApiService().scratchCard(params, callback);
                 break;
-			case FARE_ESTIMATE_FOR_ENGAGEMENT:
-                RestClient.getApiService().fareEstimateForEngagement(params, callback);
+			case FARE_ESTIMATE_WITH_NEW_DROP:
+                RestClient.getApiService().fareEstimateWithNewDrop(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

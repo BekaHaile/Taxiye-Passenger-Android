@@ -4,8 +4,10 @@ import com.google.gson.annotations.SerializedName
 import com.sabkuchfresh.feed.models.FeedCommonResponse
 
 class FareEstimateResponse (
-        @SerializedName("old_fare")
+        @SerializedName("oldFare")
         var oldFare:Double?,
-        @SerializedName("fare")
-        var fare:Double?
+        @SerializedName("newFare")
+        var newFare:Double?,
+        @SerializedName("pool_fare_id")
+        var poolFareId:Int?
 ):FeedCommonResponse()
