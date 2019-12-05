@@ -2171,4 +2171,5 @@
     <string name="earnings">Earnings</string>
     <string name="earnings_today">Earnings Today</string>
     <string name="total_earnings">Total Earnings</string>
+    <string name="referred_on">Referred on</string>
 </resources>

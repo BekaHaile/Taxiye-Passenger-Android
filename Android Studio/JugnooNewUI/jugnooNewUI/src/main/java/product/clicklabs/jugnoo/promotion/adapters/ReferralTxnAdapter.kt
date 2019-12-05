@@ -9,17 +9,18 @@ import kotlinx.android.synthetic.main.item_view_referral_earnings.view.*
 import kotlinx.android.synthetic.main.list_item_show_more.view.*
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.promotion.models.ReferralTxn
-import product.clicklabs.jugnoo.utils.ASSL
+import product.clicklabs.jugnoo.promotion.models.ReferralUser
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
 
 
-class ReferralTxnAdapter(private val context: Context, private val callback: Callback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-    private var transactionInfoList: MutableList<ReferralTxn>? = null
+class ReferralTxnAdapter(private val context: Context, private val currency:String,
+                         private val callback: Callback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    private var transactionInfoList: MutableList<Any>? = null
     private var totalTransactions: Int? = null
 
-    fun notifyList(transactionInfoList: MutableList<ReferralTxn>?, totalTransactions: Int) {
+    fun notifyList(transactionInfoList: MutableList<Any>?, totalTransactions: Int) {
         this.transactionInfoList = transactionInfoList
         this.totalTransactions = totalTransactions
         this.notifyDataSetChanged()
@@ -28,19 +29,9 @@ class ReferralTxnAdapter(private val context: Context, private val callback: Cal
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == TYPE_FOOTER) {
             val v = LayoutInflater.from(parent.context).inflate(R.layout.list_item_show_more, parent, false)
-
-            val layoutParams = RecyclerView.LayoutParams(720, RecyclerView.LayoutParams.WRAP_CONTENT)
-            v.layoutParams = layoutParams
-
-            ASSL.DoMagic(v)
             return ViewFooterHolder(v, context)
         } else {
             val v = LayoutInflater.from(parent.context).inflate(R.layout.item_view_referral_earnings, parent, false)
-
-            val layoutParams = RecyclerView.LayoutParams(720, 156)
-            v.layoutParams = layoutParams
-
-            ASSL.DoMagic(v)
             return ViewHolder(v, context)
         }
     }
@@ -61,11 +52,7 @@ class ReferralTxnAdapter(private val context: Context, private val callback: Cal
         return if (transactionInfoList == null || transactionInfoList!!.size == 0) {
             0
         } else {
-            if (totalTransactions!! > transactionInfoList!!.size) {
-                transactionInfoList!!.size + 1
-            } else {
-                transactionInfoList!!.size
-            }
+            transactionInfoList!!.size
         }
     }
 
@@ -89,11 +76,23 @@ class ReferralTxnAdapter(private val context: Context, private val callback: Cal
             itemView.tvInfo.typeface = Fonts.mavenRegular(context)
         }
 
-        fun bind(referralTxn: ReferralTxn){
-            itemView.tvDate.text = DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(referralTxn.date))
-            itemView.tvTime.text = DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(referralTxn.date))
-            itemView.tvAmount.text = Utils.formatCurrencyValue("INR", referralTxn.amount!!)
-            itemView.tvInfo.text = referralTxn.message
+        fun bind(referralTxn: Any){
+            if(referralTxn is ReferralTxn){
+                itemView.tvDate.text = DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(referralTxn.creditedOn))
+                itemView.tvTime.text = DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(referralTxn.creditedOn))
+                itemView.tvAmount.text = Utils.formatCurrencyValue(currency, referralTxn.amount!!)
+                itemView.tvInfo.text = referralTxn.text
+                itemView.tvInfo.visibility = View.VISIBLE
+            }
+            else if(referralTxn is ReferralUser){
+                itemView.tvDate.text = referralTxn.userName
+                if(referralTxn.referredOn != null) {
+                    itemView.tvTime.text = context.getString(R.string.referred_on).plus(" ").plus(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(referralTxn.referredOn)))
+                }
+                itemView.tvAmount.text = Utils.formatCurrencyValue(currency, referralTxn.amount!!)
+                itemView.tvInfo.visibility = View.GONE
+            }
+
         }
     }
 

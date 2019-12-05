@@ -3,12 +3,24 @@ package product.clicklabs.jugnoo.promotion.models
 import com.google.gson.annotations.SerializedName
 
 class ReferralTxn (
-        @SerializedName("date")
-        var date:String?,
+        @SerializedName("referral_id")
+        var referralId:Int?,
         @SerializedName("amount")
         var amount:Double?,
-        @SerializedName("message")
-        var message:String?,
-        @SerializedName("type")
-        var type:Int?
+        @SerializedName("credited_on")
+        var creditedOn:String?,
+        @SerializedName("user_name")
+        var userName:String?,
+        @SerializedName("text")
+        var text:String?
+)
+class ReferralUser (
+        @SerializedName("referral_id")
+        var referralId:Int?,
+        @SerializedName("amount")
+        var amount:Double?,
+        @SerializedName("referred_on")
+        var referredOn:String?,
+        @SerializedName("user_name")
+        var userName:String?
 )

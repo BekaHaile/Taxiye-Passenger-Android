@@ -5,5 +5,12 @@ import com.sabkuchfresh.feed.models.FeedCommonResponse
 
 class ReferralTxnResponse (
         @SerializedName("data")
-        var referralTxns: MutableList<ReferralTxn>?
+        var referralData: ReferralTxnData?
 ) : FeedCommonResponse()
+
+class ReferralTxnData(
+        @SerializedName("txns")
+        var txns: MutableList<ReferralTxn>?,
+        @SerializedName("referrals")
+        var referrals: MutableList<ReferralUser>?
+)

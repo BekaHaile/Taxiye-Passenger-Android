@@ -320,6 +320,12 @@ public class DateOperations {
 	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    return formatter.format(date);
 	}
+	public static String getCurrentDate() {
+	    long foo = System.currentTimeMillis();
+	    Date date = new Date(foo);
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	    return formatter.format(date);
+	}
 	
 	public static String getCurrentTimeInUTC() {
 	    long foo = System.currentTimeMillis();

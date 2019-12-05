@@ -3,57 +3,28 @@ package product.clicklabs.jugnoo.promotion.fragments
 import android.app.Activity
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
-
 import com.sabkuchfresh.analytics.GAAction
-import com.sabkuchfresh.analytics.GAUtils
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
 import com.sabkuchfresh.feed.ui.api.ApiName
 import kotlinx.android.synthetic.main.fragment_referral_txn.*
-
-import org.json.JSONArray
-import org.json.JSONObject
-
-import java.util.ArrayList
-import java.util.HashMap
-
-import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.MyApplication
 import product.clicklabs.jugnoo.R
-import product.clicklabs.jugnoo.SplashNewActivity
-import product.clicklabs.jugnoo.config.Config
-import product.clicklabs.jugnoo.datastructure.ApiResponseFlags
 import product.clicklabs.jugnoo.datastructure.DialogErrorType
 import product.clicklabs.jugnoo.home.HomeActivity
-import product.clicklabs.jugnoo.home.HomeUtil
 import product.clicklabs.jugnoo.promotion.adapters.ReferralTxnAdapter
-import product.clicklabs.jugnoo.promotion.models.ReferralTxn
 import product.clicklabs.jugnoo.promotion.models.ReferralTxnResponse
-import product.clicklabs.jugnoo.retrofit.RestClient
-import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt
-import product.clicklabs.jugnoo.utils.ASSL
 import product.clicklabs.jugnoo.utils.DateOperations
 import product.clicklabs.jugnoo.utils.DialogPopup
-import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Log
 import product.clicklabs.jugnoo.utils.Utils
-import product.clicklabs.jugnoo.wallet.adapters.WalletTransactionsAdapter
-import product.clicklabs.jugnoo.wallet.models.TransactionInfo
-import retrofit.Callback
 import retrofit.RetrofitError
-import retrofit.client.Response
-import retrofit.mime.TypedByteArray
+import java.util.*
 
 
 class ReferralTxnFragment : Fragment(), GAAction {
@@ -64,7 +35,7 @@ class ReferralTxnFragment : Fragment(), GAAction {
 
     var totalTransactions = 0
     var pageSize = 0
-    internal var transactionInfoList: MutableList<ReferralTxn> = mutableListOf()
+    internal var transactionInfoList: MutableList<Any> = mutableListOf()
 
     private var state:Int = STATE_REFERRALS
 
@@ -81,19 +52,21 @@ class ReferralTxnFragment : Fragment(), GAAction {
 
         groupNoData.visibility = View.GONE
 
-        adapter = ReferralTxnAdapter(requireActivity(), object : ReferralTxnAdapter.Callback {
-            override fun onShowMoreClick() {
-                getTransactionInfoAsync(requireActivity())
-            }
-        })
-        rvTransactions.adapter = adapter
+        if(Data.autoData != null) {
+            adapter = ReferralTxnAdapter(requireActivity(), Data.autoData.currency, object : ReferralTxnAdapter.Callback {
+                override fun onShowMoreClick() {
+                    getTransactionInfoAsync(requireActivity())
+                }
+            })
+            rvTransactions.adapter = adapter
 
 
-        totalTransactions = 0
-        pageSize = 0
+            totalTransactions = 0
+            pageSize = 0
 
-        transactionInfoList.clear()
-        getTransactionInfoAsync(requireActivity())
+            transactionInfoList.clear()
+            getTransactionInfoAsync(requireActivity())
+        }
     }
     
 
@@ -155,8 +128,22 @@ class ReferralTxnFragment : Fragment(), GAAction {
                 ApiCommon<ReferralTxnResponse>(requireActivity()).showLoader(true)
                         .execute(params, ApiName.REFERRAL_TXNS, object:APICommonCallback<ReferralTxnResponse>(){
                             override fun onSuccess(t: ReferralTxnResponse?, message: String?, flag: Int) {
-                                transactionInfoList.addAll(t!!.referralTxns!!)
-
+                                if(state == STATE_REFERRALS
+                                        && t != null && t.referralData != null && t.referralData!!.referrals != null){
+                                    transactionInfoList.addAll(t.referralData!!.referrals!!)
+                                }
+                                else if(state == STATE_TOTAL
+                                        && t != null && t.referralData != null && t.referralData!!.txns != null){
+                                    transactionInfoList.addAll(t.referralData!!.txns!!)
+                                }
+                                else if(state == STATE_TODAY
+                                        && t != null && t.referralData != null && t.referralData!!.txns != null){
+                                    val currentDate = DateOperations.getCurrentDate()
+                                    val currentDateItems = t.referralData!!.txns!!.filter {
+                                        it.creditedOn?.contains(currentDate) ?: false
+                                    }
+                                    transactionInfoList.addAll(currentDateItems)
+                                }
                                 updateListData("", false)
                             }
 
