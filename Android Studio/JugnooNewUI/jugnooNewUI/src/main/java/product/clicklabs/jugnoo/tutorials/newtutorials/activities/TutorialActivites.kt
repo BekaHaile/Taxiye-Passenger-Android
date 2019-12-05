@@ -35,25 +35,23 @@ class TutorialActivites : BaseAppCompatActivity() {
         initView()
     }
 
-    fun setUpViewModel(params: HashMap<String, String>) {
+    private fun setUpViewModel(params: HashMap<String, String>) {
         viewModel = ViewModelProviders.of(this).get(TutorialViewModel::class.java)
-        viewModel.getTutorialData().observe(this@TutorialActivites, object : Observer<ArrayList<TutorialDAO>> {
-            override fun onChanged(t: ArrayList<TutorialDAO>?) {
-                when (!t.isNullOrEmpty()) {
-                    true -> {
-                        pListOfTutorialImages.clear()
-                        pListOfTutorialImages.addAll(t)
-                        pViewPageAdapter.notifyDataSetChanged()
-                        indicator.setViewPager(viewpager)
-                        if (t.size == pListOfTutorialImages.size - 1) {
-                            btNextText.text = resources.getString(R.string.finish)
-                        } else {
-                            btNextText.text = resources.getString(R.string.next)
-                        }
+        viewModel.getTutorialData().observe(this@TutorialActivites, Observer<ArrayList<TutorialDAO>> { t ->
+            when (!t.isNullOrEmpty()) {
+                true -> {
+                    pListOfTutorialImages.clear()
+                    pListOfTutorialImages.addAll(t)
+                    pViewPageAdapter.notifyDataSetChanged()
+                    indicator.setViewPager(viewpager)
+                    if (t.size == pListOfTutorialImages.size - 1) {
+                        btNextText.text = resources.getString(R.string.finish)
+                    } else {
+                        btNextText.text = resources.getString(R.string.next)
                     }
-                    false -> {
-                        openFinalActivity()
-                    }
+                }
+                false -> {
+                    openFinalActivity()
                 }
             }
         })

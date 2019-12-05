@@ -31,7 +31,7 @@ class TutorialPageAdapter(private var dataObjectList: ArrayList<TutorialDAO>) : 
         Picasso.with(pContext).load(dataObjectList[pPosition].pImageUrl)
                 .placeholder(R.drawable.ic_fresh_item_placeholder).fit()
                 .into(pLayout.findViewById(R.id.iv_tut) as ImageView)
-        val tapDesc = (pLayout.findViewById(R.id.tvTutDescription) as TextView);
+        val tapDesc = (pLayout.findViewById(R.id.tvTutDescription) as TextView)
         tapDesc.text = dataObjectList[pPosition].pDescription
 
     }
