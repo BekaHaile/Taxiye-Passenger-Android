@@ -215,6 +215,7 @@ import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverCallDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverNotFoundDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
+import product.clicklabs.jugnoo.home.dialogs.EditDropDialog;
 import product.clicklabs.jugnoo.home.dialogs.EnterBidDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.NotesDialog;
@@ -323,7 +324,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
         RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,
         RewardsDialog.ScratchCardRevealedListener, CoroutineScope,
-        RideConfirmationDialog.RideRequestConfirmListener, DriverNotFoundDialog.RideRequestConfirmListener, DriverCallDialog.CallDriverListener {
+        RideConfirmationDialog.RideRequestConfirmListener, DriverNotFoundDialog.RideRequestConfirmListener, DriverCallDialog.CallDriverListener,
+		EditDropDialog.Callback {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;

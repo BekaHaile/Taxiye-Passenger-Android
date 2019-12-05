@@ -12,6 +12,7 @@ import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
 import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
+import product.clicklabs.jugnoo.retrofit.model.FareEstimateResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
@@ -704,5 +705,9 @@ public interface ApiService {
 	@FormUrlEncoded
 	@POST("/customer/add_drivers_contacted_on_timeout")
 	void logDriverCall(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/fare_estimate_for_engagement")
+	void fareEstimateForEngagement(@FieldMap Map<String, String> params, Callback<FareEstimateResponse> callback);
 
 }

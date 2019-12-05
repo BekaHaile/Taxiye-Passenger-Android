@@ -6,16 +6,20 @@ import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.support.v4.app.DialogFragment
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import com.google.android.gms.maps.model.LatLng
+import com.sabkuchfresh.feed.ui.api.APICommonCallback
+import com.sabkuchfresh.feed.ui.api.ApiCommon
+import com.sabkuchfresh.feed.ui.api.ApiName
 import kotlinx.android.synthetic.main.dialog_edit_drop.*
+import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.R
-import product.clicklabs.jugnoo.apis.ApiFareEstimate
-import product.clicklabs.jugnoo.datastructure.PromoCoupon
-import product.clicklabs.jugnoo.datastructure.SearchResult
+import product.clicklabs.jugnoo.retrofit.model.FareEstimateResponse
+import product.clicklabs.jugnoo.utils.DialogPopup
 import product.clicklabs.jugnoo.utils.Utils
 import java.io.Serializable
 
@@ -86,52 +90,98 @@ class EditDropDialog :DialogFragment(){
             tvPickup.text = editDropDatum!!.pickupAddress
             tvDrop.text = editDropDatum!!.dropAddress
 
-            tvOldFareValue.text = Utils.formatCurrencyValue(editDropDatum!!.currency, editDropDatum!!.oldFare)
+            tvOldFareValue.text = Utils.formatCurrencyValue(editDropDatum!!.currency, editDropDatum!!.oldFare!!)
+            tvNewFareValue.text = Utils.formatCurrencyValue(editDropDatum!!.currency, editDropDatum!!.newFare!!)
         }
 
     }
 
 
-    fun estimateFare(){
 
+    class EditDropDatum(var engagementId:Int?,
+                        var pickupLatLng: LatLng?, var pickupAddress:String?,
+                        var dropLatLng: LatLng?, var dropAddress:String?,
+                        var currency:String?, var oldFare:Double?, var newFare:Double?):Serializable, Parcelable {
+        constructor(parcel: Parcel) : this(
+                parcel.readValue(Int::class.java.classLoader) as? Int,
+                parcel.readParcelable(LatLng::class.java.classLoader),
+                parcel.readString(),
+                parcel.readParcelable(LatLng::class.java.classLoader),
+                parcel.readString(),
+                parcel.readString(),
+                parcel.readValue(Double::class.java.classLoader) as? Double,
+                parcel.readValue(Double::class.java.classLoader) as? Double) {
+        }
 
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeValue(engagementId)
+            parcel.writeParcelable(pickupLatLng, flags)
+            parcel.writeString(pickupAddress)
+            parcel.writeParcelable(dropLatLng, flags)
+            parcel.writeString(dropAddress)
+            parcel.writeString(currency)
+            parcel.writeValue(oldFare)
+            parcel.writeValue(newFare)
+        }
+
+        override fun describeContents(): Int {
+            return 0
+        }
+
+        companion object CREATOR : Parcelable.Creator<EditDropDatum> {
+            override fun createFromParcel(parcel: Parcel): EditDropDatum {
+                return EditDropDatum(parcel)
+            }
+
+            override fun newArray(size: Int): Array<EditDropDatum?> {
+                return arrayOfNulls(size)
+            }
+        }
     }
-
-    val apiFareEstimate:ApiFareEstimate by lazy { ApiFareEstimate(requireContext(), object:ApiFareEstimate.Callback{
-        override fun onSuccess(list: MutableList<LatLng>?, distanceText: String?, timeText: String?, distanceValue: Double, timeValue: Double, promoCoupon: PromoCoupon?) {
-        }
-
-        override fun onRetry() {
-        }
-
-        override fun onNoRetry() {
-        }
-
-        override fun onFareEstimateSuccess(currency: String?, minFare: String?, maxFare: String?, convenienceCharge: Double, tollCharge: Double) {
-        }
-
-        override fun onPoolSuccess(currency: String?, fare: Double, rideDistance: Double, rideDistanceUnit: String?, rideTime: Double, rideTimeUnit: String?, poolFareId: Int, convenienceCharge: Double, text: String?, tollCharge: Double) {
-        }
-
-        override fun onDirectionsFailure() {
-        }
-
-        override fun onFareEstimateFailure() {
-        }
-
-    }) }
-
-
-
-
-
-
-    class EditDropDatum(var pickupLatLng: LatLng?, var pickupAddress:String?,
-                        var dropSearchResult:SearchResult?,
-                        var oldFare:Double, var currency:String?,
-                        var regionId:Int?, var ):Serializable, Parcelable
 
     interface Callback{
         fun onEditDropConfirm(dropLatLng:LatLng?, dropAddress:String?)
     }
+}
+
+object DropChangeConfirm{
+
+
+    fun fareEstimateAndConfirmDialog(activity:AppCompatActivity, engagementId:Int?,
+                                     pickupLatLng: LatLng?, pickupAddress:String?,
+                                     dropLatLng: LatLng?, dropAddress:String?,
+                                     currency:String?){
+
+        val editDropDatum = EditDropDialog.EditDropDatum(engagementId, pickupLatLng, pickupAddress, dropLatLng, dropAddress, currency, null, null)
+        estimateFare(activity, editDropDatum)
+
+    }
+
+    private fun estimateFare(activity:AppCompatActivity, editDropDatum : EditDropDialog.EditDropDatum){
+        val params = hashMapOf(
+                Constants.KEY_ENGAGEMENT_ID to editDropDatum.engagementId.toString(),
+                Constants.KEY_OP_DROP_LATITUDE to editDropDatum.dropLatLng!!.latitude.toString(),
+                Constants.KEY_OP_DROP_LONGITUDE to editDropDatum.dropLatLng!!.longitude.toString()
+        )
+        ApiCommon<FareEstimateResponse>(activity).execute(params, ApiName.FARE_ESTIMATE_FOR_ENGAGEMENT,
+                object : APICommonCallback<FareEstimateResponse>(){
+                    override fun onSuccess(t: FareEstimateResponse?, message: String?, flag: Int) {
+                        if(t != null){
+                            editDropDatum.oldFare = t.oldFare
+                            editDropDatum.newFare = t.fare
+                            val ft = activity.supportFragmentManager.beginTransaction()
+                            val dialogFragment = EditDropDialog.newInstance(editDropDatum)
+                            dialogFragment.show(ft, EditDropDialog::class.java.simpleName)
+                        } else {
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.something_went_wrong))
+                        }
+                    }
+
+                    override fun onError(t: FareEstimateResponse?, message: String?, flag: Int): Boolean {
+                        return false
+                    }
+
+                })
+    }
+
 }
