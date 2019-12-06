@@ -109,4 +109,9 @@
     <integer name="show_confirm_popup_before_ride_request">1</integer>
     <string name="youtube_api_key">AIzaSyBnfHIBFCXp8F-zmhJY6hOKZrQuyWgeQPA</string>
 
+    <!--    Tip-->
+    <integer name="show_tip_on_confirm_ride">1</integer>
+    <integer name="show_tip_on_confirm_ride_level_1">1</integer>
+    <integer name="show_tip_on_confirm_ride_level_2">1</integer>
+
 </resources>

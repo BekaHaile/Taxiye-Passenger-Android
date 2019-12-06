@@ -584,6 +584,7 @@ public class JSONParser implements Constants {
 				context.getString(R.string.youtube_api_key)));
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
 
+
 		parseJungleApiObjects(context, autoData);
 	}
 
@@ -976,7 +977,7 @@ public class JSONParser implements Constants {
         try {
             parseDriversToShow(autos.getDrivers());
 
-            Data.autoData.setNoDriverFoundTip(0.0);
+//            Data.autoData.setNoDriverFoundTip(0.0);
             Data.autoData.setServiceTypes(autos.getServiceTypes());
 
             Data.autoData.setFareFactor(1);

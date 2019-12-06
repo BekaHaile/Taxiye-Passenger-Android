@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
+import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
@@ -84,6 +85,7 @@ public class AutoData {
     private String  previousSelService = "";
     private int resendEmailInvoiceEnabled;
     private double noDriverFoundTip;
+    private ArrayList<FindADriverResponse.RequestLevels> requestLevels;
 
     // RENTAL
 
@@ -735,7 +737,7 @@ public class AutoData {
     }
 
     public boolean showRegionSpecificFare() {
-        return showRegionSpecificFare == 1;
+        return getNewUIFlag() || showRegionSpecificFare == 1;
     }
 
     public void setShowRegionSpecificFare(int showRegionSpecificFare) {
@@ -860,5 +862,20 @@ public class AutoData {
 
     public void setNoDriverFoundTip(double noDriverFoundTip) {
         this.noDriverFoundTip = noDriverFoundTip;
+    }
+
+    public ArrayList<FindADriverResponse.RequestLevels> getRequestLevels() {
+        if(requestLevels == null) {
+            FindADriverResponse.RequestLevels level = new FindADriverResponse().new RequestLevels();
+            level.setLevel(0);
+            level.setTipEnabled(0);
+            level.setEnabled(1);
+            requestLevels = new ArrayList<>();
+        }
+        return requestLevels;
+    }
+
+    public void setRequestLevels(ArrayList<FindADriverResponse.RequestLevels> requestLevels) {
+        this.requestLevels = requestLevels;
     }
 }

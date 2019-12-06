@@ -2221,6 +2221,8 @@
     <string name = "south_africa_"> Sudáfrica </string>
     <string name = "zambia"> Zambia </string>
     <string name = "zimbabwe"> Zimbabwe </string>
+    <string name="we_are_unable_to_process_your_request">No podemos procesar su solicitud en este momento. Por favor, inténtelo de nuevo más tarde.</string>
+    <string name="please_select_appropriate_pickup_and_drop_location_to_continue">Seleccione la ubicación de recogida y entrega adecuada para continuar.</string>
 
 
 </resources>

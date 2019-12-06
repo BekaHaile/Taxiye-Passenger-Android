@@ -1871,6 +1871,7 @@
     <string name="last_name">Familienname</string>
     <string name="please_enter_first_name">Bitte geben Sie den Vornamen ein</string>
     <string name="please_enter_last_name">Bitte geben Sie den Nachnamen ein</string>
-
+    <string name="we_are_unable_to_process_your_request">Wir können Ihre Anfrage derzeit nicht bearbeiten. Bitte versuchen Sie es später noch einmal.</string>
+    <string name="please_select_appropriate_pickup_and_drop_location_to_continue">Bitte wählen Sie den geeigneten Ort für die Abholung und Abgabe aus, um fortzufahren.</string>
 
 </resources>

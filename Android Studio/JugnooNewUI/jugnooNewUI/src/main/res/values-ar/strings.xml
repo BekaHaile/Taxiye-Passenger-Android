@@ -1903,7 +1903,8 @@
     <string name="last_name">الكنية</string>
     <string name="please_enter_first_name">يرجى إدخال الاسم الأول</string>
     <string name="please_enter_last_name">يرجى إدخال الاسم الأخير</string>
-
+    <string name="we_are_unable_to_process_your_request">لا يمكننا معالجة طلبك في هذا الوقت. الرجاء معاودة المحاولة في وقت لاحق.</string>
+    <string name="please_select_appropriate_pickup_and_drop_location_to_continue">الرجاء تحديد موقع الالتقاط والإسقاط المناسب للمتابعة.</string>
 
 
     <string name = "andorra"> أندورا </string>

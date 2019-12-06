@@ -83,7 +83,7 @@ class DriverNotFoundDialog : DialogFragment() {
      *
      */
     private fun setData() {
-        var addedTip = 0.0
+        var addedTip = Data.autoData.noDriverFoundTip
         var isTotalInRange = false
         var requestRide : RequestRideConfirm? = null
 
@@ -164,6 +164,11 @@ class DriverNotFoundDialog : DialogFragment() {
                 (context as RideRequestConfirmListener).onOkClick()
                 dismiss()
             }
+        }
+
+        if(addedTip > 0.0){
+            rootView.etAdditionalFare.setText(addedTip.toInt().toString())
+            rootView.etAdditionalFare.setPrefix(Utils.getCurrencySymbol(requestRide?.currency))
         }
     }
 
