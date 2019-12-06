@@ -705,6 +705,6 @@ public interface ApiService {
 
 	@FormUrlEncoded
 	@POST("/fetch_customer_referral_info")
-	void referralTransactions(@FieldMap Map<String, String> params, Callback<ReferralTxnResponse> callback);
+	void fetchCustomerReferralInfo(@FieldMap Map<String, String> params, Callback<ReferralTxnResponse> callback);
 
 }

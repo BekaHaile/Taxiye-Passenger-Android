@@ -317,8 +317,8 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case SCRATCH_CARD:
                 RestClient.getApiService().scratchCard(params, callback);
                 break;
-			case REFERRAL_TXNS:
-                RestClient.getApiService().referralTransactions(params, callback);
+			case REFERRAL_INFO:
+                RestClient.getApiService().fetchCustomerReferralInfo(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

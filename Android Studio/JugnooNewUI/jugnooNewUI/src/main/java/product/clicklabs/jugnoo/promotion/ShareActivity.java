@@ -15,7 +15,10 @@ import android.widget.TextView;
 
 import com.facebook.CallbackManager;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -31,6 +34,7 @@ import product.clicklabs.jugnoo.promotion.adapters.PromotionsFragmentAdapter;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralActivityFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralLeaderboardFragment;
 import product.clicklabs.jugnoo.promotion.fragments.ReferralTxnFragment;
+import product.clicklabs.jugnoo.promotion.fragments.ReferralsFragment;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
@@ -46,7 +50,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 
-public class ShareActivity extends BaseAppCompatActivity {
+public class ShareActivity extends BaseAppCompatActivity implements ReferralTxnFragment.Callback {
 	
 	RelativeLayout relative;
 
@@ -274,6 +278,14 @@ public class ShareActivity extends BaseAppCompatActivity {
 		}
 	}
 
+	public ReferralsFragment getReferralsFragment() {
+		Fragment page = getSupportFragmentManager().findFragmentByTag("android:switcher:" + viewPager.getId() + ":" + 0);
+		if (page instanceof ReferralsFragment) {
+			return (ReferralsFragment) page;
+		}
+		return null;
+	}
+
 
 	public void retryLeaderboardDialog(String message){
 		DialogPopup.alertPopupTwoButtonsWithListeners(this, "", message,
@@ -449,4 +461,13 @@ public class ShareActivity extends BaseAppCompatActivity {
 		rlContainer.setVisibility(View.GONE);
 	}
 
+	@Nullable
+	@Override
+	public List<Object> getReferralTxnList(int state) {
+		ReferralsFragment frag = getReferralsFragment();
+		if(frag != null){
+			return frag.getTxnList(state);
+		}
+		return null;
+	}
 }

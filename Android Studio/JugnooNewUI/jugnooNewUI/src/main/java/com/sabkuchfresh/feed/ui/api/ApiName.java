@@ -59,5 +59,5 @@ public enum ApiName {
 	CANCEL_BID,
     SCRATCH_CARD,
 
-	REFERRAL_TXNS
+	REFERRAL_INFO
 }
