@@ -361,7 +361,6 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(Constants.KEY_FUGU_APP_TYPE, fuguAppType);
             int isTipEnabled = autoData.optInt(KEY_TIP_ENABLED, 0);
             int resendEmailInvoiceEnabled = autoData.optInt(KEY_RESEND_EMAIL_INVOICE_ENABLED, context.getResources().getInteger(R.integer.resend_email_invoice_enabled));
-            boolean showTipOnConfirmRide = autoData.optInt(KEY_TIP_ENABLED_BEFORE_REQUEST_RIDE, context.getResources().getInteger(R.integer.show_tip_on_confirm_ride)) == 1;
 
 //            int gpsLockStatus;
 //            try {
@@ -393,7 +392,6 @@ public class JSONParser implements Constants {
             Data.autoData.setUseRecentLocAutoSnapMaxDistance(autosData.getUseRecentLocAutoSnapMaxDistance());
             Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
             Data.autoData.setFaultConditions(autosData.getFaultConditions());
-            Data.autoData.setTipEnabledBeforeRequestRide(showTipOnConfirmRide);
 
 			long bidRequestRideTimeout = autoData.optLong(KEY_BID_REQUEST_RIDE_TIMEOUT, 420000);
 			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
@@ -585,6 +583,7 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_YOUTUBE_API_KEY, autoData.optString(KEY_CUSTOMER_YOUTUBE_API_KEY,
 				context.getString(R.string.youtube_api_key)));
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
+
 
 		parseJungleApiObjects(context, autoData);
 	}
@@ -1304,6 +1303,7 @@ public class JSONParser implements Constants {
             String cardId = "0";
             int rideType = RideTypeValue.NORMAL.getOrdinal();
             int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
+            int fareMandatory = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1430,6 +1430,7 @@ public class JSONParser implements Constants {
                             rideType = jObject.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
                             gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
+							fareMandatory = jObject.optInt(Constants.KEY_FARE_MANDATORY,0);
 
 
                             try{
@@ -1540,7 +1541,7 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

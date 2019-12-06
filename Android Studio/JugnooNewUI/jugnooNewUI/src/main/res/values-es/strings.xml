@@ -1871,6 +1871,8 @@
     <string name="last_name">Apellido</string>
     <string name="please_enter_first_name">Por favor ingrese su nombre</string>
     <string name="please_enter_last_name">Por favor ingrese el apellido</string>
+    <string name="we_are_unable_to_process_your_request">No podemos procesar su solicitud en este momento. Por favor, inténtelo de nuevo más tarde.</string>
+    <string name="please_select_appropriate_pickup_and_drop_location_to_continue">Seleccione la ubicación de recogida y entrega adecuada para continuar.</string>
 
 
 </resources>

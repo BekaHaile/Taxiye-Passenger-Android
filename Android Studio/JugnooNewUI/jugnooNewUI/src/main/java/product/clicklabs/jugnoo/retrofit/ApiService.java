@@ -13,6 +13,7 @@ import product.clicklabs.jugnoo.promotion.models.ReferralTxnResponse;
 import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
+import product.clicklabs.jugnoo.retrofit.model.FareEstimateResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
@@ -701,6 +702,14 @@ public interface ApiService {
 	@FormUrlEncoded
 	@POST("/customer/scratch_coupon")
 	void scratchCard(@FieldMap Map<String, String> params, Callback<ScratchCard> callback);
+
+	@FormUrlEncoded
+	@POST("/customer/add_drivers_contacted_on_timeout")
+	void logDriverCall(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/get_fare_estimate_with_new_drop_location")
+	void fareEstimateWithNewDrop(@FieldMap Map<String, String> params, Callback<FareEstimateResponse> callback);
 
 
 	@FormUrlEncoded

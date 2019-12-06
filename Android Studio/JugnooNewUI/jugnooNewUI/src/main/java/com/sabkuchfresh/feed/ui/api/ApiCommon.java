@@ -317,6 +317,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
             case SCRATCH_CARD:
                 RestClient.getApiService().scratchCard(params, callback);
                 break;
+			case FARE_ESTIMATE_WITH_NEW_DROP:
+                RestClient.getApiService().fareEstimateWithNewDrop(params, callback);
+                break;
 			case REFERRAL_INFO:
                 RestClient.getApiService().fetchCustomerReferralInfo(params, callback);
                 break;

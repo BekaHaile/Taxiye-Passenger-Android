@@ -6,7 +6,8 @@
     <item android:state_pressed="true">
         <shape>
             <corners android:radius="50dp" />
-            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
+            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"
+                android:angle="0"/>
 
 
         </shape>
@@ -16,7 +17,8 @@
         <shape>
             <corners android:radius="50dp" />
             <solid android:color="@color/grey_alpha_50"/>
-            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"/>
+            <gradient android:endColor="@color/gradient_pressed_end" android:startColor="@color/gradient_pressed_start"
+                android:angle="0"/>
 
         </shape>
     </item>
@@ -24,7 +26,8 @@
         <shape>
             <corners android:radius="50dp" />
 
-            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"/>
+            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"
+                android:angle="0"/>
 
 
         </shape>
