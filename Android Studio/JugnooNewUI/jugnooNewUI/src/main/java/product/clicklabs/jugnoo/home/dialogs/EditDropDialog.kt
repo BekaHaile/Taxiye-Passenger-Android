@@ -92,8 +92,12 @@ class EditDropDialog :DialogFragment(){
             tvPickup.text = editDropDatum!!.pickupAddress
             tvDrop.text = editDropDatum!!.dropAddress
 
-            tvOldFareValue.text = Utils.formatCurrencyValue(editDropDatum!!.currency, editDropDatum!!.oldFare!!)
-            tvNewFareValue.text = Utils.formatCurrencyValue(editDropDatum!!.currency, editDropDatum!!.newFare!!)
+            if(editDropDatum!!.oldFare != null) {
+                tvOldFareValue.text = Utils.formatCurrencyValue(editDropDatum!!.currency, editDropDatum!!.oldFare!!)
+            }
+            if(editDropDatum!!.newFare != null) {
+                tvNewFareValue.text = Utils.formatCurrencyValue(editDropDatum!!.currency, editDropDatum!!.newFare!!)
+            }
         }
 
     }
