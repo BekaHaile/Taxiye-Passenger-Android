@@ -2170,4 +2170,13 @@
     <string name="add_more_tip_for_better_acceptance">Add more tip to the current fare for better acceptance of ride</string>
     <string name="we_are_unable_to_process_your_request">We are unable to process your request at this time. Please try again later.</string>
     <string name="please_select_appropriate_pickup_and_drop_location_to_continue">Please select appropriate pickup and drop location to continue.</string>
+    <string name="new_destination_fare">New Destination Fare</string>
+    <string name="change_in_fare_on_drop_change">It seems there is change in fare with the new destination request</string>
+    <string name="previous_fare">Previous Fare</string>
+    <string name="updated_fare">Updated Fare</string>
+    <string name="please_confirm_the_fare_update">Please confirm the fare update</string>
+    <string name="earnings">Earnings</string>
+    <string name="earnings_today">Earnings Today</string>
+    <string name="total_earnings">Total Earnings</string>
+    <string name="referred_on">Referred on</string>
 </resources>

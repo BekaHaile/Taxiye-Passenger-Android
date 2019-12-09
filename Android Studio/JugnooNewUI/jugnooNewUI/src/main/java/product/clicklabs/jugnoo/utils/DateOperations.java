@@ -236,7 +236,7 @@ public class DateOperations {
 	public static String convertDateViaFormatOnlyTime(String dateTime) {
 
 		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("hh:mm a");
+		SimpleDateFormat sdfTo = new SimpleDateFormat("h:mm a");
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -318,6 +318,12 @@ public class DateOperations {
 	    long foo = System.currentTimeMillis();
 	    Date date = new Date(foo);
 	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    return formatter.format(date);
+	}
+	public static String getCurrentDate() {
+	    long foo = System.currentTimeMillis();
+	    Date date = new Date(foo);
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	    return formatter.format(date);
 	}
 	

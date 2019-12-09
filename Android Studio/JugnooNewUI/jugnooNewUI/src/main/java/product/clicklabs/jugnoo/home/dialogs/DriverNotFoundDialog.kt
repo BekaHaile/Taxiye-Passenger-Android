@@ -77,6 +77,8 @@ class DriverNotFoundDialog : DialogFragment() {
         rootView.tvTipLabel.typeface = Fonts.mavenRegular(rootView.context)
         rootView.etAdditionalFare.typeface = Fonts.mavenRegular(rootView.context)
         rootView.tvNoRidesFound.setTypeface(Fonts.mavenRegular(rootView.context), BOLD)
+        rootView.btnOk.typeface = Fonts.mavenMedium(rootView.context)
+        rootView.btnCancel.typeface = Fonts.mavenMedium(rootView.context)
     }
 
     /**
