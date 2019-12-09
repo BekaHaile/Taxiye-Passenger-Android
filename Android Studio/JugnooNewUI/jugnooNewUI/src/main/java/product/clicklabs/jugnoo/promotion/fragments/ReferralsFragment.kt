@@ -214,6 +214,24 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
     }
 
+    private fun setReferralStats(referralTxnResponse: ReferralTxnResponse?) {
+        if(referralTxnResponse?.referralData != null
+                && referralTxnResponse.referralData!!.referralsCount != null
+                && referralTxnResponse.referralData!!.referralEarnedTotal != null
+                && referralTxnResponse.referralData!!.referralEarnedToday != null) {
+            setHighlightText(tvReferralsCount!!, getString(R.string.referrals),
+                    referralTxnResponse.referralData!!.referralsCount!!.toInt().toString())
+            setHighlightText(tvCashEarned!!, getString(R.string.cash_earned),
+                    Utils.formatCurrencyValue(Data.autoData.currency, referralTxnResponse.referralData!!.referralEarnedTotal!!))
+            setHighlightText(tvCashEarnedToday!!, getString(R.string.earned_today),
+                    Utils.formatCurrencyValue(Data.autoData.currency, referralTxnResponse.referralData!!.referralEarnedToday!!))
+
+            Data.userData.referralMessages.referralsCount = referralTxnResponse.referralData!!.referralsCount!!
+            Data.userData.referralMessages.referralEarnedTotal = referralTxnResponse.referralData!!.referralEarnedTotal!!
+            Data.userData.referralMessages.referralEarnedToday = referralTxnResponse.referralData!!.referralEarnedToday!!
+        }
+    }
+
     private fun getReferDriverDialog(): ReferDriverDialog {
         if (referDriverDialog == null) {
             referDriverDialog = ReferDriverDialog(activity)
@@ -267,6 +285,7 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
                     .execute(params, ApiName.REFERRAL_INFO, object: APICommonCallback<ReferralTxnResponse>(){
                         override fun onSuccess(t: ReferralTxnResponse?, message: String?, flag: Int) {
                             referralTxnResponse = t
+                            setReferralStats(referralTxnResponse)
                         }
 
                         override fun onError(t: ReferralTxnResponse?, message: String?, flag: Int): Boolean {
@@ -295,7 +314,11 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
                 && referralTxnResponse != null && referralTxnResponse!!.referralData != null && referralTxnResponse!!.referralData!!.txns != null){
             val currentDate = DateOperations.getCurrentDate()
             val currentDateItems = referralTxnResponse!!.referralData!!.txns!!.filter {
-                it.creditedOn?.contains(currentDate) ?: false
+                if(it.isToday != null){
+                    it.isToday == 1
+                } else {
+                    it.creditedOn?.contains(currentDate) ?: false
+                }
             }
             list.addAll(currentDateItems)
         }

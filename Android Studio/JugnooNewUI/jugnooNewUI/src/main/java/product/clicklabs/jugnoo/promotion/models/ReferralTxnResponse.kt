@@ -12,5 +12,11 @@ class ReferralTxnData(
         @SerializedName("txns")
         var txns: MutableList<ReferralTxn>?,
         @SerializedName("referrals")
-        var referrals: MutableList<ReferralUser>?
+        var referrals: MutableList<ReferralUser>?,
+        @SerializedName("referral_count")
+        var referralsCount: Double? = 0.0,
+        @SerializedName("referral_earned_total")
+        var referralEarnedTotal: Double? = 0.0,
+        @SerializedName("referral_earned_today")
+        var referralEarnedToday: Double? = 0.0
 )

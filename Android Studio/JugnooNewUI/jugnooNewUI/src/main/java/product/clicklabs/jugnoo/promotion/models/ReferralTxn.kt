@@ -12,7 +12,9 @@ class ReferralTxn (
         @SerializedName("user_name")
         var userName:String?,
         @SerializedName("text")
-        var text:String?
+        var text:String?,
+        @SerializedName("is_today")
+        var isToday:Int?
 )
 class ReferralUser (
         @SerializedName("referral_id")

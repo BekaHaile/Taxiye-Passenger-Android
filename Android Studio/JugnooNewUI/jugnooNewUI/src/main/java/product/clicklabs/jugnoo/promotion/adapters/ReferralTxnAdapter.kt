@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.promotion.adapters
 
 import android.content.Context
+import android.graphics.Typeface
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -70,27 +71,27 @@ class ReferralTxnAdapter(private val context: Context, private val currency:Stri
 
     inner class ViewHolder(convertView: View, context: Context) : RecyclerView.ViewHolder(convertView) {
         init {
-            itemView.tvDate.typeface = Fonts.mavenRegular(context)
-            itemView.tvAmount.typeface = Fonts.mavenRegular(context)
             itemView.tvTime.typeface = Fonts.mavenRegular(context)
+            itemView.tvAmount.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD)
+            itemView.tvDate.typeface = Fonts.mavenRegular(context)
             itemView.tvInfo.typeface = Fonts.mavenRegular(context)
         }
 
         fun bind(referralTxn: Any){
             if(referralTxn is ReferralTxn){
+                itemView.tvTime.text = referralTxn.text
+                itemView.tvInfo.text = DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(referralTxn.creditedOn))
                 itemView.tvDate.text = DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(referralTxn.creditedOn))
-                itemView.tvTime.text = DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(referralTxn.creditedOn))
                 itemView.tvAmount.text = Utils.formatCurrencyValue(currency, referralTxn.amount!!)
-                itemView.tvInfo.text = referralTxn.text
-                itemView.tvInfo.visibility = View.VISIBLE
             }
             else if(referralTxn is ReferralUser){
-                itemView.tvDate.text = referralTxn.userName
+                itemView.tvTime.text = referralTxn.userName
                 if(referralTxn.referredOn != null) {
-                    itemView.tvTime.text = context.getString(R.string.referred_on).plus(" ").plus(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(referralTxn.referredOn)))
+                    itemView.tvDate.text = DateOperations.convertDateOnlyViaFormat(DateOperations.utcToLocalWithTZFallback(referralTxn.referredOn))
+                    itemView.tvInfo.text =  DateOperations.convertDateViaFormatOnlyTime(DateOperations.utcToLocalWithTZFallback(referralTxn.referredOn))
                 }
                 itemView.tvAmount.text = Utils.formatCurrencyValue(currency, referralTxn.amount!!)
-                itemView.tvInfo.visibility = View.GONE
+
             }
 
         }
