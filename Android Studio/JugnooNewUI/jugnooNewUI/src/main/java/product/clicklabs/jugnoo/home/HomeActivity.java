@@ -9364,7 +9364,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("qr_code_details",qrCodeDetails);
                                 }
                                 nameValuePairs.put("is_bluetooth_tracker",""+Data.autoData.getBluetoothEnabled());
-                                nameValuePairs.put("is_scratch_coupon_applicable", "" + true); // key added for differentiating request ride call from new scratch App and old App
+//                                nameValuePairs.put("is_scratch_coupon_applicable", "" + true); // key added for differentiating request ride call from new scratch App and old App
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
