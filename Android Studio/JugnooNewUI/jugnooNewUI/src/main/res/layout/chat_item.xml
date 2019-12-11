@@ -9,23 +9,22 @@
         android:id="@+id/layout_you"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/px_20"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:visibility="visible">
 
         <ImageView
             android:id="@+id/usr_icon_you"
-            android:layout_width="@dimen/px_100"
-            android:layout_height="@dimen/px_100"
-            android:layout_marginStart="@dimen/px_32"
-            android:tag="mwar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
             android:src="@drawable/profile_placeholder" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/px_10"
+            android:layout_marginEnd="5dp"
             android:layout_toEndOf="@+id/triangle_you"
             android:background="@drawable/bg_msg_you">
 
@@ -33,38 +32,37 @@
                 android:id="@+id/chat_txt_you"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/px_20"
-                android:layout_marginEnd="@dimen/px_20"
-                android:layout_marginTop="@dimen/px_10"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
                 android:autoLink="web"
-                android:minWidth="170px"
-                android:maxWidth="420px"
+                android:minWidth="85dp"
+                android:maxWidth="210dp"
                 android:textColor="@color/text_color"
                 android:linksClickable="true"
                 android:textIsSelectable="true"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/chat_time_you"
-                android:layout_width="@dimen/px_150"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chat_txt_you"
                 android:layout_alignEnd="@+id/chat_txt_you"
-                android:layout_marginEnd="@dimen/px_10"
+                android:layout_marginEnd="5dp"
                 android:gravity="end"
-                android:paddingBottom="@dimen/px_5"
+                android:paddingBottom="2dp"
                 android:text="@string/time"
                 android:textColor="@color/text_color_hint"
-                android:textSize="@dimen/text_size_22" />
+                android:textSize="11sp" />
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/triangle_you"
-            android:layout_width="@dimen/px_32"
-            android:layout_height="@dimen/px_32"
-            android:layout_marginTop="@dimen/px_10"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="10dp"
             android:layout_toEndOf="@id/usr_icon_you"
-            android:tag="mwar"
             android:src="@drawable/triangle_you" />
     </RelativeLayout>
 
@@ -72,14 +70,14 @@
         android:id="@+id/layout_me"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/px_20"
-        android:visibility="gone">
+        android:layout_marginTop="10dp"
+        android:visibility="visible">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/px_32"
+            android:layout_marginStart="16dp"
             android:layout_toStartOf="@+id/triangle_me"
             android:background="@drawable/bg_msg_me">
 
@@ -87,51 +85,49 @@
                 android:id="@+id/chat_txt_me"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/px_20"
-                android:layout_marginEnd="@dimen/px_20"
-                android:layout_marginTop="@dimen/px_10"
-                android:minWidth="170px"
-                android:maxWidth="420px"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                android:minWidth="85dp"
+                android:maxWidth="210dp"
                 android:autoLink="web"
                 android:text=""
                 android:linksClickable="true"
                 android:textIsSelectable="true"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/chat_time_me"
-                android:layout_width="@dimen/px_150"
+                android:layout_width="75dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/chat_txt_me"
-                android:layout_marginEnd="@dimen/px_10"
+                android:layout_marginEnd="5dp"
                 android:gravity="end"
                 android:layout_alignEnd="@+id/chat_txt_me"
-                android:paddingBottom="@dimen/px_5"
+                android:paddingBottom="2dp"
                 android:text=""
                 android:textColor="@color/text_color_hint"
-                android:textSize="@dimen/text_size_22" />
+                android:textSize="11sp" />
         </RelativeLayout>
 
         <ImageView
             android:id="@+id/triangle_me"
-            android:layout_width="@dimen/px_32"
-            android:layout_height="@dimen/px_32"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/px_32"
-            android:layout_marginTop="@dimen/px_10"
-            android:tag="mwar"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
             android:src="@drawable/triangle_me" />
 
         <ImageView
             android:id="@+id/usr_icon_me"
-            android:layout_width="@dimen/px_100"
-            android:layout_height="@dimen/px_100"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="@dimen/px_8"
-            android:tag="mwar"
+            android:layout_marginStart="4dp"
             android:visibility="gone"
-            android:layout_marginEnd="@dimen/px_32"
+            android:layout_marginEnd="16dp"
             android:src="@drawable/profile_placeholder" />
     </RelativeLayout>
 

@@ -42,8 +42,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
 		itemView.setLayoutParams(layoutParams);
-		ASSL.DoMagic(itemView);
-
 
 		return new ChatViewHolder(itemView, context);
 	}
