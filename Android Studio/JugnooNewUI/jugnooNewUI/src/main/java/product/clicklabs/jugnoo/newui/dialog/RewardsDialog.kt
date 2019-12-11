@@ -6,15 +6,14 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import androidx.constraintlayout.widget.ConstraintSet
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.constraintlayout.widget.ConstraintSet
+import androidx.fragment.app.DialogFragment
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
 import com.sabkuchfresh.feed.ui.api.ApiName
@@ -67,7 +66,7 @@ class RewardsDialog : DialogFragment() {
         }
     }
 
-    override fun show(manager: androidx.fragment.app.FragmentManager?, tag: String?) {
+    override fun show(manager: androidx.fragment.app.FragmentManager, tag: String?) {
         val ft = manager?.beginTransaction()
         val prev = manager?.findFragmentByTag("scratchDialog")
         if (prev != null) {

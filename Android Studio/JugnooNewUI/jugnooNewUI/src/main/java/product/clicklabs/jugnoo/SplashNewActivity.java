@@ -21,10 +21,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -66,7 +62,10 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -81,6 +80,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
@@ -1511,9 +1514,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 
-	private interface OnCompleteListener {
-		void onComplete();
-	}
 
 
 
@@ -2066,18 +2066,25 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						}
 					});
 		} else {
-			try {
-				FirebaseInstanceId.getInstance().getToken();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if ("".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, ""))) {
-//					DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-				getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
-				getHandlerGoToAccessToken().postDelayed(getRunnableGoToAccessToken(), 5000);
-			} else {
-				goToAccessTokenLogin();
-			}
+			DialogPopup.showLoadingDialog(this, getString(R.string.loading));
+			FirebaseInstanceId.getInstance().getInstanceId()
+					.addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+						@Override
+						public void onComplete(@NonNull Task<InstanceIdResult> task) {
+							if (!task.isSuccessful()) {
+								Log.w(TAG, "getInstanceId failed");
+								return;
+							}
+
+							// Get new Instance ID token
+							String token = task.getResult().getToken();
+							Prefs.with(SplashNewActivity.this).save(Constants.SP_DEVICE_TOKEN, token);
+
+							DialogPopup.dismissLoadingDialog();
+
+							goToAccessTokenLogin();
+						}
+					});
 		}
 	}
 

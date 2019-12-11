@@ -5,12 +5,12 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.fragment.app.DialogFragment
-import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import com.google.android.gms.maps.model.LatLng
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
@@ -42,7 +42,7 @@ class EditDropDialog :DialogFragment(){
     private var callback:Callback? = null
     private var editDropDatum:EditDropDatum? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if(context is Callback){
             callback = context

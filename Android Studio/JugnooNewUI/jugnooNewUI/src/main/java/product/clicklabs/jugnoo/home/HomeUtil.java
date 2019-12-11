@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -194,7 +194,6 @@ public class HomeUtil {
 			intent.putExtra(Constants.KEY_LOGGED_OUT, 1);
 			intent.putExtra(Constants.KEY_MESSAGE, message);
 		}
-		intent.putExtra(Constants.KEY_SPLASH_STATE, SplashNewActivity.State.SPLASH_LS.getOrdinal());
 		activity.startActivity(intent);
 		activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 

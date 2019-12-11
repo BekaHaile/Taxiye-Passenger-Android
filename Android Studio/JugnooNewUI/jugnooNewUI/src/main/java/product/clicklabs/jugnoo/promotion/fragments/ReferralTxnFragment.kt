@@ -2,11 +2,11 @@ package product.clicklabs.jugnoo.promotion.fragments
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sabkuchfresh.analytics.GAAction
 import kotlinx.android.synthetic.main.fragment_referral_txn.*
 import product.clicklabs.jugnoo.Data
@@ -30,7 +30,7 @@ class ReferralTxnFragment : Fragment(), GAAction {
 
     private var callback:Callback? = null
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if(context is Callback){
             callback = context
