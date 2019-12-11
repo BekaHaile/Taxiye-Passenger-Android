@@ -1,7 +1,7 @@
 package com.picker.image.ui;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.view.PagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView android:id="@+id/rlRoot"
+<androidx.cardview.widget.CardView android:id="@+id/rlRoot"
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:layout_marginBottom="@dimen/margin_bottom_home_switcher_item"
@@ -90,7 +90,7 @@
 
 
     </LinearLayout>
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>
 
 
 

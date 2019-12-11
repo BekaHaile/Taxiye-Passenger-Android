@@ -47,7 +47,7 @@
             android:layout_marginStart="33px"
             android:background="@color/stroke_color_light"/>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_noti_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

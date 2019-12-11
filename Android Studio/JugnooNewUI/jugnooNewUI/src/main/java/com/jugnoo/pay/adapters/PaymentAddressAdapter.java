@@ -1,7 +1,6 @@
 package com.jugnoo.pay.adapters;
 
-import android.app.Activity;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +14,10 @@ import product.clicklabs.jugnoo.utils.Fonts;
 
 import com.jugnoo.pay.activities.SelectContactActivity;
 import com.jugnoo.pay.models.FetchPaymentAddressResponse;
-import com.jugnoo.pay.models.SelectUser;
-import com.jugnoo.pay.utils.CommonMethods;
-import com.jugnoo.pay.utils.RecyclerViewClickListener;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 /**

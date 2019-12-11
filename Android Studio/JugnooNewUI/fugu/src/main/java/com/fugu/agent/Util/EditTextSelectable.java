@@ -13,7 +13,7 @@ import java.util.List;
  * @author gurmail
  */
 
-public class EditTextSelectable extends android.support.v7.widget.AppCompatEditText  {
+public class EditTextSelectable extends androidx.appcompat.widget.AppCompatEditText  {
 
     private KeyImeChange keyImeChangeListener;
 

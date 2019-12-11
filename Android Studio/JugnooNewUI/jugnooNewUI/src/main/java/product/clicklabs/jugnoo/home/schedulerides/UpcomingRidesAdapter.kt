@@ -1,9 +1,9 @@
 package product.clicklabs.jugnoo.home.schedulerides
 
 import android.content.Context
-import android.databinding.DataBindingUtil
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import product.clicklabs.jugnoo.R
@@ -42,7 +42,7 @@ class UpcomingRidesAdapter(val context: Context,val presenter: UpcomingRidesPres
 
 
 
-    class ViewHolder(var binding: ListItemUpcomingRideBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(var binding: ListItemUpcomingRideBinding) : androidx.recyclerview.widget.RecyclerView.ViewHolder(binding.root) {
 
         fun bind(upcomingRide: UpcomingRide) {
             with(binding) {

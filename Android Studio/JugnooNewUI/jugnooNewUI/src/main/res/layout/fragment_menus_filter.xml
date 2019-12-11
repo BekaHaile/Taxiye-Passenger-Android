@@ -144,7 +144,7 @@
                 />
 
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFilters"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -184,7 +184,7 @@
                 android:background="@color/stroke_light_grey_alpha"
                 />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvSort"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -316,7 +316,7 @@
             android:background="@color/stroke_light_grey_alpha"
             />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewCuisinesList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -2,10 +2,9 @@ package com.fugu.agent;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,8 +16,6 @@ import android.widget.TextView;
 
 import com.fugu.R;
 import com.fugu.agent.fragment.BroadcastFragment;
-import com.fugu.agent.helper.BroadcastListenerHelper;
-import com.fugu.agent.listeners.BroadcastListener;
 
 /**
  * Created by gurmail on 20/07/18.

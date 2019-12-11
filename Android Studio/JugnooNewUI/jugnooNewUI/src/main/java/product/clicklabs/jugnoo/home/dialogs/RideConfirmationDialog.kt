@@ -3,7 +3,7 @@ package product.clicklabs.jugnoo.home.dialogs
 import android.app.Dialog
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
-import android.support.v4.app.DialogFragment
+import androidx.fragment.app.DialogFragment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater

@@ -4,7 +4,7 @@ package com.fugu.agent.recylerviewAnimation;
  * Created by ankit on 20/07/17.
  */
 
-import android.support.v4.view.ViewCompat;
+import androidx.core.view.ViewCompat;
 import android.view.View;
 
 /**

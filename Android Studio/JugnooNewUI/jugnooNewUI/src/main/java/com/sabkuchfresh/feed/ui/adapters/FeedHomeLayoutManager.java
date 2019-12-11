@@ -2,7 +2,7 @@ package com.sabkuchfresh.feed.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.v7.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.sabkuchfresh.home.FreshActivity;

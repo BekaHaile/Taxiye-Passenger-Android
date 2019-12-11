@@ -2,8 +2,8 @@ package product.clicklabs.jugnoo.adapters
 
 import android.content.Context
 import android.graphics.Typeface
-import android.support.v7.widget.CardView
-import android.support.v7.widget.RecyclerView
+import androidx.cardview.widget.CardView
+import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -27,8 +27,8 @@ import java.util.*
  */
 
 class BidsPlacedAdapter(private val context: Context,
-                        private val recyclerView: RecyclerView,
-                        private val callback: Callback) : RecyclerView.Adapter<BidsPlacedAdapter.MyViewHolder>(), ItemListener {
+                        private val recyclerView: androidx.recyclerview.widget.RecyclerView,
+                        private val callback: Callback) : androidx.recyclerview.widget.RecyclerView.Adapter<BidsPlacedAdapter.MyViewHolder>(), ItemListener {
     private val layoutInflater: LayoutInflater
     private var bidInfos: ArrayList<BidInfo>? = null
     private val dp2: Int
@@ -54,7 +54,7 @@ class BidsPlacedAdapter(private val context: Context,
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val convertView = layoutInflater.inflate(R.layout.list_item_bid_request, parent, false)
 
-        val params = convertView.layoutParams as RecyclerView.LayoutParams
+        val params = convertView.layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
         params.setMargins(0, dp2, 0, dp2)
         convertView.layoutParams = params
 
@@ -115,7 +115,7 @@ class BidsPlacedAdapter(private val context: Context,
 
     override fun onClickItem(viewClicked: View, parentView: View) {
         val position = recyclerView.getChildAdapterPosition(parentView)
-        if (position != RecyclerView.NO_POSITION) {
+        if (position != androidx.recyclerview.widget.RecyclerView.NO_POSITION) {
             when (viewClicked.id) {
                 R.id.bAccept -> callback.onBidAccepted(bidInfos!![position])
 
@@ -125,9 +125,9 @@ class BidsPlacedAdapter(private val context: Context,
     }
 
 
-    class MyViewHolder(itemView: View, itemListener: ItemListener) : RecyclerView.ViewHolder(itemView) {
+    class MyViewHolder(itemView: View, itemListener: ItemListener) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
-        val cvRoot: CardView
+        val cvRoot: androidx.cardview.widget.CardView
         val vProgressLeft: View
         val ivDriver: ImageView
         val textViewDriverRating: TextView

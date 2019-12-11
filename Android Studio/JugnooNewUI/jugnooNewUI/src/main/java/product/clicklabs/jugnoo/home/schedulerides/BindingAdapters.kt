@@ -1,9 +1,9 @@
 package product.clicklabs.jugnoo.home.schedulerides
 
 import android.content.Context
-import android.databinding.BindingAdapter
+import androidx.databinding.BindingAdapter
 import android.graphics.drawable.Drawable
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.widget.ImageView
 import product.clicklabs.jugnoo.R
 

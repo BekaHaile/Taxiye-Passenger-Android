@@ -5,15 +5,17 @@ package product.clicklabs.jugnoo.utils;
  */
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 import product.clicklabs.jugnoo.BuildConfig;
 
 /**
- * {@link android.support.v7.widget.LinearLayoutManager} which wraps its content. Note that this class will always
- * wrap the content regardless of {@link android.support.v7.widget.RecyclerView} layout parameters.
+ * {@link LinearLayoutManager} which wraps its content. Note that this class will always
+ * wrap the content regardless of {@link RecyclerView} layout parameters.
  *
  * Now it's impossible to run add/remove animations with child views which have arbitrary dimensions (height for
  * VERTICAL orientation and width for HORIZONTAL). However if child views have fixed dimensions
@@ -21,7 +23,7 @@ import product.clicklabs.jugnoo.BuildConfig;
  * If animations are not used at all then a normal measuring procedure will run and child views will be measured during
  * the measure pass.
  */
-public class LinearLayoutManagerForResizableRecyclerView extends android.support.v7.widget.LinearLayoutManager {
+public class LinearLayoutManagerForResizableRecyclerView extends LinearLayoutManager {
 
 	private static final int CHILD_WIDTH = 0;
 	private static final int CHILD_HEIGHT = 1;

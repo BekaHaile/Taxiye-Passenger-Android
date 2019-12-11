@@ -8,16 +8,18 @@ import android.content.pm.PermissionInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 /**
  * Created by socomo-46 on 22/09/16.
@@ -312,7 +314,7 @@ public final class PermissionCommon {
             snackBarPermissionDenied = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
 //            snackBarPermissionDenied.setActionTextColor(ContextCompat.getColor(activity, android.R.color.white));
 //            snackBarPermissionDenied.getView().setBackgroundColor(ContextCompat.getColor(activity, android.R.color.holo_red_dark));
-            ((TextView) snackBarPermissionDenied.getView().findViewById(android.support.design.R.id.snackbar_text)).setMaxLines(5);
+            ((TextView) snackBarPermissionDenied.getView().findViewById(com.google.android.material.R.id.snackbar_text)).setMaxLines(5);
             snackBarPermissionDenied.setAction("Settings", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -341,7 +343,7 @@ public final class PermissionCommon {
             snackBarRational = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
 //            snackBarRational.setActionTextColor(ContextCompat.getColor(activity, android.R.color.white));
 //            snackBarRational.getView().setBackgroundColor(ContextCompat.getColor(activity, android.R.color.holo_blue_dark));
-            ((TextView) snackBarRational.getView().findViewById(android.support.design.R.id.snackbar_text)).setMaxLines(5);
+            ((TextView) snackBarRational.getView().findViewById(com.google.android.material.R.id.snackbar_text)).setMaxLines(5);
 
         }
 

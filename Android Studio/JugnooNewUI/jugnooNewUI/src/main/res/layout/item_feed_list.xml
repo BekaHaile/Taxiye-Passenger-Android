@@ -194,7 +194,7 @@
         android:visibility="gone" />
 
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/vpReviewImages"
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_height_feed"
@@ -206,7 +206,7 @@
            android:layout_height="22dp"
            android:layout_alignBottom="@id/vpReviewImages"
            android:background="@drawable/shadow_up_new" />
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabDots"
         android:layout_width="match_parent"
         android:layout_height="6dp"

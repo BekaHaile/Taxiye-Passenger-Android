@@ -3,11 +3,11 @@ package product.clicklabs.jugnoo.newui.adapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.Group
-import android.support.v7.widget.AppCompatImageView
-import android.support.v7.widget.AppCompatTextView
-import android.support.v7.widget.RecyclerView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Group
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -18,8 +18,8 @@ import product.clicklabs.jugnoo.promotion.models.Promo
 import java.text.SimpleDateFormat
 import java.util.*
 
-class RewardsAdapter(val recyclerView:RecyclerView, val promoList: ArrayList<Promo>, private val rewardCardListener: RewardCardListener) :
-        RecyclerView.Adapter<RewardsAdapter.ViewHolderService>() {
+class RewardsAdapter(val recyclerView: androidx.recyclerview.widget.RecyclerView, val promoList: ArrayList<Promo>, private val rewardCardListener: RewardCardListener) :
+        androidx.recyclerview.widget.RecyclerView.Adapter<RewardsAdapter.ViewHolderService>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderService {
@@ -33,7 +33,7 @@ class RewardsAdapter(val recyclerView:RecyclerView, val promoList: ArrayList<Pro
 
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: ViewHolderService, position: Int) {
-        val params = holder.clRewards.layoutParams as RecyclerView.LayoutParams
+        val params = holder.clRewards.layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
         params.width = getItemWidth(holder.clRewards.context)
         params.topMargin = 12
         params.bottomMargin = 12
@@ -77,13 +77,13 @@ class RewardsAdapter(val recyclerView:RecyclerView, val promoList: ArrayList<Pro
         return  width / 2
     }
 
-    inner class ViewHolderService(view : View) : RecyclerView.ViewHolder(view){
-        var clRewards : ConstraintLayout= view.findViewById(R.id.clRewards)
+    inner class ViewHolderService(view : View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
+        var clRewards : ConstraintLayout = view.findViewById(R.id.clRewards)
         var tvRewardInfo : AppCompatTextView= view.findViewById(R.id.tvRewardInfo)
         var tvAmount : AppCompatTextView= view.findViewById(R.id.tvAmount)
         var ivScratch : AppCompatImageView= view.findViewById(R.id.ivScratch)
         var ivGift : AppCompatImageView= view.findViewById(R.id.ivGift)
-        var groupScratch : Group= view.findViewById(R.id.groupScratch)
+        var groupScratch : Group = view.findViewById(R.id.groupScratch)
     }
 
     interface RewardCardListener{

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@color/transparent">
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivMarker"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -20,7 +20,7 @@
         android:background="@drawable/bg_saved_location_marker"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvSavedLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:text="@string/save_your_pickup_location"
             android:textColor="@color/white" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="35dp"
             android:visibility="gone"
             android:src="@drawable/ic_save_location_heart"

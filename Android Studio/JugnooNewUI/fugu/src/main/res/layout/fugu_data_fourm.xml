@@ -10,7 +10,7 @@
     android:background="@drawable/hippo_rating_background"
     android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDataForm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

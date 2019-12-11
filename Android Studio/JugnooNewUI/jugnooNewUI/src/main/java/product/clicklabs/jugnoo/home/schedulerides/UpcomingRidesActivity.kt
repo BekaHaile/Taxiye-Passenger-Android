@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.home.schedulerides
 
-import android.databinding.DataBindingUtil
+import androidx.databinding.DataBindingUtil
 import android.graphics.Typeface
 import android.os.Bundle
 import com.sabkuchfresh.feed.models.FeedCommonResponse

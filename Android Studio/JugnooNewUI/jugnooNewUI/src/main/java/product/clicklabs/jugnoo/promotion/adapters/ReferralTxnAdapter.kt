@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.promotion.adapters
 
 import android.content.Context
 import android.graphics.Typeface
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import product.clicklabs.jugnoo.utils.Utils
 
 
 class ReferralTxnAdapter(private val context: Context, private val currency:String,
-                         private val callback: Callback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                         private val callback: Callback) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
     private var transactionInfoList: MutableList<Any>? = null
     private var totalTransactions: Int? = null
 
@@ -27,7 +27,7 @@ class ReferralTxnAdapter(private val context: Context, private val currency:Stri
         this.notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         if (viewType == TYPE_FOOTER) {
             val v = LayoutInflater.from(parent.context).inflate(R.layout.list_item_show_more, parent, false)
             return ViewFooterHolder(v, context)
@@ -38,7 +38,7 @@ class ReferralTxnAdapter(private val context: Context, private val currency:Stri
     }
 
 
-    override fun onBindViewHolder(viewholder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(viewholder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         if (viewholder is ViewHolder) {
             val transactionInfo = transactionInfoList!![position]
             viewholder.bind(transactionInfo)
@@ -69,7 +69,7 @@ class ReferralTxnAdapter(private val context: Context, private val currency:Stri
 
 
 
-    inner class ViewHolder(convertView: View, context: Context) : RecyclerView.ViewHolder(convertView) {
+    inner class ViewHolder(convertView: View, context: Context) : androidx.recyclerview.widget.RecyclerView.ViewHolder(convertView) {
         init {
             itemView.tvTime.typeface = Fonts.mavenRegular(context)
             itemView.tvAmount.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD)
@@ -98,7 +98,7 @@ class ReferralTxnAdapter(private val context: Context, private val currency:Stri
     }
 
 
-    inner class ViewFooterHolder(convertView: View, context: Context) : RecyclerView.ViewHolder(convertView) {
+    inner class ViewFooterHolder(convertView: View, context: Context) : androidx.recyclerview.widget.RecyclerView.ViewHolder(convertView) {
 
         init {
             itemView.textViewShowMore.typeface = Fonts.mavenLight(context)

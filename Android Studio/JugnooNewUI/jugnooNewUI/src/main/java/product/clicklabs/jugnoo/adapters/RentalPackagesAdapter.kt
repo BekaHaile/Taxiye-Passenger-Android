@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.adapters
 
 import android.content.Context
 import android.graphics.Typeface
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +13,9 @@ import product.clicklabs.jugnoo.retrofit.model.Package
 
 class RentalPackagesAdapter(private var context:Context, private var packages: ArrayList<Package>?,
                             private var currency:String?, private var distanceUnit:String?,
-                            val recyclerView:RecyclerView
+                            val recyclerView: androidx.recyclerview.widget.RecyclerView
                             , private val typeface: Typeface?, private  val onSelectedCallback: OnSelectedCallback) :
-        RecyclerView.Adapter<RentalPackagesAdapter.ViewHolderCorporate>(),ItemListener {
+        androidx.recyclerview.widget.RecyclerView.Adapter<RentalPackagesAdapter.ViewHolderCorporate>(),ItemListener {
 
 
     companion object {
@@ -30,7 +30,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
 
     override fun onClickItem(viewClicked: View?, parentView: View?) {
         val pos = recyclerView.getChildLayoutPosition(parentView!!)
-        if(pos != RecyclerView.NO_POSITION){
+        if(pos != androidx.recyclerview.widget.RecyclerView.NO_POSITION){
             for(corp in packages!!){
                 corp.selected = false
             }
@@ -45,7 +45,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RentalPackagesAdapter.ViewHolderCorporate {
         val dp5 = context.resources.getDimensionPixelSize(R.dimen.dp_5)
         val view:View = LayoutInflater.from(parent.context).inflate(R.layout.list_item_rental_package, parent, false);
-        val params:RecyclerView.LayoutParams = view.layoutParams as RecyclerView.LayoutParams
+        val params: androidx.recyclerview.widget.RecyclerView.LayoutParams = view.layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
         params.setMargins(0, dp5, 0, dp5)
         view.layoutParams = params
         return ViewHolderCorporate(view, this)
@@ -59,7 +59,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
         holder.bind(packages!![position].getPackageName(distanceUnit), packages!![position].selected, position)
     }
 
-    inner class ViewHolderCorporate(view : View, listener:ItemListener) : RecyclerView.ViewHolder(view){
+    inner class ViewHolderCorporate(view : View, listener:ItemListener) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
         init{
             if(typeface != null) {
                 itemView.tvPackageName.typeface = typeface

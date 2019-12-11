@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.home.schedulerides
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 
 /**
  * Created by Parminder Saini on 17/10/18.

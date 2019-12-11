@@ -1,6 +1,6 @@
 package com.sabkuchfresh.feed.ui.views.animateheartview;
 
-import android.support.annotation.DrawableRes;
+import androidx.annotation.DrawableRes;
 
 /**
  * Created by Joel on 23/12/2015.

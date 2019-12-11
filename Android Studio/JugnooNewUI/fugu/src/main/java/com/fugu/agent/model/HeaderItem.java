@@ -1,6 +1,6 @@
 package com.fugu.agent.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * Created by gurmail on 19/06/18.
