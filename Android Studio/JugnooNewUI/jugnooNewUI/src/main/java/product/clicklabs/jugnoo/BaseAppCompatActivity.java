@@ -12,8 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.fugu.FuguConfig;
-import com.fugu.FuguTicketAttributes;
+import com.hippo.HippoConfig;
+import com.hippo.HippoTicketAttributes;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -126,7 +126,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 	}
 
 	private void fuguShowConversations() {
-		FuguConfig.getInstance().showConversations(this, getString(R.string.fugu_support_title));
+		HippoConfig.getInstance().showConversations(this, getString(R.string.fugu_support_title));
 	}
 
 	@Override
@@ -186,9 +186,9 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 	}
 
 	public void openHippoTicketSupport(){
-		FuguTicketAttributes.Builder builder = new FuguTicketAttributes.Builder();
+		HippoTicketAttributes.Builder builder = new HippoTicketAttributes.Builder();
 		builder.setFaqName(Prefs.with(this).getString(Constants.HIPPO_SUPPORT_FAQ_NAME, ""));
-		FuguConfig.getInstance().showFAQSupport(builder.build());
+		HippoConfig.getInstance().showFAQSupport(builder.build());
 	}
 
 	public void attachBaseContextWithoutTypekit(Context newBase){

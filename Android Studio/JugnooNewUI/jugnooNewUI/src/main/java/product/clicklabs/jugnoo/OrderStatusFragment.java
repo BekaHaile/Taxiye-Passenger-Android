@@ -32,8 +32,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -372,8 +373,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 public void onClick(View v) {
                     if (activity instanceof RideTransactionsActivity) {
                         if (datum1 != null && !TextUtils.isEmpty(datum1.getFuguChannelId())) {
-                            FuguConfig.getInstance().openChatByTransactionId(datum1.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                                    datum1.getFuguChannelName(), datum1.getFuguTags());
+                            ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                                    .setTransactionId(datum1.getFuguChannelId())
+                                    .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                                    .setChannelName(datum1.getFuguChannelName())
+                                    .setTags(datum1.getFuguTags())
+                                    .build();
+                            HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                         } else if(Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)){
                             activity.startActivity(new Intent(activity, SupportMailActivity.class));
                         }
@@ -1340,11 +1346,15 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 try {
 
                     if(!TextUtils.isEmpty(datum1.getFuguChannelId())){
-                        FuguConfig.getInstance().openChatByTransactionId(datum1.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
-                                datum1.getFuguChannelName(), datum1.getFuguTags());
+                        ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                                .setTransactionId(datum1.getFuguChannelId())
+                                .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                                .setChannelName(datum1.getFuguChannelName())
+                                .setTags(datum1.getFuguTags())
+                                .build();
+                        HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                     }else{
-                        FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
-
+                        HippoConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                     }
 
                 } catch (Exception e) {

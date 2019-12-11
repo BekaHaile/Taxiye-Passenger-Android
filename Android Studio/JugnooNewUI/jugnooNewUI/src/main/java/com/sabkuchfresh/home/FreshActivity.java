@@ -59,7 +59,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -68,6 +67,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+import com.hippo.HippoNotificationConfig;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
 import com.razorpay.Checkout;
@@ -259,7 +259,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private View topView;
     private FetchFeedbackResponse.Review currentReview;
-    private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();
+    private HippoNotificationConfig fuguNotificationConfig  = new HippoNotificationConfig();
     /**
      * this holds the reference for the Otto Bus which we declared in LavocalApplication
      */
@@ -580,7 +580,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         backPressedCount = 0;
 
         if(Data.getFuguChatBundle()!=null) {
-            fuguNotificationConfig.handleFuguPushNotification(FreshActivity.this, Data.getFuguChatBundle());
+            fuguNotificationConfig.handleHippoPushNotification(FreshActivity.this, Data.getFuguChatBundle());
             Data.setFuguChatBundle(null);
         }
 

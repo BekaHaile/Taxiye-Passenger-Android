@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.hippo.HippoNotificationConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -39,7 +39,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 	private ScrollView scroll;
 	private int scrollPaddingTop;
 	private TextView tvGreeting;
-	private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();
+	private HippoNotificationConfig fuguNotificationConfig  = new HippoNotificationConfig();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,7 +106,7 @@ public class HomeSwitcherActivity extends BaseAppCompatActivity implements GACat
 		fetchWalletBalance();
 
 		if(Data.getFuguChatBundle()!=null) {
-			fuguNotificationConfig.handleFuguPushNotification(this, Data.getFuguChatBundle());
+			fuguNotificationConfig.handleHippoPushNotification(this, Data.getFuguChatBundle());
 			Data.setFuguChatBundle(null);
 		}
 

@@ -8,13 +8,13 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.hippo.HippoConfig;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -417,11 +417,11 @@ public class HomeUtil {
 		if (Data.isFuguChatEnabled()) {
 			try {
 				if(productType == ProductType.MENUS.getOrdinal()){
-					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
+					HippoConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
 				} else if(productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
-					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_DELIVERY_CUSTOMER_DELIVERY_LATE());
+					HippoConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_DELIVERY_CUSTOMER_DELIVERY_LATE());
 				} else {
-					FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
+					HippoConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

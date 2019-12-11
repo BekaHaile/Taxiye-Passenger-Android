@@ -23,8 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -1276,11 +1277,15 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                                 //launch fugu and then fatafatChatPay
                                 try {
                                     if(!TextUtils.isEmpty(datum.getFuguChannelId())){
-                                        FuguConfig.getInstance().openChatByTransactionId(datum.getFuguChannelId()
-                                                ,String.valueOf(Data.getFuguUserData().getUserId()),
-                                                datum.getFuguChannelName(), datum.getFuguTags());
+                                        ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                                                .setTransactionId(datum.getFuguChannelId())
+                                                .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                                                .setChannelName(datum.getFuguChannelName())
+                                                .setTags(datum.getFuguTags())
+                                                .build();
+                                        HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                                     }else{
-                                        FuguConfig.getInstance().openChat(context, Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+                                        HippoConfig.getInstance().openChat(context, Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();

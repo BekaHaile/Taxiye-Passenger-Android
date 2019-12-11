@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.feed.ui.views.animateheartview.LikeButton;
@@ -834,7 +834,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                             activity.getTransactionUtils().openMealsBulkOrderFragment(activity, activity.getRelativeLayoutContainer(), mealsBulkBanner.getNextPageImage());
                             GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER_NEXT_PAGE);
                         } else {
-                            FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_BULK_MEALS());
+                            HippoConfig.getInstance().openChat(activity,Data.CHANNEL_ID_FUGU_BULK_MEALS());
                             GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER);
                         }
                     } catch (Exception e) {

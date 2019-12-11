@@ -37,7 +37,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.fugu.FuguConfig;
+import com.hippo.HippoConfig;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.FatafatImageAdapter;
@@ -848,7 +848,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                 activity.overridePendingTransition(R.anim.hold, R.anim.hold);
 
                             } else {
-                                FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+                                HippoConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                             }
 
 

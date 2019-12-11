@@ -28,7 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.adapters.UserContactAdapter;
 import com.sabkuchfresh.datastructure.UserContactObject;
 import com.sabkuchfresh.feed.models.ContactResponseModel;
@@ -480,12 +480,11 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
                             if (createChatResponse != null && !TextUtils.isEmpty(createChatResponse.getChannelId())
                                     && createChatResponse.getFuguData() != null) {
 
-                                FuguConfig.getInstance().openChat(NewConversationActivity.this,
+                                HippoConfig.getInstance().openChat(NewConversationActivity.this,
                                         Long.parseLong(createChatResponse.getChannelId()));
                             }
                             // indicate to fugu that a new peer chat is created ( so we can refresh the chat
                             // activity when we resume it )
-                            FuguConfig.getInstance().setNewPeerChatCreated();
                             finish();
 
                         }

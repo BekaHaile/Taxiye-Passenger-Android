@@ -8,8 +8,11 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
@@ -787,10 +791,23 @@ public class JSONParser implements Constants {
 
         try {
 
-            if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
-                FuguNotificationConfig.updateFcmRegistrationToken(MyApplication.getInstance().getDeviceToken());
-                Data.initializeFuguHandler((Activity) context, Data.getFuguUserData());
-            }
+			FirebaseInstanceId.getInstance().getInstanceId()
+					.addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+						@Override
+						public void onComplete(@NonNull Task<InstanceIdResult> task) {
+							if (!task.isSuccessful()) {
+								Log.w(TAG, "getInstanceId failed");
+								return;
+							}
+
+							// Get new Instance ID token
+							String token = task.getResult().getToken();
+
+							if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
+								Data.initializeFuguHandler((Activity) context, Data.getFuguUserData(), token);
+							}
+						}
+					});
 
         } catch (Exception e) {
             e.printStackTrace();

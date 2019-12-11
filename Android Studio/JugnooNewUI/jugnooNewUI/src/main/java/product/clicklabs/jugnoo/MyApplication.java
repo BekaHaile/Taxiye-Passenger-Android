@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
-import com.fugu.constant.FuguAppConstant;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.StandardExceptionParser;
@@ -152,7 +151,7 @@ public class MyApplication extends MultiDexApplication {
 
         fuguChatCustomActionReceiver = new ChatCustomActionBroadCastReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(FuguAppConstant.FUGU_CUSTOM_ACTION_SELECTED);
+        filter.addAction("FUGU_CUSTOM_ACTION_SELECTED");
         LocalBroadcastManager.getInstance(getApplicationContext()).
                 registerReceiver(fuguChatCustomActionReceiver, filter);
 

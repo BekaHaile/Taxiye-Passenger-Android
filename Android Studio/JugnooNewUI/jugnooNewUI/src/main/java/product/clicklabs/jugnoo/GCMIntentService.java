@@ -26,10 +26,10 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
-import com.fugu.FuguNotificationConfig;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.hippo.HippoNotificationConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
@@ -76,7 +76,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
     public static final int NOTIFICATION_ID = 1;
     public static final int PROMOTION_NOTIFICATION_ID = 1212;
-	private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
+	HippoNotificationConfig fuguNotificationConfig=new HippoNotificationConfig();
 
     public GCMIntentService() {
     }
@@ -404,7 +404,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		try {
-			if (fuguNotificationConfig.isFuguNotification(remoteMessage.getData())) {
+			if (fuguNotificationConfig.isHippoNotification(remoteMessage.getData())) {
 				fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
                 fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);
 

@@ -207,7 +207,10 @@
   **[] $VALUES;
   public *;
 }
-
+-keeppackagenames org.jsoup.nodes
+  -keep public class org.jsoup.** {
+      public *;
+      }
 
 -dontwarn com.bumptech.glide.**
 -keep class com.bumptech.glide.** { *; }

@@ -18,8 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -230,10 +231,15 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 					}
 				} else if(productType == ProductType.FEED.getOrdinal()){
 					if (datumFeed != null && !TextUtils.isEmpty(datumFeed.getFuguChannelId())) {
-						FuguConfig.getInstance().openChatByTransactionId(datumFeed.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-								datumFeed.getFuguChannelName(), datumFeed.getFuguTags());
+						ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+								.setTransactionId(datumFeed.getFuguChannelId())
+								.setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+								.setChannelName(datumFeed.getFuguChannelName())
+								.setTags(datumFeed.getFuguTags())
+								.build();
+						HippoConfig.getInstance().openChatByUniqueId(chatAttr);
 					} else {
-						FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+						HippoConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
 					}
 				}
 				break;

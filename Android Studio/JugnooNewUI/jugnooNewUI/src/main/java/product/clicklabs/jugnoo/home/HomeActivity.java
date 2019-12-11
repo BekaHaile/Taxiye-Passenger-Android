@@ -84,8 +84,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
-import com.fugu.FuguConfig;
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -105,6 +103,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
+import com.hippo.HippoNotificationConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -593,8 +594,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TransactionUtils transactionUtils;
     public RelativeLayout relativeLayoutContainer,scheduleRideContainer;
     private FrameLayout coordinatorLayout;
-    private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
-    ;
+    private HippoNotificationConfig fuguNotificationConfig = new HippoNotificationConfig();
     public Gson gson = new Gson();
     private boolean addressPopulatedFromDifferentOffering;
 
@@ -2408,7 +2408,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
             if (Data.getFuguChatBundle() != null) {
-                fuguNotificationConfig.handleFuguPushNotification(HomeActivity.this, Data.getFuguChatBundle());
+                fuguNotificationConfig.handleHippoPushNotification(HomeActivity.this, Data.getFuguChatBundle());
                 Data.setFuguChatBundle(null);
             }
         } catch (Exception e) {
@@ -9992,10 +9992,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (fromSos) {
                     Data.autoData.getFuguTags().add(FUGU_TAG_SOS);
                 }
-                FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                        Data.autoData.getFuguChannelName(), Data.autoData.getFuguTags());
+                ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                        .setTransactionId(Data.autoData.getFuguChannelId())
+                        .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                        .setChannelName(Data.autoData.getFuguChannelName())
+                        .setTags(Data.autoData.getFuguTags())
+                        .build();
+                HippoConfig.getInstance().openChatByUniqueId(chatAttr);
             } else {
-                FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+                HippoConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -13239,8 +13244,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             imageViewClose.setOnClickListener(v -> noDriverFoundHelpDialog.dismiss());
             buttonOk.setOnClickListener(v -> {
-                FuguConfig.getInstance().openChatByTransactionId(fuguChannelId, String.valueOf(Data.getFuguUserData().getUserId()),
-                        fuguChannelName, tags, new String[]{altMessage});
+				ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+						.setTransactionId(fuguChannelId)
+						.setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+						.setChannelName(fuguChannelName)
+						.setTags(tags)
+						.setMessage(new String[]{altMessage})
+						.build();
+				HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                 noDriverFoundHelpDialog.dismiss();
             });
             relative.setOnClickListener(v -> noDriverFoundHelpDialog.dismiss());

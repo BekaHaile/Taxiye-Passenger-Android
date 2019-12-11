@@ -66,6 +66,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -129,7 +130,6 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-import static com.fugu.FuguConfig.clearFuguData;
 
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
@@ -472,7 +472,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
-					clearFuguData(SplashNewActivity.this);
+					HippoConfig.clearHippoData(SplashNewActivity.this);
 					Prefs.with(this).save(FUGU_CACHE_CLEARED,true);
 					Log.e("Splash","Fugu Data cleared on startup");
 				} catch (Exception e) {

@@ -29,7 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.adapters.RestaurantReviewImagesAdapter;
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
@@ -1131,8 +1131,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         if (fuguMerchantData != null && !TextUtils.isEmpty(fuguMerchantData.getChannelId()) && fuguMerchantData.getFuguData() != null) {
             /*FuguConfig.getInstance().openChatByTransactionId(fuguMerchantData.getChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
                     fuguMerchantData.getFuguData().getChannelName(), fuguMerchantData.getFuguData().getFuguTags());*/
-            FuguConfig.getInstance().openChat(activity,
-                    Long.parseLong(fuguMerchantData.getChannelId()));
+            HippoConfig.getInstance().openChat(activity, Long.parseLong(fuguMerchantData.getChannelId()));
         }
     }
 }
