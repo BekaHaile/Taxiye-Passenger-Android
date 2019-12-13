@@ -588,6 +588,10 @@ public class JSONParser implements Constants {
 				context.getString(R.string.youtube_api_key)));
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
 
+		Prefs.with(context).save(KEY_HIPPO_CALL_ENABLED, autoData.optInt(KEY_HIPPO_CALL_ENABLED,
+				context.getResources().getInteger(R.integer.hippo_call_enabled)));
+		Prefs.with(context).save(KEY_HIPPO_CALL_TYPE, autoData.optString(KEY_HIPPO_CALL_TYPE, "audio"));
+
 
 		parseJungleApiObjects(context, autoData);
 	}
@@ -1321,6 +1325,7 @@ public class JSONParser implements Constants {
             int rideType = RideTypeValue.NORMAL.getOrdinal();
             int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
             int fareMandatory = 0;
+            String userIdentifier = "";
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1448,6 +1453,7 @@ public class JSONParser implements Constants {
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
                             gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
 							fareMandatory = jObject.optInt(Constants.KEY_FARE_MANDATORY,0);
+							userIdentifier = jObject.optString(Constants.KEY_DRIVER_IDENTIFIER, "");
 
 
                             try{
@@ -1558,7 +1564,7 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, userIdentifier));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

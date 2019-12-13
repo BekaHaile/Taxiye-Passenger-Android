@@ -2179,4 +2179,7 @@
     <string name="earnings_today">Earnings Today</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="referred_on">Referred on</string>
+    <string name="contact_user_format">Contact %s</string>
+    <string name="free_call">Free Call</string>
+    <string name="carrier_charges_may_apply">*Carrier charges may apply</string>
 </resources>

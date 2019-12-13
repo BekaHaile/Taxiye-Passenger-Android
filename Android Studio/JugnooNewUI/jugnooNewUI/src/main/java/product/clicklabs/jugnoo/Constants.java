@@ -1139,4 +1139,11 @@ public interface Constants {
 
 	String KEY_SESSIONTOKEN = "sessiontoken";
 	String KEY_FARE_MANDATORY = "fare_mandatory";
+
+	String KEY_HIPPO_CALL_ENABLED = "hippo_call_enabled";
+	String KEY_HIPPO_CALL_TYPE = "hippo_call_type";
+	String KEY_DRIVER_IDENTIFIER = "driver_identifier";
+	String KEY_DEVICE_NAME = "device_name";
+	String KEY_OS_VERSION = "os_version";
+	String KEY_COUNTRY = "country";
 }

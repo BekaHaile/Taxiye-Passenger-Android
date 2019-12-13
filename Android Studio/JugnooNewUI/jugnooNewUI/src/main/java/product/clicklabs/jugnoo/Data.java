@@ -13,6 +13,7 @@ import com.hippo.CaptureUserData;
 import com.hippo.HippoColorConfig;
 import com.hippo.HippoConfig;
 import com.hippo.HippoConfigAttributes;
+import com.hippocall.HippoCallConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.net.URLDecoder;
@@ -573,6 +574,7 @@ public class Data {
 		if (Config.getConfigMode() == ConfigMode.LIVE) {
             configAttributes = new HippoConfigAttributes.Builder()
                     .setEnvironment("live")
+					.setShowLog(BuildConfig.DEBUG)
                     .setAppKey(Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)))
                     .setAppType(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)))
                     .setCaptureUserData(userData)
@@ -584,7 +586,7 @@ public class Data {
         } else {
             configAttributes = new HippoConfigAttributes.Builder()
 					.setEnvironment("test")
-					.setShowLog(true)
+					.setShowLog(BuildConfig.DEBUG)
                     .setAppKey(Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)))
                     .setAppType(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)))
                     .setCaptureUserData(userData)
@@ -594,6 +596,9 @@ public class Data {
                     .build();
             HippoConfig.initHippoConfig(context, configAttributes);
         }
+		HippoCallConfig.getInstance().setCallBackListener();
+		HippoCallConfig.getInstance().setHippoCallPushIcon(R.mipmap.ic_launcher);
+		HippoCallConfig.getInstance().setHippoCallsmaillPushIcon(R.mipmap.notification_icon);
     }
 
     private static HippoColorConfig getHippoColorConfig(){

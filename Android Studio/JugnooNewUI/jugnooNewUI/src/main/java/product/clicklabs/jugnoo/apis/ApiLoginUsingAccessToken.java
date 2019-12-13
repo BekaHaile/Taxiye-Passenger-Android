@@ -58,6 +58,9 @@ public class ApiLoginUsingAccessToken {
 			HashMap<String, String> params = new HashMap<>();
 			params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
 			params.put(Constants.KEY_DEVICE_TOKEN, MyApplication.getInstance().getDeviceToken());
+			params.put(Constants.KEY_DEVICE_NAME, MyApplication.getInstance().deviceName());
+			params.put(Constants.KEY_OS_VERSION, MyApplication.getInstance().osVersion());
+			params.put(Constants.KEY_COUNTRY, MyApplication.getInstance().country());
 
 
 			params.put(Constants.KEY_LATITUDE, String.valueOf(latitude));
