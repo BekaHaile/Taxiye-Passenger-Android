@@ -86,10 +86,19 @@ public class SearchListAdapter extends BaseAdapter{
         public void afterTextChanged(Editable s) {
             try {
                 SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString().trim());
-                if (s.toString().trim().length() > 2) {
+                if (s.toString().trim().length() > 1 && s.toString().trim().length() <= 4) {
+
+					searchResultsForSearch.clear();
+					addFavoriteLocations(s.toString().trim(),input_finish_checker.editText);
+					setSearchResultsToList(input_finish_checker.editText);
+
+                }
+                else if (s.toString().trim().length() > 4) {
+
 					last_text_edit = System.currentTimeMillis();
 					handler.removeCallbacks(input_finish_checker);
 					handler.postDelayed(input_finish_checker.setTextToSearch(s.toString().trim()), delay);
+
                 } else {
                     searchResultsForSearch.clear();
                     setResults(searchResultsForSearch);
@@ -126,7 +135,7 @@ public class SearchListAdapter extends BaseAdapter{
     private int searchMode;
 	private int favLocationsCount = 0;
 
-	private String uuidVal = "";
+	private String uuidVal = null;
 
 	private final String SET_LOCATION_ON_MAP = "<set_location_on_map>";
 	private SearchResult searchResultSetLocationOnMap;
@@ -181,7 +190,6 @@ public class SearchListAdapter extends BaseAdapter{
 
 
             this.showSavedPlaces = showSavedPlaces;
-			uuidVal = UUID.randomUUID().toString();
 			searchResultSetLocationOnMap = new SearchResult(SET_LOCATION_ON_MAP, context.getString(R.string.set_location_on_map), "", 0, 0);
 
         }
@@ -189,6 +197,13 @@ public class SearchListAdapter extends BaseAdapter{
             throw new IllegalStateException("context passed is not of Activity type");
         }
     }
+
+    private String getUUID(){
+    	if(uuidVal == null){
+			uuidVal = UUID.randomUUID().toString();
+    	}
+    	return uuidVal;
+	}
 
     public void setResults(ArrayList<SearchResult> autoCompleteSearchResults) {
         this.searchResults.clear();
@@ -199,10 +214,6 @@ public class SearchListAdapter extends BaseAdapter{
         this.notifyDataSetChanged();
     }
 
-    public void addSavedLocationsToList(){
-        searchResultsForSearch.clear();
-        setResults(searchResultsForSearch);
-    }
 
     @Override
     public int getCount() {
@@ -389,11 +400,13 @@ public class SearchListAdapter extends BaseAdapter{
                 String location = latLng.latitude+","+latLng.longitude;
                 String radius = searchText.length() <= 3 ? "50" : (searchText.length() <= 5 ? "100": (searchText.length() <= 8 ? "1000" : "10000"));
 
-				GoogleJungleCaching.INSTANCE.getAutoCompletePredictions(searchText, uuidVal, components, location, radius, new PlacesCallback() {
+				searchResultsForSearch.clear();
+				addFavoriteLocations(searchText,editText);
+
+				GoogleJungleCaching.INSTANCE.getAutoCompletePredictions(searchText, getUUID(), components, location, radius, new PlacesCallback() {
 					@Override
 					public void onAutocompletePredictionsReceived(List<Prediction> predictions) {
 						try {
-							searchResultsForSearch.clear();
 							if(predictions != null) {
 								for (Prediction autocompletePrediction : predictions) {
 									String name = autocompletePrediction.getDescription().split(",")[0];
@@ -404,7 +417,6 @@ public class SearchListAdapter extends BaseAdapter{
 											autocompletePrediction.getLng() != null ? autocompletePrediction.getLng() : 0));
 								}
 							}
-							addFavoriteLocations(searchText,editText);
 
 							setSearchResultsToList(editText);
 							refreshingAutoComplete = false;
@@ -531,7 +543,7 @@ public class SearchListAdapter extends BaseAdapter{
 			Log.e("SearchListAdapter", "getPlaceById placeId=" + placeId);
 			Log.v("after call back", "after call back");
 
-			GoogleJungleCaching.INSTANCE.getPlaceById(placeId, placeAddress, defaultSearchPivotLatLng, uuidVal, new PlaceDetailCallback() {
+			GoogleJungleCaching.INSTANCE.getPlaceById(placeId, placeAddress, defaultSearchPivotLatLng, getUUID(), new PlaceDetailCallback() {
 				@Override
 				public void onPlaceDetailReceived(@NotNull PlaceDetailsResponse placeDetailsResponse) {
 					try {

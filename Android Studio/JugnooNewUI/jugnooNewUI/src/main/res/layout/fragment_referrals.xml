@@ -12,6 +12,7 @@
         android:animateLayoutChanges="true"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:tag="@string/dont_touch_me"
         android:splitMotionEvents="false">
 
 
@@ -35,6 +36,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 app:typekitFont="@string/maven"
+                android:background="?attr/selectableItemBackground"
+                android:theme="@style/GreyHighlight"
                 />
 
             <View
@@ -58,6 +61,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 app:typekitFont="@string/maven"
+                android:background="?attr/selectableItemBackground"
+                android:theme="@style/GreyHighlight"
                 />
 
             <View
@@ -81,6 +86,8 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 app:typekitFont="@string/maven"
+                android:background="?attr/selectableItemBackground"
+                android:theme="@style/GreyHighlight"
                 />
 
 
@@ -92,6 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
+            android:tag="@string/dont_touch_me"
 
             >
 
@@ -99,7 +107,7 @@
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewPagerImageVideo"
                 android:layout_width="match_parent"
-                android:layout_height="330px"
+                android:layout_height="170dp"
 
                 />
 
@@ -115,7 +123,6 @@
                 app:tabGravity="center"
                 app:tabIndicatorHeight="0dp"
                 app:tabMaxWidth="6dp"
-                android:tag="@string/dont_touch_me"
                 />
 
         </RelativeLayout>
@@ -125,26 +132,23 @@
         <ImageView
             android:id="@+id/imageViewLogo"
             android:layout_width="match_parent"
-            android:layout_height="330px"
-            android:layout_centerHorizontal="true"
+            android:layout_height="170dp"
             android:scaleType="@integer/referral_icon_scale_type"
-            android:tag="mlar"
             android:visibility="visible" />
 
         <TextView
             android:id="@+id/textViewDesc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="56px"
+            android:layout_marginTop="28dp"
             android:gravity="center"
-            android:paddingStart="40px"
-            android:paddingEnd="40px"
-            android:lineSpacingExtra="4px"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:lineSpacingExtra="2dp"
             android:textColorLink="@color/theme_color"
             android:text="@string/free_ride_desc"
             android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_34"
+            android:textSize="17sp"
             />
 
     </LinearLayout>
@@ -152,26 +156,26 @@
     <LinearLayout
         android:id="@+id/llShare"
         android:layout_width="match_parent"
-        android:layout_height="380px"
+        android:layout_height="180dp"
         android:layout_alignParentBottom="true"
         android:background="@color/grey_lb_list"
         android:gravity="center"
         android:orientation="vertical"
+        android:tag="@string/dont_touch_me"
         >
 
         <LinearLayout
             android:id="@+id/llWhatsappShare"
-            android:layout_width="@dimen/px_500"
-            android:layout_height="@dimen/px_82"
+            android:layout_width="250dp"
+            android:layout_height="41dp"
             android:orientation="horizontal"
             android:gravity="center"
             android:background="@drawable/capsule_green_color_selector"
             >
 
             <ImageView
-                android:layout_width="@dimen/px_50"
-                android:layout_height="@dimen/px_50"
-                android:tag="mwar"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:src="@drawable/ic_whatsapp_white"
                 />
 
@@ -179,11 +183,11 @@
                 android:id="@+id/tvWhatsapp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_30"
+                android:textSize="15sp"
                 android:textColor="@color/white"
                 android:text="@string/invite_via_whatsapp"
                 android:textAllCaps="true"
-                android:layout_marginStart="@dimen/px_12"
+                android:layout_marginStart="6dp"
                 />
 
 
@@ -193,13 +197,13 @@
             android:id="@+id/tvMoreSharingOptions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_28"
+            android:textSize="14sp"
             android:textColor="@color/text_color_selector"
             android:text="@string/view_more_sharing_options"
-            android:paddingStart="@dimen/px_15"
-            android:paddingEnd="@dimen/px_15"
-            android:paddingBottom="@dimen/px_15"
-            android:layout_marginTop="@dimen/px_15"
+            android:paddingStart="7dp"
+            android:paddingEnd="7dp"
+            android:paddingBottom="7dp"
+            android:layout_marginTop="7dp"
             />
 
 
@@ -208,21 +212,22 @@
 
     <LinearLayout
         android:id="@+id/llReferralCode"
-        android:layout_width="@dimen/px_320"
-        android:layout_height="@dimen/px_120"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
         android:orientation="vertical"
         android:gravity="center"
-        android:layout_marginBottom="-60px"
+        android:layout_marginBottom="-30dp"
         android:background="@drawable/bg_white_menu_color_dashed_selector"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/llShare"
+        android:tag="@string/dont_touch_me"
         >
 
         <TextView
             android:id="@+id/tvYourReferralCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_24"
+            android:textSize="12sp"
             android:textColor="@color/text_color"
             android:text="@string/your_referral_code"
             />
@@ -232,10 +237,10 @@
             android:id="@+id/tvReferralCodeValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/text_size_36"
+            android:textSize="18sp"
             android:textColor="@color/text_color"
             android:text="@string/_9999999999"
-            android:layout_marginTop="@dimen/px_10"
+            android:layout_marginTop="5dp"
             />
 
     </LinearLayout>
@@ -243,9 +248,10 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutReferContainer"
         android:layout_width="wrap_content"
-        android:layout_height="158px"
+        android:layout_height="77dp"
         android:visibility="visible"
         android:layout_alignParentBottom="true"
+        android:tag="@string/dont_touch_me"
         >
 
         <RelativeLayout
@@ -257,14 +263,14 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="2px"
+                android:layout_height="1dp"
                 android:layout_above="@+id/linearLayoutMultipleTab"
                 android:background="@color/stroke_color_light" />
 
             <LinearLayout
                 android:id="@+id/linearLayoutMultipleTab"
                 android:layout_width="match_parent"
-                android:layout_height="95px"
+                android:layout_height="47dp"
                 android:layout_alignParentBottom="true"
                 android:background="@color/menu_item_selector_color"
                 android:orientation="horizontal"
@@ -272,59 +278,59 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayoutLeaderBoard"
-                    android:layout_width="359px"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:visibility="visible"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="33px"
-                        android:layout_height="32px"
-                        android:src="@drawable/leaderboard"
-                        android:tag="mwar" />
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:src="@drawable/leaderboard" />
 
                     <TextView
                         android:id="@+id/textViewLeaderboard"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="25px"
+                        android:layout_marginStart="12dp"
                         android:textColor="@color/text_color"
                         android:gravity="center"
                         android:text="@string/leaderboard"
-                        android:textSize="@dimen/text_size_32" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
                 <ImageView
-                    android:layout_width="2px"
+                    android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="20px"
-                    android:layout_marginTop="20px"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
                     android:src="@color/stroke_color_light" />
 
                 <LinearLayout
                     android:id="@+id/linearLayoutRefer"
-                    android:layout_width="359px"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:visibility="visible"
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="33px"
-                        android:layout_height="37px"
-                        android:src="@drawable/driver"
-                        android:tag="mwar" />
+                        android:layout_width="16dp"
+                        android:layout_height="18dp"
+                        android:src="@drawable/driver" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="25px"
+                        android:layout_marginStart="12dp"
                         android:gravity="center"
                         android:textColor="@color/text_color"
                         android:text="@string/refer_a_driver"
-                        android:textSize="@dimen/text_size_32" />
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -336,30 +342,29 @@
             android:id="@+id/relativeLayoutReferSingle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="27px"
-            android:layout_marginEnd="27px"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="13dp"
             android:visibility="gone">
 
             <TextView
                 android:id="@+id/textViewReferDriver"
                 android:layout_width="match_parent"
-                android:layout_height="88px"
+                android:layout_height="44dp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/bg_menu_item_selector_color_tlrrb"
                 android:gravity="center"
                 android:text="@string/want_to_refer_a_driver"
                 android:textAllCaps="true"
                 android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/text_size_30" />
+                android:textSize="15sp" />
 
             <ImageView
-                android:layout_width="88px"
-                android:layout_height="88px"
-                android:layout_marginTop="20px"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="30px"
-                android:background="@drawable/ic_slide_up"
-                android:tag="mwar" />
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/ic_slide_up" />
 
         </RelativeLayout>
 
@@ -367,29 +372,28 @@
             android:id="@+id/relativeLayoutLeaderboardSingle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="27px"
-            android:layout_marginEnd="27px"
+            android:layout_marginStart="13dp"
+            android:layout_marginEnd="13dp"
             android:visibility="gone">
 
             <TextView
                 android:id="@+id/textViewLeaderboardSingle"
                 android:layout_width="match_parent"
-                android:layout_height="95px"
+                android:layout_height="47dp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/bg_menu_item_selector_color_tlrrb"
                 android:gravity="center"
                 android:text="@string/leaderboard"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_44" />
+                android:textSize="22sp" />
 
             <ImageView
-                android:layout_width="88px"
-                android:layout_height="88px"
-                android:layout_marginTop="20px"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="30px"
-                android:background="@drawable/ic_slide_up"
-                android:tag="mwar" />
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/ic_slide_up" />
 
         </RelativeLayout>
     </RelativeLayout>

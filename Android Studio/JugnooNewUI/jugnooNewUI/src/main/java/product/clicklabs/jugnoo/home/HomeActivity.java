@@ -125,7 +125,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.Target;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
@@ -215,6 +214,8 @@ import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverCallDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverNotFoundDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
+import product.clicklabs.jugnoo.home.dialogs.EditDropConfirmation;
+import product.clicklabs.jugnoo.home.dialogs.EditDropDialog;
 import product.clicklabs.jugnoo.home.dialogs.EnterBidDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.NotesDialog;
@@ -323,7 +324,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
         RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,
         RewardsDialog.ScratchCardRevealedListener, CoroutineScope,
-        RideConfirmationDialog.RideRequestConfirmListener, DriverNotFoundDialog.RideRequestConfirmListener, DriverCallDialog.CallDriverListener {
+        RideConfirmationDialog.RideRequestConfirmListener, DriverNotFoundDialog.RideRequestConfirmListener, DriverCallDialog.CallDriverListener,
+		EditDropDialog.Callback {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -7857,7 +7859,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
     }
 
-    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel, final boolean zoomAfterDropSet, final String address) {
+    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel,
+									final boolean zoomAfterDropSet, final String address, int poolFareId) {
         if (MyApplication.getInstance().isOnline()) {
 
             progressWheel.setVisibility(View.VISIBLE);
@@ -7876,6 +7879,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                 params.put("engagement_id", Data.autoData.getcEngagementId());
             }
+            if(poolFareId > 0){
+				params.put(KEY_POOL_FARE_ID, String.valueOf(poolFareId));
+			}
 
             Log.i("params", "=" + params);
 
@@ -8882,12 +8888,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             int rideType = jObj.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
 
             int gpsLockStatus = jObj.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
+            int fareMandatory = jObj.optInt(Constants.KEY_FARE_MANDATORY,0);
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(this, Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                    isCorporateRide, cardId, rideType, gpsLockStatus));
+                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -9358,7 +9365,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     nameValuePairs.put("qr_code_details",qrCodeDetails);
                                 }
                                 nameValuePairs.put("is_bluetooth_tracker",""+Data.autoData.getBluetoothEnabled());
-                                nameValuePairs.put("is_scratch_coupon_applicable", "" + true); // key added for differentiating request ride call from new scratch App and old App
+//                                nameValuePairs.put("is_scratch_coupon_applicable", "" + true); // key added for differentiating request ride call from new scratch App and old App
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
 
@@ -10838,8 +10845,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-            textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getNameForText(this));
-            dropAddressName = autoCompleteSearchResult.getNameForText(this);
         }
     }
 
@@ -10983,20 +10988,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
                 saveLastDestinations(searchResult);
                 sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                        getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
+                        getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress(), 0);
             } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                saveLastDestinations(searchResult);
-                if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                    zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
-                }
 
-                sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                        getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
-                if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                    GAUtils.event(RIDES, RIDE + IN_PROGRESS, DESTINATION + UPDATED);
-                }
+            	if(Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null
+						&& Data.autoData.getAssignedDriverInfo().getFareMandatory() == 1) {
+					EditDropConfirmation.INSTANCE.fareEstimateAndConfirm(this, Integer.parseInt(Data.autoData.getcEngagementId()),
+							Data.autoData.getPickupLatLng(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
+							searchResult.getLatLng(), searchResult.getAddress(), searchResult.getName(),
+							Data.autoData.getAssignedDriverInfo().getCurrency());
+				} else {
+					updateDropToUIAndServerApi(searchResult, 0);
+				}
             }
 
             Log.e("onPlaceSearchPost", "=" + searchResult);
@@ -11004,6 +11009,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
     }
+
+    private void updateDropToUIAndServerApi(SearchResult searchResult, int poolFareId){
+		saveLastDestinations(searchResult);
+		if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+			zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
+		}
+
+		textViewFinalDropLocationClick.setText(searchResult.getNameForText(this));
+		dropAddressName = searchResult.getNameForText(this);
+
+		sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
+				getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true,
+				searchResult.getAddress(), poolFareId);
+		if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+			GAUtils.event(RIDES, RIDE + IN_PROGRESS, DESTINATION + UPDATED);
+		}
+	}
 
 	public void removeP2DPolyline() {
 		polylineOptionsP2D = null;
@@ -13318,5 +13340,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         mRequestType = 2;
         onReqestRideConfirmClick();
     }
+
+	@Override
+	public void onEditDropConfirm(@Nullable LatLng dropLatLng, @Nullable String dropAddress, @Nullable String dropName, Integer poolFareId) {
+    	SearchResult searchResult = new SearchResult(dropName, dropAddress, "", dropLatLng.latitude, dropLatLng.longitude);
+		updateDropToUIAndServerApi(searchResult, poolFareId);
+	}
 }
 

@@ -1466,6 +1466,7 @@ public class JSONParser implements Constants {
             String cardId = "0";
             int rideType = RideTypeValue.NORMAL.getOrdinal();
             int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
+            int fareMandatory = 0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1592,6 +1593,7 @@ public class JSONParser implements Constants {
                             rideType = jObject.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
                             gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
+							fareMandatory = jObject.optInt(Constants.KEY_FARE_MANDATORY,0);
 
 
                             try{
@@ -1702,7 +1704,7 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

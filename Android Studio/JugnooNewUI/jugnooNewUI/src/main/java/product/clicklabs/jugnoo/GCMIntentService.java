@@ -904,14 +904,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 //
 					}
 					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
-						String clientId = jObj.optString(KEY_CLIENT_ID, "");
-						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
-						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
-						String name = "";//FeedUtils.getActivityName(this);
 
-
-						if(!name.equalsIgnoreCase(this.getPackageName()) ||
-								Data.context == null){
+						if(!(Data.context instanceof ChatActivity)){
 							String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
 							notificationManagerCustomID(this, title, chatMessage, PROMOTION_NOTIFICATION_ID, AppLinkIndex.CHAT_PAGE.getOrdinal(),
 									null, "", playSound, 0, 1, tabIndex, flag);
@@ -921,7 +915,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							intent.putExtra(Constants.KEY_CHAT_DELIVERY,message);
 							LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 						} else {
-							// Nothing
 							clearNotification(this, PROMOTION_NOTIFICATION_ID);
 						}
 					} else if (PushFlags.REFRESH_PAY_DATA.getOrdinal() == flag) {

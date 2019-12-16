@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.GAAction;
@@ -32,7 +31,6 @@ import product.clicklabs.jugnoo.adapters.ChatAdapter;
 import product.clicklabs.jugnoo.adapters.ChatSuggestionAdapter;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.model.FetchChatResponse;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -84,8 +82,6 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
         setContentView(R.layout.activity_chat);
 
 		try {
-			RelativeLayout relative = (RelativeLayout) findViewById(R.id.relative);
-			new ASSL(this, relative, 1134, 720, false);
 
 			TextView textViewTitle = (TextView) findViewById(R.id.textViewTitle);
 			textViewTitle.setTypeface(Fonts.avenirNext(this));

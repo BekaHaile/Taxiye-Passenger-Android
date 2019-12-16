@@ -9,9 +9,11 @@ import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRideResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.promotion.models.ReferralTxnResponse;
 import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
+import product.clicklabs.jugnoo.retrofit.model.FareEstimateResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
@@ -704,5 +706,14 @@ public interface ApiService {
 	@FormUrlEncoded
 	@POST("/customer/add_drivers_contacted_on_timeout")
 	void logDriverCall(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/get_fare_estimate_with_new_drop_location")
+	void fareEstimateWithNewDrop(@FieldMap Map<String, String> params, Callback<FareEstimateResponse> callback);
+
+
+	@FormUrlEncoded
+	@POST("/fetch_customer_referral_info")
+	void fetchCustomerReferralInfo(@FieldMap Map<String, String> params, Callback<ReferralTxnResponse> callback);
 
 }

@@ -527,7 +527,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		});
 		setMap();
 
-		searchListAdapter.addSavedLocationsToList();
 		updateSavedPlacesLists();
 		showSearchLayout();
 

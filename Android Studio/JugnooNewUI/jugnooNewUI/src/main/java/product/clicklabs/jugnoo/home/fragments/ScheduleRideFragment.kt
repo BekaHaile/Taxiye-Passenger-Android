@@ -281,8 +281,11 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             for (pc in region.packages) {
                 pc.selected = false
             }
-            region.packages[0].selected = true
-            this@ScheduleRideFragment.selectedPackage = region.packages[0]
+            if((Data.autoData == null || Data.autoData.serviceTypeSelected == null
+                    || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))) {
+                region.packages[0].selected = true
+                this@ScheduleRideFragment.selectedPackage = region.packages[0]
+            }
         }
         if (packagesAdapter == null) {
             packagesAdapter = RentalPackagesAdapter(activity as Context,
@@ -410,6 +413,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     private fun getDirectionsAndComputeFare(sourceLatLng: LatLng, sourceAddress: String, destLatLng: LatLng, destAddress: String) {
         try {
+            if(selectedPackage == null) {
+                return
+            }
             val region = (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected
             selectedPackage?.isRoundTrip = if(isOneWay == 1) 0 else 1
             if(apiFareEstimate == null) {
@@ -443,22 +449,34 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     override fun onPoolSuccess(currency: String, fare: Double, rideDistance: Double, rideDistanceUnit: String,
                                                rideTime: Double, rideTimeUnit: String, poolFareId: Int, convenienceCharge: Double,
                                                text: String, tollCharge: Double) {
+                        tvFareEstimate.visibility = View.VISIBLE
+                        viewInnerDrop.visibility = View.VISIBLE
+                        tvFareEstimate.text = getString(R.string.fare_estimate).plus(": ")
+                                .plus(Utils.formatCurrencyValue(currency, if(isOneWay == 1) fare.toString() else (2 * fare).toString()))
+                        if (Prefs.with(context).getInt(Constants.KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
+                            tvFareEstimate.append(" ")
+                            tvFareEstimate.append(getString(R.string.bracket_in_format, currency))
+                        }
                     }
 
                     override fun onNoRetry() {
                         tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onRetry() {
                         tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onFareEstimateFailure() {
                         tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onDirectionsFailure() {
                         tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
                 })
             }
@@ -733,7 +751,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 }
             }
         }
-        if(oneWayPackages.size > 0){
+        if(oneWayPackages.size > 0
+                && (Data.autoData == null || Data.autoData.serviceTypeSelected == null
+                        || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))){
             oneWayPackages[0].selected = true
             selectedPackage = oneWayPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
@@ -775,7 +795,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 }
             }
         }
-        if(roundTripPackages.size > 0){
+        if(roundTripPackages.size > 0
+                && (Data.autoData == null || Data.autoData.serviceTypeSelected == null
+                        || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))){
             roundTripPackages[0].selected = true
             selectedPackage = roundTripPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()

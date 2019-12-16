@@ -1,31 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/relative"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/name"
     android:layout_width="wrap_content"
-    android:layout_height="100px"
-    android:splitMotionEvents="false">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="72px"
-        android:orientation="vertical"
-        android:paddingStart="30px"
-        android:paddingEnd="30px"
-        android:layout_marginStart="20px"
-        android:layout_marginTop="5px"
-        android:gravity="center"
-        android:background="@drawable/capsule_text_color_light_less"
-        android:splitMotionEvents="false">
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/yes_small"
-            android:layout_gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_30" />
-    </LinearLayout>
-
-
-</LinearLayout>
+    android:layout_height="wrap_content"
+    android:background="@drawable/capsule_text_color_light_less"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:text="@string/yes_small"
+    android:textColor="@color/white"
+    android:textSize="14sp" />
