@@ -1384,7 +1384,7 @@
 \n- Grocery/daily needs items
 \n- Pick &amp; drop documents/keys/other items</string>
     <string name="anywhere_hint_order_via_chat">Please enter item details</string>
-    <string name="action_order_via_fatafat">Order via Fatafat</string>
+    <string name="action_order_via_fatafat">Order via %s</string>
     <string name="action_create_custom_order">Custom order</string>
     <string name="label_custom_order">Get anything delivered anywhere by \n  placing a custom order.</string>
     <string name="label_fav_restaurant">Couldn’t find your \n favourite store yet?</string>

@@ -1353,7 +1353,7 @@
 \n- Grocery/daily needs items
 \n- Pick &amp; drop documents/keys/other items</string>
     <string name="anywhere_hint_order_via_chat">Please enter item details</string>
-    <string name="action_order_via_fatafat">Order via Fatafat</string>
+    <string name="action_order_via_fatafat">Order via %s</string>
     <string name="action_create_custom_order">Custom order</string>
     <string name="label_custom_order">Get anything delivered anywhere by \n  placing a custom order.</string>
     <string name="label_fav_restaurant">Couldn’t find your \n favourite store yet?</string>
@@ -2224,5 +2224,6 @@
     <string name="we_are_unable_to_process_your_request">No podemos procesar su solicitud en este momento. Por favor, inténtelo de nuevo más tarde.</string>
     <string name="please_select_appropriate_pickup_and_drop_location_to_continue">Seleccione la ubicación de recogida y entrega adecuada para continuar.</string>
 
+    <string name="offers_and_coupons_applied_colon">Ofertas aplicadas: \n<b>%s</b></string>
 
 </resources>

@@ -397,11 +397,11 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 imageviewType.setImageResource(R.drawable.ic_pros_grey);
                 ivOffering.setImageResource(R.drawable.ic_pros_grey);
             } else if(Config.getFeedClientId().equals(feedbackClientId)){
-                imageviewType.setImageResource(R.drawable.ic_menus_delivery_customer_grey);
-                ivOffering.setImageResource(R.drawable.ic_menus_delivery_customer_grey);
+                imageviewType.setImageResource(R.drawable.ic_fatafat_grey);
+                ivOffering.setImageResource(R.drawable.ic_fatafat_grey);
             } else if(Config.getDeliveryCustomerClientId().equals(feedbackClientId) && merchantCategoryId !=Constants.CATEGORY_ID_RESTAURANTS){
-                imageviewType.setImageResource(R.drawable.ic_menus_delivery_customer_grey);
-                ivOffering.setImageResource(R.drawable.ic_menus_delivery_customer_grey);
+                imageviewType.setImageResource(R.drawable.ic_fatafat_grey);
+                ivOffering.setImageResource(R.drawable.ic_fatafat_grey);
             }else {
                 imageviewType.setImageResource(R.drawable.ic_menus_grey);
                 ivOffering.setImageResource(R.drawable.ic_menus_grey);

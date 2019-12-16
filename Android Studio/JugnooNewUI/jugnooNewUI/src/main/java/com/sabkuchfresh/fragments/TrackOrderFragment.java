@@ -84,6 +84,7 @@ import retrofit.mime.TypedByteArray;
 import static product.clicklabs.jugnoo.ChatActivity.KEY_DELIVERY_ID;
 import static product.clicklabs.jugnoo.ChatActivity.KEY_ORDER_TYPE;
 import static product.clicklabs.jugnoo.Constants.KEY_CHAT_COUNT;
+import static product.clicklabs.jugnoo.Constants.KEY_DRIVER_PHONE_NO;
 
 /**
  * Created by shankar on 29/05/17.
@@ -129,7 +130,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		bundle.putDouble(Constants.KEY_DELIVERY_LATITUDE, deliveryLatitude);
 		bundle.putDouble(Constants.KEY_DELIVERY_LONGITUDE, deliveryLongitude);
 		bundle.putInt(Constants.KEY_SHOW_DELIVERY_ROUTE, showDeliveryRoute);
-		bundle.putString(Constants.KEY_DRIVER_PHONE_NO, driverPhoneNo);
+		bundle.putString(KEY_DRIVER_PHONE_NO, driverPhoneNo);
 		bundle.putInt("initialHeight", initialHeight);
 		bundle.putBoolean("tiltState", tiltState);
 		fragment.setArguments(bundle);
@@ -158,7 +159,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		deliveryLatLng = new LatLng(getArguments().getDouble(Constants.KEY_DELIVERY_LATITUDE, 0d),
 				getArguments().getDouble(Constants.KEY_DELIVERY_LONGITUDE, 0d));
 		showDeliveryRoute = getArguments().getInt(Constants.KEY_SHOW_DELIVERY_ROUTE, 0);
-		driverPhoneNo = getArguments().getString(Constants.KEY_DRIVER_PHONE_NO, "");
+		driverPhoneNo = getArguments().getString(KEY_DRIVER_PHONE_NO, "");
 		initialHeight = getArguments().getInt("initialHeight", ViewGroup.LayoutParams.MATCH_PARENT);
 		tiltState = getArguments().getBoolean("tiltState", false);
 
@@ -203,13 +204,14 @@ openChatScreen();
 	public void openChatScreen() {
 		Prefs.with(getActivity()).save(KEY_CHAT_COUNT, 0);
 //		tvChatCount.setVisibility(View.GONE);
-		Intent intent=new Intent(getActivity(),ChatActivity.class);
-		Bundle bundle=new Bundle();
-		bundle.putInt(KEY_ORDER_TYPE,ChatActivity.ORDER_TYPE_DELIVERY);
+		Intent intent = new Intent(getActivity(), ChatActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putInt(KEY_ORDER_TYPE, ChatActivity.ORDER_TYPE_DELIVERY);
+		bundle.putString(KEY_DRIVER_PHONE_NO, driverPhoneNo);
 //		intent.putExtra(KEY_ORDER_TYPE,ChatActivity.ORDER_TYPE_DELIVERY);
-bundle.putString(KEY_DELIVERY_ID,String.valueOf(deliveryId));
+		bundle.putString(KEY_DELIVERY_ID, String.valueOf(deliveryId));
 
-intent.putExtras(bundle);
+		intent.putExtras(bundle);
 		startActivity(intent);
 		getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
 		GAUtils.event(RIDES, DRIVER_ENROUTE, CHAT + GAAction.BUTTON + CLICKED);

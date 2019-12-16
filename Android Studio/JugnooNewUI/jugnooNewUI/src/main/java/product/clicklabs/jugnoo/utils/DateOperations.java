@@ -19,7 +19,7 @@ import java.util.TimeZone;
 public class DateOperations {
 
 	private static Calendar indianTimeCalendar = Calendar.getInstance();
-	private static final DateFormat FORMAT_UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+	private static final DateFormat FORMAT_UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.ENGLISH);
 	/*private static final DateFormat FORMAT_UTC_LOCAL = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
 
 	static {
@@ -58,8 +58,8 @@ public class DateOperations {
 	@SuppressLint("SimpleDateFormat")
 	public static String utcToLocal(String utcTime) {
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		try {
 			Date myDate = simpleDateFormat.parse(utcTime);
@@ -74,8 +74,8 @@ public class DateOperations {
 	@SuppressLint("SimpleDateFormat")
 	public static String localToUTC(String localTime) {
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		try {
 			Date myDate = simpleDateFormat.parse(localTime);
@@ -89,8 +89,8 @@ public class DateOperations {
 
 	//2015-05-08T10:29:52.000Z
 	public static String utcToLocalTZ(String utcTime) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		try {
 			utcTime = utcTime.replace("T", " ");
@@ -107,7 +107,7 @@ public class DateOperations {
 	
 	public static Calendar getCalendarFromTimeStamp(String timeStamp){
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 			Date date1 = format.parse(timeStamp);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date1);
@@ -208,8 +208,8 @@ public class DateOperations {
 	 */
 	public static String convertDateViaFormat(String dateTime) {
 
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -226,9 +226,9 @@ public class DateOperations {
      */
     public static String convertDateViaFormatToLocal(String dateTime) {
 
-        SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
         sdfFrom.setTimeZone(TimeZone.getTimeZone("UTC"));
-        SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+        SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a",Locale.ENGLISH);
         sdfTo.setTimeZone(TimeZone.getDefault());
         try {
             Date myDate = sdfFrom.parse(dateTime);
@@ -241,8 +241,8 @@ public class DateOperations {
 
 	public static String convertDateViaFormatTZ(String dateTime) {
 
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a",Locale.ENGLISH);
 		try {
 			dateTime = dateTime.replace("T", " ").split("\\.")[0];
 			Date myDate = sdfFrom.parse(dateTime);
@@ -255,8 +255,8 @@ public class DateOperations {
 
 	public static String convertDateViaFormatOnlyTime(String dateTime) {
 
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("hh:mm a");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("hh:mm a",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -267,8 +267,8 @@ public class DateOperations {
 	}
 
 	public static String convertDateOnlyViaFormat(String dateTime) {
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -279,8 +279,8 @@ public class DateOperations {
 	}
 
 	public static String convertDateOnlyViaFormatMonthFull(String dateTime) {
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMMM, yyyy");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMMM, yyyy",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -291,8 +291,8 @@ public class DateOperations {
 	}
 
 	public static String convertDateOnlyViaFormatSlash(String dateTime) {
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd/MM/yyyy",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -337,14 +337,14 @@ public class DateOperations {
 	public static String getCurrentTime() {
 	    long foo = System.currentTimeMillis();
 	    Date date = new Date(foo);
-	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 	    return formatter.format(date);
 	}
 	
 	public static String getCurrentTimeInUTC() {
 	    long foo = System.currentTimeMillis();
 	    Date date = new Date(foo);
-	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 	    formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 	    return formatter.format(date);
 	}
@@ -353,7 +353,7 @@ public class DateOperations {
 	public static String getTimeStampfromCalendar(Calendar calendar) {
 	    long foo = calendar.getTimeInMillis();
 	    Date date = new Date(foo);
-	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 	    return formatter.format(date);
 	}
 	
@@ -366,14 +366,14 @@ public class DateOperations {
 	public String getSixtySecAfterCurrentTime() {
 	    long foo = System.currentTimeMillis() + 60000;
 	    Date date = new Date(foo);
-	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 	    return formatter.format(date);
 	}
 	
 	
 	public static long getTimeDifference(String time1, String time2){
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 			Date date1 = format.parse(time1);
 			Date date2 = format.parse(time2);
 			long millis = date1.getTime() - date2.getTime();
@@ -386,7 +386,7 @@ public class DateOperations {
 
 	public static long getTimeDifferenceInHHMM(String time1, String time2){
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("hh:mm a");
+			SimpleDateFormat format = new SimpleDateFormat("hh:mm a",Locale.ENGLISH);
 			Date date1 = format.parse(time1);
 			Date date2 = format.parse(time2);
 			long millis = date1.getTime() - date2.getTime();
@@ -423,7 +423,7 @@ public class DateOperations {
 	
 	public static long getMilliseconds(String time1){
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 			Date date1 = format.parse(time1);
 			long millis = date1.getTime();
 			return millis;
@@ -431,7 +431,7 @@ public class DateOperations {
 			try {
 				time1 = time1.replace("T", " ");
 				time1 = time1.split("\\.")[0];
-				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 				Date date1 = format.parse(time1);
 				long millis = date1.getTime();
 				return millis;
@@ -447,7 +447,7 @@ public class DateOperations {
         try {
             long foo = System.currentTimeMillis();
             Date date = new Date(foo);
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             String utcDate = formatter.format(date);
 
@@ -458,7 +458,7 @@ public class DateOperations {
             e.printStackTrace();
             long foo = System.currentTimeMillis();
             Date date = new Date(foo);
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             String utcDate = formatter.format(date);
             String utcTimeStamp = utcDate + " " + utcTime;
@@ -470,7 +470,7 @@ public class DateOperations {
         try {
             long foo = System.currentTimeMillis();
             Date date = new Date(foo);
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             String utcDate = formatter.format(date);
 
@@ -491,8 +491,8 @@ public class DateOperations {
 		if(utcTime.contains("T")){
 			return utcToLocalTZ(utcTime);
 		} else{
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 			simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 			try {
 				Date myDate = simpleDateFormat.parse(utcTime);
@@ -508,10 +508,8 @@ public class DateOperations {
 
 	public static String getTimeStampUTCFromMillis(long millis, boolean needUTC){
 		Date date = new Date(millis);
-		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		if(needUTC) {
-			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-		}
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
+		formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 		return formatter.format(date);
 	}
 
@@ -533,8 +531,8 @@ public class DateOperations {
 	}
 
 	public static String convertDayTimeAPViaFormat(String dateTime, boolean showFullHours) {
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("HH:mm:ss");
-		SimpleDateFormat sdfTo = new SimpleDateFormat((showFullHours?"h":"") + "h:mm a");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("HH:mm:ss",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat((showFullHours?"h":"") + "h:mm a",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -545,8 +543,8 @@ public class DateOperations {
 	}
 
 public static String getAmPmFromServerDateFormat(String dateTime) {
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("h:mm a");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("h:mm a",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -561,7 +559,7 @@ public static String getAmPmFromServerDateFormat(String dateTime) {
 
 	public static long getTimeDifferenceInHHmmss(String time1, String time2){
 		try {
-			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss",Locale.ENGLISH);
 			Date date1 = format.parse(time1);
 			Date date2 = format.parse(time2);
 			long millis = date1.getTime() - date2.getTime();
@@ -585,8 +583,8 @@ public static String getAmPmFromServerDateFormat(String dateTime) {
 	}
 
 	public static String getDateFormatted(String dateYYYYMMDD) {
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateYYYYMMDD);
 			return sdfTo.format(myDate);
@@ -598,7 +596,7 @@ public static String getAmPmFromServerDateFormat(String dateTime) {
 
 	public static String addCalendarFieldValueToDateTime(String dateTime, int addition, int calendarField){
 		try{
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 			Date date1 = format.parse(dateTime);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date1);
@@ -617,8 +615,8 @@ public static String getAmPmFromServerDateFormat(String dateTime) {
 	}
 
 	public static String convertDateTimeUSToInd(String dateTime) {
-		SimpleDateFormat sdfFrom = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
-		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a");
+		SimpleDateFormat sdfFrom = new SimpleDateFormat("MM/dd/yyyy hh:mm a",Locale.ENGLISH);
+		SimpleDateFormat sdfTo = new SimpleDateFormat("dd MMM, yyyy h:mm a",Locale.ENGLISH);
 		try {
 			Date myDate = sdfFrom.parse(dateTime);
 			return sdfTo.format(myDate);
@@ -630,7 +628,7 @@ public static String getAmPmFromServerDateFormat(String dateTime) {
 
 	public static String getDaysAheadTime(String dateTime, int additionOfDays){
 		try{
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH);
 			Date date1 = format.parse(dateTime);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date1);

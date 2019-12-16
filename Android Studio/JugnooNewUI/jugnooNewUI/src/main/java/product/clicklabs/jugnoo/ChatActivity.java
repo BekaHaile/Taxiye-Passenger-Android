@@ -39,6 +39,8 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
+import static product.clicklabs.jugnoo.Constants.KEY_DRIVER_PHONE_NO;
+
 
 /**
  * Created by ankit on 10/11/16.
@@ -99,6 +101,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 				orderType = getIntent().getExtras().getInt(KEY_ORDER_TYPE, ORDER_TYPE_RIDE);
 				if (orderType != ORDER_TYPE_RIDE) {
 					orderId = getIntent().getExtras().getString(KEY_DELIVERY_ID);
+					phone = getIntent().getExtras().getString(KEY_DRIVER_PHONE_NO);
 				}
 			}
 

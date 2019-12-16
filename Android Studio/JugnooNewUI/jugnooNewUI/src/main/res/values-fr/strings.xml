@@ -2420,7 +2420,7 @@ from %s in your UPI app.
 
     <string name="anywhere_hint_order_via_chat">Please enter item details</string>
 
-    <string name="action_order_via_fatafat">Order via Fatafat</string>
+    <string name="action_order_via_fatafat">Order via %s</string>
 
     <string name="action_create_custom_order">Custom order</string>
 

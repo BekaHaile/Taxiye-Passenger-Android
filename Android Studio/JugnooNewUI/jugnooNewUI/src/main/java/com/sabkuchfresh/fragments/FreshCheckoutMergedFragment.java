@@ -315,7 +315,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         layoutMinOrder =(LinearLayout)rootView.findViewById(R.id.layout_min_order);
         tvOrderViaFatafat =(TextView)rootView.findViewById(R.id.tv_order_via_fatafaat);
         tvOrderViaFatafat.setTypeface(tvOrderViaFatafat.getTypeface(),Typeface.BOLD);
-        tvOrderViaFatafat.setText(getString(R.string.action_order_via_fatafat, R.string.fatafat_text));
+        tvOrderViaFatafat.setText(getString(R.string.action_order_via_fatafat, getString(R.string.fatafat_text)));
         tvOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -476,6 +476,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         shadowMinOrder = (View)rootView.findViewById(R.id.shadow_top_min_order);
 
         linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
+        linearLayoutWalletContainer.setVisibility(View.GONE);
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
         relativeLayoutStripeCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStripeCard);
         relativeLayoutIcici = (RelativeLayout) rootView.findViewById(R.id.rlIciciUpi);
@@ -2190,6 +2191,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         try {
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
+                linearLayoutWalletContainer.setVisibility(View.VISIBLE);
                 linearLayoutWalletContainer.removeAllViews();
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
@@ -2778,8 +2780,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             DialogPopup.dismissLoadingDialog();
                         }
                         linearLayoutMain.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-                        //TODO handle vehicles here.
-                        handleVehiclesList(userCheckoutResponse.getVehiclesList());
+                        if(userCheckoutResponse.getVehiclesList()!=null){
+                            //TODO handle vehicles here.
+                            handleVehiclesList(userCheckoutResponse.getVehiclesList());
+                        }
+                        else {
+                            textViewChooseVehicle.setVisibility(View.GONE);
+                            linearLayoutDeliveryVehicles.setVisibility(View.GONE);
+                            rvVehicles.setVisibility(View.GONE);
+                        }
+
 
                     }
 
@@ -3995,7 +4005,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             for(Item item : itemsInCart){
                 for(ItemSelected itemSelected : item.getItemSelectedList()){
                     if(itemSelected.getQuantity() > 0){
-                        sb.append(itemSelected.getQuantity()).append(xSpace).append(item.getItemName());
+                        sb.append(itemSelected.getQuantity()).append(xSpace).append(item.getItemName()+"\n("+item.getItemDetails()+")");
                         item.generateCustomizeText(itemSelected);
 
                         if(!TextUtils.isEmpty(itemSelected.getCustomizeText())){

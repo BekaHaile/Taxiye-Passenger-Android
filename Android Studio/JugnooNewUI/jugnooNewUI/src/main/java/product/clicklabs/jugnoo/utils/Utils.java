@@ -28,6 +28,7 @@ import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Html;
+import android.text.InputFilter;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -78,6 +79,8 @@ import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -531,7 +534,8 @@ public class Utils implements GAAction, GACategory{
 	private static DecimalFormat decimalFormatMoney;
 	public static DecimalFormat getMoneyDecimalFormat(){
 		if(decimalFormatMoney == null){
-			decimalFormatMoney = new DecimalFormat("#.##");
+			decimalFormatMoney=(DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+			decimalFormatMoney.applyPattern("0.00");
 		}
 		return decimalFormatMoney;
 	}
@@ -1087,10 +1091,12 @@ public class Utils implements GAAction, GACategory{
 			currencyNumberFormat = NumberFormat.getCurrencyInstance(MyApplication.getInstance().getCurrentLocale());
 			currencyNumberFormat.setRoundingMode(RoundingMode.HALF_UP);
 			currencyNumberFormat.setGroupingUsed(false);
+			currencyNumberFormat.setMinimumFractionDigits(2);
+			currencyNumberFormat.setMaximumFractionDigits(2);
 		}
 		int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
-		currencyNumberFormat.setMinimumFractionDigits(setPrecision ? precision : 0);
-		currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
+//		currencyNumberFormat.setMinimumFractionDigits(setPrecision ? precision : 0);
+//		currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
 
 		if(TextUtils.isEmpty(currency)){
 			currency = MyApplication.getInstance().getString(R.string.default_currency);
@@ -1105,6 +1111,7 @@ public class Utils implements GAAction, GACategory{
 		return result;
 
 	}
+
 	public static String formatCurrencyValue(String currency, String value){
 		try {
 			return formatCurrencyValue(currency, Double.parseDouble(value));

@@ -87,7 +87,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
         });
         recyclerViewNotification.setAdapter(myNotificationAdapter);
 
-        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX.replace("\n",""));
         //textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(this, textViewTitle));
 
         mNotificationSettingBtn = (ImageView) findViewById(R.id.imageViewSetting);
@@ -270,7 +270,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
 
     public void layoutToggle() {
         if(swipeRefreshLayout.getVisibility() == View.GONE) {
-            textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
+            textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX.replace("\n",""));
             mNotificationSettingBtn.setVisibility(View.VISIBLE);
             linearLayoutContainer.setVisibility(View.GONE);
             swipeRefreshLayout.setVisibility(View.VISIBLE);

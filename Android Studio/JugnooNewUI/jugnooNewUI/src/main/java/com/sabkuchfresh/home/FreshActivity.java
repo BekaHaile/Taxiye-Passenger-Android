@@ -1535,8 +1535,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 } else {
                     llCheckoutBarSetVisibility(View.GONE);
                 }
-
-                tvCartAmount.setText(Utils.formatCurrencyAmount(totalPrice, currencyCode, currency));
+                tvCartAmount.setText(String.format(getResources().getString(R.string.rupees_value_format),
+                        Utils.getMoneyDecimalFormat().format(totalPrice)));
 
                 tvCheckoutItemsCount.setText(Utils.fromHtml(getString(quantity == 1 ?
                         R.string.checkout_bracket_item : R.string.checkout_bracket_items,
