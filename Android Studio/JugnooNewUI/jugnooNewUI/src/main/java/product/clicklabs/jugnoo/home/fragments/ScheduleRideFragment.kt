@@ -490,8 +490,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
     private fun getFareEstimate() {
         if(searchResultPickup != null && searchResultDestination != null && Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) {
-            tvFareEstimate.visibility = View.VISIBLE
-            viewInnerDrop.visibility = View.VISIBLE
+//            tvFareEstimate.visibility = View.VISIBLE
+//            viewInnerDrop.visibility = View.VISIBLE
             getDirectionsAndComputeFare(searchResultPickup!!.latLng, searchResultPickup!!.address, searchResultDestination!!.latLng, searchResultDestination!!.address)
         } else {
             tvFareEstimate.visibility = View.GONE
