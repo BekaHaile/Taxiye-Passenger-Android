@@ -313,6 +313,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
+import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_DRIVER_ARRIVED;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
 
 //import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
@@ -4462,7 +4463,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     case P_DRIVER_ARRIVED:
 
                         fabViewIntial.setVisibility(View.GONE);
-                        fabViewFinal.setVisibility(View.VISIBLE);
+                        fabViewFinal.setVisibility(View.GONE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
 
                         if (map != null) {
@@ -4542,6 +4543,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						}
                         checkForGoogleLogoVisibilityInRide();
                         setFabViewAtRide(mode);
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
 
                         showChatButton();
 
@@ -4553,7 +4555,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         rentalStateUIHandling(mode);
 
                         fabViewIntial.setVisibility(View.GONE);
-                        fabViewFinal.setVisibility(View.VISIBLE);
+                        fabViewFinal.setVisibility(View.GONE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
                             if (driverMarkerInRide == null) {
@@ -4627,6 +4629,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         checkForGoogleLogoVisibilityInRide();
 
                         setFabViewAtRide(mode);
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+
 
 
 
@@ -4921,7 +4925,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             containerHeight = containerHeight + 50f;
         }
         if (relativeLayoutInRideInfo.getVisibility() == View.VISIBLE) {
-            containerHeight = containerHeight + 40f;
+            containerHeight = containerHeight + 50f;
+        }
+        if(layoutAddedTip.getVisibility() == View.VISIBLE) {
+//            fabViewTest.setFABButtons()
+        } else if (layoutAddedTip.getVisibility() == View.GONE) {
+//            containerHeight = containerHeight + 50f;
         }
         fabViewTest.setMenuLabelsRightTestPadding(containerHeight);
     }
@@ -7000,10 +7009,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else {
                     //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
                     if ((passengerScreenMode == P_INITIAL && !confirmedScreenOpened)
-                            || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
-                            || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
+                            || ( relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons(false);
+                    }
+                    if(passengerScreenMode == P_DRIVER_ARRIVED) {
+                        fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                     }
                 }
             } else {
