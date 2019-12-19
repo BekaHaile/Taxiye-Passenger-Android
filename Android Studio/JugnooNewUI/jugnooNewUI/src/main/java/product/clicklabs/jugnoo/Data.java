@@ -573,6 +573,7 @@ public class Data {
 		if (Config.getConfigMode() == ConfigMode.LIVE) {
             configAttributes = new HippoConfigAttributes.Builder()
                     .setEnvironment("live")
+					.setShowLog(BuildConfig.DEBUG)
                     .setAppKey(Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)))
                     .setAppType(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)))
                     .setCaptureUserData(userData)
@@ -584,7 +585,7 @@ public class Data {
         } else {
             configAttributes = new HippoConfigAttributes.Builder()
 					.setEnvironment("test")
-					.setShowLog(true)
+					.setShowLog(BuildConfig.DEBUG)
                     .setAppKey(Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)))
                     .setAppType(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)))
                     .setCaptureUserData(userData)
@@ -625,15 +626,11 @@ public class Data {
 
 
 	public static boolean isFuguChatEnabled() {
-        if(Data.userData != null) {
-            ArrayList<MenuInfo> itemsToShow = Data.userData.getMenuInfoList();
-            for (MenuInfo menuInfo : itemsToShow) {
-                if (MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return isMenuTagEnabled(MenuInfoTags.FUGU_SUPPORT);
+    }
+	public static boolean isHippoTicketForRideEnabled(Context context) {
+        return Prefs.with(context).getInt(Constants.KEY_HIPPO_TICKET_FOR_RIDE_ISSUES, 0) == 1
+				&& isMenuTagEnabled(MenuInfoTags.TICKET_SUPPORT);
     }
     public static boolean isMenuTagEnabled(MenuInfoTags tag) {
         if(Data.userData != null) {

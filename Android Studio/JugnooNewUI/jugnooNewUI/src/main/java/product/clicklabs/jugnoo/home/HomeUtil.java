@@ -15,6 +15,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.hippo.HippoConfig;
+import com.hippo.HippoTicketAttributes;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -42,6 +43,8 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.home.models.HippoTicketModel;
+import product.clicklabs.jugnoo.home.models.HippoTicketRideModel;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
@@ -522,5 +525,25 @@ public class HomeUtil {
 			}
 		}
 		return paymentOption;
+	}
+
+
+	public static void openHippoTicketSupport(Context context){
+		if(Data.userData != null) {
+			HippoTicketModel hippoTicketModel = new HippoTicketModel(Integer.parseInt(Data.userData.getUserId()), Data.userData.getRegAs());
+			HippoTicketAttributes.Builder builder = new HippoTicketAttributes.Builder();
+			builder.setFaqName(Prefs.with(context).getString(Constants.HIPPO_SUPPORT_FAQ_NAME, ""));
+			HippoConfig.getInstance().showFAQSupport(builder.build(), hippoTicketModel);
+		}
+	}
+
+	public static void openHippoTicketSupport(Context context, int engagementId, int driverId){
+		if(Data.userData != null) {
+			HippoTicketRideModel hippoTicketModel = new HippoTicketRideModel(Integer.parseInt(Data.userData.getUserId()), Data.userData.getRegAs(),
+					driverId, engagementId);
+			HippoTicketAttributes.Builder builder = new HippoTicketAttributes.Builder();
+			builder.setFaqName(Prefs.with(context).getString(Constants.HIPPO_SUPPORT_FAQ_NAME, ""));
+			HippoConfig.getInstance().showFAQSupport(builder.build(), hippoTicketModel);
+		}
 	}
 }

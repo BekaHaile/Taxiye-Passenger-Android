@@ -96,4 +96,6 @@
     <integer name="show_tip_on_confirm_ride_level_1">1</integer>
     <integer name="show_tip_on_confirm_ride_level_2">1</integer>
 
+    <integer name="hippo_ticket_for_ride_issues">1</integer>
+
 </resources>

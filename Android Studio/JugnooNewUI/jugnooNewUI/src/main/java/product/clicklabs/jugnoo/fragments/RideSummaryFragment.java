@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +34,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -327,7 +327,12 @@ public class RideSummaryFragment extends Fragment implements Constants {
 				@Override
 				public void onClick(View v) {
 					if (activity instanceof RideTransactionsActivity) {
-                        if (Data.isFuguChatEnabled()) {
+						if(Data.isHippoTicketForRideEnabled(activity)){
+							HomeUtil.openHippoTicketSupport(activity,
+									Integer.parseInt(endRideData.engagementId),
+									endRideData.getDriverId());
+						}
+						else if (Data.isFuguChatEnabled()) {
                             try {
                                 if(!TextUtils.isEmpty(endRideData.getFuguChannelId())){
                                     ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()

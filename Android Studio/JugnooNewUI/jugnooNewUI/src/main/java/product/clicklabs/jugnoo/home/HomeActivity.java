@@ -150,6 +150,7 @@ import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
+import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -2232,9 +2233,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                             rating, "", "");
-                    if (Data.isFuguChatEnabled()) {
+                    if (Data.isFuguChatEnabled()
+							|| Data.isHippoTicketForRideEnabled(HomeActivity.this)) {
                         fuguCustomerHelpRides(false);
-                    } else if (Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)) {
+                    }
+                    else if (Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)) {
                         startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
@@ -9987,7 +9990,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void fuguCustomerHelpRides(boolean fromSos) {
         try {
-            if (!TextUtils.isEmpty(Data.autoData.getFuguChannelId())) {
+        	if(!fromSos && Data.isHippoTicketForRideEnabled(this)){
+				HomeUtil.openHippoTicketSupport(this,
+						Integer.parseInt(Data.autoData.getcEngagementId()),
+						Integer.parseInt(Data.autoData.getcDriverId()));
+			}
+        	else if (!TextUtils.isEmpty(Data.autoData.getFuguChannelId())) {
                 Data.autoData.getFuguTags().remove(FUGU_TAG_SOS);
                 if (fromSos) {
                     Data.autoData.getFuguTags().add(FUGU_TAG_SOS);

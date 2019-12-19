@@ -1139,4 +1139,7 @@ public interface Constants {
 
 	String KEY_SESSIONTOKEN = "sessiontoken";
 	String KEY_FARE_MANDATORY = "fare_mandatory";
+
+	String KEY_HIPPO_TICKET_FOR_RIDE_ISSUES = "hippo_ticket_for_ride_issues";
+	String KEY_DRIVER_INFO = "driver_info";
 }

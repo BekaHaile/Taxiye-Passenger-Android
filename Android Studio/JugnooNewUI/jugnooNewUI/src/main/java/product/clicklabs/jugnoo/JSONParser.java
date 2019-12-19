@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -588,6 +589,9 @@ public class JSONParser implements Constants {
 				context.getString(R.string.youtube_api_key)));
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
 
+		Prefs.with(context).save(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES, autoData.optInt(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES,
+				context.getResources().getInteger(R.integer.hippo_ticket_for_ride_issues)));
+
 
 		parseJungleApiObjects(context, autoData);
 	}
@@ -803,7 +807,8 @@ public class JSONParser implements Constants {
 							// Get new Instance ID token
 							String token = task.getResult().getToken();
 
-							if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
+							if((Data.isFuguChatEnabled() || Data.isMenuTagEnabled(MenuInfoTags.TICKET_SUPPORT))
+									&& Data.getFuguUserData()!=null) {
 								Data.initializeFuguHandler((Activity) context, Data.getFuguUserData(), token);
 							}
 						}
@@ -1181,7 +1186,18 @@ public class JSONParser implements Constants {
         double paidUsingPOS = jLastRideData.optDouble(Constants.KEY_PAID_USING_POS, 0);
 		int meterFareApplicable = jLastRideData.optInt(Constants.KEY_METER_FARE_APPLICABLE, 0);
 
-        JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
+		int driverId = 0;
+		try {
+			driverId = jLastRideData.optInt(KEY_DRIVER_ID, Integer.parseInt(Data.autoData.getcDriverId()));
+			if(jLastRideData.has(KEY_DRIVER_INFO)){
+				JSONObject jDriverInfo = jLastRideData.optJSONObject(KEY_DRIVER_INFO);
+				driverId = jDriverInfo.optInt(KEY_ID);
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
         ArrayList<DiscountType> stripeCardsAmount = new ArrayList<>();
         if(jCardDetails != null) {
             for (int i = 0; i < jCardDetails.length(); i++) {
@@ -1219,7 +1235,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId);
 	}
 
 

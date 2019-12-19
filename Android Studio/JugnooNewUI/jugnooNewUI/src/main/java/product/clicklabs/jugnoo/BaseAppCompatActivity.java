@@ -8,18 +8,16 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.hippo.HippoConfig;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.hippo.HippoConfig;
-import com.hippo.HippoTicketAttributes;
-
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 /**
@@ -185,11 +183,6 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 		}
 	}
 
-	public void openHippoTicketSupport(){
-		HippoTicketAttributes.Builder builder = new HippoTicketAttributes.Builder();
-		builder.setFaqName(Prefs.with(this).getString(Constants.HIPPO_SUPPORT_FAQ_NAME, ""));
-		HippoConfig.getInstance().showFAQSupport(builder.build());
-	}
 
 	public void attachBaseContextWithoutTypekit(Context newBase){
 		super.attachBaseContext(LocaleHelper.onAttach(newBase, LocaleHelper.getLanguage(newBase)));
