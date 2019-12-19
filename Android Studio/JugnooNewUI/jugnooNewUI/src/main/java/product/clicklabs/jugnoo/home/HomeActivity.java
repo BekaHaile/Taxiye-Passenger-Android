@@ -4799,7 +4799,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void updateDriverTipUI(PassengerScreenMode mode) {
         if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null  &&
                 Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()
-                && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0){
+                && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0
+				&& Data.autoData.getAssignedDriverInfo().getTipBeforeRequestRide() <= 0){
             buttonTipDriver.setVisibility(View.VISIBLE);
             setAddedTipUI();
         }else if(mode==PassengerScreenMode.P_RIDE_END && Data.autoData!=null  &&
@@ -8894,12 +8895,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             int gpsLockStatus = jObj.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
             int fareMandatory = jObj.optInt(Constants.KEY_FARE_MANDATORY,0);
+            double tipBeforeRequestRide = jObj.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(this, Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory));
+                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);

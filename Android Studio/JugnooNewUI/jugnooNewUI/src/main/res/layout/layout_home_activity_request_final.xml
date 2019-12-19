@@ -82,14 +82,14 @@
 
     <Button
         android:id="@+id/customerInRideMyLocationBtn"
-        android:layout_width="121px"
-        android:layout_height="117px"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_above="@+id/relativeLayoutInRideContainer"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="5px"
-        android:layout_marginEnd="55px"
+        android:layout_marginBottom="2dp"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/mylocation_btn_selector"
-        android:tag="mwar"
+        android:tag="@string/dont_touch_me"
         android:visibility="visible" />
 
     <ImageView
@@ -545,7 +545,8 @@
             android:orientation="horizontal"
             android:layout_alignParentEnd="true"
             android:gravity="center"
-            android:layout_marginEnd="40px">
+            android:tag="@string/dont_touch_me"
+            android:layout_marginEnd="20dp">
 
             <RelativeLayout
                 android:id="@+id/rlChatDriver"
@@ -578,8 +579,8 @@
 
             <Button
                 android:id="@+id/buttonTipDriver"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:contentDescription="@string/call_driver"
@@ -594,13 +595,11 @@
 
         <Button
             android:id="@+id/buttonCallDriver"
-            android:layout_width="132px"
-            android:layout_height="136px"
-            android:layout_alignParentEnd="true"
+            android:layout_width="62dp"
+            android:layout_height="62dp"
             android:contentDescription="@string/call_driver"
             android:visibility="visible"
-            android:background="@drawable/ic_ride_call_selector"
-            android:tag="mwar" />
+            android:background="@drawable/ic_ride_call_selector" />
 
         </LinearLayout>
     </RelativeLayout>

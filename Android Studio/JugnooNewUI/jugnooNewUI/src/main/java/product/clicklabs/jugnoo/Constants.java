@@ -1158,4 +1158,5 @@ public interface Constants {
 	String INTENT_ACTION_CHAT_REFRESH = "INTENT_ACTION_CHAT_REFRESH";
 	String KEY_PAYLOAD = "payload";
 	String KEY_OPEN_CHAT = "open_chat";
+	String KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST = "tip_provided_before_ride_request";
 }
