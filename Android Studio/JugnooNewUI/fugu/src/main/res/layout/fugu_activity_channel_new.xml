@@ -115,6 +115,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:elevation="@dimen/fugu_elevation_4"
+                android:visibility="gone"
                 app:backgroundTint="@color/fugu_new_chat_color"
                 app:fabSize="normal"
                 app:rippleColor="@android:color/white"/>

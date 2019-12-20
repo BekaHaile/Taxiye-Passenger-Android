@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -12,7 +13,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.GAAction;
+import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
+import com.sabkuchfresh.fragments.FeedbackFragment;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.ArrayList;
 
@@ -23,17 +27,19 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
-public class  RideTransactionsActivity extends BaseAppCompatActivity implements GAAction {
+public class  RideTransactionsActivity extends BaseAppCompatActivity implements GAAction, FeedbackFragment.ParentActivityMethods {
 
     private final String TAG = RideTransactionsActivity.class.getSimpleName();
 
 	DrawerLayout drawerLayout;
 	RelativeLayout relative;
 
-	TextView textViewTitle;
+	public TextView textViewTitle;
 	ImageView imageViewBack;
 
     RelativeLayout relativeLayoutContainer;
@@ -65,6 +71,29 @@ public class  RideTransactionsActivity extends BaseAppCompatActivity implements 
 		Paper.book().write(PaperDBKeys.HISTORY_PRODUCT_TYPES, productTypedFiltered);
 	}
 
+	private String gaCategory;
+	public String getGaCategory(){
+		if(gaCategory == null){
+			int type = getAppType();
+			if(type == AppConstant.ApplicationType.MEALS){
+				gaCategory = GACategory.MEALS;
+			} else if(type == AppConstant.ApplicationType.MENUS){
+				gaCategory = GACategory.MENUS;
+			} else if(type == AppConstant.ApplicationType.DELIVERY_CUSTOMER){
+				gaCategory = GACategory.DELIVERY_CUSTOMER;
+			} else if(type == AppConstant.ApplicationType.PROS){
+				gaCategory = GACategory.PROS;
+			} else if(type == AppConstant.ApplicationType.FEED){
+				gaCategory = Data.getFeedName(this)+" ";
+			} else {
+				gaCategory = GACategory.FRESH;
+			}
+		}
+		return gaCategory;
+	}
+	public int getAppType() {
+		return Prefs.with(RideTransactionsActivity.this).getInt(Constants.APP_TYPE, Data.AppType);
+	}
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -192,7 +221,7 @@ public class  RideTransactionsActivity extends BaseAppCompatActivity implements 
 		if(getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0) != 0){
 			new TransactionUtils(). openOrderStatusFragment(this, relativeLayoutContainer, getIntent().getIntExtra(Constants.KEY_ORDER_ID, 0),
 					getIntent().getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal()),
-					getIntent().getIntExtra(Constants.KEY_OPEN_LIVE_TRACKING, 0));
+					getIntent().getIntExtra(Constants.KEY_OPEN_LIVE_TRACKING, 0), false, true);
 		} else {
 			getSupportFragmentManager().beginTransaction()
 					.add(relativeLayoutContainer.getId(), new RideTransactionsFragment(), RideTransactionsFragment.class.getName())
@@ -341,5 +370,31 @@ public class  RideTransactionsActivity extends BaseAppCompatActivity implements 
 
 	public ArrayList<Integer> getProductTypedFiltered(){
 		return productTypedFiltered;
+	}
+
+
+	private Handler handler;
+
+	@Override
+	public Handler getHandler(){
+		if(handler == null){
+			handler = new Handler();
+		}
+		return handler;
+	}
+
+	@Override
+	public View getFragmentContainer() {
+		return getContainer();
+	}
+
+	@Override
+	public void registerForKeyBoardEvent(KeyboardLayoutListener.KeyBoardStateHandler keyboardListener) {
+
+	}
+
+	@Override
+	public void unRegisterKeyBoardListener() {
+
 	}
 }

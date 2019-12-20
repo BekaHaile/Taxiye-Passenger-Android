@@ -1,7 +1,11 @@
 package product.clicklabs.jugnoo.utils;
 
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.net.Uri;
+import android.util.Base64;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -16,8 +20,11 @@ import com.facebook.share.widget.ShareDialog;
 
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -81,6 +88,7 @@ public class FacebookLoginHelper {
     public void openFacebookSession(boolean fetchData) {
         this.fetchData = fetchData;
         accessToken = AccessToken.getCurrentAccessToken();
+        calculateHashKey(BuildConfig.APPLICATION_ID);
         Log.i("accessToken", "=" + accessToken);
         if (accessToken == null) {
             callOpenActiveSession();
@@ -174,6 +182,24 @@ public class FacebookLoginHelper {
 
             ShareDialog shareDialog = new ShareDialog(activity);
             shareDialog.show(linkContent);
+        }
+    }
+
+    private void calculateHashKey(String yourPackageName) {
+        try {
+            PackageInfo info = activity.getPackageManager().getPackageInfo(
+                    yourPackageName,
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:",
+                        Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
     }
 

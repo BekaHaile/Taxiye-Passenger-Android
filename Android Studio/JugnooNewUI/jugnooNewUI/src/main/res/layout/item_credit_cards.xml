@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100px"
+    android:id="@+id/rlRoot"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="@drawable/white_background_rounded_corner_selector"
+    android:clickable="true"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:id="@+id/llCard"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/rlDelete"
+        android:gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:paddingBottom="8dp"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ivRadio"
+            android:layout_width="33px"
+            android:layout_height="33px"
+            android:src="@drawable/ic_radio_button_normal"
+            android:tag="mwar"/>
+
+        <ImageView
+            android:id="@+id/ivCardIcon"
+            style="@style/payment_option_icon_small"
+            android:src="@drawable/ic_card_default"
+            android:layout_marginStart="10px"
+            />
+
+        <TextView
+            android:id="@+id/tvCardNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10px"
+            tools:text="**** **** **** ****"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/text_size_34"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlDelete"
+        android:layout_width="wrap_content"
+        android:paddingStart="8dp"
+        android:layout_centerVertical="true"
+        android:paddingEnd="8dp"
+        android:gravity="end"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center"
+        android:layout_height="98px">
+
+        <ImageView
+            android:id="@+id/ivDelete"
+            android:layout_width="wrap_content"
+            android:visibility="visible"
+            android:layout_centerVertical="true"
+            android:layout_height="33px"
+            android:src="@drawable/ic_cross_et_normal"
+            android:tag="mwar"/>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -29,6 +29,18 @@ public class ItemSelected {
 	@Expose
 	private String customizeText;
 
+	@SerializedName("item_notes")
+	private String itemInstructions = "";
+
+	public String getItemInstructions() {
+		return itemInstructions;
+	}
+
+	public void setItemInstructions(final String itemInstructions) {
+		if (itemInstructions == null) this.itemInstructions = "";
+		else this.itemInstructions = itemInstructions;
+	}
+
 	public Integer getRestaurantItemId() {
 		return restaurantItemId;
 	}

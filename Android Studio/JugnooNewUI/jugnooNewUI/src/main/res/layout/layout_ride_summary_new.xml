@@ -102,8 +102,7 @@
                         android:layout_marginTop="10px"
                         android:text="@string/_0"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/end_ride_fare_value_text_size"
-                        />
+                        android:textSize="@dimen/end_ride_fare_value_text_size" />
                 </LinearLayout>
 
                 <ImageView

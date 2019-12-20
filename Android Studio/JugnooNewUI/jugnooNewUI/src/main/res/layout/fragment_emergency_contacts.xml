@@ -1,13 +1,14 @@
-<RelativeLayout
-    android:id="@+id/relative"
+<RelativeLayout android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/topBar"
-        android:layout_width="@dimen/screen_width"
+        android:layout_width="match_parent"
+        android:fitsSystemWindows="true"
         android:layout_height="@dimen/top_bar_height"
         android:background="@color/white">
 
@@ -16,8 +17,17 @@
             android:text="@string/emergency_contacts"
             android:textSize="@dimen/text_size_32"
             style="@style/title"
+            android:layout_toEndOf="@+id/imageViewBack"
+            android:layout_toStartOf="@id/textViewEdit"
+            android:layout_width="match_parent"
+            android:ellipsize="marquee"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:freezesText="true"
             />
-
         <ImageView
             android:id="@+id/imageViewBack"
             style="@style/back_image"/>

@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.datastructure;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -8,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Utils;
 
 public class SearchResult {
@@ -90,9 +92,16 @@ public class SearchResult {
 		return name;
 	}
 
-	public String getNameForText() {
-		if(!TextUtils.isEmpty(name)){
-			return Utils.firstCharCapital(name);
+	public String getNameForText(Context context) {
+		if (!TextUtils.isEmpty(name)) {
+			if (getName().equalsIgnoreCase(Constants.TYPE_HOME)) {
+				return context.getString(R.string.home);
+			} else if (getName().equalsIgnoreCase(Constants.TYPE_WORK)) {
+				return context.getString(R.string.work);
+			} else {
+				return Utils.firstCharCapital(name);
+			}
+
 		} else {
 			return address;
 		}

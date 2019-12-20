@@ -218,7 +218,7 @@ public class RestClient {
         if(FATAFAT_API_SERVICE == null) {
             RestAdapter.Builder builder = new RestAdapter.Builder()
                     .setEndpoint(Config.getFatafatServerUrl())
-                    .setClient(new Ok3Client(getOkHttpClient(false)))
+                    .setClient(new Ok3Client(getOkHttpClient(true)))
                     .setLogLevel(RestAdapter.LogLevel.FULL);
             setLogger(builder);
 

@@ -78,6 +78,7 @@ import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -531,7 +532,8 @@ public class Utils implements GAAction, GACategory{
 	private static DecimalFormat decimalFormatMoney;
 	public static DecimalFormat getMoneyDecimalFormat(){
 		if(decimalFormatMoney == null){
-			decimalFormatMoney = new DecimalFormat("#.##");
+			decimalFormatMoney=(DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+			decimalFormatMoney.applyPattern("0.00");
 		}
 		return decimalFormatMoney;
 	}
@@ -1089,8 +1091,13 @@ public class Utils implements GAAction, GACategory{
 			currencyNumberFormat.setGroupingUsed(false);
 		}
 		int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
-		currencyNumberFormat.setMinimumFractionDigits(setPrecision ? precision : 0);
-		currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
+		if(MyApplication.getInstance().getResources().getBoolean(R.bool.currency_precision_from_server)){
+			currencyNumberFormat.setMinimumFractionDigits(setPrecision ? precision : 0);
+			currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
+		} else {
+			currencyNumberFormat.setMinimumFractionDigits(2);
+			currencyNumberFormat.setMaximumFractionDigits(2);
+		}
 
 		if(TextUtils.isEmpty(currency)){
 			currency = MyApplication.getInstance().getString(R.string.default_currency);
@@ -1105,6 +1112,7 @@ public class Utils implements GAAction, GACategory{
 		return result;
 
 	}
+
 	public static String formatCurrencyValue(String currency, String value){
 		try {
 			return formatCurrencyValue(currency, Double.parseDouble(value));

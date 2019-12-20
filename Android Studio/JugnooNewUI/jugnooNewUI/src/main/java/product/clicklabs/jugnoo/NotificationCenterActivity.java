@@ -87,12 +87,12 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
         });
         recyclerViewNotification.setAdapter(myNotificationAdapter);
 
-        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
+        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX.replace("\n",""));
         //textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(this, textViewTitle));
 
         mNotificationSettingBtn = (ImageView) findViewById(R.id.imageViewSetting);
         mNotificationSettingBtn.setOnClickListener(this);
-        if(Data.userData != null && Data.userData.getNotificationSettingEnabled() == 1) {
+        if((Data.userData != null && Data.userData.getNotificationSettingEnabled() == 1) || getResources().getBoolean(R.bool.show_inbox_preferences)) {
             mNotificationSettingBtn.setVisibility(View.VISIBLE);
         } else {
             mNotificationSettingBtn.setVisibility(View.GONE);
@@ -269,7 +269,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
 
     public void layoutToggle() {
         if(swipeRefreshLayout.getVisibility() == View.GONE) {
-            textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX);
+            textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_INBOX.replace("\n",""));
             mNotificationSettingBtn.setVisibility(View.VISIBLE);
             linearLayoutContainer.setVisibility(View.GONE);
             swipeRefreshLayout.setVisibility(View.VISIBLE);

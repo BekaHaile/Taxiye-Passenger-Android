@@ -415,6 +415,9 @@ public class MenusResponse {
 		@SerializedName("is_open_merchant_info")
 		@Expose
 		private int shouldOpenMerchantInfo;
+		@SerializedName("activation_status")
+		@Expose
+		private int activationStatus;
 
 		public boolean getShouldOpenMerchantInfo() {
 			return shouldOpenMerchantInfo == 1;
@@ -872,6 +875,10 @@ public class MenusResponse {
 		public boolean isHasRated() {
 			return hasRated;
 		}
+
+		public int getActivationStatus() {
+			return activationStatus;
+		}
 	}
 
 
@@ -889,6 +896,21 @@ public class MenusResponse {
 		@SerializedName("is_open_merchant_info")
 		@Expose
 		private int shouldOpenMerchantInfo;
+		@SerializedName("webview_link")
+		@Expose
+		private String webViewLink;
+		@SerializedName("ext_link")
+		@Expose
+		private String extLink;
+		@SerializedName("restaurant_item_id")
+		@Expose
+		private int restaurantItemId = -1;
+		@SerializedName("view_type")
+		@Expose
+		private int viewType = -1;
+		@SerializedName("banner_id")
+		@Expose
+		private int bannerId;
 
 		public boolean getShouldOpenMerchantInfo() {
 			return shouldOpenMerchantInfo == 1;
@@ -910,6 +932,26 @@ public class MenusResponse {
 				deepIndex = -1;
 			}
 			return deepIndex;
+		}
+
+		public String getWebViewLink() {
+			return webViewLink;
+		}
+
+		public String getExtLink() {
+			return extLink;
+		}
+
+		public int getRestaurantItemId() {
+			return restaurantItemId;
+		}
+
+		public int getViewType() {
+			return viewType;
+		}
+
+		public int getBannerId() {
+			return bannerId;
 		}
 	}
 

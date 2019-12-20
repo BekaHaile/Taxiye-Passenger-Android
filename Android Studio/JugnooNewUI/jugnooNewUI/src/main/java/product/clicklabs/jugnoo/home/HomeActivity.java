@@ -3255,9 +3255,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
             }
 
-            textViewDestSearch.setText(searchResult.getNameForText());
+            textViewDestSearch.setText(searchResult.getNameForText(this));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
-            textViewDestSearchNew.setText(searchResult.getNameForText());
+            textViewDestSearchNew.setText(searchResult.getNameForText(this));
             textViewDestSearchNew.setTextColor(getResources().getColor(R.color.text_color));
 
             relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
@@ -5494,7 +5494,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 textViewIRPaymentOptionValue.setText(getString(R.string.cash));
             } else {
                 textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
-                        .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
+                        .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode(),this));
             }
             if(PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()
                     && Prefs.with(this).getInt(KEY_SHOW_IN_RIDE_PAYMENT_OPTION, 1) != 1){
@@ -6158,15 +6158,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             placeAdded = true;
                             if (passengerScreenMode == P_INITIAL) {
                                 if (likeClicked == 1) {
-                                    textViewInitialSearch.setText(searchResult.getNameForText());
-                                    textViewInitialSearchNew.setText(searchResult.getNameForText());
-                                    tvPickupRentalOutstation.setText(searchResult.getNameForText());
+                                    textViewInitialSearch.setText(searchResult.getNameForText(this));
+                                    textViewInitialSearchNew.setText(searchResult.getNameForText(this));
+                                    tvPickupRentalOutstation.setText(searchResult.getNameForText(this));
                                     ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
                                     ivLikePickup.setTag("liked");
                                 } else if (likeClicked == 2) {
-                                    textViewDestSearch.setText(searchResult.getNameForText());
-                                    textViewDestSearchNew.setText(searchResult.getNameForText());
-                                    tvPickupRentalOutstation.setText(searchResult.getNameForText());
+                                    textViewDestSearch.setText(searchResult.getNameForText(this));
+                                    textViewDestSearchNew.setText(searchResult.getNameForText(this));
+                                    tvPickupRentalOutstation.setText(searchResult.getNameForText(this));
                                     ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
                                     ivLikeDrop.setTag("liked");
                                 }
@@ -7398,10 +7398,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (passengerScreenMode == P_INITIAL) {
                 if (searchResult != null) {
                     addressNeeded = false;
-                    textView.setText(searchResult.getNameForText());
+                    textView.setText(searchResult.getNameForText(this));
                     if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                        tvPickupRentalOutstation.setText(searchResult.getNameForText());
-                        textViewInitialSearchNew.setText(searchResult.getNameForText());
+                        tvPickupRentalOutstation.setText(searchResult.getNameForText(this));
+                        textViewInitialSearchNew.setText(searchResult.getNameForText(this));
 						Data.autoData.setPickupSearchResult(searchResult);
                     }
                     if(textView == textViewInitialSearch){
@@ -7457,7 +7457,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP
 						&& Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())) {
                 	if(searchResult != null){
-                		dropAddressName = searchResult.getNameForText();
+                		dropAddressName = searchResult.getNameForText(this);
 					}
                     if (dropAddressName.length() == 0) {
                         textView.setText(Data.autoData.getDropAddress());
@@ -7468,7 +7468,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP
 						&& !TextUtils.isEmpty(Data.autoData.getPickupAddress(currentLatLng))){
                 	if(searchResult != null){
-						textView.setText(searchResult.getNameForText());
+						textView.setText(searchResult.getNameForText(this));
 					} else {
 						textView.setText(Data.autoData.getPickupAddress(currentLatLng));
 					}
@@ -7608,7 +7608,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				if(sr == null) {
 					textViewInitialSearchNew.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
 				} else {
-					textViewInitialSearchNew.setText(sr.getNameForText());
+					textViewInitialSearchNew.setText(sr.getNameForText(this));
 				}
 			}
 			if(Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())){
@@ -7616,7 +7616,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				if(sr == null) {
 					textViewDestSearchNew.setText(Data.autoData.getDropAddress());
 				} else {
-					textViewDestSearchNew.setText(sr.getNameForText());
+					textViewDestSearchNew.setText(sr.getNameForText(this));
 				}
 			}
 		}
@@ -9119,6 +9119,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         try {
             Data.latitude = location.getLatitude();
             Data.longitude = location.getLongitude();
+			if (getResources().getBoolean(R.bool.autos_map_traffic_default_enabled)) {
+				map.setTrafficEnabled(true);
+			}
             if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
                 HomeActivity.myLocation = location;
             }
@@ -10822,13 +10825,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             zoomAfterFindADriver = false;
             if (!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                    textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
-                    textViewInitialSearchNew.setText(autoCompleteSearchResult.getNameForText());
-                    tvPickupRentalOutstation.setText(autoCompleteSearchResult.getNameForText());
+                    textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText(this));
+                    textViewInitialSearchNew.setText(autoCompleteSearchResult.getNameForText(this));
+                    tvPickupRentalOutstation.setText(autoCompleteSearchResult.getNameForText(this));
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
-                    textViewDestSearch.setText(autoCompleteSearchResult.getNameForText());
-                    textViewDestSearchNew.setText(autoCompleteSearchResult.getNameForText());
-                    dropAddressName = autoCompleteSearchResult.getNameForText();
+                    textViewDestSearch.setText(autoCompleteSearchResult.getNameForText(this));
+                    textViewDestSearchNew.setText(autoCompleteSearchResult.getNameForText(this));
+                    dropAddressName = autoCompleteSearchResult.getNameForText(this);
                     setPickupLocationInitialUI();
                 }
                 searchedALocation = true;
@@ -10840,8 +10843,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 fareEstimatBeforeRequestRide();
             }
         } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
-			tvDropAssigning.setText(autoCompleteSearchResult.getNameForText());
-            dropAddressName = autoCompleteSearchResult.getNameForText();
+			tvDropAssigning.setText(autoCompleteSearchResult.getNameForText(this));
+            dropAddressName = autoCompleteSearchResult.getNameForText(this);
         } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
@@ -10867,9 +10870,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void setSearchResultToPickupCase(SearchResult searchResult) {
         try {
             if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
-                textViewInitialSearch.setText(searchResult.getNameForText());
-                textViewInitialSearchNew.setText(searchResult.getNameForText());
-                tvPickupRentalOutstation.setText(searchResult.getNameForText());
+                textViewInitialSearch.setText(searchResult.getNameForText(this));
+                textViewInitialSearchNew.setText(searchResult.getNameForText(this));
+                tvPickupRentalOutstation.setText(searchResult.getNameForText(this));
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                 setPickupAddressZoomedOnce = true;
                 mapTouched = true;
@@ -11016,8 +11019,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
 		}
 
-		textViewFinalDropLocationClick.setText(searchResult.getNameForText());
-		dropAddressName = searchResult.getNameForText();
+		textViewFinalDropLocationClick.setText(searchResult.getNameForText(this));
+		dropAddressName = searchResult.getNameForText(this);
 
 		sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
 				getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true,
@@ -11864,7 +11867,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
             textViewPaymentModeValueConfirm.setText(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
+                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),this));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -12670,6 +12673,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             getString(R.string.confirm_payment_via_card_ending_format,
                                     MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(HomeActivity.this, Data.autoData.getPickupPaymentOption())),
                             v -> getDriverTipInteractor().addTip(tipSelected, Data.autoData.getEndRideData().getPaymentOption()));
+                }
+                @Override
+                public void getSelectedPaymentOption() {
+
                 }
             });
         }

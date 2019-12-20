@@ -103,7 +103,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewAmount.setText(Utils.formatCurrencyValue(orderHistory.getCurrency(), orderHistory.getAmount()));
                 holder.textViewAmount.setVisibility(Prefs.with(activity).getInt(Constants.KEY_SHOW_FARE_IN_RIDE_HISTORY, 1) == 1 ? View.VISIBLE : View.GONE);
 
-                holder.imageViewProductType.setImageResource(R.drawable.ic_rides);
+                holder.imageViewProductType.setImageResource(R.drawable.autos_ride_txn_icon);
                 holder.imageViewProductType.setBackgroundResource(R.drawable.circle_theme);
 
                 try {
@@ -174,8 +174,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.textViewDetailsValue.setText(orderHistory.getExpectedDeliveryDate() + ", " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getStartTime(), false) + " - " + DateOperations.convertDayTimeAPViaFormat(orderHistory.getEndTime(), false));
                 }
 
-                holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(orderHistory.getDiscountedAmount())));
-
+                holder.textViewAmount.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(orderHistory.getDiscountedAmount(), orderHistory.getCurrencyCode(), orderHistory.getCurrency()));
 
                 if (orderHistory.getProductType() == ProductType.FRESH.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_groceries_new_vector);
@@ -190,7 +189,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     holder.imageViewProductType.setImageResource(R.drawable.ic_menus);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_purple_menu_fab);
                 } else if (orderHistory.getProductType() == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
-                    holder.imageViewProductType.setImageResource(R.drawable.ic_delivery_customer);
+                    holder.imageViewProductType.setImageResource(R.drawable.delivery_order_txn_icon);
                     holder.imageViewProductType.setBackgroundResource(R.drawable.circle_green_delivery_customer_fab);
                 } else if (orderHistory.getProductType() == ProductType.PAY.getOrdinal()) {
                     holder.imageViewProductType.setImageResource(R.drawable.ic_pay_grey);
@@ -247,12 +246,11 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 holder.textViewDetailsValue.setText(DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(orderHistory.getCreatedAt())));
 
                 if (orderHistory.getAmount() != 0) {
-                    holder.textViewAmount.setText(activity.getString(R.string.rupees_value_format,
-                            Utils.getMoneyDecimalFormat().format(orderHistory.getAmount())));
+                    holder.textViewAmount.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(orderHistory.getAmount(), orderHistory.getCurrencyCode(), orderHistory.getCurrency() ));
                 } else {
                     holder.textViewAmount.setText("");
                 }
-                holder.imageViewProductType.setImageResource(Data.userData.isRidesAndFatafatEnabled() ? R.drawable.ic_delivery_customer : R.drawable.ic_anywhere_fab);
+                holder.imageViewProductType.setImageResource(Data.userData.isRidesAndFatafatEnabled() ? R.drawable.delivery_order_txn_icon : R.drawable.ic_anywhere_fab);
                 holder.imageViewProductType.setBackgroundResource(Data.userData.isRidesAndFatafatEnabled() ? R.drawable.circle_green_delivery_customer_fab : R.drawable.circle_feed_grey_fab);
 
                 holder.relativeLayoutTo.setVisibility(View.VISIBLE);
@@ -410,7 +408,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                 if (rideType == RideTypeValue.POOL.getOrdinal()) {
                     return R.drawable.ic_pool_white;
                 } else {
-                    return R.drawable.ic_rides;
+                    return R.drawable.autos_ride_txn_icon;
                 }
             } else if (vehicleType == VehicleTypeValue.BIKES.getOrdinal()) {
                 if (rideType == RideTypeValue.POOL.getOrdinal()) {
@@ -432,7 +430,7 @@ public class RideTransactionsAdapter extends RecyclerView.Adapter<RecyclerView.V
                     || iconSet.equalsIgnoreCase(VehicleIconSet.TRANSPORT.getName())) {
                 return R.drawable.ic_transport_white;
             } else {
-                return R.drawable.ic_rides;
+                return R.drawable.autos_ride_txn_icon;
             }
         }
 

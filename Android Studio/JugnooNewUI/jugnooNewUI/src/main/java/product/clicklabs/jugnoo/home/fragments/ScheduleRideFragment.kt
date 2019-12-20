@@ -261,6 +261,11 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             updatePackagesAccRegionSelected(null)
             btSchedule.setText(if (!openSchedule) R.string.book else R.string.schedule)
             tvScheduleMessage.text = if (serviceType != null) Utils.trimHTML(Utils.fromHtml(serviceType!!.info)) else requireActivity().getString(R.string.schedule_ride_alert)
+            if(serviceType != null && serviceType!!.info.isNotEmpty()) {
+                tvNote.visibility = View.VISIBLE
+            } else {
+                tvNote.visibility = View.GONE
+            }
         }
 
         updatePaymentOption()
@@ -396,10 +401,10 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     fun searchResultReceived(searchResult: SearchResult, placeSearchMode: PlaceSearchListFragment.PlaceSearchMode?) {
         if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-            tvPickup.text = searchResult.nameForText
+            tvPickup.text = searchResult.getNameForText(activity)
             searchResultPickup = searchResult
         } else {
-            tvDestination.text = searchResult.nameForText
+            tvDestination.text = searchResult.getNameForText(activity)
             searchResultDestination = searchResult
         }
         getFareEstimate()
@@ -569,6 +574,10 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     fun getPaymentOptionDialog(): PaymentOptionDialog? {
         if (paymentOptionDialog == null) {
             paymentOptionDialog = PaymentOptionDialog(activity, (requireActivity() as HomeActivity).getCallbackPaymentOptionSelector(), object : PaymentOptionDialog.Callback {
+                override fun getSelectedPaymentOption() {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
                 override fun onDialogDismiss() {
 
                 }
@@ -577,7 +586,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     (requireActivity() as HomeActivity).updateConfirmedStatePaymentUI()
                     try {
                         GAUtils.event(GACategory.RIDES, GAAction.HOME + GAAction.WALLET + GAAction.SELECTED, MyApplication.getInstance().walletCore
-                                .getPaymentOptionName(Data.autoData.pickupPaymentOption))
+                                .getPaymentOptionName(Data.autoData.pickupPaymentOption, requireContext()))
                     } catch (e: Exception) {
                     }
 
@@ -599,7 +608,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()))
             textViewPaymentModeValueConfirm.text = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption())
+                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),activity)
 
         }
 
@@ -708,9 +717,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     fun getOneWayPackages(selectedRegion:Region?): ArrayList<Package> {
         oneWayPackages.clear()
-        if(selectedRegion != null) {
-            for (i in 0 until selectedRegion.packages.size) {
-                if (selectedRegion.packages.get(i).returnTrip == 0) {
+        if(selectedRegion != null && selectedRegion.packages !=null ) {
+            for (i in 0 until selectedRegion!!.packages.size) {
+                if (selectedRegion!!.packages.get(i).returnTrip == 0) {
                     val pck = Package()
 
                     pck.packageId = selectedRegion.packages.get(i).packageId

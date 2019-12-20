@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -13,7 +14,6 @@ import android.support.multidex.MultiDexApplication;
 import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.fugu.constant.FuguAppConstant;
@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.branch.referral.Branch;
-import io.fabric.sdk.android.Fabric;
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -77,6 +76,8 @@ public class MyApplication extends MultiDexApplication {
     private Bus mBus;
     public Branch branch;
     private BroadcastReceiver fuguChatCustomActionReceiver;
+    public Activity mActivity;
+
 
 
     @Override
@@ -213,6 +214,14 @@ public class MyApplication extends MultiDexApplication {
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         GoogleAnalytics.getInstance(this).dispatchLocalHits();
+    }
+
+    public Activity getmActivity() {
+        return mActivity;
+    }
+
+    public void setmActivity(Activity mActivity) {
+        this.mActivity = mActivity;
     }
 
     /***

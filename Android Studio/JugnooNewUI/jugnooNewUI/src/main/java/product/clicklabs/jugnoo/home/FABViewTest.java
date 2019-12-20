@@ -907,17 +907,17 @@ public class FABViewTest implements GACategory, GAAction {
 
     private void initOfferingsList(){
          listToggleModeData = new HashMap<>();
-        listToggleModeData.put(Config.getAutosClientId(),new ToggleModeData(Config.getAutosClientId(), R.drawable.ic_rides,R.color.theme_color,R.color.orange_rides_fab_pressed));
-        listToggleModeData.put(Config.getDeliveryCustomerClientId(),new ToggleModeData(Config.getDeliveryCustomerClientId(),R.drawable.ic_delivery_customer,R.color.green_delivery_customer_fab,R.color.green_delivery_customer_fab));
+        listToggleModeData.put(Config.getAutosClientId(),new ToggleModeData(Config.getAutosClientId(), R.drawable.autos_ride_txn_icon,R.color.theme_color,R.color.theme_color_alpha));
+        listToggleModeData.put(Config.getDeliveryCustomerClientId(),new ToggleModeData(Config.getDeliveryCustomerClientId(),R.drawable.delivery_order_txn_icon,R.color.green_delivery_customer_fab,R.color.green_delivery_customer_fab));
         listToggleModeData.put(Config.getMealsClientId(),new ToggleModeData(Config.getMealsClientId(),R.drawable.ic_meals,R.color.pink_meals_fab,R.color.pink_meals_fab_pressed));
         listToggleModeData.put(Config.getFreshClientId(),new ToggleModeData(Config.getFreshClientId(),R.drawable.ic_groceries_new_vector,R.color.green_fresh_fab,R.color.green_fresh_fab_pressed));
         listToggleModeData.put(Config.getMenusClientId(),new ToggleModeData(Config.getMenusClientId(),R.drawable.ic_menus,R.color.purple_menus_fab,R.color.purple_menus_fab_pressed));
         listToggleModeData.put(Config.getPayClientId(),new ToggleModeData(Config.getPayClientId(),R.drawable.ic_pay,R.color.yellow_pay_fab,R.color.yellow_pay_fab_pressed));
-        listToggleModeData.put(Config.getFeedClientId(),new ToggleModeData(Config.getFeedClientId(),R.drawable.ic_anywhere_fab,R.color.grey_feed_fab,R.color.grey_feed_fab_pressed));
+        listToggleModeData.put(Config.getFeedClientId(),new ToggleModeData(Config.getFeedClientId(),R.drawable.anywhere_fab_icon,R.color.anywhere_fab_color_normal,R.color.anywhere_fab_color_pressed));
         listToggleModeData.put(Config.getProsClientId(),new ToggleModeData(Config.getProsClientId(),R.drawable.ic_pros,R.color.orange_pros_fab,R.color.orange_pros_fab_pressed));
         //not used now in project,fallback cases written just in case
         listToggleModeData.put(Config.getGroceryClientId(),new ToggleModeData(Config.getGroceryClientId(),R.drawable.ic_groceries_new_vector,R.color.green_fresh_fab,R.color.green_fresh_fab_pressed));
-        listToggleModeData.put(Config.getDeliveryClientId(),new ToggleModeData(Config.getDeliveryClientId(),R.drawable.ic_rides,R.color.theme_color,R.color.orange_rides_fab_pressed));
+        listToggleModeData.put(Config.getDeliveryClientId(),new ToggleModeData(Config.getDeliveryClientId(),R.drawable.autos_ride_txn_icon,R.color.theme_color,R.color.theme_color_alpha));
 
     }
 
