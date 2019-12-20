@@ -1142,4 +1142,5 @@ public interface Constants {
 
 	String KEY_HIPPO_TICKET_FOR_RIDE_ISSUES = "hippo_ticket_for_ride_issues";
 	String KEY_DRIVER_INFO = "driver_info";
+	String KEY_HIPPO_TICKET_RIDE_FAQ_NAME = "hippo_ticket_ride_faq_name";
 }

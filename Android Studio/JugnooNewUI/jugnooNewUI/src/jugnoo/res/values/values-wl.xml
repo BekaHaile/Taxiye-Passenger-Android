@@ -97,5 +97,6 @@
     <integer name="show_tip_on_confirm_ride_level_2">1</integer>
 
     <integer name="hippo_ticket_for_ride_issues">1</integer>
+    <string name="hippo_ticket_ride_faq_name">Rides</string>
 
 </resources>

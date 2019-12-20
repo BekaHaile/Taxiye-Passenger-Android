@@ -150,7 +150,6 @@ import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
-import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -9991,7 +9990,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void fuguCustomerHelpRides(boolean fromSos) {
         try {
         	if(!fromSos && Data.isHippoTicketForRideEnabled(this)){
-				HomeUtil.openHippoTicketSupport(this,
+				HomeUtil.openHippoTicketForRide(this,
 						Integer.parseInt(Data.autoData.getcEngagementId()),
 						Integer.parseInt(Data.autoData.getcDriverId()));
 			}

@@ -591,6 +591,8 @@ public class JSONParser implements Constants {
 
 		Prefs.with(context).save(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES, autoData.optInt(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES,
 				context.getResources().getInteger(R.integer.hippo_ticket_for_ride_issues)));
+		Prefs.with(context).save(KEY_HIPPO_TICKET_RIDE_FAQ_NAME, autoData.optString(KEY_HIPPO_TICKET_RIDE_FAQ_NAME,
+				context.getString(R.string.hippo_ticket_ride_faq_name)));
 
 
 		parseJungleApiObjects(context, autoData);
@@ -1188,7 +1190,8 @@ public class JSONParser implements Constants {
 
 		int driverId = 0;
 		try {
-			driverId = jLastRideData.optInt(KEY_DRIVER_ID, Integer.parseInt(Data.autoData.getcDriverId()));
+			driverId = jLastRideData.optInt(KEY_DRIVER_ID,
+					!TextUtils.isEmpty(Data.autoData.getcDriverId()) ? Integer.parseInt(Data.autoData.getcDriverId()) : 0);
 			if(jLastRideData.has(KEY_DRIVER_INFO)){
 				JSONObject jDriverInfo = jLastRideData.optJSONObject(KEY_DRIVER_INFO);
 				driverId = jDriverInfo.optInt(KEY_ID);

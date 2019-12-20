@@ -532,17 +532,19 @@ public class HomeUtil {
 		if(Data.userData != null) {
 			HippoTicketModel hippoTicketModel = new HippoTicketModel(Integer.parseInt(Data.userData.getUserId()), Data.userData.getRegAs());
 			HippoTicketAttributes.Builder builder = new HippoTicketAttributes.Builder();
-			builder.setFaqName(Prefs.with(context).getString(Constants.HIPPO_SUPPORT_FAQ_NAME, ""));
+			builder.setFaqName(Prefs.with(context).getString(Constants.HIPPO_SUPPORT_FAQ_NAME,
+					context.getString(R.string.customer_hippo_support_faq_name)));
 			HippoConfig.getInstance().showFAQSupport(builder.build(), hippoTicketModel);
 		}
 	}
 
-	public static void openHippoTicketSupport(Context context, int engagementId, int driverId){
+	public static void openHippoTicketForRide(Context context, int engagementId, int driverId){
 		if(Data.userData != null) {
 			HippoTicketRideModel hippoTicketModel = new HippoTicketRideModel(Integer.parseInt(Data.userData.getUserId()), Data.userData.getRegAs(),
 					driverId, engagementId);
 			HippoTicketAttributes.Builder builder = new HippoTicketAttributes.Builder();
-			builder.setFaqName(Prefs.with(context).getString(Constants.HIPPO_SUPPORT_FAQ_NAME, ""));
+			builder.setFaqName(Prefs.with(context).getString(Constants.KEY_HIPPO_TICKET_RIDE_FAQ_NAME,
+					context.getString(R.string.hippo_ticket_ride_faq_name)));
 			HippoConfig.getInstance().showFAQSupport(builder.build(), hippoTicketModel);
 		}
 	}

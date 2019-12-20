@@ -328,7 +328,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
 				public void onClick(View v) {
 					if (activity instanceof RideTransactionsActivity) {
 						if(Data.isHippoTicketForRideEnabled(activity)){
-							HomeUtil.openHippoTicketSupport(activity,
+							HomeUtil.openHippoTicketForRide(activity,
 									Integer.parseInt(endRideData.engagementId),
 									endRideData.getDriverId());
 						}
