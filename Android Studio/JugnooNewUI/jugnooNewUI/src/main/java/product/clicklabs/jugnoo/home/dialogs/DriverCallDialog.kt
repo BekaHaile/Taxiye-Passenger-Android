@@ -132,7 +132,6 @@ class DriverCallDialog : DialogFragment() {
             }
         }
         rootView.rvNearbyDrivers.layoutManager = LinearLayoutManager(activity)
-        rootView.rvNearbyDrivers.isNestedScrollingEnabled = false
         val driverList : ArrayList<DriverInfo> = ArrayList()
         if(activity is HomeActivity) {
             val region = (activity as HomeActivity).slidingBottomPanel.requestRideOptionsFragment.regionSelected
