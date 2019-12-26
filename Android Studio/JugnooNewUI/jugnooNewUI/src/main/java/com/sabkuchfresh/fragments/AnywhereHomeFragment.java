@@ -538,7 +538,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         try {
             if (mPromoCouponDialog == null) {
 
-                mPromoCouponDialog = new PromoCouponDialog(activity, new product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter.Callback() {
+                mPromoCouponDialog = new PromoCouponDialog(activity, new PromoCouponDialog.Callback() {
                     @Override
                     public void onCouponSelected() {
                         Log.d("onCouponSelected", "");

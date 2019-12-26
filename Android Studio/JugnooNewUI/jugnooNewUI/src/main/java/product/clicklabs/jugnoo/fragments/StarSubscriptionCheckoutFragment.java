@@ -1053,17 +1053,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
 
     @Override
-    public void onCouponSelected() {
-
-    }
-
-    @Override
     public PromoCoupon getSelectedCoupon() {
         return getSelectedPromoCoupon();
     }
 
     @Override
-    public boolean setSelectedCoupon(int position) {
+    public boolean setSelectedCoupon(int position, PromoCoupon pc) {
         PromoCoupon promoCoupon;
         if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
             promoCoupon = promoCoupons.get(position);
@@ -1079,10 +1074,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
     }
 
-    @Override
-    public void applyPromoCoupon(String text) {
-
-    }
 
 
 

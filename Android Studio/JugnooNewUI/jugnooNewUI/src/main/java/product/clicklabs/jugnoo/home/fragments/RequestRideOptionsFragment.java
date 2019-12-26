@@ -274,10 +274,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     activity.updateConfirmedStateCoupon();
                 }
 
-                @Override
-                public void onSkipped() {
-                    //onRequestRideTap();
-                }
 
                 @Override
                 public void onInviteFriends() {

@@ -124,8 +124,8 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsRecyclerAdapter;
+import product.clicklabs.jugnoo.home.dialogs.PromoCouponDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -149,7 +149,7 @@ import retrofit.mime.TypedByteArray;
 
 
 public class FreshCheckoutMergedFragment extends Fragment implements GAAction, DeliverySlotsAdapter.Callback,
-        FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback, MenusCartItemsAdapter.Callback {
+        FreshCartItemsAdapter.Callback, PromoCouponDialog.Callback, MenusCartItemsAdapter.Callback {
 
 
     private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();

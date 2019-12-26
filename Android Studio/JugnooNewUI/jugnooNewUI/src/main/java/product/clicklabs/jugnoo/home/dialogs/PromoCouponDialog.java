@@ -14,7 +14,6 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
-import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsRecyclerAdapter;
 import product.clicklabs.jugnoo.utils.ASSL;
 
@@ -22,13 +21,13 @@ public class PromoCouponDialog {
     private static final String TAG = PromoCouponDialog.class.getSimpleName();
 
     private Activity activity;
-    private PromoCouponsAdapter.Callback callback;
+    private Callback callback;
 
     private Dialog dialog = null;
     private PromoCouponsRecyclerAdapter adapter;
 
 
-    public PromoCouponDialog(final Activity activity, final PromoCouponsAdapter.Callback callback) {
+    public PromoCouponDialog(final Activity activity, final Callback callback) {
 
         this.activity = activity;
         this.callback = callback;
@@ -95,4 +94,12 @@ public class PromoCouponDialog {
     public boolean isShowing() {
         return dialog != null && dialog.isShowing();
     }
+
+	public interface Callback{
+		void onCouponSelected();
+		PromoCoupon getSelectedCoupon();
+		boolean setSelectedCoupon(int position);
+		void applyPromoCoupon(String text);
+
+	}
 }
