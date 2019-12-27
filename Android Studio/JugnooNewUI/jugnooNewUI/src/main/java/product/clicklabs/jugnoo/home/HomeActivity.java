@@ -97,6 +97,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -265,9 +266,9 @@ import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.room.DBObject;
-import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.room.apis.DBCoroutine;
 import product.clicklabs.jugnoo.room.database.SearchLocationDB;
+import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.smartlock.callbacks.SmartlockCallbacks;
 import product.clicklabs.jugnoo.smartlock.controller.SmartLockController;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -2711,6 +2712,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         // map object initialized
         map = googleMap;
         if (map != null) {
+
+			boolean success = map.setMapStyle(
+					MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_json));
 
             map.getUiSettings().setZoomGesturesEnabled(false);
             map.getUiSettings().setZoomControlsEnabled(false);
@@ -5491,7 +5495,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 imageViewIRPaymentOption.setImageResource(R.drawable.ic_corporate);
             }
             else if (PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()) {
-                textViewIRPaymentOptionValue.setText(getString(R.string.cash));
+                textViewIRPaymentOptionValue.setText(getString(R.string.pay_later));
             } else {
                 textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
                         .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode(),this));
@@ -11363,10 +11367,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         LinearLayout rlMark = findViewById(R.id.rlMark);
 
         int dp70 = Utils.dpToPx(this, 55);
-        int dp40 = Utils.dpToPx(this, 20);
+        int dp40 = (int)(ASSL.minRatio()*16F);
         int dp30 = Utils.dpToPx(this, 15);
-        int dp50 = Utils.dpToPx(this, 18);
-        int dp68 = Utils.dpToPx(this, 27);
+        int dp50 = Utils.dpToPx(this, 22);
+        int dp68 = Utils.dpToPx(this, 30);
 
 		ViewGroup.LayoutParams layoutParamsInitial = relativeLayoutInitialSearchBarNew.getLayoutParams();
 		layoutParamsInitial.height = dp70;

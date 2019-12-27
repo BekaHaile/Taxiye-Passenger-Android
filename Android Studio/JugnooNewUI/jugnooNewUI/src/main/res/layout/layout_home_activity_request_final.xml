@@ -314,7 +314,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5px"
-                        android:textAllCaps="true"
                         android:gravity="center"
                         android:text="@string/rs_0100"
                         android:textColor="@color/text_color"

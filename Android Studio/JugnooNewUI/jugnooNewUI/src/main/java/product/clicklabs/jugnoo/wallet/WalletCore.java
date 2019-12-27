@@ -451,12 +451,12 @@ public class WalletCore {
             } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
                 return context1.getString(R.string.pos);
             } else {
-                return context1.getResources().getString(R.string.cash);
+                return context1.getResources().getString(R.string.pay_later);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return context.getResources().getString(R.string.cash);
+        return context.getResources().getString(R.string.pay_later);
     }
 
     public String getRazorpayName(Context context) {

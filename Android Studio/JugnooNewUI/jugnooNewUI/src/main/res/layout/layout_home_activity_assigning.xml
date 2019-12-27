@@ -90,7 +90,7 @@
                             android:id="@+id/iv3NewUIPickupMarkAssigning"
                             android:layout_width="8dp"
                             android:layout_height="8dp"
-                            android:src="@drawable/circle_theme" />
+                            android:src="@drawable/circle_green" />
 
                         <ImageView
                             android:id="@+id/iv2NewUIDropDashedLineAssigning"
@@ -103,9 +103,9 @@
 
                         <ImageView
                             android:id="@+id/iv3NewUIDropMarkAssigning"
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:src="@drawable/ic_shape"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:src="@drawable/circle_red"
                             android:visibility="visible" />
 
                     </LinearLayout>

@@ -90,22 +90,22 @@
                     android:layout_width="16px"
                     android:layout_height="16px"
                     android:tag="mwar"
-                    android:src="@drawable/circle_theme"/>
+                    android:src="@drawable/circle_green"/>
                 <ImageView
                     android:id="@+id/iv2NewUIDropDashedLine"
                     android:layout_width="40px"
-                    android:layout_height="50px"
+                    android:layout_height="55px"
                     android:orientation="vertical"
                     android:rotation="0"
                     android:visibility="visible"
                     android:src="@drawable/dotted_vertical_line"/>
                 <ImageView
                     android:id="@+id/iv3NewUIDropMark"
-                    android:layout_width="20px"
-                    android:layout_height="20px"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
                     android:visibility="visible"
                     android:tag="mwar"
-                    android:src="@drawable/ic_shape"/>
+                    android:src="@drawable/circle_red"/>
                 
             </LinearLayout>
 
@@ -282,7 +282,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/_200"
-                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_26" />
 
@@ -309,10 +308,10 @@
                     android:background="?attr/selectableItemBackground">
 
                     <ImageView
-                        android:layout_width="35px"
-                        android:layout_height="34px"
+                        android:id="@+id/ivOfferIconConfirm"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
                         android:layout_centerVertical="true"
-                        android:layout_toStartOf="@+id/textViewOffersConfirm"
                         android:src="@drawable/ic_gift"
                         android:tag="mwar" />
 
@@ -320,19 +319,20 @@
                         android:id="@+id/textViewOffersConfirm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="15px"
+                        android:layout_toEndOf="@+id/ivOfferIconConfirm"
+                        android:layout_marginStart="10px"
+                        android:layout_marginTop="5px"
                         android:gravity="center"
                         android:text="@string/nl_offers"
                         android:textColor="@color/text_color"
-                        android:textSize="28px" />
+                        android:textSize="26px" />
 
                     <ImageView
                         android:id="@+id/imageViewOfferConfirm"
                         android:layout_width="31px"
                         android:layout_height="31px"
-                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@+id/textViewOffersConfirm"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="15px"
                         android:layout_marginEnd="20px"
@@ -378,7 +378,7 @@
                         android:gravity="center"
                         android:text="@string/notes"
                         android:textColor="@color/text_color"
-                        android:textSize="28px" />
+                        android:textSize="26px" />
 
                     <ImageView
                         android:id="@+id/imageViewNotes"

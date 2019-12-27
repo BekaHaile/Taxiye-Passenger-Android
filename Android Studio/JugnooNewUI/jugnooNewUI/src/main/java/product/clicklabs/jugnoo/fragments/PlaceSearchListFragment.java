@@ -379,13 +379,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}else{
 			ViewGroup.LayoutParams params = imageViewType.getLayoutParams();
 			if(searchMode == PlaceSearchMode.DROP.getOrdinal()) {
-				params.height = 30;
-				params.width = 30;
-				imageViewType.setImageResource(R.drawable.ic_shape);
+				params.height = 20;
+				params.width = 20;
+				imageViewType.setImageResource(R.drawable.circle_red);
 			} else {
 				params.height = 20;
 				params.width = 20;
-				imageViewType.setImageResource(R.drawable.circle_theme);
+				imageViewType.setImageResource(R.drawable.circle_green);
 			}
 			imageViewType.setLayoutParams(params);
 			String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
