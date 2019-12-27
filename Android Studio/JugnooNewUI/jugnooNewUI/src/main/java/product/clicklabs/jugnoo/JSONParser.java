@@ -20,6 +20,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,6 +40,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -322,7 +325,91 @@ public class JSONParser implements Constants {
 
     }
 
-    public void parseAutoData(Context context, JSONObject autoData, LoginResponse.Autos autosData) throws Exception{
+	private void reorderMenu(Context context) {
+
+    	if(Data.userData != null && Data.userData.getMenuInfoList() != null){
+
+			//free rides for life check
+			if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
+				int index = Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES.getTag()));
+				int indexNew = Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES_NEW.getTag()));
+				if(index > -1){
+					Data.userData.getMenuInfoList().remove(index);
+					MenuInfo menuInfo = new MenuInfo(context.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
+					Data.userData.getMenuInfoList().add(0, menuInfo);
+				} else if(indexNew == -1){
+					MenuInfo menuInfo = new MenuInfo(context.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
+					Data.userData.getMenuInfoList().add(0, menuInfo);
+				}
+			}
+
+
+			//setting priority
+    		for(int i = 0; i < Data.userData.getMenuInfoList().size(); i++){
+				MenuInfo menuInfo = Data.userData.getMenuInfoList().get(i);
+    			if(menuInfo != null) {
+    				if(menuInfo.getPriority() == null){
+						if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES_NEW.getTag())
+								|| menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())) {
+							menuInfo.setPriority(1);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())) {
+							menuInfo.setPriority(2);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())) {
+							menuInfo.setPriority(3);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())) {
+							menuInfo.setPriority(4);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())) {
+							menuInfo.setPriority(5);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FUGU_SUPPORT.getTag())) {
+							menuInfo.setPriority(6);
+						}
+					}
+					if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.CHANGE_LOCALE.getTag())) {
+						menuInfo.setName(context.getString(R.string.change_language));
+						menuInfo.setShowInAccount(1);
+					} else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())) {
+						menuInfo.setName(context.getString(R.string.your_trips));
+					}
+				}
+			}
+
+    		//sorting
+			Collections.sort(Data.userData.getMenuInfoList(), new Comparator<MenuInfo>() {
+				@Override
+				public int compare(MenuInfo o1, MenuInfo o2) {
+					if(o1.getPriority() == null && o2.getPriority() == null){
+						return 0;
+					}
+					else if(o1.getPriority() != null && o2.getPriority() == null){
+						return -1;
+					}
+					else if(o1.getPriority() == null && o2.getPriority() != null){
+						return 1;
+					}
+					else {
+						if(o1.getPriority() > o2.getPriority()){
+							return 1;
+						}
+						else if(o1.getPriority() < o2.getPriority()){
+							return -1;
+						}
+						else {
+							return 0;
+						}
+					}
+				}
+			});
+
+		}
+
+	}
+
+	public void parseAutoData(Context context, JSONObject autoData, LoginResponse.Autos autosData) throws Exception{
         try {
             String destinationHelpText = autoData.optString("destination_help_text", "");
             String rideSummaryBadText = autoData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
@@ -442,6 +529,8 @@ public class JSONParser implements Constants {
             if(Data.userData != null){
             	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
+
+				reorderMenu(context);
 			}
         } catch (Exception e) {
             e.printStackTrace();

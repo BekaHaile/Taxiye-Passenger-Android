@@ -2557,6 +2557,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
             rvRideTypes.setVisibility(serviceTypesEligible.size() > 1 ? View.VISIBLE : View.GONE);
+			setTopBarMenuIcon();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -10082,13 +10083,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
 
 //            topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) getResources().getDimensionPixelSize(R.dimen.text_size_40) * minRatio);
-            topBar.imageViewMenu.setImageResource(R.drawable.ic_menu_selector);
+			setTopBarMenuIcon();
             topBar.textViewTitle.setTextColor(getResources().getColor(R.color.text_color));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void setTopBarMenuIcon(){
+		topBar.imageViewMenu.setImageResource(rvRideTypes.getVisibility() == View.VISIBLE ?
+				R.drawable.ic_menu_selector : R.drawable.ic_menu_home_new_selector);
+	}
 
     public void setTopBarTransNewUI() {
 		RelativeLayout.LayoutParams paramsInitial = (RelativeLayout.LayoutParams) initialLayout.getLayoutParams();
