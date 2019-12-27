@@ -4121,7 +4121,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 findViewById(R.id.ivNotes).setVisibility(View.GONE);
                             }
                         } else if(isNewUI) {
-                            buttonConfirmRequest.setText(R.string.book);
+                            buttonConfirmRequest.setText(R.string.confirm_ride);
                             imageViewRideNow.setVisibility(View.GONE);
                             relativeLayoutSearchContainerNew.setVisibility(View.VISIBLE);
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
@@ -6838,7 +6838,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
                         if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() != null
                                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1) {
-                            tvTermsAndConditions.setVisibility(View.VISIBLE);
+//                            tvTermsAndConditions.setVisibility(View.VISIBLE);
                         }
                     }
                 } else {
@@ -11222,7 +11222,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() != null
                         && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1) {
-                    tvTermsAndConditions.setVisibility(View.VISIBLE);
+//                    tvTermsAndConditions.setVisibility(View.VISIBLE);
                 }
             }
             setPickupLocationInitialUI();

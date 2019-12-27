@@ -46,7 +46,8 @@
         android:layout_above="@+id/relativeLayoutConfirmBottom"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:elevation="5dp"
         />
 
     <RelativeLayout
@@ -324,9 +325,8 @@
                         android:layout_marginStart="15px"
                         android:gravity="center"
                         android:text="@string/nl_offers"
-                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
+                        android:textSize="28px" />
 
                     <ImageView
                         android:id="@+id/imageViewOfferConfirm"
@@ -377,9 +377,8 @@
                         android:layout_marginStart="20px"
                         android:gravity="center"
                         android:text="@string/notes"
-                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
+                        android:textSize="28px" />
 
                     <ImageView
                         android:id="@+id/imageViewNotes"
@@ -486,7 +485,6 @@
             style="@style/ButtonThemeCapsule"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_38"
-            android:textAllCaps="false"
             android:layout_below="@+id/linearLayoutConfirmOption2"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10px"
@@ -494,18 +492,20 @@
 
         <TextView
             android:id="@+id/tvTermsAndConditions"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:textSize="@dimen/font_extra_small"
             android:tag="@string/dont_touch_me"
             android:layout_below="@id/buttonConfirmRequest"
-            android:paddingStart="@dimen/spacing_small"
-            android:paddingEnd="@dimen/spacing_small"
-            android:paddingTop="@dimen/spacing_small"
-            android:paddingBottom="@dimen/spacing_normal"
+            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
             android:text="@string/text_terms_and_conditions_apply"
             android:gravity="center_horizontal"
-            android:textColor="@color/text_color_link"/>
+            android:textColor="@color/text_color_link"
+            android:background="?attr/selectableItemBackground"
+            android:theme="@style/GreyHighlight"
+            />
     </RelativeLayout>
 
 </RelativeLayout>
