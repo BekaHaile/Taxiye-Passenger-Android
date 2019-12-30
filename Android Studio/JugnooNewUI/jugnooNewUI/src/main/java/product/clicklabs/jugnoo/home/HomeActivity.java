@@ -6935,7 +6935,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		}
 
         if(lasSelectedCustomCoupon != null
-                && lasSelectedCustomCoupon.getType() == CouponType.DROP_BASED.getType()
+                && (lasSelectedCustomCoupon.getType() == CouponType.DROP_BASED.getType()
+				|| lasSelectedCustomCoupon.getType() == CouponType.PICKUP_DROP_BASED.getType())
                 && lasSelectedCustomCoupon.getDropRadius() > 0){
             boolean matched = false;
             for(LatLngCoordinates llc : lasSelectedCustomCoupon.getDropLocationCoordinates()){
