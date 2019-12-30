@@ -6740,7 +6740,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         @Override
                         public void onFinish() {
-                            stopDefaultCoupon = false;
                             progressBarInitialSearch.stopSpinning();
                             progressBarInitialSearch.setVisibility(View.GONE);
                             imageViewRideNow.setEnabled(true);
@@ -6876,9 +6875,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
             try {
-                if (!stopDefaultCoupon && (slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation)) {
-                    defaultCouponSelection();
-                }
+//                if (!stopDefaultCoupon && (slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon().getId() > 0 || promoSelectionLastOperation)) {
+//                    defaultCouponSelection();
+//                }
                 if(vehiclesTabAdapterConfirmRide!=null){
                     vehiclesTabAdapterConfirmRide.setList(regions);
                 }
@@ -6929,9 +6928,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //        }
     }
 
-    private void defaultCouponSelection() {
+    public static boolean checkCouponDropValidity(PromoCoupon lasSelectedCustomCoupon) {
 
-        PromoCoupon lasSelectedCustomCoupon = getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
+    	if(Data.autoData == null){
+    		return false;
+		}
+
         if(lasSelectedCustomCoupon != null
                 && lasSelectedCustomCoupon.getType() == CouponType.DROP_BASED.getType()
                 && lasSelectedCustomCoupon.getDropRadius() > 0){
@@ -6956,11 +6958,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
 
-        if (!lastSelectedCouponExits) {
-            getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(Data.userData
-                    .getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(), HomeActivity.this));
-        }
+		//if false: 	default selection needed, hence coupon is invalid
+		//else if true: coupon is valid
 
+        return lastSelectedCouponExits;
 
     }
 
@@ -10323,7 +10324,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
-    private boolean stopDefaultCoupon = false;
+    private boolean stopDefaultCoupon;
     public void callFindADriverAfterCouponSelect(){
         if(confirmedScreenOpened || isNewUI()) {
             if (Data.autoData.showRegionSpecificFare()) {
@@ -10334,9 +10335,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 PromoCoupon pc = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
                 if (pc != null && pc.getId() > 0) {
-                    stopDefaultCoupon = true;
                     params.put(pc instanceof CouponInfo ? Constants.KEY_COUPON_TO_APPLY : Constants.KEY_PROMO_TO_APPLY, String.valueOf(pc.getId()));
                 }
+				stopDefaultCoupon = true;
                 DialogPopup.showLoadingDialog(this, getString(R.string.loading));
                 findDriversETACall(false, false, false, params);
             } else {
@@ -11228,21 +11229,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         int oldRegionId = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId();
         int oldRideType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType();
         slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(position);
-        int newVehicleType = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType();
+        Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+        int newVehicleType = regionSelected.getVehicleType();
         slidingBottomPanel.getRequestRideOptionsFragment().updatePaymentOption();
         if(isNewUI) {
             relativeLayoutTotalFare.setVisibility(View.GONE);
             linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
             tvTermsAndConditions.setVisibility(View.GONE);
-            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
-				showReverseBidField(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+            if(regionSelected.getReverseBid() == 1) {
+				showReverseBidField(regionSelected);
 				relativeLayoutOfferConfirm.setVisibility(View.GONE);
                 boolean isCashOnly = true;
                 if (MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
                     for (PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()) {
                         if (paymentModeConfigData.getPaymentOption() != PaymentOption.CASH.getOrdinal()
                                 && paymentModeConfigData.getEnabled() == 1
-                                && !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes().contains(paymentModeConfigData.getPaymentOption())
+                                && !regionSelected.getRestrictedPaymentModes().contains(paymentModeConfigData.getPaymentOption())
                                 && paymentModeConfigData.getPaymentOption() != 0) {
                             isCashOnly = false;
                         }
@@ -11256,8 +11258,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
                 linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
 
-                if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() != null
-                        && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1) {
+                if (regionSelected.getRegionFare() != null
+                        && regionSelected.getFareMandatory() == 1) {
 //                    tvTermsAndConditions.setVisibility(View.VISIBLE);
                 }
             }
@@ -11271,7 +11273,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
         }
 
-        if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()== RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+        if(regionSelected.getRideType()== RideTypeValue.BIKE_RENTAL.getOrdinal()) {
         	relativeLayoutDestSearchBar.setVisibility(View.GONE);
 			relativeLayoutDestSearchBarNew.setVisibility(View.GONE);
 
@@ -11311,7 +11313,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(passengerScreenMode == P_INITIAL && (confirmedScreenOpened || isNewUI) && Data.autoData.getPickupLatLng() != null) {
             pickupLocationEtaMarker();
         }
-        if(oldRegionId != slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
+        if(oldRegionId != regionSelected.getRegionId()) {
             mNotes = "";
         }
 		ArrayList<Region> regions = Data.autoData.getRegions();
@@ -11319,12 +11321,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             vehiclesTabAdapterConfirmRide.setList(regions);
         }
         if (regions.size() == 1) {
-            imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-                    .getVehicleIconSet().getRequestSelector(this));
+            imageViewRideNow.setImageDrawable(regionSelected.getVehicleIconSet().getRequestSelector(this));
         } else {
-            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getOperatorId() != oldOperatorId
-                    || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getVehicleType().equals(oldVehicleType)
-                    || !slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId().equals(oldRegionId)
+            if (regionSelected.getOperatorId() != oldOperatorId
+                    || !regionSelected.getVehicleType().equals(oldVehicleType)
+                    || !regionSelected.getRegionId().equals(oldRegionId)
                     ) {
                 if (oldRideType == RideTypeValue.POOL.getOrdinal()
                         && (textViewDestSearch.getText().toString()
@@ -11363,12 +11364,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         PromoCoupon selectedCoupon = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
 
 
-        if (!(userClicked && oldVehicleType == newVehicleType)) {//do not change promo if user clicked on same vehicle Type
-            if (selectedCoupon == null || selectedCoupon.getId() == -1 || !selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected())) {
+        if (!stopDefaultCoupon && !(userClicked && oldVehicleType == newVehicleType)) {//do not change promo if user clicked on same vehicle Type
+            if (selectedCoupon == null || selectedCoupon.getId() <= 0
+					|| (!selectedCoupon.isVehicleTypeExists(getVehicleTypeSelected(), getOperatorIdSelected()) || !checkCouponDropValidity(selectedCoupon))) {
                 PromoCoupon defaultCoupon = Data.userData.getDefaultCoupon(getVehicleTypeSelected(), getOperatorIdSelected(), HomeActivity.this);
 
                 if (defaultCoupon != null) {
                     slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(defaultCoupon);
+
+                    //to call find a driver again if previous find a driver was called without coupon selected or with different coupon
+                    String previousPromoId = "";
+                    if(getApiFindADriver().getParams() != null){
+                    	if(!getApiFindADriver().getParams().getOrDefault(KEY_COUPON_TO_APPLY, "").equalsIgnoreCase("")){
+							previousPromoId = getApiFindADriver().getParams().get(KEY_COUPON_TO_APPLY);
+						}
+                    	else if(!getApiFindADriver().getParams().getOrDefault(KEY_PROMO_TO_APPLY, "").equalsIgnoreCase("")){
+							previousPromoId = getApiFindADriver().getParams().get(KEY_PROMO_TO_APPLY);
+						}
+					}
+                    if(!String.valueOf(defaultCoupon.getId()).equalsIgnoreCase(previousPromoId)){
+						callFindADriverAfterCouponSelect();
+					}
 
                 } else {
                     slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(-1, false);
@@ -11376,11 +11392,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 updateConfirmedStateCoupon();
             }
         }
+		stopDefaultCoupon = false;
 
         showPoolInforBar(false);
         slidingBottomPanel.getRequestRideOptionsFragment().updateOffersCount();
 
-		if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
+		if (regionSelected.getRideType() ==
 				RideTypeValue.BIKE_RENTAL.getOrdinal()) {
 			damageReportButton.setVisibility(View.GONE);
 		} else {
