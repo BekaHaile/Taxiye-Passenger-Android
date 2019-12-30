@@ -672,6 +672,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ImageView imageViewDropCrossNew;
     LinearLayout linearLayoutConfirmOption,linearLayoutBidValue;
     EditText editTextBidValue;
+    private int regionIdFareSetInETBid;
     private SearchLocationDB searchLocationDB;
 
     private CardView cvTutorialBanner;
@@ -4799,7 +4800,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void updateDriverTipUI(PassengerScreenMode mode) {
         if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null  &&
                 Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()
-                && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0){
+                && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0
+				&& Data.autoData.getAssignedDriverInfo().getTipBeforeRequestRide() <= 0){
             buttonTipDriver.setVisibility(View.VISIBLE);
             setAddedTipUI();
         }else if(mode==PassengerScreenMode.P_RIDE_END && Data.autoData!=null  &&
@@ -6821,7 +6823,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     imageViewRideNow.setVisibility(View.GONE);
                     linearLayoutConfirmOption.setBackground(ContextCompat.getDrawable(this,R.color.white));
                     if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
-                        linearLayoutBidValue.setVisibility(View.VISIBLE);
+
+						//for setting region fare in etBid again
+						regionIdFareSetInETBid = 0;
+
+						showReverseBidField(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+
                         relativeLayoutOfferConfirm.setVisibility(View.GONE);
                         boolean isCashOnly = true;
                         if (MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
@@ -7574,7 +7581,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		@Override
 		public void run() {
 			DialogPopup.dismissLoadingDialog();
-			editTextBidValue.setText(Utils.getDecimalFormat2Decimal().format(Data.autoData.getChangedBidValue()));
+			editTextBidValue.setText(Utils.getMoneyDecimalFormat().format(Data.autoData.getChangedBidValue()));
 			editTextBidValue.setSelection(editTextBidValue.getText().length());
 
 			finalRequestRideTimerStart(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
@@ -8894,12 +8901,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             int gpsLockStatus = jObj.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
             int fareMandatory = jObj.optInt(Constants.KEY_FARE_MANDATORY,0);
+            double tipBeforeRequestRide = jObj.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(this, Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory));
+                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -10945,6 +10953,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (P_INITIAL == passengerScreenMode
                     || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 isPickupSet = true;
+
+
                 if(scheduleRideOpen){
                     if(getScheduleRideFragment() != null){
                         getScheduleRideFragment().searchResultReceived(searchResult, searchMode);
@@ -11209,8 +11219,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
             tvTermsAndConditions.setVisibility(View.GONE);
             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
-                linearLayoutBidValue.setVisibility(View.VISIBLE);
-                relativeLayoutOfferConfirm.setVisibility(View.GONE);
+				showReverseBidField(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+				relativeLayoutOfferConfirm.setVisibility(View.GONE);
                 boolean isCashOnly = true;
                 if (MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
                     for (PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()) {
@@ -11364,7 +11374,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return changed;
     }
 
-//    0 :- Height Large
+	public void showReverseBidField(Region region) {
+		linearLayoutBidValue.setVisibility(View.VISIBLE);
+		if(region.getRegionFare() != null && regionIdFareSetInETBid != region.getRegionId()) {
+			editTextBidValue.setText(Utils.getMoneyDecimalFormat().format(region.getRegionFare().getFare() * 0.8));
+			editTextBidValue.setSelection(editTextBidValue.getText().length());
+			regionIdFareSetInETBid = region.getRegionId();
+		}
+	}
+
+	//    0 :- Height Large
 //    1 :- Normal Height
     private void setHeightDropAddress(int caseVal) {
 

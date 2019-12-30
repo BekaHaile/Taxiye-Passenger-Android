@@ -57,6 +57,7 @@ public class DriverInfo {
 	private int rideType;
 	private int gpsLockStatus;
 	private int fareMandatory;
+	private double tipBeforeRequestRide;
 
 	public String getDeviceToken() {
 		return deviceToken;
@@ -114,7 +115,7 @@ public class DriverInfo {
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
 					  String currency, String markerUrl, Double tipAmount, int isCorporateRide, String cardId, int rideType, int gpsLockStatus,
-					  int fareMandatory){
+					  int fareMandatory, double tipBeforeRequestRide){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -151,6 +152,7 @@ public class DriverInfo {
 		this.rideType = rideType;
 		this.gpsLockStatus = gpsLockStatus;
 		this.fareMandatory = fareMandatory;
+		this.tipBeforeRequestRide = tipBeforeRequestRide;
 	}
 
 	//for last ride data
@@ -365,6 +367,14 @@ public class DriverInfo {
 
 	public void setFareMandatory(int fareMandatory) {
 		this.fareMandatory = fareMandatory;
+	}
+
+	public double getTipBeforeRequestRide() {
+		return tipBeforeRequestRide;
+	}
+
+	public void setTipBeforeRequestRide(double tipBeforeRequestRide) {
+		this.tipBeforeRequestRide = tipBeforeRequestRide;
 	}
 
 	public enum PaymentMethod{

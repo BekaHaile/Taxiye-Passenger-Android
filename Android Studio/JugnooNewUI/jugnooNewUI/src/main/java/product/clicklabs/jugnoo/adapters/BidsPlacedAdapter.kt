@@ -80,7 +80,7 @@ class BidsPlacedAdapter(private val context: Context,
 
 
         holder.tvEta.visibility = if(TextUtils.isEmpty(bidInfo.eta)) View.GONE else View.VISIBLE
-        holder.tvEta.text = bidInfo.eta+context.getString(R.string.min)
+        holder.tvEta.text = bidInfo.eta.plus(" ").plus(context.getString(R.string.min))
         holder.tvDistance.text = bidInfo.acceptDistanceText
         holder.bidInfo = bidInfo
 

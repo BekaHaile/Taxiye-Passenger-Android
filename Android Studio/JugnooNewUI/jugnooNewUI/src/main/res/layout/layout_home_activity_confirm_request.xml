@@ -209,7 +209,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70px">
+                android:layout_height="90px">
 
                 <LinearLayout
                     android:id="@+id/linearLayoutBidValue"
@@ -219,8 +219,8 @@
                     android:theme="@style/GreyHighlight"
                     android:paddingStart="20px"
                     android:paddingEnd="12px"
-                    android:paddingTop="12px"
-                    android:paddingBottom="12px"
+                    android:paddingTop="8px"
+                    android:paddingBottom="8px"
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:orientation="horizontal"
