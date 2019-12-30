@@ -6823,7 +6823,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     imageViewRideNow.setVisibility(View.GONE);
                     linearLayoutConfirmOption.setBackground(ContextCompat.getDrawable(this,R.color.white));
                     if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
+
+						//for setting region fare in etBid again
+						regionIdFareSetInETBid = 0;
+
 						showReverseBidField(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+
                         relativeLayoutOfferConfirm.setVisibility(View.GONE);
                         boolean isCashOnly = true;
                         if (MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
@@ -10949,8 +10954,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
                 isPickupSet = true;
 
-                //for setting region fare in etBid again
-				regionIdFareSetInETBid = 0;
 
                 if(scheduleRideOpen){
                     if(getScheduleRideFragment() != null){
@@ -11374,7 +11377,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 	public void showReverseBidField(Region region) {
 		linearLayoutBidValue.setVisibility(View.VISIBLE);
 		if(region.getRegionFare() != null && regionIdFareSetInETBid != region.getRegionId()) {
-			editTextBidValue.setText(Utils.getMoneyDecimalFormat().format(region.getRegionFare().getFare()));
+			editTextBidValue.setText(Utils.getMoneyDecimalFormat().format(region.getRegionFare().getFare() * 0.8));
 			editTextBidValue.setSelection(editTextBidValue.getText().length());
 			regionIdFareSetInETBid = region.getRegionId();
 		}
