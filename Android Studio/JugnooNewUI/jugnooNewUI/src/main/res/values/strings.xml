@@ -2454,4 +2454,5 @@
     <string name="contact_user_format">Contact %s</string>
     <string name="free_call">Free Call</string>
     <string name="carrier_charges_may_apply">*Carrier charges may apply</string>
+    <string name="offer_not_valid_for_selected_drop_location">Offer not valid for your selected drop location</string>
 </resources>

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
+import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -84,7 +85,6 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				@Override
 				public PromoCoupon getSelectedCoupon() {
 					if(activity instanceof HomeActivity) {
-//						return ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getSelectedCoupon();
 						return couponSelected;
 					} else {
 						return null;
@@ -94,12 +94,14 @@ public class PromoCouponsDialog implements GACategory, GAAction{
 				@Override
 				public boolean setSelectedCoupon(int position, PromoCoupon pc) {
 					if(activity instanceof HomeActivity) {
-						couponSelectedIndex = position;
-						couponSelected = pc;
-
-//						onDialogOpenPromoSelectOperation = position > -1 && position < promoCoupons.size();
-//						return ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().setSelectedCoupon(position, false);
-						return true;
+						if(pc == null || HomeActivity.checkCouponDropValidity(pc)){
+							couponSelectedIndex = position;
+							couponSelected = pc;
+							return true;
+						} else {
+							Utils.showToast(activity, activity.getString(R.string.offer_not_valid_for_selected_drop_location));
+							return false;
+						}
 					} else {
 						return false;
 					}
