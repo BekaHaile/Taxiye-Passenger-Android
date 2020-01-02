@@ -2449,4 +2449,6 @@
     <string name="earnings_today">Earnings Today</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="referred_on">Referred on</string>
+    <string name="no_vehicles_available">Sorry!! No vehicle available in this area</string>
+
 </resources>
