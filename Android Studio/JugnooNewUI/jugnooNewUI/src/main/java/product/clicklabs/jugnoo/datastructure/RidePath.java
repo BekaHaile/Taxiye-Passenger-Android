@@ -9,13 +9,13 @@ import product.clicklabs.jugnoo.utils.MapUtils;
  */
 public class RidePath {
 
-    public int ridePathId;
+    public long ridePathId;
     public double sourceLatitude;
     public double sourceLongitude;
     public double destinationLatitude;
     public double destinationLongitude;
 
-    public RidePath(int ridePathId, double sourceLatitude, double sourceLongitude, double destinationLatitude, double destinationLongitude) {
+    public RidePath(long ridePathId, double sourceLatitude, double sourceLongitude, double destinationLatitude, double destinationLongitude) {
         this.ridePathId = ridePathId;
         this.sourceLatitude = sourceLatitude;
         this.sourceLongitude = sourceLongitude;
