@@ -1174,4 +1174,5 @@ public interface Constants {
 	String KEY_DEVICE_NAME = "device_name";
 	String KEY_OS_VERSION = "os_version";
 	String KEY_COUNTRY = "country";
+	String KEY_DRIVER_TO_PICKUP_PATH_ENABLED = "driver_to_pickup_path_enabled";
 }

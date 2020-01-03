@@ -227,13 +227,6 @@ public class MenuBar {
 	}
 
 
-	public void setupFreshUI(){
-		try {
-			menuAdapter.setList(getSideMenuList());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public Activity getActivity(){
 		return activity;

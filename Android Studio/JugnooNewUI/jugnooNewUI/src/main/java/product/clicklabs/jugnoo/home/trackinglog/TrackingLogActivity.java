@@ -449,7 +449,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
 							marker.setRotation((float) MapUtils.getBearing(prevMarkerPos, trackingLogItem.getLatLng()));
                             this.onAnimComplete();
                         }
-                    }, false, null, 0, 0, 0,
+                    },
                     trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.RESET.getOrdinal()));
         }
 
