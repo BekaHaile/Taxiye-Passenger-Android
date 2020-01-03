@@ -680,6 +680,8 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
 
 		Prefs.with(context).save(KEY_DRIVER_TO_PICKUP_PATH_ENABLED, autoData.optInt(KEY_DRIVER_TO_PICKUP_PATH_ENABLED, 1));
+		Prefs.with(context).save(KEY_SHOW_DRIVER_MARKER_IN_RIDE, autoData.optInt(KEY_SHOW_DRIVER_MARKER_IN_RIDE, 1));
+		Prefs.with(context).save(KEY_SHOW_RIDE_COVERED_PATH, autoData.optInt(KEY_SHOW_RIDE_COVERED_PATH, 0));
 		Prefs.with(context).save(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES, autoData.optInt(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES,
 				context.getResources().getInteger(R.integer.hippo_ticket_for_ride_issues)));
 		Prefs.with(context).save(KEY_HIPPO_TICKET_RIDE_FAQ_NAME, autoData.optString(KEY_HIPPO_TICKET_RIDE_FAQ_NAME,

@@ -11,39 +11,39 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutFinalDropLocationClick"
         android:layout_width="match_parent"
-        android:layout_height="100px"
-        android:layout_marginStart="20px"
-        android:layout_marginEnd="20px"
-        android:layout_marginTop="20px"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/dropshadow_in_white"
-        android:splitMotionEvents="false">
+        android:splitMotionEvents="false"
+        android:tag="@string/dont_touch_me">
 
         <ImageView
             android:id="@+id/imageViewFinalDropLocationSearch"
-            android:layout_width="16px"
-            android:layout_height="16px"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
             android:layout_centerVertical="true"
-            android:layout_marginStart="37px"
-            android:src="@drawable/circle_red"
-            android:tag="mwar" />
+            android:layout_marginStart="18dp"
+            android:src="@drawable/circle_red" />
 
         <TextView
             android:id="@+id/textViewFinalDropLocationClick"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginStart="37px"
+            android:layout_marginStart="18dp"
             android:layout_toStartOf="@+id/linearLayoutFinalDropLocationEditProgress"
             android:layout_toEndOf="@+id/imageViewFinalDropLocationSearch"
             android:background="@color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/enter_destination"
-            android:paddingEnd="20px"
+            android:paddingEnd="10dp"
             android:textColorHint="@color/text_color_hint"
             android:singleLine="true"
             android:textColor="@color/text_color"
             android:textCursorDrawable="@null"
-            android:textSize="30px" />
+            android:textSize="15sp" />
 
         <LinearLayout
             android:id="@+id/linearLayoutFinalDropLocationEditProgress"
@@ -51,15 +51,14 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="10px"
+            android:layout_marginEnd="5dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <product.clicklabs.jugnoo.utils.ProgressWheel xmlns:wheel="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/progressBarFinalDropLocation"
-                android:layout_width="70px"
-                android:layout_height="70px"
-                android:tag="mwar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:visibility="visible"
                 wheel:matProg_barColor="@color/theme_color"
                 wheel:matProg_barWidth="3dp"
@@ -68,11 +67,10 @@
 
             <ImageView
                 android:id="@+id/imageViewFinalDropLocationEdit"
-                android:layout_width="60px"
-                android:layout_height="60px"
-                android:padding="15px"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="7dp"
                 android:src="@drawable/edit_icon_selector"
-                android:tag="mwar"
                 android:visibility="visible" />
 
         </LinearLayout>
@@ -94,14 +92,14 @@
 
     <ImageView
         android:id="@+id/imageViewPokemonOnOffEngaged"
-        android:layout_width="90px"
-        android:layout_height="90px"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:src="@drawable/ic_poke_on_off_button"
-        android:tag="mwar"
-        android:layout_marginStart="56px"
-        android:layout_marginBottom="5px"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="2dp"
         android:layout_above="@+id/relativeLayoutInRideContainer"
         android:visibility="gone"
+        android:tag="@string/dont_touch_me"
         />
 
 
@@ -111,7 +109,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/transparent">
+        android:background="@color/transparent"
+        android:tag="@string/dont_touch_me">
 
         <LinearLayout
             android:id="@+id/linearLayoutInRideDriverInfo"
@@ -119,7 +118,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="42dp"
             android:orientation="vertical"
-            android:tag="@string/dont_touch_me"
             >
 
             <ImageView
@@ -534,7 +532,6 @@
             android:orientation="horizontal"
             android:layout_alignParentEnd="true"
             android:gravity="center"
-            android:tag="@string/dont_touch_me"
             android:layout_marginEnd="20dp">
 
             <RelativeLayout
