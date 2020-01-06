@@ -79,11 +79,6 @@ public class MarkerAnimation {
 			}
         } catch (Exception e) {
             e.printStackTrace();
-            try {
-                marker.setPosition(finalPosition);
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
             if(callbackAnim != null){
                 callbackAnim.onAnimNotDone();
             }
@@ -104,7 +99,9 @@ public class MarkerAnimation {
 
     private static void checkAndExecute(){
         try {
-            getDirectionsAsyncs.remove(0);
+        	if(getDirectionsAsyncs.size() > 0) {
+				getDirectionsAsyncs.remove(0);
+			}
             if(getDirectionsAsyncs.size() > 0){
 				getDirectionsAsyncs.get(0).execute();
 			}
@@ -215,7 +212,8 @@ public class MarkerAnimation {
                 try {
                         clearPolylines();
                         if(list != null && destination != null
-                                && totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI){
+                                && (totalDistance > MapUtils.distance(source, destination) * MAX_DISTANCE_FACTOR_GAPI
+								|| totalDistance > MAX_DISTANCE)){
                             straightLineCase();
                         } else if(list == null){
 							straightLineCase();
@@ -259,7 +257,6 @@ public class MarkerAnimation {
                     }
                 }
             }
-            stopCurrentAsync = false;
 
         }
     }
@@ -290,15 +287,17 @@ public class MarkerAnimation {
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
-//                    marker.setPosition(finalPosition);
-                    if (list.size() > 0) {
+					Log.i(MarkerAnimation.class.getSimpleName(), "objectAnimators="+objectAnimators.size()+" & getDirectionsAsyncs="+getDirectionsAsyncs.size());
+                    if (list.size() > 0 && !stopCurrentAsync) {
                         animateMarkerToICSRecursive(engagementId, marker, list, latLngInterpolator, duration, rotation, callbackAnim);
                     } else {
+						cancelObjectAnimations();
                         checkAndExecute();
                         if(callbackAnim != null){
                             callbackAnim.onAnimComplete();
                         }
                     }
+					stopCurrentAsync = false;
                 }
 
                 @Override
@@ -327,7 +326,8 @@ public class MarkerAnimation {
                 callbackAnim.onTranslate(finalPosition, finalDuration);
             }
             animator.start();
-            objectAnimator = animator;
+			cancelObjectAnimations();
+            objectAnimators.add(animator);
         }
     }
 
@@ -351,9 +351,13 @@ public class MarkerAnimation {
 
                 @Override
                 public void onAnimationEnd(Animator animator) {
+					Log.i(MarkerAnimation.class.getSimpleName(), "objectAnimators="+objectAnimators.size()+" & getDirectionsAsyncs="+getDirectionsAsyncs.size());
+					cancelObjectAnimations();
+					checkAndExecute();
                     if(callbackAnim != null){
                         callbackAnim.onAnimComplete();
                     }
+					stopCurrentAsync = false;
                 }
 
                 @Override
@@ -367,7 +371,8 @@ public class MarkerAnimation {
                 }
             });
             animator.start();
-            objectAnimator = animator;
+			cancelObjectAnimations();
+			objectAnimators.add(animator);
             float bearing = (float) MapUtils.getBearing(marker.getPosition(), latLng);
             MapUtils.rotateMarker(marker, bearing);
             if(Integer.parseInt(engagementId) > 0) {
@@ -430,7 +435,8 @@ public class MarkerAnimation {
             latLngs.add(lastLatLng);
             latLngs.add(currLatLng);
             double duration = durationList.remove(0);
-            animatorSet = new MapRouteAnimator().animateRoute(googleMap, latLngs, (long) duration, pathResolvedColor, pathWidth, latLngInterpolator,
+			cancelAnimationSets();
+            animatorSets.add(new MapRouteAnimator().animateRoute(googleMap, latLngs, (long) duration, pathResolvedColor, pathWidth, latLngInterpolator,
                     new MapRouteAnimator.Callback() {
                         @Override
                         public void onAnimationEnd(Polyline foregroundPolyline) {
@@ -438,10 +444,11 @@ public class MarkerAnimation {
                             if(latLngList.size() > 0){
                                 animatePath(currLatLng, googleMap, latLngList, durationList, pathResolvedColor, pathWidth, latLngInterpolator);
                             } else {
+								cancelAnimationSets();
                                 clearPolylinesUnTracked();
                             }
                         }
-                    });
+                    }));
         }
 
     }
@@ -457,18 +464,32 @@ public class MarkerAnimation {
     }
 
 
-    private static AnimatorSet animatorSet;
-    private static ObjectAnimator objectAnimator;
+    private static ArrayList<AnimatorSet> animatorSets = new ArrayList<>();
+    private static ArrayList<ObjectAnimator> objectAnimators = new ArrayList<>();
     private static boolean stopCurrentAsync;
     public static void clearAsyncList(){
+		stopCurrentAsync = true;
         getDirectionsAsyncs.clear();
-        if(animatorSet != null){
-            animatorSet.cancel();
+		cancelObjectAnimations();
+		cancelAnimationSets();
+	}
+
+	private static void cancelAnimationSets() {
+		if(animatorSets != null){
+            for(AnimatorSet as : animatorSets){
+            	as.cancel();
+			}
+			animatorSets.clear();
         }
-        if(objectAnimator != null){
-            objectAnimator.cancel();
-        }
-        stopCurrentAsync = true;
-    }
+	}
+
+	private static void cancelObjectAnimations() {
+		if(objectAnimators != null){
+			for(ObjectAnimator oa : objectAnimators){
+				oa.cancel();
+			}
+			objectAnimators.clear();
+		}
+	}
 
 }
