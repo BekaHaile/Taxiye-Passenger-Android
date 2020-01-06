@@ -33,9 +33,9 @@ public class MarkerAnimation {
     private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
     private static final double ANIMATION_TIME = 8000;
     private static final double FAST_ANIMATION_TIME = 1500;
-    public static final double MIN_DISTANCE = 40;
-    public static final double MAX_DISTANCE = 1000;
-    public static final double MAX_DISTANCE_FACTOR_GAPI = 1.8;
+    public static final double MIN_DISTANCE = 10;
+    public static final double MAX_DISTANCE = 2000;
+    public static final double MAX_DISTANCE_FACTOR_GAPI = 3.0;
 
 
 	public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition,

@@ -3847,7 +3847,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         driverMarkerInRide = null;
                     } catch (Exception e) {
                     }
-                    lastSavedLatLng = null;
+                    lastRidePathLatLng = null;
                 }
 
                 removeSaveLocationDialog();
@@ -8227,8 +8227,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             displayOldPath();
             if (driverMarkerInRide == null) {
-                if (lastSavedLatLng != null) {
-                    Data.autoData.getAssignedDriverInfo().latLng = lastSavedLatLng;
+                if (lastRidePathLatLng != null) {
+                    Data.autoData.getAssignedDriverInfo().latLng = lastRidePathLatLng;
                 }
                 driverMarkerInRide = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
                 if(Prefs.with(this).getInt(KEY_SHOW_DRIVER_MARKER_IN_RIDE, 1) == 0) {
@@ -8253,7 +8253,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     }
 
-    private LatLng lastSavedLatLng;
+    private LatLng lastRidePathLatLng;
 
     private ArrayList<PolylineOptions> getPolylineOptionsInRideDriverPath() {
         if (polylineOptionsInRideDriverPath == null) {
@@ -8261,19 +8261,23 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         if (polylineOptionsInRideDriverPath.size() == 0) {
             try {
-                ArrayList<RidePath> ridePathsList = MyApplication.getInstance().getDatabase2().getRidePathInfo();
-                int coveredPathColor = Prefs.with(this).getInt(KEY_SHOW_RIDE_COVERED_PATH, 0) == 1 ? RIDE_ELAPSED_PATH_COLOR : Color.TRANSPARENT;
-                for (RidePath ridePath : ridePathsList) {
-                    PolylineOptions polylineOptions = new PolylineOptions();
-                    polylineOptions.width(ASSL.Xscale() * 5F);
-                    polylineOptions.color(coveredPathColor);
-                    polylineOptions.geodesic(false);
+            	if(Prefs.with(this).getInt(KEY_SHOW_RIDE_COVERED_PATH, 0) == 1) {
+					ArrayList<RidePath> ridePathsList = MyApplication.getInstance().getDatabase2().getRidePathInfo();
+					int coveredPathColor = Prefs.with(this).getInt(KEY_SHOW_RIDE_COVERED_PATH, 0) == 1 ? RIDE_ELAPSED_PATH_COLOR : Color.TRANSPARENT;
+					PolylineOptions polylineOptions = new PolylineOptions();
+					polylineOptions.width(ASSL.Xscale() * 5F);
+					polylineOptions.color(coveredPathColor);
+					polylineOptions.geodesic(false);
 					polylineOptions.zIndex(ONGOING_RIDE_PATH_ZINDEX);
-                    polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
-                            new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
-                    polylineOptionsInRideDriverPath.add(polylineOptions);
-                    lastSavedLatLng = ridePath.getDestinationLatLng();
-                }
+					for (RidePath ridePath : ridePathsList) {
+						if (polylineOptions.getPoints().size() == 0) {
+							polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude));
+						}
+						polylineOptions.add(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
+						lastRidePathLatLng = ridePath.getDestinationLatLng();
+					}
+					polylineOptionsInRideDriverPath.add(polylineOptions);
+				}
             } catch (Exception e) {
                 e.printStackTrace();
             }
