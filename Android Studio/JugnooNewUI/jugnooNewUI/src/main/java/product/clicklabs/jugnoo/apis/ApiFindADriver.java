@@ -228,7 +228,9 @@ public class ApiFindADriver {
 				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
 					region.setIsDefault(false);
-					Data.autoData.addRegion(region);
+					if(region.isRegionAccGender(activity, Data.userData)) {
+						Data.autoData.addRegion(region);
+					}
 					if(region.getRegionFare() != null && region.getRegionFare().getFare() < minRegionFare) {
 						minRegionFare = region.getRegionFare().getFare();
 					}

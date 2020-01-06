@@ -1030,6 +1030,10 @@ public interface Constants {
     String KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED = "customer_google_traffic_enabled";
 
     String KEY_SHOW_TIP_OPTION = "show_tip_option";
+    String KEY_GENDER = "gender";
+    String KEY_DATE_OF_BIRTH = "date_of_birth";
+    String DOB_DATE_FORMAT = "yyyy-MM-dd";
+
 
     String KEY_CUSTOMER_REQUEST_RIDE_BID_FAST_INTERVAL = "customer_request_ride_bid_fast_interval";
     String KEY_PAID_USING_POS = "paid_using_pos";
@@ -1154,4 +1158,7 @@ public interface Constants {
 
 	String KEY_SESSIONTOKEN = "sessiontoken";
 	String KEY_FARE_MANDATORY = "fare_mandatory";
+    String KEY_APPLICABLE_GENDER = "applicable_gender";
+    String KEY_CUSTOMER_GENDER_FILTER = "customer_gender_filter";
+    String KEY_CUSTOMER_DOB_INPUT = "customer_dob_input";
 }

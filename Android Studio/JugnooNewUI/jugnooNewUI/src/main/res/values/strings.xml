@@ -1991,6 +1991,9 @@
     <string name="accept">Accept</string>
     <string name="bid">Bid</string>
     <string name="wrong_address_selected">Wrong address selected</string>
+    <string name="please_select_your_gender">Please select your gender</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="please_select_your_dob">Please select your date of birth</string>
     <string name="pos">POS</string>
     <string name="hourly_package">Hourly\nPackage</string>
     <string name="safe">Safe</string>
@@ -2451,4 +2454,9 @@
     <string name="referred_on">Referred on</string>
     <string name="no_vehicles_available">Sorry!! No vehicle available in this area</string>
 
+    <string name="select_gender">Select Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="please_select_gender">Please select gender</string>
+    <string name="please_enter_date_of_birth">Please enter date of birth</string>
 </resources>
