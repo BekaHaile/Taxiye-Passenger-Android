@@ -133,6 +133,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -146,8 +148,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.branch.referral.Branch;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import kotlin.coroutines.CoroutineContext;
 import kotlinx.coroutines.CoroutineScope;
+import okio.BufferedSource;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
@@ -5833,6 +5839,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     };
 
+    private StreamClient streamClient = new StreamClient();
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -5845,6 +5853,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }, 400);
 
         try {
+
+        	for(int i=0; i<5; i++) {
+				streamClient.startClient(i);
+			}
 
             if(pushDialog != null) {
                 pushDialog.onResume();
@@ -6476,6 +6488,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(pushDialog != null) {
             pushDialog.onPause();
         }
+//		streamClient.stopClient();
         super.onPause();
     }
 
