@@ -734,7 +734,7 @@ public class Region {
 		return userData == null
 				|| userData.getGender() == GenderValues.ALL.getType()
 				|| getApplicableGender() == GenderValues.ALL.getType()
-				|| (Prefs.with(context).getInt(Constants.KEY_CUSTOMER_GENDER_FILTER, 0) == 1
+				|| (Prefs.with(context).getInt(Constants.KEY_CUSTOMER_GENDER_FILTER, context.getResources().getInteger(R.integer.customer_gender_filter)) == 1
 				&& userData.getGender() == getApplicableGender());
 	}
 

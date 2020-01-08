@@ -263,9 +263,6 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(Constants.SP_LAST_COUNTRY_CODE_SAVED, countryCode);
 
 
-        Data.userData.setGender(userData.optInt(Constants.KEY_GENDER, 0));
-        Data.userData.setDateOfBirth(userData.optString(Constants.KEY_DATE_OF_BIRTH, ""));
-
         Data.userData.setSubscriptionData(loginUserData.getSubscriptionData());
         Data.userData.setShowJugnooStarInAcccount(loginUserData.getShowJugnooStarInAccount());
 
@@ -396,6 +393,17 @@ public class JSONParser implements Constants {
             Data.autoData.setUseRecentLocAutoSnapMaxDistance(autosData.getUseRecentLocAutoSnapMaxDistance());
             Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
             Data.autoData.setFaultConditions(autosData.getFaultConditions());
+
+            Data.userData.setGender(autoData.optInt(Constants.KEY_GENDER, 0));
+            android.util.Log.d(TAG, "parseUserData Key Gender: gender saved" + autoData.optInt(Constants.KEY_GENDER, 0));
+            Data.userData.setDateOfBirth(autoData.optString(Constants.KEY_DATE_OF_BIRTH, ""));
+
+            Prefs.with(context).save(KEY_CUSTOMER_GENDER_FILTER, autoData.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                    context.getResources().getInteger(R.integer.customer_gender_filter)));
+            android.util.Log.d(TAG, "parseConfigParams: filter" + autoData.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                    context.getResources().getInteger(R.integer.customer_gender_filter)));
+            Prefs.with(context).save(KEY_CUSTOMER_DOB_INPUT, autoData.optInt(KEY_CUSTOMER_DOB_INPUT,
+                    context.getResources().getInteger(R.integer.customer_dob_input)));
 
 			long bidRequestRideTimeout = autoData.optLong(KEY_BID_REQUEST_RIDE_TIMEOUT, 420000);
 			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
@@ -588,10 +596,7 @@ public class JSONParser implements Constants {
 				context.getString(R.string.youtube_api_key)));
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
 
-		Prefs.with(context).save(KEY_CUSTOMER_GENDER_FILTER, autoData.optInt(KEY_CUSTOMER_GENDER_FILTER,
-				context.getResources().getInteger(R.integer.customer_gender_filter)));
-		Prefs.with(context).save(KEY_CUSTOMER_DOB_INPUT, autoData.optInt(KEY_CUSTOMER_DOB_INPUT,
-				context.getResources().getInteger(R.integer.customer_dob_input)));
+
 
 		parseJungleApiObjects(context, autoData);
 	}
@@ -647,6 +652,8 @@ public class JSONParser implements Constants {
         Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED, jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
 
         Prefs.with(context).save(KEY_CUSTOMER_GENDER_FILTER, jObj.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                context.getResources().getInteger(R.integer.customer_gender_filter)));
+        android.util.Log.d("In JSONPARSER", "parseConfigParams: gender filer" + jObj.optInt(KEY_CUSTOMER_GENDER_FILTER,
                 context.getResources().getInteger(R.integer.customer_gender_filter)));
         Prefs.with(context).save(KEY_CUSTOMER_DOB_INPUT, jObj.optInt(KEY_CUSTOMER_DOB_INPUT,
                 context.getResources().getInteger(R.integer.customer_dob_input)));
