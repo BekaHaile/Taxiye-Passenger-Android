@@ -156,6 +156,7 @@ public class FreshCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 mHolder.textViewItemUnit.setVisibility(View.GONE);
             }
+            //todo api: /get_super_categories
             mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
                     Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
 

@@ -554,19 +554,26 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/px_26"
                                     android:layout_marginStart="40px"
+                                    android:layout_centerVertical="true"
                                     android:layout_marginTop="@dimen/px_26"
                                     android:text="@string/total_amount"
                                     android:textColor="@color/theme_color"
                                     android:textSize="@dimen/text_size_40"
                                     app:typekitFont="maven"/>
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginTop="@dimen/px_26"
+                                    android:layout_marginBottom="@dimen/px_26"
+                                    android:orientation="vertical">
 
                                 <com.sabkuchfresh.utils.TextViewStrikeThrough
                                     android:id="@+id/tvTotalAmountValOld"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/px_26"
                                     android:layout_marginEnd="@dimen/px_30"
-                                    android:layout_marginTop="@dimen/px_26"
                                     android:layout_toStartOf="@+id/tvTotalAmountVal"
                                     android:text="@string/rupee_0"
                                     android:textColor="@color/text_color_light"
@@ -579,14 +586,13 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentEnd="true"
-                                    android:layout_marginBottom="@dimen/px_26"
                                     android:layout_marginEnd="30px"
-                                    android:layout_marginTop="@dimen/px_26"
                                     android:text="@string/rupee_0"
                                     android:textColor="@color/theme_color"
                                     android:textSize="@dimen/text_size_40"
                                     app:typekitFont="maven"/>
 
+                                </LinearLayout>
 
                                 <TextView
                                     android:id="@+id/tvTotalAmountMessage"

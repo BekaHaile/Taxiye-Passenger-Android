@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
+import com.sabkuchfresh.home.FreshActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -75,6 +76,19 @@ public class PaymentOptionDialog implements View.OnClickListener {
         this.activity = activity;
         this.callback = callback;
         this.callbackPaymentOptionSelector = callbackPaymentOptionSelector;
+    }
+
+
+    private Activity handleActivityCasting(Activity activity) {
+
+        if(activity instanceof HomeActivity){
+            return (HomeActivity)activity;
+        }
+        if(activity instanceof FreshActivity) {
+            return (FreshActivity)activity;
+        }
+        else return activity;
+
     }
 
 
@@ -268,13 +282,17 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
     private void setSelectedPaymentOptionUI() {
         try {
-			ArrayList<Region> regions = Data.autoData.getRegions();
             int selectedPaymentOption = callbackPaymentOptionSelector.getSelectedPaymentOption();
-            Region region = (regions.size() > 1) ? ((HomeActivity)activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-                    : (regions.size() > 0 ? regions.get(0) : null);
-            if (region != null && region.getRestrictedPaymentModes().size() > 0) {
-                if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
-                    callbackPaymentOptionSelector.setSelectedPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(callbackPaymentOptionSelector.getSelectedPaymentOption(), (HomeActivity) activity));
+            if(activity instanceof HomeActivity) {
+				ArrayList<Region> regions = Data.autoData.getRegions();
+                Region region = (regions.size() > 1) ? ((HomeActivity) activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                        : (regions.size() > 0 ? regions.get(0) : null);
+                if (region != null && region.getRestrictedPaymentModes().size() > 0) {
+                    if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
+                        callbackPaymentOptionSelector.setSelectedPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(callbackPaymentOptionSelector.getSelectedPaymentOption(), (HomeActivity) activity));
+                    } else {
+                        callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
+                    }
                 } else {
                     callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
                 }
@@ -416,11 +434,13 @@ public class PaymentOptionDialog implements View.OnClickListener {
                 linearLayoutWalletContainer.removeAllViews();
                 List<Integer> restrictedPaymentMode = new ArrayList<>();
 
-				ArrayList<Region> regions = Data.autoData.getRegions();
-                if(regions.size() > 1) {
-                    restrictedPaymentMode = ((HomeActivity)activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
-                } else if(regions.size() > 0) {
-                    restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
+                if(activity instanceof HomeActivity) {
+					ArrayList<Region> regions = Data.autoData.getRegions();
+                    if (regions.size() > 1) {
+                        restrictedPaymentMode = ((HomeActivity) activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
+                    } else if (regions.size() > 0) {
+                        restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
+                    }
                 }
 
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
@@ -534,6 +554,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
     public interface Callback {
         void onDialogDismiss();
         void onPaymentModeUpdated();
+        void getSelectedPaymentOption();
 
     }
 

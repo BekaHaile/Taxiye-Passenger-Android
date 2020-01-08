@@ -26,10 +26,13 @@ public class CheckoutChargesAdapter extends BaseAdapter {
 	private Context context;
 	private LayoutInflater inflater;
 	private ArrayList<Tax> taxes;
+	private String currencyCode, currency;
 
-	public CheckoutChargesAdapter(Context context, ArrayList<Tax> taxes) {
+	public CheckoutChargesAdapter(Context context, ArrayList<Tax> taxes, String currencyCode, String currency) {
 		this.context = context;
 		this.taxes = taxes;
+		this.currencyCode = currencyCode;
+		this.currency = currency;
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -76,11 +79,14 @@ public class CheckoutChargesAdapter extends BaseAdapter {
 				holder.tvValue.setTextColor(ContextCompat.getColor(context, R.color.green));
 			}
 			else if(taxes.get(position).getValue() < 0){
-				holder.tvValue.setText("- "+context.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(Math.abs(taxes.get(position).getValue()))));
+
+				holder.tvValue.setText("- ".concat(Utils.formatCurrencyAmount(Math.abs(taxes.get(position).getValue()), currencyCode, currency)));
+
 				holder.tvValue.setTextColor(ContextCompat.getColor(context, R.color.text_color));
 			}
 			else {
-				holder.tvValue.setText(context.getString(R.string.rupees_value_format, Utils.getDoubleTwoDigits(taxes.get(position).getValue())));
+				holder.tvValue.setText(Utils.formatCurrencyAmount(taxes.get(position).getValue(), currencyCode, currency));
+
 				holder.tvValue.setTextColor(ContextCompat.getColor(context, R.color.text_color));
 			}
 

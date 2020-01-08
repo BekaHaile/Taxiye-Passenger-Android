@@ -21,6 +21,7 @@ import android.provider.Settings;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -821,6 +822,26 @@ public class Utils {
 
     }
 
+    public static String formatCurrencyAmount(final double amount, final String currencyCode, final String currency){
+    	try {
+    		if(!TextUtils.isEmpty(currencyCode)){
+				String itemPrice = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(currencyCode,
+						amount, false);
+
+				if (itemPrice.contains(currencyCode)) {
+					return String.format("%s%s", !TextUtils.isEmpty(currency) ? currency : currencyCode, product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(amount));
+				} else {
+					return itemPrice;
+				}
+			}else {
+				return String.format(MyApplication.getInstance().getResources().getString(R.string.rupees_value_format),
+						product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(amount));
+			}
+		} catch (Exception e){
+    		return String.format(MyApplication.getInstance().getResources().getString(R.string.rupees_value_format),
+					product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(amount));
+		}
+	}
 }
 
 

@@ -466,6 +466,7 @@ public class MealAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 String discountOfferDisplay = getDiscountOfferDisplay();
                 if(discountInfo!=null  && showDiscountedPrices && discountOfferDisplay!=null
                         && (!subItem.getActualPrice().equals(subItem.getPrice()))){
+                    //todo api: /get_all_products
                     mHolder.tvDiscountedPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),
                             Utils.getMoneyDecimalFormatWithoutFloat().format(subItem.getActualPrice())));
                     mHolder.textPrice.setText(String.format(activity.getResources().getString(R.string.rupees_value_format),

@@ -19,6 +19,7 @@ import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.datastructure.SearchSuggestion;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.Utils;
 
@@ -96,6 +97,11 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             }
 
             @Override
+            public void onRestaurantSelected(Item selItem, int vendorId, boolean shouldOpenMerchantInfo) {
+
+            }
+
+            @Override
             public void onBannerInfoDeepIndexClick(int deepIndex) {
                 Data.deepLinkIndex = deepIndex;
                 if (activity != null) {
@@ -106,6 +112,11 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
             @Override
             public void openCategory(MenusResponse.Category category) {
                 // NA here
+            }
+
+            @Override
+            public void onBannerClickForViewType(int bannerId) {
+
             }
 
             @Override

@@ -150,7 +150,7 @@ public class MenusSearchFragment extends Fragment implements GACategory, GAActio
 							activity.onBackPressed();
 						}
 					}
-				});
+				}, activity.getMenuProductsResponse().getCurrencyCode(), activity.getMenuProductsResponse().getCurrency());
 		recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 
 

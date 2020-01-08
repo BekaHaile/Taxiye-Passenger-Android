@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -74,6 +75,8 @@ public class MyApplication extends MultiDexApplication {
     private Bus mBus;
     public Branch branch;
     private BroadcastReceiver fuguChatCustomActionReceiver;
+    public Activity mActivity;
+
 
 
     @Override
@@ -210,6 +213,14 @@ public class MyApplication extends MultiDexApplication {
         t.send(new HitBuilders.ScreenViewBuilder().build());
 
         GoogleAnalytics.getInstance(this).dispatchLocalHits();
+    }
+
+    public Activity getmActivity() {
+        return mActivity;
+    }
+
+    public void setmActivity(Activity mActivity) {
+        this.mActivity = mActivity;
     }
 
     /***

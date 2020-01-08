@@ -425,12 +425,27 @@ public class AutoData {
 
         if(getServiceTypeSelected().getSupportedRideTypes() != null && getServiceTypeSelected().getSupportedRideTypes().size() > 0) {
             for (Region region : regions){
-                if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType())){
+                if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType()) && !region.getEta().equalsIgnoreCase("-")){
                     regionsTemp.add(region);
                 }
             }
+			if(regionsTemp.size() == 0){
+				for (Region region : regions){
+					if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType())){
+						regionsTemp.add(region);
+					}
+				}
+			}
+
         } else {
-            regionsTemp.addAll(regions);
+			for (Region region : regions){
+				if(!region.getEta().equalsIgnoreCase("-")){
+					regionsTemp.add(region);
+				}
+			}
+			if(regionsTemp.size() == 0){
+				regionsTemp.addAll(regions);
+			}
         }
         return regionsTemp;
     }

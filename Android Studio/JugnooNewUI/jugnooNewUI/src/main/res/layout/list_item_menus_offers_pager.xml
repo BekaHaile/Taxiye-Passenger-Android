@@ -3,13 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:tag="@string/dont_touch_me"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pagerMenusVendorOffers"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_110"
+        android:layout_height="@dimen/banner_height"
         />
 
     <com.google.android.material.tabs.TabLayout

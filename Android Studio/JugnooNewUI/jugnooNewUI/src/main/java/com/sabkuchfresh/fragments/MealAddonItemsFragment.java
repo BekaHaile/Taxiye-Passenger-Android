@@ -100,7 +100,7 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
         listViewAddonItems.addHeaderView(header, null, false);
         ((TextView)header.findViewById(R.id.textViewCompleteMeal)).setTypeface(Fonts.mavenMedium(activity));
 
-        addOnItemsAdapter = new AddOnItemsAdapter(activity, mealsAddonSubItems, this);
+        addOnItemsAdapter = new AddOnItemsAdapter(activity, mealsAddonSubItems, this, activity.getResources().getString(R.string.default_currency), activity.getResources().getString(R.string.default_currency));
         listViewAddonItems.setAdapter(addOnItemsAdapter);
 
         relativeLayoutProceed.setOnClickListener(new View.OnClickListener() {
@@ -162,7 +162,7 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
 
                     @Override
                     public void deleteStarSubscription() {
-                        freshCartItemsAdapter.setResults(subItemsInCart, null);
+                        freshCartItemsAdapter.setResults(subItemsInCart, null, activity.getResources().getString(R.string.default_currency), activity.getResources().getString(R.string.default_currency));
                     }
 
                     @Override
@@ -174,7 +174,7 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
                     public void removeCoupon() {
 
                     }
-                },this);
+                },this, activity.getResources().getString(R.string.default_currency), activity.getResources().getString(R.string.default_currency));
         listViewCart.setAdapter(freshCartItemsAdapter);
 
         linearLayoutCartExpansion.setVisibility(View.GONE);
@@ -333,7 +333,7 @@ public class MealAddonItemsFragment extends Fragment implements GACategory, GAAc
     private void updateCartItemsList(){
         subItemsInCart = activity.fetchCartList();
         if(freshCartItemsAdapter != null){
-            freshCartItemsAdapter.setResults(subItemsInCart, null);
+            freshCartItemsAdapter.setResults(subItemsInCart, null, activity.getResources().getString(R.string.default_currency), activity.getResources().getString(R.string.default_currency));
         }
     }
 

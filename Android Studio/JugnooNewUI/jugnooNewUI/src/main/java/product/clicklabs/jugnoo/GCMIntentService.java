@@ -77,6 +77,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
     public static final int NOTIFICATION_ID = 1;
     public static final int PROMOTION_NOTIFICATION_ID = 1212;
 	HippoNotificationConfig fuguNotificationConfig=new HippoNotificationConfig();
+	private String deliveryId;
 
     public GCMIntentService() {
     }
@@ -171,6 +172,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				notificationIntent.putExtra(Constants.KEY_CAMPAIGN_ID, campaignId);
 				notificationIntent.putExtra(Constants.KEY_POST_ID, postId);
 				notificationIntent.putExtra(Constants.KEY_POST_NOTIFICATION_ID, postNotificationId);
+				if(deliveryId!=null && !deliveryId.isEmpty()) {
+					notificationIntent.putExtra(KEY_DELIVERY_ID,deliveryId);
+				}
+
 			} else{
 				notificationIntent.setData(Uri.parse(url));
 			}
@@ -881,6 +886,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
+					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag) {
+						String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
+						deliveryId = jObj.optString(KEY_DELIVERY_ID);
+						notificationManagerCustomID(this, title, chatMessage, PROMOTION_NOTIFICATION_ID, AppLinkIndex.CHAT_PAGE.getOrdinal(),
+								null, "", playSound, 0, 1, tabIndex, flag);
+						Prefs.with(this).save(KEY_CHAT_COUNT , Prefs.with(this).getInt(KEY_CHAT_COUNT, 0) + 1);
+//
+					}
 					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
 
 						if(!(Data.context instanceof ChatActivity)){
@@ -890,6 +903,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 							Prefs.with(this).save(KEY_CHAT_COUNT , Prefs.with(this).getInt(KEY_CHAT_COUNT, 0) + 1);
 							Intent intent = new Intent(Data.LOCAL_BROADCAST);
 							intent.putExtra(Constants.KEY_FLAG, flag);
+							intent.putExtra(Constants.KEY_CHAT_DELIVERY,message);
 							LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 						} else {
 							clearNotification(this, PROMOTION_NOTIFICATION_ID);

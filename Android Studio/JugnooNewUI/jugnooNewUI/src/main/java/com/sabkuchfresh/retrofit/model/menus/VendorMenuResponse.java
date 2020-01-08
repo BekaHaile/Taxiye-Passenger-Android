@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by socomo on 12/23/16.
  */
@@ -51,6 +52,12 @@ public class VendorMenuResponse {
     @SerializedName("images_list")
     @Expose
     private ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages;
+    @SerializedName("currency_code")
+    @Expose
+    private String currencyCode;
+    @SerializedName("currency")
+    @Expose
+    private String currency;
 
     public void setReviewImages(ArrayList<FetchFeedbackResponse.ReviewImage> reviewImages) {
         this.reviewImages = reviewImages;
@@ -138,6 +145,14 @@ public class VendorMenuResponse {
 
     public void setVendor(MenusResponse.Vendor vendor) {
         this.vendor = vendor;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public String getCurrency() {
+        return currency;
     }
 
 

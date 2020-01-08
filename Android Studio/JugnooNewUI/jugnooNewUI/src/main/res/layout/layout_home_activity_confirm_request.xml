@@ -46,7 +46,8 @@
         android:layout_above="@+id/relativeLayoutConfirmBottom"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:elevation="5dp"
         />
 
     <RelativeLayout
@@ -89,22 +90,22 @@
                     android:layout_width="16px"
                     android:layout_height="16px"
                     android:tag="mwar"
-                    android:src="@drawable/circle_theme"/>
+                    android:src="@drawable/circle_green"/>
                 <ImageView
                     android:id="@+id/iv2NewUIDropDashedLine"
                     android:layout_width="40px"
-                    android:layout_height="50px"
+                    android:layout_height="55px"
                     android:orientation="vertical"
                     android:rotation="0"
                     android:visibility="visible"
                     android:src="@drawable/dotted_vertical_line"/>
                 <ImageView
                     android:id="@+id/iv3NewUIDropMark"
-                    android:layout_width="20px"
-                    android:layout_height="20px"
+                    android:layout_width="16px"
+                    android:layout_height="16px"
                     android:visibility="visible"
                     android:tag="mwar"
-                    android:src="@drawable/ic_shape"/>
+                    android:src="@drawable/circle_red"/>
                 
             </LinearLayout>
 
@@ -208,7 +209,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70px">
+                android:layout_height="90px">
 
                 <LinearLayout
                     android:id="@+id/linearLayoutBidValue"
@@ -218,8 +219,8 @@
                     android:theme="@style/GreyHighlight"
                     android:paddingStart="20px"
                     android:paddingEnd="12px"
-                    android:paddingTop="12px"
-                    android:paddingBottom="12px"
+                    android:paddingTop="8px"
+                    android:paddingBottom="8px"
                     android:background="?attr/selectableItemBackground"
                     android:gravity="center"
                     android:orientation="horizontal"
@@ -281,7 +282,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="@string/_200"
-                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/text_size_26" />
 
@@ -308,10 +308,10 @@
                     android:background="?attr/selectableItemBackground">
 
                     <ImageView
-                        android:layout_width="35px"
-                        android:layout_height="34px"
+                        android:id="@+id/ivOfferIconConfirm"
+                        android:layout_width="33px"
+                        android:layout_height="33px"
                         android:layout_centerVertical="true"
-                        android:layout_toStartOf="@+id/textViewOffersConfirm"
                         android:src="@drawable/ic_gift"
                         android:tag="mwar" />
 
@@ -319,20 +319,20 @@
                         android:id="@+id/textViewOffersConfirm"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="15px"
+                        android:layout_toEndOf="@+id/ivOfferIconConfirm"
+                        android:layout_marginStart="10px"
+                        android:layout_marginTop="5px"
                         android:gravity="center"
                         android:text="@string/nl_offers"
-                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
+                        android:textSize="26px" />
 
                     <ImageView
                         android:id="@+id/imageViewOfferConfirm"
                         android:layout_width="31px"
                         android:layout_height="31px"
-                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@+id/textViewOffersConfirm"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="15px"
                         android:layout_marginEnd="20px"
@@ -377,9 +377,8 @@
                         android:layout_marginStart="20px"
                         android:gravity="center"
                         android:text="@string/notes"
-                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/text_size_26" />
+                        android:textSize="26px" />
 
                     <ImageView
                         android:id="@+id/imageViewNotes"
@@ -486,7 +485,6 @@
             style="@style/ButtonThemeCapsule"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_38"
-            android:textAllCaps="false"
             android:layout_below="@+id/linearLayoutConfirmOption2"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10px"
@@ -494,18 +492,20 @@
 
         <TextView
             android:id="@+id/tvTermsAndConditions"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:textSize="@dimen/font_extra_small"
             android:tag="@string/dont_touch_me"
             android:layout_below="@id/buttonConfirmRequest"
-            android:paddingStart="@dimen/spacing_small"
-            android:paddingEnd="@dimen/spacing_small"
-            android:paddingTop="@dimen/spacing_small"
-            android:paddingBottom="@dimen/spacing_normal"
+            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
             android:text="@string/text_terms_and_conditions_apply"
             android:gravity="center_horizontal"
-            android:textColor="@color/text_color_link"/>
+            android:textColor="@color/text_color_link"
+            android:background="?attr/selectableItemBackground"
+            android:theme="@style/GreyHighlight"
+            />
     </RelativeLayout>
 
 </RelativeLayout>

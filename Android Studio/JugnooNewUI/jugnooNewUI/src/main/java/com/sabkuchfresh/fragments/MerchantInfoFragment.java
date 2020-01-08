@@ -512,13 +512,13 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                         R.drawable.capsule_grey_dark_bg : R.drawable.capsule_theme_color_selector);
                 bOrderOnline.setVisibility(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE ? View.GONE : View.VISIBLE);
 //                dividerBelowDetails.setVisibility(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_UNAVAILABLE ? View.GONE : View.VISIBLE);
-                bOrderOnline.setText(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT || activity.getVendorOpened().getOutOfRadius() == 1 ? R.string.action_order_via_fatafat : R.string.order_online);
+                bOrderOnline.setText(activity.getVendorOpened().getOrderMode() == Constants.ORDER_MODE_CHAT || activity.getVendorOpened().getOutOfRadius() == 1 ? getString(R.string.action_order_via_fatafat, getString(R.string.fatafat_text)): getString(R.string.order_online));
 
                 // decide whether to show out of radius strip
                 if (activity.getVendorOpened().isOutOfRadiusStrip()) {
 
                     tvOutOfRadiusFatafatBanner.setVisibility(View.VISIBLE);
-                    String subHeading = activity.getString(R.string.fatafat_banner_sub_heading);
+                    String subHeading = activity.getString(R.string.fatafat_banner_sub_heading, R.string.fatafat_text);
                     tvOutOfRadiusFatafatBanner.setText(subHeading);
                 } else {
                     tvOutOfRadiusFatafatBanner.setVisibility(View.GONE);

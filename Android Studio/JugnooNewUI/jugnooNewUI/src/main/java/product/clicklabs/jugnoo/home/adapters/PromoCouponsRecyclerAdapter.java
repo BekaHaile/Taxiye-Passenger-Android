@@ -26,6 +26,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
+import product.clicklabs.jugnoo.home.dialogs.PromoCouponDialog;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -36,14 +37,14 @@ public class PromoCouponsRecyclerAdapter extends RecyclerView.Adapter<RecyclerVi
     private int layoutRID;
     private Activity activity;
     private ArrayList<PromoCoupon> offerList = new ArrayList<>();
-    private PromoCouponsAdapter.Callback callback;
+    private PromoCouponDialog.Callback callback;
     private LayoutInflater mInflater;
     private static final int REFFERAL_ITEM = 1;
     private static final int OFFER_ITEM = 0;
     private RecyclerView recyclerView;
 
 
-    public PromoCouponsRecyclerAdapter(Activity activity, int layoutRID, ArrayList<PromoCoupon> offerList, PromoCouponsAdapter.Callback callback, RecyclerView recyclerView) {
+    public PromoCouponsRecyclerAdapter(Activity activity, int layoutRID, ArrayList<PromoCoupon> offerList, PromoCouponDialog.Callback callback, RecyclerView recyclerView) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         this.layoutRID = layoutRID;

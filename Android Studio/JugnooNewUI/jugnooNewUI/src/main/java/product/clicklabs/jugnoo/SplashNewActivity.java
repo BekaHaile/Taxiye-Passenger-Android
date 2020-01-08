@@ -59,6 +59,7 @@ import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
 import com.facebook.appevents.AppEventsLogger;
+import com.fugu.FuguConfig;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
@@ -129,12 +130,15 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import static product.clicklabs.jugnoo.Constants.KEY_DELIVERY_ID;
+
 
 
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
 	private AlertDialog dialogLocationPermission;
+
 	private PermissionCommon.PermissionListener permissionListener = new PermissionCommon.PermissionListener() {
 				@Override
 				public void permissionGranted(int requestCode) {
@@ -453,6 +457,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onCreate(savedInstanceState);
 
 		try {
+			MyApplication.getInstance().setmActivity(this);
 			HashMap<String,String> rationalMap = (new HashMap<>());
 			rationalMap.put(Manifest.permission.ACCESS_FINE_LOCATION,
 			BuildConfig.FLAVOR.equals("jugnoo")?getString(R.string.perm_location_rational_splash_jugnoo,getString(R.string.app_name)):
@@ -528,9 +533,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
 			}
 
-
-
-
+			handleChatActivityFromPush();
 
 
 			Data.locationSettingsNoPressed = false;
@@ -4581,5 +4584,29 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		textViewPhoneNumberRequired.setText(R.string.nl_splash_required);
 		btnPhoneLogin.setText(R.string.continue_text);
 
+	}
+
+	Handler handlerToOpenChatActivity;
+	private void handleChatActivityFromPush() {
+		//Opens Chat Activity after receiving Access Token.
+		int delayForChatActivity = 0;
+		if(handlerToOpenChatActivity == null) {
+			handlerToOpenChatActivity = new Handler();
+		}
+		handlerToOpenChatActivity.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(Data.userData!= null && Data.userData.accessToken != null) {
+					String deliveryId = getIntent().getStringExtra(Constants.KEY_DELIVERY_ID);
+					if(deliveryId!=null && !deliveryId.isEmpty()) {
+						startActivity(ChatActivity.createIntent(SplashNewActivity.this,deliveryId));
+						handlerToOpenChatActivity.removeCallbacks(null);
+					}
+				} else {
+					handleChatActivityFromPush();
+				}
+
+			}
+		}, 50);
 	}
 }

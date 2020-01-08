@@ -23,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -327,7 +329,91 @@ public class JSONParser implements Constants {
 
     }
 
-    public void parseAutoData(Context context, JSONObject autoData, LoginResponse.Autos autosData) throws Exception{
+	private void reorderMenu(Context context) {
+
+    	if(Data.userData != null && Data.userData.getMenuInfoList() != null){
+
+			//free rides for life check
+			if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
+				int index = Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES.getTag()));
+				int indexNew = Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES_NEW.getTag()));
+				if(index > -1){
+					Data.userData.getMenuInfoList().remove(index);
+					MenuInfo menuInfo = new MenuInfo(context.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
+					Data.userData.getMenuInfoList().add(0, menuInfo);
+				} else if(indexNew == -1){
+					MenuInfo menuInfo = new MenuInfo(context.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
+					Data.userData.getMenuInfoList().add(0, menuInfo);
+				}
+			}
+
+
+			//setting priority
+    		for(int i = 0; i < Data.userData.getMenuInfoList().size(); i++){
+				MenuInfo menuInfo = Data.userData.getMenuInfoList().get(i);
+    			if(menuInfo != null) {
+    				if(menuInfo.getPriority() == null){
+						if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES_NEW.getTag())
+								|| menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())) {
+							menuInfo.setPriority(1);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())) {
+							menuInfo.setPriority(2);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())) {
+							menuInfo.setPriority(3);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())) {
+							menuInfo.setPriority(4);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())) {
+							menuInfo.setPriority(5);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FUGU_SUPPORT.getTag())) {
+							menuInfo.setPriority(6);
+						}
+					}
+					if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.CHANGE_LOCALE.getTag())) {
+						menuInfo.setName(context.getString(R.string.change_language));
+						menuInfo.setShowInAccount(1);
+					} else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())) {
+						menuInfo.setName(context.getString(R.string.your_trips));
+					}
+				}
+			}
+
+    		//sorting
+			Collections.sort(Data.userData.getMenuInfoList(), new Comparator<MenuInfo>() {
+				@Override
+				public int compare(MenuInfo o1, MenuInfo o2) {
+					if(o1.getPriority() == null && o2.getPriority() == null){
+						return 0;
+					}
+					else if(o1.getPriority() != null && o2.getPriority() == null){
+						return -1;
+					}
+					else if(o1.getPriority() == null && o2.getPriority() != null){
+						return 1;
+					}
+					else {
+						if(o1.getPriority() > o2.getPriority()){
+							return 1;
+						}
+						else if(o1.getPriority() < o2.getPriority()){
+							return -1;
+						}
+						else {
+							return 0;
+						}
+					}
+				}
+			});
+
+		}
+
+	}
+
+	public void parseAutoData(Context context, JSONObject autoData, LoginResponse.Autos autosData) throws Exception{
         try {
             String destinationHelpText = autoData.optString("destination_help_text", "");
             String rideSummaryBadText = autoData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
@@ -432,7 +518,7 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT,
                     autoData.optString(Constants.KEY_CUSTOMER_SUPPORT_EMAIL_SUBJECT, context.getString(R.string.support_mail_subject, context.getString(R.string.app_name))));
 
-            Utils.setCurrencyPrecision(context, autoData.optInt(Constants.KEY_CURRENCY_PRECISION, 0));
+            Utils.setCurrencyPrecision(context, autoData.optInt(Constants.KEY_CURRENCY_PRECISION, 1));
             Prefs.with(context).save(Constants.SCHEDULE_CURRENT_TIME_DIFF,
                     autoData.optInt(Constants.SCHEDULE_CURRENT_TIME_DIFF,30));
              Prefs.with(context).save(Constants.SCHEDULE_DAYS_LIMIT,
@@ -447,6 +533,8 @@ public class JSONParser implements Constants {
             if(Data.userData != null){
             	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
+
+				reorderMenu(context);
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -1340,6 +1428,7 @@ public class JSONParser implements Constants {
             int rideType = RideTypeValue.NORMAL.getOrdinal();
             int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
             int fareMandatory = 0;
+            double tipBeforeRequestRide = 0.0;
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1467,6 +1556,7 @@ public class JSONParser implements Constants {
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
                             gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
 							fareMandatory = jObject.optInt(Constants.KEY_FARE_MANDATORY,0);
+							tipBeforeRequestRide = jObject.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
 
 
                             try{
@@ -1577,7 +1667,7 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

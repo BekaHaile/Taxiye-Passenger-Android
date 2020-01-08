@@ -314,6 +314,13 @@ public class ApiCommon<T extends FeedCommonResponse> {
 			case CANCEL_BID:
                 RestClient.getApiService().cancelBid(params, callback);
                 break;
+            case NEARBY_AGENTS:
+                RestClient.getFatafatApiService().nearbyAgents(params,callback);
+                break;
+            case NEARBY_AGENTS_MENUS:
+                RestClient.getMenusApiService().nearbyAgents(params,callback);
+                break;
+
             case SCRATCH_CARD:
                 RestClient.getApiService().scratchCard(params, callback);
                 break;

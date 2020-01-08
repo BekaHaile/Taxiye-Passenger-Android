@@ -10,10 +10,12 @@ import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.retrofit.model.Deliveries;
 
 /**
  * Created by gurmail on 19/08/16.
@@ -185,6 +187,9 @@ public class HistoryResponse {
         @SerializedName("order_time")
         @Expose
         private String orderTime;
+        @SerializedName("order_delivery_time")
+        @Expose
+        private String orderDeliveryTime;
         @SerializedName("cancellable")
         @Expose
         private int cancellable = 0;
@@ -338,6 +343,63 @@ public class HistoryResponse {
         private String currency;
         @SerializedName("distance_unit")
         private String distanceUnit;
+        @SerializedName("currency_code")
+        private String currencyCode;
+        @Expose
+        @SerializedName("pending_feedback")
+        private int pendingFeedback = 0;
+
+        @Expose
+        @SerializedName("feedback_info")
+        private LoginResponse.FeedbackData feedbackData;
+
+        @Expose
+        @SerializedName("driver_name")
+        private String driveName;
+
+        public boolean isPendingFeedback() {
+            return pendingFeedback == 1;
+        }
+
+        public LoginResponse.FeedbackData getFeedBackData() {
+            return feedbackData;
+        }
+
+        public String getDriveName() {
+            return driveName;
+        }
+
+        public void setDriveName(String driveName) {
+            this.driveName = driveName;
+        }
+
+        @Expose
+        @SerializedName("deliveries")
+        private ArrayList<Deliveries> deliveries;
+
+        @Expose
+        @SerializedName("is_corporate")
+        private String is_corporate;
+
+        @Expose
+        @SerializedName("driver_id")
+        private String driver_id;
+
+        @Expose
+        @SerializedName("order_created_at")
+        private String order_created_at;
+
+        public String getDriverName() {
+            return driveName;
+        }
+
+        public String getOrder_created_at() {
+            return order_created_at;
+        }
+
+        public String getDriver_id() {
+            return driver_id;
+        }
 
         public int getIsPaid() {
             return isPaid;
@@ -361,6 +423,38 @@ public class HistoryResponse {
 
         public ArrayList<String> getFuguTags() {
             return fuguTags;
+        }
+
+        @SerializedName("charges_break_down")
+        ArrayList<HashMap<String,Double>> popupData ;
+
+        @SerializedName(value = "user_images")
+        @Expose
+        private OrderImageTypes imagesTypes;
+
+        @SerializedName(value = "vehicle_info")
+        @Expose
+        private VehicleInfo vehicleInfo;
+
+        public VehicleInfo getVehicleInfo() {
+            return vehicleInfo;
+        }
+
+        public OrderImageTypes getImages() {
+            return imagesTypes;
+        }
+
+        public String getOrderDeliveryTime() {
+            return orderDeliveryTime;
+        }
+
+        /**
+         * Getter for popupData
+         *
+         * @return : Returns the value of popupData
+         */
+        public ArrayList<HashMap<String, Double>> getPopupData() {
+            return popupData;
         }
 
         /**
@@ -1160,6 +1254,26 @@ public class HistoryResponse {
         public void setHistoryIcon(String historyIcon) {
             this.historyIcon = historyIcon;
         }
+
+        public ArrayList<Deliveries> getDeliveries() {
+            return deliveries;
+        }
+
+        public void setDeliveries(final ArrayList<Deliveries> deliveries) {
+            this.deliveries = deliveries;
+        }
+
+        public boolean isCorporate() {
+            return is_corporate != null && is_corporate.equals("1");
+        }
+
+        public void setIs_corporate(final String is_corporate) {
+            this.is_corporate = is_corporate;
+        }
+
+        public String getCurrencyCode() {
+            return currencyCode;
+        }
     }
 
 
@@ -1340,5 +1454,89 @@ public class HistoryResponse {
             return deliveryLongitude;
         }
 
+    }
+
+    public class OrderImageTypes {
+
+        @SerializedName("delivery")
+        @Expose
+        private ArrayList<OrderImages> deliveryImages;
+
+        @SerializedName("pickup")
+        @Expose
+        private ArrayList<OrderImages> pickupImages;
+
+        public ArrayList<OrderImages> getDeliveryImages() {
+            return deliveryImages;
+        }
+
+        public ArrayList<OrderImages> getPickupImages() {
+            return pickupImages;
+        }
+    }
+
+    public class VehicleInfo {
+
+        @SerializedName("image")
+        @Expose
+        private String image;
+
+        public String getImage() {
+            return image;
+        }
+    }
+
+
+    public class OrderImages {
+
+        @SerializedName("image")
+        @Expose
+        private String image = "";
+
+        @SerializedName("delivery_id")
+        @Expose
+        private int delivery_id;
+
+        @SerializedName("order_id")
+        @Expose
+        private int order_id;
+
+        @SerializedName("type")
+        @Expose
+        private int type;
+
+        @SerializedName("source")
+        @Expose
+        private int source ;
+
+        private int deliveryNo = -1;
+
+        public String getImage() {
+            return image;
+        }
+
+        public int getDelivery_id() {
+            return delivery_id;
+        }
+
+        public int getOrder_id() {
+            return order_id;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public int getSource() {
+            return source;
+        }
+
+        public void setDeliveryNo(final int deliveryNo) {
+            this.deliveryNo = deliveryNo;
+        }
+
+        public int getDeliveryNo() {
+            return deliveryNo;
+        }
     }
 }

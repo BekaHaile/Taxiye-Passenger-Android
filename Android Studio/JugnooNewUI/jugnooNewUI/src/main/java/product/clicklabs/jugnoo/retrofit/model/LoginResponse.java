@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.retrofit.model;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,6 +15,7 @@ import com.sabkuchfresh.retrofit.model.Store;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
@@ -520,8 +523,20 @@ public class LoginResponse {
 		@SerializedName("upload_image_info")
 		private FatafatUploadImageInfo fatafatUploadImageInfo;
 
+		@SerializedName("max_deliveries")
+		private int max_deliveries;
+
+		@SerializedName("vehicle_type")
+		private HashMap<String, Integer> vehicleTypes;
 
 
+		public HashMap<String, Integer> getVehicleTypes() {
+			return vehicleTypes;
+		}
+
+		public int getMax_deliveries() {
+			return max_deliveries;
+		}
 
 		public FatafatUploadImageInfo getFatafatUploadImageInfo() {
 			return fatafatUploadImageInfo;
@@ -1426,7 +1441,7 @@ public class LoginResponse {
 	}
 
 
-	public class FeedbackData {
+	public static class FeedbackData implements Parcelable {
 
 
 		@SerializedName(Constants.KEY_FEEDBACK_ORDER_ID)
@@ -1447,7 +1462,7 @@ public class LoginResponse {
 		@SerializedName(Constants.KEY_FEEDBACK_AMOUNT)
 		private double amount;
 
-		@SerializedName(Constants.KEY_FEEDBACK_DATE)
+		@SerializedName(value = Constants.KEY_FEEDBACK_DATE, alternate = "delivery_date")
 		private String feedbackDeliveryDate = "";
 
 		@SerializedName(Constants.KEY_FEEDBACK_VIEW_TYPE)
@@ -1455,6 +1470,10 @@ public class LoginResponse {
 
 		@SerializedName(Constants.KEY_RIDE_END_GOOD_FEEDBACK_TEXT)
 		private String rideEndGoodFeedbackText;
+		@SerializedName(Constants.KEY_FEEDBACK_ORDER_CURRENCY_CODE)
+		private String feedbackCurrencyCode;
+		@SerializedName(Constants.KEY_FEEDBACK_ORDER_CURRENCY)
+		private String feedbackCurrency;
 
 
 		@SerializedName(Constants.KEY_NEGATIVE_FEEDBACK_REASONS)
@@ -1462,6 +1481,12 @@ public class LoginResponse {
 
 		@SerializedName(Constants.KEY_POSITIVE_FEEDBACK_REASONS)
 		ArrayList<String> positiveFeedbackReasons;
+
+		@SerializedName("driver_tip_allowed")
+		private int driverTipAllowed = 0;
+
+		@SerializedName("driver_name")
+		private String driverName;
 
 		public Integer getFeedbackViewType() {
 			return feedbackViewType==null? RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal():feedbackViewType;
@@ -1479,6 +1504,32 @@ public class LoginResponse {
 			return restaurantName;
 		}
 
+		public void setRestaurantName(String restaurantName) {
+			this.restaurantName = restaurantName;
+		}
+
+		public void setDriverName(String driverName) {
+			this.driverName = driverName;
+		}
+
+		public void setOrderId(final String orderId) {
+			this.orderId = orderId;
+		}
+
+		public void setAmount(final double amount) {
+			this.amount = amount;
+		}
+
+		public void setFeedbackDeliveryDate(final String feedbackDeliveryDate) {
+			this.feedbackDeliveryDate = feedbackDeliveryDate;
+		}
+		public void setFeedbackCurrencyCode(String feedbackCurrencyCode) {
+			this.feedbackCurrencyCode = feedbackCurrencyCode;
+		}
+
+		public void setFeedbackCurrency(String feedbackCurrency) {
+			this.feedbackCurrency = feedbackCurrency;
+		}
 		public String getQuestion() {
 			return question;
 		}
@@ -1518,6 +1569,63 @@ public class LoginResponse {
 		public void setFeedbackViewType(Integer feedbackViewType) {
 			this.feedbackViewType = feedbackViewType;
 		}
+
+		public String getFeedbackCurrencyCode() {
+			return feedbackCurrencyCode;
+		}
+
+		public String getFeedbackCurrency() {
+			return feedbackCurrency;
+		}
+
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(this.orderId);
+			dest.writeString(this.restaurantName);
+			dest.writeString(this.question);
+			dest.writeInt(this.questionType);
+			dest.writeInt(this.pendingFeedback);
+			dest.writeDouble(this.amount);
+			dest.writeString(this.feedbackDeliveryDate);
+			dest.writeValue(this.feedbackViewType);
+			dest.writeString(this.rideEndGoodFeedbackText);
+			dest.writeStringList(this.negativeFeedbackReasons);
+			dest.writeStringList(this.positiveFeedbackReasons);
+		}
+
+		public FeedbackData() {
+		}
+
+		protected FeedbackData(Parcel in) {
+			this.orderId = in.readString();
+			this.restaurantName = in.readString();
+			this.question = in.readString();
+			this.questionType = in.readInt();
+			this.pendingFeedback = in.readInt();
+			this.amount = in.readDouble();
+			this.feedbackDeliveryDate = in.readString();
+			this.feedbackViewType = (Integer) in.readValue(Integer.class.getClassLoader());
+			this.rideEndGoodFeedbackText = in.readString();
+			this.negativeFeedbackReasons = in.createStringArrayList();
+			this.positiveFeedbackReasons = in.createStringArrayList();
+		}
+
+		public static final Parcelable.Creator<FeedbackData> CREATOR = new Parcelable.Creator<FeedbackData>() {
+			@Override
+			public FeedbackData createFromParcel(Parcel source) {
+				return new FeedbackData(source);
+			}
+
+			@Override
+			public FeedbackData[] newArray(int size) {
+				return new FeedbackData[size];
+			}
+		};
 	}
 
 }

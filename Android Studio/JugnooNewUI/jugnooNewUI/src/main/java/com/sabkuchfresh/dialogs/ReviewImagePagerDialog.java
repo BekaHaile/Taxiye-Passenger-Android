@@ -1,5 +1,6 @@
 package com.sabkuchfresh.dialogs;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -42,7 +43,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 
 public class ReviewImagePagerDialog extends DialogFragment {
 
-	private FreshActivity activity;
+	private Activity activity;
 	private View rootView;
 
 	private ImageView ivClose;
@@ -117,7 +118,7 @@ public class ReviewImagePagerDialog extends DialogFragment {
 			imageArrayList = (ArrayList<FetchFeedbackResponse.ReviewImage>) getArguments().getSerializable(Constants.LIST_IMAGES);
 		}
 
-		activity = (FreshActivity) getActivity();
+		activity = getActivity();
 
 		ivClose = (ImageView) rootView.findViewById(R.id.ivClose);
 		ivClose.setVisibility(View.GONE);
@@ -151,7 +152,15 @@ public class ReviewImagePagerDialog extends DialogFragment {
 
 			vpParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
 			vpImages.setLayoutParams(vpParams);
-			vpImages.setAdapter(new ImagePagerAdapter(activity,imageArrayList==null? activity.getCurrentReview().getImages():imageArrayList));
+
+//			todo delivery
+			List<FetchFeedbackResponse.ReviewImage> display = imageArrayList;
+
+			if (display == null && activity instanceof FreshActivity) {
+				display = ((FreshActivity)activity).getCurrentReview().getImages();
+			}
+//
+			vpImages.setAdapter(new ImagePagerAdapter(activity,display));
 
 
 
@@ -165,29 +174,31 @@ public class ReviewImagePagerDialog extends DialogFragment {
 			if(hideLikeShareCount){
 				tvLikeShareCount.setVisibility(View.GONE);
 			} else{
-				StringBuilder likeCount = new StringBuilder();
-				StringBuilder shareCount = new StringBuilder();
-				if (activity.getCurrentReview().getLikeCount() > 1) {
-					likeCount.append(activity.getCurrentReview().getLikeCount()).append(" ").append(activity.getString(R.string.likes));
-				} else {
-					likeCount.append(activity.getCurrentReview().getLikeCount()).append(" ").append(activity.getString(R.string.like));
-				}
-				if (activity.getCurrentReview().getShareCount() > 1) {
-					shareCount.append(activity.getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.shares));
-				} else {
-					shareCount.append(activity.getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.share));
-				}
+				if(activity instanceof FreshActivity) {
+					StringBuilder likeCount = new StringBuilder();
+					StringBuilder shareCount = new StringBuilder();
+					if (((FreshActivity)activity).getCurrentReview().getLikeCount() > 1) {
+						likeCount.append(((FreshActivity)activity).getCurrentReview().getLikeCount()).append(" ").append(activity.getString(R.string.likes));
+					} else {
+						likeCount.append(((FreshActivity)activity).getCurrentReview().getLikeCount()).append(" ").append(activity.getString(R.string.like));
+					}
+					if (((FreshActivity)activity).getCurrentReview().getShareCount() > 1) {
+						shareCount.append(((FreshActivity)activity).getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.shares));
+					} else {
+						shareCount.append(((FreshActivity)activity).getCurrentReview().getShareCount()).append(" ").append(activity.getString(R.string.share));
+					}
 
-				if(likeIsEnabled != 1){
-					likeCount.delete(0, likeCount.length());
-				}
-				if(shareIsEnabled != 1){
-					shareCount.delete(0, shareCount.length());
-				}
-				String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
-				tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
+					if (likeIsEnabled != 1) {
+						likeCount.delete(0, likeCount.length());
+					}
+					if (shareIsEnabled != 1) {
+						shareCount.delete(0, shareCount.length());
+					}
+					String seperator = (likeCount.length() > 0 && shareCount.length() > 0) ? " | " : "";
+					tvLikeShareCount.setText(likeCount.toString() + seperator + shareCount.toString());
 
-				tvLikeShareCount.setVisibility(View.GONE);
+					tvLikeShareCount.setVisibility(View.GONE);
+				}
 			}
 
 
