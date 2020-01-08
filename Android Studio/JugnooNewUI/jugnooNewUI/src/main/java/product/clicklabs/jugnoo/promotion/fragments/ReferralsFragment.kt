@@ -180,7 +180,7 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
                 }
             }
-            ss.setSpan(clickableSpan, textViewDesc!!.text.length - 6, textViewDesc!!.text.length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            ss.setSpan(clickableSpan, textViewDesc!!.text.length - getString(R.string.details).length, textViewDesc!!.text.length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             textViewDesc!!.text = ss
             textViewDesc!!.movementMethod = LinkMovementMethod.getInstance()
