@@ -9,16 +9,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.widget.NestedScrollView;
-import androidx.cardview.widget.CardView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -33,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.hippo.ChatByUniqueIdAttributes;
 import com.hippo.HippoConfig;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
@@ -40,11 +31,13 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCancelOrder;
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.fragments.OrderCancelReasonsFragment;
 import com.sabkuchfresh.fragments.TrackOrderFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
@@ -53,13 +46,21 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
-import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
-import product.clicklabs.jugnoo.adapters.ImageWithTextAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.adapters.ImageWithTextAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -203,7 +204,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     @BindView(R.id.btRepeatOrderFeed)
     Button btRepeatOrderFeed;
     @BindView(R.id.btRateOrder) Button btRateOrderFeed;
-    @BindView(R.id.rvFeedPickupImages) RecyclerView rvFeedPickupImages;
+    @BindView(R.id.rvFeedPickupImages)
+	RecyclerView rvFeedPickupImages;
     @BindView(R.id.rvFeedDeliveriesImages) RecyclerView rvFeedDeliveriesImages;
     @BindView(R.id.cardDeliveriesFeedPhotos) CardView cardDeliveriesFeedPhotos;
     @BindView(R.id.cardPickupFeedPhotos) CardView cardPickupFeedPhotos;

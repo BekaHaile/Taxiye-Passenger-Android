@@ -584,7 +584,7 @@ public class Data {
             HippoConfig.initHippoConfig(context, configAttributes);
         } else {
             configAttributes = new HippoConfigAttributes.Builder()
-					.setEnvironment("test")
+					.setEnvironment(BuildConfig.DEBUG ? "test" : "live")
 					.setShowLog(BuildConfig.DEBUG)
                     .setAppKey(Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)))
                     .setAppType(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)))
