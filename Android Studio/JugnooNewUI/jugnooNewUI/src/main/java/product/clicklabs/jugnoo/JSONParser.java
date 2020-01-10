@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -246,6 +247,7 @@ public class JSONParser implements Constants {
         int showOfferDialog = userData.optInt(KEY_SHOW_OFFER_DIALOG, 1);
         int showTutorial = userData.optInt(KEY_SHOW_TUTORIAL, 0);
         int regAs = userData.optInt(Constants.KEY_REG_AS, 0);
+        int cityId = userData.optInt(Constants.KEY_CITY_ID, 0);
 
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
@@ -262,7 +264,7 @@ public class JSONParser implements Constants {
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled, prosEnabled,
                 deliveryCustomerEnabled,inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
-                showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode, regAs);
+                showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode, regAs, cityId);
 
 		Prefs.with(context).save(KEY_USER_ID, userId);
 
@@ -682,8 +684,58 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_HIPPO_TICKET_RIDE_FAQ_NAME, autoData.optString(KEY_HIPPO_TICKET_RIDE_FAQ_NAME,
 				context.getString(R.string.hippo_ticket_ride_faq_name)));
 
+		Prefs.with(context).save(KEY_PROMO_BANNER_DATA, autoData.optString(KEY_PROMO_BANNER_DATA, ""));
+
+		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 
 		parseJungleApiObjects(context, autoData);
+	}
+
+	private void parseCityConfigVariables(Context context, JSONObject userData, String cityId){
+		try{
+			JSONObject cityMainObj = userData.optJSONObject(Constants.KEY_CITY_OBJ);
+
+			JSONObject cityDefaultObj = getCityIdObj(cityMainObj, String.valueOf(0));
+
+			JSONObject cityObj = getCityIdObj(cityMainObj, cityId);
+
+			saveCityLevelParam(context, cityDefaultObj, cityObj, KEY_PROMO_BANNER_DATA, true);
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private JSONObject getCityIdObj(JSONObject cityMainObj, String cityId){
+		if(cityMainObj.has(cityId)){
+			return cityMainObj.optJSONObject(cityId);
+		} else {
+			Iterator<String> keys = cityMainObj.keys();
+			while(keys.hasNext()){
+				String key = keys.next();
+				if(key.startsWith(cityId+",") || key.endsWith(","+cityId) || key.contains(","+cityId+",")){
+					return cityMainObj.optJSONObject(key);
+				}
+			}
+		}
+
+		return new JSONObject();
+	}
+
+	private void saveCityLevelParam(Context context, JSONObject cityDefaultObj, JSONObject cityObj, String key, boolean isString) {
+		if(cityObj.has(key)) {
+			if(!isString) {
+				Prefs.with(context).save(key, cityObj.optInt(key));
+			} else {
+				Prefs.with(context).save(key, cityObj.optString(key));
+			}
+		} else if(cityDefaultObj.has(key)) {
+			if(!isString) {
+				Prefs.with(context).save(key, cityDefaultObj.optInt(key));
+			} else {
+				Prefs.with(context).save(key, cityDefaultObj.optString(key));
+			}
+		}
 	}
 
 	private void parseJungleApiObjects(Context context, JSONObject userData) {

@@ -1160,6 +1160,10 @@ public interface Constants {
 	String KEY_OPEN_CHAT = "open_chat";
 	String KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST = "tip_provided_before_ride_request";
 
+	String KEY_CITY_OBJ = "city_obj";
+	String KEY_PROMO_BANNER_DATA = "promo_banner_data";
+
+
 	String KEY_HIPPO_TICKET_FOR_RIDE_ISSUES = "hippo_ticket_for_ride_issues";
 	String KEY_DRIVER_INFO = "driver_info";
 	String KEY_HIPPO_TICKET_RIDE_FAQ_NAME = "hippo_ticket_ride_faq_name";
