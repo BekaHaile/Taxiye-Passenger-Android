@@ -4898,7 +4898,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void showChatButton() {
         try {
-            if (passengerScreenMode != PassengerScreenMode.P_IN_RIDE && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
+            if (passengerScreenMode != PassengerScreenMode.P_IN_RIDE
+					&& Prefs.with(this).getInt(Constants.KEY_HIPPO_CALL_ENABLED, 0) == 0
+					&& Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
                 rlChatDriver.setVisibility(View.VISIBLE);
                 buttonCallDriver.setVisibility(View.GONE);
                 if (Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0) > 0) {
@@ -5949,7 +5951,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							imageViewDropCrossNew.performClick();
 						}
 					}
-					if(intentFired){
+					if(intentFired && Data.autoData.getPickupLatLng() != null){
                         SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
 								false);
                         if (searchResult != null) {
@@ -8905,11 +8907,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             int fareMandatory = jObj.optInt(Constants.KEY_FARE_MANDATORY,0);
             double tipBeforeRequestRide = jObj.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
 
+            String userIdentifier = jObj.optString(Constants.KEY_DRIVER_IDENTIFIER, "");
+
             Data.autoData.setAssignedDriverInfo(new DriverInfo(this, Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide));
+                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);

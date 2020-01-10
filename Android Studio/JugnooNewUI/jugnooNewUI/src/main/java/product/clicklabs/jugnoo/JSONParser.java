@@ -684,6 +684,10 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_HIPPO_TICKET_RIDE_FAQ_NAME, autoData.optString(KEY_HIPPO_TICKET_RIDE_FAQ_NAME,
 				context.getString(R.string.hippo_ticket_ride_faq_name)));
 
+		Prefs.with(context).save(KEY_HIPPO_CALL_ENABLED, autoData.optInt(KEY_HIPPO_CALL_ENABLED,
+				context.getResources().getInteger(R.integer.hippo_call_enabled)));
+		Prefs.with(context).save(KEY_HIPPO_CALL_TYPE, autoData.optString(KEY_HIPPO_CALL_TYPE, "audio"));
+
 		Prefs.with(context).save(KEY_PROMO_BANNER_DATA, autoData.optString(KEY_PROMO_BANNER_DATA, ""));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
@@ -1481,6 +1485,7 @@ public class JSONParser implements Constants {
             int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
             int fareMandatory = 0;
             double tipBeforeRequestRide = 0.0;
+            String userIdentifier = "";
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1609,6 +1614,7 @@ public class JSONParser implements Constants {
                             gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
 							fareMandatory = jObject.optInt(Constants.KEY_FARE_MANDATORY,0);
 							tipBeforeRequestRide = jObject.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
+							userIdentifier = jObject.optString(Constants.KEY_DRIVER_IDENTIFIER, "");
 
 
                             try{
@@ -1719,7 +1725,7 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

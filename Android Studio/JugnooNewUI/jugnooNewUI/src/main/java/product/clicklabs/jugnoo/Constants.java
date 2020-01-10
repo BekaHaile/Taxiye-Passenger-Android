@@ -1167,4 +1167,11 @@ public interface Constants {
 	String KEY_HIPPO_TICKET_FOR_RIDE_ISSUES = "hippo_ticket_for_ride_issues";
 	String KEY_DRIVER_INFO = "driver_info";
 	String KEY_HIPPO_TICKET_RIDE_FAQ_NAME = "hippo_ticket_ride_faq_name";
+
+	String KEY_HIPPO_CALL_ENABLED = "hippo_call_enabled";
+	String KEY_HIPPO_CALL_TYPE = "hippo_call_type";
+	String KEY_DRIVER_IDENTIFIER = "driver_identifier";
+	String KEY_DEVICE_NAME = "device_name";
+	String KEY_OS_VERSION = "os_version";
+	String KEY_COUNTRY = "country";
 }

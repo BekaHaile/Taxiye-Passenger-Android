@@ -126,4 +126,6 @@
     <integer name="hippo_ticket_for_ride_issues">1</integer>
     <string name="hippo_ticket_ride_faq_name">Rides</string>
 
+    <integer name="hippo_call_enabled">1</integer>
+
 </resources>
