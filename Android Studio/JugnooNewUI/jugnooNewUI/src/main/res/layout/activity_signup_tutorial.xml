@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/black_70">
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/vpPayTutorial"
         android:layout_width="match_parent"

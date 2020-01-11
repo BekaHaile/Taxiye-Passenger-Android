@@ -1,13 +1,12 @@
 package product.clicklabs.jugnoo.home.schedulerides
 
-import android.databinding.BaseObservable
-import android.databinding.Bindable
-import android.databinding.ObservableField
-import com.android.databinding.library.baseAdapters.BR
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import androidx.databinding.ObservableField
+import androidx.databinding.library.baseAdapters.BR
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
 import com.sabkuchfresh.feed.ui.api.ApiName
-import product.clicklabs.jugnoo.utils.DialogPopup
 import retrofit.RetrofitError
 
 /**

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainView"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
             app:layout_constraintStart_toStartOf="@+id/mainView"
             app:layout_constraintTop_toBottomOf="@id/tvLabel" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivPickup"
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -51,7 +51,7 @@
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@id/viewSeparator" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvPickup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
             app:layout_constraintTop_toTopOf="@id/ivPickup"
             tools:text="@string/label_confirm_ride_request" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivDottedLine"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -77,7 +77,7 @@
             app:layout_constraintStart_toStartOf="@id/ivPickup"
             app:layout_constraintTop_toBottomOf="@id/ivPickup" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivDrop"
             android:layout_width="20dp"
             android:layout_height="20dp"
@@ -87,7 +87,7 @@
             app:layout_constraintStart_toStartOf="@+id/ivPickup"
             app:layout_constraintTop_toTopOf="@id/tvDrop" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvDrop"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -101,7 +101,7 @@
             app:layout_constraintTop_toBottomOf="@id/tvPickup"
             tools:text="@string/label_confirm_ride_request" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivTip"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -111,7 +111,7 @@
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@+id/tvDrop" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTipLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -152,7 +152,7 @@
             android:drawablePadding="5dp"
             />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTipMsg"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -174,7 +174,7 @@
             app:layout_constraintStart_toStartOf="@+id/mainView"
             app:layout_constraintTop_toBottomOf="@id/tvTipMsg" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivVehicle"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -184,7 +184,7 @@
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@id/viewSeparatorVehicle" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvVehicleName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -197,7 +197,7 @@
             app:layout_constraintTop_toTopOf="@id/ivVehicle"
             tools:text="@string/label_confirm_ride_request" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivEstimateFare"
             android:layout_width="19dp"
             android:layout_height="19dp"
@@ -208,7 +208,7 @@
             app:layout_constraintBottom_toBottomOf="@id/tvEstimateFare"
             app:layout_constraintTop_toTopOf="@id/ivVehicle" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvEstimateFare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -233,7 +233,7 @@
             app:layout_constraintStart_toStartOf="@+id/mainView"
             app:layout_constraintTop_toBottomOf="@id/tvVehicleName" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvNotes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -246,7 +246,7 @@
             app:layout_constraintTop_toBottomOf="@id/viewSeparatorNotes"
             tools:text="Note:- text" />
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnOk"
             android:layout_width="0dp"
             android:layout_height="36dp"
@@ -262,7 +262,7 @@
             app:layout_constraintStart_toEndOf="@+id/btnCancel"
             app:layout_constraintTop_toBottomOf="@+id/tvNotes" />
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCancel"
             android:layout_width="0dp"
             android:layout_height="36dp"
@@ -278,39 +278,39 @@
             app:layout_constraintStart_toStartOf="@id/glStart"
             app:layout_constraintTop_toBottomOf="@+id/tvNotes" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".05" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".95" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glMid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".50" />
 
-        <android.support.constraint.Group
+        <androidx.constraintlayout.widget.Group
             android:id="@+id/groupDrop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="tvDrop,ivDrop,ivDottedLine" />
 
-        <android.support.constraint.Group
+        <androidx.constraintlayout.widget.Group
             android:id="@+id/groupTip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="viewSeparatorVehicle,ivTip,tvTipLabel,etAdditionalFare,tvTipMsg" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>
 

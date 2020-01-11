@@ -6,22 +6,18 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.BounceInterpolator;
-import android.view.animation.OvershootInterpolator;
 
 import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by Parminder Singh on 3/24/17.

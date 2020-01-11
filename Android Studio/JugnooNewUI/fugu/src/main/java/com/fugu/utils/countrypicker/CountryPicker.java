@@ -1,8 +1,8 @@
 package com.fugu.utils.countrypicker;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import android.telephony.TelephonyManager;
 
 import com.fugu.R;

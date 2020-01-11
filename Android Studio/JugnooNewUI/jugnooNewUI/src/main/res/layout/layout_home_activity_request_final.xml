@@ -104,16 +104,6 @@
         android:visibility="gone"
         />
 
-    <ImageView
-        android:layout_width="68dp"
-        android:layout_height="68dp"
-        android:layout_alignParentBottom="true"
-        android:tag="DontTouchMe"
-        android:layout_marginStart="20dp"
-        android:layout_centerVertical="true"
-        android:visibility="visible"
-        />
-
 
     <!-- drive info layout-->
     <RelativeLayout

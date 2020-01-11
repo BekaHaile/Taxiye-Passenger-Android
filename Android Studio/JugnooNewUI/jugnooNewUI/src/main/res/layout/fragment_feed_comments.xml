@@ -11,14 +11,14 @@
 
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_feed_detail"
         android:background="@color/feed_grey_background_light"
         android:layout_above="@+id/ll_anonymous"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <ImageView
         android:id="@+id/imageViewShadow"
@@ -46,7 +46,7 @@
 
 
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_handle"
             android:layout_marginStart="@dimen/spacing_normal"
             android:theme="@style/ThemeSwitch"

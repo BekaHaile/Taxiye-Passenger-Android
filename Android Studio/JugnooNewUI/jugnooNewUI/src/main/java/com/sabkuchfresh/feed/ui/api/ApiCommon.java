@@ -1,7 +1,7 @@
 package com.sabkuchfresh.feed.ui.api;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import com.sabkuchfresh.feed.models.FeedCommonResponse;

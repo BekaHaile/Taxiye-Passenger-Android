@@ -1,6 +1,6 @@
 package com.sabkuchfresh.adapters;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,6 @@ import com.picker.image.model.ImageEntry;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;

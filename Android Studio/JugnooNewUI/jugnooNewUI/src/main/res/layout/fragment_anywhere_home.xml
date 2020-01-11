@@ -43,7 +43,7 @@
                 android:textColor="@color/text_color"
                 app:typekitFont="@string/maven_r" />
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -69,11 +69,11 @@
                     android:textSize="14sp"
                     app:typekitFont="@string/maven" />
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
 
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cvUploadImages"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,10 +130,10 @@
 
 
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cvImages"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -172,7 +172,7 @@
 
                     </FrameLayout>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvImages"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -187,7 +187,7 @@
 
                 </HorizontalScrollView>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
 
             <TextView
@@ -200,7 +200,7 @@
                 android:textColor="@color/text_color"
                 app:typekitFont="@string/maven_r" />
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cv_pickup_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -254,7 +254,7 @@
 
 
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -266,7 +266,7 @@
                 android:textColor="@color/text_color"
                 app:typekitFont="@string/maven_r" />
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cv_delivery_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -317,7 +317,7 @@
 
 
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
 
 
@@ -330,7 +330,7 @@
                 android:textColor="@color/text_color"
                 app:typekitFont="@string/maven_r" />
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -359,7 +359,7 @@
                         android:textSize="14sp"
                         app:typekitFont="@string/maven" />
 
-                    <android.support.v7.widget.SwitchCompat
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switchDeliveryTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -400,7 +400,7 @@
                 </RadioGroup>
 
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
 
             <TextView
@@ -414,7 +414,7 @@
                 android:textColor="@color/text_color"
                 app:typekitFont="@string/maven_r" />
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cv_delivery_charges"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -468,7 +468,7 @@
                         android:layout_height="wrap_content" />
                 </RelativeLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
             <TextView
                 android:id="@+id/tv_promo_label"
                 android:layout_width="wrap_content"
@@ -481,7 +481,7 @@ android:layout_marginBottom="@dimen/dp_6"                android:textColor="@col
                 app:typekitFont="@string/maven_r" />
 
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cv_promo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -507,9 +507,9 @@ android:layout_marginBottom="@dimen/dp_6"                android:textColor="@col
                     android:textColor="@color/text_color"
                     android:textSize="14sp"
                     app:typekitFont="@string/maven" />
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cvPaymentOption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -556,11 +556,11 @@ android:layout_marginBottom="@dimen/dp_6"                android:textColor="@col
                         app:typekitFont="@string/maven" />
 
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
 
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/cvVehicles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -573,7 +573,7 @@ android:layout_marginBottom="@dimen/dp_6"                android:textColor="@col
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvVehicles"
                     android:layout_width="match_parent"
                     android:visibility="gone"
@@ -587,7 +587,7 @@ android:layout_marginBottom="@dimen/dp_6"                android:textColor="@col
                     android:visibility="gone"
                     layout="@layout/order_place_referal" />
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
 
         </LinearLayout>

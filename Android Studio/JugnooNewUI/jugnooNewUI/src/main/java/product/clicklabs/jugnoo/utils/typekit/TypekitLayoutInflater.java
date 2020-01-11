@@ -3,7 +3,7 @@ package product.clicklabs.jugnoo.utils.typekit;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.v4.os.BuildCompat;
+import androidx.core.os.BuildCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;

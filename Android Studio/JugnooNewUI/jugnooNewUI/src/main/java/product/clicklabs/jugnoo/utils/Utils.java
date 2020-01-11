@@ -25,8 +25,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -51,6 +49,8 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
+import com.hippo.HippoConfig;
+import com.hippocall.HippoCallConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -82,6 +82,8 @@ import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -92,6 +94,7 @@ import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.home.dialogs.ThreeButtonDialog;
 
 import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
 
@@ -897,7 +900,52 @@ public class Utils implements GAAction, GACategory{
 
 	public static void callDriverDuringRide(Activity activity){
 		try {
-			Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
+			if(Data.autoData == null || Data.autoData.getAssignedDriverInfo() == null){
+				return;
+			}
+
+			if(!TextUtils.isEmpty(Data.autoData.getAssignedDriverInfo().getUserIdentifier())
+					&& Prefs.with(activity).getInt(Constants.KEY_HIPPO_CALL_ENABLED, 0) == 1){
+
+				ThreeButtonDialog.INSTANCE.show(activity,
+						activity.getString(R.string.contact_user_format, Data.autoData.getAssignedDriverInfo().name),
+						activity.getString(R.string.carrier_charges_may_apply),
+						Data.autoData.getAssignedDriverInfo().phoneNumber,
+						activity.getString(R.string.free_call),
+						activity.getString(R.string.cancel),
+						true,
+						new ThreeButtonDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+								Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
+							}
+
+							@Override
+							public void onNeutralClick() {
+								String callType = Prefs.with(activity).getString(Constants.KEY_HIPPO_CALL_TYPE, "audio");
+								ArrayList<String> userUniqueKeys = new ArrayList<>();
+								userUniqueKeys.add(Data.autoData.getAssignedDriverInfo().getUserIdentifier());
+
+								HippoCallConfig.getInstance().setCallBackListener();
+
+								HippoConfig.getInstance().startCall(activity, callType,
+										Data.autoData.getcEngagementId(),
+										Data.userData.userIdentifier,
+										Data.autoData.getAssignedDriverInfo().name,
+										userUniqueKeys,
+										Data.autoData.getAssignedDriverInfo().image);
+							}
+
+							@Override
+							public void onNegativeClick() {
+
+							}
+						}
+				);
+			}
+			else {
+				Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
+			}
 			if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				GAUtils.event(RIDES, RIDE+IN_PROGRESS, CALL+BUTTON+CLICKED);
 			}

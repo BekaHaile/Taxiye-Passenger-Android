@@ -207,7 +207,10 @@
   **[] $VALUES;
   public *;
 }
-
+-keeppackagenames org.jsoup.nodes
+  -keep public class org.jsoup.** {
+      public *;
+      }
 
 -dontwarn com.bumptech.glide.**
 -keep class com.bumptech.glide.** { *; }
@@ -232,4 +235,6 @@
 -dontwarn okhttp3.RealCall$ApplicationInterceptorChain
 -dontwarn javax.annotation.**
 
-
+-keep public class com.hippocall.** {
+  public private protected *;
+}

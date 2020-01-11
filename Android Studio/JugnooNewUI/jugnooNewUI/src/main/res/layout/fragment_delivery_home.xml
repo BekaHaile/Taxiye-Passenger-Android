@@ -5,7 +5,7 @@
 
 
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_marginTop="@dimen/height_category_bar"
         android:id="@+id/recycler_delivery_home"
         android:layout_width="match_parent"

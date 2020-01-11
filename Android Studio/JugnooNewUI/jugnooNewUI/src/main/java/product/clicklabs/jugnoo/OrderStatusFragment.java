@@ -9,16 +9,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -32,18 +22,22 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.adapters.OrderItemsAdapter;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.ApiCancelOrder;
+import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
 import com.sabkuchfresh.fragments.OrderCancelReasonsFragment;
 import com.sabkuchfresh.fragments.TrackOrderFragment;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.OrderStatus;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
+import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.utils.TextViewStrikeThrough;
 import com.sabkuchfresh.widgets.LockableBottomSheetBehavior;
 
@@ -52,13 +46,21 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import com.sabkuchfresh.dialogs.ReviewImagePagerDialog;
-import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
-import product.clicklabs.jugnoo.adapters.ImageWithTextAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.adapters.ImageWithTextAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -202,7 +204,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     @BindView(R.id.btRepeatOrderFeed)
     Button btRepeatOrderFeed;
     @BindView(R.id.btRateOrder) Button btRateOrderFeed;
-    @BindView(R.id.rvFeedPickupImages) RecyclerView rvFeedPickupImages;
+    @BindView(R.id.rvFeedPickupImages)
+	RecyclerView rvFeedPickupImages;
     @BindView(R.id.rvFeedDeliveriesImages) RecyclerView rvFeedDeliveriesImages;
     @BindView(R.id.cardDeliveriesFeedPhotos) CardView cardDeliveriesFeedPhotos;
     @BindView(R.id.cardPickupFeedPhotos) CardView cardPickupFeedPhotos;
@@ -396,8 +399,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 public void onClick(View v) {
                     if (activity instanceof RideTransactionsActivity) {
                         if (datum1 != null && !TextUtils.isEmpty(datum1.getFuguChannelId())) {
-                            FuguConfig.getInstance().openChatByTransactionId(datum1.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                                    datum1.getFuguChannelName(), datum1.getFuguTags());
+                            ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                                    .setTransactionId(datum1.getFuguChannelId())
+                                    .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                                    .setChannelName(datum1.getFuguChannelName())
+                                    .setTags(datum1.getFuguTags())
+                                    .build();
+                            HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                         } else if(Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)){
                             activity.startActivity(new Intent(activity, SupportMailActivity.class));
                         }
@@ -1523,11 +1531,15 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                 try {
 
                     if(!TextUtils.isEmpty(datum1.getFuguChannelId())){
-                        FuguConfig.getInstance().openChatByTransactionId(datum1.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
-                                datum1.getFuguChannelName(), datum1.getFuguTags());
+                        ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                                .setTransactionId(datum1.getFuguChannelId())
+                                .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                                .setChannelName(datum1.getFuguChannelName())
+                                .setTags(datum1.getFuguTags())
+                                .build();
+                        HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                     }else{
-                        FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
-
+                        HippoConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                     }
 
                 } catch (Exception e) {

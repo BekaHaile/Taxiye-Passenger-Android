@@ -46,7 +46,7 @@
                 android:paddingTop="20px"
                 android:paddingBottom="20px">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvStripeCards"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -483,7 +483,7 @@
 
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvCorporates"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -118,7 +118,7 @@
             android:gravity="start"
             android:text="@string/label_cancel_payment" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_cancellation_reasons"
             android:layout_width="match_parent"
             android:layout_marginBottom="@dimen/spacing_normal"

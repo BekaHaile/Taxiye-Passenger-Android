@@ -8,8 +8,11 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -26,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
@@ -675,6 +679,15 @@ public class JSONParser implements Constants {
 				context.getString(R.string.youtube_api_key)));
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
 
+		Prefs.with(context).save(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES, autoData.optInt(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES,
+				context.getResources().getInteger(R.integer.hippo_ticket_for_ride_issues)));
+		Prefs.with(context).save(KEY_HIPPO_TICKET_RIDE_FAQ_NAME, autoData.optString(KEY_HIPPO_TICKET_RIDE_FAQ_NAME,
+				context.getString(R.string.hippo_ticket_ride_faq_name)));
+
+		Prefs.with(context).save(KEY_HIPPO_CALL_ENABLED, autoData.optInt(KEY_HIPPO_CALL_ENABLED,
+				context.getResources().getInteger(R.integer.hippo_call_enabled)));
+		Prefs.with(context).save(KEY_HIPPO_CALL_TYPE, autoData.optString(KEY_HIPPO_CALL_TYPE, "audio"));
+
 		Prefs.with(context).save(KEY_PROMO_BANNER_DATA, autoData.optString(KEY_PROMO_BANNER_DATA, ""));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
@@ -928,10 +941,24 @@ public class JSONParser implements Constants {
 
         try {
 
-            if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
-                FuguNotificationConfig.updateFcmRegistrationToken(MyApplication.getInstance().getDeviceToken());
-                Data.initializeFuguHandler((Activity) context, Data.getFuguUserData());
-            }
+			FirebaseInstanceId.getInstance().getInstanceId()
+					.addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+						@Override
+						public void onComplete(@NonNull Task<InstanceIdResult> task) {
+							if (!task.isSuccessful()) {
+								Log.w(TAG, "getInstanceId failed");
+								return;
+							}
+
+							// Get new Instance ID token
+							String token = task.getResult().getToken();
+
+							if((Data.isFuguChatEnabled() || Data.isMenuTagEnabled(MenuInfoTags.TICKET_SUPPORT))
+									&& Data.getFuguUserData()!=null) {
+								Data.initializeFuguHandler((Activity) context, Data.getFuguUserData(), token);
+							}
+						}
+					});
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1305,7 +1332,19 @@ public class JSONParser implements Constants {
         double paidUsingPOS = jLastRideData.optDouble(Constants.KEY_PAID_USING_POS, 0);
 		int meterFareApplicable = jLastRideData.optInt(Constants.KEY_METER_FARE_APPLICABLE, 0);
 
-        JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
+		int driverId = 0;
+		try {
+			driverId = jLastRideData.optInt(KEY_DRIVER_ID,
+					!TextUtils.isEmpty(Data.autoData.getcDriverId()) ? Integer.parseInt(Data.autoData.getcDriverId()) : 0);
+			if(jLastRideData.has(KEY_DRIVER_INFO)){
+				JSONObject jDriverInfo = jLastRideData.optJSONObject(KEY_DRIVER_INFO);
+				driverId = jDriverInfo.optInt(KEY_ID);
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
         ArrayList<DiscountType> stripeCardsAmount = new ArrayList<>();
         if(jCardDetails != null) {
             for (int i = 0; i < jCardDetails.length(); i++) {
@@ -1343,7 +1382,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId);
 	}
 
 
@@ -1446,6 +1485,7 @@ public class JSONParser implements Constants {
             int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
             int fareMandatory = 0;
             double tipBeforeRequestRide = 0.0;
+            String userIdentifier = "";
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1574,6 +1614,7 @@ public class JSONParser implements Constants {
                             gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
 							fareMandatory = jObject.optInt(Constants.KEY_FARE_MANDATORY,0);
 							tipBeforeRequestRide = jObject.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
+							userIdentifier = jObject.optString(Constants.KEY_DRIVER_IDENTIFIER, "");
 
 
                             try{
@@ -1684,7 +1725,7 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

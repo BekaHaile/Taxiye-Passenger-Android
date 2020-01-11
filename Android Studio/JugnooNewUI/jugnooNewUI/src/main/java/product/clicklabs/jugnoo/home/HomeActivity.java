@@ -30,21 +30,21 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
@@ -84,8 +84,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
-import com.fugu.FuguConfig;
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -106,6 +104,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
+import com.hippo.HippoNotificationConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -594,8 +595,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private TransactionUtils transactionUtils;
     public RelativeLayout relativeLayoutContainer,scheduleRideContainer;
     private FrameLayout coordinatorLayout;
-    private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
-    ;
+    private HippoNotificationConfig fuguNotificationConfig = new HippoNotificationConfig();
     public Gson gson = new Gson();
     private boolean addressPopulatedFromDifferentOffering;
 
@@ -2234,9 +2234,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                             rating, "", "");
-                    if (Data.isFuguChatEnabled()) {
+                    if (Data.isFuguChatEnabled()
+							|| Data.isHippoTicketForRideEnabled(HomeActivity.this)) {
                         fuguCustomerHelpRides(false);
-                    } else if (Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)) {
+                    }
+                    else if (Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)) {
                         startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
@@ -2410,7 +2412,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
             if (Data.getFuguChatBundle() != null) {
-                fuguNotificationConfig.handleFuguPushNotification(HomeActivity.this, Data.getFuguChatBundle());
+                fuguNotificationConfig.handleHippoPushNotification(HomeActivity.this, Data.getFuguChatBundle());
                 Data.setFuguChatBundle(null);
             }
         } catch (Exception e) {
@@ -4896,7 +4898,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void showChatButton() {
         try {
-            if (passengerScreenMode != PassengerScreenMode.P_IN_RIDE && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
+            if (passengerScreenMode != PassengerScreenMode.P_IN_RIDE
+					&& Prefs.with(this).getInt(Constants.KEY_HIPPO_CALL_ENABLED, 0) == 0
+					&& Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
                 rlChatDriver.setVisibility(View.VISIBLE);
                 buttonCallDriver.setVisibility(View.GONE);
                 if (Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0) > 0) {
@@ -5947,7 +5951,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							imageViewDropCrossNew.performClick();
 						}
 					}
-					if(intentFired){
+					if(intentFired && Data.autoData.getPickupLatLng() != null){
                         SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
 								false);
                         if (searchResult != null) {
@@ -8903,11 +8907,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             int fareMandatory = jObj.optInt(Constants.KEY_FARE_MANDATORY,0);
             double tipBeforeRequestRide = jObj.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
 
+            String userIdentifier = jObj.optString(Constants.KEY_DRIVER_IDENTIFIER, "");
+
             Data.autoData.setAssignedDriverInfo(new DriverInfo(this, Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide));
+                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -10003,15 +10009,25 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void fuguCustomerHelpRides(boolean fromSos) {
         try {
-            if (!TextUtils.isEmpty(Data.autoData.getFuguChannelId())) {
+        	if(!fromSos && Data.isHippoTicketForRideEnabled(this)){
+				HomeUtil.openHippoTicketForRide(this,
+						Integer.parseInt(Data.autoData.getcEngagementId()),
+						Integer.parseInt(Data.autoData.getcDriverId()));
+			}
+        	else if (!TextUtils.isEmpty(Data.autoData.getFuguChannelId())) {
                 Data.autoData.getFuguTags().remove(FUGU_TAG_SOS);
                 if (fromSos) {
                     Data.autoData.getFuguTags().add(FUGU_TAG_SOS);
                 }
-                FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                        Data.autoData.getFuguChannelName(), Data.autoData.getFuguTags());
+                ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                        .setTransactionId(Data.autoData.getFuguChannelId())
+                        .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                        .setChannelName(Data.autoData.getFuguChannelName())
+                        .setTags(Data.autoData.getFuguTags())
+                        .build();
+                HippoConfig.getInstance().openChatByUniqueId(chatAttr);
             } else {
-                FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+                HippoConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -13275,8 +13291,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             imageViewClose.setOnClickListener(v -> noDriverFoundHelpDialog.dismiss());
             buttonOk.setOnClickListener(v -> {
-                FuguConfig.getInstance().openChatByTransactionId(fuguChannelId, String.valueOf(Data.getFuguUserData().getUserId()),
-                        fuguChannelName, tags, new String[]{altMessage});
+				ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+						.setTransactionId(fuguChannelId)
+						.setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+						.setChannelName(fuguChannelName)
+						.setTags(tags)
+						.setMessage(new String[]{altMessage})
+						.build();
+				HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                 noDriverFoundHelpDialog.dismiss();
             });
             relative.setOnClickListener(v -> noDriverFoundHelpDialog.dismiss());
