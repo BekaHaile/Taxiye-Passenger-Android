@@ -31,7 +31,6 @@ import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 public class MarkerAnimation {
 
     private static ArrayList<GetDirectionsAsync> getDirectionsAsyncs = new ArrayList<>();
-    private static final double ANIMATION_TIME = 8000;
     private static final double FAST_ANIMATION_TIME = 1500;
     public static final double MIN_DISTANCE = 10;
     public static final double MAX_DISTANCE = 2000;
@@ -39,21 +38,21 @@ public class MarkerAnimation {
 
 
 	public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition,
-										  final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, boolean ignoreDistanceCheck) {
-		animateMarkerToICS(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim, false, null, 0, 0, 0, ignoreDistanceCheck);
+										  final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim, boolean ignoreDistanceCheck, long duration) {
+		animateMarkerToICS(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim, false, null, 0, 0, 0, ignoreDistanceCheck, duration);
 	}
 
     public static void animateMarkerToICS(String engagementId, Marker marker, LatLng finalPosition,
                                           final LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
                                           boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
-                                          int untrackedPathColor, float pathWidth, boolean ignoreDistanceCheck) {
+                                          int untrackedPathColor, float pathWidth, boolean ignoreDistanceCheck, long durationPassed) {
 
         try {
             if(!ignoreDistanceCheck && MapUtils.distance(marker.getPosition(), finalPosition) < MIN_DISTANCE){
                 return;
             }
             if(ignoreDistanceCheck || MapUtils.distance(marker.getPosition(), finalPosition) > MAX_DISTANCE){
-                double duration = (ignoreDistanceCheck ? FAST_ANIMATION_TIME : ANIMATION_TIME);
+                double duration = (ignoreDistanceCheck ? FAST_ANIMATION_TIME : durationPassed);
                 animationForShortDistance(engagementId, marker, finalPosition, latLngInterpolator, callbackAnim,
                         (long) duration);
                 clearPolylines();
@@ -72,7 +71,7 @@ public class MarkerAnimation {
 			}
 			else{
                 getDirectionsAsyncs.add(new GetDirectionsAsync(engagementId, marker, finalPosition, latLngInterpolator,
-                        callbackAnim, animateRoute, googleMap, pathResolvedColor, untrackedPathColor, pathWidth));
+                        callbackAnim, animateRoute, googleMap, pathResolvedColor, untrackedPathColor, pathWidth, durationPassed));
                 if(getDirectionsAsyncs.size() == 1){
                     getDirectionsAsyncs.get(0).execute();
                 }
@@ -88,9 +87,10 @@ public class MarkerAnimation {
 
 
     public static void animateMarkerOnList(Marker marker, List<LatLng> list, final LatLngInterpolator latLngInterpolator, boolean animateRoute,
-                                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth, CallbackAnim callback, boolean fastDuration){
+                                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth,
+										   CallbackAnim callback, boolean fastDuration, long durationPassed){
         getDirectionsAsyncs.add(new GetDirectionsAsync("-1", marker, latLngInterpolator, callback, list, animateRoute,
-                googleMap, pathResolvedColor, untrackedPathColor, pathWidth, fastDuration));
+                googleMap, pathResolvedColor, untrackedPathColor, pathWidth, fastDuration, durationPassed));
         if(getDirectionsAsyncs.size() == 1){
             getDirectionsAsyncs.get(0).execute();
         }
@@ -123,11 +123,12 @@ public class MarkerAnimation {
         int pathResolvedColor, untrackedPathColor;
         float pathWidth;
         boolean fastDuration;
+        long durationPassed;
 
         GetDirectionsAsync(String engagementId, Marker marker, LatLng destination,
                            LatLngInterpolator latLngInterpolator, CallbackAnim callbackAnim,
                            boolean animateRoute, GoogleMap googleMap, int pathResolvedColor,
-                           int untrackedPathColor, float pathWidth){
+                           int untrackedPathColor, float pathWidth, long durationPassed){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = destination;
@@ -140,11 +141,13 @@ public class MarkerAnimation {
             this.untrackedPathColor = untrackedPathColor;
             this.pathWidth = pathWidth;
             fastDuration = false;
+            this.durationPassed = durationPassed;
         }
 
         GetDirectionsAsync(String engagementId, Marker marker, LatLngInterpolator latLngInterpolator,
                            CallbackAnim callbackAnim, List<LatLng> list, boolean animateRoute,
-                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth, boolean fastDuration){
+                           GoogleMap googleMap, int pathResolvedColor, int untrackedPathColor, float pathWidth,
+						   boolean fastDuration, long durationPassed){
             this.engagementId = engagementId;
             this.source = marker.getPosition();
             this.destination = (list != null && list.size() > 0) ? list.get(list.size()-1) : null;
@@ -158,6 +161,7 @@ public class MarkerAnimation {
             this.untrackedPathColor = untrackedPathColor;
             this.pathWidth = pathWidth;
             this.fastDuration = fastDuration;
+            this.durationPassed = durationPassed;
         }
 
         @Override
@@ -220,7 +224,7 @@ public class MarkerAnimation {
 						}
 
                         ArrayList<Double> duration = new ArrayList<>();
-						double totalDuration = (fastDuration ? FAST_ANIMATION_TIME : ANIMATION_TIME);
+						double totalDuration = (fastDuration ? FAST_ANIMATION_TIME : durationPassed);
                         for (int i = 0; i < list.size(); i++) {
                             if (i + 1 < list.size()) {
                                 double animDuration = (MapUtils.distance(list.get(i), list.get(i + 1)) / totalDistance) * totalDuration;

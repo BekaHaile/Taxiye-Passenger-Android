@@ -9,10 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Property;
 import android.view.View;
@@ -43,6 +39,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -450,7 +450,7 @@ public class TrackingLogActivity extends BaseFragmentActivity {
                             this.onAnimComplete();
                         }
                     },
-                    trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.RESET.getOrdinal()));
+                    trackingLogItem.getMode().equalsIgnoreCase(TrackingLogModeValue.RESET.getOrdinal()), 9000);
         }
 
     }

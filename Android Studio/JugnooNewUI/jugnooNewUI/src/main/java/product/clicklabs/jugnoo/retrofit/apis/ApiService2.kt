@@ -13,6 +13,7 @@ interface ApiService2 {
 
 
     @Streaming
+    @FormUrlEncoded
     @POST("get_driver_current_location_v2")
     fun getDriverCurrentLocation(@FieldMap params:HashMap<String, String>): Observable<ResponseBody>
 

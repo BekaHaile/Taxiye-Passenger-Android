@@ -4420,7 +4420,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, true);
+                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null,
+										true, getMarkerAnimationDuration());
                             }
 							myLocationButtonPressed = true;
 							DriverToPickupPath.INSTANCE.showPath(this, mode, map,
@@ -4508,7 +4509,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, true);
+                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null,
+										true, getMarkerAnimationDuration());
                             }
 							myLocationButtonPressed = true;
 							DriverToPickupPath.INSTANCE.showPath(this, mode, map,
@@ -8042,6 +8044,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 	public void consumeDriverLocationUpdates(String result) {
 		try {
 			Log.d(TAG, "consumeDriverLocationUpdates result="+result);
+			if(result.equalsIgnoreCase("streaming real time data")){
+				return;
+			}
 
 			JSONObject jObj = new JSONObject(result);
 
@@ -8068,7 +8073,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 										&& driverLocationMarker != null) {
 									MarkerAnimation.clearAsyncList();
 									MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-											driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), getMarkerCallbackAnim(), false);
+											driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), getMarkerCallbackAnim(),
+											false, getMarkerAnimationDuration());
 									updateDriverETAText(passengerScreenMode);
 								}
 							} catch (Exception e) {
@@ -8086,6 +8092,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		}
 	}
 
+	private long getMarkerAnimationDuration(){
+    	return Prefs.with(this).getLong(passengerScreenMode == PassengerScreenMode.P_IN_RIDE ?
+				KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE : KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT, 9000);
+	}
 
 	private StreamClient.LocationStreamCallback locationStreamCallback = new StreamClient.LocationStreamCallback() {
 		@NotNull
@@ -8455,7 +8465,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                 new LatLngInterpolator.LinearFixed(),
 												showRideCoveredPath, map,
 												RIDE_ELAPSED_PATH_COLOR, untrackedPathColor, ASSL.Xscale() * 5f,
-												getMarkerCallbackAnim(), false);
+												getMarkerCallbackAnim(), false, getMarkerAnimationDuration());
                                     } else {
                                         MarkerAnimation.clearPolylines();
 

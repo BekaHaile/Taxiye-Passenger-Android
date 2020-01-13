@@ -51,7 +51,6 @@ class StreamClient {
                     .observeOn(Schedulers.io())
                     .flatMap { responseBody -> events(responseBody.source()) }
                     .subscribe({ t ->
-                        Log.i(TAG, "onNext t=$t")
                         callback.onResponse(t)
                     }, { e ->
                         Log.i(TAG, "onError e=$e")
