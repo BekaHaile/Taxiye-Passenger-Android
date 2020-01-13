@@ -5854,9 +5854,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         try {
 
-        	for(int i=0; i<5; i++) {
-				streamClient.startClient(i);
-			}
 
             if(pushDialog != null) {
                 pushDialog.onResume();
@@ -6488,7 +6485,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         if(pushDialog != null) {
             pushDialog.onPause();
         }
-//		streamClient.stopClient();
         super.onPause();
     }
 
@@ -7963,109 +7959,149 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
     }
 
+    private HashMap<String, String> getParamsForDriverLocationUpdate(){
+		HashMap<String, String> nameValuePairs = new HashMap<>();
+		if(Data.userData != null
+				&& Data.autoData != null
+				&& Data.autoData.getAssignedDriverInfo() != null
+				&& Data.autoData.getPickupLatLng() != null) {
+			nameValuePairs.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			nameValuePairs.put(KEY_DRIVER_ID, Data.autoData.getAssignedDriverInfo().userId);
+			nameValuePairs.put(KEY_PICKUP_LATITUDE, "" + Data.autoData.getPickupLatLng().latitude);
+			nameValuePairs.put(KEY_PICKUP_LONGITUDE, "" + Data.autoData.getPickupLatLng().longitude);
+		}
+
+		HomeUtil.addDefaultParams(nameValuePairs);
+		return nameValuePairs;
+	}
+
+	private boolean driverIsArrivingCheck(){
+    	return (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+				&& (Data.userData != null)
+				&& (Data.autoData.getAssignedDriverInfo() != null)
+				&& (Data.autoData.getPickupLatLng() != null);
+	}
+
+
     //Customer's timer
     Timer timerDriverLocationUpdater;
     TimerTask timerTaskDriverLocationUpdater;
 
     public void startDriverLocationUpdateTimer() {
 
-        cancelDriverLocationUpdateTimer();
+		cancelDriverLocationUpdateTimer();
 
-        try {
-            timerDriverLocationUpdater = new Timer();
+		if(Prefs.with(this).getInt(KEY_DRIVER_TRACKING_USING_STREAM_ENABLED, 1) == 1){
+			if (MyApplication.getInstance().isOnline()
+					&& driverIsArrivingCheck()) {
 
-            timerTaskDriverLocationUpdater = new TimerTask() {
+				streamClient.startLocationStream(getParamsForDriverLocationUpdate(), locationStreamCallback);
+			} else {
+				streamClient.stopLocationStream();
+				if(driverIsArrivingCheck() && !MyApplication.getInstance().isOnline()) {
+					DialogPopup.alertPopupWithListener(this, "", getString(R.string.no_internet_connection),
+							getString(R.string.tap_to_retry), new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									startDriverLocationUpdateTimer();
+								}
+							}, false);
+				}
+			}
 
-                @Override
-                public void run() {
-                    try {
-                        if (MyApplication.getInstance().isOnline()
-                                && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
-                                && (Data.userData != null)
-                                && (Data.autoData.getAssignedDriverInfo() != null)
-                                && (Data.autoData.getPickupLatLng() != null)) {
+		} else {
+			timerDriverLocationUpdater = new Timer();
+			timerTaskDriverLocationUpdater = new TimerTask() {
 
-                            long startTime = System.currentTimeMillis();
-                            HashMap<String, String> nameValuePairs = new HashMap<>();
-                            nameValuePairs.put("access_token", Data.userData.accessToken);
-                            nameValuePairs.put("driver_id", Data.autoData.getAssignedDriverInfo().userId);
-                            nameValuePairs.put("pickup_latitude", "" + Data.autoData.getPickupLatLng().latitude);
-                            nameValuePairs.put("pickup_longitude", "" + Data.autoData.getPickupLatLng().longitude);
+				@Override
+				public void run() {
+					try {
+						if (MyApplication.getInstance().isOnline()
+								&& (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+								&& (Data.userData != null)
+								&& (Data.autoData.getAssignedDriverInfo() != null)
+								&& (Data.autoData.getPickupLatLng() != null)) {
 
-                            new HomeUtil().putDefaultParams(nameValuePairs);
-                            Response response = RestClient.getApiService().getDriverCurrentLocation(nameValuePairs);
-                            String result = new String(((TypedByteArray) response.getBody()).getBytes());
+							long startTime = System.currentTimeMillis();
+							Response response = RestClient.getApiService().getDriverCurrentLocation(getParamsForDriverLocationUpdate());
+							String result = new String(((TypedByteArray) response.getBody()).getBytes());
 
-                            try {
-                                JSONObject jObj = new JSONObject(result);
-
-                                if (!jObj.isNull("error")) {
-                                    String errorMessage = jObj.getString("error");
-                                    int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-                                    if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
-                                        HomeActivity.logoutUser(HomeActivity.this);
-                                    }
-                                } else {
-                                    int flag = jObj.getInt("flag");
-                                    if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
-                                        final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble("latitude"), jObj.getDouble("longitude"));
-
-                                        String eta = "5";
-                                        if (jObj.has("eta")) {
-                                            eta = jObj.getString("eta");
-                                        }
-                                        if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null
-												&& MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng, driverCurrentLatLng) > 5) {
-											DriverToPickupPath.INSTANCE.showPath(HomeActivity.this, passengerScreenMode, map, driverCurrentLatLng, Data.autoData.getPickupLatLng());
-
-											Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
-											Data.autoData.getAssignedDriverInfo().setEta(eta);
-											MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
-											runOnUiThread(new Runnable() {
-
-												@Override
-												public void run() {
-													try {
-														if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-															if (driverLocationMarker != null) {
-																MarkerAnimation.clearAsyncList();
-																MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-																		driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), getMarkerCallbackAnim(), false);
-																updateDriverETAText(passengerScreenMode);
-															}
-														}
-													} catch (Exception e) {
-														e.printStackTrace();
-													}
-												}
-											});
-										}
-
-
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-
-            timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000,
-                    Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL, 30000));
-            Log.i("timerDriverLocationUpdater", "started");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+							consumeDriverLocationUpdates(result);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000,
+					Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL, 30000));
+		}
 
     }
 
-    private MarkerAnimation.CallbackAnim callbackAnim = null;
+	public void consumeDriverLocationUpdates(String result) {
+		try {
+			Log.d(TAG, "consumeDriverLocationUpdates result="+result);
+
+			JSONObject jObj = new JSONObject(result);
+
+			int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.DRIVER_LOCATION.getOrdinal());
+			if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
+				final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble(KEY_LATITUDE), jObj.getDouble(KEY_LONGITUDE));
+				String eta = jObj.optString(KEY_ETA, "5");
+
+				if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null
+						&& MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng, driverCurrentLatLng) > 5) {
+					DriverToPickupPath.INSTANCE.showPath(HomeActivity.this, passengerScreenMode, map, driverCurrentLatLng, Data.autoData.getPickupLatLng());
+
+					Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
+					Data.autoData.getAssignedDriverInfo().setEta(eta);
+					MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
+					runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+								if (Data.autoData != null
+										&& (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+										|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+										&& driverLocationMarker != null) {
+									MarkerAnimation.clearAsyncList();
+									MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
+											driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), getMarkerCallbackAnim(), false);
+									updateDriverETAText(passengerScreenMode);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	private StreamClient.LocationStreamCallback locationStreamCallback = new StreamClient.LocationStreamCallback() {
+		@NotNull
+		@Override
+		public HashMap<String, String> getParams() {
+			return getParamsForDriverLocationUpdate();
+		}
+
+		@Override
+		public void onResponse(@NotNull String response) {
+			consumeDriverLocationUpdates(response);
+		}
+	};
+
+
+	private MarkerAnimation.CallbackAnim callbackAnim = null;
 	private MarkerAnimation.CallbackAnim getMarkerCallbackAnim() {
 		if(callbackAnim == null){
 			callbackAnim = new MarkerAnimation.CallbackAnim() {
@@ -8098,6 +8134,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 	public void cancelDriverLocationUpdateTimer() {
         try {
+        	if(!driverIsArrivingCheck()) {
+				streamClient.stopLocationStream();
+			}
+
             if (timerTaskDriverLocationUpdater != null) {
                 timerTaskDriverLocationUpdater.cancel();
                 timerTaskDriverLocationUpdater = null;

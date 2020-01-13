@@ -692,6 +692,7 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_HIPPO_CALL_TYPE, autoData.optString(KEY_HIPPO_CALL_TYPE, "audio"));
 
 		Prefs.with(context).save(KEY_PROMO_BANNER_DATA, autoData.optString(KEY_PROMO_BANNER_DATA, ""));
+		Prefs.with(context).save(KEY_DRIVER_TRACKING_USING_STREAM_ENABLED, autoData.optInt(KEY_DRIVER_TRACKING_USING_STREAM_ENABLED, 1));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 

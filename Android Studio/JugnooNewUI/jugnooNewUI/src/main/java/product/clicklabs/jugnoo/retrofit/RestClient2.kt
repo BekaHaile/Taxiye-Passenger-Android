@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit
 object RestClient2 {
 
     @JvmStatic
-    lateinit var apiService:ApiService2
+    lateinit var apiStreamService:ApiService2
 
 
     private fun getOkHttpClient(retryOnConnectionFailure: Boolean, timeoutSeconds: Long): OkHttpClient {
@@ -47,7 +47,7 @@ object RestClient2 {
 
 
     @JvmStatic
-    fun initApiService(){
+    fun initStreamApiService(){
         val restAdapter = Retrofit.Builder()
                 .baseUrl(Config.getServerUrl().plus("/"))
                 .client(getOkHttpClient(true, 60*60))
@@ -55,7 +55,7 @@ object RestClient2 {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
 
-        apiService = restAdapter.create(ApiService2::class.java)
+        apiStreamService = restAdapter.create(ApiService2::class.java)
     }
 
 
