@@ -8044,7 +8044,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 	public void consumeDriverLocationUpdates(String result) {
 		try {
 			Log.d(TAG, "consumeDriverLocationUpdates result="+result);
-			if(result.equalsIgnoreCase("streaming real time data")){
+			if(result.equalsIgnoreCase("streaming real time data") || !hasWindowFocus()){
 				return;
 			}
 
@@ -8052,11 +8052,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 			int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.DRIVER_LOCATION.getOrdinal());
 			if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
+				Log.d(TAG, "consumeDriverLocationUpdates DRIVER_LOCATION");
 				final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble(KEY_LATITUDE), jObj.getDouble(KEY_LONGITUDE));
 				String eta = jObj.optString(KEY_ETA, "5");
 
 				if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null
 						&& MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng, driverCurrentLatLng) > 5) {
+					Log.d(TAG, "consumeDriverLocationUpdates driverCurrentLatLng");
 					DriverToPickupPath.INSTANCE.showPath(HomeActivity.this, passengerScreenMode, map, driverCurrentLatLng, Data.autoData.getPickupLatLng());
 
 					Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
@@ -8071,6 +8073,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 										&& (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
 										|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
 										&& driverLocationMarker != null) {
+									Log.d(TAG, "consumeDriverLocationUpdates runOnUiThread");
 									MarkerAnimation.clearAsyncList();
 									MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
 											driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), getMarkerCallbackAnim(),

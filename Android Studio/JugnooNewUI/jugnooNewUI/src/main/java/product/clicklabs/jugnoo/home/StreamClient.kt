@@ -1,15 +1,14 @@
 package product.clicklabs.jugnoo.home
 
+import android.os.Handler
+import android.os.Looper
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import okio.BufferedSource
 import product.clicklabs.jugnoo.retrofit.RestClient2
 import product.clicklabs.jugnoo.utils.Log
-import java.io.IOException
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class StreamClient {
@@ -44,6 +43,8 @@ class StreamClient {
 
     private var locationStreamDisposable:Disposable? = null
 
+    private val handler: Handler by lazy{ Handler(Looper.getMainLooper()) }
+
     fun startLocationStream(params: HashMap<String, String>, callback:LocationStreamCallback){
         if(locationStreamDisposable == null) {
             locationStreamDisposable = RestClient2.apiStreamService
@@ -51,17 +52,17 @@ class StreamClient {
                     .observeOn(Schedulers.io())
                     .flatMap { responseBody -> events(responseBody.source()) }
                     .subscribe({ t ->
+                        Log.d(TAG, "onSuccess t=$t")
                         if(locationStreamDisposable != null && !locationStreamDisposable!!.isDisposed) {
+                            Log.d(TAG, "onSuccess isDisposed=not")
                             callback.onResponse(t)
                         }
                     }, { e ->
-                        if(locationStreamDisposable != null && !locationStreamDisposable!!.isDisposed) {
-                            Log.i(TAG, "onError e=$e")
-                            reconnectWithDelay(callback)
-                        }
+                        Log.e(TAG, "onError e=$e")
+                        reconnectWithDelay(callback)
                     }, {
+                        Log.i(TAG, "onFinish")
                         if(locationStreamDisposable != null && !locationStreamDisposable!!.isDisposed) {
-                            Log.i(TAG, "onFinish")
                             stopLocationStream()
                         }
                     })
@@ -79,18 +80,12 @@ class StreamClient {
 
 
     private fun reconnectWithDelay(callback:LocationStreamCallback){
-        val disposable = Observable.create<String> { emitter ->
-            Log.d("DelayExample", "Create")
-            stopLocationStream()
-            emitter.onNext("MindOrks")
-            emitter.onComplete()
-        }.subscribeOn(Schedulers.io())
-                .delay(5, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe {
-                    Log.d("DelayExample", "onNext it=$it")
-                    startLocationStream(callback.getParams(), callback)
-                }
+        Log.e(TAG, "reconnectWithDelay callback=$callback")
+        stopLocationStream()
+        handler.postDelayed({
+            Log.e(TAG, "reconnect startLocationStream callback=$callback")
+            startLocationStream(callback.getParams(), callback)
+        }, 5000)
     }
 
 
@@ -113,7 +108,8 @@ class StreamClient {
                 if(!emitter.isDisposed) {
                     emitter.onComplete()
                 }
-            } catch (e: IOException) {
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception e=$e")
                 e.printStackTrace()
                 if (e.message == "Socket closed") {
                     isCompleted = true
