@@ -51,13 +51,19 @@ class StreamClient {
                     .observeOn(Schedulers.io())
                     .flatMap { responseBody -> events(responseBody.source()) }
                     .subscribe({ t ->
-                        callback.onResponse(t)
+                        if(locationStreamDisposable != null && !locationStreamDisposable!!.isDisposed) {
+                            callback.onResponse(t)
+                        }
                     }, { e ->
-                        Log.i(TAG, "onError e=$e")
-                        reconnectWithDelay(callback)
+                        if(locationStreamDisposable != null && !locationStreamDisposable!!.isDisposed) {
+                            Log.i(TAG, "onError e=$e")
+                            reconnectWithDelay(callback)
+                        }
                     }, {
-                        Log.i(TAG, "onFinish")
-                        stopLocationStream()
+                        if(locationStreamDisposable != null && !locationStreamDisposable!!.isDisposed) {
+                            Log.i(TAG, "onFinish")
+                            stopLocationStream()
+                        }
                     })
         }
     }
@@ -100,20 +106,26 @@ class StreamClient {
             var isCompleted = false
             try {
                 while (!source.exhausted()) {
-                    emitter.onNext(source.readUtf8Line()!!)
+                    if(!emitter.isDisposed) {
+                        emitter.onNext(source.readUtf8Line()!!)
+                    }
                 }
-                emitter.onComplete()
+                if(!emitter.isDisposed) {
+                    emitter.onComplete()
+                }
             } catch (e: IOException) {
                 e.printStackTrace()
                 if (e.message == "Socket closed") {
                     isCompleted = true
-                    emitter.onComplete()
-                } else {
+                    if(!emitter.isDisposed) {
+                        emitter.onComplete()
+                    }
+                } else if(!emitter.isDisposed) {
                     emitter.onError(e)
                 }
             }
             //if response end we get here
-            if (!isCompleted) {
+            if (!isCompleted && !emitter.isDisposed) {
                 emitter.onComplete()
             }
         }

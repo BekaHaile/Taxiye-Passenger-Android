@@ -8768,7 +8768,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     firstTimeZoom = false;
                                     passengerScreenMode = P_INITIAL;
                                     switchPassengerScreen(passengerScreenMode);
-                                    DialogPopup.alertPopup(HomeActivity.this, "", message);
+                                    if(!isFinishing()) {
+										DialogPopup.alertPopup(HomeActivity.this, "", message);
+									}
                                     dismissSOSDialog();
                                 }
                             } catch (Exception e) {
