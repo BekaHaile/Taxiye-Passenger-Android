@@ -4919,10 +4919,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void showChatButton() {
         try {
             if (passengerScreenMode != PassengerScreenMode.P_IN_RIDE
-					&& Prefs.with(this).getInt(Constants.KEY_HIPPO_CALL_ENABLED, 0) == 0
 					&& Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
                 rlChatDriver.setVisibility(View.VISIBLE);
-                buttonCallDriver.setVisibility(View.GONE);
+				buttonCallDriver.setVisibility(View.GONE);
                 if (Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0) > 0) {
                     tvChatCount.setVisibility(View.VISIBLE);
                     tvChatCount.setText(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0));
@@ -4932,7 +4931,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             } else {
                 rlChatDriver.setVisibility(View.GONE);
-                buttonCallDriver.setVisibility(View.VISIBLE);
+				buttonCallDriver.setVisibility(View.VISIBLE);
             }
 
         } catch (Exception e) {
