@@ -598,7 +598,7 @@ public class Data {
         }
 		HippoCallConfig.getInstance().setCallBackListener();
 		HippoCallConfig.getInstance().setHippoCallPushIcon(R.mipmap.ic_launcher);
-		HippoCallConfig.getInstance().setHippoCallsmaillPushIcon(R.mipmap.notification_icon);
+		HippoCallConfig.getInstance().setHippoCallsmaillPushIcon(R.mipmap.fejhifoh);
     }
 
     private static HippoColorConfig getHippoColorConfig(){

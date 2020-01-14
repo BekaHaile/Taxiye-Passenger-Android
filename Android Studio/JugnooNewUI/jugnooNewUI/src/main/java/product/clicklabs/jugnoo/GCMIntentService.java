@@ -112,7 +112,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
             builder.setWhen(when);
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-            builder.setSmallIcon(R.mipmap.notification_icon);
+            builder.setSmallIcon(R.mipmap.fejhifoh);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -207,7 +207,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 
-            builder.setSmallIcon(R.mipmap.notification_icon);
+            builder.setSmallIcon(R.mipmap.fejhifoh);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -317,7 +317,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			}
 
 //			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-			builder.setSmallIcon(R.mipmap.notification_icon);
+			builder.setSmallIcon(R.mipmap.fejhifoh);
 
 			Intent intentCall = new Intent(context, CallActivity.class);
 			intentCall.putExtra(context.getResources().getString(R.string.call_number), callNumber);
@@ -374,7 +374,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
             builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-            builder.setSmallIcon(R.mipmap.notification_icon);
+            builder.setSmallIcon(R.mipmap.fejhifoh);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -418,7 +418,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					HippoCallConfig.getInstance().onNotificationReceived(getApplicationContext(), messageJson);
 				} else {
 					fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
-					fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);
+					fuguNotificationConfig.setSmallIcon(R.mipmap.fejhifoh);
 
 
 					if (Build.VERSION.SDK_INT >= 16) {

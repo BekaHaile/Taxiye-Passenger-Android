@@ -649,7 +649,7 @@ public class Utils implements GAAction, GACategory{
 
             builder.setWhen(when);
             builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
-            builder.setSmallIcon(R.mipmap.notification_icon);
+            builder.setSmallIcon(R.mipmap.fejhifoh);
             builder.setContentIntent(intent);
 
 

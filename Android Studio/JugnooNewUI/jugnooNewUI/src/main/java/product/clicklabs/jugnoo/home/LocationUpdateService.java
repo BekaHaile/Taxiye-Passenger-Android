@@ -252,7 +252,7 @@ public class LocationUpdateService extends Service {
 		builder.setTicker(getString(R.string.app_name));
 		builder.setWhen(when);
 		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-		builder.setSmallIcon(R.mipmap.notification_icon);
+		builder.setSmallIcon(R.mipmap.fejhifoh);
 		builder.setChannelId(Constants.NOTIF_CHANNEL_SILENT);
 		builder.setContentIntent(intent);
 		builder.setPriority(Notification.PRIORITY_DEFAULT);
