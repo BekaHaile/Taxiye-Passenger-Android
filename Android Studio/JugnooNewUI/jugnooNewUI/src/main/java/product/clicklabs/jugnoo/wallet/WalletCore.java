@@ -687,6 +687,9 @@ public class WalletCore {
 
     public void parsePaymentModeConfigDatas(JSONObject jObj) {
         try {
+        	if(!jObj.has(Constants.KEY_PAYMENT_MODE_CONFIG_DATA)){
+        		return;
+			}
             JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
             paymentModeConfigDatas = new ArrayList<>();
             int cashPosition = -1;

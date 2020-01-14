@@ -679,6 +679,9 @@ public class JSONParser implements Constants {
 				context.getString(R.string.youtube_api_key)));
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
 
+		Prefs.with(context).save(KEY_DRIVER_TO_PICKUP_PATH_ENABLED, autoData.optInt(KEY_DRIVER_TO_PICKUP_PATH_ENABLED, 1));
+		Prefs.with(context).save(KEY_SHOW_DRIVER_MARKER_IN_RIDE, autoData.optInt(KEY_SHOW_DRIVER_MARKER_IN_RIDE, 1));
+		Prefs.with(context).save(KEY_SHOW_RIDE_COVERED_PATH, autoData.optInt(KEY_SHOW_RIDE_COVERED_PATH, 0));
 		Prefs.with(context).save(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES, autoData.optInt(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES,
 				context.getResources().getInteger(R.integer.hippo_ticket_for_ride_issues)));
 		Prefs.with(context).save(KEY_HIPPO_TICKET_RIDE_FAQ_NAME, autoData.optString(KEY_HIPPO_TICKET_RIDE_FAQ_NAME,
@@ -689,6 +692,9 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_HIPPO_CALL_TYPE, autoData.optString(KEY_HIPPO_CALL_TYPE, "audio"));
 
 		Prefs.with(context).save(KEY_PROMO_BANNER_DATA, autoData.optString(KEY_PROMO_BANNER_DATA, ""));
+		Prefs.with(context).save(KEY_DRIVER_TRACKING_USING_STREAM_ENABLED, autoData.optInt(KEY_DRIVER_TRACKING_USING_STREAM_ENABLED, 1));
+		Prefs.with(context).save(KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE, autoData.optLong(KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE, 9000));
+		Prefs.with(context).save(KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT, autoData.optLong(KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT, 9000));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 
@@ -1252,14 +1258,16 @@ public class JSONParser implements Constants {
         double sumAdditionalCharges = 0;
         try {
             JSONArray additionalChargesJson = jLastRideData.optJSONArray("additional_charges");
-            for(int i=0; i<additionalChargesJson.length(); i++){
-                JSONObject obj = additionalChargesJson.getJSONObject(i);
-                DiscountType discountType = new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id"));
-                if(discountType.value > 0) {
-                    discountTypes.add(discountType);
-                    sumAdditionalCharges = sumAdditionalCharges + discountType.value;
-                }
-            }
+            if(additionalChargesJson != null) {
+				for (int i = 0; i < additionalChargesJson.length(); i++) {
+					JSONObject obj = additionalChargesJson.getJSONObject(i);
+					DiscountType discountType = new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id"));
+					if (discountType.value > 0) {
+						discountTypes.add(discountType);
+						sumAdditionalCharges = sumAdditionalCharges + discountType.value;
+					}
+				}
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }

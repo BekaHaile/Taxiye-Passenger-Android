@@ -1174,4 +1174,10 @@ public interface Constants {
 	String KEY_DEVICE_NAME = "device_name";
 	String KEY_OS_VERSION = "os_version";
 	String KEY_COUNTRY = "country";
+	String KEY_DRIVER_TO_PICKUP_PATH_ENABLED = "driver_to_pickup_path_enabled";
+	String KEY_SHOW_DRIVER_MARKER_IN_RIDE = "show_driver_marker_in_ride";
+	String KEY_SHOW_RIDE_COVERED_PATH = "show_ride_covered_path";
+	String KEY_DRIVER_TRACKING_USING_STREAM_ENABLED = "driver_tracking_using_stream_enabled";
+	String KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE = "driver_marker_anim_duration_inride";
+	String KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT = "driver_marker_anim_duration_accept";
 }

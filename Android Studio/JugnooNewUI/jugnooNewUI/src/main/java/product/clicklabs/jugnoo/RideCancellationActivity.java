@@ -472,14 +472,15 @@ public class RideCancellationActivity extends BaseActivity implements ActivityCl
 									if (HomeActivity.appInterruptHandler != null) {
 										HomeActivity.appInterruptHandler.onCancelCompleted();
 									}
+									if(!activity.isFinishing()) {
+										DialogPopup.alertPopupWithListener(activity, "", serverMessage, new View.OnClickListener() {
 
-									DialogPopup.alertPopupWithListener(activity, "", serverMessage, new View.OnClickListener() {
-
-										@Override
-										public void onClick(View v) {
-											performBackPressed();
-										}
-									});
+											@Override
+											public void onClick(View v) {
+												performBackPressed();
+											}
+										});
+									}
 									GAUtils.event(RIDES, WAITING_FOR_DRIVER, RIDE+CANCELLED);
 								} else {
 									DialogPopup.alertPopup(activity, "", serverMessage);

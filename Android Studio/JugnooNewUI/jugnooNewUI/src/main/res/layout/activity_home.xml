@@ -153,9 +153,6 @@
                      android:layout_alignParentBottom="true"
                 />
 
-            <!-- rental destination layout -->
-            <!--<include-->
-                <!--layout="@layout/layout_rental_destination"/>-->
 
             <!-- end ride layout -->
             <include layout="@layout/layout_ride_summary_new" />
