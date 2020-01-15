@@ -115,10 +115,10 @@ class ReinviteFriendsDialog : DialogFragment() {
 
     private fun setClickListeners(){
         btnCancel.setOnClickListener{
-
+            dismiss()
         }
         btnReInvite.setOnClickListener{
-
+            dismiss()
         }
     }
 

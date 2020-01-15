@@ -27,11 +27,13 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 	private Activity activity;
 	private Callback callback;
 	private ArrayList<ContactBean> contactBeans;
+	private boolean stopInterrupt = false;
 
 	public ContactsFetchAsync(Activity activity, ArrayList<ContactBean> contactBeans, Callback callback){
 		this.activity = activity;
 		this.contactBeans = contactBeans;
 		this.callback = callback;
+		this.stopInterrupt = false;
 	}
 
 	@Override
@@ -51,7 +53,9 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 	protected void onPostExecute(String s) {
 		super.onPostExecute(s);
 		DialogPopup.dismissLoadingDialog();
-		callback.onPostExecute(contactBeans);
+		if(!stopInterrupt) {
+			callback.onPostExecute(contactBeans);
+		}
 	}
 
 	private void fetchContacts() {
@@ -62,7 +66,7 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 			Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
 
 			if (cur.getCount() > 0) {
-				while (cur.moveToNext()) {
+				while (cur.moveToNext() && !stopInterrupt) {
 					String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
 					String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 					String hasPhoneNumber = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
@@ -73,7 +77,7 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 								ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
 								new String[]{id}, null);
 
-						while (pCur.moveToNext()) {
+						while (pCur.moveToNext() && !stopInterrupt) {
 							String phone = pCur
 									.getString(pCur
 											.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
@@ -82,7 +86,7 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 
 							phone = phone.replace(" ","");
 							phone = phone.replace("-", "");
-							if (phone != null && Utils.validPhoneNumber(phone)) {
+							if (Utils.validPhoneNumber(phone)) {
 								contactBeans.add(new ContactBean(name, phone,"", type, ContactBean.ContactBeanViewType.CONTACT));
 							}
 						}
@@ -104,27 +108,23 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 	}
 
 	private void loadList(ArrayList<ContactBean> list) {
-
-		Set set = new TreeSet(new Comparator<ContactBean>() {
-			@Override
-			public int compare(ContactBean o1, ContactBean o2) {
-				if (o1.getPhoneNo().toString().equalsIgnoreCase(o2.getPhoneNo().toString())) {
-					return 0;
+		if(!stopInterrupt) {
+			Set set = new TreeSet(new Comparator<ContactBean>() {
+				@Override
+				public int compare(ContactBean o1, ContactBean o2) {
+					if (o1.getPhoneNo().equalsIgnoreCase(o2.getPhoneNo())) {
+						return 0;
+					}
+					return 1;
 				}
-				return 1;
-			}
-		});
+			});
 
-		set.addAll(list);
+			set.addAll(list);
 
-		final ArrayList<ContactBean> newList = new ArrayList<ContactBean>(set);
-		Collections.sort(newList, new Comparator<ContactBean>() {
-			@Override
-			public int compare(ContactBean o1, ContactBean o2) {
-				return o1.getName().compareToIgnoreCase(o2.getName());
-			}
-		});
-		contactBeans.addAll(newList);
+			final ArrayList<ContactBean> newList = new ArrayList<ContactBean>(set);
+			Collections.sort(newList, (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
+			contactBeans.addAll(newList);
+		}
 	}
 
 
@@ -144,6 +144,11 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 			e.printStackTrace();
 			return context.getString(R.string.mobile);
 		}
+	}
+
+	public void stop(){
+		stopInterrupt = true;
+		this.cancel(true);
 	}
 
 
