@@ -1,11 +1,11 @@
 package product.clicklabs.jugnoo.adapters
 
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.retrofit.model.Gender
 import product.clicklabs.jugnoo.utils.Fonts

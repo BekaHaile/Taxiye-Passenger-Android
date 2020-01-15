@@ -7,11 +7,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -29,7 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.adapters.RestaurantReviewImagesAdapter;
 import com.sabkuchfresh.adapters.RestaurantReviewsAdapter;
@@ -1131,8 +1131,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
         if (fuguMerchantData != null && !TextUtils.isEmpty(fuguMerchantData.getChannelId()) && fuguMerchantData.getFuguData() != null) {
             /*FuguConfig.getInstance().openChatByTransactionId(fuguMerchantData.getChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
                     fuguMerchantData.getFuguData().getChannelName(), fuguMerchantData.getFuguData().getFuguTags());*/
-            FuguConfig.getInstance().openChat(activity,
-                    Long.parseLong(fuguMerchantData.getChannelId()));
+            HippoConfig.getInstance().openChat(activity, Long.parseLong(fuguMerchantData.getChannelId()));
         }
     }
 }

@@ -8,8 +8,11 @@ import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -20,9 +23,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
 import product.clicklabs.jugnoo.config.Config;
@@ -38,6 +45,7 @@ import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
+import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PayData;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -239,6 +247,7 @@ public class JSONParser implements Constants {
         int showOfferDialog = userData.optInt(KEY_SHOW_OFFER_DIALOG, 1);
         int showTutorial = userData.optInt(KEY_SHOW_TUTORIAL, 0);
         int regAs = userData.optInt(Constants.KEY_REG_AS, 0);
+        int cityId = userData.optInt(Constants.KEY_CITY_ID, 0);
 
 
         Data.userData = new UserData(userIdentifier, accessToken, authKey, userName, userEmail, emailVerificationStatus,
@@ -255,7 +264,7 @@ public class JSONParser implements Constants {
                 mealsEnabled, freshEnabled, deliveryEnabled, groceryEnabled, menusEnabled, payEnabled, feedEnabled, prosEnabled,
                 deliveryCustomerEnabled,inviteFriendButton, defaultClientId, integratedJugnooEnabled,
                 topupCardEnabled, showHomeScreen, showSubscriptionData, slideCheckoutPayEnabled, showJeanieHelpText,
-                showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode, regAs);
+                showOfferDialog, showTutorial, signupOnboarding,autosEnabled, countryCode, regAs, cityId);
 
 		Prefs.with(context).save(KEY_USER_ID, userId);
 
@@ -323,7 +332,91 @@ public class JSONParser implements Constants {
 
     }
 
-    public void parseAutoData(Context context, JSONObject autoData, LoginResponse.Autos autosData) throws Exception{
+	private void reorderMenu(Context context) {
+
+    	if(Data.userData != null && Data.userData.getMenuInfoList() != null){
+
+			//free rides for life check
+			if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
+				int index = Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES.getTag()));
+				int indexNew = Data.userData.getMenuInfoList().indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES_NEW.getTag()));
+				if(index > -1){
+					Data.userData.getMenuInfoList().remove(index);
+					MenuInfo menuInfo = new MenuInfo(context.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
+					Data.userData.getMenuInfoList().add(0, menuInfo);
+				} else if(indexNew == -1){
+					MenuInfo menuInfo = new MenuInfo(context.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
+					Data.userData.getMenuInfoList().add(0, menuInfo);
+				}
+			}
+
+
+			//setting priority
+    		for(int i = 0; i < Data.userData.getMenuInfoList().size(); i++){
+				MenuInfo menuInfo = Data.userData.getMenuInfoList().get(i);
+    			if(menuInfo != null) {
+    				if(menuInfo.getPriority() == null){
+						if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES_NEW.getTag())
+								|| menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())) {
+							menuInfo.setPriority(1);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())) {
+							menuInfo.setPriority(2);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())) {
+							menuInfo.setPriority(3);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())) {
+							menuInfo.setPriority(4);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())) {
+							menuInfo.setPriority(5);
+						}
+						else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FUGU_SUPPORT.getTag())) {
+							menuInfo.setPriority(6);
+						}
+					}
+					if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.CHANGE_LOCALE.getTag())) {
+						menuInfo.setName(context.getString(R.string.change_language));
+						menuInfo.setShowInAccount(1);
+					} else if (menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())) {
+						menuInfo.setName(context.getString(R.string.your_trips));
+					}
+				}
+			}
+
+    		//sorting
+			Collections.sort(Data.userData.getMenuInfoList(), new Comparator<MenuInfo>() {
+				@Override
+				public int compare(MenuInfo o1, MenuInfo o2) {
+					if(o1.getPriority() == null && o2.getPriority() == null){
+						return 0;
+					}
+					else if(o1.getPriority() != null && o2.getPriority() == null){
+						return -1;
+					}
+					else if(o1.getPriority() == null && o2.getPriority() != null){
+						return 1;
+					}
+					else {
+						if(o1.getPriority() > o2.getPriority()){
+							return 1;
+						}
+						else if(o1.getPriority() < o2.getPriority()){
+							return -1;
+						}
+						else {
+							return 0;
+						}
+					}
+				}
+			});
+
+		}
+
+	}
+
+	public void parseAutoData(Context context, JSONObject autoData, LoginResponse.Autos autosData) throws Exception{
         try {
             String destinationHelpText = autoData.optString("destination_help_text", "");
             String rideSummaryBadText = autoData.optString("ride_summary_text", context.getResources().getString(R.string.ride_summary_bad_text));
@@ -454,6 +547,8 @@ public class JSONParser implements Constants {
             if(Data.userData != null){
             	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
+
+				reorderMenu(context);
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -596,9 +691,74 @@ public class JSONParser implements Constants {
 				context.getString(R.string.youtube_api_key)));
 		Prefs.with(context).save(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, autoData.optString(KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0"));
 
+		Prefs.with(context).save(KEY_DRIVER_TO_PICKUP_PATH_ENABLED, autoData.optInt(KEY_DRIVER_TO_PICKUP_PATH_ENABLED, 1));
+		Prefs.with(context).save(KEY_SHOW_DRIVER_MARKER_IN_RIDE, autoData.optInt(KEY_SHOW_DRIVER_MARKER_IN_RIDE, 1));
+		Prefs.with(context).save(KEY_SHOW_RIDE_COVERED_PATH, autoData.optInt(KEY_SHOW_RIDE_COVERED_PATH, 0));
+		Prefs.with(context).save(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES, autoData.optInt(KEY_HIPPO_TICKET_FOR_RIDE_ISSUES,
+				context.getResources().getInteger(R.integer.hippo_ticket_for_ride_issues)));
+		Prefs.with(context).save(KEY_HIPPO_TICKET_RIDE_FAQ_NAME, autoData.optString(KEY_HIPPO_TICKET_RIDE_FAQ_NAME,
+				context.getString(R.string.hippo_ticket_ride_faq_name)));
+
+		Prefs.with(context).save(KEY_HIPPO_CALL_ENABLED, autoData.optInt(KEY_HIPPO_CALL_ENABLED,
+				context.getResources().getInteger(R.integer.hippo_call_enabled)));
+		Prefs.with(context).save(KEY_HIPPO_CALL_TYPE, autoData.optString(KEY_HIPPO_CALL_TYPE, "audio"));
+
+		Prefs.with(context).save(KEY_PROMO_BANNER_DATA, autoData.optString(KEY_PROMO_BANNER_DATA, ""));
+		Prefs.with(context).save(KEY_DRIVER_TRACKING_USING_STREAM_ENABLED, autoData.optInt(KEY_DRIVER_TRACKING_USING_STREAM_ENABLED, 1));
+		Prefs.with(context).save(KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE, autoData.optLong(KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE, 9000));
+		Prefs.with(context).save(KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT, autoData.optLong(KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT, 9000));
+
+		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 
 
 		parseJungleApiObjects(context, autoData);
+	}
+
+	private void parseCityConfigVariables(Context context, JSONObject userData, String cityId){
+		try{
+			JSONObject cityMainObj = userData.optJSONObject(Constants.KEY_CITY_OBJ);
+
+			JSONObject cityDefaultObj = getCityIdObj(cityMainObj, String.valueOf(0));
+
+			JSONObject cityObj = getCityIdObj(cityMainObj, cityId);
+
+			saveCityLevelParam(context, cityDefaultObj, cityObj, KEY_PROMO_BANNER_DATA, true);
+
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	private JSONObject getCityIdObj(JSONObject cityMainObj, String cityId){
+		if(cityMainObj.has(cityId)){
+			return cityMainObj.optJSONObject(cityId);
+		} else {
+			Iterator<String> keys = cityMainObj.keys();
+			while(keys.hasNext()){
+				String key = keys.next();
+				if(key.startsWith(cityId+",") || key.endsWith(","+cityId) || key.contains(","+cityId+",")){
+					return cityMainObj.optJSONObject(key);
+				}
+			}
+		}
+
+		return new JSONObject();
+	}
+
+	private void saveCityLevelParam(Context context, JSONObject cityDefaultObj, JSONObject cityObj, String key, boolean isString) {
+		if(cityObj.has(key)) {
+			if(!isString) {
+				Prefs.with(context).save(key, cityObj.optInt(key));
+			} else {
+				Prefs.with(context).save(key, cityObj.optString(key));
+			}
+		} else if(cityDefaultObj.has(key)) {
+			if(!isString) {
+				Prefs.with(context).save(key, cityDefaultObj.optInt(key));
+			} else {
+				Prefs.with(context).save(key, cityDefaultObj.optString(key));
+			}
+		}
 	}
 
 	private void parseJungleApiObjects(Context context, JSONObject userData) {
@@ -768,105 +928,6 @@ public class JSONParser implements Constants {
             Data.setDeliveryCustomerData(loginResponse.getDeliveryCustomer());
             setPromoCoupons(Data.getDeliveryCustomerData());
 
-        } else {
-            String mockDelivery = "{\n" +
-                    "    \"pending_feedback\": 0,\n" +
-                    "    \"fata     fat_enabled\": 1,\n" +
-                    "    \"current_user_city\": 107,\n" +
-                    "    \"city_id\": 107,\n" +
-                    "    \"user_id\": 6217145,\n" +
-                    "    \"operator_id\": 337,\n" +
-                    "    \"suggestions\": [\n" +
-                    "      {\n" +
-                    "        \"restaurant_item_id\": 1428766,\n" +
-                    "        \"item_name\": \"Happy Verde To You\",\n" +
-                    "        \"line_1\": \"Happy Verde To You\",\n" +
-                    "        \"line_1_color\": \"#595968\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"restaurant_item_id\": 1430381,\n" +
-                    "        \"item_name\": \"KAVA\",\n" +
-                    "        \"line_1\": \"KAVA\",\n" +
-                    "        \"line_1_color\": \"#595968\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"restaurant_item_id\": 1494669,\n" +
-                    "        \"item_name\": \"Snickers\",\n" +
-                    "        \"line_1\": \"Snickers\",\n" +
-                    "        \"line_1_color\": \"#595968\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"restaurant_item_id\": 1494713,\n" +
-                    "        \"item_name\": \"Coca Cola\",\n" +
-                    "        \"line_1\": \"Coca Cola\",\n" +
-                    "        \"line_1_color\": \"#595968\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"restaurant_item_id\": 1514185,\n" +
-                    "        \"item_name\": \"Galleta Double Tree\",\n" +
-                    "        \"line_1\": \"Galleta Double Tree\",\n" +
-                    "        \"line_1_color\": \"#595968\"\n" +
-                    "      }\n" +
-                    "    ],\n" +
-                    "    \"show_promo_box\": 1,\n" +
-                    "    \"add_store_images_limit\": 2,\n" +
-                    "    \"show_add_store\": 1,\n" +
-                    "    \"merchant_categories\": [\n" +
-                    "      {\n" +
-                    "        \"id\": 77,\n" +
-                    "        \"category\": \"Dairy & Milk Products\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 26,\n" +
-                    "        \"category\": \"Farmacia\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 75,\n" +
-                    "        \"category\": \"Groceries\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 27,\n" +
-                    "        \"category\": \"Hogar\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 28,\n" +
-                    "        \"category\": \"Mascotas\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 76,\n" +
-                    "        \"category\": \"OTC wellness\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 74,\n" +
-                    "        \"category\": \"Pet Care\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 73,\n" +
-                    "        \"category\": \"Restaurant\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 13,\n" +
-                    "        \"category\": \"Restaurants\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 2,\n" +
-                    "        \"category\": \"Servicios\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 29,\n" +
-                    "        \"category\": \"Shopping\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 30,\n" +
-                    "        \"category\": \"Specialties\"\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"id\": 25,\n" +
-                    "        \"category\": \"Supermercado\"\n" +
-                    "      }\n" +
-                    "    ]\n" +
-                    "  }";
-            Data.setDeliveryCustomerData(new Gson().fromJson(mockDelivery, LoginResponse.DeliveryCustomer.class));
         }
         if(loginResponse.getMeals()!=null){
             Data.setMealsData(loginResponse.getMeals());
@@ -886,70 +947,6 @@ public class JSONParser implements Constants {
         }
         if(loginResponse.getFeed() != null) {
             Data.setFeedData(loginResponse.getFeed());
-        } else {
-            String mockFeed = "{\n" +
-                    "    \"coupons\": [\n" +
-                    "      \n" +
-                    "    ],\n" +
-                    "    \"promotions\": [\n" +
-                    "      \n" +
-                    "    ],\n" +
-                    "    \"feed_active\": 1,\n" +
-                    "    \"feed_rank\": 3328,\n" +
-                    "    \"user_count\": 4948,\n" +
-                    "    \"has_handle\": 1,\n" +
-                    "    \"show_create_handle\": 0,\n" +
-                    "    \"early_access_text\": \"<span style='font-family:MavenProRegular;font-size:17px;color:#595968;text-align:center;padding:0px;margin:0px'>Skip ahead in the queue by spreading the word about <b>AskLocal</b>. The more friends that join, the sooner you’ll get access.</span>\",\n" +
-                    "    \"early_access_share_title\": \"Change the way you connect with your city\",\n" +
-                    "    \"early_access_share_desc\": \"Don't miss out on AskLocal, Jugnoo's latest offering. Ask questions, get reviews and recommendations, and transform your city life! To get early access, reserve your spot now.\",\n" +
-                    "    \"contacts_synced\": 1,\n" +
-                    "    \"max_upload_images\": 5,\n" +
-                    "    \"ask_something_placeholder\": \"Ask a question?\",\n" +
-                    "    \"review_placeholder\": \"Share your experience...\",\n" +
-                    "    \"feed_reg_string\": \"What is everyone in the city upto? Find out through AskLocal.\",\n" +
-                    "    \"anonymous_functionality_enabled\": 1,\n" +
-                    "    \"feed_name\": \"Delivery\",\n" +
-                    "    \"count_notification_polling_interval\": 15,\n" +
-                    "    \"show_promo_box\": 1,\n" +
-                    "    \"upload_image_info\": {\n" +
-                    "      \"show_image_box\": 1,\n" +
-                    "      \"image_limit\": 2,\n" +
-                    "      \"image_size_limit\": 2097152\n" +
-                    "    },\n" +
-                    "    \"max_deliveries\": 5,\n" +
-                    "    \"vehicle_type\": {\n" +
-                    "      \"Bike\": 1\n" +
-                    "    },\n" +
-                    "    \"locale\": \"es\",\n" +
-                    "    \"how_it_works\": [\n" +
-                    "      {\n" +
-                    "        \"image_url\": \"https://s3-ap-south-1.amazonaws.com/jugnoo-marketing-images/default/AdoL08W4-24992182_150434205579820_1139049513_n.png\",\n" +
-                    "        \"heading\": \"Place Your Order\",\n" +
-                    "        \"info\": \"Make sure you have enough balance in your wallet to cover delivery costs.\",\n" +
-                    "        \"order\": 1\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"image_url\": \"https://s3-ap-south-1.amazonaws.com/jugnoo-marketing-images/default/JUILuucu-25105791_150434285579812_346337539_n.png\",\n" +
-                    "        \"heading\": \"Confirm Order Details\",\n" +
-                    "        \"info\": \"Our chat support team will contact you with availability and pricing.\",\n" +
-                    "        \"order\": 2\n" +
-                    "      },\n" +
-                    "      {\n" +
-                    "        \"image_url\": \"https://s3-ap-south-1.amazonaws.com/jugnoo-marketing-images/default/1gZNTZTc-24989668_150434235579817_82520482_n.png\",\n" +
-                    "        \"heading\": \"Collect Your Order\",\n" +
-                    "        \"info\": \"Pay item cost in cash or online to our delivery executive and receive your order.\",\n" +
-                    "        \"order\": 3\n" +
-                    "      }\n" +
-                    "    ],\n" +
-                    "    \"vehicles_info\": [\n" +
-                    "      {\n" +
-                    "        \"type\": 1,\n" +
-                    "        \"name\": \"Bike\",\n" +
-                    "        \"image\": \"https://s3.ap-south-1.amazonaws.com/jugnoo-fatafat/images/Android/bike.png\"\n" +
-                    "      }\n" +
-                    "    ]\n" +
-                    "  }";
-            Data.setFeedData(new Gson().fromJson(mockFeed, LoginResponse.Feed.class));
         }
 
 
@@ -985,10 +982,24 @@ public class JSONParser implements Constants {
 
         try {
 
-            if(Data.isFuguChatEnabled() && Data.getFuguUserData()!=null) {
-                FuguNotificationConfig.updateFcmRegistrationToken(MyApplication.getInstance().getDeviceToken());
-                Data.initializeFuguHandler((Activity) context, Data.getFuguUserData());
-            }
+			FirebaseInstanceId.getInstance().getInstanceId()
+					.addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+						@Override
+						public void onComplete(@NonNull Task<InstanceIdResult> task) {
+							if (!task.isSuccessful()) {
+								Log.w(TAG, "getInstanceId failed");
+								return;
+							}
+
+							// Get new Instance ID token
+							String token = task.getResult().getToken();
+
+							if((Data.isFuguChatEnabled() || Data.isMenuTagEnabled(MenuInfoTags.TICKET_SUPPORT))
+									&& Data.getFuguUserData()!=null) {
+								Data.initializeFuguHandler((Activity) context, Data.getFuguUserData(), token);
+							}
+						}
+					});
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1284,14 +1295,16 @@ public class JSONParser implements Constants {
         double sumAdditionalCharges = 0;
         try {
             JSONArray additionalChargesJson = jLastRideData.optJSONArray("additional_charges");
-            for(int i=0; i<additionalChargesJson.length(); i++){
-                JSONObject obj = additionalChargesJson.getJSONObject(i);
-                DiscountType discountType = new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id"));
-                if(discountType.value > 0) {
-                    discountTypes.add(discountType);
-                    sumAdditionalCharges = sumAdditionalCharges + discountType.value;
-                }
-            }
+            if(additionalChargesJson != null) {
+				for (int i = 0; i < additionalChargesJson.length(); i++) {
+					JSONObject obj = additionalChargesJson.getJSONObject(i);
+					DiscountType discountType = new DiscountType(obj.optString("text"), obj.optDouble("amount"), obj.optInt("reference_id"));
+					if (discountType.value > 0) {
+						discountTypes.add(discountType);
+						sumAdditionalCharges = sumAdditionalCharges + discountType.value;
+					}
+				}
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1364,7 +1377,19 @@ public class JSONParser implements Constants {
         double paidUsingPOS = jLastRideData.optDouble(Constants.KEY_PAID_USING_POS, 0);
 		int meterFareApplicable = jLastRideData.optInt(Constants.KEY_METER_FARE_APPLICABLE, 0);
 
-        JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
+		int driverId = 0;
+		try {
+			driverId = jLastRideData.optInt(KEY_DRIVER_ID,
+					!TextUtils.isEmpty(Data.autoData.getcDriverId()) ? Integer.parseInt(Data.autoData.getcDriverId()) : 0);
+			if(jLastRideData.has(KEY_DRIVER_INFO)){
+				JSONObject jDriverInfo = jLastRideData.optJSONObject(KEY_DRIVER_INFO);
+				driverId = jDriverInfo.optInt(KEY_ID);
+			}
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+
+		JSONArray jCardDetails =  jLastRideData.optJSONArray(Constants.KEY_CARD_DETAILS);
         ArrayList<DiscountType> stripeCardsAmount = new ArrayList<>();
         if(jCardDetails != null) {
             for (int i = 0; i < jCardDetails.length(); i++) {
@@ -1402,7 +1427,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId);
 	}
 
 
@@ -1504,6 +1529,8 @@ public class JSONParser implements Constants {
             int rideType = RideTypeValue.NORMAL.getOrdinal();
             int gpsLockStatus = GpsLockStatus.UNLOCK.getOrdinal();
             int fareMandatory = 0;
+            double tipBeforeRequestRide = 0.0;
+            String userIdentifier = "";
 
 
             HomeActivity.userMode = UserMode.PASSENGER;
@@ -1631,6 +1658,8 @@ public class JSONParser implements Constants {
                             iconSet = jObject.optString(KEY_ICON_SET, VehicleIconSet.ORANGE_AUTO.getName());
                             gpsLockStatus = jObject.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
 							fareMandatory = jObject.optInt(Constants.KEY_FARE_MANDATORY,0);
+							tipBeforeRequestRide = jObject.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
+							userIdentifier = jObject.optString(Constants.KEY_DRIVER_IDENTIFIER, "");
 
 
                             try{
@@ -1741,7 +1770,7 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);

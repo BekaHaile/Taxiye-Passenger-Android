@@ -2,8 +2,8 @@ package product.clicklabs.jugnoo.home.adapters
 
 import android.app.Activity
 import android.graphics.Typeface.BOLD
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +22,7 @@ import java.text.DecimalFormatSymbols
 import java.util.*
 import kotlin.collections.ArrayList
 
-class DriverListAdapter(val activity: Activity?, val driverList: ArrayList<DriverInfo>, val driverContactListener: DriverContactListener) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DriverListAdapter(val activity: Activity?, val driverList: ArrayList<DriverInfo>, val driverContactListener: DriverContactListener) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
 
     override fun getItemCount(): Int {
@@ -30,11 +30,11 @@ class DriverListAdapter(val activity: Activity?, val driverList: ArrayList<Drive
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return ViewHolderVehicle(LayoutInflater.from(activity).inflate(R.layout.list_item_driver_contact, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
             is ViewHolderVehicle -> holder.bind(position)
@@ -43,7 +43,7 @@ class DriverListAdapter(val activity: Activity?, val driverList: ArrayList<Drive
 
     }
 
-    inner class ViewHolderVehicle(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolderVehicle(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
         init {
             (view.findViewById(R.id.tvDriverName) as TextView).setTypeface(Fonts.mavenMedium(activity),BOLD)

@@ -7,7 +7,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/top_bar_height"
                 android:splitMotionEvents="false"
-                android:visibility="visible"
+                android:visibility="gone"
     >
 
     <RelativeLayout
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="112dp"
-            android:paddingBottom="10px"
+            android:paddingBottom="5dp"
             android:background="@color/white"
             android:splitMotionEvents="false"
             android:clickable="true"
@@ -90,7 +90,7 @@
                             android:id="@+id/iv3NewUIPickupMarkAssigning"
                             android:layout_width="8dp"
                             android:layout_height="8dp"
-                            android:src="@drawable/circle_theme" />
+                            android:src="@drawable/circle_green" />
 
                         <ImageView
                             android:id="@+id/iv2NewUIDropDashedLineAssigning"
@@ -103,9 +103,9 @@
 
                         <ImageView
                             android:id="@+id/iv3NewUIDropMarkAssigning"
-                            android:layout_width="10dp"
-                            android:layout_height="10dp"
-                            android:src="@drawable/ic_shape"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:src="@drawable/circle_red"
                             android:visibility="visible" />
 
                     </LinearLayout>
@@ -349,7 +349,7 @@
             />
 
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvBidsIncoming"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

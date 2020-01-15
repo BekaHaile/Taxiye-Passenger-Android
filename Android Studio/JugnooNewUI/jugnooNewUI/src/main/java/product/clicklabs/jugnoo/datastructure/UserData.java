@@ -103,6 +103,7 @@ public class UserData {
 	private int regAs;
 	private int gender;
 	private String dateOfBirth;
+	private int cityId;
 
 	public String getFuguChannelInfoJson() {
 		return fuguChannelInfoJson;
@@ -131,7 +132,7 @@ public class UserData {
 					int inviteFriendButton, String defaultClientId,
 					int integratedJugnooEnabled, int topupCardEnabled, int showHomeScreen, int showSubscriptionData,
 					int slideCheckoutPayEnabled, int showJeanieHelpText, int showOfferDialog, int showTutorial, int signupOnboarding, int autosEnabled,
-					String countryCode, int regAs){
+					String countryCode, int regAs, int cityId){
         this.userIdentifier = userIdentifier;
 		this.accessToken = accessToken;
 		this.authKey = authKey;
@@ -217,6 +218,7 @@ public class UserData {
 		this.showTutorial = showTutorial;
 		this.signupOnboarding = signupOnboarding;
 		this.regAs = regAs;
+		this.cityId = cityId;
 
 
 
@@ -1204,5 +1206,13 @@ public class UserData {
 
 	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public int getCityId() {
+		return cityId;
+	}
+
+	public void setCityId(int cityId) {
+		this.cityId = cityId;
 	}
 }

@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.emergency;
 
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.view.View;
 
 import product.clicklabs.jugnoo.R;

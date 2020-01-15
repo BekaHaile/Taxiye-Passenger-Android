@@ -1,8 +1,8 @@
 package com.sabkuchfresh.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.fugu.FuguConfig;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
@@ -51,7 +51,7 @@ public class MealsBulkOrderFragment extends Fragment implements GAAction{
 			@Override
 			public void onClick(View v) {
 				try {
-					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_BULK_MEALS());
+					HippoConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_BULK_MEALS());
 					GAUtils.event(activity.getGaCategory(), HOME, BULK_ORDER_CTA+CLICKED);
 				} catch (Exception e) {
 					e.printStackTrace();

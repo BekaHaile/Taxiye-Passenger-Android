@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon

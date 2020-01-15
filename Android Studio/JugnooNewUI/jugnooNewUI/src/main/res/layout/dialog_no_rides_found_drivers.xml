@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mainView"
         android:layout_width="330dp"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             app:layout_constraintStart_toStartOf="@+id/mainView"
             app:layout_constraintTop_toTopOf="@id/mainView" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvListOfSomeDriversNearby"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:text="@string/text_here_is_what_you_can_do" />
 
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTipMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
             android:drawablePadding="5dp"
             />
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivVehicle"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -98,7 +98,7 @@
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@+id/tvTipMessage" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvVehicleName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/ivVehicle"
             tools:text="Auto" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvFare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -126,7 +126,7 @@
             tools:text="Auto" />
 
 
-        <android.support.v7.widget.AppCompatImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/ivTip"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -136,7 +136,7 @@
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@+id/ivVehicle" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTipLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -169,7 +169,7 @@
             android:background="@color/rank_2"
             app:layout_constraintBottom_toBottomOf="@id/viewSeparatorTotal"/>
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTotalFareLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
             app:layout_constraintTop_toBottomOf="@+id/viewSeparatorTip"
             android:text="@string/total_fare" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvTotalFare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -216,7 +216,7 @@
             app:layout_constraintStart_toStartOf="@+id/glStart"
             app:layout_constraintTop_toBottomOf="@id/viewSeparatorTotal" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvCallDriver"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -255,12 +255,12 @@
             android:layout_marginTop="10dp"
             app:maxHeight="300dp">
 
-            <android.support.v7.widget.LinearLayoutCompat
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvNearbyDrivers"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
@@ -274,12 +274,12 @@
                     android:textColor="@color/text_color"
                     android:layout_margin="@dimen/spacing_normal"
                     android:text="@string/no_drivers_found"/>
-            </android.support.v7.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </product.clicklabs.jugnoo.utils.MaxHeightScrollView>
 
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnOk"
             android:layout_width="0dp"
             android:layout_height="36dp"
@@ -296,7 +296,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/glBottomEnd" />
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnCancel"
             android:layout_width="0dp"
             android:layout_height="36dp"
@@ -313,28 +313,28 @@
             app:layout_constraintStart_toStartOf="@+id/glStart"
             />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glBottomEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_end="@dimen/spacing_normal" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".05" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glEnd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent=".95" />
 
-        <android.support.constraint.Guideline
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/glMid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -342,19 +342,19 @@
             app:layout_constraintGuide_percent=".50" />
 
 
-        <android.support.constraint.Group
+        <androidx.constraintlayout.widget.Group
             android:id="@+id/groupTip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="ivTip,etAdditionalFare,ivVehicle,tvVehicleName,tvFare,tvTotalFare,tvTipLabel,viewSeparatorTip,viewTotalFare,tvTotalFareLabel,viewSeparatorTotal"/>
 
-        <android.support.constraint.Group
+        <androidx.constraintlayout.widget.Group
             android:id="@+id/groupCallDriver"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="programmaticScrollView"/>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>
 

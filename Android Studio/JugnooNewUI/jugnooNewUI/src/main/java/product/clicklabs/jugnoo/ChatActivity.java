@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -45,6 +45,8 @@ import static product.clicklabs.jugnoo.Constants.KEY_DRIVER_PHONE_NO;
  */
 
 public class ChatActivity extends BaseFragmentActivity implements View.OnClickListener, GAAction, GACategory{
+
+	public static boolean isActive = false;
 
 	public static final String KEY_ORDER_TYPE = "key_order_type";
 	public static final String KEY_DELIVERY_ID = "key_delivery_id";
@@ -159,7 +161,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 		}
 
 		registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_FINISH_ACTIVITY));
-
+		isActive = true;
     }
 
 	Runnable loadDiscussion=new Runnable() {
@@ -223,6 +225,7 @@ public class ChatActivity extends BaseFragmentActivity implements View.OnClickLi
 		if (handler != null && loadDiscussion != null) {
 			handler.removeCallbacks(loadDiscussion);
 		}
+		isActive = false;
 	}
 
 	// sends the message to server and display it

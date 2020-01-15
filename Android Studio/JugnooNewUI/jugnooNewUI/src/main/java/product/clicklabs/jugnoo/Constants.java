@@ -1158,6 +1158,32 @@ public interface Constants {
 
 	String KEY_SESSIONTOKEN = "sessiontoken";
 	String KEY_FARE_MANDATORY = "fare_mandatory";
+
+	String INTENT_ACTION_CHAT_REFRESH = "INTENT_ACTION_CHAT_REFRESH";
+	String KEY_PAYLOAD = "payload";
+	String KEY_OPEN_CHAT = "open_chat";
+	String KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST = "tip_provided_before_ride_request";
+
+	String KEY_CITY_OBJ = "city_obj";
+	String KEY_PROMO_BANNER_DATA = "promo_banner_data";
+
+
+	String KEY_HIPPO_TICKET_FOR_RIDE_ISSUES = "hippo_ticket_for_ride_issues";
+	String KEY_DRIVER_INFO = "driver_info";
+	String KEY_HIPPO_TICKET_RIDE_FAQ_NAME = "hippo_ticket_ride_faq_name";
+
+	String KEY_HIPPO_CALL_ENABLED = "hippo_call_enabled";
+	String KEY_HIPPO_CALL_TYPE = "hippo_call_type";
+	String KEY_DRIVER_IDENTIFIER = "driver_identifier";
+	String KEY_DEVICE_NAME = "device_name";
+	String KEY_OS_VERSION = "os_version";
+	String KEY_COUNTRY = "country";
+	String KEY_DRIVER_TO_PICKUP_PATH_ENABLED = "driver_to_pickup_path_enabled";
+	String KEY_SHOW_DRIVER_MARKER_IN_RIDE = "show_driver_marker_in_ride";
+	String KEY_SHOW_RIDE_COVERED_PATH = "show_ride_covered_path";
+	String KEY_DRIVER_TRACKING_USING_STREAM_ENABLED = "driver_tracking_using_stream_enabled";
+	String KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE = "driver_marker_anim_duration_inride";
+	String KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT = "driver_marker_anim_duration_accept";
     String KEY_APPLICABLE_GENDER = "applicable_gender";
     String KEY_CUSTOMER_GENDER_FILTER = "customer_gender_filter";
     String KEY_CUSTOMER_DOB_INPUT = "customer_dob_input";

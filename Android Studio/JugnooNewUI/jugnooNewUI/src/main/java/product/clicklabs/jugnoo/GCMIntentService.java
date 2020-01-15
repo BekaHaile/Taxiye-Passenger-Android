@@ -21,18 +21,16 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
-import com.fugu.FuguNotificationConfig;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.hippo.HippoNotificationConfig;
+import com.hippocall.HippoCallConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
@@ -42,21 +40,26 @@ import com.squareup.picasso.Target;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import product.clicklabs.jugnoo.apis.ApiTrackPush;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
-import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.models.Promo;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -66,6 +69,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SoundMediaPlayer;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
+import retrofit.client.Response;
 
 public class GCMIntentService extends FirebaseMessagingService implements Constants, GAAction {
 
@@ -73,7 +77,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
     public static final int NOTIFICATION_ID = 1;
     public static final int PROMOTION_NOTIFICATION_ID = 1212;
-	private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
+	HippoNotificationConfig fuguNotificationConfig=new HippoNotificationConfig();
 	private String deliveryId;
 
     public GCMIntentService() {
@@ -118,9 +122,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			hideSmallIcon(notification);
             notificationManager.notify(NOTIFICATION_ID, notification);
 
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-            wl.acquire(15000);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -219,9 +220,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				hideSmallIcon(notification);
 				notificationManager.notify(notificationId, notification);
 
-				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-				wl.acquire(15000);
 			}
 
         } catch (Exception e) {
@@ -335,9 +333,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			hideSmallIcon(notification);
 			notificationManager.notify(notificationId, notification);
 
-			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-			WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-			wl.acquire(15000);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -393,9 +388,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
             notificationManager.notify(notificationId, notification);
 
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-            wl.acquire(15000);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -418,15 +410,22 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		try {
-			if (fuguNotificationConfig.isFuguNotification(remoteMessage.getData())) {
-				fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
-                fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);
+			Log.e(TAG, "onMessageReceived remoteMessage=" + remoteMessage);
+
+			if (fuguNotificationConfig.isHippoNotification(remoteMessage.getData())) {
+				if (fuguNotificationConfig.isHippoCallNotification(this, remoteMessage.getData())) {
+					JSONObject messageJson = new JSONObject(remoteMessage.getData().get("message"));
+					HippoCallConfig.getInstance().onNotificationReceived(getApplicationContext(), messageJson);
+				} else {
+					fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
+					fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);
 
 
-                if(Build.VERSION.SDK_INT >= 16){
-                    fuguNotificationConfig.setPriority(Notification.PRIORITY_HIGH);
-                }
-                fuguNotificationConfig.showNotification(getApplicationContext(), remoteMessage.getData());
+					if (Build.VERSION.SDK_INT >= 16) {
+						fuguNotificationConfig.setPriority(Notification.PRIORITY_HIGH);
+					}
+					fuguNotificationConfig.showNotification(getApplicationContext(), remoteMessage.getData());
+				}
 				return;
 			}
 
@@ -1129,4 +1128,37 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 		}
 	}
 
+
+	@Override
+	public void onNewToken(@NonNull String token) {
+		super.onNewToken(token);
+
+		Prefs.with(this).save(Constants.SP_DEVICE_TOKEN, token);
+
+		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
+		if (!"".equalsIgnoreCase(pair.first)) {
+			// call api
+			refreshDeviceToken(token, pair.first);
+		} else {
+			Intent intent = new Intent(Constants.INTENT_ACTION_DEVICE_TOKEN_UPDATE);
+			intent.putExtra(Constants.KEY_DEVICE_TOKEN, token);
+			LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+		}
+	}
+
+
+	public void refreshDeviceToken(String refreshedToken, String accessToken) {
+		try {
+			if (MyApplication.getInstance().isOnline()) {
+				final HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
+				params.put(Constants.KEY_DEVICE_TOKEN, refreshedToken);
+				new HomeUtil().putDefaultParams(params);
+				Response response = RestClient.getApiService().refreshDeviceToken(params);
+			} else {
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

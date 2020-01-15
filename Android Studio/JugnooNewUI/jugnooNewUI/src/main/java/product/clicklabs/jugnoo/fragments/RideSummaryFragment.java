@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +23,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
@@ -35,6 +34,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -326,13 +327,23 @@ public class RideSummaryFragment extends Fragment implements Constants {
 				@Override
 				public void onClick(View v) {
 					if (activity instanceof RideTransactionsActivity) {
-                        if (Data.isFuguChatEnabled()) {
+						if(Data.isHippoTicketForRideEnabled(activity)){
+							HomeUtil.openHippoTicketForRide(activity,
+									Integer.parseInt(endRideData.engagementId),
+									endRideData.getDriverId());
+						}
+						else if (Data.isFuguChatEnabled()) {
                             try {
                                 if(!TextUtils.isEmpty(endRideData.getFuguChannelId())){
-                                    FuguConfig.getInstance().openChatByTransactionId(endRideData.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
-                                            endRideData.getFuguChannelName(), endRideData.getFuguTags());
+                                    ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                                            .setTransactionId(endRideData.getFuguChannelId())
+                                            .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                                            .setChannelName(endRideData.getFuguChannelName())
+                                            .setTags(endRideData.getFuguTags())
+                                            .build();
+                                    HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                                 }else {
-                                    FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+                                    HippoConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

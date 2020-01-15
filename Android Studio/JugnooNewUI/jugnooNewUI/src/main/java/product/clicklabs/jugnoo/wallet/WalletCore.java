@@ -3,8 +3,8 @@ package product.clicklabs.jugnoo.wallet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -451,12 +451,12 @@ public class WalletCore {
             } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
                 return context1.getString(R.string.pos);
             } else {
-                return context1.getResources().getString(R.string.cash);
+                return context1.getResources().getString(R.string.pay_later);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return context.getResources().getString(R.string.cash);
+        return context.getResources().getString(R.string.pay_later);
     }
 
     public String getRazorpayName(Context context) {
@@ -535,7 +535,7 @@ public class WalletCore {
         return name;
     }
 
-    public String getPaymentOptionName(int paymentOption) {
+    public String getPaymentOptionName(int paymentOption, Context context) {
         try {
             if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
                 return context.getResources().getString(R.string.paytm);
@@ -687,6 +687,9 @@ public class WalletCore {
 
     public void parsePaymentModeConfigDatas(JSONObject jObj) {
         try {
+        	if(!jObj.has(Constants.KEY_PAYMENT_MODE_CONFIG_DATA)){
+        		return;
+			}
             JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
             paymentModeConfigDatas = new ArrayList<>();
             int cashPosition = -1;

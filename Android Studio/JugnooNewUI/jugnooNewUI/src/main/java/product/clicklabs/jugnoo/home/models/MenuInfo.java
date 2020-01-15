@@ -26,6 +26,9 @@ public class MenuInfo {
     @SerializedName("icon_normal")
     @Expose
     private String iconNormal;
+    @SerializedName("priority")
+    @Expose
+    private Integer priority;
     private boolean isUIEnabled=true;
 
     public boolean isUIEnabled() {
@@ -111,4 +114,12 @@ public class MenuInfo {
     public boolean equals(Object obj) {
         return obj instanceof MenuInfo && ((MenuInfo)obj).tag.equalsIgnoreCase(tag);
     }
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
 }

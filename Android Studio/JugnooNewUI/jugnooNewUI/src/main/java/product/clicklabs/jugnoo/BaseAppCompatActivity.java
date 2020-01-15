@@ -8,18 +8,16 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
-import com.fugu.FuguConfig;
-import com.fugu.FuguTicketAttributes;
+import com.hippo.HippoConfig;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
-import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 /**
@@ -126,7 +124,7 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 	}
 
 	private void fuguShowConversations() {
-		FuguConfig.getInstance().showConversations(this, getString(R.string.fugu_support_title));
+		HippoConfig.getInstance().showConversations(this, getString(R.string.fugu_support_title));
 	}
 
 	@Override
@@ -185,11 +183,6 @@ public class BaseAppCompatActivity extends AppCompatActivity implements Permissi
 		}
 	}
 
-	public void openHippoTicketSupport(){
-		FuguTicketAttributes.Builder builder = new FuguTicketAttributes.Builder();
-		builder.setFaqName(Prefs.with(this).getString(Constants.HIPPO_SUPPORT_FAQ_NAME, ""));
-		FuguConfig.getInstance().showFAQSupport(builder.build());
-	}
 
 	public void attachBaseContextWithoutTypekit(Context newBase){
 		super.attachBaseContext(LocaleHelper.onAttach(newBase, LocaleHelper.getLanguage(newBase)));

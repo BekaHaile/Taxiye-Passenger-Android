@@ -3,9 +3,9 @@ package com.sabkuchfresh.pros.utils;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
 import android.widget.DatePicker;
 
 import com.sabkuchfresh.fragments.AnywhereHomeFragment;

@@ -4,8 +4,8 @@ package com.fugu.agent.recylerviewAnimation;
  * Created by ankit on 20/07/17.
  */
 
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.animation.Interpolator;
 
 public class FadeInLeftAnimator extends BaseItemAnimator {

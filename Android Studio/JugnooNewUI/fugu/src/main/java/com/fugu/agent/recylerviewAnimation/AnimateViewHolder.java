@@ -4,8 +4,8 @@ package com.fugu.agent.recylerviewAnimation;
  * Created by ankit on 20/07/17.
  */
 
-import android.support.v4.view.ViewPropertyAnimatorListener;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.view.ViewPropertyAnimatorListener;
+import androidx.recyclerview.widget.RecyclerView;
 
 public interface AnimateViewHolder {
 

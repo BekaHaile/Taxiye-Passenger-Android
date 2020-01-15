@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.home.schedulerides
 
-import com.fugu.utils.DateUtils
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.sabkuchfresh.feed.models.FeedCommonResponse

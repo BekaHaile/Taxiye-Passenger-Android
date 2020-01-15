@@ -2,12 +2,11 @@ package product.clicklabs.jugnoo.home.dialogs;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
@@ -283,11 +282,11 @@ public class PaymentOptionDialog implements View.OnClickListener {
 
     private void setSelectedPaymentOptionUI() {
         try {
-			ArrayList<Region> regions = Data.autoData.getRegions();
             int selectedPaymentOption = callbackPaymentOptionSelector.getSelectedPaymentOption();
             if(activity instanceof HomeActivity) {
-                Region region = (Data.autoData.getRegions().size() > 1) ? ((HomeActivity) activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-                        : (Data.autoData.getRegions().size() > 0 ? Data.autoData.getRegions().get(0) : null);
+				ArrayList<Region> regions = Data.autoData.getRegions();
+                Region region = (regions.size() > 1) ? ((HomeActivity) activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                        : (regions.size() > 0 ? regions.get(0) : null);
                 if (region != null && region.getRestrictedPaymentModes().size() > 0) {
                     if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
                         callbackPaymentOptionSelector.setSelectedPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(callbackPaymentOptionSelector.getSelectedPaymentOption(), (HomeActivity) activity));
@@ -436,10 +435,11 @@ public class PaymentOptionDialog implements View.OnClickListener {
                 List<Integer> restrictedPaymentMode = new ArrayList<>();
 
                 if(activity instanceof HomeActivity) {
-                    if (Data.autoData.getRegions().size() > 1) {
+					ArrayList<Region> regions = Data.autoData.getRegions();
+                    if (regions.size() > 1) {
                         restrictedPaymentMode = ((HomeActivity) activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
-                    } else if (Data.autoData.getRegions().size() > 0) {
-                        restrictedPaymentMode = Data.autoData.getRegions().get(0).getRestrictedPaymentModes();
+                    } else if (regions.size() > 0) {
+                        restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
                     }
                 }
 

@@ -2,11 +2,11 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -222,30 +222,11 @@ public class MenuBar {
 			}
 		}
 
-		if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
-			int index = itemsToShow.indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES.getTag()));
-			int indexNew = itemsToShow.indexOf(new MenuInfo(MenuInfoTags.FREE_RIDES_NEW.getTag()));
-			if(index > -1){
-				itemsToShow.remove(index);
-				MenuInfo menuInfo = new MenuInfo(activity.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
-				itemsToShow.add(0, menuInfo);
-			} else if(indexNew == -1){
-				MenuInfo menuInfo = new MenuInfo(activity.getString(R.string.free_rides_for_life), MenuInfoTags.FREE_RIDES_NEW.getTag());
-				itemsToShow.add(0, menuInfo);
-			}
-		}
 
 		return itemsToShow;
 	}
 
 
-	public void setupFreshUI(){
-		try {
-			menuAdapter.setList(getSideMenuList());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public Activity getActivity(){
 		return activity;

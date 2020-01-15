@@ -169,9 +169,9 @@
     <string name="insert_sd_card">Please insert SD Card to use this app</string>
 
     <!-- NL Home Screen -->
-    <string name="nl_min_fare">BASE FARE</string>
-    <string name="nl_offers">OFFERS</string>
-    <string name="nl_change_locality">CHANGE LOCALITY</string>
+    <string name="nl_min_fare">Base Fare</string>
+    <string name="nl_offers">Offers</string>
+    <string name="nl_change_locality">Change Locality</string>
     <string name="get_fare_estimate">Get Fare Estimate</string>
     <string name="nl_per_km">Per Km</string>
     <string name="nl_per_min">Per Min</string>
@@ -2147,7 +2147,7 @@
     <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
 
     <string name="text_no_delivery_available">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
-    <string name="fatafat_text">Delivery</string>
+
 
 
     <string name="pickup">Pickup</string>
@@ -2156,7 +2156,7 @@
     <string name="offers_and_coupons_applied_colon">Offers Applied: \n<b>%s</b></string>
 
 <!--    New UI changes-->
-    <string name="text_where_to_go">Where to go</string>
+    <string name="text_where_to_go">Where to?</string>
     <string name="add_favorite_place">Add Favorite Place</string>
     <string name="label_confirm_ride_request">Confirm Ride Request</string>
     <string name="text_congestion_time">Congestion Time</string>
@@ -2459,4 +2459,10 @@
     <string name="female">Female</string>
     <string name="please_select_gender">Please select gender</string>
     <string name="please_enter_date_of_birth">Please enter date of birth</string>
+    <string name="pay_later">Pay Later</string>
+    <string name="your_trips">Your Trips</string>
+    <string name="contact_user_format">Contact %s</string>
+    <string name="free_call">Free Call</string>
+    <string name="carrier_charges_may_apply">*Carrier charges may apply</string>
+    <string name="tap_to_retry">Tap to Retry</string>
 </resources>

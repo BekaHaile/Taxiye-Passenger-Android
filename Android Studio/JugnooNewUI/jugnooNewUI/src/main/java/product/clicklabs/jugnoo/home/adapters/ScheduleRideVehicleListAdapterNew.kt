@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.adapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import product.clicklabs.jugnoo.home.HomeActivity
 import product.clicklabs.jugnoo.home.models.Region
 import product.clicklabs.jugnoo.utils.Utils
 
-class ScheduleRideVehicleListAdapterNew(val activity: HomeActivity, val vehicleList: ArrayList<Region>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScheduleRideVehicleListAdapterNew(val activity: HomeActivity, val vehicleList: ArrayList<Region>) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     // Gets the number of animals in the list
     override fun getItemCount(): Int {
@@ -20,12 +20,12 @@ class ScheduleRideVehicleListAdapterNew(val activity: HomeActivity, val vehicleL
     }
 
     // Inflates the item views
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return ViewHolderVehicle(LayoutInflater.from(activity).inflate(R.layout.list_item_schedule_ride_vehicles, parent, false))
     }
 
     // Binds each animal in the ArrayList to a view
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         // holder?.tvAnimalType?.text = items.get(position)
 
         when (holder) {
@@ -35,7 +35,7 @@ class ScheduleRideVehicleListAdapterNew(val activity: HomeActivity, val vehicleL
 
     }
 
-    inner class ViewHolderVehicle(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolderVehicle(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
         fun bind(position: Int) {
          //   itemView.tvHeader.text = vehicleName
 

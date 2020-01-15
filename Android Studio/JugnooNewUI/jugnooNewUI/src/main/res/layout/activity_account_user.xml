@@ -285,7 +285,7 @@
 
                         </RelativeLayout>
 
-                        <android.support.v7.widget.AppCompatSpinner
+                        <androidx.appcompat.widget.AppCompatSpinner
                             android:id="@+id/spinnerGender"
                             android:layout_width="match_parent"
                             android:layout_height="28dp"
@@ -370,14 +370,14 @@
                     android:tag="@string/dont_touch_me"
                     >
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvMenuItems"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:overScrollMode="never"
                         android:scrollbars="none"
                         android:visibility="gone">
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
 
                     <!-- change password layout -->
                     <RelativeLayout

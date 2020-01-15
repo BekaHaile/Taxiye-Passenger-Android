@@ -55,7 +55,7 @@
             android:visibility="gone"
             tools:text="Tkjhjkhjkhjkhjkhjkhjhjhjkhjkhjkhjkhjkhjkhjk" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvActionDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
             android:layout_height="@dimen/fugu_action_divider_size"
             android:background="@color/fugu_action_divider_color" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvActionButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

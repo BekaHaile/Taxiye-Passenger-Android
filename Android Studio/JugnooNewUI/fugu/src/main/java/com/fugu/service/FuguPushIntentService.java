@@ -3,9 +3,9 @@ package com.fugu.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.core.app.TaskStackBuilder;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.fugu.FuguConfig;
 import com.fugu.FuguNotificationConfig;
@@ -21,8 +21,6 @@ import com.fugu.database.CommonData;
 import com.fugu.model.FuguConversation;
 import com.google.gson.Gson;
 
-import static com.fugu.constant.FuguAppConstant.CHAT_TYPE;
-import static com.fugu.constant.FuguAppConstant.NOTIFICATION_INTENT;
 import static com.fugu.constant.FuguAppConstant.NOTIFICATION_TAPPED;
 
 /**

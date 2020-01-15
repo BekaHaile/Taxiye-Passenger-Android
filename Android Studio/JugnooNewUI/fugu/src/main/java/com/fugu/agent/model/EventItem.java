@@ -1,6 +1,6 @@
 package com.fugu.agent.model;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import static com.fugu.constant.FuguAppConstant.ASSIGNMENT_MESSAGE;
 

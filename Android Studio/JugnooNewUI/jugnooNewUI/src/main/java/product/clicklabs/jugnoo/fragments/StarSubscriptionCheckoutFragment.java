@@ -7,10 +7,10 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.CardView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.cardview.widget.CardView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -1053,17 +1053,12 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
 
 
     @Override
-    public void onCouponSelected() {
-
-    }
-
-    @Override
     public PromoCoupon getSelectedCoupon() {
         return getSelectedPromoCoupon();
     }
 
     @Override
-    public boolean setSelectedCoupon(int position) {
+    public boolean setSelectedCoupon(int position, PromoCoupon pc) {
         PromoCoupon promoCoupon;
         if (promoCoupons != null && position > -1 && position < promoCoupons.size()) {
             promoCoupon = promoCoupons.get(position);
@@ -1079,10 +1074,6 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
         }
     }
 
-    @Override
-    public void applyPromoCoupon(String text) {
-
-    }
 
 
 

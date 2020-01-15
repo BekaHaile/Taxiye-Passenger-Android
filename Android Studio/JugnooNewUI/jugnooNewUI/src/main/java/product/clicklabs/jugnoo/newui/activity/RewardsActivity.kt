@@ -3,10 +3,10 @@ package product.clicklabs.jugnoo.newui.activity
 import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
-import android.support.constraint.ConstraintLayout
-import android.support.constraint.Guideline
-import android.support.v4.app.Fragment
-import android.support.v7.widget.GridLayoutManager
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.Guideline
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import android.view.View
 import android.widget.Toast
 import com.sabkuchfresh.analytics.GAAction
@@ -67,7 +67,7 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
                 groupCashback.visibility = View.VISIBLE
                 groupOffer.visibility = View.VISIBLE
                 rewardsAdapter?.notifyDataSetChanged()
-                val guideLine : Guideline= findViewById(R.id.glMid)
+                val guideLine : Guideline = findViewById(R.id.glMid)
                 val params : ConstraintLayout.LayoutParams = guideLine.layoutParams as ConstraintLayout.LayoutParams
                 params.guidePercent = 0.50f // 45% // range: 0 <-> 1
                 guideLine.layoutParams = params
@@ -97,7 +97,7 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
                     promosList.add(promo)
                 }
             }
-            val guideLine : Guideline= findViewById(R.id.glMid)
+            val guideLine : Guideline = findViewById(R.id.glMid)
             val params : ConstraintLayout.LayoutParams = guideLine.layoutParams as ConstraintLayout.LayoutParams
             params.guidePercent = 0f // 45% // range: 0 <-> 1
             guideLine.layoutParams = params
@@ -155,7 +155,7 @@ class RewardsActivity : BaseFragmentActivity(), RewardsDialog.ScratchCardReveale
         tvTitle.text = getString(R.string.terms_of_use)
     }
 
-    fun removeFragment(fragment: Fragment?) {
+    fun removeFragment(fragment: androidx.fragment.app.Fragment?) {
         if (fragment != null) {
             llContainer.visibility = View.GONE
             supportFragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()

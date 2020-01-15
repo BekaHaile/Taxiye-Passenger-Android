@@ -57,6 +57,7 @@
         tools:replace="android:allowBackup"
         android:supportsRtl="true"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         >
         <uses-library
             android:name="org.apache.http.legacy"
@@ -76,13 +77,6 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-        <service
-            android:name=".MyInstanceIDListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 
@@ -504,7 +498,7 @@
             android:exported="false"/>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="@string/file_provider_name"
             android:exported="false"
             android:grantUriPermissions="true">

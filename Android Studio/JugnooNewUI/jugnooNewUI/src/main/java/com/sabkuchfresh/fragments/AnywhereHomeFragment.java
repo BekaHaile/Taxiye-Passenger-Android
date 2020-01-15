@@ -6,15 +6,15 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
@@ -39,7 +39,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.fugu.FuguConfig;
+import com.hippo.HippoConfig;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
 import com.sabkuchfresh.adapters.FatafatImageAdapter;
@@ -538,7 +538,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         try {
             if (mPromoCouponDialog == null) {
 
-                mPromoCouponDialog = new PromoCouponDialog(activity, new product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter.Callback() {
+                mPromoCouponDialog = new PromoCouponDialog(activity, new PromoCouponDialog.Callback() {
                     @Override
                     public void onCouponSelected() {
                         Log.d("onCouponSelected", "");
@@ -995,7 +995,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                 activity.overridePendingTransition(R.anim.hold, R.anim.hold);
 
                             } else {
-                                FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+                                HippoConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
                             }
 
 
@@ -1509,7 +1509,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 if(paymentOptionDialog!=null){
 
                     WalletCore walletCore = new WalletCore(activity);
-                    tvPaymentOption.setText(walletCore.getPaymentOptionName(paymentMethod));
+                    tvPaymentOption.setText(walletCore.getPaymentOptionName(paymentMethod, activity));
                     paymentOptionDialog.dismiss();
                 }
 
