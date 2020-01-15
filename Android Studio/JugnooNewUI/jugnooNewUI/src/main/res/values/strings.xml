@@ -2455,4 +2455,10 @@
     <string name="free_call">Free Call</string>
     <string name="carrier_charges_may_apply">*Carrier charges may apply</string>
     <string name="tap_to_retry">Tap to Retry</string>
+    <string name="reinvite">Re-Invite</string>
+    <string name="call_out_your_friends_who_are_app_members">Call out your friends who are already %s members  and earn money!</string>
+    <string name="become_a">Become a</string>
+    <string name="better_friend">better friend</string>
+    <string name="to_your">to\nyour</string>
+    <string name="friend">friend!</string>
 </resources>

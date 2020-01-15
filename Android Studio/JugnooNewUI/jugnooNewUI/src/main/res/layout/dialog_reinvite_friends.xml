@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainView"
+        android:layout_width="330dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:background="@drawable/bg_draw_corner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:gravity="center_horizontal"
+            tools:text="Become a better friend to\nyour Jugnoo friend!"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivReinviteImage"
+            android:layout_width="268dp"
+            android:layout_height="140dp"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintEnd_toEndOf="@+id/glEnd"
+            app:layout_constraintTop_toBottomOf="@+id/tvLabel"
+            android:layout_marginTop="@dimen/spacing_large"
+            app:srcCompat="@drawable/ic_reinvite_banner_image"
+            />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvCalloutFriends"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxHeight="92dp"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:textColor="@color/white"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:gravity="center"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/ivReinviteImage"
+            tools:text="@string/call_out_your_friends_who_are_app_members"
+            android:background="@drawable/ic_orange_banner"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvReinviteMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:textColor="@color/text_color"
+            android:gravity="center_horizontal"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="@+id/glEnd"
+            app:layout_constraintStart_toStartOf="@+id/glStart"
+            app:layout_constraintTop_toBottomOf="@+id/tvCalloutFriends"
+            android:lineSpacingExtra="8dp"
+            tools:text="They get ₹100 once they book the ride\nYou get ₹100 once they book the ride" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnReInvite"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="@dimen/spacing_extra_large"
+            android:background="@drawable/button_theme"
+            android:text="@string/reinvite"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintTop_toBottomOf="@+id/tvReinviteMessage"
+            app:layout_constraintEnd_toEndOf="@+id/glEnd"
+            app:layout_constraintStart_toEndOf="@+id/btnCancel"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/glBottomEnd" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:background="@null"
+            android:text="@string/cancel"
+            android:textColor="@color/text_color_theme_alpha_selector"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/glBottomEnd"
+            app:layout_constraintEnd_toStartOf="@+id/btnReInvite"
+            app:layout_constraintTop_toTopOf="@+id/btnReInvite"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/glStart" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/glBottomEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_end="@dimen/spacing_normal" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/glStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".05" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/glEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent=".95" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>
+
