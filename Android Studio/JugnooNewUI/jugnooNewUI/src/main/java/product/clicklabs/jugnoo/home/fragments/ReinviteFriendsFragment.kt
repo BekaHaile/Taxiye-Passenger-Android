@@ -7,13 +7,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sabkuchfresh.feed.ui.api.APICommonCallback
+import com.sabkuchfresh.feed.ui.api.ApiCommon
+import com.sabkuchfresh.feed.ui.api.ApiName
 import kotlinx.android.synthetic.main.fragment_reinvite_friends.*
+import org.json.JSONArray
+import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.base.BaseFragment
 import product.clicklabs.jugnoo.emergency.ContactsFetchAsync
 import product.clicklabs.jugnoo.emergency.models.ContactBean
 import product.clicklabs.jugnoo.home.adapters.ReinviteFriendsAdapter
 import product.clicklabs.jugnoo.permission.PermissionCommon
+import product.clicklabs.jugnoo.retrofit.model.FilterActiveUsersResponse
 import product.clicklabs.jugnoo.utils.Fonts
 import java.util.*
 
@@ -67,8 +73,11 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
                 reinviteFriendsAdapter = ReinviteFriendsAdapter(rvFriends, contactBeans!!, this@ReinviteFriendsFragment)
                 rvFriends.adapter = reinviteFriendsAdapter
 
-                btnReInvite.visibility = View.VISIBLE
-                textViewSelectAll.visibility = View.VISIBLE
+
+                val phoneNumbers = contactBeans!!.map{
+                    it.phoneNo
+                }
+                filterUsersApis(phoneNumbers as MutableList<String>)
             }
 
         })
@@ -94,10 +103,12 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
         textViewTitle.typeface = Fonts.mavenMedium(requireContext())
         textViewSelectAll.typeface = Fonts.mavenRegular(requireContext())
         btnReInvite.typeface = Fonts.mavenMedium(requireContext())
+        tvNoContacts.typeface = Fonts.mavenRegular(requireContext())
         rvFriends.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         btnReInvite.visibility = View.GONE
         textViewSelectAll.visibility = View.GONE
+        groupNoContacts.visibility = View.GONE
 
 
         btnReInvite.setOnClickListener{
@@ -123,6 +134,28 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
     override fun onContactSelected(position: Int, contactBean: ContactBean) {
 
     }
+
+
+    fun filterUsersApis(phoneNumbers:MutableList<String>){
+        val params = hashMapOf<String, String>()
+        val jsonArray = JSONArray()
+        phoneNumbers.forEach{
+            jsonArray.put(it)
+        }
+        params.put(Constants.KEY_PHONE_NOS, jsonArray.toString())
+        ApiCommon<FilterActiveUsersResponse>(requireActivity()).execute(params, ApiName.FILTER_ACTIVE_USERS,
+                object:APICommonCallback<FilterActiveUsersResponse>(){
+            override fun onSuccess(t: FilterActiveUsersResponse?, message: String?, flag: Int) {
+
+            }
+
+            override fun onError(t: FilterActiveUsersResponse?, message: String?, flag: Int): Boolean {
+                return false
+            }
+
+        })
+    }
+
 
     interface InteractionListener{
         fun backPressed()

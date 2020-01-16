@@ -5,6 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sabkuchfresh.adapters.ItemListener
+import com.sabkuchfresh.utils.Utils
+import com.squareup.picasso.CircleTransform
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.list_item_friend.view.*
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.emergency.models.ContactBean
@@ -12,6 +15,10 @@ import product.clicklabs.jugnoo.utils.Fonts
 
 class ReinviteFriendsAdapter(val rv:RecyclerView, val contactBeans:MutableList<ContactBean>, val callback: Callback)
     : RecyclerView.Adapter<ReinviteFriendsAdapter.ViewHolderFriend>(), ItemListener {
+
+    val imageSize:Int by lazy{
+        Utils.dpToPx(rv.context, 55)
+    }
 
     override fun getItemCount(): Int {
         return contactBeans.size
@@ -33,7 +40,7 @@ class ReinviteFriendsAdapter(val rv:RecyclerView, val contactBeans:MutableList<C
     }
 
 
-    class ViewHolderFriend(view: View, itemListener: ItemListener) : RecyclerView.ViewHolder(view){
+    inner class ViewHolderFriend(view: View, itemListener: ItemListener) : RecyclerView.ViewHolder(view){
         init {
             itemView.tvUserName.typeface = Fonts.mavenMedium(itemView.context)
             itemView.tvUserPhoneNo.typeface = Fonts.mavenRegular(itemView.context)
@@ -45,8 +52,12 @@ class ReinviteFriendsAdapter(val rv:RecyclerView, val contactBeans:MutableList<C
         fun bind(contactBean: ContactBean){
             itemView.tvUserName.text = contactBean.name
             itemView.tvUserPhoneNo.text = contactBean.phoneNo
-            if(contactBean.imageBitmap != null){
-                itemView.ivUserImage.setImageBitmap(contactBean.imageBitmap)
+            if(contactBean.imageUri != null){
+                Picasso.with(itemView.ivUserImage.context).load(contactBean.imageUri)
+                        .resize(imageSize, imageSize)
+                        .centerCrop()
+                        .transform(CircleTransform())
+                        .into(itemView.ivUserImage)
             } else {
                 itemView.ivUserImage.setImageResource(R.drawable.icon_user)
             }

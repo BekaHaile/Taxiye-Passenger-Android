@@ -2463,4 +2463,5 @@
     <string name="friend">friend!</string>
     <string name="select_all">Select All</string>
     <string name="select_n_all">Select\nall</string>
+    <string name="no_contacts_found">No contacts found</string>
 </resources>

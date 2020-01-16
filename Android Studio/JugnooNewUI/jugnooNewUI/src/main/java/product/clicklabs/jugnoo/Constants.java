@@ -1180,4 +1180,5 @@ public interface Constants {
 	String KEY_DRIVER_TRACKING_USING_STREAM_ENABLED = "driver_tracking_using_stream_enabled";
 	String KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE = "driver_marker_anim_duration_inride";
 	String KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT = "driver_marker_anim_duration_accept";
+	String KEY_PHONE_NOS = "phone_nos";
 }

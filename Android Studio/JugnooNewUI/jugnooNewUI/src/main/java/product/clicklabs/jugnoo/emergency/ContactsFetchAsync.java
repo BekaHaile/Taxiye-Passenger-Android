@@ -5,11 +5,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.ContactsContract;
-import android.provider.MediaStore;
 
 import com.sabkuchfresh.utils.Utils;
 
@@ -77,11 +75,11 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 					String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 					String hasPhoneNumber = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER));
 					String imageUri = cur.getString(cur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
-					Bitmap bp = null;
+					Uri uri = null;
 
 					if (imageUri != null) {
 						try {
-							bp = MediaStore.Images.Media.getBitmap(activity.getContentResolver(), Uri.parse(imageUri));
+							uri = Uri.parse(imageUri);
 						} catch (Exception e) { }
 					}
 
@@ -102,7 +100,7 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 							phone = phone.replace(" ","");
 							phone = phone.replace("-", "");
 							if (Utils.validPhoneNumber(phone)) {
-								contactBeans.add(new ContactBean(name, phone,"", type, ContactBean.ContactBeanViewType.CONTACT, bp, null));
+								contactBeans.add(new ContactBean(name, phone,"", type, ContactBean.ContactBeanViewType.CONTACT, uri, null));
 							}
 						}
 						pCur.close();

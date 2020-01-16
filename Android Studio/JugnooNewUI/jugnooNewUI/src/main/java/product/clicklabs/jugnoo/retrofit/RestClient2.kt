@@ -30,7 +30,7 @@ object RestClient2 {
         val connectionPool = ConnectionPool(3, (5 * 60 * 1000).toLong(), TimeUnit.MILLISECONDS)
 
         val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
 
         val builder = OkHttpClient.Builder()
