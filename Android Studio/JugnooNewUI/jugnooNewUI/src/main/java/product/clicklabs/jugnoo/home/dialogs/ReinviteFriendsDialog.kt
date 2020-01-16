@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home.dialogs
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
 import android.text.Spannable
@@ -17,6 +18,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.dialog_reinvite_friends.*
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.R
+import product.clicklabs.jugnoo.home.ReinviteFriendsActivity
 import product.clicklabs.jugnoo.utils.Fonts
 
 
@@ -118,6 +120,7 @@ class ReinviteFriendsDialog : DialogFragment() {
             dismiss()
         }
         btnReInvite.setOnClickListener{
+            startActivity(Intent(requireContext(), ReinviteFriendsActivity::class.java))
             dismiss()
         }
     }

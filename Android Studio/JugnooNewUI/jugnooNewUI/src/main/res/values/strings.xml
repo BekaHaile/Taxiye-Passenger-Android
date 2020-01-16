@@ -2462,4 +2462,5 @@
     <string name="to_your">to\nyour</string>
     <string name="friend">friend!</string>
     <string name="select_all">Select All</string>
+    <string name="select_n_all">Select\nall</string>
 </resources>

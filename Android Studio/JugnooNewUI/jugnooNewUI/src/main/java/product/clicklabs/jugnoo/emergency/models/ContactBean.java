@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.emergency.models;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by shankar on 2/23/16.
  */
@@ -21,14 +23,18 @@ public class ContactBean {
 	private String type;
 	private boolean selected;
 	private ContactBeanViewType contactBeanViewType;
+	private Bitmap imageBitmap;
+	private String imageUrl;
 
 
-	public ContactBean(String name, String phoneNo,String countryCode,String type, ContactBeanViewType contactBeanViewType) {
+	public ContactBean(String name, String phoneNo, String countryCode, String type, ContactBeanViewType contactBeanViewType, Bitmap imageBitmap, String imageUrl) {
 		this.name = name;
 		this.phoneNo = phoneNo;
 		this.countryCode = countryCode;
 		this.type = type;
 		this.contactBeanViewType = contactBeanViewType;
+		this.imageBitmap = imageBitmap;
+		this.imageUrl = imageUrl;
 		this.selected = false;
 	}
 
@@ -93,6 +99,22 @@ public class ContactBean {
 
 	public void setContactBeanViewType(ContactBeanViewType contactBeanViewType) {
 		this.contactBeanViewType = contactBeanViewType;
+	}
+
+	public Bitmap getImageBitmap() {
+		return imageBitmap;
+	}
+
+	public void setImageBitmap(Bitmap imageBitmap) {
+		this.imageBitmap = imageBitmap;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 
