@@ -12596,7 +12596,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
                         return false;
                     }
 
