@@ -76,7 +76,7 @@
         android:id="@+id/tvNoContacts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_contacts_found"
+        android:text="@string/no_contacts_in_your_phone"
         app:layout_constraintStart_toStartOf="@+id/rvFriends"
         app:layout_constraintEnd_toEndOf="@+id/rvFriends"
         app:layout_constraintTop_toBottomOf="@+id/ivNoContacts"

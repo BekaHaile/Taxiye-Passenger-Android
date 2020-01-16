@@ -38,6 +38,10 @@ public class ContactBean {
 		this.selected = false;
 	}
 
+	public ContactBean(String phoneNo){
+		this.phoneNo = phoneNo;
+	}
+
 	@Override
 	public String toString() {
 		return getName();
@@ -46,7 +50,8 @@ public class ContactBean {
 	@Override
 	public boolean equals(Object o) {
 		try{
-			return (o instanceof ContactBean && ((ContactBean)o).getPhoneNo().equalsIgnoreCase(this.getPhoneNo()));
+			return o instanceof ContactBean && (((ContactBean)o).getPhoneNo().contains(this.getPhoneNo())
+			|| this.getPhoneNo().contains(((ContactBean)o).getPhoneNo()));
 		} catch(Exception e){
 			e.printStackTrace();
 		}
