@@ -13,7 +13,6 @@ import com.hippo.CaptureUserData;
 import com.hippo.HippoColorConfig;
 import com.hippo.HippoConfig;
 import com.hippo.HippoConfigAttributes;
-import com.hippocall.HippoCallConfig;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.net.URLDecoder;
@@ -596,9 +595,7 @@ public class Data {
                     .build();
             HippoConfig.initHippoConfig(context, configAttributes);
         }
-		HippoCallConfig.getInstance().setCallBackListener();
-		HippoCallConfig.getInstance().setHippoCallPushIcon(R.mipmap.ic_launcher);
-		HippoCallConfig.getInstance().setHippoCallsmaillPushIcon(R.mipmap.notification_icon);
+		HippoCallStub.init();
     }
 
     private static HippoColorConfig getHippoColorConfig(){

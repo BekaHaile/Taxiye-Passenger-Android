@@ -30,7 +30,6 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.hippo.HippoNotificationConfig;
-import com.hippocall.HippoCallConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
@@ -415,7 +414,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			if (fuguNotificationConfig.isHippoNotification(remoteMessage.getData())) {
 				if (fuguNotificationConfig.isHippoCallNotification(this, remoteMessage.getData())) {
 					JSONObject messageJson = new JSONObject(remoteMessage.getData().get("message"));
-					HippoCallConfig.getInstance().onNotificationReceived(getApplicationContext(), messageJson);
+					HippoCallStub.onNotificationReceived(getApplicationContext(), messageJson);
 				} else {
 					fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
 					fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);

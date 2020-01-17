@@ -50,7 +50,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 import com.hippo.HippoConfig;
-import com.hippocall.HippoCallConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -88,6 +87,7 @@ import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.HippoCallStub;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -926,7 +926,7 @@ public class Utils implements GAAction, GACategory{
 								ArrayList<String> userUniqueKeys = new ArrayList<>();
 								userUniqueKeys.add(Data.autoData.getAssignedDriverInfo().getUserIdentifier());
 
-								HippoCallConfig.getInstance().setCallBackListener();
+								HippoCallStub.init();
 
 								HippoConfig.getInstance().startCall(activity, callType,
 										Data.autoData.getcEngagementId(),
