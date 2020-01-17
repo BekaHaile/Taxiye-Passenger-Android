@@ -6214,7 +6214,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
                         if(data.getBooleanExtra(KEY_SCHEDULE_RIDE,false)){
-                            super.onBackPressed();
+                            performBackpressed();
                             return;
                         }
                         if (data.hasExtra(KEY_SEARCH_RESULT)) {
@@ -6579,7 +6579,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     topBar.imageViewMenu.setVisibility(View.VISIBLE);
                     setScheduleIcon();
                     topBar.textViewTitle.setText(getResources().getString(R.string.rides));
-                    super.onBackPressed();
+                    getSupportFragmentManager().popBackStackImmediate();
 //                    passengerScreenMode = PassengerScreenMode.P_INITIAL;
 //                    switchPassengerScreen(passengerScreenMode);
 //                    initialMyLocationBtn.performClick();
