@@ -128,6 +128,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvPickup.typeface = Fonts.mavenRegular(activity)
             tvScheduleMessage.typeface = Fonts.mavenRegular(activity)
             tvDestination.typeface = Fonts.mavenRegular(activity)
+            tvScheduleDest.typeface = Fonts.mavenRegular(activity)
             tvPickupDateTime.setTypeface(Fonts.mavenMedium(activity), BOLD)
             tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
             tvOneWay.typeface = Fonts.mavenMedium(activity)
@@ -146,6 +147,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
             tvPickup.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.PICKUP) }
             tvDestination.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP) }
+            tvScheduleDest.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP) }
             tvSelectDateTime.setOnClickListener {
                 try {
                     getDatePickerFragment().show(childFragmentManager, "datePicker", onDateSetListener)
@@ -190,7 +192,11 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     if (TextUtils.isEmpty(tvPickup.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_pickup))
                         throw Exception()
-                    } else if (!Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
+                    } else if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)
+                            && TextUtils.isEmpty(tvScheduleDest.text.toString())) {
+                        Utils.showToast(activity, activity!!.getString(R.string.enter_destination))
+                        throw Exception()
+                    } else if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)
                             && TextUtils.isEmpty(tvDestination.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_destination))
                         throw Exception()
@@ -244,9 +250,14 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             setPickupAndDropAddress()
 
             val visibilityNotRental = if (openSchedule) View.VISIBLE else View.GONE
-            tvDestination.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
-            llDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
-            tvDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
+            tvDestination.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
+                    || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)) View.GONE else View.VISIBLE
+            tvScheduleDest.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)
+                    || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
+            llDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
+                    || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)) View.GONE else View.VISIBLE
+            tvDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
+                    || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)) View.GONE else View.VISIBLE
             tvPickupDateTime.visibility = visibilityNotRental
             tvSelectDateTime.visibility = visibilityNotRental
 //            tvFareEstimate.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
@@ -405,6 +416,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             searchResultPickup = searchResult
         } else {
             tvDestination.text = searchResult.getNameForText(activity)
+            tvScheduleDest.text = searchResult.getNameForText(activity)
             searchResultDestination = searchResult
         }
         getFareEstimate()
@@ -459,23 +471,23 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     }
 
                     override fun onNoRetry() {
-                        tvFareEstimate?.visibility = View.GONE
-                        viewInnerDrop?.visibility = View.VISIBLE
+                        tvFareEstimate.visibility = View.GONE
+                        viewInnerDrop.visibility = View.VISIBLE
                     }
 
                     override fun onRetry() {
-                        tvFareEstimate?.visibility = View.GONE
-                        viewInnerDrop?.visibility = View.VISIBLE
+                        tvFareEstimate.visibility = View.GONE
+                        viewInnerDrop.visibility = View.VISIBLE
                     }
 
                     override fun onFareEstimateFailure() {
-                        tvFareEstimate?.visibility = View.GONE
-                        viewInnerDrop?.visibility = View.VISIBLE
+                        tvFareEstimate.visibility = View.GONE
+                        viewInnerDrop.visibility = View.VISIBLE
                     }
 
                     override fun onDirectionsFailure() {
-                        tvFareEstimate?.visibility = View.GONE
-                        viewInnerDrop?.visibility = View.VISIBLE
+                        tvFareEstimate.visibility = View.GONE
+                        viewInnerDrop.visibility = View.VISIBLE
                     }
                 })
             }
