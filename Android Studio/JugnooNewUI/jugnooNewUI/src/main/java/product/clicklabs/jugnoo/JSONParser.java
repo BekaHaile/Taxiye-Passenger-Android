@@ -536,7 +536,7 @@ public class JSONParser implements Constants {
             	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
 
-				reorderMenu(context);
+				//  reorderMenu(context);
 			}
         } catch (Exception e) {
             e.printStackTrace();

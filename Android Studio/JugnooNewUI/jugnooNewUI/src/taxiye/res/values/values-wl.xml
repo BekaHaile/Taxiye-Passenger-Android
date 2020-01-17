@@ -84,4 +84,6 @@
     <string name="default_country_code">+251</string>
     <string name="default_country_iso">ETH</string>
     <string name="default_currency">ETB</string>
+    <string name="pay_later">Cash</string>
+    <string name="your_trips">History</string>
 </resources>
