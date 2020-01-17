@@ -96,7 +96,7 @@
                 android:text="@string/login_signup_with"
                 android:textSize="@dimen/text_size_32"
                 android:textColor="@color/layout_login_signup_text_color"
-                android:layout_marginTop="@dimen/px_50"
+                android:layout_marginTop="@dimen/px_120"
                 android:layout_gravity="center_horizontal"
                 app:typekitFont="maven"/>
 
@@ -159,7 +159,7 @@
                     android:textAllCaps="true"
                     android:gravity="center"
                     android:tag="mwar"
-                    android:textColor="@color/text_color"
+                    android:textColor="@color/layout_login_signup_text_color"
                     android:background="@drawable/circle_trnsp_stroke_grey_light"
                     android:textSize="@dimen/text_size_28" />
 
@@ -255,7 +255,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/px_70"
                 android:text="@string/nl_splash_terms"
-                android:textColor="@color/document_layout_bordor_color"
+                android:textColor="@color/layout_login_signup_text_color"
                 android:textSize="@dimen/text_size_24" />
 
             <TextView
