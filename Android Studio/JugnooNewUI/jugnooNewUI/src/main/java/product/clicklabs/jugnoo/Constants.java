@@ -1181,4 +1181,6 @@ public interface Constants {
 	String KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE = "driver_marker_anim_duration_inride";
 	String KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT = "driver_marker_anim_duration_accept";
 	String KEY_PHONE_NOS = "phone_nos";
+	String KEY_USERS = "users";
+	String KEY_USER_PHONE_NO = "user_phone_no";
 }

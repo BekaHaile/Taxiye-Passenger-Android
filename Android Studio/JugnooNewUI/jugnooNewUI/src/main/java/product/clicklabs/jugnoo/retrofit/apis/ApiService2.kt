@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.retrofit.apis
 
+import com.sabkuchfresh.feed.models.FeedCommonResponse
 import io.reactivex.Observable
 import okhttp3.ResponseBody
 import product.clicklabs.jugnoo.retrofit.model.FilterActiveUsersResponse
@@ -23,5 +24,9 @@ interface ApiService2 {
     @FormUrlEncoded
     @POST("filter_active_users")
     fun filterActiveUsers(@FieldMap params:HashMap<String, String>): Call<FilterActiveUsersResponse>
+
+    @FormUrlEncoded
+    @POST("reinvite_users")
+    fun reinviteUsers(@FieldMap params:HashMap<String, String>): Call<FeedCommonResponse>
 
 }

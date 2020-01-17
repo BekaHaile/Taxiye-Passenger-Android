@@ -305,6 +305,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
 			case FILTER_ACTIVE_USERS:
                 RestClient2.getApiService().filterActiveUsers(params).enqueue(callback2);
                 break;
+			case REINVITE_USERS:
+                RestClient2.getApiService().reinviteUsers(params).enqueue(callback2);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 

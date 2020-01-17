@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sabkuchfresh.feed.models.FeedCommonResponse
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
 import com.sabkuchfresh.feed.ui.api.ApiName
@@ -16,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONArray
+import org.json.JSONObject
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.base.BaseFragment
@@ -121,7 +123,16 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
 
 
         btnReInvite.setOnClickListener{
-
+            if(filteredUsers != null) {
+                val selectedUsers = filteredUsers!!.filter{
+                    it.isSelected
+                }
+                if(selectedUsers.isEmpty()){
+                    Utils.showToast(requireContext(), getString(R.string.please_select_some_contacts_first))
+                    return@setOnClickListener
+                }
+                reinviteUsersApi(selectedUsers as MutableList<FilteredUserDatum>)
+            }
         }
 
         textViewSelectAll.setOnClickListener{
@@ -218,6 +229,31 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
         })
     }
 
+
+    fun reinviteUsersApi(selectedUsers:MutableList<FilteredUserDatum>){
+        val params = hashMapOf<String, String>()
+        val jsonArray = JSONArray()
+        selectedUsers.forEach{
+            val jObj = JSONObject()
+            jObj.put(Constants.KEY_USER_ID, it.userId)
+            jObj.put(Constants.KEY_USER_PHONE_NO, it.userPhoneNo)
+            jsonArray.put(jObj)
+        }
+        params.put(Constants.KEY_USERS, jsonArray.toString())
+
+        ApiCommon<FeedCommonResponse>(requireActivity()).execute(params, ApiName.REINVITE_USERS,
+                object:APICommonCallback<FeedCommonResponse>(){
+            override fun onSuccess(t: FeedCommonResponse?, message: String?, flag: Int) {
+
+            }
+
+            override fun onError(t: FeedCommonResponse?, message: String?, flag: Int): Boolean {
+                return false
+            }
+
+        })
+
+    }
 
     interface InteractionListener{
         fun backPressed()
