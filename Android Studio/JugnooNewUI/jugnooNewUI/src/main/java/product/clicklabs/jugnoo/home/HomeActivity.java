@@ -3073,6 +3073,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }, 500);
 
+
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance("",
 				"They get ₹100 once they book the ride\nYou get ₹100 once they book the ride");

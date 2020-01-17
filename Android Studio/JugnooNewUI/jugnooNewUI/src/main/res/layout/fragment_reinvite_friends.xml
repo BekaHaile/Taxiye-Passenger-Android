@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:gravity="center"
-        android:text="@string/invite_friends"
+        android:text="@string/reinvite_friends"
         android:textSize="20sp"
         android:textColor="@color/text_color"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,6 +83,9 @@
         android:layout_marginTop="10dp"
         android:textSize="14sp"
         android:textColor="@color/text_color"
+        android:gravity="center_horizontal"
+        android:background="?attr/selectableItemBackground"
+        android:theme="@style/GreyHighlight"
         />
     <androidx.constraintlayout.widget.Group
         android:id="@+id/groupNoContacts"

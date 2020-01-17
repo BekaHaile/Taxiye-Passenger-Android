@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo.promotion.fragments
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -25,19 +26,18 @@ import com.sabkuchfresh.feed.ui.api.ApiCommon
 import com.sabkuchfresh.feed.ui.api.ApiName
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_referrals.*
+import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.MyApplication
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.HomeActivity
+import product.clicklabs.jugnoo.home.ReinviteFriendsActivity
 import product.clicklabs.jugnoo.promotion.ReferralActions
 import product.clicklabs.jugnoo.promotion.ShareActivity
 import product.clicklabs.jugnoo.promotion.adapters.MediaInfoFragmentAdapter
 import product.clicklabs.jugnoo.promotion.dialogs.ReferDriverDialog
 import product.clicklabs.jugnoo.promotion.models.ReferralTxnResponse
-import product.clicklabs.jugnoo.utils.DateOperations
-import product.clicklabs.jugnoo.utils.DialogPopup
-import product.clicklabs.jugnoo.utils.Fonts
-import product.clicklabs.jugnoo.utils.Utils
+import product.clicklabs.jugnoo.utils.*
 import java.util.*
 
 
@@ -71,10 +71,9 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
         textViewDesc!!.typeface = Fonts.mavenMedium(activity)
 
-        textViewLeaderboardSingle!!.typeface = Fonts.mavenMedium(activity)
-
         textViewLeaderboard.typeface = Fonts.mavenMedium(activity)
-        textViewReferDriver!!.typeface = Fonts.mavenMedium(activity)
+        tvReinvite.typeface = Fonts.mavenMedium(activity)
+        tvShareDriver!!.typeface = Fonts.mavenMedium(activity)
 
 
 
@@ -117,13 +116,11 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
             }
         }
 
-        linearLayoutLeaderBoard!!.setOnClickListener { activity!!.openLeaderboardFragment() }
+        rlLeaderBoard.setOnClickListener { activity!!.openLeaderboardFragment() }
 
-        linearLayoutRefer!!.setOnClickListener { relativeLayoutReferSingle!!.performClick() }
+        rlShareDriver.setOnClickListener { getReferDriverDialog().show() }
 
-        relativeLayoutLeaderboardSingle!!.setOnClickListener { linearLayoutLeaderBoard!!.performClick() }
-
-        textViewReferDriver!!.setOnClickListener { getReferDriverDialog().show() }
+        rlReinvite.setOnClickListener { startActivity(Intent(requireContext(), ReinviteFriendsActivity::class.java)) }
 
         tvReferralsCount!!.setOnClickListener { v -> openReferralTxnFragment(ReferralTxnFragment.STATE_REFERRALS) }
         tvCashEarned!!.setOnClickListener { v -> openReferralTxnFragment(ReferralTxnFragment.STATE_TOTAL) }
@@ -190,21 +187,37 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
                         .into(imageViewLogo)
             }
 
-            relativeLayoutReferContainer!!.visibility = View.GONE
+            val reinviteUsersEnabled = Prefs.with(requireContext()).getInt(Constants.KEY_REINVITE_USERS_ENABLED, 1)
             if (Data.userData != null) {
-                relativeLayoutMultipleTab!!.visibility = View.GONE
-                relativeLayoutReferSingle!!.visibility = View.GONE
-                relativeLayoutLeaderboardSingle!!.visibility = View.GONE
-                if (Data.userData.referralLeaderboardEnabled == 1 && Data.userData.getcToDReferralEnabled() == 1) {
-                    relativeLayoutMultipleTab!!.visibility = View.VISIBLE
-                    relativeLayoutReferContainer!!.visibility = View.VISIBLE
-                } else if (Data.userData.referralLeaderboardEnabled == 1 && Data.userData.getcToDReferralEnabled() != 1) {
-                    relativeLayoutLeaderboardSingle!!.visibility = View.VISIBLE
-                    relativeLayoutReferContainer!!.visibility = View.VISIBLE
-                } else if (Data.userData.referralLeaderboardEnabled != 1 && Data.userData.getcToDReferralEnabled() == 1) {
-                    relativeLayoutReferSingle!!.visibility = View.VISIBLE
-                    relativeLayoutReferContainer!!.visibility = View.VISIBLE
+                relativeLayoutMultipleTab.visibility = View.GONE
+                rlLeaderBoard.visibility = View.GONE
+                ivDivLeaderboard.visibility = View.GONE
+
+                rlReinvite!!.visibility = View.GONE
+                ivDivReinvite!!.visibility = View.GONE
+
+                rlShareDriver!!.visibility = View.GONE
+
+                if(Data.userData.referralLeaderboardEnabled == 1){
+                    relativeLayoutMultipleTab.visibility = View.VISIBLE
+                    rlLeaderBoard.visibility = View.VISIBLE
                 }
+                if(reinviteUsersEnabled == 1){
+                    relativeLayoutMultipleTab.visibility = View.VISIBLE
+                    rlReinvite.visibility = View.VISIBLE
+                }
+                if(Data.userData.getcToDReferralEnabled() == 1){
+                    relativeLayoutMultipleTab.visibility = View.VISIBLE
+                    rlShareDriver.visibility = View.VISIBLE
+                }
+
+                if(rlLeaderBoard.visibility == View.VISIBLE && (rlReinvite.visibility == View.VISIBLE || rlShareDriver.visibility == View.VISIBLE)){
+                    ivDivLeaderboard.visibility = View.VISIBLE
+                }
+                if(rlReinvite.visibility == View.VISIBLE && rlShareDriver.visibility == View.VISIBLE){
+                    ivDivReinvite.visibility = View.VISIBLE
+                }
+
             }
 
         } catch (e: Exception) {

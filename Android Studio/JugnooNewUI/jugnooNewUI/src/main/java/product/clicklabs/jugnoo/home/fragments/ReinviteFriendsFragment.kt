@@ -57,7 +57,7 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
     private val permissionCommom: PermissionCommon by lazy {
         PermissionCommon(this@ReinviteFriendsFragment).setCallback(object:PermissionCommon.PermissionListener{
             override fun permissionGranted(requestCode: Int) {
-                contactsFetchAsync.execute()
+                getContactsFetchAsync().execute()
             }
 
             override fun permissionDenied(requestCode: Int, neverAsk: Boolean): Boolean {
@@ -73,34 +73,42 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
 
     }
 
-    private val contactsFetchAsync: ContactsFetchAsync by lazy{
-        ContactsFetchAsync(requireContext(), contactBeans as ArrayList<ContactBean>, object:ContactsFetchAsync.Callback{
-            override fun onPreExecute() {
+    private var contactsFetchAsync: ContactsFetchAsync? = null
+    private fun getContactsFetchAsync(): ContactsFetchAsync{
+        if(contactsFetchAsync == null) {
+            contactsFetchAsync = ContactsFetchAsync(requireContext(), contactBeans as ArrayList<ContactBean>, object : ContactsFetchAsync.Callback {
+                override fun onPreExecute() {
 
-            }
+                }
 
-            override fun onPostExecute(contactBeans: ArrayList<ContactBean>?) {
-                if(contactBeans != null) {
-                    val phoneNumbers = contactBeans.map {
-                        it.phoneNo
+                override fun onPostExecute(contactBeans: ArrayList<ContactBean>?) {
+                    if (contactBeans != null) {
+                        groupNoContacts.visibility = View.GONE
+                        tvNoContacts.setOnClickListener(null)
+
+                        val phoneNumbers = contactBeans.map {
+                            it.phoneNo
+                        }
+                        filterUsersApis(phoneNumbers as MutableList<String>)
+                    } else {
+                        groupNoContacts.visibility = View.VISIBLE
+                        tvNoContacts.setText(R.string.no_contacts_in_your_phone)
+                        tvNoContacts.setOnClickListener(null)
                     }
-                    filterUsersApis(phoneNumbers as MutableList<String>)
-                } else {
+                }
+
+                override fun onCancel() {
+                    contactsFetchAsync = null
                     groupNoContacts.visibility = View.VISIBLE
-                    tvNoContacts.setText(R.string.no_contacts_in_your_phone)
-                    tvNoContacts.setOnClickListener(null)
+                    tvNoContacts.setText(R.string.contacts_read_cancelled_tap_to_retry)
+                    tvNoContacts.setOnClickListener {
+                        readContacts()
+                    }
                 }
-            }
 
-            override fun onCancel() {
-                groupNoContacts.visibility = View.VISIBLE
-                tvNoContacts.setText(R.string.contacts_read_cancelled_tap_to_retry)
-                tvNoContacts.setOnClickListener{
-                    readContacts()
-                }
-            }
-
-        })
+            })
+        }
+        return contactsFetchAsync!!
     }
 
 

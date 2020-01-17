@@ -1183,4 +1183,5 @@ public interface Constants {
 	String KEY_PHONE_NOS = "phone_nos";
 	String KEY_USERS = "users";
 	String KEY_USER_PHONE_NO = "user_phone_no";
+	String KEY_REINVITE_USERS_ENABLED = "reinvite_users_enabled";
 }
