@@ -4,8 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
@@ -17,6 +15,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayout
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GACategory
 import com.sabkuchfresh.analytics.GAUtils

@@ -61,12 +61,12 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
             }
 
             override fun permissionDenied(requestCode: Int, neverAsk: Boolean): Boolean {
-                permissionCommom.getPermission(REQUEST_CODE_CONTACT, Manifest.permission.READ_CONTACTS)
+                readContacts()
                 return false
             }
 
             override fun onRationalRequestIntercepted(requestCode: Int) {
-                permissionCommom.getPermission(REQUEST_CODE_CONTACT, Manifest.permission.READ_CONTACTS)
+                readContacts()
             }
 
         })
@@ -88,6 +88,15 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
                 } else {
                     groupNoContacts.visibility = View.VISIBLE
                     tvNoContacts.setText(R.string.no_contacts_in_your_phone)
+                    tvNoContacts.setOnClickListener(null)
+                }
+            }
+
+            override fun onCancel() {
+                groupNoContacts.visibility = View.VISIBLE
+                tvNoContacts.setText(R.string.contacts_read_cancelled_tap_to_retry)
+                tvNoContacts.setOnClickListener{
+                    readContacts()
                 }
             }
 
@@ -150,8 +159,12 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
 
 
 
-        permissionCommom.getPermission(REQUEST_CODE_CONTACT, Manifest.permission.READ_CONTACTS)
+        readContacts()
 
+    }
+
+    private fun readContacts() {
+        permissionCommom.getPermission(REQUEST_CODE_CONTACT, Manifest.permission.READ_CONTACTS)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -219,6 +232,7 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
                 } else {
                     groupNoContacts.visibility = View.VISIBLE
                     tvNoContacts.text = getString(R.string.none_of_your_contacts_are_on_app, getString(R.string.app_name))
+                    tvNoContacts.setOnClickListener(null)
                 }
             }
 
@@ -244,7 +258,9 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
         ApiCommon<FeedCommonResponse>(requireActivity()).execute(params, ApiName.REINVITE_USERS,
                 object:APICommonCallback<FeedCommonResponse>(){
             override fun onSuccess(t: FeedCommonResponse?, message: String?, flag: Int) {
-
+                DialogPopup.alertPopupWithListener(requireActivity(), "", message) {
+                    listener.backPressed()
+                }
             }
 
             override fun onError(t: FeedCommonResponse?, message: String?, flag: Int): Boolean {

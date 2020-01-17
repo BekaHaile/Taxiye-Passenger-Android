@@ -245,7 +245,12 @@ public class AddEmergencyContactsFragment extends Fragment {
                 contactsListAdapter.setCountAndNotify();
                 contactsArrayAdapter.notifyDataSetChanged();
             }
-        }).execute();
+
+			@Override
+			public void onCancel() {
+				performBackPressed();
+			}
+		}).execute();
 
         return rootView;
     }

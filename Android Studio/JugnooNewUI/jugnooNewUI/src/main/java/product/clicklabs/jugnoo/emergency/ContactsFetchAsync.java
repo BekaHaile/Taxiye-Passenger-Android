@@ -163,12 +163,14 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 	public void stop(){
 		stopInterrupt = true;
 		this.cancel(true);
+		callback.onCancel();
 	}
 
 
 	public interface Callback{
 		void onPreExecute();
 		void onPostExecute(ArrayList<ContactBean> contactBeans);
+		void onCancel();
 	}
 
 	private void showLoading(){

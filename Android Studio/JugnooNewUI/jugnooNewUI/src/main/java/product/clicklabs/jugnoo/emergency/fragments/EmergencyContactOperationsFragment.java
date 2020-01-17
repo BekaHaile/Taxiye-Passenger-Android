@@ -119,7 +119,12 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
                         public void onPostExecute(ArrayList<ContactBean> contactBeans) {
                             phoneContactsListAdapter.notifyDataSetChanged();
                         }
-                    }).execute();
+
+						@Override
+						public void onCancel() {
+							performBackPressed();
+						}
+					}).execute();
 
                     if (requestCode == REQUEST_CODE_ADD_CONTACT) {
                         new FragTransUtils().openAddEmergencyContactsFragment(activity,
