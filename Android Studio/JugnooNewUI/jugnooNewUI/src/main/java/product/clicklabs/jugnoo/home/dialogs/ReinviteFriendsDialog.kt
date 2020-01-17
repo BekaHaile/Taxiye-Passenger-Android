@@ -125,9 +125,4 @@ class ReinviteFriendsDialog : DialogFragment() {
         }
     }
 
-    interface RideRequestConfirmListener {
-        fun onCancelClick()
-        fun onOkClick()
-    }
-
 }

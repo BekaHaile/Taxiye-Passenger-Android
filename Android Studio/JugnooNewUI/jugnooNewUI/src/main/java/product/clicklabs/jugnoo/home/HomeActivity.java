@@ -3074,12 +3074,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }, 500);
 
 
-
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance("",
-				"They get ₹100 once they book the ride\nYou get ₹100 once they book the ride");
-		reinviteFriendsDialog.show(ft, ReinviteFriendsDialog.class.getSimpleName());
-
     }
 
 	public TextView getInitialPickupTextView() {
@@ -10359,26 +10353,46 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private DeepLinkAction deepLinkAction = new DeepLinkAction();
 
     private void openPushDialog() {
-        dismissPushDialog(false);
-        PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
-            @Override
-            public void onButtonClicked(int deepIndex, String url, int restaurantId) {
-                if ("".equalsIgnoreCase(url)) {
-                    Data.deepLinkIndex = deepIndex;
-                    Prefs.with(HomeActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "" + restaurantId);
-                    deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
-                } else {
-                    Utils.openUrl(HomeActivity.this, url);
-                }
-            }
-        }).show();
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }
-        if (dialog != null) {
-            pushDialog = dialog;
-        }
-    }
+		try {
+			dismissPushDialog(false);
+
+			if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+				drawerLayout.closeDrawer(GravityCompat.START);
+			}
+
+			String pushDialogContent = Prefs.with(this).getString(Constants.SP_PUSH_DIALOG_CONTENT,
+					Constants.EMPTY_JSON_OBJECT);
+			JSONObject jObj = new JSONObject(pushDialogContent);
+			if(jObj.optInt(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.REINVITE_USERS.getOrdinal()){
+				pushDialog = null;
+
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance("",
+						jObj.optString(Constants.KEY_MESSAGE, ""));
+				reinviteFriendsDialog.show(ft, ReinviteFriendsDialog.class.getSimpleName());
+				Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, EMPTY_JSON_OBJECT);
+			} else {
+
+				PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
+					@Override
+					public void onButtonClicked(int deepIndex, String url, int restaurantId) {
+						if ("".equalsIgnoreCase(url)) {
+							Data.deepLinkIndex = deepIndex;
+							Prefs.with(HomeActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "" + restaurantId);
+							deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
+						} else {
+							Utils.openUrl(HomeActivity.this, url);
+						}
+					}
+				}).show(pushDialogContent);
+				if (dialog != null) {
+					pushDialog = dialog;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     private void dismissPushDialog(boolean clearDialogContent) {
         if (pushDialog != null) {

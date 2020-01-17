@@ -125,6 +125,12 @@ public class DeepLinkAction {
 			else if(AppLinkIndex.FUGU_SUPPORT.getOrdinal() == deepIndex){
 				MenuAdapter.onClickAction(MenuInfoTags.FUGU_SUPPORT.getTag(),0,0,activity,latlng);
 			}
+			else if(AppLinkIndex.TICKET_SUPPORT.getOrdinal() == deepIndex){
+				MenuAdapter.onClickAction(MenuInfoTags.TICKET_SUPPORT.getTag(),0,0,activity,latlng);
+			}
+			else if(AppLinkIndex.REINVITE_USERS.getOrdinal() == deepIndex){
+				activity.startActivity(new Intent(activity, ReinviteFriendsActivity.class));
+			}
 
 		} catch(Exception e){
 			e.printStackTrace();
