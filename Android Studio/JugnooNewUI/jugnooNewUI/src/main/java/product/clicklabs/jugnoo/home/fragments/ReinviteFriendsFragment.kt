@@ -46,7 +46,7 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
 
     }
 
-    private lateinit var listener:InteractionListener
+    private lateinit var listener: InteractionListener
 
     private val contactBeans:MutableList<ContactBean> = mutableListOf()
     private var filteredUsers:MutableList<FilteredUserDatum>? = null
@@ -154,8 +154,19 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
 
         textViewSelectAll.setOnClickListener{
             if(filteredUsers != null && reinviteFriendsAdapter != null){
-                filteredUsers!!.forEach{
-                    it.isSelected = true
+                val anyNotSelected = filteredUsers!!.any{
+                    !it.isSelected
+                }
+                if(anyNotSelected) {
+                    filteredUsers!!.forEach {
+                        it.isSelected = true
+                    }
+                    textViewSelectAll.setText(R.string.unselect_all)
+                } else {
+                    filteredUsers!!.forEach {
+                        it.isSelected = false
+                    }
+                    textViewSelectAll.setText(R.string.select_all)
                 }
                 reinviteFriendsAdapter!!.notifyDataSetChanged()
             }
@@ -182,7 +193,10 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
 
 
     override fun onContactSelected(position: Int, userDatum: FilteredUserDatum) {
-
+        val anyNotSelected = filteredUsers!!.any{
+            !it.isSelected
+        }
+        textViewSelectAll.setText(if(anyNotSelected) R.string.select_all else R.string.unselect_all)
     }
 
 

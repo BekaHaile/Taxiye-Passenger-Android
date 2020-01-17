@@ -127,6 +127,7 @@ public final class PermissionCommon {
 
 
                 } else {
+					permissionsInitiated = permissions;
 
                     String permissionDenied = permissionsInitiated[0];
                     for (String permission : permissions) {

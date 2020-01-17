@@ -180,6 +180,8 @@ public class ContactsFetchAsync extends AsyncTask<String, Integer, String> {
 			stop();
 			progressDialog.dismiss();
 		});
+		progressDialog.setCancelable(false);
+		progressDialog.setCanceledOnTouchOutside(false);
 
 		progressDialog.show();
 	}

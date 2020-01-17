@@ -2468,4 +2468,5 @@
     <string name="none_of_your_contacts_are_on_app">None of your contacts are on %s</string>
     <string name="contacts_read_cancelled_tap_to_retry">Contacts read cancelled\nTap to retry</string>
     <string name="reinvite_friends">Re-Invite Friends</string>
+    <string name="unselect_all">Unselect All</string>
 </resources>
