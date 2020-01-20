@@ -210,12 +210,12 @@ class ReinviteFriendsFragment() : BaseFragment(), ReinviteFriendsAdapter.Callbac
         ApiCommon<FilterActiveUsersResponse>(requireActivity()).execute(params, ApiName.FILTER_ACTIVE_USERS,
                 object:APICommonCallback<FilterActiveUsersResponse>(){
             override fun onSuccess(t: FilterActiveUsersResponse?, message: String?, flag: Int) {
-                if(t?.filteredUsers != null) {
+                if(t?.filteredUsers != null && t.filteredUsers.size > 0) {
 
                     DialogPopup.showLoadingDialog(requireContext(), getString(R.string.loading))
 
                     GlobalScope.launch(Dispatchers.IO){
-                        //match user names
+                        //match user names with contacts
                         t.filteredUsers.forEach{
                             val valueToFind = Utils.retrievePhoneNumberTenChars(it.userPhoneNo, "+91")
                             val index = contactBeans.indexOf(ContactBean(valueToFind))
