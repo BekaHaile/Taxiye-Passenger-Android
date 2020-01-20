@@ -23,8 +23,10 @@
     <uses-permission android:name="android.permission.CLEAR_APP_CACHE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
 
 
@@ -53,7 +55,10 @@
         android:screenOrientation="portrait"
         android:theme="@style/AppThemePay"
         tools:replace="android:allowBackup"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
+        >
         <meta-data
             android:name="payu_merchant_id"
             android:value="HjlOjY"/>
@@ -69,13 +74,6 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-            </intent-filter>
-        </service>
-        <service
-            android:name=".MyInstanceIDListenerService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
 
@@ -497,7 +495,7 @@
             android:exported="false"/>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="@string/file_provider_name"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -547,6 +545,9 @@
                     android:scheme="https"/>
             </intent-filter>
         </activity>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
         <activity android:name=".rentals.qrscanner.ScannerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -557,6 +558,23 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             />
+
+        <activity
+            android:name=".newui.activity.RewardsActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+
+        <activity
+            android:name=".promotion.VideoActivity"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name="product.clicklabs.jugnoo.youtube.YoutubeVideoActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

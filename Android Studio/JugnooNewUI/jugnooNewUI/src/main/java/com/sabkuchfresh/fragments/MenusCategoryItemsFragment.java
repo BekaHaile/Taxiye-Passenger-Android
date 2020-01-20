@@ -6,12 +6,13 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.os.Handler;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -191,15 +192,15 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             @Override
                             public void onPlusClicked(int position, Item item, boolean isNewItemAdded) {
                                 //This method is only called when item is not customisable
-                                if(activity.getTotalPrice() <= 0){
+                                if (activity.getTotalPrice() <= 0) {
                                     activity.saveDeliveryAddressModel();
                                 }
                                 activity.updateCartValuesGetTotalPrice();
-                                if (activity.isMenusOrDeliveryOpen()){
-                                    if(isNewItemAdded)
-                                       GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.ADDED);
+                                if (activity.isMenusOrDeliveryOpen()) {
+                                    if (isNewItemAdded)
+                                        GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME, GAAction.ITEM + GAAction.ADDED);
                                     else
-                                        GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.INCREASED);
+                                        GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME, GAAction.ITEM + GAAction.INCREASED);
                                 }
 
                             }
@@ -207,9 +208,9 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             @Override
                             public void onMinusClicked(int position, Item item) {
                                 activity.updateCartValuesGetTotalPrice();
-                                if (activity.isMenusOrDeliveryOpen()){
+                                if (activity.isMenusOrDeliveryOpen()) {
 
-                                    GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME , GAAction.ITEM + GAAction.DECREASED);
+                                    GAUtils.event(activity.getGaCategory(), GAAction.RESTAURANT_HOME, GAAction.ITEM + GAAction.DECREASED);
                                 }
                             }
 
@@ -240,7 +241,23 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
                             public void onCategoryClick(Category category) {
 
                             }
-                        });
+                        },activity.getMenuProductsResponse().getCurrencyCode(), activity.getMenuProductsResponse().getCurrency(), new MenusCategoryItemsAdapter.ItemAdded() {
+                    @Override
+                    public void onItemAdded(int position) {
+                        scrollToDirectVendorSearchIndex();
+                    }
+
+                    @Override
+                    public void onItemFound(final int position, final int itemId) {
+                        recyclerViewCategoryItems.scrollToPosition(position);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                setSelectedItem(itemId);
+                            }
+                        }, 200);
+                    }
+                });
                 recyclerViewCategoryItems.setAdapter(menusCategoryItemsAdapter);
 
             }
@@ -280,6 +297,12 @@ public class MenusCategoryItemsFragment extends Fragment implements SwipeRefresh
     public void updateSwipe(SwipeCheckout swipe) {
         if (swipe.flag == 1) {
             mSwipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    public void setSelectedItem(int itemId) {
+        if (menusCategoryItemsAdapter != null) {
+            menusCategoryItemsAdapter.setSelectedItemId(itemId);
         }
     }
 }

@@ -21,18 +21,15 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
+import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
-import com.fugu.FuguNotificationConfig;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.hippo.HippoNotificationConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.squareup.picasso.Picasso;
@@ -42,26 +39,36 @@ import com.squareup.picasso.Target;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import product.clicklabs.jugnoo.apis.ApiTrackPush;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
+import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.LocationUpdateService;
 import product.clicklabs.jugnoo.home.SyncIntentService;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
+import product.clicklabs.jugnoo.promotion.models.Promo;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.CallActivity;
 import product.clicklabs.jugnoo.utils.FbEvents;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Foreground;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SoundMediaPlayer;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.EventsHolder;
+import retrofit.client.Response;
 
 public class GCMIntentService extends FirebaseMessagingService implements Constants, GAAction {
 
@@ -69,7 +76,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
     public static final int NOTIFICATION_ID = 1;
     public static final int PROMOTION_NOTIFICATION_ID = 1212;
-	private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
+	HippoNotificationConfig fuguNotificationConfig=new HippoNotificationConfig();
+	private String deliveryId;
 
     public GCMIntentService() {
     }
@@ -113,9 +121,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			hideSmallIcon(notification);
             notificationManager.notify(NOTIFICATION_ID, notification);
 
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-            wl.acquire(15000);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,6 +172,10 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				notificationIntent.putExtra(Constants.KEY_CAMPAIGN_ID, campaignId);
 				notificationIntent.putExtra(Constants.KEY_POST_ID, postId);
 				notificationIntent.putExtra(Constants.KEY_POST_NOTIFICATION_ID, postNotificationId);
+				if(deliveryId!=null && !deliveryId.isEmpty()) {
+					notificationIntent.putExtra(KEY_DELIVERY_ID,deliveryId);
+				}
+
 			} else{
 				notificationIntent.setData(Uri.parse(url));
 			}
@@ -210,9 +219,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				hideSmallIcon(notification);
 				notificationManager.notify(notificationId, notification);
 
-				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-				WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-				wl.acquire(15000);
 			}
 
         } catch (Exception e) {
@@ -326,9 +332,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			hideSmallIcon(notification);
 			notificationManager.notify(notificationId, notification);
 
-			PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-			WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-			wl.acquire(15000);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -384,9 +387,6 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 
             notificationManager.notify(notificationId, notification);
 
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
-            wl.acquire(15000);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -409,15 +409,22 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 	@Override
 	public void onMessageReceived(RemoteMessage remoteMessage) {
 		try {
-			if (fuguNotificationConfig.isFuguNotification(remoteMessage.getData())) {
-				fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
-                fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);
+			Log.e(TAG, "onMessageReceived remoteMessage=" + remoteMessage);
+
+			if (fuguNotificationConfig.isHippoNotification(remoteMessage.getData())) {
+				if (fuguNotificationConfig.isHippoCallNotification(this, remoteMessage.getData())) {
+					JSONObject messageJson = new JSONObject(remoteMessage.getData().get("message"));
+					HippoCallStub.onNotificationReceived(getApplicationContext(), messageJson);
+				} else {
+					fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
+					fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);
 
 
-                if(Build.VERSION.SDK_INT >= 16){
-                    fuguNotificationConfig.setPriority(Notification.PRIORITY_HIGH);
-                }
-                fuguNotificationConfig.showNotification(getApplicationContext(), remoteMessage.getData());
+					if (Build.VERSION.SDK_INT >= 16) {
+						fuguNotificationConfig.setPriority(Notification.PRIORITY_HIGH);
+					}
+					fuguNotificationConfig.showNotification(getApplicationContext(), remoteMessage.getData());
+				}
 				return;
 			}
 
@@ -569,10 +576,19 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						message1 = jObj.optString(KEY_MESSAGE, getString(R.string.your_ride_has_ended));
 						String engagementId = jObj.getString("engagement_id");
+						JSONObject coupon = jObj.getJSONObject("coupon");
+						Promo promo = null;
 
+						if(coupon.has("coupon_card_type") && coupon.has("is_scratched") && coupon.optInt("is_scratched", 0) != 1) {
+							CouponInfo couponInfo = new CouponInfo(coupon.optInt("account_id", 0), coupon.optString("title", ""));
+//							couponInfo.setCouponId(coupon.getInt("coupon_id"));
+							promo = new Promo(coupon.optString("name", ""), coupon.optString("clientId", ""),
+									couponInfo, 0, 0, coupon.optInt("is_scratched", 0) == 1, coupon.getInt("coupon_card_type"));
+
+						}
 						if (HomeActivity.appInterruptHandler != null) {
 							if (PassengerScreenMode.P_IN_RIDE == HomeActivity.passengerScreenMode) {
-								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId);
+								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId, promo);
 							}
 						}
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1){
@@ -603,8 +619,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					} else if (PushFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
 						String log = jObj.getString("log");
+						int requestType = jObj.optInt("request_level", -1);
 						if (HomeActivity.appInterruptHandler != null) {
-							HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log);
+							HomeActivity.appInterruptHandler.onNoDriversAvailablePushRecieved(log, requestType);
 						}
 					} else if (PushFlags.CHANGE_STATE.getOrdinal() == flag) {
 						Prefs.with(this).save(KEY_STATE_RESTORE_NEEDED, 1);
@@ -876,24 +893,26 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
+					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag) {
+						String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
+						deliveryId = jObj.optString(KEY_DELIVERY_ID);
+						notificationManagerCustomID(this, title, chatMessage, PROMOTION_NOTIFICATION_ID, AppLinkIndex.CHAT_PAGE.getOrdinal(),
+								null, "", playSound, 0, 1, tabIndex, flag);
+						Prefs.with(this).save(KEY_CHAT_COUNT , Prefs.with(this).getInt(KEY_CHAT_COUNT, 0) + 1);
+//
+					}
 					else if(PushFlags.CHAT_MESSAGE.getOrdinal() == flag){
-						String clientId = jObj.optString(KEY_CLIENT_ID, "");
-						String phoneNo = jObj.optString(KEY_PHONE_NO, "");
-						//message1 = jObj.optString(KEY_MESSAGE, getResources().getString(R.string.request_accepted_message));
-						String name = "";//FeedUtils.getActivityName(this);
 
-
-						if(!name.equalsIgnoreCase(this.getPackageName()) ||
-								Data.context == null || !(Data.context instanceof ChatActivity)){
+						if(!(Data.context instanceof ChatActivity)){
 							String chatMessage = jObj.getJSONObject(KEY_MESSAGE).optString("chat_message", "");
 							notificationManagerCustomID(this, title, chatMessage, PROMOTION_NOTIFICATION_ID, AppLinkIndex.CHAT_PAGE.getOrdinal(),
 									null, "", playSound, 0, 1, tabIndex, flag);
 							Prefs.with(this).save(KEY_CHAT_COUNT , Prefs.with(this).getInt(KEY_CHAT_COUNT, 0) + 1);
 							Intent intent = new Intent(Data.LOCAL_BROADCAST);
 							intent.putExtra(Constants.KEY_FLAG, flag);
+							intent.putExtra(Constants.KEY_CHAT_DELIVERY,message);
 							LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 						} else {
-							// Nothing
 							clearNotification(this, PROMOTION_NOTIFICATION_ID);
 						}
 					} else if (PushFlags.REFRESH_PAY_DATA.getOrdinal() == flag) {
@@ -929,6 +948,14 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, message);
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+					} else if(PushFlags.NO_DRIVER_FOUND_HELP.getOrdinal() == flag) {
+						if(HomeActivity.appInterruptHandler != null && Foreground.get(MyApplication.getInstance()).isForeground()) {
+							HomeActivity.appInterruptHandler.onNoDriverHelpPushReceived(new JSONObject(message));
+						} else {
+							notificationManager(this, title, message1, 0);
+							Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, message);
+						}
 					}
 
 					incrementPushCounter(jObj, flag);
@@ -1100,4 +1127,37 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 		}
 	}
 
+
+	@Override
+	public void onNewToken(@NonNull String token) {
+		super.onNewToken(token);
+
+		Prefs.with(this).save(Constants.SP_DEVICE_TOKEN, token);
+
+		Pair<String, Integer> pair = AccessTokenGenerator.getAccessTokenPair(this);
+		if (!"".equalsIgnoreCase(pair.first)) {
+			// call api
+			refreshDeviceToken(token, pair.first);
+		} else {
+			Intent intent = new Intent(Constants.INTENT_ACTION_DEVICE_TOKEN_UPDATE);
+			intent.putExtra(Constants.KEY_DEVICE_TOKEN, token);
+			LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+		}
+	}
+
+
+	public void refreshDeviceToken(String refreshedToken, String accessToken) {
+		try {
+			if (MyApplication.getInstance().isOnline()) {
+				final HashMap<String, String> params = new HashMap<>();
+				params.put(Constants.KEY_ACCESS_TOKEN, accessToken);
+				params.put(Constants.KEY_DEVICE_TOKEN, refreshedToken);
+				new HomeUtil().putDefaultParams(params);
+				Response response = RestClient.getApiService().refreshDeviceToken(params);
+			} else {
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

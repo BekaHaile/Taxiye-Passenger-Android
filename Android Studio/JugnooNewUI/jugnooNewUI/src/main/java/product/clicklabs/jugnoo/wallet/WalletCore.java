@@ -3,8 +3,8 @@ package product.clicklabs.jugnoo.wallet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -316,7 +316,9 @@ public class WalletCore {
 
                 RequestRideOptionsFragment requestRideOptionsFragment = homeActivity.slidingBottomPanel.getRequestRideOptionsFragment();
                 if (requestRideOptionsFragment.getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()) {
-                    homeActivity.slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                    if(!homeActivity.isNewUI()){
+                    	homeActivity.slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+					}
                     if (Data.autoData.getRegions().size() > 1) {
                         requestRideOptionsFragment.getPaymentOptionDialog().show(-1, null);
                     } else {
@@ -426,35 +428,35 @@ public class WalletCore {
         }
     }
 
-    public String getPaymentOptionBalanceText(int paymentOption) {
+    public String getPaymentOptionBalanceText(int paymentOption, Context context1) {
         try {
             if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
-                return String.format(context.getResources().getString(R.string.rupees_value_format),
+                return String.format(context1.getResources().getString(R.string.rupees_value_format),
                         Data.userData.getPaytmBalanceStr());
             } else if (paymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
-                return String.format(context.getResources().getString(R.string.rupees_value_format),
+                return String.format(context1.getResources().getString(R.string.rupees_value_format),
                         Data.userData.getMobikwikBalanceStr());
             } else if (paymentOption == PaymentOption.FREECHARGE.getOrdinal()) {
-                return String.format(context.getResources().getString(R.string.rupees_value_format),
+                return String.format(context1.getResources().getString(R.string.rupees_value_format),
                         Data.userData.getFreeChargeBalanceStr());
             } else if (paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()) {
-                return getRazorpayName(context);
+                return getRazorpayName(context1);
             } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()
                     ||paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
-                return getConfigDisplayNameCards(context,paymentOption);
+                return getConfigDisplayNameCards(context1,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
-                return getMPesaName(context);
+                return getMPesaName(context1);
             } else if (paymentOption == PaymentOption.CORPORATE.getOrdinal()) {
-                return context.getString(R.string.corporate);
+                return context1.getString(R.string.corporate);
             } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
-                return context.getString(R.string.pos);
+                return context1.getString(R.string.pos);
             } else {
-                return context.getResources().getString(R.string.cash);
+                return context1.getResources().getString(R.string.pay_later);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return context.getResources().getString(R.string.cash);
+        return context.getResources().getString(R.string.pay_later);
     }
 
     public String getRazorpayName(Context context) {
@@ -533,7 +535,7 @@ public class WalletCore {
         return name;
     }
 
-    public String getPaymentOptionName(int paymentOption) {
+    public String getPaymentOptionName(int paymentOption, Context context) {
         try {
             if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
                 return context.getResources().getString(R.string.paytm);
@@ -542,7 +544,7 @@ public class WalletCore {
             } else if (paymentOption == PaymentOption.FREECHARGE.getOrdinal()) {
                 return context.getResources().getString(R.string.freecharge);
             } else if (paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()) {
-                return getPaymentOptionBalanceText(paymentOption);
+                return getPaymentOptionBalanceText(paymentOption,context);
             } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()
                         ||paymentOption==PaymentOption.PAY_STACK_CARD.getOrdinal() ) {
                 return getConfigDisplayNameCards(context,paymentOption);
@@ -685,6 +687,9 @@ public class WalletCore {
 
     public void parsePaymentModeConfigDatas(JSONObject jObj) {
         try {
+        	if(!jObj.has(Constants.KEY_PAYMENT_MODE_CONFIG_DATA)){
+        		return;
+			}
             JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
             paymentModeConfigDatas = new ArrayList<>();
             int cashPosition = -1;

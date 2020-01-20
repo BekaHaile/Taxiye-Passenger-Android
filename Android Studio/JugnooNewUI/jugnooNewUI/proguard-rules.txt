@@ -29,6 +29,7 @@
 -dontwarn retrofit.**
 -dontwarn okio.**
 -dontwarn com.flurry.**
+-dontwarn com.sothree.slidinguppanel.**
 -keep class com.google.inject.** { *; }
 -keep class org.apache.http.** { *; }
 -keep class org.apache.james.mime4j.** { *; }
@@ -206,7 +207,10 @@
   **[] $VALUES;
   public *;
 }
-
+-keeppackagenames org.jsoup.nodes
+  -keep public class org.jsoup.** {
+      public *;
+      }
 
 -dontwarn com.bumptech.glide.**
 -keep class com.bumptech.glide.** { *; }
@@ -231,4 +235,12 @@
 -dontwarn okhttp3.RealCall$ApplicationInterceptorChain
 -dontwarn javax.annotation.**
 
+-keep class com.hippocall.** { *; }
+-keep class com.hippocall.model.* { *; }
+-keep interface com.hippocall.**{ *; }
+-keep class org.webrtc.** { *; }
 
+-dontwarn org.reactivestreams.FlowAdapters
+-dontwarn org.reactivestreams.**
+-dontwarn java.util.concurrent.flow.**
+-dontwarn java.util.concurrent.**

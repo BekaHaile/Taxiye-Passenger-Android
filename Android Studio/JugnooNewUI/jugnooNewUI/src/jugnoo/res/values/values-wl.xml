@@ -83,4 +83,49 @@
     <!--marker animation-->
     <bool name="show_bouncing_marker">true</bool>
 
+    <!--set preferences Inbox-->
+    <bool name="show_inbox_preferences">true</bool>
+
+
+<!--    Add these as per your customizations in your own white-label.-->
+    <string name="no_delivery_available_your_location">@string/text_no_fatafat_available_your_location</string>
+    <string name="text_for_pickup_anywhre">Enter Pickup Location</string>
+
+    <string name="delivery_new_name">Fatafat</string>
+    <string name="anywhere">Enter Pickup Location</string>
+
+    <color name="orange_rides_fab_pressed">@color/colorPrimaryDark</color>
+    <color name="theme_color_start">@color/colorPrimary</color>
+    <color name="green_delivery_customer_fab">@color/colorPrimary</color>
+    <color name="green_delivery_customer_fab_pressed">@color/colorPrimaryDark</color>
+    <color name="yellow_jugnoo">@color/colorPrimary</color>
+    <color name="text_color_orange">@color/colorPrimary</color>
+    <string name="fatafat_text">Fatafat</string>
+
+    <!--    UI changes-->
+    <integer name="remove_pickup_address_hit">1</integer>
+    <integer name="customer_show_add_saved_place">0</integer>
+
+    <!--Confirm pop before request ride-->
+    <integer name="show_confirm_popup_before_ride_request">1</integer>
+    <string name="youtube_api_key">AIzaSyBnfHIBFCXp8F-zmhJY6hOKZrQuyWgeQPA</string>
+
+    <!--    Tip-->
+    <integer name="show_tip_on_confirm_ride">1</integer>
+    <integer name="show_tip_on_confirm_ride_level_1">1</integer>
+    <integer name="show_tip_on_confirm_ride_level_2">1</integer>
+
+    <drawable name="autos_ride_txn_icon">@drawable/ic_rides</drawable>
+    <drawable name="delivery_order_txn_icon">@drawable/ic_delivery_customer</drawable>
+    <drawable name="anywhere_fab_icon">@drawable/ic_anywhere_fab</drawable>
+    <color name="anywhere_fab_color_normal">@color/grey_feed_fab</color>
+    <color name="anywhere_fab_color_pressed">@color/grey_feed_fab_pressed</color>
+    <bool name="autos_map_traffic_default_enabled">false</bool>
+    <bool name="currency_precision_from_server">true</bool>
+
+    <integer name="hippo_ticket_for_ride_issues">1</integer>
+    <string name="hippo_ticket_ride_faq_name">Rides</string>
+
+    <integer name="hippo_call_enabled">1</integer>
+
 </resources>

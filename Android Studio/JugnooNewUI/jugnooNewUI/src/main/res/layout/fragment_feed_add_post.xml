@@ -353,7 +353,7 @@
 
 
 
-        <android.support.v7.widget.SwitchCompat
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_handle"
             android:layout_marginStart="@dimen/spacing_normal"
             android:layout_centerVertical="true"

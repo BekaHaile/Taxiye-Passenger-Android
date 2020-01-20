@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo.home.schedulerides
 
-import com.fugu.utils.DateUtils
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.sabkuchfresh.feed.models.FeedCommonResponse
@@ -28,7 +27,7 @@ data class UpcomingRide(@Expose @SerializedName("pickup_id") var engagementId:St
 
        fun getDisplayTime():String{
             return  pickUpTime?.run {
-                DateOperations.convertDateViaFormat(DateOperations.utcToLocalWithTZFallback(this))
+                DateOperations.convertDateViaFormatToLocal(DateOperations.utcToLocalWithTZFallback(this))
               }?:""
        }
 

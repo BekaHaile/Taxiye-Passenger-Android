@@ -8,15 +8,15 @@ import android.content.IntentFilter;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -53,6 +53,7 @@ import com.sabkuchfresh.adapters.CheckoutChargesAdapter;
 import com.sabkuchfresh.adapters.DeliverySlotsAdapter;
 import com.sabkuchfresh.adapters.FreshCartItemsAdapter;
 import com.sabkuchfresh.adapters.MenusCartItemsAdapter;
+import com.sabkuchfresh.adapters.VehicleTypeAdapterMenus;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -64,6 +65,9 @@ import com.sabkuchfresh.dialogs.CheckoutPriceMismatchDialog;
 import com.sabkuchfresh.dialogs.CheckoutRequestPaymentDialog;
 import com.sabkuchfresh.dialogs.OrderCompleteReferralDialog;
 import com.sabkuchfresh.enums.IciciPaymentOrderStatus;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.home.FreshOrderCompleteDialog;
@@ -77,6 +81,7 @@ import com.sabkuchfresh.retrofit.model.SlotViewType;
 import com.sabkuchfresh.retrofit.model.SubItem;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
+import com.sabkuchfresh.retrofit.model.feed.NearbyDriversResponse;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Charges;
 import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
@@ -119,13 +124,14 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.SubscriptionData;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.home.adapters.PromoCouponsAdapter;
 import product.clicklabs.jugnoo.home.adapters.PromoCouponsRecyclerAdapter;
+import product.clicklabs.jugnoo.home.dialogs.PromoCouponDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
@@ -143,13 +149,14 @@ import retrofit.mime.TypedByteArray;
 
 
 public class FreshCheckoutMergedFragment extends Fragment implements GAAction, DeliverySlotsAdapter.Callback,
-        FreshCartItemsAdapter.Callback, PromoCouponsAdapter.Callback, MenusCartItemsAdapter.Callback {
+        FreshCartItemsAdapter.Callback, PromoCouponDialog.Callback, MenusCartItemsAdapter.Callback {
 
 
     private final String TAG = FreshCheckoutMergedFragment.class.getSimpleName();
     private RelativeLayout linearLayoutRoot;
 
     private RelativeLayout relativeLayoutCartTop;
+    private CardView cvNoAvailableOffers, cvOffersAvailable;
     private NonScrollListView listViewCharges;
     private CheckoutChargesAdapter chargesAdapter;
     private TextView textViewCartItems, textViewCartTotalUndiscount;
@@ -187,7 +194,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private LinearLayout linearLayoutMain;
     private TextView textViewScroll;
 
-    private TextView textViewDeliveryInstructionsText;
+    private TextView textViewDeliveryInstructionsText, tvNoAvailableOffers;
 
     private CardView cvStarSavings, cvBecomeStar;
     private TextView tvStarSavingsValue;
@@ -253,6 +260,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private EditText edtIciciVpa;
     private String jugnooVpaHandle;
     private TextView tvUPICashback;
+    private String currencyCode = "", currency = "";
+
+    private LinearLayout linearLayoutDeliveryVehicles;
+    private TextView textViewChooseVehicle;
+    private CardView cvVehicles;
+    private RecyclerView rvVehicles;
+    private SearchResult pickUpAddress;
+    private int currentVehicleTypePos = -1;
+    private VehicleTypeAdapterMenus vehicleTypeAdapterMenus;
+    private List<UserCheckoutResponse.VehiclesList> vehicleInfoList;
+    private int vehicleType ;
+    private boolean isPickUpSet = false;
+    private int checkCount = 0;
+
+
+
 
     @Override
     public void onStart() {
@@ -292,13 +315,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         layoutMinOrder =(LinearLayout)rootView.findViewById(R.id.layout_min_order);
         tvOrderViaFatafat =(TextView)rootView.findViewById(R.id.tv_order_via_fatafaat);
         tvOrderViaFatafat.setTypeface(tvOrderViaFatafat.getTypeface(),Typeface.BOLD);
+        tvOrderViaFatafat.setText(getString(R.string.action_order_via_fatafat, getString(R.string.fatafat_text)));
         tvOrderViaFatafat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     GAUtils.event(GACategory.FATAFAT3, GAAction.MIN_ORDER, GAAction.LABEL_ORDER_VIA_FATAFAT);
 
-                    orderViaFatafat(activity, itemsInCart,subItemsInCart,activity,subTotalAmount);
+                    orderViaFatafat(activity, itemsInCart,subItemsInCart,activity,subTotalAmount, currencyCode, currency);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -327,8 +351,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     itemsInCart = new ArrayList<>();
                 }
                 itemsInCart.clear();
-
-
+                vehicleTypeAdapterMenus = null;
+                vehicleType = 2217;
+                currentVehicleTypePos = -1;
+                vehicleInfoList = null;
+                isPickUpSet = false;
+                checkCount = 0;
+                setCurrentSelectedAddressToMenus();
                 itemsInCart = prepareItemsInCartForMenus(activity,itemsInCart);
 
             } catch (Exception e) {
@@ -394,14 +423,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         tvStarOffer.setTypeface(Fonts.mavenMedium(activity));
         listViewCart = (NonScrollListView) rootView.findViewById(R.id.listViewCart);
 
-        if (isMenusOrDeliveryOpen()) {
-            menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this);
-            listViewCart.setAdapter(menusCartItemsAdapter);
-        } else {
-            freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, true, this,this);
-            listViewCart.setAdapter(freshCartItemsAdapter);
-        }
-
 
         listViewCharges = (NonScrollListView) rootView.findViewById(R.id.listViewCharges);
         chargesList = new ArrayList<>(); chargesListForFatafat = new ArrayList<>();
@@ -410,8 +431,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         chargesList.add(taxSubTotal);
         chargesList.add(taxTotal);
 
-        chargesAdapter = new CheckoutChargesAdapter(activity, chargesList);
-        listViewCharges.setAdapter(chargesAdapter);
         linearLayoutDeliverySlot = (LinearLayout) rootView.findViewById(R.id.linearLayoutDeliverySlot);
         recyclerViewDeliverySlots = (RecyclerView) rootView.findViewById(R.id.recyclerViewDeliverySlots);
         recyclerViewDeliverySlots.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false));
@@ -457,6 +476,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         shadowMinOrder = (View)rootView.findViewById(R.id.shadow_top_min_order);
 
         linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
+        linearLayoutWalletContainer.setVisibility(View.GONE);
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
         relativeLayoutStripeCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStripeCard);
         relativeLayoutIcici = (RelativeLayout) rootView.findViewById(R.id.rlIciciUpi);
@@ -495,11 +515,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rlUPI = (RelativeLayout) rootView.findViewById(R.id.rlUPI);
         ivUPI = (ImageView) rootView.findViewById(R.id.ivUPI);
         tvUPI = (TextView) rootView.findViewById(R.id.tvUPI);
-
+        tvNoAvailableOffers = rootView.findViewById(R.id.tvNoAvailableOffers);
+        tvNoAvailableOffers.setTypeface(Fonts.mavenMedium(activity));
+        cvOffersAvailable = rootView.findViewById(R.id.cvOffersAvailable);
         linearLayoutOffers = (LinearLayout) rootView.findViewById(R.id.linearLayoutOffers);
         listViewOffers = (RecyclerView) rootView.findViewById(R.id.listViewOffers);
         listViewOffers.setNestedScrollingEnabled(false);
         listViewOffers.setLayoutManager(new LinearLayoutManager(activity));
+
         promoCouponsAdapter = new PromoCouponsRecyclerAdapter(activity, R.layout.list_item_fresh_promo_coupon, promoCoupons, this,listViewOffers);
         listViewOffers.setAdapter(promoCouponsAdapter);
 
@@ -518,6 +541,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         cvBecomeStar.setVisibility(View.GONE);
         spin = (MySpinner) rootView.findViewById(R.id.simpleSpinner);
         btnAddStar = (Button) rootView.findViewById(R.id.btnAddStar);
+
+        linearLayoutDeliveryVehicles = (LinearLayout) rootView.findViewById(R.id.linearLayoutDeliveryVehicles);
+        textViewChooseVehicle = (TextView) rootView.findViewById(R.id.textViewChooseVehicle);
+        cvVehicles = (CardView) rootView.findViewById(R.id.cvVehicles);
+        rvVehicles = (RecyclerView) rootView.findViewById(R.id.rvVehicles);
+        rvVehicles.setVisibility(View.GONE);
+        rvVehicles.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
+                LinearLayoutManager.HORIZONTAL, false));
+        rvVehicles.setItemAnimator(new DefaultItemAnimator());
+
 
 
         try {
@@ -716,8 +749,93 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         setSlideInitial();
         toggleChatAvailability(false);
-
         return rootView;
+    }
+
+
+    private void fetchDrivers() {
+        HashMap<String, String> params = new HashMap<>();
+
+        if (pickUpAddress != null) {
+            params.put(Constants.KEY_LATITUDE, String.valueOf(pickUpAddress.getLatitude()));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(pickUpAddress.getLongitude()));
+        } else {
+            params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+            params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+        }
+
+        new HomeUtil().putDefaultParams(params);
+
+        new ApiCommon<NearbyDriversResponse>(activity).showLoader(false).execute(params, ApiName.NEARBY_AGENTS_MENUS, new APICommonCallback<NearbyDriversResponse>() {
+            @Override
+            public void onSuccess(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
+
+            }
+
+            @Override
+            public boolean onFailure(final RetrofitError error) {
+                return true;
+            }
+
+            @Override
+            public boolean onError(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
+                return true;
+            }
+        });
+    }
+
+    public void handleVehiclesList(List<UserCheckoutResponse.VehiclesList> vehiclesListFromResponse) {
+
+        vehicleInfoList = vehiclesListFromResponse;
+        for (int i = 0; i < vehiclesListFromResponse.size(); i++) {
+            if (vehiclesListFromResponse.get(i).getIsSelected() != null && vehiclesListFromResponse.get(i).getIsSelected() == 1) {
+                currentVehicleTypePos = i;
+                break;
+            }
+            else {
+                currentVehicleTypePos = 0;
+            }
+        }
+        vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+        if(vehicleInfoList != null && vehicleInfoList.size() > 1){
+            if (vehicleTypeAdapterMenus == null) {
+
+                vehicleTypeAdapterMenus = new VehicleTypeAdapterMenus((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterMenus.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(UserCheckoutResponse.VehiclesList item, int pos) {
+                        currentVehicleTypePos = pos;
+                        vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+                        getCheckoutDataAPI(selectedSubscription, false);
+                    }
+                });
+            }
+            if(isPickUpSet) {
+                if(checkCount == 0) {
+                    linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
+                    rvVehicles.setVisibility(View.VISIBLE);
+                    rvVehicles.setAdapter(vehicleTypeAdapterMenus);
+                    checkCount++;
+                }
+                else {
+                    linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
+                    rvVehicles.setVisibility(View.VISIBLE);
+                    textViewChooseVehicle.setVisibility(View.GONE);
+                    vehicleTypeAdapterMenus.updateList(vehicleInfoList);
+                }
+            }
+        }
+        else {
+            textViewChooseVehicle.setVisibility(View.GONE);
+            linearLayoutDeliveryVehicles.setVisibility(View.GONE);
+            rvVehicles.setVisibility(View.GONE);
+        }
+
+        rvVehicles.post(new Runnable() {
+            @Override
+            public void run() {
+                rvVehicles.smoothScrollToPosition(currentVehicleTypePos);
+            }
+        });
     }
 
     private void setSliderCompleteState() {
@@ -918,16 +1036,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         taxTotal.setValue((double) Math.round(payableAmount()));
         chargesList.add(taxTotal);
         chargesListForFatafat.add(taxTotal);
-        chargesAdapter.notifyDataSetChanged();
-
-
+        if (chargesAdapter != null) {
+            chargesAdapter.notifyDataSetChanged();
+        }
         if (dialogOrderComplete == null || dialogOrderComplete.getDialog()==null ||!dialogOrderComplete.getDialog().isShowing()) {
             if (payableAmount() > 0) {
 //                Utils.getDoubleTwoDigits((double)Math.round(payableAmount()));
-                activity.buttonPlaceOrder.setText(getString(R.string.pay_format, activity.getString(R.string.rupees_value_format,
-                        Utils.getDoubleTwoDigits((double) Math.round(payableAmount())))));
-                activity.tvSlide.setText(getString(R.string.pay_format, activity.getString(R.string.rupees_value_format,
-                        Utils.getDoubleTwoDigits((double) Math.round(payableAmount())))));
+
+                activity.buttonPlaceOrder.setText(getString(R.string.pay_format, Utils.formatCurrencyAmount(payableAmount(), activity.getUserCheckoutResponse().getCurrencyCode(), activity.getUserCheckoutResponse().getCurrency())));
+                activity.tvSlide.setText(getString(R.string.pay_format, Utils.formatCurrencyAmount(payableAmount(), activity.getUserCheckoutResponse().getCurrencyCode(), activity.getUserCheckoutResponse().getCurrency())));
+
             } else {
                 activity.buttonPlaceOrder.setText(activity.getResources().getString(R.string.place_order));
                 activity.tvSlide.setText(activity.getResources().getString(R.string.place_order));
@@ -1484,6 +1602,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 params.put(Constants.DELIVERY_LATITUDE, String.valueOf(activity.getSelectedLatLng().latitude));
                 params.put(Constants.DELIVERY_LONGITUDE, String.valueOf(activity.getSelectedLatLng().longitude));
+                if(vehicleInfoList != null && !vehicleInfoList.isEmpty() && currentVehicleTypePos != -1 && vehicleType != 2217) {
+                    params.put(Constants.KEY_VEHICLE_TYPE, ""+vehicleType);
+                }
 
                 if (activity.getPaymentOption().getOrdinal() == PaymentOption.UPI_RAZOR_PAY.getOrdinal()) {
                     params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(PaymentOption.RAZOR_PAY.getOrdinal()));
@@ -1980,13 +2101,13 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             };
             if (paymentOption == PaymentOption.PAYTM && Data.userData.getPaytmEnabled() == 1) {
                 String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getPaytmBalance() - Math.ceil(payableAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, R.drawable.ic_paytm_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_paytm_balance, amount, currencyCode, currency, R.drawable.ic_paytm_big);
             } else if (paymentOption == PaymentOption.MOBIKWIK && Data.userData.getMobikwikEnabled() == 1) {
                 String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getMobikwikBalance() - Math.ceil(payableAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, R.drawable.ic_mobikwik_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_mobikwik_balance, amount, currencyCode, currency, R.drawable.ic_mobikwik_big);
             } else if (paymentOption == PaymentOption.FREECHARGE && Data.userData.getFreeChargeEnabled() == 1) {
                 String amount = Utils.getMoneyDecimalFormat().format(Math.ceil(Data.userData.getFreeChargeBalance() - Math.ceil(payableAmount())));
-                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, R.drawable.ic_freecharge_big);
+                new FreshWalletBalanceLowDialog(activity, callback).show(R.string.dont_have_enough_freecharge_balance, amount, currencyCode, currency, R.drawable.ic_freecharge_big);
             } else {
                 intentToWallet(paymentOption);
             }
@@ -2070,6 +2191,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         try {
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
+                linearLayoutWalletContainer.setVisibility(View.VISIBLE);
                 linearLayoutWalletContainer.removeAllViews();
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
@@ -2193,7 +2315,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             for(PromoCoupon promo:promoCouponsList){
                 if(promo.showPromoBox()){
                     promoCouponsList.remove(promo);
-                    promoCouponsList.add(promo);
+//                    promoCouponsList.add(promo);
                     break;
                 }
             }
@@ -2208,6 +2330,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         } else {
             promoCoupons.addAll(promoCouponsList);
         }
+
+
     }
 
     private void updateCouponsDataView() {
@@ -2229,9 +2353,14 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (promoCoupons != null) {
 
             if (promoCoupons.size() > 0) {
-                linearLayoutOffers.setVisibility(View.VISIBLE);
+//                linearLayoutOffers.setVisibility(View.VISIBLE);
+                listViewOffers.setVisibility(View.VISIBLE);
+                tvNoAvailableOffers.setVisibility(View.GONE);
+
             } else {
-                linearLayoutOffers.setVisibility(View.GONE);
+//                linearLayoutOffers.setVisibility(View.GONE);
+                listViewOffers.setVisibility(View.GONE);
+                tvNoAvailableOffers.setVisibility(View.VISIBLE);
             }
             PromoCoupon pcOld = selectServerMarkedCouponAndReturnOld();
 
@@ -2269,6 +2398,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         } else {
             linearLayoutOffers.setVisibility(View.GONE);
+//            listViewOffers.setVisibility(View.GONE);
+//            tvNoAvailableOffers.setVisibility(View.VISIBLE);
         }
     }
 
@@ -2408,8 +2539,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
                 }
 
-
-
+                if(vehicleInfoList != null && !vehicleInfoList.isEmpty() && currentVehicleTypePos != -1 && vehicleType != 2217) {
+                    params.put(Constants.KEY_VEHICLE_TYPE, ""+vehicleType);
+                }
 
                 if (isMenusOrDeliveryOpen()) {
                     params.put(Constants.KEY_CART, cartItemsMenus());
@@ -2458,6 +2590,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+
+                                    currencyCode = userCheckoutResponse.getCurrencyCode();
+                                    currency = userCheckoutResponse.getCurrency();
+                                    setAdapterMenuOrFresh(userCheckoutResponse);
+
+                                    setChargesAdapter(userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
 
                                     if (FreshCheckoutMergedFragment.this.type == AppConstant.ApplicationType.FRESH
                                             && userCheckoutResponse.getCityId() != null
@@ -2642,6 +2780,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             DialogPopup.dismissLoadingDialog();
                         }
                         linearLayoutMain.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+                        if(userCheckoutResponse.getVehiclesList()!=null){
+                            //TODO handle vehicles here.
+                            handleVehiclesList(userCheckoutResponse.getVehiclesList());
+                        }
+                        else {
+                            textViewChooseVehicle.setVisibility(View.GONE);
+                            linearLayoutDeliveryVehicles.setVisibility(View.GONE);
+                            rvVehicles.setVisibility(View.GONE);
+                        }
+
+
                     }
 
                     @Override
@@ -2667,6 +2816,28 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
     }
+
+    private void setChargesAdapter(String currencyCode, String currency) {
+        if(chargesAdapter == null) {
+            chargesAdapter = new CheckoutChargesAdapter(activity, chargesList, currencyCode, currency);
+            listViewCharges.setAdapter(chargesAdapter);
+        }
+    }
+
+    private void setAdapterMenuOrFresh(UserCheckoutResponse userCheckoutResponse) {
+        if (isMenusOrDeliveryOpen()) {
+            if(menusCartItemsAdapter == null) {
+                menusCartItemsAdapter = new MenusCartItemsAdapter(activity, itemsInCart, true, this, userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
+                listViewCart.setAdapter(menusCartItemsAdapter);
+            }
+        } else {
+            if(freshCartItemsAdapter == null) {
+                freshCartItemsAdapter = new FreshCartItemsAdapter(activity, subItemsInCart, true, this, this, userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
+                listViewCart.setAdapter(freshCartItemsAdapter);
+            }
+        }
+    }
+
     public void getCheckoutDataAPI(SubscriptionData.Subscription subscription, final boolean showMealsMismatchPopup){
         getCheckoutDataAPI(subscription,showMealsMismatchPopup,null);
     }
@@ -2757,16 +2928,16 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         if (Data.userData.getShowSubscriptionData() == 1 && !Data.userData.isSubscriptionActive() && userCheckoutResponse.getShowStarSubscriptions() == 1) {
             if (userCheckoutResponse.getSubscriptionInfo() != null && userCheckoutResponse.getSubscriptionInfo().getSubscriptionId() != null) {
                 if (isMenusOrDeliveryOpen()) {
-                    menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo());
+                    menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo(), userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
                 } else {
-                    freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo());
+                    freshCartItemsAdapter.setResults(subItemsInCart, userCheckoutResponse.getSubscriptionInfo(), userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
                 }
                 cvBecomeStar.setVisibility(View.GONE);
             } else {
                 if (isMenusOrDeliveryOpen()) {
-                    menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo());
+                    menusCartItemsAdapter.setResults(itemsInCart, userCheckoutResponse.getSubscriptionInfo(), userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
                 } else {
-                    freshCartItemsAdapter.setResults(subItemsInCart, null);
+                    freshCartItemsAdapter.setResults(subItemsInCart, null, userCheckoutResponse.getCurrencyCode(), userCheckoutResponse.getCurrency());
                 }
                 cvBecomeStar.setVisibility(View.VISIBLE);
             }
@@ -2868,6 +3039,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             imageViewDeliveryAddressForward.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_back_pay_selector));
             imageViewDeliveryAddressForward.setVisibility(View.VISIBLE);
             textViewAddressValue.setText(activity.getSelectedAddress());
+            setCurrentSelectedAddressToMenus();
             imageViewAddressType.setImageResource(R.drawable.ic_loc_other);
             if (!TextUtils.isEmpty(activity.getSelectedAddressType())) {
                 textViewAddressName.setVisibility(View.VISIBLE);
@@ -2987,6 +3159,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if (!rehitCheckoutApi()) {
                 removeCouponWithCheck();
             }
+        }
+    }
+
+    private void setCurrentSelectedAddressToMenus() {
+        SearchResult searchResult = HomeUtil.getNearBySavedAddress(activity, activity.getSelectedLatLng(), false);
+        pickUpAddress = searchResult;
+        if(searchResult != null) {
+//            fetchDrivers();
+            isPickUpSet = true;
         }
     }
 
@@ -3110,7 +3291,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         noOfItemsInCart =pair.second;
         textViewCartItems.setText(activity.getString(R.string.cart_items_format, String.valueOf(pair.second)));
         taxTotal.setValue(pair.first);
-        chargesAdapter.notifyDataSetChanged();
+        if (chargesAdapter != null) {
+            chargesAdapter.notifyDataSetChanged();
+        }
     }
 
     private void updateCartDataView() {
@@ -3813,7 +3996,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
 
-    public static void orderViaFatafat(Context context, ArrayList<Item> itemsInCart, ArrayList<SubItem> subItemsInCart, FreshActivity activity, Double subTotalAmount){
+    public static void orderViaFatafat(Context context, ArrayList<Item> itemsInCart, ArrayList<SubItem> subItemsInCart, FreshActivity activity, Double subTotalAmount, String mCurrencyCode, String mCurrency){
         activity.lastAppTypeOpen = activity.getAppType();
         StringBuilder sb = new StringBuilder();
         String newLine = "\n", colon = ": ", xSpace = " X ";
@@ -3822,7 +4005,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             for(Item item : itemsInCart){
                 for(ItemSelected itemSelected : item.getItemSelectedList()){
                     if(itemSelected.getQuantity() > 0){
-                        sb.append(itemSelected.getQuantity()).append(xSpace).append(item.getItemName());
+                        sb.append(itemSelected.getQuantity()).append(xSpace).append(item.getItemName()+"\n("+item.getItemDetails()+")");
                         item.generateCustomizeText(itemSelected);
 
                         if(!TextUtils.isEmpty(itemSelected.getCustomizeText())){
@@ -3852,7 +4035,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
 
 
         sb.append(newLine);
-        sb.append(context.getString(R.string.approx_order_amount)).append(colon).append(activity.getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormat().format(subTotalAmount)));
+        sb.append(context.getString(R.string.approx_order_amount)).append(colon).append(Utils.formatCurrencyAmount(subTotalAmount, mCurrencyCode, mCurrency));
 
 
 

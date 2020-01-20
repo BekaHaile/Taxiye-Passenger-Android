@@ -4,9 +4,9 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -34,6 +34,7 @@ import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.newui.activity.RewardsActivity;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -129,7 +130,7 @@ public class PromoDescriptionFragment extends Fragment {
 
 	@OnClick(R.id.bUseCoupon)
 	public void useCoupon() {
-		if(context instanceof PromotionActivity && promoCoupon != null) {
+		if((context instanceof PromotionActivity || context instanceof RewardsActivity) && promoCoupon != null) {
 			if(!TextUtils.isEmpty(clientId)) {
 				applyCoupon(clientId);
 			} else {
@@ -168,8 +169,13 @@ public class PromoDescriptionFragment extends Fragment {
 				&& Data.userData.isRidesAndFatafatEnabled()
 
 		Prefs.with(getActivity()).save(Constants.OPEN_PROMO_DEEPLINK_CLIENT_ID,clientId);*/
-		MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity) context, clientId,
-				new LatLng(Data.latitude, Data.longitude), true);
+		  if(context instanceof PromotionActivity) {
+			  MyApplication.getInstance().getAppSwitcher().switchApp((PromotionActivity) context, clientId,
+					  new LatLng(Data.latitude, Data.longitude), true);
+		  } else {
+			  MyApplication.getInstance().getAppSwitcher().switchApp((RewardsActivity) context, clientId,
+					  new LatLng(Data.latitude, Data.longitude), true);
+		  }
 	}
 
 

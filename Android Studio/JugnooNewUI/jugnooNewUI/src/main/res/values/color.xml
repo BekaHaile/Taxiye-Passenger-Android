@@ -86,6 +86,7 @@
 
     <color name="white">#FFFFFF</color>
     <color name="white_alpha">#99FFFFFF</color>
+    <color name="white_alpha_light">#66FFFFFF</color>
     <color name="white_light_grey">#FFFFFF</color>
 
 
@@ -328,5 +329,7 @@
     <color name="otp_text_color">@color/text_color</color>
     <color name="background_no_net">@null</color>
     <color name="grey_f0">#f0f0f0</color>
+
+    <color name="grey_alpha_66">#44666666</color>
 
 </resources>

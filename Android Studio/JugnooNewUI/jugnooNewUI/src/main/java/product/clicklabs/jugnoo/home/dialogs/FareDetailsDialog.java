@@ -105,7 +105,7 @@ public class FareDetailsDialog {
 
 			Region region = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected();
 			double fareFactor = region.getCustomerFareFactor();
-			if(fareFactor > 1.0){
+			if(fareFactor > 1.0 && activity.showSurgeIcon()){
 				relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
 				textViewPriorityTipValue.setText(String.format(activity.getResources().getString(R.string.format_x),
 						Utils.getMoneyDecimalFormat().format(fareFactor)));

@@ -1,21 +1,19 @@
 package com.fugu.agent;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -29,7 +27,6 @@ import android.widget.TextView;
 
 import com.fugu.FuguColorConfig;
 import com.fugu.FuguConfig;
-import com.fugu.FuguNotificationConfig;
 import com.fugu.FuguStringConfig;
 import com.fugu.R;
 import com.fugu.agent.Util.ConversationMode;
@@ -58,7 +55,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import static com.fugu.constant.FuguAppConstant.NETWORK_STATE_INTENT;
-import static com.fugu.constant.FuguAppConstant.NOTIFICATION_TAPPED;
 
 /**
  * Created by gurmail on 18/06/18.

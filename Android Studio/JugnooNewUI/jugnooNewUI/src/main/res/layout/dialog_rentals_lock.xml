@@ -45,6 +45,22 @@
 
 
         <TextView
+            android:id="@+id/tvTitleHelp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="25dp"
+            android:gravity="center"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:visibility="gone"
+            android:text="@string/unable_to_book_a_ride"
+            android:textColor="@color/theme_color"
+            android:textSize="22sp"
+            app:typekitFont="@string/maven"/>
+
+        <TextView
             android:id="@+id/tvMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

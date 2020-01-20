@@ -134,13 +134,16 @@ public interface GoogleAPIServices {
 									 @Query(value = "signature", encodeValue = false) String signature);
 
 
-	@GET("/maps/api/geocode/json")
-	Response placeDetails(@Query(value = "place_id") String placeId,
-									 @Query(value = "key") String key);
-	@GET("/maps/api/geocode/json")
-	Response placeDetails(@Query(value = "place_id") String placeId,
-						  @Query("client") String client,
-						  @Query("channel") String  channel,
-						  @Query(value = "signature", encodeValue = false) String signature);
+	@GET("/maps/api/place/details/json?fields=geometry")
+	Response placeDetailsByPlaceId(@Query(value = "place_id") String placeId,
+								   @Query(value = "sessiontoken") String sessiontoken,
+								   @Query(value = "key") String key);
+
+	@GET("/maps/api/place/details/json?fields=geometry")
+	Response placeDetailsByPlaceId(@Query(value = "place_id") String placeId,
+								   @Query(value = "sessiontoken") String sessiontoken,
+								   @Query("client") String client,
+								   @Query("channel") String  channel,
+								   @Query(value = "signature", encodeValue = false) String signature);
 
 }

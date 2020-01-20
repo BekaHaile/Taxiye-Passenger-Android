@@ -92,8 +92,14 @@
     <dimen name="end_ride_fare_value_text_size">
         45px
     </dimen>
+    <dimen name="end_ride_fare_value_text_size_dp">
+        22sp
+    </dimen>
     <dimen name="end_ride_fare_title_text_size">
         26px
+    </dimen>
+    <dimen name="end_ride_fare_title_text_size_dp">
+        13sp
     </dimen>
 
 
@@ -886,7 +892,8 @@
     <dimen name="dp_130">130dp</dimen>
     <dimen name="padding_bottom_delivery_home_page">120dp</dimen>
     <dimen name="padding_custom_order_root_layout">10dp</dimen>
-    <dimen name="height_pay_slider">54dp</dimen>
+    <dimen name="height_pay_slider">64dp</dimen>
 
     <dimen name="otp_country_code_text_size">17sp</dimen>
+    <dimen name="banner_height">220dp</dimen>
 </resources>

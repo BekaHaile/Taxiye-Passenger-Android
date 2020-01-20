@@ -4,10 +4,10 @@ import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +45,6 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -166,8 +165,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         recyclerViewVehicles.setItemAnimator(new DefaultItemAnimator());
         recyclerViewVehicles.setHasFixedSize(false);
 
+		final ArrayList<Region> regions = Data.autoData.getRegions();
         try {
-            vehiclesTabAdapter = new VehiclesTabAdapter(activity, Data.autoData.getRegions(),false);
+            vehiclesTabAdapter = new VehiclesTabAdapter(activity, regions,false);
             recyclerViewVehicles.setAdapter(vehiclesTabAdapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -209,10 +209,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if(Data.autoData != null && Data.autoData.getRegions().size() > 1) {
-                        activity.setVehicleTypeSelected(0, false, true);
-                    }
-                }
+					try {
+						if(Data.autoData != null && regions.size() > 1) {
+							activity.setVehicleTypeSelected(checkForRequestedRegion(Data.autoData.getRegions()), false, true);
+						}
+					} catch (Exception ignored) {}
+				}
             }, 500);
         } catch (Exception e) {
             e.printStackTrace();
@@ -272,10 +274,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     activity.updateConfirmedStateCoupon();
                 }
 
-                @Override
-                public void onSkipped() {
-                    //onRequestRideTap();
-                }
 
                 @Override
                 public void onInviteFriends() {
@@ -295,21 +293,6 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
         return promoCouponsDialog;
     }
 
-    /*public void updatePoolInfoText(){
-        try {
-            for(Region region : Data.autoData.getRegions()){
-                if(region.getRideType() == RideTypeValue.POOL.getOrdinal() && (!getRegionSelected().getOfferTexts().getText1().equalsIgnoreCase(""))){
-                    relativeLayoutPoolInfoBar.setVisibility(View.GONE);
-                    textViewPoolInfo1.setText(getRegionSelected().getOfferTexts().getText1());
-                    return;
-                } else{
-                    relativeLayoutPoolInfoBar.setVisibility(View.GONE);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
 
     public void updateBottomMultipleView(int rideType){
         if(rideType == RideTypeValue.POOL.getOrdinal()){
@@ -331,11 +314,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public void updatePaymentOption() {
         try {
-
+			ArrayList<Region> regions = Data.autoData.getRegions();
             int selectedPaymentOption = MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption());
-            Region region = (Data.autoData.getRegions().size() > 1) ? activity.slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-                    : (Data.autoData.getRegions().size() > 0 ? Data.autoData.getRegions().get(0) : null);
+            Region region = (regions.size() > 1) ? activity.slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                    : (regions.size() > 0 ? regions.get(0) : null);
             if (region != null && region.getRestrictedPaymentModes().size() > 0) {
                 if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
                     Data.autoData.setPickupPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(selectedPaymentOption, activity));
@@ -348,10 +331,10 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
             imageViewPaymentMode.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
             imageViewPaymentModeMS.setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
-            textViewPaymentModeValue.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
-            textViewPaymentModeValueMS.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
+            textViewPaymentModeValue.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(), activity));
+            textViewPaymentModeValueMS.setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),activity));
             activity.getSlidingBottomPanel().getImageViewPaymentOp().setImageResource(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
-            activity.getSlidingBottomPanel().getTextViewCashValue().setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
+            activity.getSlidingBottomPanel().getTextViewCashValue().setText(MyApplication.getInstance().getWalletCore().getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),activity));
             updatePreferredPaymentOptionUI();
             activity.updateConfirmedStatePaymentUI();
         } catch (Exception e) {
@@ -376,31 +359,33 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
 
         try{
-            if(Data.autoData.getRegions().size() > 1){
+			ArrayList<Region> regions = Data.autoData.getRegions();
+            if(regions.size() > 1){
                 boolean matched = false;
-                for (int i=0; i<Data.autoData.getRegions().size(); i++) {
-                    if(Data.autoData.getRegions().get(i).getOperatorId() == getRegionSelected().getOperatorId()
-                            && Data.autoData.getRegions().get(i).getRegionId().equals(getRegionSelected().getRegionId())
-                            && Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
-                            ){
-                        regionSelected = Data.autoData.getRegions().get(i);
+                int index = 0;
+                for (int i=0; i<regions.size(); i++) {
+                    if(regions.get(i).getRegionId().equals(getRegionSelected().getRegionId())){
+                        regionSelected = regions.get(i);
                         matched = true;
+						index = i;
                         break;
                     }
                 }
                 if(!matched){
-                    regionSelected = Data.autoData.getRegions().get(0);
+                    regionSelected = regions.get(0);
                     activity.setVehicleTypeSelected(0, false, true);
-                }
+                } else {
+					activity.setVehicleTypeSelected(index, false, true);
+				}
 
-                vehiclesTabAdapter.notifyDataSetChanged();
+				vehiclesTabAdapter.setList(regions);
                 activity.updateFareEstimateHoverButton();
-                updateSupplyUI(Data.autoData.getRegions().size());
+                updateSupplyUI(regions.size());
                 //updatePoolInfoText();
-            } else if(Data.autoData.getRegions().size() > 0){
+            } else if(regions.size() > 0){
                 activity.setVehicleTypeSelected(0, false, false);
-                regionSelected = Data.autoData.getRegions().get(0);
-                updateSupplyUI(Data.autoData.getRegions().size());
+                regionSelected = regions.get(0);
+                updateSupplyUI(regions.size());
             } else{
                 activity.forceFarAwayCity();
             }
@@ -411,14 +396,30 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     }
 
     public Region getRegionSelected() {
+		ArrayList<Region> regions = Data.autoData.getRegions();
         if(regionSelected == null || regionSelected.isDefault()){
-            if(Data.autoData.getRegions().size() > 0){
-                regionSelected = Data.autoData.getRegions().get(0);
+            if(regions.size() > 0){
+                regionSelected = regions.get(0);
             } else{
                 regionSelected = new Region();
             }
         }
         return regionSelected;
+    }
+
+    private int checkForRequestedRegion(ArrayList<Region> regions) {
+        int requestedRegionId = Prefs.with(activity).getInt(KEY_REGION_ID, -1);
+        int index = 0;
+        if(requestedRegionId != -1) {
+            for (int i = 0; i < regions.size(); i++) {
+                if(regions.get(i).getRegionId() == requestedRegionId) {
+                    index = i;
+                    break;
+                }
+            }
+        }
+        Prefs.with(activity).save(KEY_REGION_ID, -1);
+        return index;
     }
 
     public void updateSupplyUI(int supplyCount){
@@ -441,12 +442,13 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
 
     public void updateFareStructureUI(){
         try {
-            for (int i = 0; i < Data.autoData.getRegions().size(); i++) {
-                if (Data.autoData.getRegions().get(i).getOperatorId() == getRegionSelected().getOperatorId()
-                        && Data.autoData.getRegions().get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
-                        && Data.autoData.getRegions().get(i).getRideType().equals(getRegionSelected().getRideType())
+			ArrayList<Region> regions = Data.autoData.getRegions();
+            for (int i = 0; i < regions.size(); i++) {
+                if (regions.get(i).getOperatorId() == getRegionSelected().getOperatorId()
+                        && regions.get(i).getVehicleType().equals(getRegionSelected().getVehicleType())
+                        && regions.get(i).getRideType().equals(getRegionSelected().getRideType())
                         ) {
-                    Data.autoData.setFareStructure(Data.autoData.getRegions().get(i).getFareStructure());
+                    Data.autoData.setFareStructure(regions.get(i).getFareStructure());
                     break;
                 }
             }
@@ -533,10 +535,11 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
     }
 
     public void setRegionSelected(int position) {
-        if (position > -1 && position < Data.autoData.getRegions().size()) {
-            regionSelected = Data.autoData.getRegions().get(position);
+		ArrayList<Region> regions = Data.autoData.getRegions();
+        if (position > -1 && position < regions.size()) {
+            regionSelected = regions.get(position);
         }
-        vehiclesTabAdapter.notifyDataSetChanged();
+        vehiclesTabAdapter.setList(regions);
         recyclerViewVehicles.getLayoutManager().scrollToPosition(position);
         updateFareStructureUI();
     }
@@ -572,7 +575,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     activity.updateConfirmedStatePaymentUI();
 
                     try {GAUtils.event(RIDES, HOME+WALLET+SELECTED, MyApplication.getInstance().getWalletCore()
-                            .getPaymentOptionName(Data.autoData.getPickupPaymentOption()));} catch (Exception e) {}
+                            .getPaymentOptionName(Data.autoData.getPickupPaymentOption(), activity));} catch (Exception e) {}
+                }
+
+                @Override
+                public void getSelectedPaymentOption() {
+
                 }
             });
         }
@@ -685,8 +693,9 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                         if (pc.getIsValid() == 1 && setSelectedCoupon(i, true)) {
                             if(pc.getAllowedVehicles() != null && pc.getAllowedVehicles().size() > 0
                                     && !pc.isVehicleTypeExists(getRegionSelected().getVehicleType(), getRegionSelected().getOperatorId())){
-                                for(int j=0; j<Data.autoData.getRegions().size(); j++){
-                                    if(Data.autoData.getRegions().get(j).getVehicleType().equals(pc.getAllowedVehicles().get(0))){
+								ArrayList<Region> regions = Data.autoData.getRegions();
+                                for(int j=0; j<regions.size(); j++){
+                                    if(regions.get(j).getVehicleType().equals(pc.getAllowedVehicles().get(0))){
                                         activity.setVehicleTypeSelected(j, false, false);
                                         break;
                                     }

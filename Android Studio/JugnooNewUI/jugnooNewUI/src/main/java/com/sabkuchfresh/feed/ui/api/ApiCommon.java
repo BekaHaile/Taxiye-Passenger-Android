@@ -1,7 +1,7 @@
 package com.sabkuchfresh.feed.ui.api;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
@@ -313,6 +313,22 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 break;
 			case CANCEL_BID:
                 RestClient.getApiService().cancelBid(params, callback);
+                break;
+            case NEARBY_AGENTS:
+                RestClient.getFatafatApiService().nearbyAgents(params,callback);
+                break;
+            case NEARBY_AGENTS_MENUS:
+                RestClient.getMenusApiService().nearbyAgents(params,callback);
+                break;
+
+            case SCRATCH_CARD:
+                RestClient.getApiService().scratchCard(params, callback);
+                break;
+			case FARE_ESTIMATE_WITH_NEW_DROP:
+                RestClient.getApiService().fareEstimateWithNewDrop(params, callback);
+                break;
+			case REFERRAL_INFO:
+                RestClient.getApiService().fetchCustomerReferralInfo(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");

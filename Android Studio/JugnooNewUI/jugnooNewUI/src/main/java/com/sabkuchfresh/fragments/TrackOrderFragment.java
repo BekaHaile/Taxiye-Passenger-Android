@@ -11,11 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.util.Pair;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +46,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -61,12 +62,12 @@ import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.GoogleDirectionWayPointsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapLatLngBoundsCreator;
@@ -78,6 +79,11 @@ import product.clicklabs.jugnoo.utils.TouchableMapFragment;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static product.clicklabs.jugnoo.ChatActivity.KEY_DELIVERY_ID;
+import static product.clicklabs.jugnoo.ChatActivity.KEY_ORDER_TYPE;
+import static product.clicklabs.jugnoo.Constants.KEY_CHAT_COUNT;
+import static product.clicklabs.jugnoo.Constants.KEY_DRIVER_PHONE_NO;
 
 /**
  * Created by shankar on 29/05/17.
@@ -123,7 +129,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		bundle.putDouble(Constants.KEY_DELIVERY_LATITUDE, deliveryLatitude);
 		bundle.putDouble(Constants.KEY_DELIVERY_LONGITUDE, deliveryLongitude);
 		bundle.putInt(Constants.KEY_SHOW_DELIVERY_ROUTE, showDeliveryRoute);
-		bundle.putString(Constants.KEY_DRIVER_PHONE_NO, driverPhoneNo);
+		bundle.putString(KEY_DRIVER_PHONE_NO, driverPhoneNo);
 		bundle.putInt("initialHeight", initialHeight);
 		bundle.putBoolean("tiltState", tiltState);
 		fragment.setArguments(bundle);
@@ -152,7 +158,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		deliveryLatLng = new LatLng(getArguments().getDouble(Constants.KEY_DELIVERY_LATITUDE, 0d),
 				getArguments().getDouble(Constants.KEY_DELIVERY_LONGITUDE, 0d));
 		showDeliveryRoute = getArguments().getInt(Constants.KEY_SHOW_DELIVERY_ROUTE, 0);
-		driverPhoneNo = getArguments().getString(Constants.KEY_DRIVER_PHONE_NO, "");
+		driverPhoneNo = getArguments().getString(KEY_DRIVER_PHONE_NO, "");
 		initialHeight = getArguments().getInt("initialHeight", ViewGroup.LayoutParams.MATCH_PARENT);
 		tiltState = getArguments().getBoolean("tiltState", false);
 
@@ -175,7 +181,12 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		bCallDriver = (LinearLayout) rootView.findViewById(R.id.bCallDriver);
 		bCallDriver.setVisibility(View.GONE);
 
-
+rootView.findViewById(R.id.bChatDriver).setOnClickListener(new View.OnClickListener() {
+	@Override
+	public void onClick(View view) {
+openChatScreen();
+	}
+});
 
 		bMyLocation.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -189,6 +200,21 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 		return rootView;
 	}
 
+	public void openChatScreen() {
+		Prefs.with(getActivity()).save(KEY_CHAT_COUNT, 0);
+//		tvChatCount.setVisibility(View.GONE);
+		Intent intent = new Intent(getActivity(), ChatActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putInt(KEY_ORDER_TYPE, ChatActivity.ORDER_TYPE_DELIVERY);
+		bundle.putString(KEY_DRIVER_PHONE_NO, driverPhoneNo);
+//		intent.putExtra(KEY_ORDER_TYPE,ChatActivity.ORDER_TYPE_DELIVERY);
+		bundle.putString(KEY_DELIVERY_ID, String.valueOf(deliveryId));
+
+		intent.putExtras(bundle);
+		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.right_in, R.anim.right_out);
+		GAUtils.event(RIDES, DRIVER_ENROUTE, CHAT + GAAction.BUTTON + CLICKED);
+	}
 	@Override
 	public void permissionGranted(int requestCode) {
 		if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
@@ -602,7 +628,7 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 														new LatLngInterpolator.LinearFixed(), animateRoute, googleMap,
 														pathColor,
 														untrackedPathColor,
-														pathWidth, callbackAnim, fastDuration);
+														pathWidth, callbackAnim, fastDuration, 9000);
 												latLngsDriverAnim.clear();
 												latLngsDriverAnim.addAll(latLngsAnimateDriver);
 											} else {
@@ -627,32 +653,12 @@ public class TrackOrderFragment extends BaseFragment implements GACategory, GAAc
 
 							try {
 								if (TextUtils.isEmpty(eta)) {
-									String origin = latLngDriver.latitude + "," + latLngDriver.longitude;
-									String destination = deliveryLatLng.latitude + "," + deliveryLatLng.longitude;
-									Response responseDM = GoogleRestApis.INSTANCE.getDistanceMatrix(origin,
-											destination, "EN", false, false
-									);
-									JSONObject jObjDM = new JSONObject(new String(((TypedByteArray)responseDM.getBody()).getBytes()));
-									if(jObjDM.getString("status").equals("OK")){
-										String durationText =  (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getString("text") );
-										String durations[] = durationText.split(" ");
-										if(destination.length()>1){
-											setEtaText(durations[0],durations[1]);
-										}else{
-											long minutes =  (jObjDM.getJSONArray("rows").getJSONObject(0).getJSONArray("elements").getJSONObject(0).getJSONObject("duration").getLong("text") );
-											if(minutes>1){
-												minutes = minutes/60;
-											}
-											setEtaText(String.valueOf(minutes),getString(R.string.min));
+									JungleApisImpl.DistanceMatrixResult distanceMatrixResult = JungleApisImpl.INSTANCE.getDistanceMatrix(latLngDriver, deliveryLatLng);
 
-										}
+									setEtaText(String.valueOf((int)(distanceMatrixResult.getTimeValue()/60)),getString(R.string.min));
 
 
 
-
-									} else {
-										throw new Exception();
-									}
 //									GoogleDirectionWayPointsResponse googleDirectionWayPointsResponse = gson.fromJson(result, GoogleDirectionWayPointsResponse.class);
 //									Log.i("googleDirectionWayPointsResponse", "=" + googleDirectionWayPointsResponse);
 //									setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));

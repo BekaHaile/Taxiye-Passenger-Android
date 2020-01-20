@@ -1,7 +1,7 @@
 package product.clicklabs.jugnoo.home.adapters
 
 import android.graphics.Typeface.BOLD
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +17,7 @@ import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue
 import product.clicklabs.jugnoo.utils.Fonts
 import product.clicklabs.jugnoo.utils.Utils
 
-class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList: ArrayList<Region>, val selectedCallback: OnSelectedCallback) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList: ArrayList<Region>, val selectedCallback: OnSelectedCallback) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
 
     override fun getItemCount(): Int {
@@ -25,11 +25,11 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return ViewHolderVehicle(LayoutInflater.from(activity).inflate(R.layout.list_item_schedule_ride_vehicles, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
             is ViewHolderVehicle -> holder.bind(position)
@@ -38,7 +38,7 @@ class ScheduleRideVehicleListAdapter(val activity: HomeActivity, val vehicleList
 
     }
 
-    inner class ViewHolderVehicle(view: View) : RecyclerView.ViewHolder(view) {
+    inner class ViewHolderVehicle(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
 
         init {
             (view.findViewById(R.id.tvVehicleName) as TextView).setTypeface(Fonts.mavenMedium(activity),BOLD)

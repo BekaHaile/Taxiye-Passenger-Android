@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.adapters
 
 import android.app.Activity
 import android.graphics.Typeface
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,9 +15,9 @@ import product.clicklabs.jugnoo.utils.Prefs
 import product.clicklabs.jugnoo.wallet.WalletCore
 
 
-class StripeCardAdapter (private var stripeData: ArrayList<StripeCardData>?, val recyclerView: RecyclerView
+class StripeCardAdapter (private var stripeData: ArrayList<StripeCardData>?, val recyclerView: androidx.recyclerview.widget.RecyclerView
                          , private val typeface: Typeface?, private  val onSelectedCallback: OnSelectedCallback,private val activity : Activity) :
-        RecyclerView.Adapter<StripeCardAdapter.ViewHolderStripeCards>(), ItemListener {
+        androidx.recyclerview.widget.RecyclerView.Adapter<StripeCardAdapter.ViewHolderStripeCards>(), ItemListener {
 
 
     fun setList(stripeCards: ArrayList<StripeCardData >){
@@ -26,8 +26,8 @@ class StripeCardAdapter (private var stripeData: ArrayList<StripeCardData>?, val
     }
 
     override fun onClickItem(viewClicked: View?, parentView: View?) {
-        val pos = recyclerView.getChildLayoutPosition(parentView)
-        if(pos != RecyclerView.NO_POSITION){
+        val pos = recyclerView.getChildLayoutPosition(parentView!!)
+        if(pos != androidx.recyclerview.widget.RecyclerView.NO_POSITION){
             for(corp in stripeData!!){
                 corp.selected = false
             }
@@ -68,7 +68,7 @@ class StripeCardAdapter (private var stripeData: ArrayList<StripeCardData>?, val
         }
     }
 
-    inner class ViewHolderStripeCards(view : View, listener: ItemListener) : RecyclerView.ViewHolder(view){
+    inner class ViewHolderStripeCards(view : View, listener: ItemListener) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
         init{
             if(typeface != null) {
                 itemView.tvStripeCardName.typeface= typeface

@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,9 +21,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -61,11 +59,14 @@ import com.facebook.accountkit.AccountKit;
 import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.PhoneNumber;
 import com.facebook.appevents.AppEventsLogger;
-import com.fugu.FuguConfig;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -80,6 +81,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
@@ -92,6 +97,7 @@ import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
@@ -123,11 +129,15 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import static product.clicklabs.jugnoo.Constants.KEY_DELIVERY_ID;
+
+
 
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
 	private AlertDialog dialogLocationPermission;
+
 	private PermissionCommon.PermissionListener permissionListener = new PermissionCommon.PermissionListener() {
 				@Override
 				public void permissionGranted(int requestCode) {
@@ -259,7 +269,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	View extra;
 
 
-	boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
+	public boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
 
 	int debugState = 0, userVerfied = 0;
 	boolean hold1 = false, hold2 = false;
@@ -320,7 +330,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	private int nextPermissionsRequestCode = 4000;
 	private FBAccountKit fbAccountKit;
 	private EditText editTextPhoneNumber;
-	private TextView textViewPhoneNumberRequired;
+	private AppCompatTextView textViewPhoneNumberRequired;
+
 	private static final int REQUEST_CODE_RECIEVE_SMS = 0x123;
 	private static final int REQUEST_CODE_LOCATION = 0x124;
 
@@ -369,7 +380,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								} else {
 									if (Data.deepLinkIndex == -1) {
 										Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
-										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
+										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
 										Log.v("deepLinkReferralCode", "---> "+Data.deepLinkReferralCode);
 										refreeUserId = referringParams.optString(KEY_USER_ID, "");
 									}
@@ -445,6 +456,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onCreate(savedInstanceState);
 
 		try {
+			MyApplication.getInstance().setmActivity(this);
 			HashMap<String,String> rationalMap = (new HashMap<>());
 			rationalMap.put(Manifest.permission.ACCESS_FINE_LOCATION,
 			BuildConfig.FLAVOR.equals("jugnoo")?getString(R.string.perm_location_rational_splash_jugnoo,getString(R.string.app_name)):
@@ -464,7 +476,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
-					FuguConfig.clearFuguData(SplashNewActivity.this);
+					HippoConfig.clearHippoData(SplashNewActivity.this);
 					Prefs.with(this).save(FUGU_CACHE_CLEARED,true);
 					Log.e("Splash","Fugu Data cleared on startup");
 				} catch (Exception e) {
@@ -496,6 +508,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			AppSignatureHelper.Companion.getAppSignatures(this);
 
 			MyApplication.getInstance().initializeServerURL(this);
+			Data.jungleApisDisable = 0;
 
 			Prefs.with(this).save(SP_OTP_SCREEN_OPEN, "");
 			//clear Menu Reorder Prefs
@@ -519,9 +532,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
 			}
 
-
-
-
+			handleChatActivityFromPush();
 
 
 			Data.locationSettingsNoPressed = false;
@@ -532,6 +543,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 			LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
+
+			JungleApisImpl.INSTANCE.deleteDirectionsPathOld();
 
 
 			setContentView(R.layout.activity_splash_new);
@@ -877,6 +890,14 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								tvSkip.performClick();
 								return;
 							}
+
+							if(!TextUtils.isEmpty(Data.deepLinkReferralCode)
+									&& loginResponseData != null
+									&& loginResponseData.getUserData() != null
+									&& loginResponseData.getUserData().getPromoSuccess() == 1){
+								referralCode = "";
+							}
+
 							apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
 							Utils.hideSoftKeyboard(SplashNewActivity.this, etOnboardingName);
 							GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SUBMIT+CLICKED);
@@ -1436,32 +1457,35 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				}
 			}));
 		}
+        if(llLoginContainer!=null) {
+			llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
+				@SuppressLint("NewApi")
+				@SuppressWarnings("deprecation")
+				@Override
+				public void keyboardOpened() {
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
+					params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+					params.setMargins(0, (int) (ASSL.Yscale() * 150), 0, 0);
+					params.setMarginStart(0);
+					params.setMarginEnd(0);
+					llLoginContainer.setLayoutParams(params);
+				}
 
-		llLoginContainer.getViewTreeObserver().addOnGlobalLayoutListener(new KeyboardLayoutListener(llLoginContainer, tvScroll, new KeyboardLayoutListener.KeyBoardStateHandler() {
-			@Override
-			public void keyboardOpened() {
-				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
-				params.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
-				params.setMargins(0, (int)(ASSL.Yscale()*150), 0, 0);
-				params.setMarginStart(0);
-				params.setMarginEnd(0);
-				llLoginContainer.setLayoutParams(params);
-			}
-
-			@Override
-			public void keyBoardClosed() {
-				RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
-				params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
-				params.setMargins(0, 0, 0, 0);
-				params.setMarginStart(0);
-				params.setMarginEnd(0);
-				llLoginContainer.setLayoutParams(params);
-			}
-		}));
+				@Override
+				public void keyBoardClosed() {
+					RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(llLoginContainer.getLayoutParams());
+					params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+					params.setMargins(0, 0, 0, 0);
+					params.setMarginStart(0);
+					params.setMarginEnd(0);
+					llLoginContainer.setLayoutParams(params);
+				}
+			}));
+		}
 		Prefs.with(this).save(Constants.KEY_ANIMATE_ASK_LOCAL_POST_TEXT,true);
 
 
-		textViewPhoneNumberRequired = (TextView) findViewById(R.id.textViewPhoneNumberRequired);
+		textViewPhoneNumberRequired = findViewById(R.id.textViewPhoneNumberRequired);
 		editTextPhoneNumber.addTextChangedListener(new TextWatcher() {
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1492,9 +1516,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 
-	private interface OnCompleteListener {
-		void onComplete();
-	}
 
 
 
@@ -1746,7 +1767,23 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				if(Prefs.with(this).getInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1) == 1){
 					tvReferralTitle.setVisibility(View.VISIBLE);
 					etReferralCode.setVisibility(View.VISIBLE);
+					etReferralCode.setText(Data.deepLinkReferralCode);
 					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
+
+					if(etReferralCode.getText().length() > 0
+							&& loginResponseData != null
+							&& loginResponseData.getUserData() != null
+							&& loginResponseData.getUserData().getPromoSuccess() == 1){
+						tvReferralTitle.setText(R.string.referral_code_applied);
+						etReferralCode.setEnabled(false);
+						etReferralCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_tick_coupon, 0);
+						findViewById(R.id.ivEtPromoDiv).setVisibility(View.GONE);
+					} else {
+						tvReferralTitle.setText(R.string.do_you_have_a_referral_code);
+						etReferralCode.setEnabled(true);
+						etReferralCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+					}
+
 				} else {
 					tvReferralTitle.setVisibility(View.GONE);
 					etReferralCode.setVisibility(View.GONE);
@@ -1974,7 +2011,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	private void sendToRegisterThroughSms(boolean openLS) {
 		try {
-			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+			if (state != State.SPLASH_ONBOARDING && !"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				Log.e("Data.deepLinkReferralCode value in sendToRegisterThroughSms", "--->"+Data.deepLinkReferralCode);
                 Data.deepLinkIndex = -1;
                 SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -1990,7 +2027,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //				changeUIState(State.SIGNUP);
     //			}
             } else if(openLS){
-				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this) && state != State.SPLASH_LS_NEW) {
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)
+						&& state != State.SPLASH_LS_NEW && state != State.CLAIM_GIFT && state != State.SPLASH_ONBOARDING) {
 					splashLSState(false);
 				}
 			}
@@ -2030,18 +2068,25 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						}
 					});
 		} else {
-			try {
-				FirebaseInstanceId.getInstance().getToken();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if ("".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, ""))) {
-//					DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-				getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
-				getHandlerGoToAccessToken().postDelayed(getRunnableGoToAccessToken(), 5000);
-			} else {
-				goToAccessTokenLogin();
-			}
+			DialogPopup.showLoadingDialog(this, getString(R.string.loading));
+			FirebaseInstanceId.getInstance().getInstanceId()
+					.addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+						@Override
+						public void onComplete(@NonNull Task<InstanceIdResult> task) {
+							if (!task.isSuccessful()) {
+								Log.w(TAG, "getInstanceId failed");
+								return;
+							}
+
+							// Get new Instance ID token
+							String token = task.getResult().getToken();
+							Prefs.with(SplashNewActivity.this).save(Constants.SP_DEVICE_TOKEN, token);
+
+							DialogPopup.dismissLoadingDialog();
+
+							goToAccessTokenLogin();
+						}
+					});
 		}
 	}
 
@@ -2106,10 +2151,12 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 		requestLocationUpdatesExplicit();
 
-		retryAccessTokenLogin();
+		if(state != State.SPLASH_ONBOARDING && state != State.CLAIM_GIFT){
+			retryAccessTokenLogin();
+		}
 		resumed = true;
 		userVerfied = 0;
-		AppEventsLogger.activateApp(this);
+		AppEventsLogger.activateApp(getApplication());
 
 		if(OTPConfirmScreen.backToSplashOboarding){
 			OTPConfirmScreen.backToSplashOboarding = false;
@@ -2226,8 +2273,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				@Override
 				public void success(String clientId) {
 					loginDataFetched = true;
-					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
-					DialogPopup.dismissLoadingDialog();
+					onWindowFocusChanged(true);
+//					DialogPopup.showLoadingDialog(SplashNewActivity.this, "");
+//					DialogPopup.dismissLoadingDialog();
 				}
 
 				@Override
@@ -2269,7 +2317,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	public static boolean allowedAuthChannelsHitOnce = false;
 	private boolean allowedAuthChannelsHitInProgress = false;
-	public void getAllowedAuthChannels(final Activity activity){
+	public void getAllowedAuthChannels(final Activity activity, final boolean claimGIftClicked){
 		if (MyApplication.getInstance().isOnline()) {
 			if(allowedAuthChannelsHitOnce || allowedAuthChannelsHitInProgress){
 				return;
@@ -2408,7 +2456,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						activity.onConfigurationChanged(config);
 
 						allowedAuthChannelsHitOnce = true;
-						splashLSState(false);
+						splashLSState(claimGIftClicked);
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -2519,6 +2567,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			btnOk.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
+					if(activity instanceof SplashNewActivity){
+						((SplashNewActivity)activity).loginDataFetched = false;
+					} else if(activity instanceof OTPConfirmScreen){
+						((OTPConfirmScreen)activity).loginDataFetched = false;
+					}
 					dialog.dismiss();
 					Intent intent = new Intent(Intent.ACTION_VIEW);
 					intent.setData(Uri.parse("https://play.google.com/store/apps/details?id="+BuildConfig.APPLICATION_ID));
@@ -2704,7 +2757,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							dialog.dismiss();
 							activity.startActivity(new Intent(activity, DebugOptionsActivity.class));
 							activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
-							ActivityCompat.finishAffinity(activity);
 						} else {
 							etCode.requestFocus();
 							etCode.setError(getString(R.string.code_not_matched));
@@ -3012,7 +3064,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.we_are_unable_to_process_your_request));
 				}
 			});
 		} else{
@@ -3130,7 +3182,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									if(jObj.optJSONObject(KEY_USER_DATA).optInt(KEY_SIGNUP_ONBOARDING, 0) == 1){
 										JSONParser.parseSignupOnboardingKeys(activity, jObj);
-										changeUIState(State.SPLASH_ONBOARDING);
 
 										String authKey = jObj.optJSONObject(KEY_USER_DATA).optString("auth_key", "");
 										if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){
@@ -3138,6 +3189,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 										}
 										String authSecret = authKey + Config.getClientSharedSecret();
 										accessToken = SHA256Convertor.getSHA256String(authSecret);
+										changeUIState(State.SPLASH_ONBOARDING);
 									} else{
 										loginDataFetched = true;
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
@@ -3264,10 +3316,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								//sendToOtpScreen = true;
 								goToLoginUsingPhone(phoneNo);
 							} else if (ApiResponseFlags.AUTH_LOGIN_SUCCESSFUL.getOrdinal() == flag) {
-								loginDataFetched = true;
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									new JSONParser().parseAccessTokenLoginData(activity, responseStr,
 											loginResponse, LoginVia.FACEBOOK, new LatLng(Data.loginLatitude, Data.loginLongitude));
+									loginDataFetched = true;
 
 
 								}
@@ -3477,7 +3529,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				changeUIState(State.SPLASH_LS_NEW);
 			}
 		} else {
-			getAllowedAuthChannels(this);
+			getAllowedAuthChannels(this, claimGIftClicked);
 		}
 	}
 
@@ -4325,6 +4377,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 										Data.userData.userName = updatedName;
 									}
 								}
+								if(jObj.optInt(KEY_REFERRAL_CORRECT, 0) == 1){
+									if(Data.userData != null){
+										Data.userData.setPromoSuccess(1);
+									}
+								}
 								onWindowFocusChanged(true);
 							} else {
 								DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
@@ -4526,5 +4583,29 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		textViewPhoneNumberRequired.setText(R.string.nl_splash_required);
 		btnPhoneLogin.setText(R.string.continue_text);
 
+	}
+
+	Handler handlerToOpenChatActivity;
+	private void handleChatActivityFromPush() {
+		//Opens Chat Activity after receiving Access Token.
+		int delayForChatActivity = 0;
+		if(handlerToOpenChatActivity == null) {
+			handlerToOpenChatActivity = new Handler();
+		}
+		handlerToOpenChatActivity.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(Data.userData!= null && Data.userData.accessToken != null) {
+					String deliveryId = getIntent().getStringExtra(Constants.KEY_DELIVERY_ID);
+					if(deliveryId!=null && !deliveryId.isEmpty()) {
+						startActivity(ChatActivity.createIntent(SplashNewActivity.this,deliveryId));
+						handlerToOpenChatActivity.removeCallbacks(null);
+					}
+				} else {
+					handleChatActivityFromPush();
+				}
+
+			}
+		}, 50);
 	}
 }

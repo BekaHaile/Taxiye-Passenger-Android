@@ -1,8 +1,8 @@
 package com.sabkuchfresh.home;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -41,6 +41,7 @@ import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.fragments.ScheduleRideFragment;
+import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.tutorials.NewUserCompleteProfileFragment;
 import product.clicklabs.jugnoo.tutorials.NewUserReferralFragment;
@@ -254,11 +255,12 @@ public class TransactionUtils {
         }
     }
 
-    public void openFeedback(FragmentActivity activity, View container,String clientId) {
+    public void openFeedback(FragmentActivity activity, View container, String clientId,
+                             final LoginResponse.FeedbackData feedbackData, final boolean showInvoiceText) {
         if (!activity.isFinishing() && !checkIfFragmentAdded(activity, FeedbackFragment.class.getName())) {
             activity.getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
-                    .add(container.getId(),  FeedbackFragment.newInstance(clientId),
+                    .add(container.getId(),  FeedbackFragment.newInstance(clientId, feedbackData, showInvoiceText),
                             FeedbackFragment.class.getName())
                     .addToBackStack(FeedbackFragment.class.getName())
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()

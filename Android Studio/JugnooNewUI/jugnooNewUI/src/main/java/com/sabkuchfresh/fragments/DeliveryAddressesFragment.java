@@ -6,11 +6,11 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.widget.NestedScrollView;
+import androidx.cardview.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +57,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
-import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -331,7 +331,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
 
         boolean showSavedPlaces = !(activity instanceof AddPlaceActivity);
-        searchListAdapter = new SearchListAdapter(activity, new LatLng(30.75, 76.78),
+        searchListAdapter = new SearchListAdapter(activity, PlaceSearchListFragment.getPivotLatLng(activity),
                 PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal(),
                 new SearchListAdapter.SearchListActionsHandler() {
 
@@ -564,6 +564,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 
             getBottomSheetBehaviour().setBottomSheetCallback(null);
 
+            llSetAnywhere.setVisibility(View.GONE);
         } else {
             rootView.findViewById(R.id.divider_above_map).setVisibility(View.GONE);
             rootView.findViewById(R.id.divider_below_map).setVisibility(View.GONE);
@@ -732,7 +733,7 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
             // saved addresses list
             if (activity instanceof FreshActivity) {
                 searchResultNearPin = HomeUtil.getNearBySavedAddress(activity, latLng,
-                        Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+						false);
                 if (searchResultNearPin != null) {
                     setFetchedAddressToTextView(searchResultNearPin.getName());
                     return;
@@ -752,30 +753,55 @@ public class DeliveryAddressesFragment extends BaseFragment implements GAAction,
 			if(jobGeocode != null){
 				jobGeocode.cancel(new CancellationException());
 			}
-			jobGeocode = GoogleAPICoroutine.INSTANCE.hitGeocode(latLng, geocodeResponse -> {
+			jobGeocode = GoogleJungleCaching.INSTANCE.hitGeocode(latLng, (googleGeocodeResponse, singleAddress) -> {
 				try {
 					Log.e("DeliveryAddressFrag", "GoogleCachingApiKT success address received");
-					if (geocodeResponse != null && geocodeResponse.results != null && geocodeResponse.results.size() > 0) {
+					if (googleGeocodeResponse != null && googleGeocodeResponse.results != null && googleGeocodeResponse.results.size() > 0) {
 						current_latitude = latLng.latitude;
 						current_longitude = latLng.longitude;
 
-						current_street = geocodeResponse.results.get(0).getStreetNumber();
-						current_route = geocodeResponse.results.get(0).getRoute();
-						current_area = geocodeResponse.results.get(0).getLocality();
-						current_city = geocodeResponse.results.get(0).getCity();
-						current_pincode = geocodeResponse.results.get(0).getCountry();
+						current_street = googleGeocodeResponse.results.get(0).getStreetNumber();
+						current_route = googleGeocodeResponse.results.get(0).getRoute();
+						current_area = googleGeocodeResponse.results.get(0).getLocality();
+						current_city = googleGeocodeResponse.results.get(0).getCity();
+						current_pincode = googleGeocodeResponse.results.get(0).getCountry();
 
 						setFetchedAddressToTextView(current_street + (current_street.length() > 0 ? ", " : "")
 								+ current_route + (current_route.length() > 0 ? ", " : "")
-								+ geocodeResponse.results.get(0).getAddAddress()
+								+ googleGeocodeResponse.results.get(0).getAddAddress()
 								+ ", " + current_city);
-					} else {
+					}
+					else if(singleAddress != null){
+						String[] arr = singleAddress.split(",");
+
+						current_latitude = latLng.latitude;
+						current_longitude = latLng.longitude;
+
+						if(arr.length > 0){
+							current_pincode = arr[arr.length-1];
+						}
+						if(arr.length > 1){
+							current_city = arr[arr.length-2];
+						}
+						if(arr.length > 2){
+							current_area = arr[arr.length-3];
+						}
+						if(arr.length > 3){
+							current_route = arr[arr.length-4];
+						}
+						if(arr.length > 4){
+							current_street = arr[arr.length-5];
+						}
+
+						setFetchedAddressToTextView(singleAddress);
+					}
+					else {
 						Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 						tvDeliveryAddress.setText("");
 					}
 
 				} catch (Exception e) {
-					android.util.Log.e(TAG, "success: " + (geocodeResponse != null ? geocodeResponse.getErrorMessage() : ""));
+					android.util.Log.e(TAG, "error: " + (googleGeocodeResponse != null ? googleGeocodeResponse.getErrorMessage() : ""));
 					e.printStackTrace();
 					Utils.showToast(activity, activity.getString(R.string.unable_to_fetch_address));
 					tvDeliveryAddress.setText("");

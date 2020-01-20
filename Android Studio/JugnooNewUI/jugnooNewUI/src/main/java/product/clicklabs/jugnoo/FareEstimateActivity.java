@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -40,6 +40,7 @@ import java.util.List;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.MapsApiSources;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -272,11 +273,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
 
     }
 
+    private ApiFareEstimate apiFareEstimate;
     private void getDirectionsAndComputeFare(final LatLng sourceLatLng, final String sourceAddress, final LatLng destLatLng, final String destAddress) {
         try {
-            new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
+        	if(apiFareEstimate == null){
+				apiFareEstimate = new ApiFareEstimate(this, new ApiFareEstimate.Callback() {
                 @Override
-                public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+                public void onSuccess(List<LatLng> list, String distanceText,
                                       String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
                     try {
 
@@ -338,19 +341,13 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                             }, 500);
                         }
 
-                        if (!TextUtils.isEmpty(sourceAddress)) {
-                            startAddress = sourceAddress;
-                        }
-                        if (!TextUtils.isEmpty(destAddress)) {
-                            endAddress = destAddress;
-                        }
-                        textViewPickupLocation.setText(startAddress);
+                        textViewPickupLocation.setText(sourceAddress);
                         String startAdd = textViewPickupLocation.getText().toString();
                         if (startAdd.charAt(startAdd.length() - 1) == ',') {
                             textViewPickupLocation.setText(startAdd.substring(0, startAdd.length() - 1));
                         }
 
-                        textViewDropLocation.setText(endAddress);
+                        textViewDropLocation.setText(destAddress);
                         String endAdd = textViewDropLocation.getText().toString();
                         if (endAdd.charAt(endAdd.length() - 1) == ',') {
                             textViewDropLocation.setText(endAdd.substring(0, endAdd.length() - 1));
@@ -422,7 +419,9 @@ public class FareEstimateActivity extends BaseAppCompatActivity implements
                 public void onDirectionsFailure() {
 
                 }
-            }).getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon);
+            });
+        	}
+        	apiFareEstimate.getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, true, region, promoCoupon, null, MapsApiSources.CUSTOMER_FARE_ESTIMATE_ACTIVITY);
 
         } catch (Exception e) {
             e.printStackTrace();

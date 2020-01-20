@@ -42,7 +42,8 @@
     <item>
         <shape>
             <!--<solid android:color="@color/theme_color" />-->
-            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"/>
+            <gradient android:endColor="@color/gradient_normal_end" android:startColor="@color/gradient_normal_start"
+                android:angle="0"/>
 
             <corners android:radius="43dp" />
         </shape>

@@ -74,6 +74,7 @@ public interface Constants {
     String KEY_ERROR = "error";
 
     String KEY_ACCESS_TOKEN = "access_token";
+    String KEY_SESSION_ID = "session_id";
     String KEY_UPDATE_CONTACTS="update_contacts";
     String KEY_CONTACTS_LIST="contacts_list";
     String KEY_ENGAGEMENT_ID = "engagement_id";
@@ -234,6 +235,7 @@ public interface Constants {
     String STRIPE_SELECTED_POS ="selected_stripe_card";
 
     String KEY_URL = "url";
+    String KEY_VIDEO = "video";
     String SP_LAST_PUSH_RECEIVED_TIME = "last_push_received_time";
     String KEY_LAST_PUSH_TIME_DIFF = "last_push_time_diff";
     String KEY_PUSH_CLICKED = "push_clicked";
@@ -521,6 +523,8 @@ public interface Constants {
     String KEY_RATING_FLAG = "rating_flag";
     String KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE = "ride_end_good_feedback_view_type";
     String KEY_RIDE_END_GOOD_FEEDBACK_TEXT = "ride_end_good_feedback_text";
+    String KEY_FEEDBACK_ORDER_CURRENCY_CODE = "feedback_order_currency_code";
+    String KEY_FEEDBACK_ORDER_CURRENCY = "feedback_order_currency";
     String KEY_IS_FEED_ORDER_FEEDBACK = "is_feed_order_feedback";
     String KEY_RATE_APP = "rate_app";
     String KEY_NEGATIVE_FEEDBACK_REASONS = "negative_feedback_reasons";
@@ -737,6 +741,7 @@ public interface Constants {
     String KEY_OFFERING_NAME = "offering_name";
     String KEY_PROMO_COUPON = "promo_coupon";
     String SP_USE_COUPON_ = "sp_use_coupon_";
+    String SP_PROMO_SCRATCHED = "sp_promo_scratched";
     String SP_USE_COUPON_IS_COUPON_ = "sp_use_coupon_is_coupon_";
     String KEY_ANIMATE_ASK_LOCAL_POST_TEXT = "key_animate_ask_local_post_text";
     String KEY_POST_NOTIFICATION_ID = "post_notification_id";
@@ -744,6 +749,8 @@ public interface Constants {
 
     String KEY_SP_IS_VEG_TOGGLE = "is_veg_toggle";
     String KEY_OPEN_LIVE_TRACKING = "open_live_tracking";
+    String KEY_SHOW_RATE_ORDER_BUTTON = "key_show_rate_order_button";
+    String KEY_SHOW_REPEAT_ORDER_BUTTON = "key_show_repeat_order_button";
     String SP_ASKLOCAL_LAST_ADDRESS_OBJ = "sp_asklocal_last_address_obj";
     String SP_MENUS_CART_ADDRESS = "sp_menus_cart_address";
     String SP_DELIVERY_CUSTOMER_CART_ADDRESS = "sp_delivery_customer_cart_address";
@@ -1078,4 +1085,100 @@ public interface Constants {
 
 	String KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP = "customer_set_location_on_map_on_top";
 	String KEY_FEEDBACK_INFO="feedback_info";
+	String KEY_CUSTOMER_BID_INCREMENT = "customer_bid_increment";
+	String KEY_MIN_REGION_FARE = "min_region_fare";
+	String KEY_MAX_REGION_FARE = "max_region_fare";
+	String KEY_IS_ROUND_TRIP = "is_round_trip";
+	String KEY_CUSTOMER_SHOW_BOUNCING_MARKER = "customer_show_bouncing_marker";
+	String KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG = "customer_show_save_location_dialog";
+
+	String KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED = "customer_region_fare_check_enabled";
+	String KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED = "customer_pickup_address_empty_check_enabled";
+	String KEY_CUSTOMER_DIRECTIONS_CACHING = "customer_directions_caching";
+
+	String KEY_JUNGLE_DIRECTIONS_OBJ = "jungle_directions_obj";
+	String KEY_CFE_JUNGLE_DIRECTIONS_OBJ = "c_fe_jungle_directions_obj";
+	String KEY_JUNGLE_DISTANCE_MATRIX_OBJ = "jungle_distance_matrix_obj";
+	String KEY_JUNGLE_GEOCODE_OBJ = "jungle_geocode_obj";
+	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";
+	String KEY_JUNGLE_POINTS = "points";
+	String KEY_JUNGLE_OPTIONS = "options";
+	String KEY_JUNGLE_TYPE = "type";
+	String KEY_JUNGLE_OFFERING = "offering";
+	String KEY_JUNGLE_APP_ID = "app_id";
+	String KEY_JUNGLE_APP_CODE = "app_code";
+	String KEY_JUNGLE_API_KEY = "api_key";
+	String KEY_JUNGLE_ACCESS_TOKEN = "access_token";
+	String KEY_JUNGLE_ORIGIN_LAT = "originlatitude";
+	String KEY_JUNGLE_ORIGIN_LNG = "originlongitude";
+	String KEY_JUNGLE_DEST_LAT = "destinationlatitude";
+	String KEY_JUNGLE_DEST_LNG = "destinationlongitude";
+	String KEY_JUNGLE_CURRENT_LAT = "currentlatitude";
+	String KEY_JUNGLE_CURRENT_LNG = "currentlongitude";
+	String KEY_JUNGLE_PLACEID = "placeId";
+	String KEY_JUNGLE_TEXT = "text";
+	String KEY_JUNGLE_LAT = "lat";
+	String KEY_JUNGLE_LNG = "lng";
+
+	String JUNGLE_JSON_OBJECT = "{\""+KEY_JUNGLE_OPTIONS+"\":0}";
+    String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
+    String KEY_CUSTOMER_REQUEST_RIDE_POPUP = "customer_request_ride_popup";
+	String KEY_METER_FARE_APPLICABLE = "meter_fare_applicable";
+	String KEY_REFERRAL_CORRECT = "referral_correct";
+
+	String KEY_C_2_D_REFERRAL_IMAGE = "c2d_referral_image";
+	String KEY_C_2_D_REFERRAL_INFO = "c2d_referral_info";
+	String KEY_C_2_D_REFERRAL_DETAILS = "c2d_referral_details";
+    String KEY_DELIVERIES = "deliveries";
+    String KEY_NOTES = "key_notes";
+    String KEY_IS_ONE_WAY = "is_oneway";
+    String KEY_IS_CORPORATE = "is_corporate";
+    String KEY_DETAILS = "details";
+
+    String KEY_IS_OPTIMIZED = "is_optimized";
+
+    String KEY_HISTORY_DATA = "history_data";
+    String KEY_BUNDLE_WITH_HISTORY_DATA = "bundle_with_history_data";
+    String KEY_CHAT_DELIVERY = "chat_delivery";
+	String KEY_IS_NEW_REFERRAL = "is_new_referral";
+
+	String KEY_CUSTOMER_YOUTUBE_API_KEY = "customer_youtube_api_key";
+	String SP_YOUTUBE_TUTORIAL_SKIPPED = "sp_youtube_tutorial_skipped";
+
+	String KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD = "directions_max_distance_threshold";
+
+	String KEY_PUSH_NO_DRIVER_FOUND_HELP = "no_driver_found_help";
+	String KEY_TIP_ENABLED_BEFORE_REQUEST_RIDE = "tip_enabled_before_request_ride";
+	String KEY_TIP_ENABLED_FOR_LEVEL_0 = "tip_enabled_for_level_0";
+	String KEY_TIP_ENABLED_FOR_LEVEL_1 = "tip_enabled_for_level_1";
+	String KEY_TIP_ENABLED_FOR_LEVEL_2 = "tip_enabled_for_level_2";
+
+	String KEY_SESSIONTOKEN = "sessiontoken";
+	String KEY_FARE_MANDATORY = "fare_mandatory";
+
+	String INTENT_ACTION_CHAT_REFRESH = "INTENT_ACTION_CHAT_REFRESH";
+	String KEY_PAYLOAD = "payload";
+	String KEY_OPEN_CHAT = "open_chat";
+	String KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST = "tip_provided_before_ride_request";
+
+	String KEY_CITY_OBJ = "city_obj";
+	String KEY_PROMO_BANNER_DATA = "promo_banner_data";
+
+
+	String KEY_HIPPO_TICKET_FOR_RIDE_ISSUES = "hippo_ticket_for_ride_issues";
+	String KEY_DRIVER_INFO = "driver_info";
+	String KEY_HIPPO_TICKET_RIDE_FAQ_NAME = "hippo_ticket_ride_faq_name";
+
+	String KEY_HIPPO_CALL_ENABLED = "hippo_call_enabled";
+	String KEY_HIPPO_CALL_TYPE = "hippo_call_type";
+	String KEY_DRIVER_IDENTIFIER = "driver_identifier";
+	String KEY_DEVICE_NAME = "device_name";
+	String KEY_OS_VERSION = "os_version";
+	String KEY_COUNTRY = "country";
+	String KEY_DRIVER_TO_PICKUP_PATH_ENABLED = "driver_to_pickup_path_enabled";
+	String KEY_SHOW_DRIVER_MARKER_IN_RIDE = "show_driver_marker_in_ride";
+	String KEY_SHOW_RIDE_COVERED_PATH = "show_ride_covered_path";
+	String KEY_DRIVER_TRACKING_USING_STREAM_ENABLED = "driver_tracking_using_stream_enabled";
+	String KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE = "driver_marker_anim_duration_inride";
+	String KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT = "driver_marker_anim_duration_accept";
 }

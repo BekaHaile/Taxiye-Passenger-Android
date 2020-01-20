@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Handler;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +25,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
@@ -47,6 +47,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRidesActivity;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
@@ -188,9 +189,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 } else if(MenuInfoTags.JUGNOO_FRESH.getTag().equalsIgnoreCase(menuInfo.getTag())) {
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fatafat_menu_selector);
                     Data.webActivityTitle = menuInfo.getName();
-                }else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                }
+                else if(MenuInfoTags.FREE_RIDES.getTag().equalsIgnoreCase(menuInfo.getTag())
+						||MenuInfoTags.FREE_RIDES_NEW.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_share_selector);
-                } else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(menuInfo.getTag())){
+                }
+                else if(MenuInfoTags.WALLET.getTag().equalsIgnoreCase(menuInfo.getTag())){
                     holder.imageViewMenuIcon.setImageResource(R.drawable.ic_wallet_selector);
                     try {
                         holder.textViewValue.setText(!activity.getResources().getBoolean(R.bool.wallet_amount_sidemenu)? Utils.getMoneyDecimalFormatWithoutFloat().format(Data.userData.getTotalWalletBalance()):String.format(activity.getResources()
@@ -539,6 +543,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 activity.startActivity(intent);
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
+            else if(MenuInfoTags.FREE_RIDES_NEW.getTag().equalsIgnoreCase(tag)){
+                Intent intent = new Intent(activity, ShareActivity.class);
+				intent.putExtra(Constants.KEY_IS_NEW_REFERRAL, true);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
             else if(MenuInfoTags.REFER_A_DRIVER.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, ReferDriverActivity.class));
                 activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
@@ -642,9 +652,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }
             }
             else if(MenuInfoTags.TICKET_SUPPORT.getTag().equalsIgnoreCase(tag)){
-                if(activity instanceof BaseAppCompatActivity){
-                    ((BaseAppCompatActivity)activity).openHippoTicketSupport();
-                }
+            	HomeUtil.openHippoTicketSupport(activity);
             }
             else if(MenuInfoTags.EMAIL_SUPPORT.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, SupportMailActivity.class));
@@ -861,7 +869,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
 
 
 
-            textViewFeed.setText(Data.getFeedName(context));
+            textViewFeed.setText(R.string.delivery_new_name);
         }
     }
 

@@ -29,23 +29,22 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.FloatRange;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import android.os.Handler;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
@@ -55,8 +54,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.util.Pair;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -85,8 +86,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.appevents.AppEventsLogger;
-import com.fugu.FuguConfig;
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.analytics.ecommerce.ProductAction;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -98,6 +97,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -106,6 +106,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
+import com.hippo.HippoNotificationConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -136,6 +139,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -149,6 +154,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import io.branch.referral.Branch;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.CoroutineScope;
+import okio.BufferedSource;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
@@ -166,6 +177,7 @@ import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.RideCancellationActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.adapters.BadgesAdapter;
+import product.clicklabs.jugnoo.adapters.BadgesAdapter;
 import product.clicklabs.jugnoo.adapters.BidsPlacedAdapter;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
@@ -174,12 +186,13 @@ import product.clicklabs.jugnoo.adapters.SearchListAdapter;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
 import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
+import product.clicklabs.jugnoo.apis.ApiCancelRequest;
 import product.clicklabs.jugnoo.apis.ApiEmergencyDisable;
 import product.clicklabs.jugnoo.apis.ApiFareEstimate;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiFindADriver;
-import product.clicklabs.jugnoo.apis.GoogleAPICoroutine;
+import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
@@ -192,6 +205,7 @@ import product.clicklabs.jugnoo.datastructure.FeedBackInfo;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.LatLngCoordinates;
+import product.clicklabs.jugnoo.datastructure.MapsApiSources;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -204,6 +218,7 @@ import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
@@ -214,7 +229,11 @@ import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.adapters.SpecialPickupItemsAdapter;
 import product.clicklabs.jugnoo.home.adapters.VehiclesTabAdapter;
 import product.clicklabs.jugnoo.home.dialogs.CancellationChargesDialog;
+import product.clicklabs.jugnoo.home.dialogs.DriverCallDialog;
+import product.clicklabs.jugnoo.home.dialogs.DriverNotFoundDialog;
 import product.clicklabs.jugnoo.home.dialogs.DriverTipInteractor;
+import product.clicklabs.jugnoo.home.dialogs.EditDropConfirmation;
+import product.clicklabs.jugnoo.home.dialogs.EditDropDialog;
 import product.clicklabs.jugnoo.home.dialogs.EnterBidDialog;
 import product.clicklabs.jugnoo.home.dialogs.InAppCampaignDialog;
 import product.clicklabs.jugnoo.home.dialogs.NotesDialog;
@@ -224,10 +243,12 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
+import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
 import product.clicklabs.jugnoo.home.dialogs.TutorialInfoDialog;
+import product.clicklabs.jugnoo.home.dialogs.VehicleFareEstimateDialog;
 import product.clicklabs.jugnoo.home.fragments.ScheduleRideFragment;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
@@ -238,9 +259,11 @@ import product.clicklabs.jugnoo.home.models.RideTypeValue;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
+import product.clicklabs.jugnoo.newui.dialog.RewardsDialog;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
+import product.clicklabs.jugnoo.promotion.models.Promo;
 import product.clicklabs.jugnoo.rentals.InstructionDialog;
 import product.clicklabs.jugnoo.rentals.RentalStationAdapter;
 import product.clicklabs.jugnoo.rentals.damagereport.DamageReportActivity;
@@ -250,12 +273,19 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
+import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
+import product.clicklabs.jugnoo.retrofit.model.MediaInfo;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
+import product.clicklabs.jugnoo.retrofit.model.RequestRideConfirm;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
 import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
+import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.smartlock.callbacks.SmartlockCallbacks;
 import product.clicklabs.jugnoo.smartlock.controller.SmartLockController;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -273,7 +303,6 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FacebookLoginHelper;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.FrameAnimDrawable;
-import product.clicklabs.jugnoo.utils.GoogleRestApis;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LatLngInterpolator;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
@@ -295,12 +324,14 @@ import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.MySpinner;
 import product.clicklabs.jugnoo.widgets.PrefixedEditText;
+import product.clicklabs.jugnoo.youtube.YoutubeVideoActivity;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 import static com.sabkuchfresh.feed.utils.FeedUtils.dpToPx;
+import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
 
 //import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
@@ -310,11 +341,20 @@ import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITI
 public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHandler,
         SearchListAdapter.SearchListActionsHandler, Constants, OnMapReadyCallback, View.OnClickListener,
         GACategory, GAAction, BidsPlacedAdapter.Callback, ScheduleRideFragment.InteractionListener,
-        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,BadgesAdapter.BadgesClickListener {
+        RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,
+        RewardsDialog.ScratchCardRevealedListener, CoroutineScope,
+        RideConfirmationDialog.RideRequestConfirmListener, DriverNotFoundDialog.RideRequestConfirmListener, DriverCallDialog.CallDriverListener,
+		EditDropDialog.Callback, BadgesAdapter.BadgesClickListener {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
+    private static final int REQ_CODE_VIDEO = 9112, RESULT_PAUSE = 5;
+
+
+	private float ONGOING_RIDE_PATH_ZINDEX = 2;
+	private float PICKUP_TO_DROP_PATH_ZINDEX = 0;
+
     private final String TAG = "Home Screen";
     private String macId ="";
 
@@ -347,7 +387,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     ImageView imageViewRideNow, imageViewInAppCampaign;
     RelativeLayout relativeLayoutInitialSearchBar, relativeLayoutDestSearchBar;
-    TextView textViewInitialSearch, textViewDestSearch;
+    TextView textViewInitialSearch, textViewDestSearch, tvPickupRentalOutstation;
     ImageView imageViewDropCross;
     ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation, confirmMyLocationBtn;
@@ -372,13 +412,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout assigningLayout, rlAssigningNormal, rlAssigningBidding, rlBidTimer;
     TextView textViewFindingDriver, tvBidTimer;
     private ProgressWheel pwBidTimer;
-    Button initialCancelRideBtn;
+    TextView tvInitialCancelRide, tvRaiseBidValue;
+	Button bRaiseOfferFare;
+	TextView tvRaiseFareMinus, tvRaiseFarePlus;
+	LinearLayout llRaiseBidButton;
     private LinearLayout llFindingADriver;
     public RelativeLayout relativeLayoutAssigningDropLocationParent;
-    private RelativeLayout relativeLayoutAssigningDropLocationClick, relativeLayoutDestinationHelp, relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
-    private TextView textViewAssigningDropLocationClick, textViewDestHelp, textViewFellowRider;
-    ProgressWheel progressBarAssigningDropLocation;
-    ImageView imageViewAssigningDropLocationEdit;
+    private RelativeLayout relativeLayoutConfirmBottom, relativeLayoutConfirmRequest;
+    private TextView tvPickupAssigning, tvDropAssigning, textViewFellowRider;
     boolean cancelTouchHold = false, placeAdded, zoomAfterFindADriver, fromNaviCurrentLocation;
 
 
@@ -393,13 +434,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Button customerInRideMyLocationBtn;
     LinearLayout linearLayoutInRideDriverInfo;
     ImageView imageViewInRideDriver;
-    TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating;
+    TextView textViewInRideDriverName, textViewInRideDriverCarNumber, textViewInRideState, textViewDriverRating, tvTermsAndConditions;
     RelativeLayout relativeLayoutDriverRating, relativeLayoutOfferConfirm,layoutAddedTip, rlNotes;
     Button buttonCancelRide, buttonAddMoneyToWallet, buttonCallDriver,buttonTipDriver,buttonAddTipEndRide;
     ImageView ivMoreOptions;
     RelativeLayout relativeLayoutFinalDropLocationParent, relativeLayoutGreat;
     LinearLayout relativeLayoutTotalFare;
-    TextView textViewIRPaymentOptionValue, textViewRupee;
+    TextView textViewIRPaymentOptionValue, textViewRupee, tvFreeRidesForLife;
     ImageView imageViewIRPaymentOption, imageViewThumbsUpGif, imageViewOfferConfirm, imageViewNotes;
     PopupMenu popupInRide;
 
@@ -447,6 +488,7 @@ RelativeLayout plusBadge;
     private LinearLayout llPayOnline;
     private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate;
     private boolean isFromConfirmToOther;
+    private CardView cvPayOnline;
 
 
     // data variables declaration
@@ -482,7 +524,6 @@ RelativeLayout plusBadge;
             zoomedToMyLocation = false,
             mapTouchedOnce = false;
     boolean dontCallRefreshDriver = false, firstTimeZoom = false, zoomingForDeepLink = false;
-    boolean dropLocationSet = false;
     boolean searchedALocation = false;
 
     Dialog noDriversDialog, dialogUploadContacts, freshIntroDialog;
@@ -582,8 +623,7 @@ RelativeLayout plusBadge;
     private TransactionUtils transactionUtils;
     public RelativeLayout relativeLayoutContainer,scheduleRideContainer;
     private FrameLayout coordinatorLayout;
-    private FuguNotificationConfig fuguNotificationConfig = new FuguNotificationConfig();
-    ;
+    private HippoNotificationConfig fuguNotificationConfig = new HippoNotificationConfig();
     public Gson gson = new Gson();
     private boolean addressPopulatedFromDifferentOffering;
 
@@ -609,8 +649,8 @@ RelativeLayout plusBadge;
 
     private RecyclerView recyclerViewVehiclesConfirmRide;
     private VehiclesTabAdapter vehiclesTabAdapterConfirmRide;
-    private boolean selectPickUpdropAtOnce = false;
-    private Polyline polyline;
+    private Polyline polylineP2D;
+    private PolylineOptions polylineOptionsP2D;
 
     private ImageView ivLikePickup, ivLikeDrop;
     private LinearLayout llFeedbackMain, llAddTip;
@@ -626,7 +666,7 @@ RelativeLayout plusBadge;
     private Button buttonConfirmRideType;
     private TextView tvHourlyPackage,tvMultipleStops,tvSafe,tvOneWayTrip,tvRoundTrips,tvAdvanceBookings;
     private String mNotes = "";
-    private boolean mIsPickup = false;
+    private boolean mIsPickup = false, isPickupSet = false;
 
     private  ApiAddHomeWorkAddress apiAddHomeWorkAddress;
 
@@ -660,15 +700,22 @@ RelativeLayout plusBadge;
     ImageView imageViewDropCrossNew;
     LinearLayout linearLayoutConfirmOption,linearLayoutBidValue;
     EditText editTextBidValue;
+    private int regionIdFareSetInETBid;
+    private SearchLocationDB searchLocationDB;
 
     private CardView cvTutorialBanner;
-    private TextView tvTutorialBanner;
+    private TextView tvTutorialBanner, tvAddedTip;
     private ImageView ivCrossTutorialBanner;
+    private String mLogMsg;
+    private Integer mRequestType = 0, mRequestLevelndex = 0;
 
     @SuppressLint("NewApi")
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        searchLocationDB = DBObject.INSTANCE.getInstance();
+        DBCoroutine.Companion.deleteLocationIfDatePassed(searchLocationDB);
 
         String languageToLoad = LocaleHelper.getLanguage(this);
         Locale locale = new Locale(languageToLoad);
@@ -726,7 +773,6 @@ RelativeLayout plusBadge;
 
         HomeActivity.appInterruptHandler = HomeActivity.this;
 
-//        isNewUI = getResources().getBoolean(R.bool.fallback_is_new_reverse);
 
         showAllDrivers = Prefs.with(this).getInt(SPLabels.SHOW_ALL_DRIVERS, 0);
         showDriverInfo = Prefs.with(this).getInt(SPLabels.SHOW_DRIVER_INFO, 0);
@@ -746,7 +792,6 @@ RelativeLayout plusBadge;
         searchedALocation = false;
         zoomingForDeepLink = false;
         freshIntroDialog = null;
-        dropLocationSet = false;
         rideNowClicked = false;
 
 
@@ -815,15 +860,17 @@ RelativeLayout plusBadge;
 		rvRideTypes = findViewById(R.id.rvRideTypes);
 		rvRideTypes.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(this,
 				LinearLayoutManager.HORIZONTAL, false));
-        setServiceTypeAdapter(true);
 
         relativeLayoutSearchContainer = (RelativeLayout) findViewById(R.id.relativeLayoutSearchContainer);
         relativeLayoutInitialSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutInitialSearchBar);
         relativeLayoutDestSearchBar = (RelativeLayout) findViewById(R.id.relativeLayoutDestSearchBar);
         textViewInitialSearch = (TextView) findViewById(R.id.textViewInitialSearch);
+        tvPickupRentalOutstation = (TextView) findViewById(R.id.tvPickupRentalOutstation);
         textViewInitialSearch.setTypeface(Fonts.mavenRegular(this));
         textViewDestSearch = (TextView) findViewById(R.id.textViewDestSearch);
+        tvPickupRentalOutstation = (TextView) findViewById(R.id.tvPickupRentalOutstation);
         textViewDestSearch.setTypeface(Fonts.mavenRegular(this));
+        tvPickupRentalOutstation.setTypeface(Fonts.mavenRegular(this));
 
         ivLikePickup = findViewById(R.id.ivLikePickup);
         ivLikeDrop = findViewById(R.id.ivLikeDrop);
@@ -860,6 +907,7 @@ RelativeLayout plusBadge;
         relativeLayoutTotalFare = findViewById(R.id.relativeLayoutTotalFare);
 		textViewRupee = findViewById(R.id.textViewRupee);
 		textViewRupee.setTypeface(Fonts.mavenMedium(this));
+		tvFreeRidesForLife = findViewById(R.id.tvFreeRidesForLife); tvFreeRidesForLife.setTypeface(Fonts.mavenMedium(this));
         buttonConfirmRequest = (Button) findViewById(R.id.buttonConfirmRequest);
         buttonConfirmRequest.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         linearLayoutPaymentModeConfirm = (LinearLayout) findViewById(R.id.linearLayoutPaymentModeConfirm);
@@ -906,12 +954,19 @@ RelativeLayout plusBadge;
 		rlAssigningBidding = findViewById(R.id.rlAssigningBidding);
 		rlBidTimer = findViewById(R.id.rlBidTimer);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
-        textViewFindingDriver.setTypeface(Fonts.mavenLight(this));
+        textViewFindingDriver.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         pwBidTimer = (ProgressWheel) findViewById(R.id.pwBidTimer);
         tvBidTimer = (TextView) findViewById(R.id.tvBidTimer);
         tvBidTimer.setTypeface(Fonts.mavenMedium(this));
-        initialCancelRideBtn = (Button) findViewById(R.id.initialCancelRideBtn);
-        initialCancelRideBtn.setTypeface(Fonts.mavenRegular(this));
+        tvInitialCancelRide = findViewById(R.id.tvInitialCancelRide);
+        tvInitialCancelRide.setTypeface(Fonts.mavenRegular(this));
+		bRaiseOfferFare = findViewById(R.id.bRaiseOfferFare);
+		bRaiseOfferFare.setTypeface(Fonts.mavenMedium(this));
+		bRaiseOfferFare.setVisibility(View.GONE);
+		llRaiseBidButton = findViewById(R.id.llRaiseBidButton);
+		tvRaiseFareMinus = findViewById(R.id.tvRaiseFareMinus); tvRaiseFareMinus.setTypeface(Fonts.mavenMedium(this));
+		tvRaiseFarePlus = findViewById(R.id.tvRaiseFarePlus); tvRaiseFarePlus.setTypeface(Fonts.mavenMedium(this));
+		tvRaiseBidValue = findViewById(R.id.tvRaiseBidValue); tvRaiseBidValue.setTypeface(Fonts.mavenMedium(this));
         findDriverJugnooAnimation = findViewById(R.id.findDriverJugnooAnimation);
         if (findDriverJugnooAnimation instanceof ImageView) {
             jugnooAnimation = (AnimationDrawable) findDriverJugnooAnimation.getBackground();
@@ -926,17 +981,12 @@ RelativeLayout plusBadge;
 
 		llFindingADriver = findViewById(R.id.llFindingADriver);
         relativeLayoutAssigningDropLocationParent = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationParent);
-        relativeLayoutAssigningDropLocationClick = (RelativeLayout) findViewById(R.id.relativeLayoutAssigningDropLocationClick);
-        relativeLayoutDestinationHelp = (RelativeLayout) findViewById(R.id.relativeLayoutDestinationHelp);
-        textViewDestHelp = (TextView) findViewById(R.id.textViewDestHelp);
-        textViewDestHelp.setTypeface(Fonts.mavenRegular(this));
-        textViewAssigningDropLocationClick = (TextView) findViewById(R.id.textViewAssigningDropLocationClick);
-        textViewAssigningDropLocationClick.setTypeface(Fonts.mavenMedium(this));
-        textViewAssigningDropLocationClick.setText("");
-        progressBarAssigningDropLocation = (ProgressWheel) findViewById(R.id.progressBarAssigningDropLocation);
-        imageViewAssigningDropLocationEdit = (ImageView) findViewById(R.id.imageViewAssigningDropLocationEdit);
-        imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
-        progressBarAssigningDropLocation.setVisibility(View.GONE);
+		tvPickupAssigning = findViewById(R.id.tvPickupAssigning);
+		tvPickupAssigning.setTypeface(Fonts.mavenMedium(this));
+		tvPickupAssigning.setText("");
+		tvDropAssigning = findViewById(R.id.tvDropAssigning);
+		tvDropAssigning.setTypeface(Fonts.mavenMedium(this));
+		tvDropAssigning.setText("");
 
 
         //Request Final Layout
@@ -966,7 +1016,9 @@ RelativeLayout plusBadge;
         textViewInRideState = (TextView) findViewById(R.id.textViewInRideState);
         textViewInRideState.setTypeface(Fonts.mavenMedium(this));
         textViewDriverRating = (TextView) findViewById(R.id.textViewDriverRating);
+        tvTermsAndConditions = (TextView) findViewById(R.id.tvTermsAndConditions);
         textViewDriverRating.setTypeface(Fonts.mavenMedium(this));
+        tvTermsAndConditions.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
         relativeLayoutDriverRating = (RelativeLayout) findViewById(R.id.relativeLayoutDriverRating);
         textViewCancellation = (TextView) findViewById(R.id.textViewCancellation);
         textViewCancellation.setTypeface(Fonts.mavenRegular(this));
@@ -1066,6 +1118,7 @@ RelativeLayout plusBadge;
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp);
         textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         llPayOnline = (LinearLayout) findViewById(R.id.llPayOnline);
+        cvPayOnline = findViewById(R.id.cvPayOnline);
         tvPayOnline = (TextView) findViewById(R.id.tvPayOnline);
         tvPayOnline.setTypeface(tvPayOnline.getTypeface(), Typeface.BOLD);
         tvPayOnlineIn = (TextView) findViewById(R.id.tvPayOnlineIn);
@@ -1207,15 +1260,18 @@ RelativeLayout plusBadge;
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLatitude()),
                         Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getLongitude()));
-                Data.autoData.setPickupLatLng(specialPicupLatLng);
+                Data.autoData.getPickupSearchResult().setLatitude(specialPicupLatLng.latitude);
+                Data.autoData.getPickupSearchResult().setLongitude(specialPicupLatLng.longitude);
                 Log.w("pickuplogging", "special pickup spin itemsel"+Data.autoData.getPickupLatLng());
                 getApiFindADriver().setRefreshLatLng(specialPicupLatLng);
                 specialPickupSelected = true;
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(specialPicupLatLng, MAX_ZOOM), getMapAnimateDuration(), null);
                 addUserCurrentLocationAddressMarker();
                 selectedSpecialPickup = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(position).getText() + ", ";
-                textViewInitialSearch.setText(selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
-                textViewInitialSearchNew.setText(selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+                String address = selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng());
+                textViewInitialSearch.setText(address);
+                textViewInitialSearchNew.setText(address);
+                tvPickupRentalOutstation.setText(address);
                 GAUtils.event(RIDES, HOME, SPECIAL_PICKUP_CHOOSED);
             }
 
@@ -1342,6 +1398,7 @@ RelativeLayout plusBadge;
 
         constraintLayoutRideTypeConfirm = findViewById(R.id.constraintLayoutRideTypeConfirm);
         ivRideTypeImage = findViewById(R.id.ivRideTypeImage);
+        ivRideTypeImage.setVisibility(View.GONE);
         tvRideTypeInfo = findViewById(R.id.tvRideTypeInfo);
         tvRideTypeInfo.setTypeface(Fonts.mavenRegular(this));
         tvRideTypeRateInfo = findViewById(R.id.tvRideTypeRateInfo);
@@ -1366,11 +1423,11 @@ RelativeLayout plusBadge;
 //            if (getFilteredDrivers() == 0) {
 //                noDriverNearbyToast(getResources().getString(R.string.no_driver_nearby_try_again));
 //            } else {
-                if (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())
-                        && Data.autoData.getDropLatLng() == null) {
-                    destinationRequiredShake();
-                    return;
-                }
+//                if (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())
+//                        && Data.autoData.getDropLatLng() == null) {
+//                    destinationRequiredShake();
+//                    return;
+//                }
                 topBar.openScheduleFragment(Data.autoData.getServiceTypeSelected(), false);
 //            }
         });
@@ -1386,6 +1443,7 @@ RelativeLayout plusBadge;
             public void onDrawerOpened(View drawerView) {
                 Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearch);
                 Utils.hideSoftKeyboard(HomeActivity.this, textViewInitialSearchNew);
+                Utils.hideSoftKeyboard(HomeActivity.this, tvPickupRentalOutstation);
             }
 
             @Override
@@ -1476,6 +1534,13 @@ RelativeLayout plusBadge;
             }
         });
 
+		linearLayoutInRideDriverInfo.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+
 
         // RENTALS
 
@@ -1513,6 +1578,11 @@ RelativeLayout plusBadge;
             @Override
             public void onClick(View v) {
                 try {
+					if(Prefs.with(HomeActivity.this).getInt(Constants.KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0) == 1
+							&& (Data.autoData.getPickupLatLng() == null || TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng())))){
+						Utils.showToast(HomeActivity.this,getString(R.string.please_confirm_you_have_selected_pickup_address));
+						return;
+					}
                     topBar.tvScheduleRidePopup.setVisibility(View.GONE);
                     if (map != null) {
                         if (!rideNowClicked) {
@@ -1542,62 +1612,42 @@ RelativeLayout plusBadge;
             public void onClick(View v) {
                 try {
                     Utils.hideKeyboard(HomeActivity.this);
-                    if((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 1
+                    if(Prefs.with(HomeActivity.this).getInt(Constants.KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0) == 1
+							&& (Data.autoData.getPickupLatLng() == null || TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng())))){
+						Utils.showToast(HomeActivity.this,getString(R.string.please_confirm_you_have_selected_pickup_address));
+                    	return;
+					}
+
+                    Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+                    if((region.getDestinationMandatory() == 1
                             &&  Data.autoData.getDropLatLng() != null)
-                            || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 0) {
+                            || region.getDestinationMandatory() == 0) {
 
-                            if (isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
-                                && !editTextBidValue.getText().toString().isEmpty()) {
-                            double innerValue = 20.0;
-                            double outerValue = 5000.0;
-                            if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
-                                innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
-                                outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
-                            }
-                            String minBidValueStr = Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue);
-                            String innerStr = getString(R.string.bid_lower_value_err, minBidValueStr);
-                            String outerStr = getString(R.string.bid_greater_amount_err);
-                            if (Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
-								EnterBidDialog.INSTANCE.showRaiseFareDialog(HomeActivity.this, innerStr,
-										getString(R.string.raise_to_format, minBidValueStr), innerValue, false, value -> {
-											editTextBidValue.setText(value);
-											buttonConfirmRequest.performClick();
-										});
+                    	//if selected region is for reverse bid or fare mandatory and regionFare is null then we cannot proceed further
+                    	if(Prefs.with(HomeActivity.this).getInt(Constants.KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, 0) == 1
+                    			&& (region.getReverseBid() == 1 || region.getFareMandatory() == 1)
+								&& (region.getRegionFare() == null || region.getRegionFare().getPoolFareId() <= 0)){
+                    		if(Data.autoData.getDropLatLng() == null){
+								Utils.showToast(HomeActivity.this,getString(R.string.destination_required));
+							} else {
+								fareEstimatBeforeRequestRide();
+								Utils.showToast(HomeActivity.this,getString(R.string.fares_updated));
+							}
+                    		return;
+						}
 
-                            } else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue
-                                    && Double.parseDouble(editTextBidValue.getText().toString()) > 5000) {
-								EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
-										getString(R.string.fare), Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
-											editTextBidValue.setText(value);
-											buttonConfirmRequest.performClick();
-										});
-
-                            } else {
-                                if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                                    findDriversETACall(true, true, false, getApiFindADriver().getParams());
-                                } else {
-                                    if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-                                            .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                        openBikeRentalScan();
-                                    } else {
-                                        requestRideClick();
-                                    }
-                                }
-
-                            }
-                        } else if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 0) {
-                            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
-                                findDriversETACall(true, true, false, getApiFindADriver().getParams());
-                            } else {
-                                if (getSlidingBottomPanel().getRequestRideOptionsFragment()
-                                        .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                    openBikeRentalScan();
-                                } else {
-                                    requestRideClick();
-                                }
-                            }
+                        if(relativeLayoutInitialSearchBarNew.getVisibility() == View.GONE) {
+                            relativeLayoutInitialSearchBarNew.setVisibility(View.VISIBLE);
+                            isPickupSet = true;
+                            setHeightDropAddress(1);
+                            setPickupLocationInitialUI();
+                            return;
+                        }
+                        if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP, 0) == 1
+								&& region.getReverseBid() != 1 && region.getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                            openRequestConfirmDialog();
                         } else {
-                            Utils.showToast(HomeActivity.this,getString(R.string.error_bid_value));
+                            onReqestRideConfirmClick();
                         }
                     } else {
                         Utils.showToast(HomeActivity.this,getString(R.string.destination_required));
@@ -1630,6 +1680,13 @@ RelativeLayout plusBadge;
             }
         });
 
+        tvTermsAndConditions.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new VehicleFareEstimateDialog().show(HomeActivity.this,
+                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+            }
+        });
 
         imageViewInAppCampaign.setOnClickListener(new OnClickListener() {
             @Override
@@ -1660,10 +1717,7 @@ RelativeLayout plusBadge;
                 if(!TextUtils.isEmpty(ivLikePickup.getTag().toString())){
                     return;
                 }
-                String address = Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng());
-                String title = address.equalsIgnoreCase(textViewInitialSearch.getText().toString()) ? "" : textViewInitialSearch.getText().toString();
-                SearchResult searchResult = new SearchResult(title, address, "",
-                        Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude);
+                SearchResult searchResult = Data.autoData.getPickupSearchResult();
                 if(TextUtils.isEmpty(searchResult.getAddress())) {
                     Utils.showToast(HomeActivity.this, getString(R.string.please_wait));
                     return;
@@ -1758,6 +1812,13 @@ RelativeLayout plusBadge;
             }
         });
 
+        tvPickupRentalOutstation.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+            }
+        });
+
         imageViewDropCross.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1765,7 +1826,6 @@ RelativeLayout plusBadge;
                     Data.autoData.setDropLatLng(null);
                     Data.autoData.setDropAddress("");
                     Data.autoData.setDropAddressId(0);
-                    dropLocationSet = false;
                     dropLocationSearched = false;
                     if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
 							|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getDestinationMandatory() == 1) {
@@ -1829,6 +1889,13 @@ RelativeLayout plusBadge;
             }
         });
 
+		tvFreeRidesForLife.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				MenuAdapter.onClickAction(MenuInfoTags.FREE_RIDES_NEW.getTag(),0,0,HomeActivity.this,getCurrentPlaceLatLng());
+			}
+		});
+
 
         // Assigning layout events
         textViewCancellation.setOnClickListener(new OnClickListener() {
@@ -1837,8 +1904,54 @@ RelativeLayout plusBadge;
             }
         });
 
+		bRaiseOfferFare.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(Data.autoData.getIsReverseBid() == 1) {
+					cancelAndReBid();
+				}
+			}
+		});
 
-        initialCancelRideBtn.setOnClickListener(new OnClickListener() {
+		tvRaiseFareMinus.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				double innerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MIN_REGION_FARE, 20.0f);
+				if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+						&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
+					innerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 0.8);
+				}
+
+				double incrementVal = getBidIncrementValFromServer();
+				if(Data.autoData.getChangedBidValue()-incrementVal >= innerValue) {
+					Data.autoData.setChangedBidValue(Data.autoData.getChangedBidValue() - incrementVal);
+					tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getChangedBidValue()));
+					bRaiseOfferFare.setEnabled(Data.autoData.getInitialBidValue() != Data.autoData.getChangedBidValue());
+				} else {
+					Utils.showToast(HomeActivity.this, getString(R.string.offer_cannot_be_less_than_min_value));
+				}
+			}
+		});
+		tvRaiseFarePlus.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				double outerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MAX_REGION_FARE, 5000.0f);
+				if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
+						&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare()!= null) {
+					outerValue = Math.ceil(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare().getFare() * 10);
+				}
+				double incrementVal = getBidIncrementValFromServer();
+				if(Data.autoData.getChangedBidValue()+incrementVal <= outerValue) {
+					Data.autoData.setChangedBidValue(Data.autoData.getChangedBidValue() + incrementVal);
+					tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getChangedBidValue()));
+					bRaiseOfferFare.setEnabled(Data.autoData.getInitialBidValue() != Data.autoData.getChangedBidValue());
+				} else {
+					Utils.showToast(HomeActivity.this, getString(R.string.offer_cannot_be_more_than_max_value));
+				}
+			}
+		});
+
+        tvInitialCancelRide.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
@@ -1852,10 +1965,9 @@ RelativeLayout plusBadge;
         });
 
 
-        relativeLayoutAssigningDropLocationClick.setOnClickListener(new OnClickListener() {
+		tvDropAssigning.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                relativeLayoutDestinationHelp.setVisibility(View.GONE);
                 initDropLocationSearchUI(false);
             }
         });
@@ -1986,11 +2098,6 @@ RelativeLayout plusBadge;
             }
         });
 
-        linearLayoutInRideDriverInfo.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
 
 
         // End ride review layout events
@@ -2247,9 +2354,11 @@ RelativeLayout plusBadge;
                     //linearLayoutRideSummaryContainerSetVisiblity(View.VISIBLE, RideEndFragmentMode.BAD_FEEDBACK);
                     submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                             rating, "", "");
-                    if (Data.isFuguChatEnabled()) {
+                    if (Data.isFuguChatEnabled()
+							|| Data.isHippoTicketForRideEnabled(HomeActivity.this)) {
                         fuguCustomerHelpRides(false);
-                    } else if (Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)) {
+                    }
+                    else if (Data.isMenuTagEnabled(MenuInfoTags.EMAIL_SUPPORT)) {
                         startActivity(new Intent(HomeActivity.this, SupportMailActivity.class));
                     } else {
                         Intent intent = new Intent(HomeActivity.this, SupportActivity.class);
@@ -2330,6 +2439,8 @@ RelativeLayout plusBadge;
 
 		cvTutorialBanner = findViewById(R.id.cvTutorialBanner);
 		tvTutorialBanner = findViewById(R.id.tvTutorialBanner);
+        tvAddedTip = findViewById(R.id.tvAddedTip);
+        tvAddedTip.setVisibility(View.GONE);
 		ivCrossTutorialBanner = findViewById(R.id.ivCrossTutorialBanner);
 
 		ivCrossTutorialBanner.setOnClickListener(v -> {
@@ -2371,10 +2482,6 @@ RelativeLayout plusBadge;
         });
 
 
-        // Show tutorial for Jeanie
-//        if(Data.userData.getShowHomeScreen() == 1){
-//            fabViewTest.getMenuLabelsRightTest().performClick();
-//        }
 
         getHandler().postDelayed(new Runnable() {
             @Override
@@ -2421,7 +2528,7 @@ RelativeLayout plusBadge;
 
         try {
             if (Data.getFuguChatBundle() != null) {
-                fuguNotificationConfig.handleFuguPushNotification(HomeActivity.this, Data.getFuguChatBundle());
+                fuguNotificationConfig.handleHippoPushNotification(HomeActivity.this, Data.getFuguChatBundle());
                 Data.setFuguChatBundle(null);
             }
         } catch (Exception e) {
@@ -2467,6 +2574,65 @@ RelativeLayout plusBadge;
         }
 
 
+        checkForYoutubeIntent();
+
+    }
+
+    private void onReqestRideConfirmClick() {
+        Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+        if (isNewUI && region.getReverseBid() == 1
+                && !editTextBidValue.getText().toString().isEmpty()) {
+            double innerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MIN_REGION_FARE, 20.0f);
+            double outerValue = Prefs.with(HomeActivity.this).getFloat(Constants.KEY_MAX_REGION_FARE, 5000.0f);
+            if(region.getRegionFare()!= null) {
+                innerValue = Math.ceil(region.getRegionFare().getFare() * 0.8);
+                outerValue = Math.ceil(region.getRegionFare().getFare() * 10);
+            }
+            String minBidValueStr = Utils.formatCurrencyValue(Data.autoData.getCurrency(), innerValue);
+            String innerStr = getString(R.string.bid_lower_value_err, minBidValueStr);
+            String outerStr = getString(R.string.bid_greater_amount_err);
+            if (Double.parseDouble(editTextBidValue.getText().toString()) < innerValue) {
+                EnterBidDialog.INSTANCE.showRaiseFareDialog(HomeActivity.this, innerStr,
+                        getString(R.string.raise_to_format, minBidValueStr), innerValue, false, value -> {
+                            editTextBidValue.setText(value);
+                            buttonConfirmRequest.performClick();
+                        });
+
+            } else if (Double.parseDouble(editTextBidValue.getText().toString()) > outerValue) {
+                EnterBidDialog.INSTANCE.show(HomeActivity.this, null, outerStr,
+                        getString(R.string.suggested_fare)+": "+minBidValueStr, Utils.getCurrencySymbol(Data.autoData.getCurrency()), getString(R.string.confirm), true, value -> {
+                            editTextBidValue.setText(value);
+                            buttonConfirmRequest.performClick();
+                        });
+
+            } else {
+                if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                    findDriversETACall(true, true, false, getApiFindADriver().getParams());
+                } else {
+                    if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                            .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                        openBikeRentalScan();
+                    } else {
+                        requestRideClick();
+                    }
+                }
+
+            }
+        } else if(isNewUI && region.getReverseBid() == 1
+                && editTextBidValue.getText().toString().isEmpty()) {
+            Utils.showToast(HomeActivity.this,getString(R.string.error_bid_value));
+        } else {
+            if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
+                findDriversETACall(true, true, false, getApiFindADriver().getParams());
+            } else {
+                if (getSlidingBottomPanel().getRequestRideOptionsFragment()
+                        .getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+                    openBikeRentalScan();
+                } else {
+                    requestRideClick();
+                }
+            }
+        }
     }
     ArrayList<Integer> imgBadgesClicked=new ArrayList<>();
     public void resetFeedBackListClicked(int pos){
@@ -2526,6 +2692,13 @@ RelativeLayout plusBadge;
                 }
             }
             rvRideTypes.setVisibility(serviceTypesEligible.size() > 1 ? View.VISIBLE : View.GONE);
+			setTopBarMenuIcon();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setTopBarTransNewUI();
+                }
+            }, 50);
         }
     }
 
@@ -2609,7 +2782,7 @@ RelativeLayout plusBadge;
                 public void onConfirmed(Double amount, String engagementId) {
 
                     if(passengerScreenMode==PassengerScreenMode.P_RIDE_END){
-                        getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId());
+                        getRideSummaryAPI(HomeActivity.this,Data.autoData.getcEngagementId(), null);
                     }else{
                         updateDriverTipUI(passengerScreenMode);
 
@@ -2676,6 +2849,9 @@ RelativeLayout plusBadge;
         map = googleMap;
         if (map != null) {
 
+			boolean success = map.setMapStyle(
+					MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_json));
+
             map.getUiSettings().setZoomGesturesEnabled(false);
             map.getUiSettings().setZoomControlsEnabled(false);
             enableMapMyLocation();
@@ -2699,7 +2875,6 @@ RelativeLayout plusBadge;
                         zoomedToMyLocation = true;
                         Data.latitude = latitude;
                         Data.longitude = longitude;
-                        Data.autoData.setPickupLatLng(latLngInIntent);
                         Log.w("pickuplogging", "onMapReady"+Data.autoData.getPickupLatLng());
                         mapTouched = true;
                         addressPopulatedFromDifferentOffering = true;
@@ -2720,7 +2895,9 @@ RelativeLayout plusBadge;
                     }
                 }
                 Log.w("getAddressAsync", "onMapReady");
-                getAddressAsync(latLng, isNewUI() ? textViewInitialSearchNew : textViewInitialSearch, null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+                if(passengerScreenMode == P_INITIAL) {
+					getAddressAsync(latLng, getInitialPickupTextView(), null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+				}
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -2745,9 +2922,9 @@ RelativeLayout plusBadge;
 
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED)
 								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
-                                && getResources().getBoolean(R.bool.show_save_location_dialog)
+                                && showSaveLocationDialog()
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
-                        && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+                        && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(), false) == null) {
                             openSaveLocationDialog(true);
                             pickupLocationMarker.remove();
                             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
@@ -2810,9 +2987,9 @@ RelativeLayout plusBadge;
                         if((passengerScreenMode == PassengerScreenMode.P_IN_RIDE || passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED
                                 || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL)
 								&& (Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal())
-                                && getResources().getBoolean(R.bool.show_save_location_dialog)
+                                && showSaveLocationDialog()
                                 && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)
-                                && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+                                && HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(), false) == null) {
                             openSaveLocationDialog(false);
                             dropLocationMarker.remove();
                             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getDropLatLng()));
@@ -2839,6 +3016,7 @@ RelativeLayout plusBadge;
                     touchCalled = true;
                     mapTouched = true;
                     zoomAfterFindADriver = false;
+					myLocationButtonPressed = false;
                 }
 
                 @Override
@@ -2866,9 +3044,9 @@ RelativeLayout plusBadge;
                     try {
                         checkForMyLocationButtonVisibility();
                         if((Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 1 && !isNewUI) || fromNaviCurrentLocation) {
-                            fromNaviCurrentLocation = false;
                             Log.w("findADriverAndGeocode", "onMapSettled");
-                            refresh = findADriverAndGeocode(map.getCameraPosition().target, mapTouched, touchCalled, releaseCalled);
+                            refresh = findADriverAndGeocode(fromNaviCurrentLocation ? getCurrentLatLng() : map.getCameraPosition().target, mapTouched, touchCalled, releaseCalled);
+							fromNaviCurrentLocation = false;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -2888,15 +3066,17 @@ RelativeLayout plusBadge;
 
                     Log.v("camera position is", "--> " + cameraPosition.zoom);
                     if (previousZoomLevel != cameraPosition.zoom) {
-                        if ((savedAddressState != HomeUtil.SavedAddressState.MARKER_WITH_TEXT) && cameraPosition.zoom > 15f) {
-                            homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true);
+                        if ((savedAddressState != HomeUtil.SavedAddressState.MARKER_WITH_TEXT) && cameraPosition.zoom > 17f) {
+                            homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true, passengerScreenMode);
                             savedAddressState = HomeUtil.SavedAddressState.MARKER_WITH_TEXT;
-                            homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
-                        } else if ((savedAddressState != HomeUtil.SavedAddressState.MARKER) && (cameraPosition.zoom < 15f) && (cameraPosition.zoom > 10f)) {
-                            homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, false);
+                            homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map, passengerScreenMode);
+                        }
+                        else if ((savedAddressState != HomeUtil.SavedAddressState.MARKER) && (cameraPosition.zoom < 17f) && (cameraPosition.zoom > 12f)) {
+                            homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, false, passengerScreenMode);
                             savedAddressState = HomeUtil.SavedAddressState.MARKER;
-                            homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
-                        } else if (cameraPosition.zoom < 10f) {
+                            homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map, passengerScreenMode);
+                        }
+                        else if (cameraPosition.zoom < 10f) {
                             homeUtil.removeSavedAddress(map);
                             savedAddressState = HomeUtil.SavedAddressState.BLANK;
                             homeUtil.removeMarkersPointsOfInterest(map);
@@ -2938,11 +3118,12 @@ RelativeLayout plusBadge;
 
             switchUserScreen();
 
+			setServiceTypeAdapter(true);
             startUIAfterGettingUserStatus();
 			getHandler().postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					if (Data.autoData.getDropLatLng() == null && !isNewUI()) {
+					if (Data.autoData != null && Data.autoData.getDropLatLng() == null && !isNewUI()) {
 						relativeLayoutDestSearchBar.performClick();
 					}
 				}
@@ -3022,7 +3203,13 @@ RelativeLayout plusBadge;
 
     }
 
-    private void openSaveLocationDialog(final boolean isPickup) {
+	public TextView getInitialPickupTextView() {
+		return Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
+				|| Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()) ?
+				tvPickupRentalOutstation : isNewUI() ? textViewInitialSearchNew : textViewInitialSearch;
+	}
+
+	private void openSaveLocationDialog(final boolean isPickup) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
         if (prev != null) {
@@ -3033,6 +3220,63 @@ RelativeLayout plusBadge;
         String address = isPickup ? Data.autoData.getPickupAddress(latLng) : Data.autoData.getDropAddress();
         DialogFragment dialogFragment = SaveLocationDialog.newInstance(latLng.latitude,latLng.longitude, address, isPickup, googleMapPadding - 10);
         dialogFragment.show(ft, "dialog");
+    }
+
+    private void openRequestConfirmDialog() {
+        setTipAmountToZero(true);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(RideConfirmationDialog.class.getSimpleName());
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DialogFragment dialogFragment = RideConfirmationDialog.newInstance(getRequestRideObject(checkForTipEnabled()));
+        dialogFragment.show(ft, RideConfirmationDialog.class.getSimpleName());
+    }
+
+    private boolean checkForTipEnabled() {
+        return mRequestLevelndex != -1 && mRequestLevelndex < Data.autoData.getRequestLevels().size()
+                ? Data.autoData.getRequestLevels().get(mRequestLevelndex).getTipEnabled() == 1 && Data.autoData.getDropLatLng() != null : false;
+    }
+
+    private RequestRideConfirm getRequestRideObject(boolean showTipLevelWise) {
+        Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+        boolean isNotInRange = region.getRideType() == RideTypeValue.POOL.getOrdinal() || region.getFareMandatory() == 1;
+        boolean showTip = region.getReverseBid() == 0 && region.getFareMandatory() == 1 && showTipLevelWise;
+
+        RequestRideConfirm requestRideConfirm = new RequestRideConfirm(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
+                region.getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ? "" : Data.autoData.getDropAddress(), region.getImages().getTabHighlighted(),
+                region.getRegionName(), region.getDisclaimerText(), region.getRegionFare() != null ? region.getRegionFare().getFareText(0).toString() : "",
+                isNotInRange && region.getRegionFare() != null ? region.getRegionFare().getFare() : 0.0,
+                region.getRegionFare() != null ? region.getRegionFare().getMinFare() : 0.0,
+                region.getRegionFare() != null ? region.getRegionFare().getMaxFare() : 0.0, Data.autoData.getCurrency(), showTip);
+
+        return requestRideConfirm;
+    }
+
+    private void openDriverNotFoundTipDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(DriverNotFoundDialog.class.getSimpleName());
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DialogFragment dialogFragment = DriverNotFoundDialog.newInstance(getRequestRideObject(checkForTipEnabled()));
+        dialogFragment.show(ft, DriverNotFoundDialog.class.getSimpleName());
+    }
+
+    private void openDriverContactListDialog() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag(DriverCallDialog.class.getSimpleName());
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+
+        DialogFragment dialogFragment = DriverCallDialog.newInstance(getRequestRideObject(checkForTipEnabled()));
+        dialogFragment.show(ft, DriverCallDialog.class.getSimpleName());
     }
 
     private void enableMapMyLocation() {
@@ -3157,12 +3401,11 @@ RelativeLayout plusBadge;
                 translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
             }
 
-            textViewDestSearch.setText(searchResult.getNameForText());
+            textViewDestSearch.setText(searchResult.getNameForText(this));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
-            textViewDestSearchNew.setText(searchResult.getNameForText());
+            textViewDestSearchNew.setText(searchResult.getNameForText(this));
             textViewDestSearchNew.setTextColor(getResources().getColor(R.color.text_color));
 
-            dropLocationSet = true;
             relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
             imageViewDropCross.setVisibility(View.VISIBLE);
             imageViewDropCrossNew.setVisibility(View.VISIBLE);
@@ -3314,8 +3557,8 @@ RelativeLayout plusBadge;
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
             Data.autoData.setDropAddressId(0);
-            dropLocationSet = false;
             dropLocationSearched = false;
+
 
             textViewDestSearch.setText("");
             textViewDestSearchNew.setText("");
@@ -3358,7 +3601,7 @@ RelativeLayout plusBadge;
                     centreLocationRl.setLayoutParams(params);
                     bottomPadding = (isNewUI() || confirmedScreenOpened) ? bottomPadding - (ASSL.Yscale() * 125F) : 0F;
                 } else {
-                    mapTopPadding = 100.0f;
+                    mapTopPadding = 230.0f;
                     if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode){
 						bottomPadding = bottomPadding - (ASSL.Yscale() * 125F);
 					}
@@ -3503,9 +3746,8 @@ RelativeLayout plusBadge;
 
     private void snapPickupLocToNearbyAddress(SearchResult searchResult) {
         try {
-            Data.autoData.setPickupLatLng(searchResult.getLatLng());
+            Data.autoData.setPickupSearchResult(searchResult.getAddress(), searchResult.getLatLng());
             Log.w("pickuplogging", "snap pickup to nrearby"+Data.autoData.getPickupLatLng());
-            Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
             map.moveCamera(CameraUpdateFactory.newLatLng(Data.autoData.getPickupLatLng()));
             addUserCurrentLocationAddressMarker();
             if (getApiFindADriver().findADriverNeeded(Data.autoData.getPickupLatLng())) {
@@ -3535,7 +3777,7 @@ RelativeLayout plusBadge;
 
                                 if (!specialPickupScreenOpened && Data.autoData.getUseRecentLocAtRequest() == 1) {
                                     SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
-                                            CHOOSE_SAVED_PICKUP_ADDRESS, true);
+											true);
                                     if (searchResult != null) {
                                         if (MapUtils.distance(Data.autoData.getPickupLatLng(), searchResult.getLatLng())
                                                 <= Data.autoData.getUseRecentLocAutoSnapMinDistance()) {
@@ -3593,6 +3835,14 @@ RelativeLayout plusBadge;
             }
     }
 
+    private void setTipAmountToZero(boolean isResetRequest) {
+        if(Data.autoData != null) {
+            Data.autoData.setNoDriverFoundTip(0.0);
+        }
+        if(isResetRequest) mRequestType = 0;
+        mRequestLevelndex = 0;
+    }
+
     private boolean addressMatchedWithSavedAddresses(String address) {
         if (address.equalsIgnoreCase(getResources().getString(R.string.home)) || address.equalsIgnoreCase(getResources().getString(R.string.work))) {
             return true;
@@ -3643,8 +3893,10 @@ RelativeLayout plusBadge;
         }
     }
 
+    private boolean myLocationButtonPressed = false;
+
     private void navigateToCurrLoc() {
-        if (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation()) {
+        if (TextUtils.isEmpty(Data.autoData.getFarAwayCity()) && (isPoolRideAtConfirmation() || isNormalRideWithDropAtConfirmation())) {
             poolPathZoomAtConfirm();
             return;
         }
@@ -3652,6 +3904,7 @@ RelativeLayout plusBadge;
                 && Data.autoData != null
                 && Data.autoData.getAssignedDriverInfo() != null
                 && Data.autoData.getAssignedDriverInfo().latLng != null) {
+			myLocationButtonPressed = true;
             zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
         } else {
             if (myLocation != null) {
@@ -3731,7 +3984,7 @@ RelativeLayout plusBadge;
                         driverMarkerInRide = null;
                     } catch (Exception e) {
                     }
-                    lastSavedLatLng = null;
+                    lastRidePathLatLng = null;
                 }
 
                 removeSaveLocationDialog();
@@ -3772,7 +4025,6 @@ RelativeLayout plusBadge;
 
                         // delete the RidePath Table from Phone Database :)
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
-                        //fabViewTest.setRelativeLayoutFABVisibility(mode);
 
                         findViewById(R.id.llRideEndTotalFareTakeCash).setVisibility(Prefs.with(this)
                                 .getInt(Constants.KEY_SHOW_FARE_DETAILS_AT_RIDE_END, 1) == 1 ? View.VISIBLE : View.GONE);
@@ -3833,6 +4085,7 @@ RelativeLayout plusBadge;
 					topBar.tvCancel.setVisibility(View.GONE);
 				}
                 cvTutorialBanner.setVisibility(View.GONE);
+				DriverToPickupPath.INSTANCE.removePolylineDriverToPickup(mode);
 
                 switch (mode) {
 
@@ -3851,11 +4104,6 @@ RelativeLayout plusBadge;
                         GCMIntentService.clearNotifications(HomeActivity.this);
                         Prefs.with(HomeActivity.this).save(Constants.KEY_CHAT_COUNT, 0);
 
-                        if (!dropLocationSet) {
-                            Data.autoData.setDropLatLng(null);
-                            Data.autoData.setDropAddress("");
-                            Data.autoData.setDropAddressId(0);
-                        }
                         Data.autoData.setAssignedDriverInfo(null);
 
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
@@ -3898,13 +4146,15 @@ RelativeLayout plusBadge;
                         Log.e("myLocation", "=" + myLocation);
 
                         if (Data.autoData.getPickupLatLng() == null) {
+                        	LatLng latLng = null;
                             if (Data.latitude != 0 && Data.longitude != 0) {
-                                Data.autoData.setPickupLatLng(new LatLng(Data.latitude, Data.longitude));
+								latLng = new LatLng(Data.latitude, Data.longitude);
                                 Log.w("pickuplogging", "case P_INITIAL Data.latitude"+Data.autoData.getPickupLatLng());
                             } else if (myLocation != null) {
-                                Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+								latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
                                 Log.w("pickuplogging", "case P_INITIAL mylocation"+Data.autoData.getPickupLatLng());
                             }
+                            getAddressAsync(latLng, getInitialPickupTextView(), null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
                         }
 
 						if(passengerScreenMode == P_INITIAL
@@ -3939,6 +4189,8 @@ RelativeLayout plusBadge;
                             showCenterPickupPin(true);
                         }
 
+						relativeLayoutConfirmBottom.getMeasuredHeight();
+						constraintLayoutRideTypeConfirm.getMeasuredHeight();
                         findADriverFinishing(false, !switchUICalledFromStateRestore);
 
                         linearLayoutRequestMain.setVisibility(View.VISIBLE);
@@ -3974,9 +4226,6 @@ RelativeLayout plusBadge;
                             linearLayoutRequestMain.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.GONE);
                             topBar.imageViewBack.setVisibility(View.VISIBLE);
-                            if(!selectPickUpdropAtOnce){
-                                relativeLayoutInitialSearchBar.setEnabled(false);
-                            }
 
                             if(mNotes != null && !mNotes.isEmpty()) {
                                 imageViewNotes.setVisibility(View.VISIBLE);
@@ -4026,7 +4275,8 @@ RelativeLayout plusBadge;
                                 findViewById(R.id.ivNotes).setVisibility(View.GONE);
                             }
                         } else if(isNewUI) {
-                            buttonConfirmRequest.setText(R.string.book);
+                            buttonConfirmRequest.setText(R.string.confirm_ride);
+                            imageViewRideNow.setVisibility(View.GONE);
                             relativeLayoutSearchContainerNew.setVisibility(View.VISIBLE);
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                             relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
@@ -4035,7 +4285,7 @@ RelativeLayout plusBadge;
                             topBar.imageViewBack.setVisibility(View.GONE);
                             topBar.imageViewMenu.setVisibility(View.VISIBLE);
                             buttonConfirmRequest.setBackground(ContextCompat.getDrawable(this, R.drawable.background_theme_gradient_selector));
-                            RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(int) (ASSL.Xscale()*96));
+                            RelativeLayout.LayoutParams  params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(int) (ASSL.Xscale()*80));
                             buttonConfirmRequest.setTextSize(19);
                             params.setMargins(30,0,30,20);
                             params.addRule(RelativeLayout.BELOW,linearLayoutConfirmOption.getId());
@@ -4046,9 +4296,6 @@ RelativeLayout plusBadge;
                                     currentLocationMarker.remove();
                                 }
                                 fareEstimatBeforeRequestRide();
-                            }
-                            if(!selectPickUpdropAtOnce){
-                                relativeLayoutInitialSearchBar.setEnabled(false);
                             }
                             if(mNotes != null && !mNotes.isEmpty()) {
                                 imageViewNotes.setVisibility(View.VISIBLE);
@@ -4085,23 +4332,26 @@ RelativeLayout plusBadge;
                             }
                             relativeLayoutSearchContainer.setVisibility(View.GONE);
                             hideCenterPickupPin();
+                            setPickupLocationInitialUI();
+                            if(Data.autoData != null) {
+                                if (!TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()))) {
+                                    textViewInitialSearchNew.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+                                }
+                                if(!TextUtils.isEmpty(Data.autoData.getDropAddress())) {
+                                    textViewDestSearchNew.setText(Data.autoData.getDropAddress());
+                                }
+                            }
+                            checkForNoDriverFoundHelp();
                         } else {
                             if (!specialPickupScreenOpened && map != null) {
                                 if (!searchedALocation) {
                                     dropAddressName = "";
                                 }
                             }
-                            textViewAssigningDropLocationClick.setText("");
+							tvDropAssigning.setText("");
                             textViewFinalDropLocationClick.setText("");
                         }
 
-						relativeLayoutConfirmBottom.getMeasuredHeight();
-						relativeLayoutConfirmBottom.post(new Runnable() {
-							@Override
-							public void run() {
-								setGoogleMapPadding(relativeLayoutConfirmBottom.getMeasuredHeight(), true);
-							}
-						});
 
                         if(scheduleRideOpen){
                            scheduleRideContainer.setVisibility(View.VISIBLE);
@@ -4156,10 +4406,6 @@ RelativeLayout plusBadge;
                         topBar.imageViewMenu.setVisibility(View.GONE);
 
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
-                        //fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
-//                        genieLayout.setVisibility(View.GONE);
-                        //fabView.relativeLayoutFAB.setVisibility(View.INVISIBLE);
-                        //fabView.setRelativeLayoutFABVisibility(mode);
 
                         break;
 
@@ -4203,13 +4449,15 @@ RelativeLayout plusBadge;
 
                         pwBidTimer.setVisibility(View.GONE);
                         tvBidTimer.setVisibility(View.GONE);
-                        initialCancelRideBtn.setVisibility(View.GONE);
+                        tvInitialCancelRide.setVisibility(View.GONE);
                         try {
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
                         updateBidsView();
+
+                        checkForAddedTip();
 
                         getHandler().postDelayed(new Runnable() {
                             @Override
@@ -4271,8 +4519,6 @@ RelativeLayout plusBadge;
                         setJeanieVisibility();
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
 
-						llFindingADriver.getMeasuredHeight();
-						llFindingADriver.post(() -> setGoogleMapPadding(llFindingADriver.getMeasuredHeight(), true));
 
                         break;
 
@@ -4283,6 +4529,12 @@ RelativeLayout plusBadge;
 
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
+//                        if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null
+//                                && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+//                            relativeLayoutFinalDropLocationClick.setVisibility(View.GONE);
+//                        } else {
+//                            relativeLayoutFinalDropLocationClick.setVisibility(View.VISIBLE);
+//                        }
                         fabViewTest = new FABViewTest(this, fabViewFinal);
                         if (map != null) {
 
@@ -4299,8 +4551,12 @@ RelativeLayout plusBadge;
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true);
+                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null,
+										true, getMarkerAnimationDuration());
                             }
+							myLocationButtonPressed = true;
+							DriverToPickupPath.INSTANCE.showPath(this, mode, map,
+									Data.autoData.getAssignedDriverInfo().latLng, Data.autoData.getPickupLatLng());
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), false));
                         }
 
@@ -4384,8 +4640,12 @@ RelativeLayout plusBadge;
                             } else {
                                 MarkerAnimation.clearAsyncList();
                                 MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null, false, null, 0, 0, 0, true);
+                                        Data.autoData.getAssignedDriverInfo().latLng, new LatLngInterpolator.LinearFixed(), null,
+										true, getMarkerAnimationDuration());
                             }
+							myLocationButtonPressed = true;
+							DriverToPickupPath.INSTANCE.showPath(this, mode, map,
+									Data.autoData.getAssignedDriverInfo().latLng, Data.autoData.getPickupLatLng());
                             pickupLocationMarker = map.addMarker(getStartPickupLocMarkerOptions(Data.autoData.getPickupLatLng(), true));
                         }
 
@@ -4491,6 +4751,7 @@ RelativeLayout plusBadge;
                         setDropLocationEngagedUI();
 
                         setAssignedDriverData(mode);
+						myLocationButtonPressed = true;
                         zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, null, 0);
 
                         buttonCancelRide.setVisibility(View.GONE);
@@ -4581,7 +4842,6 @@ RelativeLayout plusBadge;
 
                         dismissPushDialog(true);
 
-                        dropLocationSet = false;
                         Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
                         //fabView.setRelativeLayoutFABVisibility(mode);
 
@@ -4646,16 +4906,23 @@ RelativeLayout plusBadge;
         }
     }
 
+    private void checkForAddedTip() {
+        if(Data.autoData != null && Data.autoData.getNoDriverFoundTip() > 0.0) {
+            tvAddedTip.setVisibility(View.VISIBLE);
+            tvAddedTip.setText(getString(R.string.label_tip_added, Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getNoDriverFoundTip())));
+        } else {
+            tvAddedTip.setVisibility(View.GONE);
+        }
+    }
+
     private void setDropEditInAssigningState() {
         try {
             if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
                 || slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1
                 || (Data.autoData != null && Data.autoData.getIsReverseBid() == 1)) {
-                imageViewAssigningDropLocationEdit.setVisibility(View.GONE);
-                relativeLayoutAssigningDropLocationClick.setEnabled(false);
+				tvDropAssigning.setEnabled(false);
             } else {
-                imageViewAssigningDropLocationEdit.setVisibility(View.VISIBLE);
-                relativeLayoutAssigningDropLocationClick.setEnabled(true);
+				tvDropAssigning.setEnabled(false);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -4665,7 +4932,7 @@ RelativeLayout plusBadge;
     public void setLikeDropVisibilityAndBG() {
         ivLikeDrop.setVisibility(getLikePickupDropVisibility());
         if(ivLikeDrop.getVisibility() == View.VISIBLE && Data.autoData != null && Data.autoData.getDropLatLng() != null){
-            SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+            SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), false);
             if(searchResult != null){
                 ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
                 ivLikeDrop.setTag("liked");
@@ -4698,7 +4965,8 @@ RelativeLayout plusBadge;
         vehiclesTabAdapterConfirmRide = new VehiclesTabAdapter(HomeActivity.this, Data.autoData.getRegions(),true);
         if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null  &&
                 Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()
-                && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0){
+                && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0
+				&& Data.autoData.getAssignedDriverInfo().getTipBeforeRequestRide() <= 0){
             buttonTipDriver.setVisibility(View.VISIBLE);
             setAddedTipUI();
         }else if(mode==PassengerScreenMode.P_RIDE_END && Data.autoData!=null  &&
@@ -4783,6 +5051,7 @@ RelativeLayout plusBadge;
                             || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal())
                     && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) ? View.VISIBLE : View.GONE;
             llPayOnline.setVisibility(onlinePaymentVisibility);
+            cvPayOnline.setVisibility(onlinePaymentVisibility);
             tvPayOnline.setVisibility(onlinePaymentVisibility);
             return onlinePaymentVisibility;
         } catch (Exception e) {
@@ -4793,9 +5062,10 @@ RelativeLayout plusBadge;
 
     private void showChatButton() {
         try {
-            if (passengerScreenMode != PassengerScreenMode.P_IN_RIDE && Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
+            if (passengerScreenMode != PassengerScreenMode.P_IN_RIDE
+					&& Data.autoData.getAssignedDriverInfo().getChatEnabled() == 1) {
                 rlChatDriver.setVisibility(View.VISIBLE);
-                buttonCallDriver.setVisibility(View.GONE);
+				buttonCallDriver.setVisibility(View.GONE);
                 if (Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0) > 0) {
                     tvChatCount.setVisibility(View.VISIBLE);
                     tvChatCount.setText(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 0));
@@ -4805,7 +5075,7 @@ RelativeLayout plusBadge;
                 }
             } else {
                 rlChatDriver.setVisibility(View.GONE);
-                buttonCallDriver.setVisibility(View.VISIBLE);
+				buttonCallDriver.setVisibility(View.VISIBLE);
             }
 
         } catch (Exception e) {
@@ -4815,9 +5085,7 @@ RelativeLayout plusBadge;
 
 
     private void setFabViewAtRide(PassengerScreenMode mode) {
-        //fabViewTest.setFABMenuDrawable();
         float containerHeight = 110f;
-        //fabViewTest.setRelativeLayoutFABVisibility(mode);
         if (buttonCancelRide.getVisibility() == View.VISIBLE) {
             containerHeight = containerHeight + 40f;
         }
@@ -5023,9 +5291,9 @@ RelativeLayout plusBadge;
                     modeClicked = PlaceSearchListFragment.PlaceSearchMode.PICKUP.getOrdinal();
                 }
                 int mode = placeSearchMode.getOrdinal();
-                if(selectPickUpdropAtOnce && (P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
-                    mode = PlaceSearchListFragment.PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
-                }
+//                if(selectPickUpdropAtOnce && (P_INITIAL == passengerScreenMode || PassengerScreenMode.P_SEARCH == passengerScreenMode)){
+//                    mode = PlaceSearchListFragment.PlaceSearchMode.PICKUP_AND_DROP.getOrdinal();
+//                }
                 bundle.putInt(KEY_SEARCH_MODE, mode);
                 bundle.putInt(KEY_SEARCH_MODE_CLICKED, modeClicked);
                 getSupportFragmentManager().beginTransaction()
@@ -5055,8 +5323,8 @@ RelativeLayout plusBadge;
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if (frag == null || frag.isRemoving()) {
                 Bundle bundle = new Bundle();
-                if (textViewAssigningDropLocationClick.getText().length() > 0) {
-                    bundle.putString(KEY_SEARCH_FIELD_TEXT, textViewAssigningDropLocationClick.getText().toString());
+                if (tvDropAssigning.getText().length() > 0) {
+                    bundle.putString(KEY_SEARCH_FIELD_TEXT, tvDropAssigning.getText().toString());
                 } else {
                     bundle.putString(KEY_SEARCH_FIELD_TEXT, "");
                 }
@@ -5068,7 +5336,6 @@ RelativeLayout plusBadge;
                         .commitAllowingStateLoss();
             }
         } else {
-            //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
             relativeLayoutAssigningDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_ASSIGNING);
             if (frag != null) {
@@ -5079,6 +5346,10 @@ RelativeLayout plusBadge;
             }
             setJeanieVisibility();
         }
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) assigningLayout.getLayoutParams();
+        params.topMargin = View.VISIBLE == visiblity ? (int)(ASSL.Yscale() * 96F) : isNewUI() ? 0 : (int)(ASSL.Yscale() * 96F);
+		assigningLayout.setLayoutParams(params);
+		setTopBarTransNewUI();
     }
 
     private void relativeLayoutFinalDropLocationParentSetVisibility(int visiblity, String text) {
@@ -5102,7 +5373,6 @@ RelativeLayout plusBadge;
             }
             customerInRideMyLocationBtn.setVisibility(View.GONE);
         } else {
-            //fabViewTest.setRelativeLayoutFABVisibility(passengerScreenMode);
             relativeLayoutFinalDropLocationParent.setVisibility(View.GONE);
             Fragment frag = getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL);
             if (frag != null) {
@@ -5182,79 +5452,50 @@ RelativeLayout plusBadge;
 
     private void setDropLocationAssigningUI() {
         try {
-            if (Data.autoData.getDropLatLng() == null) {
-                if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
-                    relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-                    relativeLayoutDestinationHelp.setVisibility(View.GONE);
-                } else {
-                    if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
+        	getAddressAsync(Data.autoData.getPickupLatLng(), tvPickupAssigning, null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+			if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal() ||
+                    Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+				tvDropAssigning.setVisibility(View.GONE);
+				findViewById(R.id.iv2NewUIDropDashedLineAssigning).setVisibility(View.GONE);
+				findViewById(R.id.iv3NewUIDropMarkAssigning).setVisibility(View.GONE);
+			} else {
+				tvDropAssigning.setVisibility(View.VISIBLE);
+				findViewById(R.id.iv2NewUIDropDashedLineAssigning).setVisibility(View.VISIBLE);
+				findViewById(R.id.iv3NewUIDropMarkAssigning).setVisibility(View.VISIBLE);
+			}
+			setDropLocationMarker();
+			setDropEditInAssigningState();
+			if (Data.autoData.getDropLatLng() != null && passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+				getAddressAsync(Data.autoData.getDropLatLng(), tvDropAssigning, null, PlaceSearchListFragment.PlaceSearchMode.DROP);
+			} else if (Data.autoData.getDropLatLng() == null) {
+				tvDropAssigning.setText("");
+				dropAddressName = "";
+			}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-                        if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-							relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-                        } else {
-							relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-                        }
-                        try {
-                            Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-                            topInAnimation.setAnimationListener(new Animation.AnimationListener() {
-                                @Override
-                                public void onAnimationStart(Animation animation) {
-                                }
-
-                                @Override
-                                public void onAnimationEnd(Animation animation) {
-                                    relativeLayoutAssigningDropLocationClick.clearAnimation();
-                                    if (Data.userData != null && (!Data.autoData.getDestinationHelpText().equalsIgnoreCase(""))) {
-                                        textViewDestHelp.setText(Data.autoData.getDestinationHelpText());
-                                        if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                                            relativeLayoutDestinationHelp.setVisibility(View.GONE);
-                                        } else {
-                                            relativeLayoutDestinationHelp.setVisibility(View.VISIBLE);
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onAnimationRepeat(Animation animation) {
-
-                                }
-                            });
-							if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-								relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
-							}
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    textViewAssigningDropLocationClick.setText("");
-                    dropAddressName = "";
-                    setDropEditInAssigningState();
-                    progressBarAssigningDropLocation.setVisibility(View.GONE);
-                }
-            } else {
-                relativeLayoutDestinationHelp.setVisibility(View.GONE);
-                if (relativeLayoutAssigningDropLocationClick.getVisibility() == View.GONE) {
-					if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-						relativeLayoutAssigningDropLocationClick.setVisibility(View.GONE);
-					} else {
-						relativeLayoutAssigningDropLocationClick.setVisibility(View.VISIBLE);
-					}
-                    try {
-						if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-							Animation topInAnimation = AnimationUtils.loadAnimation(HomeActivity.this, R.anim.top_in);
-							relativeLayoutAssigningDropLocationClick.startAnimation(topInAnimation);
-						}
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                setDropLocationMarker();
-                setDropEditInAssigningState();
-                if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                    getAddressAsync(Data.autoData.getDropLatLng(), textViewAssigningDropLocationClick, progressBarAssigningDropLocation, PlaceSearchListFragment.PlaceSearchMode.DROP);
-                }
-            }
+    private void setPickupLocationInitialUI() {
+        try {
+			if (getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal() &&
+                    !Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
+                    && (Data.autoData.getDropLatLng() == null || Data.autoData.getDropAddress() == null)
+                    && Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1 && !isPickupSet) {
+                relativeLayoutInitialSearchBarNew.setVisibility(View.GONE);
+				findViewById(R.id.iv1).setVisibility(View.GONE);
+				findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.GONE);
+			} else {
+                relativeLayoutInitialSearchBarNew.setVisibility(View.VISIBLE);
+                findViewById(R.id.iv1).setVisibility(View.VISIBLE);
+                findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.VISIBLE);
+			}
+			if ((Data.autoData.getDropLatLng() == null || Data.autoData.getDropAddress() == null)
+					&& Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1 && !isPickupSet) {
+				setHeightDropAddress(0); // large
+			} else {
+				setHeightDropAddress(1); //Normal
+			}
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -5287,14 +5528,17 @@ RelativeLayout plusBadge;
             boolean savedLocationView = false;
             if((PassengerScreenMode.P_IN_RIDE == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
              || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode)
-                    && getResources().getBoolean(R.bool.show_save_location_dialog)
-                    && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) == null) {
+                    && showSaveLocationDialog()
+                    && HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), false) == null) {
                 savedLocationView = true;
             }
-            if(Data.autoData.getAssignedDriverInfo()!=null && Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
-                Log.e("ride type", Data.autoData.getAssignedDriverInfo().getRideType()+"");
-                    dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
-            }
+            if(Data.autoData.getAssignedDriverInfo() != null
+					&& Data.autoData.getAssignedDriverInfo().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()) {
+            	dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
+            } else if(PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+					&& slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()){
+				dropLocationMarker = map.addMarker(getCustomerLocationMarkerOptions(Data.autoData.getDropLatLng(), savedLocationView && !Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_DROP_LOCATION, false)));
+			}
 
         }
     }
@@ -5325,17 +5569,15 @@ RelativeLayout plusBadge;
 
     private void checkForGoogleLogoVisibilityInRide() {
         try {
-            float padding = getResources().getDimension(R.dimen.map_padding_request_final);
-            if (buttonCancelRide.getVisibility() == View.VISIBLE) {
-                padding = padding + getResources().getDimension(R.dimen.map_padding_request_final_extra);
-            }
-            if (relativeLayoutInRideInfo.getVisibility() == View.VISIBLE) {
-                padding = padding + getResources().getDimension(R.dimen.map_padding_request_final_extra);
-            }
-            if (relativeLayoutPoolSharing.getVisibility() == View.VISIBLE) {
-                padding = padding + 90;
-            }
-            setGoogleMapPadding(padding, false);
+        	if(linearLayoutInRideDriverInfo == null || map == null){
+        		return;
+			}
+			linearLayoutInRideDriverInfo.post(new Runnable() {
+				@Override
+				public void run() {
+					setGoogleMapPadding(linearLayoutInRideDriverInfo.getMeasuredHeight() - (int) (125 * ASSL.Yscale()), true);
+				}
+			});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -5417,10 +5659,10 @@ RelativeLayout plusBadge;
                 imageViewIRPaymentOption.setImageResource(R.drawable.ic_corporate);
             }
             else if (PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()) {
-                textViewIRPaymentOptionValue.setText(getString(R.string.cash));
+                textViewIRPaymentOptionValue.setText(getString(R.string.pay_later));
             } else {
                 textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
-                        .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()));
+                        .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode(),this));
             }
             if(PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()
                     && Prefs.with(this).getInt(KEY_SHOW_IN_RIDE_PAYMENT_OPTION, 1) != 1){
@@ -5742,14 +5984,28 @@ RelativeLayout plusBadge;
         }
     };
 
+    private StreamClient streamClient = new StreamClient();
+
     @Override
     protected void onResume() {
         super.onResume();
 
+        new Handler().postDelayed(() -> {
+            if(Prefs.with(HomeActivity.this).getBoolean(Constants.SP_PROMO_SCRATCHED, false)) {
+                slidingBottomPanel.getRequestRideOptionsFragment().selectAutoSelectedCouponAtRequestRide();
+                Prefs.with(HomeActivity.this).save(Constants.SP_PROMO_SCRATCHED, false);
+            }
+        }, 400);
 
         try {
 
+
+            if(pushDialog != null) {
+                pushDialog.onResume();
+            }
             removeSaveLocationDialog();
+
+            checkForNoDriverFoundHelp();
 
             if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null) {
                 isScheduleRideEnabled = Data.autoData.getServiceTypeSelected().getScheduleAvailable() == 1;
@@ -5782,7 +6038,7 @@ RelativeLayout plusBadge;
                                 Data.setLatLngOfJeanieLastShown(currLatLng);
                                 Data.autoData.setLastRefreshLatLng(currLatLng);
                                 Log.w("getAddressAsync", "onResume");
-                                getAddressAsync(currLatLng, isNewUI() ? textViewInitialSearchNew : textViewInitialSearch, null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+                                getAddressAsync(currLatLng, getInitialPickupTextView(), null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
                             } catch (Exception ignored) {}
                             initialMyLocationBtn.performClick();
                             mapTouched = true;
@@ -5849,21 +6105,24 @@ RelativeLayout plusBadge;
                 if (passengerScreenMode == P_INITIAL) {
                 	if(Data.autoData != null && Data.autoData.getDropLatLng() != null) {
 						SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getDropLatLng(),
-								Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+								false);
 						if (searchResult == null && Data.autoData.getDropAddressId() > 0) {
 							imageViewDropCross.performClick();
 							imageViewDropCrossNew.performClick();
 						}
 					}
-					if(intentFired){
+					if(intentFired && Data.autoData.getPickupLatLng() != null){
                         SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, Data.autoData.getPickupLatLng(),
-                                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+								false);
                         if (searchResult != null) {
                             textViewInitialSearch.setText(searchResult.getName());
                             textViewInitialSearchNew.setText(searchResult.getName());
+                            tvPickupRentalOutstation.setText(searchResult.getName());
                         } else {
-                            textViewInitialSearch.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
-                            textViewInitialSearchNew.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+                        	String address = Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng());
+                            textViewInitialSearch.setText(address);
+                            textViewInitialSearchNew.setText(address);
+                            tvPickupRentalOutstation.setText(address);
                         }
                     }
                 }
@@ -5893,6 +6152,18 @@ RelativeLayout plusBadge;
             e.printStackTrace();
         }
 
+    }
+
+    private void checkForNoDriverFoundHelp() {
+        String msg = Prefs.with(this).getString(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
+        if(msg != null && !msg.isEmpty()) {
+            try {
+                onNoDriverHelpPushReceived(new JSONObject(msg));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
+        }
     }
 
     private void removeSaveLocationDialog() {
@@ -6058,13 +6329,15 @@ RelativeLayout plusBadge;
                             placeAdded = true;
                             if (passengerScreenMode == P_INITIAL) {
                                 if (likeClicked == 1) {
-                                    textViewInitialSearch.setText(searchResult.getName());
-                                    textViewInitialSearchNew.setText(searchResult.getName());
+                                    textViewInitialSearch.setText(searchResult.getNameForText(this));
+                                    textViewInitialSearchNew.setText(searchResult.getNameForText(this));
+                                    tvPickupRentalOutstation.setText(searchResult.getNameForText(this));
                                     ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
                                     ivLikePickup.setTag("liked");
                                 } else if (likeClicked == 2) {
-                                    textViewDestSearch.setText(searchResult.getName());
-                                    textViewDestSearchNew.setText(searchResult.getName());
+                                    textViewDestSearch.setText(searchResult.getNameForText(this));
+                                    textViewDestSearchNew.setText(searchResult.getNameForText(this));
+                                    tvPickupRentalOutstation.setText(searchResult.getNameForText(this));
                                     ivLikeDrop.setImageResource(R.drawable.ic_heart_filled);
                                     ivLikeDrop.setTag("liked");
                                 }
@@ -6142,7 +6415,9 @@ RelativeLayout plusBadge;
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
                 }
-            }else{
+            } else if(resultCode == RESULT_PAUSE && requestCode == REQ_CODE_VIDEO && pushDialog != null) {
+                pushDialog.onActivityResult();
+            } else{
                 if(requestCode==REQ_BLE_ENABLE){
                     Log.e(TAG,"bluetooth permission result failed");
                     Data.autoData.setBluetoothEnabled(0);
@@ -6352,6 +6627,9 @@ RelativeLayout plusBadge;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if(pushDialog != null) {
+            pushDialog.onPause();
+        }
         super.onPause();
     }
 
@@ -6360,6 +6638,7 @@ RelativeLayout plusBadge;
         try {
             Utils.hideSoftKeyboard(this, textViewInitialSearch);
             Utils.hideSoftKeyboard(this, textViewInitialSearchNew);
+            Utils.hideSoftKeyboard(this, tvPickupRentalOutstation);
             getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -6490,6 +6769,7 @@ RelativeLayout plusBadge;
             FacebookLoginHelper.logoutFacebook();
             LocalBroadcastManager.getInstance(this).unregisterReceiver(pushBroadcastReceiver);
             System.gc();
+            searchLocationDB.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -6531,7 +6811,6 @@ RelativeLayout plusBadge;
                             progressBarInitialSearch.setVisibility(View.VISIBLE);
                             progressBarInitialSearch.spin();
                             imageViewRideNow.setEnabled(false);
-                            buttonConfirmRequest.setEnabled(false);
                             removeSpecialPickupMarkers();
                             try {
                                 if (userMode == UserMode.PASSENGER) {
@@ -6546,6 +6825,10 @@ RelativeLayout plusBadge;
                         public void onCompleteFindADriver() {
                             findADriverFinishing(true, false);
                             addUserCurrentLocationAddressMarker();
+                            if(mLogMsg != null && mRequestType != null) {
+                                noDriverAvailablePopup(HomeActivity.this, false, mLogMsg, mRequestType);
+                                mLogMsg = null;
+                            }
                             try {
 
                                 if(getScheduleRideFragment()!=null){
@@ -6621,7 +6904,6 @@ RelativeLayout plusBadge;
                             progressBarInitialSearch.stopSpinning();
                             progressBarInitialSearch.setVisibility(View.GONE);
                             imageViewRideNow.setEnabled(true);
-                            buttonConfirmRequest.setEnabled(true);
                             slidingBottomPanel.updatePaymentOptions();
                         }
 
@@ -6661,16 +6943,17 @@ RelativeLayout plusBadge;
     private ApiFindADriver apiFindADriver = null;
 
     private void findDriversETACall(boolean beforeRequestRide, boolean confirmedScreenOpened, boolean savedAddressUsed, HashMap<String, String> params) {
+        boolean showLoader = mLogMsg != null && mRequestType != null;
         getApiFindADriver()
 				.hit(Data.userData.accessToken, Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), showAllDrivers, showDriverInfo,
                 slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected(), beforeRequestRide,
-                confirmedScreenOpened, savedAddressUsed, params);
+                confirmedScreenOpened, savedAddressUsed, params, showLoader);
     }
 
     private void findADriverFinishing(boolean showPoolIntro, boolean useServerDefaultCoupon) {
-        //fabViewTest.setFABButtons();
         if (P_INITIAL == passengerScreenMode) {
-            if (Data.autoData.getRegions() != null && Data.autoData.getRegions().size() > 0) {
+			ArrayList<Region> regions = Data.autoData.getRegions();
+            if (regions != null && regions.size() > 0) {
                 boolean setNew = Data.autoData.getNewUIFlag();
                 if (setNew) {
                     if (!isNewUI) {
@@ -6692,12 +6975,23 @@ RelativeLayout plusBadge;
 
 					textViewRupee.setText(Utils.getCurrencySymbol(Data.autoData.getCurrency()));
 
+					if(Data.userData != null && Data.userData.getReferralMessages().getMultiLevelReferralEnabled()){
+						tvFreeRidesForLife.setVisibility(View.VISIBLE);
+					}
+
                     relativeLayoutTotalFare.setVisibility(View.GONE);
                     linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
                     relativeLayoutSearchContainer.setVisibility(View.GONE);
+                    tvTermsAndConditions.setVisibility(View.GONE);
+                    imageViewRideNow.setVisibility(View.GONE);
                     linearLayoutConfirmOption.setBackground(ContextCompat.getDrawable(this,R.color.white));
                     if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
-                        linearLayoutBidValue.setVisibility(View.VISIBLE);
+
+						//for setting region fare in etBid again
+						regionIdFareSetInETBid = 0;
+
+						showReverseBidField(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+
                         relativeLayoutOfferConfirm.setVisibility(View.GONE);
                         boolean isCashOnly = true;
                         if (MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
@@ -6717,10 +7011,18 @@ RelativeLayout plusBadge;
                         linearLayoutBidValue.setVisibility(View.GONE);
                         relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
                         linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+                        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() != null
+                                && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1) {
+//                            tvTermsAndConditions.setVisibility(View.VISIBLE);
+                        }
                     }
                 } else {
 
+					tvFreeRidesForLife.setVisibility(View.GONE);
 
+                    if(!confirmedScreenOpened){
+                        imageViewRideNow.setVisibility(View.VISIBLE);
+                    }
                     relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
 
                     linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
@@ -6737,7 +7039,7 @@ RelativeLayout plusBadge;
                     defaultCouponSelection();
                 }
                 if(vehiclesTabAdapterConfirmRide!=null){
-                    vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
+                    vehiclesTabAdapterConfirmRide.setList(regions);
                 }
                 slidingBottomPanel.update();
             } catch (Exception e) {
@@ -6752,11 +7054,10 @@ RelativeLayout plusBadge;
                     setServiceTypeAdapter(true);
                     setServiceTypeUI();
                     showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
-                    homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map);
+                    homeUtil.displayPointOfInterestMarkers(HomeActivity.this, assl, map, passengerScreenMode);
                     dontCallRefreshDriver = false;
 
                     updateImageViewRideNowIcon();
-                    setupFreshUI();
                     setupInAppCampaignUI();
                     Log.e(TAG, "findADriverFinishing");
                     fabViewTest = new FABViewTest(this, fabViewIntial);
@@ -6845,12 +7146,14 @@ RelativeLayout plusBadge;
                 index = i;
                 LatLng specialPicupLatLng = new LatLng(Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLatitude()),
                         Double.parseDouble(Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getLongitude()));
-                Data.autoData.setPickupLatLng(specialPicupLatLng);
+                Data.autoData.getPickupSearchResult().setLatitude(specialPicupLatLng.latitude);
+                Data.autoData.getPickupSearchResult().setLongitude(specialPicupLatLng.longitude);
                 Log.w("pickuplogging", "getIndex"+Data.autoData.getPickupLatLng());
                 addUserCurrentLocationAddressMarker();
                 specialPickupSelected = true;
                 selectedSpecialPickup = Data.autoData.getNearbyPickupRegionses().getHoverInfo().get(index).getText() + ", ";
                 textViewInitialSearchNew.setText(selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+                tvPickupRentalOutstation.setText(selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
                 break;
             }
         }
@@ -6871,12 +7174,12 @@ RelativeLayout plusBadge;
                     fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
                 } else {
                     //imageViewFabFake.setVisibility(View.VISIBLE); // fab existing
-                    if ((passengerScreenMode == P_INITIAL && !confirmedScreenOpened)
-                            || ((passengerScreenMode == PassengerScreenMode.P_DRIVER_ARRIVED || passengerScreenMode == PassengerScreenMode.P_REQUEST_FINAL
-                            || passengerScreenMode == PassengerScreenMode.P_IN_RIDE) && relativeLayoutFinalDropLocationParent.getVisibility() == View.GONE)) {
+                    if ((passengerScreenMode == P_INITIAL && !confirmedScreenOpened)) {
                         fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                         fabViewTest.setFABButtons(false);
-                    }
+                    } else {
+						fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
+					}
                 }
             } else {
                 fabViewTest.setRelativeLayoutFABTestVisibility(View.GONE);
@@ -6886,19 +7189,6 @@ RelativeLayout plusBadge;
     }
 
 
-    private void setupFreshUI() {
-        try {
-//            if(1 == Data.freshAvailable){
-                /*Dialog locD = new FreshIntroDialog(this, freshIntroCallback).show();
-                if(locD != null){
-                    freshIntroDialog = locD;
-                }*/
-//            }
-            menuBar.setupFreshUI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     private void setupInAppCampaignUI() {
         try {
@@ -6936,6 +7226,7 @@ RelativeLayout plusBadge;
             if (!"".equalsIgnoreCase(farAwayCity)) {
                 slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                 changeLocalityLayout.setVisibility(View.VISIBLE);
+				relativeLayoutConfirmRequest.setVisibility(View.GONE);
                 textViewChangeLocality.setText(farAwayCity);
                 relativeLayoutInAppCampaignRequest.setVisibility(View.GONE);
                 textViewCentrePinETA.setText("-");
@@ -6957,21 +7248,26 @@ RelativeLayout plusBadge;
                             Prefs.with(this).getString(KEY_CUSTOMER_PARTNER_DIALOG_MESSAGE, getString(R.string.customer_partner_dialog_message)), callbackPartner);
                 }
             } else {
-                if(!confirmedScreenOpened) {
+                if(!confirmedScreenOpened && !isNewUI()) {
                     imageViewRideNow.setVisibility(View.VISIBLE);
                 }
                 checkForMyLocationButtonVisibility();
                 changeLocalityLayout.setVisibility(View.GONE);
+                if(passengerScreenMode == P_INITIAL && (confirmedScreenOpened || isNewUI())) {
+					relativeLayoutConfirmRequest.setVisibility(View.VISIBLE);
+				}
                 if(partnerWithJugnooDialog != null) {
                     partnerWithJugnooDialog.dismiss();
                 }
             }
-//            setFabMarginInitial(false);
             setJeanieVisibility();
             showPokestopOnOffButton(passengerScreenMode);
         }
     }
 
+    private boolean showSaveLocationDialog(){
+		return Prefs.with(this).getInt(KEY_CUSTOMER_SHOW_SAVE_LOCATION_DIALOG, 0) == 1;
+	}
 
     public MarkerOptions getStartPickupLocMarkerOptions(LatLng latLng, boolean inRide) {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -6982,8 +7278,8 @@ RelativeLayout plusBadge;
         if (inRide) {
             if((Data.autoData.getAssignedDriverInfo() != null && Data.autoData.getAssignedDriverInfo().getRideType() == RideTypeValue.BIKE_RENTAL.getOrdinal())
 					|| Prefs.with(HomeActivity.this).getBoolean(Constants.SKIP_SAVE_PICKUP_LOCATION, false)
-                    || !getResources().getBoolean(R.bool.show_save_location_dialog)
-                    || HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false) != null) {
+                    || !showSaveLocationDialog()
+                    || HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), false) != null) {
                 markerOptions.icon(BitmapDescriptorFactory
                         .fromBitmap(CustomMapMarkerCreator
                                 .createPinMarkerBitmapStart(HomeActivity.this)));
@@ -7034,13 +7330,9 @@ RelativeLayout plusBadge;
 
     public void addUserCurrentLocationAddressMarker() {
         try {
-            if(passengerScreenMode == P_INITIAL
+            if((passengerScreenMode == P_INITIAL
                     && !confirmedScreenOpened
-                    && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0 || isNewUI) {
-                if (Data.autoData != null && Data.autoData.getPickupLatLng() == null && myLocation != null) {
-                    Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                    Log.w("pickuplogging", "addUserCurrentLocationAddressMarker"+Data.autoData.getPickupLatLng());
-                }
+                    && Prefs.with(this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0) || isNewUI) {
                 LatLng latLng = Data.autoData.getPickupLatLng();
                 BitmapDescriptor descriptor = BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
                         .getTextBitmap(HomeActivity.this,
@@ -7118,25 +7410,24 @@ RelativeLayout plusBadge;
                     && Data.autoData.getPickupLatLng() != null && driverLatLng != null) {
 
                 LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
-                double distance = MapUtils.distance(Data.autoData.getPickupLatLng(), driverLatLng);
-                if (distance <= 15000) {
-                    boundsBuilder
-                            //.include(Data.autoData.getPickupLatLng())
-                            .include(driverLatLng);
-                    if (Data.autoData.getDropLatLng() != null && PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                        boundsBuilder.include(Data.autoData.getDropLatLng());
-                    }
+                double distance = 0;
+				if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+						|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
+					boundsBuilder.include(Data.autoData.getPickupLatLng());
+					distance = MapUtils.distance(Data.autoData.getPickupLatLng(), driverLatLng);
+				}
+				else if (Data.autoData.getDropLatLng() != null && PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+					boundsBuilder.include(Data.autoData.getDropLatLng());
+					distance = MapUtils.distance(Data.autoData.getDropLatLng(), driverLatLng);
+				}
+                if (distance <= 100000) {
+                    boundsBuilder.include(driverLatLng);
                     if (latLngsToInclude != null) {
                         for (LatLng latLng : latLngsToInclude) {
                             boundsBuilder.include(latLng);
                         }
                     }
-                    if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
-                            || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-                        boundsBuilder.include(Data.autoData.getPickupLatLng());
-                    }
                     final LatLngBounds bounds = MapLatLngBoundsCreator.createBoundsWithMinDiagonal(boundsBuilder, FIX_ZOOM_DIAGONAL);
-                    final float minScaleRatio = Math.min(ASSL.Xscale(), ASSL.Yscale());
                     if (duration == 0) {
                         duration = getMapAnimateDuration();
                     }
@@ -7148,8 +7439,8 @@ RelativeLayout plusBadge;
                                 if ((PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                                         || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                                         || PassengerScreenMode.P_IN_RIDE == passengerScreenMode)
-                                        && bounds != null) {
-                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * minScaleRatio)), finalDuration, null);
+                                        && bounds != null && map != null) {
+                                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, (int) (MAP_PADDING * ASSL.minRatio())), finalDuration, null);
                                     customerInRideMyLocationBtn.setVisibility(View.GONE);
                                 }
                             } catch (Exception e) {
@@ -7245,7 +7536,7 @@ RelativeLayout plusBadge;
 
     private void updateSavedAddressLikeButton(LatLng currentLatLng, boolean isPickup){
         SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
-                Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+				false);
         ImageView iv = isPickup? ivLikePickup : ivLikeDrop;
         if (searchResult != null) {
             iv.setImageResource(R.drawable.ic_heart_filled);
@@ -7260,34 +7551,52 @@ RelativeLayout plusBadge;
 								 PlaceSearchListFragment.PlaceSearchMode placeSearchMode) {
 
         try {
-            boolean addressNeeded = true;
+            boolean addressNeeded = !isNewUI || !(Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1);
 
             SearchResult searchResult = HomeUtil.getNearBySavedAddress(HomeActivity.this, currentLatLng,
-                    Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+					true);
             if (passengerScreenMode == P_INITIAL) {
                 if (searchResult != null) {
                     addressNeeded = false;
-                    textView.setText(searchResult.getName());
-                    Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
+                    textView.setText(searchResult.getNameForText(this));
+                    if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                        tvPickupRentalOutstation.setText(searchResult.getNameForText(this));
+                        textViewInitialSearchNew.setText(searchResult.getNameForText(this));
+						Data.autoData.setPickupSearchResult(searchResult);
+                    }
                     if(textView == textViewInitialSearch){
                         ivLikePickup.setImageResource(R.drawable.ic_heart_filled);
                         ivLikePickup.setTag("liked");
                     }
                 } else {
-                    if(TextUtils.isEmpty(Data.autoData.getPickupAddress(currentLatLng))) {
+                	String address = Data.autoData.getPickupAddress(currentLatLng);
+                    if(TextUtils.isEmpty(address)) {
                         if (textView == textViewInitialSearch) {
                             ivLikePickup.setImageResource(R.drawable.ic_heart);
                             ivLikePickup.setTag("");
                         }
-                        Data.autoData.setPickupAddress("", null);
+                        Data.autoData.setPickupSearchResult(isNewUI && Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1 ? "Current Location" : "", currentLatLng);
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_HIT_GEOCODE_FREE_ROAM, 1) == 0){
 							addressNeeded = false;
 							textView.setHint(R.string.enter_pickup);
-                            textView.setText("");
-						}
+                            textView.setText(Data.autoData.getPickupSearchResult().getAddress());
+                            if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                                tvPickupRentalOutstation.setHint(R.string.enter_pickup);
+                                tvPickupRentalOutstation.setText("");
+                                textViewInitialSearchNew.setHint(R.string.enter_pickup);
+                                textViewInitialSearchNew.setText("");
+                            }
+						} else {
+                            textView.setText(Data.autoData.getPickupSearchResult().getAddress());
+                            textView.setHint(R.string.enter_pickup);
+                        }
                     } else {
                         addressNeeded = false;
-                        textView.setText(Data.autoData.getPickupAddress(currentLatLng));
+                        textView.setText(address);
+                        if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                            tvPickupRentalOutstation.setText(address);
+                            textViewInitialSearchNew.setText(address);
+                        }
                     }
                 }
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
@@ -7303,13 +7612,12 @@ RelativeLayout plusBadge;
                 } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP
 						&& searchResult != null
 						&& TextUtils.isEmpty(Data.autoData.getPickupAddress(searchResult.getLatLng()))){
-                    Data.autoData.setPickupLatLng(searchResult.getLatLng());
-                    Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
+                    Data.autoData.setPickupSearchResult(searchResult);
                 }
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP
 						&& Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())) {
                 	if(searchResult != null){
-                		dropAddressName = searchResult.getNameForText();
+                		dropAddressName = searchResult.getNameForText(this);
 					}
                     if (dropAddressName.length() == 0) {
                         textView.setText(Data.autoData.getDropAddress());
@@ -7320,7 +7628,7 @@ RelativeLayout plusBadge;
                 } else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP
 						&& !TextUtils.isEmpty(Data.autoData.getPickupAddress(currentLatLng))){
                 	if(searchResult != null){
-						textView.setText(searchResult.getNameForText());
+						textView.setText(searchResult.getNameForText(this));
 					} else {
 						textView.setText(Data.autoData.getPickupAddress(currentLatLng));
 					}
@@ -7331,23 +7639,29 @@ RelativeLayout plusBadge;
             if (addressNeeded) {
                 if (progressBar != null) {
                     progressBar.setVisibility(View.VISIBLE);
-                }
+                } else {
+                	DialogPopup.showLoadingDialog(this, getString(R.string.loading));
+				}
                 textView.setText("");
-                if (passengerScreenMode == P_INITIAL
-						&& placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                    Data.autoData.setPickupAddress("", null);
-                    Data.autoData.setPickupLatLng(currentLatLng);
-                }
                 textView.setHint(R.string.getting_address);
 
-				GoogleAPICoroutine.INSTANCE.hitGeocode(currentLatLng, settleUserDebt -> {
+				GoogleJungleCaching.INSTANCE.hitGeocode(currentLatLng, (googleGeocodeResponse, singleAddress) -> {
 					try {
-						GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(settleUserDebt);
-						String address = gapiAddress.getSearchableAddress();
+						String address = null;
+						if(googleGeocodeResponse != null){
+							GAPIAddress gapiAddress = MapUtils.parseGAPIIAddress(googleGeocodeResponse);
+							address = gapiAddress.getSearchableAddress();
+						} else if(singleAddress != null){
+							address = singleAddress;
+						}
 						textView.setText(address);
 						if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
 							textView.setHint(getResources().getString(R.string.enter_pickup));
-							Data.autoData.setPickupAddress(address, currentLatLng);
+                            tvPickupRentalOutstation.setHint(getResources().getString(R.string.enter_pickup));
+                            tvPickupRentalOutstation.setText(address);
+                            textViewInitialSearchNew.setHint(getResources().getString(R.string.enter_pickup));
+                            textViewInitialSearchNew.setText(address);
+							Data.autoData.setPickupSearchResult(address, currentLatLng);
 						} else if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP){
 							textView.setHint(getResources().getString(R.string.enter_destination));
 							Data.autoData.setDropAddress(address);
@@ -7358,12 +7672,8 @@ RelativeLayout plusBadge;
 					if (progressBar != null) {
 						progressBar.setVisibility(View.GONE);
 					}
+					DialogPopup.dismissLoadingDialog();
 				});
-            } else {
-                if (passengerScreenMode == P_INITIAL
-						&& placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                    Data.autoData.setPickupLatLng(currentLatLng);
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -7375,82 +7685,56 @@ RelativeLayout plusBadge;
      * ASync for cancelCustomerRequestAsync from server
      */
     public void cancelCustomerRequestAsync(final Activity activity) {
-        if (MyApplication.getInstance().isOnline()) {
+		ApiCancelRequest.INSTANCE.cancelCustomerRequestAsync(activity, new ApiCancelRequest.Callback() {
+			@Override
+			public void onSuccess() {
+				customerUIBackToInitialAfterCancel();
+			}
 
-            DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
+			@Override
+			public void onFailure() {
+				callAndHandleStateRestoreAPI(true);
+			}
 
-            HashMap<String, String> params = new HashMap<>();
+			@Override
+			public boolean canDismissDialog() {
+				return true;
+			}
+		});
+		if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
+			GAUtils.event(RIDES, HOME,
+					slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
+		}
+	}
+    public void cancelAndReBid() {
+		ApiCancelRequest.INSTANCE.cancelCustomerRequestAsync(this, new ApiCancelRequest.Callback() {
+			@Override
+			public void onSuccess() {
+				cancelTimerRequestRide();
+				getHandler().postDelayed(runnableRaiseBid, 5000);
+			}
 
-            params.put("access_token", Data.userData.accessToken);
-            params.put("session_id", Data.autoData.getcSessionId());
+			@Override
+			public void onFailure() {
+				callAndHandleStateRestoreAPI(true);
+			}
 
-            Log.i("access_token", "=" + Data.userData.accessToken);
-            Log.i("session_id", "=" + Data.autoData.getcSessionId());
+			@Override
+			public boolean canDismissDialog() {
+				return false;
+			}
+		});
+	}
+	private Runnable runnableRaiseBid = new Runnable() {
+		@Override
+		public void run() {
+			DialogPopup.dismissLoadingDialog();
+			editTextBidValue.setText(Utils.getMoneyDecimalFormat().format(Data.autoData.getChangedBidValue()));
+			editTextBidValue.setSelection(editTextBidValue.getText().length());
 
-            new HomeUtil().putDefaultParams(params);
-            RestClient.getApiService().cancelTheRequest(params, new Callback<SettleUserDebt>() {
-                @Override
-                public void success(SettleUserDebt settleUserDebt, Response response) {
-                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i(TAG, "cancelTheRequest response = " + responseStr);
-                    DialogPopup.dismissLoadingDialog();
-
-                    try {
-                        JSONObject jObj = new JSONObject(responseStr);
-                        int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-                        if (!jObj.isNull("error")) {
-                            String errorMessage = jObj.getString("error");
-                            if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
-                                HomeActivity.logoutUser(activity);
-                            } else {
-                                DialogPopup.alertPopupWithListener(activity, "", errorMessage,
-                                        new OnClickListener() {
-                                            @Override
-                                            public void onClick(View v) {
-                                                callAndHandleStateRestoreAPI(true);
-                                            }
-                                        });
-                            }
-                        } else {
-                            customerUIBackToInitialAfterCancel();
-                        }
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                        DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    Log.e(TAG, "cancelTheRequest error=" + error.toString());
-                    DialogPopup.dismissLoadingDialog();
-                    callAndHandleStateRestoreAPI(true);
-                }
-            });
-            if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected() != null) {
-                GAUtils.event(RIDES, HOME,
-                        slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUEST + CANCELLED);
-            }
-        } else {
-            //DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_desc));
-            DialogPopup.dialogNoInternet(HomeActivity.this, activity.getString(R.string.connection_lost_title), activity.getString(R.string.connection_lost_desc), new Utils.AlertCallBackWithButtonsInterface() {
-                @Override
-                public void positiveClick(View v) {
-                    cancelCustomerRequestAsync(HomeActivity.this);
-                }
-
-                @Override
-                public void neutralClick(View v) {
-
-                }
-
-                @Override
-                public void negativeClick(View v) {
-
-                }
-            });
-        }
-    }
+			finalRequestRideTimerStart(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+		}
+	};
 
 
     public void customerUIBackToInitialAfterCancel() {
@@ -7458,23 +7742,48 @@ RelativeLayout plusBadge;
 
 
         cancelTimerRequestRide();
+        slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(null);
+
+		if (map != null && pickupLocationMarker != null) {
+			pickupLocationMarker.remove();
+		}
 
         passengerScreenMode = P_INITIAL;
         switchPassengerScreen(passengerScreenMode);
 
-        if (map != null && pickupLocationMarker != null) {
-            pickupLocationMarker.remove();
-        }
 
         dontCallRefreshDriver = false;
 		if(!confirmedScreenOpened && !isNewUI()) {
 			callMapTouchedRefreshDrivers(null);
 		}
+		setTextToPickupDropTVs();
+        setTipAmountToZero(true);
 
-    }
+	}
+
+	public void setTextToPickupDropTVs() {
+		if(isNewUI()){
+			if(Data.autoData.getPickupLatLng() != null && !TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()))){
+				SearchResult sr = HomeUtil.getNearBySavedAddress(this, Data.autoData.getPickupLatLng(), true);
+				if(sr == null) {
+					textViewInitialSearchNew.setText(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+				} else {
+					textViewInitialSearchNew.setText(sr.getNameForText(this));
+				}
+			}
+			if(Data.autoData.getDropLatLng() != null && !TextUtils.isEmpty(Data.autoData.getDropAddress())){
+				SearchResult sr = HomeUtil.getNearBySavedAddress(this, Data.autoData.getDropLatLng(), true);
+				if(sr == null) {
+					textViewDestSearchNew.setText(Data.autoData.getDropAddress());
+				} else {
+					textViewDestSearchNew.setText(sr.getNameForText(this));
+				}
+			}
+		}
+	}
 
 
-    public void initializeStartRideVariables() {
+	public void initializeStartRideVariables() {
 
         HomeActivity.previousWaitTime = 0;
         HomeActivity.previousRideTime = 0;
@@ -7483,84 +7792,134 @@ RelativeLayout plusBadge;
     }
 
 
-    void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby, String message) {
+    void noDriverAvailablePopup(final Activity activity, boolean zeroDriversNearby, String message, int requestType) {
         try {
-            if (noDriversDialog != null && noDriversDialog.isShowing()) {
-                noDriversDialog.dismiss();
-            }
-            noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
-            noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
-            noDriversDialog.setContentView(R.layout.dialog_custom_one_button);
+            setTipAmountToZero(false);
+            ArrayList<FindADriverResponse.RequestLevels> requestLevels = Data.autoData.getRequestLevels();
 
-            RelativeLayout frameLayout = (RelativeLayout) noDriversDialog.findViewById(R.id.rv);
-            new ASSL(activity, frameLayout, 1134, 720, true);
+            int nextLevelIndex = getNextRequestLevel(requestType, requestLevels);
 
-            WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
-            layoutParams.dimAmount = 0.6f;
-            noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            noDriversDialog.setCancelable(true);
-            noDriversDialog.setCanceledOnTouchOutside(true);
+            // set requestType that is required for request Ride Api hit
+            mRequestType = nextLevelIndex != -1 ? requestLevels.get(nextLevelIndex).getLevel() : 0;
+            mRequestLevelndex = nextLevelIndex;
 
-            TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
-            textHead.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-            textHead.setVisibility(View.GONE);
-
-            TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
-            textMessage.setTypeface(Fonts.mavenMedium(activity));
-
-            textMessage.setMovementMethod(LinkMovementMethod.getInstance());
-            textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
-
-            if (zeroDriversNearby) {
-                textMessage.setText(R.string.sorry_no_drivers_available_nearby);
+            if(mRequestType == 1) {
+                openDriverNotFoundTipDialog();
+            } else if(mRequestType == 2) {
+                openDriverContactListDialog();
             } else {
-                if ("".equalsIgnoreCase(message)) {
-                    textMessage.setText(R.string.sorry_all_drivers_busy);
+                if (noDriversDialog != null && noDriversDialog.isShowing()) {
+                    noDriversDialog.dismiss();
+                }
+                noDriversDialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
+                noDriversDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+                noDriversDialog.setContentView(R.layout.dialog_custom_one_button);
+
+                RelativeLayout frameLayout = (RelativeLayout) noDriversDialog.findViewById(R.id.rv);
+                new ASSL(activity, frameLayout, 1134, 720, true);
+
+                WindowManager.LayoutParams layoutParams = noDriversDialog.getWindow().getAttributes();
+                layoutParams.dimAmount = 0.6f;
+                noDriversDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+                noDriversDialog.setCancelable(true);
+                noDriversDialog.setCanceledOnTouchOutside(true);
+
+                TextView textHead = (TextView) noDriversDialog.findViewById(R.id.textHead);
+                textHead.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+                textHead.setVisibility(View.GONE);
+
+                TextView textMessage = (TextView) noDriversDialog.findViewById(R.id.textMessage);
+                textMessage.setTypeface(Fonts.mavenMedium(activity));
+
+                textMessage.setMovementMethod(LinkMovementMethod.getInstance());
+                textMessage.setMaxHeight((int) (800.0f * ASSL.Yscale()));
+
+                if (zeroDriversNearby) {
+                    textMessage.setText(R.string.sorry_no_drivers_available_nearby);
                 } else {
-                    textMessage.setText(message);
+                    if ("".equalsIgnoreCase(message)) {
+                        textMessage.setText(R.string.sorry_all_drivers_busy);
+                    } else {
+                        textMessage.setText(message);
+                    }
                 }
+
+
+                Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
+                btnOk.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
+
+                btnOk.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (noDriversDialog != null) {
+                            noDriversDialog.dismiss();
+                        }
+                        noDriversDialog = null;
+                    }
+                });
+
+                frameLayout.setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (noDriversDialog != null) {
+                            noDriversDialog.dismiss();
+                        }
+                        noDriversDialog = null;
+                    }
+                });
+
+                noDriversDialog.findViewById(R.id.rl1).setOnClickListener(new OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+                slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(null);
+                noDriversDialog.show();
             }
-
-
-            Button btnOk = (Button) noDriversDialog.findViewById(R.id.btnOk);
-            btnOk.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-
-            btnOk.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (noDriversDialog != null) {
-                        noDriversDialog.dismiss();
-                    }
-                    noDriversDialog = null;
-                }
-            });
-
-            frameLayout.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if (noDriversDialog != null) {
-                        noDriversDialog.dismiss();
-                    }
-                    noDriversDialog = null;
-                }
-            });
-
-            noDriversDialog.findViewById(R.id.rl1).setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                }
-            });
-
-            noDriversDialog.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    private int getNextRequestLevel(int requestType, ArrayList<FindADriverResponse.RequestLevels> requestLevels) {
+        Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+        if(regionSelected.getReverseBid() == 1 || regionSelected.getFareMandatory() == 0 ||  Data.autoData.getDropLatLng() == null) {
+            return -1;
+        }
+        int index = -1;
+        // check for next level
+        for(int i = 0; i < requestLevels.size(); i++) {
+            if(requestLevels.get(i).getLevel() == requestType) {
+                index = i + 1;
+                break;
+            } else {
+                index = -1;
+            }
+        }
+        // check index with size of arrayList
+        if(index > requestLevels.size() - 1 || !isNewUI) {
+            index = -1;
+        }
+        //check if next level enabled or not
+        if(index != -1 && requestLevels.get(index).getEnabled() == 0) {
+            int tempIndex = index;
+            index = -1;
+            for(int i = tempIndex + 1; i < requestLevels.size(); i++) {
+                if(requestLevels.get(i).getEnabled() == 1) {
+                    index = i;
+                    break;
+                } else {
+                    continue;
+                }
+            }
+        }
+        return index;
+    }
 
-    public void getRideSummaryAPI(final Activity activity, final String engagementId) {
+
+    public void getRideSummaryAPI(final Activity activity, final String engagementId, final Promo promo) {
         if (!checkIfUserDataNull(activity)) {
             if (MyApplication.getInstance().isOnline()) {
 
@@ -7609,21 +7968,24 @@ RelativeLayout plusBadge;
 
                                     Utils.hideSoftKeyboard(activity, textViewInitialSearch);
                                     Utils.hideSoftKeyboard(activity, textViewInitialSearchNew);
+                                    Utils.hideSoftKeyboard(activity, tvPickupRentalOutstation);
 
 
                                     setUserData();
 
+                                    showScratchCard(promo);
+
                                 } else {
                                     Log.d("HomeActivityRental","GetRideSummmary Offline 1");
 
-                                    endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                                    endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                                 }
                             }
                         } catch (Exception exception) {
                             exception.printStackTrace();
                             Log.d("HomeActivityRental","GetRideSummmary offline 2");
 
-                            endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                            endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                         }
                     }
 
@@ -7633,26 +7995,39 @@ RelativeLayout plusBadge;
 
                         Log.e(TAG, "getRideSummary error=" + error);
                         DialogPopup.dismissLoadingDialog();
-                        endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again));
+                        endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_please_try_again), promo);
                     }
                 });
             } else {
-                endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_desc));
+                endRideRetryDialog(activity, engagementId, activity.getString(R.string.connection_lost_desc), promo);
             }
         }
     }
 
-    public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage) {
+    private void showScratchCard(Promo promo) {
+        if(promo != null) {
+            getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    RewardsDialog dialogFragment = RewardsDialog.newInstance(promo, true, true);
+                    dialogFragment.show(getSupportFragmentManager(), "scratchDialog");
+                }
+            }, 10);
+        }
+    }
+
+    public void endRideRetryDialog(final Activity activity, final String engagementId, String errorMessage, final Promo promo) {
         DialogPopup.alertPopupWithListener(activity, "", errorMessage, new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                getRideSummaryAPI(activity, engagementId);
+                getRideSummaryAPI(activity, engagementId, promo);
             }
         });
     }
 
-    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel, final boolean zoomAfterDropSet, final String address) {
+    public void sendDropLocationAPI(final Activity activity, final LatLng dropLatLng, final ProgressWheel progressWheel,
+									final boolean zoomAfterDropSet, final String address, int poolFareId) {
         if (MyApplication.getInstance().isOnline()) {
 
             progressWheel.setVisibility(View.VISIBLE);
@@ -7671,6 +8046,9 @@ RelativeLayout plusBadge;
             if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
                 params.put("engagement_id", Data.autoData.getcEngagementId());
             }
+            if(poolFareId > 0){
+				params.put(KEY_POOL_FARE_ID, String.valueOf(poolFareId));
+			}
 
             Log.i("params", "=" + params);
 
@@ -7689,7 +8067,7 @@ RelativeLayout plusBadge;
                             if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                 DialogPopup.alertPopup(activity, "", message);
                             } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-
+                                createDataAndInsert(1);
                                 Data.autoData.setDropLatLng(dropLatLng);
                                 Data.autoData.setDropAddress(address);
 
@@ -7702,11 +8080,9 @@ RelativeLayout plusBadge;
 
                                     stopDropLocationSearchUI(true);
                                     setDropLocationEngagedUI();
-                                    LatLng pickupLatLng = Data.autoData.getPickupLatLng();
-                                    if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                                        pickupLatLng = Data.autoData.getAssignedDriverInfo().latLng;
-                                    }
-                                    getDropLocationPathAndDisplay(pickupLatLng, zoomAfterDropSet, null);
+                                    if(Data.autoData.getAssignedDriverInfo() != null) {
+										getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, zoomAfterDropSet, null);
+									}
                                 }
 
                             } else {
@@ -7735,133 +8111,196 @@ RelativeLayout plusBadge;
         }
     }
 
+    private HashMap<String, String> getParamsForDriverLocationUpdate(){
+		HashMap<String, String> nameValuePairs = new HashMap<>();
+		if(Data.userData != null
+				&& Data.autoData != null
+				&& Data.autoData.getAssignedDriverInfo() != null
+				&& Data.autoData.getPickupLatLng() != null) {
+			nameValuePairs.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
+			nameValuePairs.put(KEY_DRIVER_ID, Data.autoData.getAssignedDriverInfo().userId);
+			nameValuePairs.put(KEY_PICKUP_LATITUDE, "" + Data.autoData.getPickupLatLng().latitude);
+			nameValuePairs.put(KEY_PICKUP_LONGITUDE, "" + Data.autoData.getPickupLatLng().longitude);
+		}
+
+		HomeUtil.addDefaultParams(nameValuePairs);
+		return nameValuePairs;
+	}
+
+	private boolean driverIsArrivingCheck(){
+    	return (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+				&& (Data.userData != null)
+				&& (Data.autoData.getAssignedDriverInfo() != null)
+				&& (Data.autoData.getPickupLatLng() != null);
+	}
+
+
     //Customer's timer
     Timer timerDriverLocationUpdater;
     TimerTask timerTaskDriverLocationUpdater;
 
     public void startDriverLocationUpdateTimer() {
 
-        cancelDriverLocationUpdateTimer();
+		cancelDriverLocationUpdateTimer();
 
-        try {
-            timerDriverLocationUpdater = new Timer();
+		if(Prefs.with(this).getInt(KEY_DRIVER_TRACKING_USING_STREAM_ENABLED, 1) == 1){
+			if (MyApplication.getInstance().isOnline()
+					&& driverIsArrivingCheck()) {
 
-            timerTaskDriverLocationUpdater = new TimerTask() {
+				streamClient.startLocationStream(getParamsForDriverLocationUpdate(), locationStreamCallback);
+			} else {
+				streamClient.stopLocationStream();
+				if(driverIsArrivingCheck() && !MyApplication.getInstance().isOnline()) {
+					DialogPopup.alertPopupWithListener(this, "", getString(R.string.no_internet_connection),
+							getString(R.string.tap_to_retry), new OnClickListener() {
+								@Override
+								public void onClick(View v) {
+									startDriverLocationUpdateTimer();
+								}
+							}, false);
+				}
+			}
 
-                @Override
-                public void run() {
-                    try {
-                        if (MyApplication.getInstance().isOnline()
-                                && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
-                                && (Data.userData != null)
-                                && (Data.autoData.getAssignedDriverInfo() != null)
-                                && (Data.autoData.getPickupLatLng() != null)) {
+		} else {
+			timerDriverLocationUpdater = new Timer();
+			timerTaskDriverLocationUpdater = new TimerTask() {
 
-                            long startTime = System.currentTimeMillis();
-                            HashMap<String, String> nameValuePairs = new HashMap<>();
-                            nameValuePairs.put("access_token", Data.userData.accessToken);
-                            nameValuePairs.put("driver_id", Data.autoData.getAssignedDriverInfo().userId);
-                            nameValuePairs.put("pickup_latitude", "" + Data.autoData.getPickupLatLng().latitude);
-                            nameValuePairs.put("pickup_longitude", "" + Data.autoData.getPickupLatLng().longitude);
+				@Override
+				public void run() {
+					try {
+						if (MyApplication.getInstance().isOnline()
+								&& (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+								&& (Data.userData != null)
+								&& (Data.autoData.getAssignedDriverInfo() != null)
+								&& (Data.autoData.getPickupLatLng() != null)) {
 
-                            new HomeUtil().putDefaultParams(nameValuePairs);
-                            Response response = RestClient.getApiService().getDriverCurrentLocation(nameValuePairs);
-                            String result = new String(((TypedByteArray) response.getBody()).getBytes());
+							long startTime = System.currentTimeMillis();
+							Response response = RestClient.getApiService().getDriverCurrentLocation(getParamsForDriverLocationUpdate());
+							String result = new String(((TypedByteArray) response.getBody()).getBytes());
 
-                            try {
-                                JSONObject jObj = new JSONObject(result);
-
-                                if (!jObj.isNull("error")) {
-                                    String errorMessage = jObj.getString("error");
-                                    int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.ACTION_COMPLETE.getOrdinal());
-                                    if (flag == ApiResponseFlags.INVALID_ACCESS_TOKEN.getOrdinal()) {
-                                        HomeActivity.logoutUser(HomeActivity.this);
-                                    }
-                                } else {
-                                    int flag = jObj.getInt("flag");
-                                    if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
-                                        final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble("latitude"), jObj.getDouble("longitude"));
-
-                                        String eta = "5";
-                                        if (jObj.has("eta")) {
-                                            eta = jObj.getString("eta");
-                                        }
-                                        if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null) {
-                                            if (MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng, driverCurrentLatLng) > 5) {
-                                                Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
-                                                Data.autoData.getAssignedDriverInfo().setEta(eta);
-                                                MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
-                                                HomeActivity.this.runOnUiThread(new Runnable() {
-
-                                                    @Override
-                                                    public void run() {
-                                                        try {
-                                                            if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode) {
-                                                                    if (driverLocationMarker != null) {
-                                                                        MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
-                                                                                driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), new MarkerAnimation.CallbackAnim() {
-                                                                                    @Override
-                                                                                    public void onPathFound(List<LatLng> latLngs) {
-//                                                                                        if(latLngs != null){
-//                                                                                            zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngs);
-//                                                                                        }
-                                                                                    }
-
-                                                                                    @Override
-                                                                                    public void onTranslate(LatLng latLng, double duration) {
-                                                                                        if (latLng != null) {
-                                                                                            zoomtoPickupAndDriverLatLngBounds(latLng, null, (int) (0.7d * duration));
-                                                                                        }
-                                                                                    }
-
-                                                                                    @Override
-                                                                                    public void onAnimComplete() {
-
-                                                                                    }
-
-                                                                                    @Override
-                                                                                    public void onAnimNotDone() {
-
-                                                                                    }
-                                                                                }, false, null, 0, 0, 0, false);
-                                                                        updateDriverETAText(passengerScreenMode);
-                                                                    }
-                                                            }
-                                                        } catch (Exception e) {
-                                                            e.printStackTrace();
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }
-
-
-                                    }
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-
-            getDropLocationPathAndDisplay(Data.autoData.getPickupLatLng(), true, null);
-
-            timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000,
-                    Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL, 30000));
-            Log.i("timerDriverLocationUpdater", "started");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+							consumeDriverLocationUpdates(result);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			};
+			timerDriverLocationUpdater.scheduleAtFixedRate(timerTaskDriverLocationUpdater, 5000,
+					Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_DRIVER_LOCATION_INTERVAL, 30000));
+		}
 
     }
 
-    public void cancelDriverLocationUpdateTimer() {
+	public void consumeDriverLocationUpdates(String result) {
+		try {
+			Log.d(TAG, "consumeDriverLocationUpdates result="+result);
+			if(result.equalsIgnoreCase("streaming real time data") || !hasWindowFocus()){
+				return;
+			}
+
+			JSONObject jObj = new JSONObject(result);
+
+			int flag = jObj.optInt(Constants.KEY_FLAG, ApiResponseFlags.DRIVER_LOCATION.getOrdinal());
+			if (ApiResponseFlags.DRIVER_LOCATION.getOrdinal() == flag) {
+				Log.d(TAG, "consumeDriverLocationUpdates DRIVER_LOCATION");
+				final LatLng driverCurrentLatLng = new LatLng(jObj.getDouble(KEY_LATITUDE), jObj.getDouble(KEY_LONGITUDE));
+				String eta = jObj.optString(KEY_ETA, "5");
+
+				if (Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null
+						&& MapUtils.distance(Data.autoData.getAssignedDriverInfo().latLng, driverCurrentLatLng) > 5) {
+					Log.d(TAG, "consumeDriverLocationUpdates driverCurrentLatLng");
+					DriverToPickupPath.INSTANCE.showPath(HomeActivity.this, passengerScreenMode, map, driverCurrentLatLng, Data.autoData.getPickupLatLng());
+
+					Data.autoData.getAssignedDriverInfo().latLng = driverCurrentLatLng;
+					Data.autoData.getAssignedDriverInfo().setEta(eta);
+					MyApplication.getInstance().getDatabase2().insertDriverLocations(Integer.parseInt(Data.autoData.getcEngagementId()), driverCurrentLatLng);
+					runOnUiThread(new Runnable() {
+
+						@Override
+						public void run() {
+							try {
+								if (Data.autoData != null
+										&& (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+										|| PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)
+										&& driverLocationMarker != null) {
+									Log.d(TAG, "consumeDriverLocationUpdates runOnUiThread");
+									MarkerAnimation.clearAsyncList();
+									MarkerAnimation.animateMarkerToICS(Data.autoData.getcEngagementId(), driverLocationMarker,
+											driverCurrentLatLng, new LatLngInterpolator.LinearFixed(), getMarkerCallbackAnim(),
+											false, getMarkerAnimationDuration());
+									updateDriverETAText(passengerScreenMode);
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+				}
+
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private long getMarkerAnimationDuration(){
+    	return Prefs.with(this).getLong(passengerScreenMode == PassengerScreenMode.P_IN_RIDE ?
+				KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE : KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT, 9000);
+	}
+
+	private StreamClient.LocationStreamCallback locationStreamCallback = new StreamClient.LocationStreamCallback() {
+		@NotNull
+		@Override
+		public HashMap<String, String> getParams() {
+			return getParamsForDriverLocationUpdate();
+		}
+
+		@Override
+		public void onResponse(@NotNull String response) {
+			consumeDriverLocationUpdates(response);
+		}
+	};
+
+
+	private MarkerAnimation.CallbackAnim callbackAnim = null;
+	private MarkerAnimation.CallbackAnim getMarkerCallbackAnim() {
+		if(callbackAnim == null){
+			callbackAnim = new MarkerAnimation.CallbackAnim() {
+				@Override
+				public void onPathFound(List<LatLng> latLngs) {
+//
+				}
+
+				@Override
+				public void onTranslate(LatLng latLng, double duration) {
+					if (latLng != null && myLocationButtonPressed) {
+						zoomtoPickupAndDriverLatLngBounds(latLng, null, (int) (0.9d * duration));
+					}
+				}
+
+				@Override
+				public void onAnimComplete() {
+
+				}
+
+				@Override
+				public void onAnimNotDone() {
+
+				}
+			};
+		}
+		return callbackAnim;
+	}
+
+
+	public void cancelDriverLocationUpdateTimer() {
         try {
+        	if(!driverIsArrivingCheck()) {
+				streamClient.stopLocationStream();
+			}
+
             if (timerTaskDriverLocationUpdater != null) {
                 timerTaskDriverLocationUpdater.cancel();
                 timerTaskDriverLocationUpdater = null;
@@ -7880,26 +8319,23 @@ RelativeLayout plusBadge;
 
 
     //Customer's timer
-    Timer timerUpdateDrivers;
-    TimerTask timerTaskUpdateDrivers;
+	Runnable runnableUpdateDriversInitial;
 
     public void startTimerUpdateDrivers() {
         cancelTimerUpdateDrivers();
         try {
-            timerUpdateDrivers = new Timer();
-            timerTaskUpdateDrivers = new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        if (HomeActivity.appInterruptHandler != null) {
-                            HomeActivity.appInterruptHandler.refreshDriverLocations();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            timerUpdateDrivers.scheduleAtFixedRate(timerTaskUpdateDrivers, 60000, 60000);
+			runnableUpdateDriversInitial = new Runnable() {
+				@Override
+				public void run() {
+					if (HomeActivity.appInterruptHandler != null) {
+						HomeActivity.appInterruptHandler.refreshDriverLocations();
+					}
+					if(runnableUpdateDriversInitial != null) {
+						getHandler().postDelayed(runnableUpdateDriversInitial, 60000);
+					}
+				}
+			};
+			getHandler().postDelayed(runnableUpdateDriversInitial, 60000);
             Log.i("timerUpdateDrivers", "started");
         } catch (Exception e) {
             e.printStackTrace();
@@ -7907,20 +8343,10 @@ RelativeLayout plusBadge;
     }
 
     public void cancelTimerUpdateDrivers() {
-        try {
-            if (timerTaskUpdateDrivers != null) {
-                timerTaskUpdateDrivers.cancel();
-                timerTaskUpdateDrivers = null;
-            }
-            if (timerUpdateDrivers != null) {
-                timerUpdateDrivers.cancel();
-                timerUpdateDrivers.purge();
-                timerUpdateDrivers = null;
-            }
-            Log.i("timerUpdateDrivers", "canceled");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+		if (runnableUpdateDriversInitial != null) {
+			getHandler().removeCallbacks(runnableUpdateDriversInitial);
+			runnableUpdateDriversInitial = null;
+		}
     }
 
 
@@ -7928,7 +8354,7 @@ RelativeLayout plusBadge;
     Timer timerMapAnimateAndUpdateRideData;
     TimerTask timerTaskMapAnimateAndUpdateRideData;
 
-
+	private boolean driverToDropPathShown = false;
     public void startMapAnimateAndUpdateRideDataTimer() {
         cancelMapAnimateAndUpdateRideDataTimer();
         try {
@@ -7948,8 +8374,6 @@ RelativeLayout plusBadge;
                         Response response = RestClient.getApiService().getOngoingRidePath(nameValuePairs);
                         String result = new String(((TypedByteArray) response.getBody()).getBytes());
 
-                        Log.e(TAG, "getOngoingRidePath result=" + result);
-
                         try {
                             final JSONObject jObj = new JSONObject(result);
                             final int flag = jObj.getInt("flag");
@@ -7965,69 +8389,36 @@ RelativeLayout plusBadge;
                                             JSONArray jsonArray = jObj.getJSONArray("locations");
                                             LatLng lastLatLng = null;
                                             List<LatLng> latLngsList = new ArrayList<LatLng>();
-                                            int firstPos = -1;
                                             for (int i = 0; i < jsonArray.length(); i++) {
                                                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                                                 RidePath currentRidePath = new RidePath(
-                                                        jsonObject.getInt("id"),
+                                                        jsonObject.getLong("id"),
                                                         jsonObject.getDouble("source_latitude"),
                                                         jsonObject.getDouble("source_longitude"),
                                                         jsonObject.getDouble("destination_latitude"),
                                                         jsonObject.getDouble("destination_longitude"));
 
                                                 ridePathsList.add(currentRidePath);
-                                                firstPos = 0;
-                                            }
-                                            // sorting logic
-//                                            if (firstPos > -1) {
-//                                                List<RidePath> ridePathsSorted = new ArrayList<RidePath>();
-//                                                ridePathsList.add(0, ridePathsList.remove(firstPos));
-//
-//                                                ridePathsSorted.add(ridePathsList.get(0));
-//
-//                                                while (ridePathsSorted.size() < ridePathsList.size()) {
-//                                                    RidePath ridePath = ridePathsSorted.get(ridePathsSorted.size() - 1);
-//                                                    RidePath ridePathNearest = null;
-//                                                    double distFromCurr = Double.MAX_VALUE;
-//                                                    for (RidePath ridePathI : ridePathsList) {
-//                                                        if (ridePath.ridePathId != ridePathI.ridePathId && !ridePathsSorted.contains(ridePathI)) {
-//                                                            double dist = MapUtils.distance(ridePath.getDestinationLatLng(), ridePathI.getSourceLatLng());
-//                                                            if (dist < distFromCurr) {
-//                                                                distFromCurr = dist;
-//                                                                ridePathNearest = ridePathI;
-//                                                            }
-//                                                        }
-//                                                    }
-//                                                    if (ridePathNearest != null) {
-//                                                        ridePathsSorted.add(ridePathNearest);
-//                                                    }
-//                                                }
-//
-//                                                if (ridePathsList.size() == ridePathsSorted.size()) {
-//                                                    ridePathsList.clear();
-//                                                    ridePathsList.addAll(ridePathsSorted);
-//
-//                                                    boolean sourceAdded = false;
-//                                                    for (RidePath ridePathI : ridePathsList) {
-//                                                        if (!sourceAdded) {
-//                                                            latLngsList.add(ridePathI.getSourceLatLng());
-//                                                            sourceAdded = true;
-//                                                        }
-//                                                        lastLatLng = ridePathI.getDestinationLatLng();
-//                                                        latLngsList.add(lastLatLng);
-//                                                    }
-//                                                }
-//                                            }
+												lastLatLng = new LatLng(currentRidePath.destinationLatitude, currentRidePath.destinationLongitude);
 
+												if(latLngsList.size() == 0){
+													latLngsList.add(new LatLng(currentRidePath.sourceLatitude, currentRidePath.sourceLongitude));
+												}
+												latLngsList.add(lastLatLng);
+                                            }
 
                                             if (lastLatLng != null) {
                                                 Data.autoData.getAssignedDriverInfo().latLng = lastLatLng;
-                                                getDropLocationPathAndDisplay(lastLatLng, true, latLngsList);
+                                                getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, myLocationButtonPressed, latLngsList);
                                             }
-                                            polylineOptionsInRideDriverPath = null;
-                                            plotPolylineInRideDriverPath();
+                                            else if(!driverToDropPathShown){
+												getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, myLocationButtonPressed, latLngsList);
+											}
                                             try {
                                                 MyApplication.getInstance().getDatabase2().createRideInfoRecords(ridePathsList);
+
+												polylineOptionsInRideDriverPath = null;
+												plotPolylineInRideDriverPath();
                                             } catch (Exception e) {
                                                 e.printStackTrace();
                                             }
@@ -8052,13 +8443,14 @@ RelativeLayout plusBadge;
 
             displayOldPath();
             if (driverMarkerInRide == null) {
-                if (lastSavedLatLng != null) {
-                    Data.autoData.getAssignedDriverInfo().latLng = lastSavedLatLng;
+                if (lastRidePathLatLng != null) {
+                    Data.autoData.getAssignedDriverInfo().latLng = lastRidePathLatLng;
                 }
                 driverMarkerInRide = getAssignedDriverCarMarkerOptions(Data.autoData.getAssignedDriverInfo());
-                driverMarkerInRide.setIcon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
-                        .createMarkerBitmapForResource(HomeActivity.this, R.drawable.ic_marker_transparent)));
-                getDropLocationPathAndDisplay(Data.autoData.getAssignedDriverInfo().latLng, true, null);
+                if(Prefs.with(this).getInt(KEY_SHOW_DRIVER_MARKER_IN_RIDE, 1) == 0) {
+					driverMarkerInRide.setIcon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator
+							.createMarkerBitmapForResource(HomeActivity.this, R.drawable.ic_marker_transparent)));
+				}
                 if (driverMarkerInRide.getRotation() == 0f) {
                     if (Utils.compareFloat(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f), 0f) != 0) {
                         driverMarkerInRide.setRotation(Prefs.with(HomeActivity.this).getFloat(SP_DRIVER_BEARING, 0f));
@@ -8071,14 +8463,13 @@ RelativeLayout plusBadge;
 
             timerMapAnimateAndUpdateRideData.scheduleAtFixedRate(timerTaskMapAnimateAndUpdateRideData, 100,
                     Prefs.with(this).getInt(KEY_CUSTOMER_FETCH_INRIDE_PATH_INTERVAL, 30000));
-            Log.i("timerMapAnimateAndUpdateRideData", "started");
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private LatLng lastSavedLatLng;
+    private LatLng lastRidePathLatLng;
 
     private ArrayList<PolylineOptions> getPolylineOptionsInRideDriverPath() {
         if (polylineOptionsInRideDriverPath == null) {
@@ -8086,17 +8477,23 @@ RelativeLayout plusBadge;
         }
         if (polylineOptionsInRideDriverPath.size() == 0) {
             try {
-                ArrayList<RidePath> ridePathsList = MyApplication.getInstance().getDatabase2().getRidePathInfo();
-                for (RidePath ridePath : ridePathsList) {
-                    PolylineOptions polylineOptions = new PolylineOptions();
-                    polylineOptions.width(ASSL.Xscale() * 7);
-                    polylineOptions.color(RIDE_ELAPSED_PATH_COLOR);
-                    polylineOptions.geodesic(false);
-                    polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude),
-                            new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
-                    polylineOptionsInRideDriverPath.add(polylineOptions);
-                    lastSavedLatLng = ridePath.getDestinationLatLng();
-                }
+            	if(Prefs.with(this).getInt(KEY_SHOW_RIDE_COVERED_PATH, 0) == 1) {
+					ArrayList<RidePath> ridePathsList = MyApplication.getInstance().getDatabase2().getRidePathInfo();
+					int coveredPathColor = Prefs.with(this).getInt(KEY_SHOW_RIDE_COVERED_PATH, 0) == 1 ? RIDE_ELAPSED_PATH_COLOR : Color.TRANSPARENT;
+					PolylineOptions polylineOptions = new PolylineOptions();
+					polylineOptions.width(ASSL.Xscale() * 5F);
+					polylineOptions.color(coveredPathColor);
+					polylineOptions.geodesic(false);
+					polylineOptions.zIndex(ONGOING_RIDE_PATH_ZINDEX);
+					for (RidePath ridePath : ridePathsList) {
+						if (polylineOptions.getPoints().size() == 0) {
+							polylineOptions.add(new LatLng(ridePath.sourceLatitude, ridePath.sourceLongitude));
+						}
+						polylineOptions.add(new LatLng(ridePath.destinationLatitude, ridePath.destinationLongitude));
+						lastRidePathLatLng = ridePath.getDestinationLatLng();
+					}
+					polylineOptionsInRideDriverPath.add(polylineOptions);
+				}
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -8140,7 +8537,6 @@ RelativeLayout plusBadge;
                 timerMapAnimateAndUpdateRideData.purge();
                 timerMapAnimateAndUpdateRideData = null;
             }
-            Log.i("timerMapAnimateAndUpdateRideData", "canceled");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -8167,16 +8563,10 @@ RelativeLayout plusBadge;
                     try {
                         List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
-                            LatLng source = pickupLatLng;
-                            if (latLngsListForDriverAnimation == null) {
-                                RidePath ridePath = MyApplication.getInstance().getDatabase2().getLastRidePath();
-                                source = ridePath != null ? ridePath.getDestinationLatLng() : pickupLatLng;
-                            }
-                            Response response = GoogleRestApis.INSTANCE.getDirections(source.latitude + "," + source.longitude,
-                                    Data.autoData.getDropLatLng().latitude + "," + Data.autoData.getDropLatLng().longitude, false, "driving", false, "metric");
-                            String result = new String(((TypedByteArray) response.getBody()).getBytes());
+							JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(pickupLatLng, Data.autoData.getDropLatLng(), "metric", MapsApiSources.CUSTOMER_DRIVER_TO_DROP, false);
                             if (result != null) {
-                                listPath = MapUtils.getLatLngListFromPath(result);
+                                listPath = result.getLatLngs();
+								driverToDropPathShown = true;
                                 final List<LatLng> finalListPath = listPath;
                                 if (listPath.size() > 0) {
                                     runOnUiThread(new Runnable() {
@@ -8186,7 +8576,9 @@ RelativeLayout plusBadge;
                                             try {
                                                 if (toShowPathToDrop()) {
                                                     pathToDropLocationPolylineOptions = new PolylineOptions();
-                                                    pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 7f).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true).zIndex(0);
+                                                    pathToDropLocationPolylineOptions.width(ASSL.Xscale() * 5f)
+															.color(ContextCompat.getColor(HomeActivity.this, R.color.google_path_polyline_color))
+															.geodesic(true).zIndex(PICKUP_TO_DROP_PATH_ZINDEX);
 
                                                     // for joining last point of driver tracked path to path left (red to blue)
                                                     if (latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1) {
@@ -8218,29 +8610,28 @@ RelativeLayout plusBadge;
                                 try {
                                     if (driverMarkerInRide != null && latLngsListForDriverAnimation != null && latLngsListForDriverAnimation.size() > 1) {
                                         int untrackedPathColor = Data.autoData.getDropLatLng() != null ? getResources().getColor(R.color.google_path_polyline_color) : Color.TRANSPARENT;
+										MarkerAnimation.clearAsyncList();
+
+										boolean showRideCoveredPath = Prefs.with(HomeActivity.this).getInt(KEY_SHOW_RIDE_COVERED_PATH, 0) == 1;
+
                                         MarkerAnimation.animateMarkerOnList(driverMarkerInRide, latLngsListForDriverAnimation,
-                                                new LatLngInterpolator.LinearFixed(), true, map,
-                                                RIDE_ELAPSED_PATH_COLOR,
-                                                untrackedPathColor, ASSL.Xscale() * 7f, null, false);
+                                                new LatLngInterpolator.LinearFixed(),
+												showRideCoveredPath, map,
+												RIDE_ELAPSED_PATH_COLOR, untrackedPathColor, ASSL.Xscale() * 5f,
+												getMarkerCallbackAnim(), false, getMarkerAnimationDuration());
                                     } else {
                                         MarkerAnimation.clearPolylines();
-                                    }
 
-                                    if (zoom) {
-                                        List<LatLng> latLngsToInclude = null;
-                                        if (latLngsListForDriverAnimation != null) {
-                                            if (latLngsToInclude == null) {
-                                                latLngsToInclude = new ArrayList<LatLng>();
-                                            }
-                                            latLngsToInclude.addAll(latLngsListForDriverAnimation);
-                                        }
-                                        if (finalListPath1 != null) {
-                                            if (latLngsToInclude == null) {
-                                                latLngsToInclude = new ArrayList<LatLng>();
-                                            }
-                                            latLngsToInclude.addAll(finalListPath1);
-                                        }
-                                        zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude, 0);
+										if (zoom) {
+											List<LatLng> latLngsToInclude = new ArrayList<LatLng>();
+											if (latLngsListForDriverAnimation != null) {
+												latLngsToInclude.addAll(latLngsListForDriverAnimation);
+											}
+											if (finalListPath1 != null) {
+												latLngsToInclude.addAll(finalListPath1);
+											}
+											zoomtoPickupAndDriverLatLngBounds(Data.autoData.getAssignedDriverInfo().latLng, latLngsToInclude, 0);
+										}
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -8371,7 +8762,7 @@ RelativeLayout plusBadge;
                         dialog.show();
                     } else {
                         double distance = MapUtils.distance(Data.autoData.getPickupLatLng(), new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                        if (distance > MAP_PAN_DISTANCE_CHECK) {
+                        if (distance > MAP_PAN_DISTANCE_CHECK && Data.autoData.getNoDriverFoundTip() == 0.0) {
                             textMessage.setText(getString(R.string.the_pickup_location_you_have_set_is_different));
                             dialog.show();
                         } else {
@@ -8409,12 +8800,10 @@ RelativeLayout plusBadge;
 
                         @Override
                         public void neutralClick(View v) {
-
                         }
 
                         @Override
                         public void negativeClick(View v) {
-
                         }
                     });
         }
@@ -8424,7 +8813,6 @@ RelativeLayout plusBadge;
     private int getFilteredDrivers() {
         int driversCount = 0;
 
-        // todo
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() ==
                             RideTypeValue.BIKE_RENTAL.getOrdinal())
         {
@@ -8533,7 +8921,9 @@ RelativeLayout plusBadge;
                                     firstTimeZoom = false;
                                     passengerScreenMode = P_INITIAL;
                                     switchPassengerScreen(passengerScreenMode);
-                                    DialogPopup.alertPopup(HomeActivity.this, "", message);
+                                    if(!isFinishing()) {
+										DialogPopup.alertPopup(HomeActivity.this, "", message);
+									}
                                     dismissSOSDialog();
                                 }
                             } catch (Exception e) {
@@ -8646,6 +9036,7 @@ RelativeLayout plusBadge;
             cancelTimerRequestRide();
             ArrayList<String> fellowRiders = new ArrayList<>();
             Data.autoData.setcSessionId(jObj.getString("session_id"));
+            setTipAmountToZero(true);
             Data.autoData.setcEngagementId(jObj.getString("engagement_id"));
             Data.autoData.setcDriverId(jObj.getString("driver_id"));
 
@@ -8684,10 +9075,11 @@ RelativeLayout plusBadge;
             String driverRating = jObj.getString("rating");
             String promoName = JSONParser.getPromoName(this, jObj);
 
-            Data.autoData.setPickupLatLng(new LatLng(pickupLatitude, pickupLongitude));
-            Log.w("pickuplogging", "fetchAcceptedDriverInfoAndChangeState"+Data.autoData.getPickupLatLng());
-            Data.autoData.setPickupAddress(jObj.optString(KEY_PICKUP_LOCATION_ADDRESS,
-                    Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng())), Data.autoData.getPickupLatLng());
+            LatLng pickupLatLng = new LatLng(pickupLatitude, pickupLongitude);
+            Log.w("pickuplogging", "fetchAcceptedDriverInfoAndChangeState"+pickupLatLng);
+            String pickupAddress = jObj.optString(KEY_PICKUP_LOCATION_ADDRESS, Data.autoData.getPickupAddress(pickupLatLng));
+            Data.autoData.setPickupSearchResult(new SearchResult(pickupAddress, pickupAddress, "", pickupLatitude, pickupLongitude));
+
             JSONParser.parseDropLatLng(jObj);
 
             double fareFactor = 1.0, bearing = 0.0;
@@ -8724,12 +9116,16 @@ RelativeLayout plusBadge;
             int rideType = jObj.optInt(KEY_RIDE_TYPE, RideTypeValue.NORMAL.getOrdinal());
 
             int gpsLockStatus = jObj.optInt(KEY_GPS_LOCK_STATUS,GpsLockStatus.UNLOCK.getOrdinal());
+            int fareMandatory = jObj.optInt(Constants.KEY_FARE_MANDATORY,0);
+            double tipBeforeRequestRide = jObj.optDouble(Constants.KEY_TIP_PROVIDED_BEFORE_RIDE_REQUEST, 0.0);
+
+            String userIdentifier = jObj.optString(Constants.KEY_DRIVER_IDENTIFIER, "");
 
             Data.autoData.setAssignedDriverInfo(new DriverInfo(this, Data.autoData.getcDriverId(), latitude, longitude, userName,
                     driverImage, driverCarImage, driverPhone, driverRating, carNumber, freeRide, promoName, eta,
                     fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime,
                     cancellationCharges, isPooledRIde, "", fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                    isCorporateRide, cardId, rideType, gpsLockStatus));
+                    isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
 
             JSONParser.FuguChannelData fuguChannelData = new JSONParser.FuguChannelData();
             JSONParser.parseFuguChannelDetails(jObj, fuguChannelData);
@@ -8803,7 +9199,7 @@ RelativeLayout plusBadge;
 
 
     @Override
-    public void customerEndRideInterrupt(final String engagementId) {
+    public void customerEndRideInterrupt(final String engagementId, final Promo promo) {
         try {
             Log.d("HomeActivityRental","CustomerEndRIde");
             if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.autoData.getcEngagementId())) {
@@ -8817,8 +9213,7 @@ RelativeLayout plusBadge;
                         if(rentalLockDialog != null){
                             rentalLockDialog.dismiss();
                         }
-
-                        getRideSummaryAPI(HomeActivity.this, engagementId);
+                        getRideSummaryAPI(HomeActivity.this, engagementId, promo);
                         if(driverTipInteractor != null) {
 							driverTipInteractor.dismissDialog();
 						}
@@ -8955,6 +9350,9 @@ RelativeLayout plusBadge;
         try {
             Data.latitude = location.getLatitude();
             Data.longitude = location.getLongitude();
+			if (getResources().getBoolean(R.bool.autos_map_traffic_default_enabled)) {
+				map.setTrafficEnabled(true);
+			}
             if (location.getAccuracy() <= HIGH_ACCURACY_ACCURACY_CHECK) {
                 HomeActivity.myLocation = location;
             }
@@ -8992,7 +9390,9 @@ RelativeLayout plusBadge;
     private void locationGotNow() {
         relativeLayoutLocationError.setVisibility(View.GONE);
         checkForMyLocationButtonVisibility();
-        imageViewRideNow.setVisibility(View.VISIBLE);
+        if(!confirmedScreenOpened && !isNewUI()) {
+            imageViewRideNow.setVisibility(View.VISIBLE);
+        }
         showCenterPickupPin(true);
     }
 
@@ -9035,6 +9435,8 @@ RelativeLayout plusBadge;
         Prefs.with(HomeActivity.this).save(Constants.SKIP_SAVE_DROP_LOCATION, false);
         try {
 
+            //******************* TYPE : 0 for Pickup Location, TYPE :- 1 for Drop Location ********************//
+            callInsertData();
             requestRideLifeTime = Data.autoData.getIsReverseBid() == 1 ? Data.autoData.getBidRequestRideTimeout() : 3 * 60 * 1000;
             serverRequestStartTime = System.currentTimeMillis();
             serverRequestEndTime = serverRequestStartTime + requestRideLifeTime;
@@ -9061,7 +9463,7 @@ RelativeLayout plusBadge;
                                 public void run() {
                                     try {
                                         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                            noDriverAvailablePopup(HomeActivity.this, false, "");
+                                            noDriverAvailablePopup(HomeActivity.this, false, "", -1);
                                             HomeActivity.passengerScreenMode = P_INITIAL;
                                             switchPassengerScreen(passengerScreenMode);
                                         }
@@ -9079,12 +9481,9 @@ RelativeLayout plusBadge;
                                 nameValuePairs.put("access_token", Data.userData.accessToken);
                                 nameValuePairs.put("latitude", "" + Data.autoData.getPickupLatLng().latitude);
                                 nameValuePairs.put("longitude", "" + Data.autoData.getPickupLatLng().longitude);
-                                String address = selectedSpecialPickup + Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng());
-                                if(!TextUtils.isEmpty(address) && !address.equalsIgnoreCase(Constants.UNNAMED)) {
-                                    nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, address);
-                                }
+								putSelectedPickupAddress(nameValuePairs);
 
-                                //30.7500, 76.7800
+								//30.7500, 76.7800
 //								nameValuePairs.add(new BasicNameValuePair("latitude", "30.7500"));
 //								nameValuePairs.add(new BasicNameValuePair("longitude", "76.7800"));
 
@@ -9098,17 +9497,14 @@ RelativeLayout plusBadge;
                                     nameValuePairs.put("current_longitude", "" + Data.autoData.getPickupLatLng().longitude);
                                 }
                                 if (regionSelected.getRideType() != RideTypeValue.BIKE_RENTAL.getOrdinal()
+                                        && !(Data.autoData.getServiceTypeSelected().getSupportedRideTypes() != null && Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()))
 										&& Data.autoData.getDropLatLng() != null
                                         && Utils.compareDouble(Data.autoData.getDropLatLng().latitude, 0) != 0
                                         && Utils.compareDouble(Data.autoData.getDropLatLng().longitude, 0) != 0) {
                                     nameValuePairs.put(KEY_OP_DROP_LATITUDE, String.valueOf(Data.autoData.getDropLatLng().latitude));
                                     nameValuePairs.put(KEY_OP_DROP_LONGITUDE, String.valueOf(Data.autoData.getDropLatLng().longitude));
-                                    if(!Data.autoData.getDropAddress().equalsIgnoreCase(Constants.UNNAMED)) {
-                                        nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
-                                    } else {
-                                        nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, "");
-                                    }
-                                }
+									putSelectedDropAddress(nameValuePairs);
+								}
 
                                 if (promoCouponSelectedForRide != null && regionSelected.getReverseBid() == 0) {
                                     if (promoCouponSelectedForRide instanceof CouponInfo) {
@@ -9159,7 +9555,7 @@ RelativeLayout plusBadge;
                                 if(Data.autoData.getSelectedPackage() != null) {
                                     nameValuePairs.put(Constants.KEY_PACKAGE_ID, String.valueOf(Data.autoData.getSelectedPackage().getPackageId()));
                                 }
-                                if (isNewUI && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
+                                if (isNewUI && regionSelected.getReverseBid() == 1) {
                                     if (!editTextBidValue.getText().toString().isEmpty()) {
                                         nameValuePairs.put(Constants.KEY_INITIAL_BID_VALUE, editTextBidValue.getText().toString());
                                     }
@@ -9202,8 +9598,24 @@ RelativeLayout plusBadge;
                                     nameValuePairs.put("qr_code_details",qrCodeDetails);
                                 }
                                 nameValuePairs.put("is_bluetooth_tracker",""+Data.autoData.getBluetoothEnabled());
+//                                nameValuePairs.put("is_scratch_coupon_applicable", "" + true); // key added for differentiating request ride call from new scratch App and old App
 
                                 Log.i("nameValuePairs of request_ride", "=" + nameValuePairs);
+
+
+                                //add tip feature keys in /request_ride
+                                if(Data.autoData.getNoDriverFoundTip() > 0.0) {
+                                    nameValuePairs.put("tip_amount","" + Data.autoData.getNoDriverFoundTip());
+                                }
+                                if(regionSelected.getReverseBid() == 0 && regionSelected.getFareMandatory() == 1) {
+                                    nameValuePairs.put("request_level", mRequestType + "");
+                                }
+                                if(mRequestType + 1 >= 2) {
+                                    mRequestType = 0;
+                                }
+
+
+
                                 try {
                                     slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                                 } catch (Exception e) {
@@ -9264,7 +9676,7 @@ RelativeLayout plusBadge;
                                             int flag = jObj.getInt("flag");
                                             if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
-                                                final int lockStatus = jObj.getInt("gps_lock_status");
+                                                final int lockStatus = jObj.optInt("gps_lock_status", 0);
                                                 if(lockStatus==3){
                                                     smartLockObj.downDevice();
                                                 }
@@ -9280,13 +9692,6 @@ RelativeLayout plusBadge;
                                                 if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
                                                     fbLogEvent(nameValuePairs);
 
-                                                    // Ride Requested
-                                                    // Google Android in-app conversion tracking snippet
-                                                    // Add this code to the event you'd like to track in your app.
-                                                    // See code examples and learn how to add advanced features like app deep links at:
-                                                    //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-//                                                    AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-//                                                            GOOGLE_ADWORD_CONVERSION_ID, "rxWHCIjbw2MQlLT2wwM", "0.00", true);
                                                     confirmedScreenOpened = false;
                                                     specialPickupScreenOpened = false;
                                                     if (Data.autoData.getPickupPaymentOption() != PaymentOption.CASH.getOrdinal()) {
@@ -9297,8 +9702,17 @@ RelativeLayout plusBadge;
                                                         GAUtils.event(RIDES, HOME, slidingBottomPanel
                                                                 .getRequestRideOptionsFragment().getRegionSelected().getRegionName() + " " + REQUESTED);
                                                     }
-                                                }
+                                                    if(nameValuePairs.containsKey(Constants.KEY_INITIAL_BID_VALUE)){
+                                                    	Data.autoData.setInitialBidValue(Double.parseDouble(nameValuePairs.get(Constants.KEY_INITIAL_BID_VALUE)));
+                                                    } else if (!editTextBidValue.getText().toString().isEmpty()) {
+                                                    	Data.autoData.setInitialBidValue(Double.parseDouble(editTextBidValue.getText().toString()));
+                                                    } else {
+                                                    	Data.autoData.setInitialBidValue(0);
+                                                    }
+												}
+                                                checkForAddedTip();
                                                 Data.autoData.setcSessionId(jObj.getString("session_id"));
+                                                Data.autoData.setNoDriverFoundTip(jObj.optDouble("tip_amount", 0.0));
                                                 Data.autoData.setBidInfos(JSONParser.parseBids(HomeActivity.this, Constants.KEY_BIDS, jObj));
                                                 runOnUiThread(new Runnable() {
                                                     @Override
@@ -9319,6 +9733,7 @@ RelativeLayout plusBadge;
                                                 }
                                             } else if (ApiResponseFlags.NO_DRIVERS_AVAILABLE.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
+                                                final int requestType = jObj.optInt("request_level", -1);
                                                 Log.e("NO_DRIVERS_AVAILABLE log", "=" + log);
                                                 cancelTimerRequestRide();
                                                 runOnUiThread(new Runnable() {
@@ -9326,7 +9741,12 @@ RelativeLayout plusBadge;
                                                     public void run() {
                                                         try {
                                                             if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-                                                                noDriverAvailablePopup(HomeActivity.this, false, log);
+                                                                if((requestType == 0 || requestType == 1) && isNewUI) {
+                                                                    mLogMsg = log;
+                                                                    mRequestType = requestType;
+                                                                } else {
+                                                                    noDriverAvailablePopup(HomeActivity.this, false, log, requestType);
+                                                                }
                                                                 firstTimeZoom = false;
                                                                 HomeActivity.passengerScreenMode = P_INITIAL;
                                                                 switchPassengerScreen(passengerScreenMode);
@@ -9402,6 +9822,56 @@ RelativeLayout plusBadge;
         }
     }
 
+	public void putSelectedDropAddress(HashMap<String, String> nameValuePairs) {
+		if (Data.autoData != null && !Data.autoData.getDropAddress().equalsIgnoreCase(Constants.UNNAMED)) {
+			nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, Data.autoData.getDropAddress());
+		} else {
+			nameValuePairs.put(KEY_DROP_LOCATION_ADDRESS, "");
+		}
+	}
+
+	public void putSelectedPickupAddress(HashMap<String, String> nameValuePairs) {
+    	if(Data.autoData != null) {
+			String address = selectedSpecialPickup
+					+ (Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()).equalsIgnoreCase("Current Location")
+					? "" : Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()));
+			if (!TextUtils.isEmpty(address) && !address.equalsIgnoreCase(Constants.UNNAMED)) {
+				nameValuePairs.put(KEY_PICKUP_LOCATION_ADDRESS, address);
+			}
+		}
+	}
+
+	private void createDataAndInsert(final int type) {
+        SearchResult searchResult = HomeUtil.getNearBySavedAddress(this, type == 0 ? Data.autoData.getPickupLatLng() : Data.autoData.getDropLatLng(), true);
+        if(searchResult != null) {
+            return;
+        }
+        SearchLocation searchLocation;
+        if(type == 0) {
+        	if(TextUtils.isEmpty(Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()))){
+        		return;
+			}
+            searchLocation = new SearchLocation(Data.autoData.getPickupLatLng().latitude, Data.autoData.getPickupLatLng().longitude, "",
+                    Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()), 0 + "", System.currentTimeMillis(), type);
+        } else {
+            if(Data.autoData.getDropLatLng() == null){
+                return;
+            }
+            searchLocation = new SearchLocation(Data.autoData.getDropLatLng().latitude, Data.autoData.getDropLatLng().longitude, "",
+                    Data.autoData.getDropAddress(), Data.autoData.getDropAddressId() + "", System.currentTimeMillis(), type);
+        }
+
+        DBCoroutine.Companion.insertLocation(searchLocationDB, searchLocation);
+//        DBCoroutine.Companion.getPickupLocation(searchLocationDB, new DBCoroutine.SearchLocationCallback() {
+//            @Override
+//            public void onSearchLocationReceived(@NotNull List<SearchLocation> searchLocation) {
+//
+//                Log.w("search Location:- ", searchLocation.toString());
+//            }
+//        });
+
+    }
+
     public boolean isNewUI() {
         return isNewUI;
     }
@@ -9430,7 +9900,7 @@ RelativeLayout plusBadge;
                 try {
                     if ("".equalsIgnoreCase(Data.autoData.getcSessionId())) {
                         relativeLayoutAssigningDropLocationParentSetVisibility(View.GONE);
-                        initialCancelRideBtn.setVisibility(View.GONE);
+                        tvInitialCancelRide.setVisibility(View.GONE);
                         topBar.tvCancel.setVisibility(View.GONE);
                         findDriverJugnooAnimation.setVisibility(View.VISIBLE);
                         if (findDriverJugnooAnimation instanceof ImageView) {
@@ -9441,10 +9911,10 @@ RelativeLayout plusBadge;
 
                         if (bidsPlacedAdapter.getItemCount() == 0) {
 							topBar.tvCancel.setVisibility(View.GONE);
-                            initialCancelRideBtn.setVisibility(View.VISIBLE);
+                            tvInitialCancelRide.setVisibility(View.VISIBLE);
                         } else {
 							topBar.tvCancel.setVisibility(View.VISIBLE);
-                            initialCancelRideBtn.setVisibility(View.GONE);
+                            tvInitialCancelRide.setVisibility(View.GONE);
                         }
 
                         if (findDriverJugnooAnimation instanceof ImageView) {
@@ -9476,7 +9946,7 @@ RelativeLayout plusBadge;
 
 
     @Override
-    public void onNoDriversAvailablePushRecieved(final String logMessage) {
+    public void onNoDriversAvailablePushRecieved(final String logMessage, final int requestType) {
         cancelTimerRequestRide();
         if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
             firstTimeZoom = false;
@@ -9485,7 +9955,12 @@ RelativeLayout plusBadge;
                 @Override
                 public void run() {
                     try {
-                        noDriverAvailablePopup(HomeActivity.this, false, logMessage);
+                        if((requestType == 0 || requestType == 1) && isNewUI) {
+                            mLogMsg = logMessage;
+                            mRequestType = requestType;
+                        } else {
+                            noDriverAvailablePopup(HomeActivity.this, false, logMessage, requestType);
+                        }
                         HomeActivity.passengerScreenMode = P_INITIAL;
                         switchPassengerScreen(passengerScreenMode);
                     } catch (Exception e) {
@@ -9531,22 +10006,26 @@ RelativeLayout plusBadge;
             }
             firstTimeZoom = false;
             dropLocationSearchText = "";
+			isPickupSet = false;
 
             slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
 
 
             Data.autoData.setLastRefreshLatLng(null);
-            Data.autoData.setPickupLatLng(null);
+            Data.autoData.setPickupSearchResult(null);
             Log.w("pickuplogging", "afterRideFeedbackSubmitted"+Data.autoData.getPickupLatLng());
-            Data.autoData.setPickupAddress("", null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
             Data.autoData.setDropAddressId(0);
             Data.setRecentAddressesFetched(false);
+            Data.autoData.clearRegionFares();
+            if(getApiFindADriver().getParams() != null) {
+				getApiFindADriver().getParams().clear();
+			}
+
             if(!editTextBidValue.getText().toString().isEmpty()) {
                 editTextBidValue.setText("");
             }
-            dropLocationSet = false;
             confirmedScreenOpened = false;
             specialPickupScreenOpened = false;
 
@@ -9554,9 +10033,8 @@ RelativeLayout plusBadge;
             setUserData();
 
             resetPickupDropFeilds();
+			removeP2DPolyline();
 
-            passengerScreenMode = P_INITIAL;
-            switchPassengerScreen(passengerScreenMode);
             getHandler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -9565,11 +10043,13 @@ RelativeLayout plusBadge;
                         mapStateListener.touchMapExplicit();
                         map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()), MAX_ZOOM), getMapAnimateDuration(), null);
                         if(Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_PICKUP_FREE_ROAM_ALLOWED, 1) == 0  || isNewUI) {
-                            Data.autoData.setPickupLatLng(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-                            Log.w("pickuplogging", "afterRideFeedbackSubmitted delayed runnable"+Data.autoData.getPickupLatLng());
+                            LatLng currentLatLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+                            Log.w("pickuplogging", "afterRideFeedbackSubmitted delayed runnable"+currentLatLng);
                             Log.w("findADriverAndGeocode", "afterRideFeedback");
-                            findADriverAndGeocode(Data.autoData.getPickupLatLng(), true, true, true);
+                            findADriverAndGeocode(currentLatLng, true, true, true);
                         }
+						passengerScreenMode = P_INITIAL;
+						switchPassengerScreen(passengerScreenMode);
                     }
                 }
             }, 500);
@@ -9578,26 +10058,6 @@ RelativeLayout plusBadge;
 
             try {
                 AppEventsLogger.newLogger(this).logPurchase(BigDecimal.valueOf(Data.autoData.getEndRideData().toPay), Currency.getInstance(Data.autoData.getEndRideData().getCurrency()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            try {
-                // Ride Completion
-                // Google Android in-app conversion tracking snippet
-                // Add this code to the event you'd like to track in your app.
-                // See code examples and learn how to add advanced features like app deep links at:
-                //     https://developers.google.com/app-conversion-tracking/android/#track_in-app_events_driven_by_advertising
-//                AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-//                        GOOGLE_ADWORD_CONVERSION_ID, "IVSDCMb_umMQlLT2wwM", "0.00", true);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-
-            try {
-//                AdWordsConversionReporter.reportWithConversionId(MyApplication.getInstance(),
-//                        "947755540", "BS6QCL3P0GgQlLT2wwM", "0.00", false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -9764,15 +10224,25 @@ RelativeLayout plusBadge;
 
     public void fuguCustomerHelpRides(boolean fromSos) {
         try {
-            if (!TextUtils.isEmpty(Data.autoData.getFuguChannelId())) {
+        	if(!fromSos && Data.isHippoTicketForRideEnabled(this)){
+				HomeUtil.openHippoTicketForRide(this,
+						Integer.parseInt(Data.autoData.getcEngagementId()),
+						Integer.parseInt(Data.autoData.getcDriverId()));
+			}
+        	else if (!TextUtils.isEmpty(Data.autoData.getFuguChannelId())) {
                 Data.autoData.getFuguTags().remove(FUGU_TAG_SOS);
                 if (fromSos) {
                     Data.autoData.getFuguTags().add(FUGU_TAG_SOS);
                 }
-                FuguConfig.getInstance().openChatByTransactionId(Data.autoData.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-                        Data.autoData.getFuguChannelName(), Data.autoData.getFuguTags());
+                ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                        .setTransactionId(Data.autoData.getFuguChannelId())
+                        .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                        .setChannelName(Data.autoData.getFuguChannelName())
+                        .setTags(Data.autoData.getFuguTags())
+                        .build();
+                HippoConfig.getInstance().openChatByUniqueId(chatAttr);
             } else {
-                FuguConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+                HippoConfig.getInstance().openChat(HomeActivity.this, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -9818,7 +10288,13 @@ RelativeLayout plusBadge;
                     }
                 }
                 localModeEnabled = modeEnabled;
-            } else {
+            } else if(PassengerScreenMode.P_SEARCH == passengerScreenMode && isNewUI && Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1){
+                if(placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
+                    topBar.textViewTitle.setText(getResources().getString(R.string.drop_location));
+                } else {
+                    topBar.textViewTitle.setText(getResources().getString(R.string.pickup_location));
+                }
+            }else {
                 Prefs.with(this).save(Constants.SP_EMERGENCY_MODE_ENABLED, 0);
                 if (confirmedScreenOpened) {
                     topBar.textViewTitle.setText(getResources().getString(R.string.confirmation));
@@ -9846,7 +10322,7 @@ RelativeLayout plusBadge;
             }
 
 //            topBar.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, (float) getResources().getDimensionPixelSize(R.dimen.text_size_40) * minRatio);
-            topBar.imageViewMenu.setImageResource(R.drawable.ic_menu_selector);
+			setTopBarMenuIcon();
             topBar.textViewTitle.setTextColor(getResources().getColor(R.color.text_color));
 
         } catch (Exception e) {
@@ -9854,16 +10330,29 @@ RelativeLayout plusBadge;
         }
     }
 
+    private void setTopBarMenuIcon(){
+		topBar.imageViewMenu.setImageResource(rvRideTypes.getVisibility() == View.VISIBLE
+				|| topBar.textViewTitle.getVisibility() == View.VISIBLE ?
+				R.drawable.ic_menu_selector : R.drawable.ic_menu_home_new_selector);
+	}
+
     public void setTopBarTransNewUI() {
-        if(passengerScreenMode == P_INITIAL && isNewUI && !confirmedScreenOpened && !scheduleRideOpen && !specialPickupScreenOpened) {
+		RelativeLayout.LayoutParams paramsInitial = (RelativeLayout.LayoutParams) initialLayout.getLayoutParams();
+        if(((passengerScreenMode == P_INITIAL && rvRideTypes.getVisibility() == View.GONE)
+				|| (passengerScreenMode == P_ASSIGNING && relativeLayoutAssigningDropLocationParent.getVisibility() == View.GONE))
+				&& (Data.autoData.getBidInfos() == null || Data.autoData.getBidInfos().size() == 0)
+				&& isNewUI && !confirmedScreenOpened && !scheduleRideOpen && !specialPickupScreenOpened) {
             topBar.topRl.setBackground(ContextCompat.getDrawable(this, R.color.transparent));
             topBar.imageViewShadow.setBackground(ContextCompat.getDrawable(this, R.color.transparent));
             topBar.textViewTitle.setVisibility(View.GONE);
+			paramsInitial.topMargin = 0;
         } else {
             topBar.topRl.setBackground(ContextCompat.getDrawable(this, R.color.white));
             topBar.imageViewShadow.setBackground(ContextCompat.getDrawable(this, R.drawable.shadow_down));
             topBar.textViewTitle.setVisibility(View.VISIBLE);
+			paramsInitial.topMargin = (int) (ASSL.Yscale() * 96F);
         }
+		initialLayout.setLayoutParams(paramsInitial);
     }
 
 
@@ -9993,7 +10482,11 @@ RelativeLayout plusBadge;
         startActivityForResult(intent, searchResult.getPlaceRequestCode());
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
-
+	@NotNull
+	@Override
+	public CoroutineContext getCoroutineContext() {
+		return null;
+	}
 
     @Override
     public void onDisplayMessagePushReceived() {
@@ -10048,7 +10541,7 @@ RelativeLayout plusBadge;
 
     private boolean stopDefaultCoupon = false;
     public void callFindADriverAfterCouponSelect(){
-        if(confirmedScreenOpened) {
+        if(confirmedScreenOpened || isNewUI()) {
             if (Data.autoData.showRegionSpecificFare()) {
                 HashMap<String, String> params = new HashMap<>();
                 if (getApiFindADriver().getParams() != null) {
@@ -10072,10 +10565,11 @@ RelativeLayout plusBadge;
     private void fareEstimatBeforeRequestRide() {
         jugnooPoolFareId = 0;
         if (Data.autoData.getDropLatLng() != null) {
-            int isPooled = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
-            boolean callFareEstimate = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()
-					|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1
-					|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1;
+        	Region region = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
+            int isPooled = region.getRideType() == RideTypeValue.POOL.getOrdinal() ? 1 : 0;
+            boolean callFareEstimate = region.getRideType() == RideTypeValue.POOL.getOrdinal()
+					|| region.getShowFareEstimate() == 1
+					|| region.getFareMandatory() == 1;
             PromoCoupon promoCouponSelected = null;
             try {
                 promoCouponSelected = slidingBottomPanel.getRequestRideOptionsFragment().getSelectedCoupon();
@@ -10083,25 +10577,29 @@ RelativeLayout plusBadge;
             if(apiFareEstimate == null) {
 				apiFareEstimate = new ApiFareEstimate(HomeActivity.this, new ApiFareEstimate.Callback() {
 					@Override
-					public void onSuccess(List<LatLng> list, String startAddress, String endAddress, String distanceText,
+					public void onSuccess(List<LatLng> list, String distanceText,
 										  String timeText, double distanceValue, double timeValue, PromoCoupon promoCoupon) {
 						mapTouched = false;
 						latLngBoundsBuilderPool = new LatLngBounds.Builder();
+						callInsertData();
 
-						PolylineOptions poolPolylineOption = new PolylineOptions();
-						poolPolylineOption.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
+						polylineOptionsP2D = new PolylineOptions();
+						polylineOptionsP2D.width(ASSL.Xscale() * 7).color(getResources().getColor(R.color.google_path_polyline_color)).geodesic(true);
 						for (int z = 0; z < list.size(); z++) {
-							poolPolylineOption.add(list.get(z));
+							polylineOptionsP2D.add(list.get(z));
 							latLngBoundsBuilderPool.include(list.get(z));
 						}
 
-						if (polyline != null) {
-							polyline.remove();
+						if (polylineP2D != null) {
+							polylineP2D.remove();
 						}
-						polyline = map.addPolyline(poolPolylineOption);
+						polylineP2D = map.addPolyline(polylineOptionsP2D);
 
 						pickupLocationEtaMarker();
 
+						if(dropLocationMarker != null){
+							dropLocationMarker.remove();
+						}
 						MarkerOptions poolMarkerOptionEnd = new MarkerOptions();
 						poolMarkerOptionEnd.title("End");
 						poolMarkerOptionEnd.position(Data.autoData.getDropLatLng());
@@ -10109,53 +10607,38 @@ RelativeLayout plusBadge;
 						poolMarkerOptionEnd.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createPinMarkerBitmapEnd(HomeActivity.this
 						)));
 						//map.addMarker(poolMarkerEnd);
-						map.addMarker(poolMarkerOptionEnd);
+						dropLocationMarker = map.addMarker(poolMarkerOptionEnd);
 
 						poolPathZoomAtConfirm();
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 
-						if (Data.autoData.showRegionSpecificFare()) {
+						if (Data.autoData.showRegionSpecificFare() || !callFareEstimate) {
 							HashMap<String, String> params = new HashMap<>();
 							params.put(Constants.KEY_RIDE_DISTANCE, "" + (distanceValue / 1000D));
 							params.put(Constants.KEY_RIDE_TIME, "" + (timeValue / 60D));
 							if (promoCoupon != null && promoCoupon.getId() != -1) {
 								params.put(promoCoupon instanceof CouponInfo ? Constants.KEY_COUPON_TO_APPLY : Constants.KEY_PROMO_TO_APPLY, String.valueOf(promoCoupon.getId()));
 							}
+							putSelectedPickupAddress(params);
+							putSelectedDropAddress(params);
 							findDriversETACall(false, false, false, params);
 						}
 					}
 
 					@Override
 					public void onRetry() {
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 					}
 
 					@Override
 					public void onNoRetry() {
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 					}
 
 					@Override
 					public void onFareEstimateSuccess(String currency, String minFare, String maxFare, double convenienceCharge,
 													  double tollCharge) {
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						textViewTotalFare.setText(getString(R.string.total_fare_colon));
+						closeFabView();
 						textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, minFare) + " - " +
 								Utils.formatCurrencyValue(currency, maxFare));
 						if (Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
@@ -10167,9 +10650,9 @@ RelativeLayout plusBadge;
 							textViewIncludes.setText(getString(R.string.convenience_charge_format, Utils.formatCurrencyValue(currency, convenienceCharge)));
 						} else {
 							textViewIncludes.setVisibility(View.GONE);
-							textViewIncludes.setText("");
 						}
 						setTextTollCharges(currency, tollCharge);
+						callInsertData();
 					}
 
 					private void setTextTollCharges(String currency, double tollCharge) {
@@ -10180,6 +10663,11 @@ RelativeLayout plusBadge;
 							textViewIncludes.append(getString(R.string.expected_toll_charge) + " " + Utils.formatCurrencyValue(currency, tollCharge));
 						}
 					}
+					private void closeFabView(){
+						if(fabViewTest != null) {
+							fabViewTest.closeMenu();
+						}
+					}
 
 					@Override
 					public void onPoolSuccess(String currency, double fare, double rideDistance, String rideDistanceUnit,
@@ -10188,7 +10676,6 @@ RelativeLayout plusBadge;
 						Log.v("Pool Fare value is ", "--> " + fare);
 						jugnooPoolFareId = poolFareId;
 
-						textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
 						textViewTotalFareValue.setText(Utils.formatCurrencyValue(currency, fare));
 						if (Prefs.with(HomeActivity.this).getInt(KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
 							textViewTotalFareValue.append(" ");
@@ -10198,46 +10685,43 @@ RelativeLayout plusBadge;
 						textViewIncludes.setVisibility(View.VISIBLE);
 						textViewIncludes.setText(text);
 						setTextTollCharges(currency, tollCharge);
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
+                        callInsertData();
 					}
 
 					@Override
 					public void onDirectionsFailure() {
 						jugnooPoolFareId = 0;
-						textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
 						textViewTotalFareValue.setText("-");
 
 						textViewIncludes.setVisibility(View.GONE);
 						textViewIncludes.setText("");
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
+						closeFabView();
+						if(Data.autoData != null) {
+							Data.autoData.clearRegionFares();
+							if(vehiclesTabAdapterConfirmRide != null) {
+								vehiclesTabAdapterConfirmRide.setList(Data.autoData.getRegions());
+							}
+							if(getApiFindADriver().getParams() != null) {
+								getApiFindADriver().getParams().clear();
+							}
 						}
 					}
 
 					@Override
 					public void onFareEstimateFailure() {
 						jugnooPoolFareId = 0;
-						textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
 						textViewTotalFareValue.setText("-");
 
 						textViewIncludes.setVisibility(View.GONE);
 						textViewIncludes.setText("");
-						try {
-							fabViewTest.closeMenu();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						closeFabView();
 					}
 				});
 			}
+
 			apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
-                    getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected(), promoCouponSelected);
+					region, promoCouponSelected, null, MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME);
         } else {
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
@@ -10261,6 +10745,13 @@ RelativeLayout plusBadge;
                 e.printStackTrace();
             }
         }
+    }
+
+    private void callInsertData() {
+        if(!Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()).equalsIgnoreCase("Current Location")) {
+            createDataAndInsert(0);
+        }
+        createDataAndInsert(1);
     }
 
     public void pickupLocationEtaMarker() {
@@ -10591,12 +11082,14 @@ RelativeLayout plusBadge;
             zoomAfterFindADriver = false;
             if (!isPoolRideAtConfirmation()) {
                 if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-                    textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText());
-                    textViewInitialSearchNew.setText(autoCompleteSearchResult.getNameForText());
+                    textViewInitialSearch.setText(autoCompleteSearchResult.getNameForText(this));
+                    textViewInitialSearchNew.setText(autoCompleteSearchResult.getNameForText(this));
+                    tvPickupRentalOutstation.setText(autoCompleteSearchResult.getNameForText(this));
                 } else if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
-                    textViewDestSearch.setText(autoCompleteSearchResult.getNameForText());
-                    textViewDestSearchNew.setText(autoCompleteSearchResult.getNameForText());
-                    dropAddressName = autoCompleteSearchResult.getNameForText();
+                    textViewDestSearch.setText(autoCompleteSearchResult.getNameForText(this));
+                    textViewDestSearchNew.setText(autoCompleteSearchResult.getNameForText(this));
+                    dropAddressName = autoCompleteSearchResult.getNameForText(this);
+                    setPickupLocationInitialUI();
                 }
                 searchedALocation = true;
             }
@@ -10607,13 +11100,11 @@ RelativeLayout plusBadge;
                 fareEstimatBeforeRequestRide();
             }
         } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
-            textViewAssigningDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
-            dropAddressName = autoCompleteSearchResult.getNameForText();
+			tvDropAssigning.setText(autoCompleteSearchResult.getNameForText(this));
+            dropAddressName = autoCompleteSearchResult.getNameForText(this);
         } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                 || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-            textViewFinalDropLocationClick.setText(autoCompleteSearchResult.getNameForText());
-            dropAddressName = autoCompleteSearchResult.getNameForText();
         }
     }
 
@@ -10636,15 +11127,15 @@ RelativeLayout plusBadge;
     private void setSearchResultToPickupCase(SearchResult searchResult) {
         try {
             if (searchResult != null && !TextUtils.isEmpty(searchResult.getAddress())) {
-                textViewInitialSearch.setText(searchResult.getNameForText());
-                textViewInitialSearchNew.setText(searchResult.getNameForText());
+                textViewInitialSearch.setText(searchResult.getNameForText(this));
+                textViewInitialSearchNew.setText(searchResult.getNameForText(this));
+                tvPickupRentalOutstation.setText(searchResult.getNameForText(this));
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResult.getLatLng(), MAX_ZOOM), MAP_ANIMATE_DURATION, null);
                 setPickupAddressZoomedOnce = true;
                 mapTouched = true;
                 updateSavedAddressLikeButton(searchResult.getLatLng(), true);
-                Data.autoData.setPickupLatLng(searchResult.getLatLng());
+                Data.autoData.setPickupSearchResult(searchResult);
                 Log.w("pickuplogging", "setSearchResultToPickupCase"+Data.autoData.getPickupLatLng());
-                Data.autoData.setPickupAddress(searchResult.getAddress(), searchResult.getLatLng());
 
                 try {
                     Log.e("searchResult.getThirdPartyAttributions()", "=" + searchResult.getThirdPartyAttributions());
@@ -10678,11 +11169,15 @@ RelativeLayout plusBadge;
         if (P_INITIAL == passengerScreenMode && !confirmedScreenOpened && !specialPickupSelected) {
             if (refresh && touchCalled && releaseCalled) {
                 Log.w("getAddressAsync", "findADriverAndGeocode");
-                getAddressAsync(latLng, isNewUI() ? textViewInitialSearchNew : textViewInitialSearch, null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+                getAddressAsync(latLng, getInitialPickupTextView(), null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
             }
             if ((refresh && mapTouched) || addressPopulatedFromDifferentOffering) {
                 addressPopulatedFromDifferentOffering = false;
-                callMapTouchedRefreshDrivers(null);
+                if(Data.autoData.getDropLatLng() != null && passengerScreenMode == P_INITIAL && (confirmedScreenOpened || isNewUI())){
+					fareEstimatBeforeRequestRide();
+				} else {
+					callMapTouchedRefreshDrivers(null);
+				}
             }
         }
         return refresh;
@@ -10696,20 +11191,26 @@ RelativeLayout plusBadge;
             PlaceSearchListFragment.PlaceSearchMode searchMode = placeSearchMode==null?this.placeSearchMode:placeSearchMode;
             if (P_INITIAL == passengerScreenMode
                     || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
+                isPickupSet = true;
+
+
                 if(scheduleRideOpen){
                     if(getScheduleRideFragment() != null){
                         getScheduleRideFragment().searchResultReceived(searchResult, searchMode);
                     }
                 }
-                if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+				removeP2DPolyline();
+				if (searchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
+                    passengerScreenMode = P_INITIAL;
                     progressBarInitialSearch.stopSpinning();
                     progressBarInitialSearch.setVisibility(View.GONE);
                     passengerScreenMode = P_INITIAL;
+
+					if (map != null && searchResult != null) {
+						setSearchResultToPickupCase(searchResult);
+						GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
+					}
                     switchPassengerScreen(passengerScreenMode);
-                    if (map != null && searchResult != null) {
-                        setSearchResultToPickupCase(searchResult);
-                        GAUtils.event(RIDES, HOME, PICKUP + LOCATION + ENTERED);
-                    }
                 } else if (searchMode == PlaceSearchListFragment.PlaceSearchMode.DROP) {
 
                     if (Data.autoData.getDropLatLng() == null) {
@@ -10719,7 +11220,6 @@ RelativeLayout plusBadge;
                     Data.autoData.setDropLatLng(searchResult.getLatLng());
                     Data.autoData.setDropAddress(searchResult.getAddress());
                     Data.autoData.setDropAddressId(searchResult.getId());
-                    dropLocationSet = true;
                     relativeLayoutInitialSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
                     imageViewDropCross.setVisibility(View.VISIBLE);
                     imageViewDropCrossNew.setVisibility(View.VISIBLE);
@@ -10736,40 +11236,34 @@ RelativeLayout plusBadge;
                     if (!scheduleRideOpen) {
                         if ((slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal() &&
                                 shakeAnim > 0 && !updateSpecialPickupScreen())
-                                || (!specialPickupScreenOpened && !confirmedScreenOpened &&
+                                || (!specialPickupScreenOpened && !confirmedScreenOpened && !isNewUI() &&
 								(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getShowFareEstimate() == 1
 										|| slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1))) {
                             textViewTotalFareValue.setText("");
                             imageViewRideNow.performClick();
-                        } else if(!specialPickupScreenOpened && !confirmedScreenOpened) {
+                        } else if(!specialPickupScreenOpened && !confirmedScreenOpened && !isNewUI()) {
                             findDriversETACall(false, false, false, null);
                         }
                     }
                     GAUtils.event(RIDES, HOME, DESTINATION + LOCATION + ENTERED);
                 }
-                if(isNewUiWithDropAtConfirmation()) {
-                    if(currentLocationMarker != null) {
-                        currentLocationMarker.remove();
-                    }
-                    fareEstimatBeforeRequestRide();
-                }
             } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
                 saveLastDestinations(searchResult);
                 sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                        getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress());
+                        getPlaceSearchListFragment(passengerScreenMode).getProgressBarSearch(), false, searchResult.getAddress(), 0);
             } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                     || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
                     || PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                saveLastDestinations(searchResult);
-                if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                    zoomtoPickupAndDriverLatLngBounds(searchResult.getLatLng(), null, 0);
-                }
 
-                sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
-                        getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true, searchResult.getAddress());
-                if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                    GAUtils.event(RIDES, RIDE + IN_PROGRESS, DESTINATION + UPDATED);
-                }
+            	if(Data.autoData != null && Data.autoData.getAssignedDriverInfo() != null
+						&& Data.autoData.getAssignedDriverInfo().getFareMandatory() == 1) {
+					EditDropConfirmation.INSTANCE.fareEstimateAndConfirm(this, Integer.parseInt(Data.autoData.getcEngagementId()),
+							Data.autoData.getPickupLatLng(), Data.autoData.getPickupAddress(Data.autoData.getPickupLatLng()),
+							searchResult.getLatLng(), searchResult.getAddress(), searchResult.getName(),
+							Data.autoData.getAssignedDriverInfo().getCurrency());
+				} else {
+					updateDropToUIAndServerApi(searchResult, 0);
+				}
             }
 
             Log.e("onPlaceSearchPost", "=" + searchResult);
@@ -10778,7 +11272,29 @@ RelativeLayout plusBadge;
         }
     }
 
-    @Override
+    private void updateDropToUIAndServerApi(SearchResult searchResult, int poolFareId){
+		saveLastDestinations(searchResult);
+
+		textViewFinalDropLocationClick.setText(searchResult.getNameForText(this));
+		dropAddressName = searchResult.getNameForText(this);
+
+		sendDropLocationAPI(HomeActivity.this, searchResult.getLatLng(),
+				getPlaceSearchListFragment(PassengerScreenMode.P_REQUEST_FINAL).getProgressBarSearch(), true,
+				searchResult.getAddress(), poolFareId);
+		if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
+			GAUtils.event(RIDES, RIDE + IN_PROGRESS, DESTINATION + UPDATED);
+		}
+	}
+
+	public void removeP2DPolyline() {
+		polylineOptionsP2D = null;
+		if(polylineP2D != null){
+			polylineP2D.remove();
+		}
+		polylineP2D = null;
+	}
+
+	@Override
     public void onPlaceSearchError() {
         if (P_INITIAL == passengerScreenMode
                 || PassengerScreenMode.P_SEARCH == passengerScreenMode) {
@@ -10793,9 +11309,10 @@ RelativeLayout plusBadge;
             } else {
                 textViewInitialSearch.setText("");
                 textViewInitialSearchNew.setText("");
+                tvPickupRentalOutstation.setText("");
             }
         } else if (PassengerScreenMode.P_ASSIGNING == passengerScreenMode) {
-            textViewAssigningDropLocationClick.setText("");
+			tvDropAssigning.setText("");
             dropAddressName = "";
         } else if (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
@@ -10936,9 +11453,10 @@ RelativeLayout plusBadge;
         if(isNewUI) {
             relativeLayoutTotalFare.setVisibility(View.GONE);
             linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+            tvTermsAndConditions.setVisibility(View.GONE);
             if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getReverseBid() == 1) {
-                linearLayoutBidValue.setVisibility(View.VISIBLE);
-                relativeLayoutOfferConfirm.setVisibility(View.GONE);
+				showReverseBidField(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected());
+				relativeLayoutOfferConfirm.setVisibility(View.GONE);
                 boolean isCashOnly = true;
                 if (MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().size() > 0) {
                     for (PaymentModeConfigData paymentModeConfigData : MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas()) {
@@ -10957,7 +11475,13 @@ RelativeLayout plusBadge;
                 linearLayoutBidValue.setVisibility(View.GONE);
                 relativeLayoutOfferConfirm.setVisibility(View.VISIBLE);
                 linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
+
+                if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionFare() != null
+                        && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getFareMandatory() == 1) {
+//                    tvTermsAndConditions.setVisibility(View.VISIBLE);
+                }
             }
+            setPickupLocationInitialUI();
         } else {
             linearLayoutBidValue.setVisibility(View.GONE);
             linearLayoutPaymentModeConfirm.setVisibility(View.VISIBLE);
@@ -10970,24 +11494,51 @@ RelativeLayout plusBadge;
         if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType()== RideTypeValue.BIKE_RENTAL.getOrdinal()) {
         	relativeLayoutDestSearchBar.setVisibility(View.GONE);
 			relativeLayoutDestSearchBarNew.setVisibility(View.GONE);
-			findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.GONE);
-			findViewById(R.id.iv3NewUIDropMark).setVisibility(View.GONE);
+
+			View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+			if(viewDash != null){
+				viewDash.setVisibility(View.GONE);
+			}
+			View viewDrop = findViewById(R.id.iv3NewUIDropMark);
+			if(viewDrop != null){
+				viewDrop.setVisibility(View.GONE);
+			}
         } else {
-            relativeLayoutDestSearchBar.setVisibility(View.VISIBLE);
-			relativeLayoutDestSearchBarNew.setVisibility(View.VISIBLE);
-			findViewById(R.id.iv2NewUIDropDashedLine).setVisibility(View.VISIBLE);
-			findViewById(R.id.iv3NewUIDropMark).setVisibility(View.VISIBLE);
+            if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
+                    || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())) {
+                relativeLayoutSearchContainer.setVisibility(View.GONE);
+            }
+            if(isNewUI) {
+                relativeLayoutDestSearchBarNew.setVisibility(View.VISIBLE);
+            } else {
+                relativeLayoutDestSearchBar.setVisibility(View.VISIBLE);
+            }
+
+			View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+			if(viewDash != null){
+                if((Data.autoData.getDropLatLng() == null || Data.autoData.getDropAddress() == null)
+                        && Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1 && !isPickupSet) {
+                    setHeightDropAddress(0); // large
+                } else {
+                    setHeightDropAddress(1); //Normal
+                }
+			}
+			View viewDrop = findViewById(R.id.iv3NewUIDropMark);
+			if(viewDrop != null){
+				viewDrop.setVisibility(View.VISIBLE);
+			}
         }
-        if((confirmedScreenOpened || (passengerScreenMode == P_INITIAL && isNewUI)) && Data.autoData.getPickupLatLng() != null) {
+        if(passengerScreenMode == P_INITIAL && (confirmedScreenOpened || isNewUI) && Data.autoData.getPickupLatLng() != null) {
             pickupLocationEtaMarker();
         }
         if(oldRegionId != slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRegionId()) {
             mNotes = "";
         }
+		ArrayList<Region> regions = Data.autoData.getRegions();
         if((confirmedScreenOpened || isNewUI) && vehiclesTabAdapterConfirmRide!=null){
-            vehiclesTabAdapterConfirmRide.notifyDataSetChanged();
+            vehiclesTabAdapterConfirmRide.setList(regions);
         }
-        if (Data.autoData.getRegions().size() == 1) {
+        if (regions.size() == 1) {
             imageViewRideNow.setImageDrawable(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     .getVehicleIconSet().getRequestSelector(this));
         } else {
@@ -11057,6 +11608,61 @@ RelativeLayout plusBadge;
 		}
 
         return changed;
+    }
+
+	public void showReverseBidField(Region region) {
+		linearLayoutBidValue.setVisibility(View.VISIBLE);
+		if(region.getRegionFare() != null && regionIdFareSetInETBid != region.getRegionId()) {
+			editTextBidValue.setText(Utils.getMoneyDecimalFormat().format(region.getRegionFare().getFare() * 0.8));
+			editTextBidValue.setSelection(editTextBidValue.getText().length());
+			regionIdFareSetInETBid = region.getRegionId();
+		}
+	}
+
+	//    0 :- Height Large
+//    1 :- Normal Height
+    private void setHeightDropAddress(int caseVal) {
+
+        View viewDash = findViewById(R.id.iv2NewUIDropDashedLine);
+        ImageView iv3NewUIDropMark = findViewById(R.id.iv3NewUIDropMark);
+        LinearLayout rlMark = findViewById(R.id.rlMark);
+
+        int dp70 = Utils.dpToPx(this, 55);
+        int dp40 = (int)(ASSL.minRatio()*16F);
+        int dp30 = Utils.dpToPx(this, 15);
+        int dp50 = Utils.dpToPx(this, 22);
+        int dp68 = Utils.dpToPx(this, 30);
+
+		ViewGroup.LayoutParams layoutParamsInitial = relativeLayoutInitialSearchBarNew.getLayoutParams();
+		layoutParamsInitial.height = dp70;
+
+        ViewGroup.LayoutParams layoutParams = relativeLayoutDestSearchBarNew.getLayoutParams();
+        ViewGroup.LayoutParams params = iv3NewUIDropMark.getLayoutParams();
+        RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        if(viewDash != null){
+            switch (caseVal) {
+                case 0 :
+                    viewDash.setVisibility(View.GONE);
+                    layoutParams.height = dp70;
+                    params.height = dp40;
+                    params.width = dp40;
+                    params2.setMargins(dp30, dp50, dp30, 0);
+                    break;
+
+                case 1:
+                default:
+                    viewDash.setVisibility(View.VISIBLE);
+                    layoutParams.height = dp70;
+                    params.height = dp40;
+                    params.width = dp40;
+                    params2.setMargins(dp30, dp68, dp30, 0);
+            }
+            rlMark.setLayoutParams(params2);
+            relativeLayoutDestSearchBarNew.setLayoutParams(layoutParams);
+            iv3NewUIDropMark.setLayoutParams(params);
+			relativeLayoutInitialSearchBarNew.setLayoutParams(layoutParamsInitial);
+        }
     }
 
     public void updateFareEstimateHoverButton() {
@@ -11148,7 +11754,8 @@ RelativeLayout plusBadge;
                 if (Data.autoData.getDropLatLng() == null) {
                     textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
                     textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-                    textViewDestSearchNew.setText(getResources().getString(R.string.enter_destination));
+                    textViewDestSearchNew.setText((isNewUI && Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1)
+                            ? getResources().getString(R.string.text_where_to_go) : getResources().getString(R.string.enter_destination));
                     textViewDestSearchNew.setTextColor(getResources().getColor(R.color.text_color_light));
                 }
                 viewPoolInfoBarAnim.setVisibility(View.VISIBLE);
@@ -11239,7 +11846,8 @@ RelativeLayout plusBadge;
             if (Data.autoData.getDropLatLng() == null) {
                 textViewDestSearch.setText(getResources().getString(R.string.enter_destination));
                 textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color_light));
-                textViewDestSearchNew.setText(getResources().getString(R.string.enter_destination));
+                textViewDestSearchNew.setText((isNewUI && Prefs.with(this).getInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, 0) == 1)
+                        ? getResources().getString(R.string.text_where_to_go) : getResources().getString(R.string.enter_destination));
                 textViewDestSearchNew.setTextColor(getResources().getColor(R.color.text_color_light));
             }
         }
@@ -11328,6 +11936,20 @@ RelativeLayout plusBadge;
         } else {
             return new LatLng(Data.latitude, Data.longitude);
         }
+    }
+
+    public LatLng getCurrentLatLng() {
+    	LatLng latLng;
+        if (myLocation != null) {
+			latLng = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        } else {
+			latLng = new LatLng(Data.latitude, Data.longitude);
+        }
+        if(MapUtils.distance(latLng, new LatLng(0,0)) > 10){
+        	return latLng;
+		} else {
+        	return new LatLng(LocationFetcher.getSavedLatFromSP(this), LocationFetcher.getSavedLngFromSP(this));
+		}
     }
 
 
@@ -11510,7 +12132,7 @@ RelativeLayout plusBadge;
             imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()));
             textViewPaymentModeValueConfirm.setText(MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption()));
+                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),this));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -11681,7 +12303,6 @@ RelativeLayout plusBadge;
 
     public void openConfirmRequestView() {
         confirmedScreenOpened = true;
-        textViewTotalFare.setText(getResources().getString(R.string.total_fare_colon));
         passengerScreenMode = P_INITIAL;
         switchPassengerScreen(passengerScreenMode);
     }
@@ -11694,7 +12315,7 @@ RelativeLayout plusBadge;
 
     private boolean isNormalRideWithDropAtConfirmation() {
         return P_INITIAL == passengerScreenMode
-                && confirmedScreenOpened || isNewUI
+                && (confirmedScreenOpened || isNewUI)
                 && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() != RideTypeValue.POOL.getOrdinal()
                 && Data.autoData.getDropLatLng() != null
                 && Data.autoData.getPickupLatLng() != null;
@@ -11718,12 +12339,13 @@ RelativeLayout plusBadge;
             map.clear();
             pokestopHelper.mapCleared();
             pokestopHelper.checkPokestopData(map.getCameraPosition().target, Data.userData.getCurrentCity());
-            homeUtil.displaySavedAddressesAsFlags(this, assl, map, true);
-            homeUtil.displayPointOfInterestMarkers(this, assl, map);
+            homeUtil.displaySavedAddressesAsFlags(this, assl, map, true, passengerScreenMode);
+            homeUtil.displayPointOfInterestMarkers(this, assl, map, passengerScreenMode);
             if (driverMarkerInRide != null) {
                 driverMarkerInRide.remove();
             }
             driverMarkerInRide = null;
+            polylineP2D = null;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -11874,18 +12496,58 @@ RelativeLayout plusBadge;
         }
 
         //bids from various drivers will show and block the cancel request button in this case
+		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) assigningLayout.getLayoutParams();
         if (bidsPlacedAdapter.getItemCount() > 0) {
 			rlAssigningBidding.setVisibility(View.VISIBLE);
 			rlBidTimer.setVisibility(View.GONE);
 			rlAssigningNormal.setVisibility(View.GONE);
 			topBar.tvCancel.setVisibility(View.VISIBLE);
+
+			params.topMargin = (int) (ASSL.Yscale() * 96F);
+
 		} else {
 			rlAssigningBidding.setVisibility(View.GONE);
 			rlBidTimer.setVisibility(View.GONE);
 			rlAssigningNormal.setVisibility(View.VISIBLE);
 			topBar.tvCancel.setVisibility(View.GONE);
+
+			params.topMargin = isNewUI() ? 0 : (int) (ASSL.Yscale() * 96F);
 		}
+        assigningLayout.setLayoutParams(params);
+
 		updateCancelButtonUI();
+
+		//bid and cancel buttons visibility and ui
+		double incrementVal = getBidIncrementValFromServer();
+		int bidFareVisibility = (tvInitialCancelRide.getVisibility() == View.VISIBLE
+				&& Data.autoData.getIsReverseBid() == 1 && incrementVal > 0D
+				&& Data.autoData.getInitialBidValue() > 0) ? View.VISIBLE : View.GONE;
+		bRaiseOfferFare.setVisibility(bidFareVisibility);
+		bRaiseOfferFare.setEnabled(Data.autoData.getInitialBidValue() != Data.autoData.getChangedBidValue());
+		llRaiseBidButton.setVisibility(bidFareVisibility);
+		tvRaiseBidValue.setText(Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.autoData.getChangedBidValue()));
+		if(bidFareVisibility == View.VISIBLE){
+			tvInitialCancelRide.setTextColor(ContextCompat.getColorStateList(this, R.color.text_color_selector));
+			tvInitialCancelRide.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+		} else {
+			tvInitialCancelRide.setTextColor(ContextCompat.getColorStateList(this, R.color.text_color_red_dark_aplha_selector));
+			tvInitialCancelRide.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+		}
+
+		//setting text on reverse bid increment and decrement values
+		SpannableStringBuilder ssbMinus = new SpannableStringBuilder("-"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), incrementVal));
+		ssbMinus.setSpan(new RelativeSizeSpan(1.2F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbMinus.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbMinus.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.black)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvRaiseFareMinus.setText(ssbMinus);
+		SpannableStringBuilder ssbPlus = new SpannableStringBuilder("+"+Utils.formatCurrencyValue(Data.autoData.getCurrency(), incrementVal));
+		ssbPlus.setSpan(new RelativeSizeSpan(1.2F), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbPlus.setSpan(new StyleSpan(Typeface.BOLD), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		ssbPlus.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, R.color.black)), 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		tvRaiseFarePlus.setText(ssbPlus);
+
+		//set top bar transaparent or opaque based on new ui and drop layout visibility
+		setTopBarTransNewUI();
 
 
 		long startTime = Prefs.with(this).getLong(Constants.KEY_REQUEST_RIDE_START_TIME, System.currentTimeMillis());
@@ -11901,18 +12563,22 @@ RelativeLayout plusBadge;
             pwBidTimer.setVisibility(View.VISIBLE);
             tvBidTimer.setVisibility(View.VISIBLE);
 
-
-			Log.e("updateBidsView", "diff small="+(System.currentTimeMillis() - startTime));
-			Log.e("updateBidsView", "bidTime="+bidTime);
-
             getHandler().removeCallbacks(runnableBidTimer);
             getHandler().post(runnableBidTimer);
         }
 
+        //set google map padding according to bottom layout
+		llFindingADriver.post(() -> setGoogleMapPadding(llFindingADriver.getMeasuredHeight(), true));
     }
 
+	private double getBidIncrementValFromServer() {
+		double incrementVal = 0D;
+		try{incrementVal = Double.parseDouble(Prefs.with(this).getString(KEY_CUSTOMER_BID_INCREMENT, String.valueOf(0D)));}catch(Exception e){}
+		return incrementVal;
+	}
 
-    private double bidTime = -1;
+
+	private double bidTime = -1;
     private Runnable runnableBidTimer = new Runnable() {
         @Override
         public void run() {
@@ -11936,7 +12602,7 @@ RelativeLayout plusBadge;
 
 	public void cancelClick() {
 		if(passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
-			initialCancelRideBtn.performClick();
+			tvInitialCancelRide.performClick();
 		}
 	}
 
@@ -11997,7 +12663,10 @@ RelativeLayout plusBadge;
                 @Override
                 public void onSuccess() {
                     try {
-                        homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true);
+                        homeUtil.displaySavedAddressesAsFlags(HomeActivity.this, assl, map, true, passengerScreenMode);
+                        if(passengerScreenMode == P_INITIAL) {
+                            getAddressAsync(new LatLng(Data.latitude, Data.longitude), getInitialPickupTextView(), null, PlaceSearchListFragment.PlaceSearchMode.PICKUP);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -12270,6 +12939,10 @@ RelativeLayout plusBadge;
                                     MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(HomeActivity.this, Data.autoData.getPickupPaymentOption())),
                             v -> getDriverTipInteractor().addTip(tipSelected, Data.autoData.getEndRideData().getPaymentOption()));
                 }
+                @Override
+                public void getSelectedPaymentOption() {
+
+                }
             });
         }
         return paymentOptionDialogTip;
@@ -12371,7 +13044,7 @@ RelativeLayout plusBadge;
         if(Data.autoData != null && Data.autoData.getServiceTypeSelected() != null
          && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
           || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))) {
-            slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
+//            slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
             promoCouponSelectedForRide = null;
             showPoolInforBar(false);
         }
@@ -12397,6 +13070,7 @@ RelativeLayout plusBadge;
                 || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))){
             constraintLayoutRideTypeConfirm.setVisibility(View.VISIBLE);
             linearLayoutRequestMain.setVisibility(View.GONE);
+            relativeLayoutSearchContainer.setVisibility(View.GONE);
             if(!TextUtils.isEmpty(Data.autoData.getServiceTypeSelected().getImages())) {
                 Picasso.with(this).load(Data.autoData.getServiceTypeSelected().getImages()).into(ivRideTypeImage);
             }
@@ -12404,12 +13078,13 @@ RelativeLayout plusBadge;
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(false);
 
             tvRideTypeRateInfo.setText(null);
+			ArrayList<Region> regions = Data.autoData.getRegions();
             if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())){
                 if(Data.autoData != null
-                        && Data.autoData.getRegions().size() > 0
-                        && Data.autoData.getRegions().get(0).getPackages() != null
-                        && Data.autoData.getRegions().get(0).getPackages().size() > 0) {
-                    Region region = Data.autoData.getRegions().get(0);
+                        && regions.size() > 0
+                        && regions.get(0).getPackages() != null
+                        && regions.get(0).getPackages().size() > 0) {
+                    Region region = regions.get(0);
                     tvRideTypeRateInfo.setText(R.string.package_starting_at);
                     tvRideTypeRateInfo.append(" ");
                     tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
@@ -12417,24 +13092,47 @@ RelativeLayout plusBadge;
                 }
             } else if(Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())){
                 if(Data.autoData != null
-                        && Data.autoData.getRegions().size() > 0
-                        && Data.autoData.getRegions().get(0).getFareStructure() != null) {
-                    Region region = Data.autoData.getRegions().get(0);
+                        && regions.size() > 0
+                        && regions.get(0).getFareStructure() != null) {
+                    Region region = regions.get(0);
                     tvRideTypeRateInfo.setText(R.string.package_starting_at);
                     tvRideTypeRateInfo.append(" ");
                     tvRideTypeRateInfo.append(getThemeColorSpannableString(Utils.formatCurrencyValue(region.getFareStructure().getCurrency(),
                             (region.getPackages() != null && !region.getPackages().isEmpty() && region.getPackages().get(0).getFareFixed() != null) ? region.getPackages().get(0).getFareFixed() : 0)));
                 }
             }
+			relativeLayoutConfirmBottom.setVisibility(View.GONE);
 
         } else {
+            if(isNewUI) {
+                relativeLayoutSearchContainerNew.setVisibility(View.VISIBLE);
+                relativeLayoutSearchContainer.setVisibility(View.GONE);
+                linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.white));
+            } else {
+                relativeLayoutSearchContainerNew.setVisibility(View.GONE);
+                relativeLayoutSearchContainer.setVisibility(View.VISIBLE);
+                linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
+            }
+
+			relativeLayoutConfirmBottom.setVisibility(View.VISIBLE);
             constraintLayoutRideTypeConfirm.setVisibility(View.GONE);
             linearLayoutRequestMain.setVisibility(View.VISIBLE);
             slidingBottomPanel.getSlidingUpPanelLayout().setEnabled(true);
             constraintLayoutRideTypeConfirm.postDelayed(() -> {
                 setServiceTypeAdapter(false);
             }, 200);
+
         }
+		relativeLayoutConfirmBottom.post(new Runnable() {
+			@Override
+			public void run() {
+				int bottomPadding = relativeLayoutConfirmBottom.getMeasuredHeight();
+				if(relativeLayoutConfirmBottom.getVisibility() == View.GONE){
+					bottomPadding = constraintLayoutRideTypeConfirm.getMeasuredHeight();
+				}
+				setGoogleMapPadding(bottomPadding, true);
+			}
+		});
     }
 
     private SpannableStringBuilder getThemeColorSpannableString(String message){
@@ -12646,9 +13344,8 @@ RelativeLayout plusBadge;
             Data.autoData.setServiceTypeSelected(serviceType);
             if (serviceType.getSupportedRideTypes() != null
                     && (serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType()) || serviceType.getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))) {
-                Data.autoData.setPickupLatLng(searchResultPickup.getLatLng());
+                Data.autoData.setPickupSearchResult(searchResultPickup);
                 Log.w("pickuplogging", "callRentalOutstationRequestRide"+Data.autoData.getPickupLatLng());
-                Data.autoData.setPickupAddress(searchResultPickup.getAddress(), searchResultPickup.getLatLng());
                 Data.autoData.setSelectedPackage(selectedPackage);
                 slidingBottomPanel.getRequestRideOptionsFragment().setRegionSelected(region);
                 finalRequestRideTimerStart(region);
@@ -12755,6 +13452,84 @@ RelativeLayout plusBadge;
 
     }
 
+    @Override
+    public void onNoDriverHelpPushReceived(JSONObject jsonObject) {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                if(isNewUI && P_INITIAL == passengerScreenMode) {
+                    dialogNoDriverHelp(jsonObject);
+                }
+            }
+        });
+    }
+
+    Dialog noDriverFoundHelpDialog;
+    private void dialogNoDriverHelp(final JSONObject jsonObject) {
+        try {
+            if(noDriverFoundHelpDialog != null && noDriverFoundHelpDialog.isShowing()) {
+                noDriverFoundHelpDialog.dismiss();
+            }
+            String msg = jsonObject.optString(KEY_MESSAGE, "");
+            String title = jsonObject.optString(KEY_TITLE, "");
+            String fuguChannelId = jsonObject.optString("fugu_channel_id", "");
+            String fuguChannelName = jsonObject.optString("fugu_channel_name", "");
+            String pickupAddress = jsonObject.optString("pickup_address", "");
+            String fuguTags = jsonObject.getString("fugu_tags");
+            JSONArray arrTags = new JSONArray(fuguTags);
+            ArrayList<String> tags = new ArrayList<>();
+            for(int i = 0; i < arrTags.length(); i++) {
+                tags.add(arrTags.get(i).toString());
+            }
+            String altMessage = getString(R.string.text_help_me_to_book_a_ride, pickupAddress);
+            noDriverFoundHelpDialog = new Dialog(this, android.R.style.Theme_Translucent_NoTitleBar);
+            noDriverFoundHelpDialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
+            noDriverFoundHelpDialog.setContentView(R.layout.dialog_rentals_lock);
+
+            RelativeLayout relative = (RelativeLayout) noDriverFoundHelpDialog.findViewById(R.id.relative);
+
+            WindowManager.LayoutParams layoutParams = noDriverFoundHelpDialog.getWindow().getAttributes();
+            layoutParams.dimAmount = 0.6f;
+            noDriverFoundHelpDialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            noDriverFoundHelpDialog.setCancelable(false);
+            noDriverFoundHelpDialog.setCanceledOnTouchOutside(false);
+
+
+            Button buttonOk = noDriverFoundHelpDialog.findViewById(R.id.bOk);
+            TextView tvTitle = noDriverFoundHelpDialog.findViewById(R.id.tvTitle);
+            TextView tvMessage = noDriverFoundHelpDialog.findViewById(R.id.tvMessage);
+            TextView tvTitleHelp = noDriverFoundHelpDialog.findViewById(R.id.tvTitleHelp);
+            tvTitleHelp.setVisibility(View.VISIBLE);
+            ImageView imageViewLock = noDriverFoundHelpDialog.findViewById(R.id.image_view_lock);
+            tvMessage.setText(msg);
+            tvTitle.setText(title);
+            imageViewLock.setBackgroundResource(R.drawable.ic_support);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams((int) (ASSL.Xscale() * 260), (int) (ASSL.Xscale() * 260));
+            params.setMargins((int) (ASSL.Xscale() * 40), (int) (ASSL.Xscale() * 40), 0, 0);
+            imageViewLock.setLayoutParams(params);
+            buttonOk.setText(getString(R.string.chat_with_us));
+            ImageView imageViewClose = noDriverFoundHelpDialog.findViewById(R.id.ivClose);
+
+            imageViewClose.setOnClickListener(v -> noDriverFoundHelpDialog.dismiss());
+            buttonOk.setOnClickListener(v -> {
+				ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+						.setTransactionId(fuguChannelId)
+						.setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+						.setChannelName(fuguChannelName)
+						.setTags(tags)
+						.setMessage(new String[]{altMessage})
+						.build();
+				HippoConfig.getInstance().openChatByUniqueId(chatAttr);
+                noDriverFoundHelpDialog.dismiss();
+            });
+            relative.setOnClickListener(v -> noDriverFoundHelpDialog.dismiss());
+
+            noDriverFoundHelpDialog.show();
+            Prefs.with(this).save(KEY_PUSH_NO_DRIVER_FOUND_HELP, "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     Dialog rentalLockDialog;
     private void dialogRentalLock(Activity activity) {
@@ -12785,4 +13560,64 @@ RelativeLayout plusBadge;
         }
 
     }
+
+    @Override
+    public void onScratchCardRevealed() {
+
+    }
+
+    @Override
+    public void onCancelClick(boolean isPickup) {
+        setTipAmountToZero(true);
+    }
+
+    @Override
+    public void onOkClick(boolean isPickup) {
+        onReqestRideConfirmClick();
+    }
+
+    private void checkForYoutubeIntent(){
+		if(!Prefs.with(this).getBoolean(Constants.SP_YOUTUBE_TUTORIAL_SKIPPED, false)
+				&& Data.userData != null
+				&& Data.userData.getReferralMessages().getMultiLevelReferralEnabled()
+				&& Data.userData.getReferralMessages().getReferralImages() != null){
+			String youtubeId = "";
+			for(MediaInfo mi : Data.userData.getReferralMessages().getReferralImages()){
+				if(mi.checkIsYoutubeVideo()){
+					youtubeId = mi.getYoutubeId();
+				}
+			}
+			if(!TextUtils.isEmpty(youtubeId)) {
+				startActivity(YoutubeVideoActivity.createIntent(this, youtubeId));
+			}
+		}
+	}
+
+    @Override
+    public void onCancelClick() {
+        setTipAmountToZero(true);
+    }
+
+    @Override
+    public void onOkClick() {
+        mRequestType = 1;
+        onReqestRideConfirmClick();
+    }
+
+    @Override
+    public void onCancelClicked() {
+        setTipAmountToZero(true);
+    }
+
+    @Override
+    public void onCallDriverOkClicked() {
+        mRequestType = 2;
+        onReqestRideConfirmClick();
+    }
+
+	@Override
+	public void onEditDropConfirm(@Nullable LatLng dropLatLng, @Nullable String dropAddress, @Nullable String dropName, Integer poolFareId) {
+    	SearchResult searchResult = new SearchResult(dropName, dropAddress, "", dropLatLng.latitude, dropLatLng.longitude);
+		updateDropToUIAndServerApi(searchResult, poolFareId);
+	}
 }

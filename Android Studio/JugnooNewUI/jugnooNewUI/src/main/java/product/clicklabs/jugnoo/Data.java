@@ -7,12 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 
-import com.fugu.CaptureUserData;
-import com.fugu.FuguColorConfig;
-import com.fugu.FuguConfig;
-import com.fugu.FuguFontConfig;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
+import com.hippo.CaptureUserData;
+import com.hippo.HippoColorConfig;
+import com.hippo.HippoConfig;
+import com.hippo.HippoConfigAttributes;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import java.net.URLDecoder;
@@ -119,6 +119,8 @@ public class Data {
     public static boolean activityResumed = false;
     private static CaptureUserData fuguUserData;
 
+    public static int jungleApisDisable = 0;
+
     public static void clearDataOnLogout(Activity context) {
         try {
             userData = null;
@@ -135,7 +137,7 @@ public class Data {
 
             AccessTokenGenerator.saveLogoutToken(context);
             clearSPLabelPrefs(context);
-            FuguConfig.clearFuguData(context);
+            HippoConfig.clearHippoData(context);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,6 +162,7 @@ public class Data {
             Prefs.with(context).remove(SPLabels.ADD_GYM);
             Prefs.with(context).remove(SPLabels.ADD_FRIEND);
             Prefs.with(context).remove(SPLabels.NOTIFICATION_UNREAD_COUNT);
+			Prefs.with(context).remove(Constants.KEY_USER_ID);
 
             Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
             Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
@@ -252,6 +255,7 @@ public class Data {
             Prefs.with(context).remove(Constants.SP_MOBIKWIK_LAST_BALANCE);
             Prefs.with(context).remove(Constants.SP_FREECHARGE_LAST_BALANCE);
             Prefs.with(context).remove(Constants.KEY_TUTORIAL_SKIPPED);
+            Prefs.with(context).remove(Constants.SP_YOUTUBE_TUTORIAL_SKIPPED);
 
             context.getSharedPreferences(Data.SHARED_PREF_NAME, context.MODE_PRIVATE).edit()
                     .remove(Constants.SP_CONTACTS_SYNCED).commit();
@@ -557,76 +561,77 @@ public class Data {
                 .city(userData.getCity())
                 .latitude(Data.loginLatitude)
                 .longitude(Data.loginLongitude)
-                .channelInfoJson(userData.getFuguChannelInfoJson())
+                //.channelInfoJson(userData.getFuguChannelInfoJson())
                 .build();
 
 
     }
 
-    public static final int FUGU_APP_TYPE = 1;
-    public static void initializeFuguHandler(Activity context, CaptureUserData userData) {
-        if (Config.getConfigMode() == ConfigMode.LIVE) {
-            FuguConfig.init(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)),
-                    Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)),
-                    context, "live", userData,context.getString(R.string.file_provider_name));
+	static final int FUGU_APP_TYPE = 1;
+    static void initializeFuguHandler(Activity context, CaptureUserData userData, String token) {
+		HippoConfigAttributes configAttributes;
+		if (Config.getConfigMode() == ConfigMode.LIVE) {
+            configAttributes = new HippoConfigAttributes.Builder()
+                    .setEnvironment("live")
+					.setShowLog(BuildConfig.DEBUG)
+                    .setAppKey(Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)))
+                    .setAppType(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)))
+                    .setCaptureUserData(userData)
+                    .setProvider(context.getString(R.string.file_provider_name))
+                    .setDeviceToken(token)
+					.setColorConfig(getHippoColorConfig())
+                    .build();
+            HippoConfig.initHippoConfig(context, configAttributes);
         } else {
-            FuguConfig.init(String.valueOf(FUGU_APP_TYPE), context.getString(R.string.fugu_key_test), context, "test", userData,context.getString(R.string.file_provider_name));
+            configAttributes = new HippoConfigAttributes.Builder()
+					.setEnvironment("test")
+					.setShowLog(BuildConfig.DEBUG)
+                    .setAppKey(Prefs.with(context).getString(Constants.KEY_FUGU_APP_KEY, context.getString(R.string.fugu_key)))
+                    .setAppType(String.valueOf(Prefs.with(context).getInt(Constants.KEY_FUGU_APP_TYPE, Data.FUGU_APP_TYPE)))
+                    .setCaptureUserData(userData)
+                    .setProvider(context.getString(R.string.file_provider_name))
+                    .setDeviceToken(token)
+                    .setColorConfig(getHippoColorConfig())
+                    .build();
+            HippoConfig.initHippoConfig(context, configAttributes);
         }
-
-        FuguConfig.getInstance().setHomeUpIndicatorDrawableId(R.drawable.ic_back_selector);
-
-        FuguColorConfig fuguColorConfig = new FuguColorConfig.Builder()
-                .fuguActionBarBg(FuguColorConfigStrings.FUGU_ACTION_BAR_BG)
-                .fuguActionBarText(FuguColorConfigStrings.FUGU_ACTION_BAR_TEXT)
-                .fuguBgMessageYou(FuguColorConfigStrings.FUGU_BG_MESSAGE_YOU)
-                .fuguBgMessageFrom(FuguColorConfigStrings.FUGU_BG_MESSAGE_FROM)
-                .fuguPrimaryTextMsgYou(FuguColorConfigStrings.FUGU_PRIMARY_TEXT_MSG_YOU)
-                .fuguMessageRead(FuguColorConfigStrings.FUGU_MESSAG_EREAD)
-                .fuguPrimaryTextMsgFrom(FuguColorConfigStrings.FUGU_PRIMARY_TEXT_MSG_FROM)
-                .fuguSecondaryTextMsgYou(FuguColorConfigStrings.FUGU_SECONDARY_TEXT_MSG_YOU)
-                .fuguSecondaryTextMsgFrom(FuguColorConfigStrings.FUGU_SECONDARY_TEXT_MSG_FROM)
-                .fuguTextColorPrimary(FuguColorConfigStrings.FUGU_TEXT_COLOR_PRIMARY)
-                .fuguTextColorSecondary(FuguColorConfigStrings.FUGU_TEXT_COLOR_SECONDARY)
-                .fuguChannelDateText(FuguColorConfigStrings.FUGU_CHANNEL_DATE_TEXT)
-                .fuguChatBg(FuguColorConfigStrings.FUGU_CHAT_BG)
-                .fuguBorderColor(FuguColorConfigStrings.FUGU_BORDER_COLOR)
-                .fuguChatDateText(FuguColorConfigStrings.FUGU_CHAT_DATE_TEXT)
-                .fuguThemeColorPrimary(FuguColorConfigStrings.FUGU_THEME_COLOR_PRIMARY)
-                .fuguThemeColorSecondary(FuguColorConfigStrings.FUGU_THEME_COLOR_SECONDARY)
-                .fuguTypeMessageBg(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_BG)
-                .fuguTypeMessageHint(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_HINT)
-                .fuguTypeMessageText(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_TEXT)
-                .fuguChannelBg(FuguColorConfigStrings.FUGU_CHANNEL_BG)
-                .fuguChannelItemBg(FuguColorConfigStrings.FUGU_CHANNEL_BG)
-                .build();
-
-        FuguConfig.getInstance().setColorConfig(fuguColorConfig);
-
-        FuguFontConfig fuguFontConfig = new FuguFontConfig.Builder()
-                .setNormaTextFontPath("fonts/maven_pro_regular.ttf")
-                .setHeaderTitleFontPath("fonts/avenir_next_demi.otf")
-                .build();
-
-        FuguConfig.getInstance().setFontConfig(fuguFontConfig);
-
-
+		HippoCallStub.init();
     }
 
+    private static HippoColorConfig getHippoColorConfig(){
+		return new HippoColorConfig.Builder()
+				.hippoActionBarBg(FuguColorConfigStrings.FUGU_ACTION_BAR_BG)
+				.hippoActionBarText(FuguColorConfigStrings.FUGU_ACTION_BAR_TEXT)
+				.hippoBgMessageYou(FuguColorConfigStrings.FUGU_BG_MESSAGE_YOU)
+				.hippoBgMessageFrom(FuguColorConfigStrings.FUGU_BG_MESSAGE_FROM)
+				.hippoPrimaryTextMsgYou(FuguColorConfigStrings.FUGU_PRIMARY_TEXT_MSG_YOU)
+				.hippoMessageRead(FuguColorConfigStrings.FUGU_MESSAG_EREAD)
+				.hippoPrimaryTextMsgFrom(FuguColorConfigStrings.FUGU_PRIMARY_TEXT_MSG_FROM)
+				.hippoSecondaryTextMsgYou(FuguColorConfigStrings.FUGU_SECONDARY_TEXT_MSG_YOU)
+				.hippoSecondaryTextMsgFrom(FuguColorConfigStrings.FUGU_SECONDARY_TEXT_MSG_FROM)
+				.hippoTextColorPrimary(FuguColorConfigStrings.FUGU_TEXT_COLOR_PRIMARY)
+				.hippoTextColorSecondary(FuguColorConfigStrings.FUGU_TEXT_COLOR_SECONDARY)
+				.hippoChannelDateText(FuguColorConfigStrings.FUGU_CHANNEL_DATE_TEXT)
+				.hippoChatBg(FuguColorConfigStrings.FUGU_CHAT_BG)
+				.hippoBorderColor(FuguColorConfigStrings.FUGU_BORDER_COLOR)
+				.hippoChatDateText(FuguColorConfigStrings.FUGU_CHAT_DATE_TEXT)
+				.hippoThemeColorPrimary(FuguColorConfigStrings.FUGU_THEME_COLOR_PRIMARY)
+				.hippoThemeColorSecondary(FuguColorConfigStrings.FUGU_THEME_COLOR_SECONDARY)
+				.hippoTypeMessageBg(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_BG)
+				.hippoTypeMessageHint(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_HINT)
+				.hippoTypeMessageText(FuguColorConfigStrings.FUGU_TYPE_MESSAGE_TEXT)
+				.hippoChannelBg(FuguColorConfigStrings.FUGU_CHANNEL_BG)
+				.hippoChannelItemBg(FuguColorConfigStrings.FUGU_CHANNEL_BG)
+				.build();
+	}
 
-    public static void setFuguUserData(CaptureUserData userData) {
-        fuguUserData = userData;
+
+	public static boolean isFuguChatEnabled() {
+        return isMenuTagEnabled(MenuInfoTags.FUGU_SUPPORT);
     }
-
-    public static boolean isFuguChatEnabled() {
-        if(Data.userData != null) {
-            ArrayList<MenuInfo> itemsToShow = Data.userData.getMenuInfoList();
-            for (MenuInfo menuInfo : itemsToShow) {
-                if (MenuInfoTags.FUGU_SUPPORT.getTag().equalsIgnoreCase(menuInfo.getTag())) {
-                    return true;
-                }
-            }
-        }
-        return false;
+	public static boolean isHippoTicketForRideEnabled(Context context) {
+        return Prefs.with(context).getInt(Constants.KEY_HIPPO_TICKET_FOR_RIDE_ISSUES, 0) == 1
+				&& isMenuTagEnabled(MenuInfoTags.TICKET_SUPPORT);
     }
     public static boolean isMenuTagEnabled(MenuInfoTags tag) {
         if(Data.userData != null) {

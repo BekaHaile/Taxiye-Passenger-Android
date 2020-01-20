@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -18,8 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.model.LatLng;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -230,10 +231,15 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 					}
 				} else if(productType == ProductType.FEED.getOrdinal()){
 					if (datumFeed != null && !TextUtils.isEmpty(datumFeed.getFuguChannelId())) {
-						FuguConfig.getInstance().openChatByTransactionId(datumFeed.getFuguChannelId(), String.valueOf(Data.getFuguUserData().getUserId()),
-								datumFeed.getFuguChannelName(), datumFeed.getFuguTags());
+						ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+								.setTransactionId(datumFeed.getFuguChannelId())
+								.setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+								.setChannelName(datumFeed.getFuguChannelName())
+								.setTags(datumFeed.getFuguTags())
+								.build();
+						HippoConfig.getInstance().openChatByUniqueId(chatAttr);
 					} else {
-						FuguConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
+						HippoConfig.getInstance().openChat(getActivity(), Data.CHANNEL_ID_FUGU_ISSUE_ORDER());
 					}
 				}
 				break;
@@ -316,7 +322,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 			tv3r.setText(DateOperations.convertDateTimeUSToInd(datum.getJobPickupDatetime().replace("\\", "")));
 			SearchResult searchResult = homeUtil.getNearBySavedAddress(activity,
 					new LatLng(datum.getJobLatitude(), datum.getJobLongitude()),
-					Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+					false);
 			if (searchResult != null && !TextUtils.isEmpty(searchResult.getName())) {
 				llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
 				ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResult.getName()));
@@ -514,7 +520,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 
 		SearchResult searchResultFrom = homeUtil.getNearBySavedAddress(activity,
 				new LatLng(datum.getFromLatitude(), datum.getFromLongitude()),
-				Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+				false);
 		if (searchResultFrom != null && !TextUtils.isEmpty(searchResultFrom.getName())) {
 			llFromPlace.setVisibility(View.VISIBLE);
 			ivFromPlace.setImageResource(homeUtil.getSavedLocationIcon(searchResultFrom.getName()));
@@ -527,7 +533,7 @@ public class ProsOrderStatusFragment extends Fragment implements GAAction, GACat
 
 		SearchResult searchResultTo = homeUtil.getNearBySavedAddress(activity,
 				new LatLng(datum.getToLatitude(), datum.getToLongitude()),
-				Constants.MAX_DISTANCE_TO_USE_SAVED_LOCATION, false);
+				false);
 		if (searchResultTo != null && !TextUtils.isEmpty(searchResultTo.getName())) {
 			llDeliveryPlaceFeed.setVisibility(View.VISIBLE);
 			ivDeliveryPlaceFeed.setImageResource(homeUtil.getSavedLocationIcon(searchResultTo.getName()));

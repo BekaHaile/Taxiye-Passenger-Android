@@ -1,8 +1,9 @@
 <RelativeLayout android:id="@+id/relative"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white_light_grey">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_light_grey"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -97,6 +98,74 @@
                     android:orientation="vertical"
                     >
 
+
+                    <TextView
+                        android:id="@+id/tvDeviceID"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:text="Device ID:"
+                        android:textColor="@color/grey_dark"
+                        android:background="?attr/selectableItemBackground"
+                        android:theme="@style/GreyHighlight"
+                        android:textSize="15sp"
+                        android:tag="@string/dont_touch_me"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvFBKeyHash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:text="FB Keyhash:"
+                        android:textColor="@color/grey_dark"
+                        android:background="?attr/selectableItemBackground"
+                        android:theme="@style/GreyHighlight"
+                        android:tag="@string/dont_touch_me"
+                        android:textSize="15sp"/>
+                    <TextView
+                        android:id="@+id/tvSMSHash"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:padding="10dp"
+                        android:text="SMS Keyhash:"
+                        android:textColor="@color/grey_dark"
+                        android:background="?attr/selectableItemBackground"
+                        android:theme="@style/GreyHighlight"
+                        android:tag="@string/dont_touch_me"
+                        android:textSize="15sp"/>
+
+                    <RelativeLayout
+                        android:id="@+id/rlJungleApisDisable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TextView
+                            android:layout_width="600px"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:padding="20px"
+                            android:text="JA Disable"
+                            android:textColor="@color/grey_dark"
+                            android:textSize="30px"
+                            app:typekitFont="@string/maven_l"
+                            />
+
+                        <ImageView
+                            android:id="@+id/ivJungleApisDisable"
+                            android:layout_width="36px"
+                            android:layout_height="36px"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="40px"
+                            android:src="@drawable/check_box_checked"
+                            android:tag="mwar"
+                            />
+                    </RelativeLayout>
                     <RelativeLayout
                         android:id="@+id/relativeLayoutShowAllDrivers"
                         android:layout_width="match_parent"

@@ -1,9 +1,9 @@
 package product.clicklabs.jugnoo.home.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -202,7 +202,7 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
             activity.showDriverMarkersAndPanMap(Data.autoData.getPickupLatLng(), activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected());
             try {
                 GAUtils.event(RIDES, HOME + WALLET + SELECTED, MyApplication.getInstance().getWalletCore()
-                        .getPaymentOptionName(Data.autoData.getPickupPaymentOption()));
+                        .getPaymentOptionName(Data.autoData.getPickupPaymentOption(), activity));
             } catch (Exception e) {
             }
         } catch (Exception e) {
@@ -215,8 +215,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
         try {
             int selectedPaymentOption = MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption());
-            Region region = (Data.autoData.getRegions().size() > 1) ? activity.slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
-                    : (Data.autoData.getRegions().size() > 0 ? Data.autoData.getRegions().get(0) : null);
+			ArrayList<Region> regions = Data.autoData.getRegions();
+            Region region = (regions.size() > 1) ? activity.slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
+                    : (regions.size() > 0 ? regions.get(0) : null);
             if (region != null && region.getRestrictedPaymentModes().size() > 0) {
                 if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
                     Data.autoData.setPickupPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(selectedPaymentOption, activity));
@@ -363,8 +364,9 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
     private void orderPaymentModes() {
         try {
             ArrayList<Integer> restrictedPaymentModes = new ArrayList<>();
-            if(Data.autoData.getRegions().size() > 0) {
-                restrictedPaymentModes = Data.autoData.getRegions().get(0).getRestrictedPaymentModes();
+			ArrayList<Region> regions = Data.autoData.getRegions();
+            if(regions.size() > 0) {
+                restrictedPaymentModes = regions.get(0).getRestrictedPaymentModes();
             }
             ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {

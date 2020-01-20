@@ -41,8 +41,9 @@ public class EndRideData {
 	private int reverseBid;
 	private int isCorporateRide;
 	private String partnerName;
-	private int showTipOption;
+	private int showTipOption, meterFareApplicable;
 	private double paidUsingPOS;
+	private int driverId;
 
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -55,7 +56,8 @@ public class EndRideData {
 					   String fuguChannelId, String fuguChannelName, ArrayList<String> fuguTags, int showPaymentOptions,
 					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge, double driverTipAmount,
 					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide,
-					   String partnerName, int showTipOption,double paidUsingPOS, ArrayList<DiscountType> stripeCardsAmount){
+					   String partnerName, int showTipOption,double paidUsingPOS, ArrayList<DiscountType> stripeCardsAmount, int meterFareApplicable,
+					   int driverId){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -137,9 +139,11 @@ public class EndRideData {
 		this.reverseBid = reverseBid;
 		this.paidUsingPOS = paidUsingPOS;
 		this.stripeCardsAmount = stripeCardsAmount;
+		this.meterFareApplicable = meterFareApplicable;
+		this.driverId = driverId;
 
-		this.finalFare = this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges
-				+ this.tollCharge + this.driverTipAmount + this.netCustomerTax;
+		this.finalFare = meterFareApplicable == 0 ? (this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges
+				+ this.tollCharge + this.driverTipAmount + this.netCustomerTax) : this.fare;
 	}
 
 
@@ -369,5 +373,17 @@ public class EndRideData {
 
 	public void setShowTipOption(int showTipOption) {
 		this.showTipOption = showTipOption;
+	}
+
+	public int getMeterFareApplicable() {
+		return meterFareApplicable;
+	}
+
+	public int getDriverId() {
+		return driverId;
+	}
+
+	public void setDriverId(int driverId) {
+		this.driverId = driverId;
 	}
 }

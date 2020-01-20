@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/linearLayoutRoot"
+<RelativeLayout android:id="@+id/linearLayoutRoot"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/menu_item_selector_color_F7"
     android:orientation="vertical"
-    android:splitMotionEvents="false">
+    android:splitMotionEvents="false"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -102,12 +102,22 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/tvScratchCards"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_banner"
+        android:textSize="@dimen/font_normal"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        android:layout_below="@+id/rlEnterPromo"/>
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOffers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/textViewFreeRides"
-        android:layout_below="@+id/rlEnterPromo"
+        android:layout_below="@+id/tvScratchCards"
+        android:layout_above="@+id/cardViewPromoBanner"
         android:fadeScrollbars="true"
         android:scrollbars="vertical"
         android:visibility="visible"/>
@@ -119,40 +129,74 @@
         android:background="@drawable/shadow_down_new"/>
 
 
-    <TextView
-        android:id="@+id/textViewFreeRides"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewPromoBanner"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_48"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="4dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/menu_item_selector_color"
-        android:gravity="center_vertical"
-        android:paddingStart="@dimen/dp_20"
-        android:text="@string/want_free_rides"
-        android:textColor="@color/text_color_selector"
-        android:textSize="@dimen/sp_16"
         android:visibility="gone"
-        app:typekitFont="maven"
-        />
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:theme="@style/GreyHighlight"
+            >
+            <TextView
+                android:id="@+id/tvBannerTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                tools:text="Hello"
+                android:textColor="@color/text_color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:typekitFont="maven"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivBannerArrow"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@+id/textViewFreeRides"
-        android:background="@color/stroke_color_light"
-        android:visibility="gone"
-        />
 
-    <ImageView
-        android:id="@+id/imageViewFreeRideAuto"
-        android:layout_width="@dimen/dp_64"
-        android:layout_height="@dimen/dp_64"
-        android:layout_above="@+id/textViewFreeRides"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="-25dp"
-        android:layout_marginEnd="@dimen/dp_25"
-        android:src="@drawable/ic_arrow_up_selector"
-        android:visibility="gone"
-        />
+            <TextView
+                android:id="@+id/tvBannerMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="5dp"
+                tools:text="Hello"
+                android:textColor="@color/text_color"
+                android:textSize="14sp"
+                app:typekitFont="maven"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/ivBannerArrow"
+                app:layout_constraintTop_toBottomOf="@+id/tvBannerTitle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+            <ImageView
+                android:id="@+id/ivBannerArrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_chevron_right"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginEnd="10dp"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
 
     <LinearLayout

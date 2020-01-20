@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +16,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +23,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.gson.Gson;
+import com.hippo.ChatByUniqueIdAttributes;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
@@ -35,6 +34,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -86,6 +87,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             rlPaidUsingCorporate, rlPaidUsingPOS, rlToBePaid;
     LinearLayout linearLayoutEndRideTime, linearLayoutRideDetail;
     RelativeLayout relativeLayoutEndRideWaitTime, relativeLayoutFare,relativeLayoutDriverTip, relativeLayoutFinalFare;
+    LinearLayout llFareComponents;
     NonScrollListView listViewEndRideDiscounts, listViewStripeTxns;
     TextView textViewEndRideFareValue,textViewDriverTipValue, textViewEndTollChargeValue, textViewEndRideLuggageChargeValue, textViewEndRideConvenienceChargeValue,
             textViewEndRideFinalFareValue, textViewEndRideJugnooCashValue, textViewEndRidePaytmValue,
@@ -273,6 +275,7 @@ public class RideSummaryFragment extends Fragment implements Constants {
             imageViewEndRideDriverIcon = (ImageView) rootView.findViewById(R.id.imageViewEndRideDriverIcon);
             linearLayoutRideDetail = (LinearLayout) rootView.findViewById(R.id.linearLayoutRideDetail);
             relativeLayoutFinalFare = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFinalFare);
+			llFareComponents = rootView.findViewById(R.id.llFareComponents);
 			rlToBePaid = (RelativeLayout) rootView.findViewById(R.id.rlToBePaid);
 
             textViewEndRideLuggageChargeValue = (TextView) rootView.findViewById(R.id.textViewEndRideLuggageChargeValue);
@@ -324,13 +327,23 @@ public class RideSummaryFragment extends Fragment implements Constants {
 				@Override
 				public void onClick(View v) {
 					if (activity instanceof RideTransactionsActivity) {
-                        if (Data.isFuguChatEnabled()) {
+						if(Data.isHippoTicketForRideEnabled(activity)){
+							HomeUtil.openHippoTicketForRide(activity,
+									Integer.parseInt(endRideData.engagementId),
+									endRideData.getDriverId());
+						}
+						else if (Data.isFuguChatEnabled()) {
                             try {
                                 if(!TextUtils.isEmpty(endRideData.getFuguChannelId())){
-                                    FuguConfig.getInstance().openChatByTransactionId(endRideData.getFuguChannelId(),String.valueOf(Data.getFuguUserData().getUserId()),
-                                            endRideData.getFuguChannelName(), endRideData.getFuguTags());
+                                    ChatByUniqueIdAttributes chatAttr = new ChatByUniqueIdAttributes.Builder()
+                                            .setTransactionId(endRideData.getFuguChannelId())
+                                            .setUserUniqueKey(String.valueOf(Data.getFuguUserData().getUserId()))
+                                            .setChannelName(endRideData.getFuguChannelName())
+                                            .setTags(endRideData.getFuguTags())
+                                            .build();
+                                    HippoConfig.getInstance().openChatByUniqueId(chatAttr);
                                 }else {
-                                    FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
+                                    HippoConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_ISSUE_RIDE());
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -532,31 +545,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 }
 
 
-				/*if(endRideData.discountTypes.size() > 1){
-                    listViewEndRideDiscounts.setVisibility(View.VISIBLE);
-					endRideDiscountsAdapter.setList(endRideData.discountTypes);
-					textViewEndRideDiscount.setText("Discounts");
-					textViewEndRideDiscountValue.setVisibility(View.GONE);
-					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-				}
-				else if(endRideData.discountTypes.size() > 0){
-					listViewEndRideDiscounts.setVisibility(View.GONE);
-					textViewEndRideDiscount.setText(endRideData.discountTypes.get(0).name);
-					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
-					relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-				}
-				else{
-					listViewEndRideDiscounts.setVisibility(View.GONE);
-					textViewEndRideDiscount.setText("Discounts");
-					textViewEndRideDiscountValue.setVisibility(View.VISIBLE);
-					textViewEndRideDiscountValue.setText(String.format(getResources().getString(R.string.rupees_value_format), FeedUtils.getMoneyDecimalFormat().format(endRideData.discount)));
-					if(endRideData.discount > 0){
-						relativeLayoutEndRideDiscount.setVisibility(View.VISIBLE);
-					} else{
-						relativeLayoutEndRideDiscount.setVisibility(View.GONE);
-					}
-				}*/
 
 
                 rlLuggageChargesNew.setVisibility(endRideData.getLuggageChargesNew() > 0.0 ? View.VISIBLE : View.GONE);
@@ -566,6 +554,8 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 if(Utils.compareDouble(endRideData.fare, endRideData.finalFare) == 0){
                     relativeLayoutFinalFare.setVisibility(View.GONE);
                 }
+				llFareComponents.setVisibility(endRideData.getMeterFareApplicable() == 0 ? View.VISIBLE : View.GONE);
+
 
                 if (Utils.compareDouble(endRideData.paidUsingWallet, 0) > 0) {
                     relativeLayoutPaidUsingJugnooCash.setVisibility(View.VISIBLE);
@@ -661,14 +651,6 @@ public class RideSummaryFragment extends Fragment implements Constants {
 
                 textViewEndRideToBePaidValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.toPay));
 
-                if (!rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
-                    textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
-                } else {
-                    textViewEndRideFareFactorValue.setVisibility(View.GONE);
-                }
-
-                textViewEndRideFareFactorValue.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
-                        activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
                 textViewEndRideBaseFareValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.baseFare));
                 if(Prefs.with(activity).getInt(KEY_SHOW_BASE_FARE_IN_RIDE_SUMMARY, 1) != 1){
 					linearLayoutRideDetail.setVisibility(View.VISIBLE);
@@ -688,14 +670,30 @@ public class RideSummaryFragment extends Fragment implements Constants {
                 } else {
                     linearLayoutEndRideTime.setVisibility(View.GONE);
                 }
+
+                boolean showSurge = Prefs.with(activity).getInt(KEY_CUSTOMER_SHOW_SURGE_ICON, 1) == 1;
+                textViewEndRideFareFactorValue.setVisibility(View.GONE);
                 if (endRideData.waitingChargesApplicable == 1 || endRideData.waitTime > 0) {
-                    relativeLayoutEndRideWaitTime.setVisibility(View.VISIBLE);
-                    textViewEndRideWaitTimeValue.setText(decimalFormatNoDecimal.format(endRideData.waitTime) + " "+getString(R.string.min));
-                    textViewEndRideTime.setText(R.string.total);
+                    relativeLayoutEndRideWaitTime.setVisibility(View.GONE);
+                    textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
+                    textViewEndRideFareFactorValue.setText(getString(R.string.text_congestion_time)+": "+decimalFormatNoDecimal.format(endRideData.waitTime) + " "+getString(R.string.min));
+                    textViewEndRideTime.setText(R.string.ride_time);
+                    if (showSurge && !rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
+                        textViewEndRideFareFactorValue.append("\n");
+                        textViewEndRideFareFactorValue.append(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
+                                activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
+                    }
                 } else {
                     relativeLayoutEndRideWaitTime.setVisibility(View.GONE);
                     textViewEndRideTime.setText(R.string.time);
+
+                    if (showSurge && !rideCancelled && (endRideData.fareFactor > 1 || endRideData.fareFactor < 1)) {
+                        textViewEndRideFareFactorValue.setVisibility(View.VISIBLE);
+                    }
+                    textViewEndRideFareFactorValue.setText(Prefs.with(activity).getString(Constants.KEY_CUSTOMER_PRIORITY_TIP_TITLE,
+                            activity.getString(R.string.customer_priority_tip_title)) + " " + decimalFormat.format(endRideData.fareFactor)+"x");
                 }
+
 
                 if(rideCancelled){
                     relativeLayoutConvenienceCharge.setVisibility(View.GONE);

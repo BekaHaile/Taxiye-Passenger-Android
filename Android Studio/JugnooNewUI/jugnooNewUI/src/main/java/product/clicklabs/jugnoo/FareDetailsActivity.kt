@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
@@ -60,19 +60,22 @@ class FareDetailsActivity : BaseAppCompatActivity(){
                 val details: ArrayList<Any> = ArrayList()
                 t?.regions?.forEach {
                     details.add(FareVehicle(it.regionName+"("+it.maxPeople+")"))
-                    if(it.fare.fareFixed > 0) {
-                        details.add(FareItem(getString(R.string.base_fare), Utils.formatCurrencyValue(t.currency, it.fare.fareFixed, false)))
+                    it.fare?.let {
+                        if(it.fareFixed > 0) {
+                            details.add(FareItem(getString(R.string.base_fare), Utils.formatCurrencyValue(t.currency, it.fareFixed, false)))
+                        }
+                        if(it.farePerMin > 0) {
+                            details.add(FareItem(getString(R.string.nl_per_min), Utils.formatCurrencyValue(t.currency, it.farePerMin, false)))
+                        }
+                        if(it.farePerWaitingMin > 0) {
+                            details.add(FareItem(getString(R.string.per_wait_min), Utils.formatCurrencyValue(t.currency, it.farePerWaitingMin, false)))
+                        }
+                        if(it.farePerKm > 0) {
+                            details.add(FareItem(getString(R.string.per_format, Utils.getDistanceUnit(t.distanceUnit)),
+                                    Utils.formatCurrencyValue(t.currency, it.farePerKm, false)))
+                        }
                     }
-                    if(it.fare.farePerMin > 0) {
-                        details.add(FareItem(getString(R.string.nl_per_min), Utils.formatCurrencyValue(t.currency, it.fare.farePerMin, false)))
-                    }
-                    if(it.fare.farePerWaitingMin > 0) {
-                        details.add(FareItem(getString(R.string.per_wait_min), Utils.formatCurrencyValue(t.currency, it.fare.farePerWaitingMin, false)))
-                    }
-                    if(it.fare.farePerKm > 0) {
-                        details.add(FareItem(getString(R.string.per_format, Utils.getDistanceUnit(t.distanceUnit)),
-                                Utils.formatCurrencyValue(t.currency, it.fare.farePerKm, false)))
-                    }
+
                 }
                 if(t != null && t.rateCardInfo.isNotEmpty()){
                     details.add(FareExtra(t.rateCardInfo))

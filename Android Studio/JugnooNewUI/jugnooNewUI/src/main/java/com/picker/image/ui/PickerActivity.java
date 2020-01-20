@@ -14,18 +14,20 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,10 +54,12 @@ import de.greenrobot.event.EventBus;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
+import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 
 
-public class PickerActivity extends AppCompatActivity {
+public class PickerActivity extends AppCompatActivity implements PermissionCommon.PermissionListener
+{
 
 
     public static final int NO_LIMIT = -1;
@@ -67,6 +71,8 @@ public class PickerActivity extends AppCompatActivity {
     private static final int REQUEST_PORTRAIT_RFC = 1337;
     private static final int REQUEST_PORTRAIT_FFC = REQUEST_PORTRAIT_RFC + 1;
     public static final int REQUEST_IMAGE_CAPTURE = 99;
+    private static final int REQUEST_CODE_SELECT_IMAGES=1002;
+    private static final int REQ_CODE_IMAGE_PERMISSION = 1001;
     public static ArrayList<ImageEntry> sCheckedImages = new ArrayList<>();
     private final static int REQ_CODE_PERMISSION_CAMERA = 1005;
 
@@ -84,9 +90,10 @@ public class PickerActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     private TextView tvImageCount;
     private TextView toolbarTitle;
+    private Picker picker;
     private RecyclerView recyclerViewSelectedImages;
     private String[] permissionsRequestArray;
-//    private PermissionCommon mPermissionCommon;
+    private PermissionCommon mPermissionCommon;
 
 
     @Override
@@ -97,6 +104,23 @@ public class PickerActivity extends AppCompatActivity {
             finish();
             onCancel();
         }
+
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                dispatchTakePictureIntent();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
 
         if(savedInstanceState==null)
           mPickOptions = (EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class)).options;
@@ -123,6 +147,7 @@ public class PickerActivity extends AppCompatActivity {
         initFab();
         updateFab();
         new HomeUtil().forceRTL(this);
+        mPermissionCommon = new PermissionCommon(this).setCallback(this);
     }
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -278,7 +303,11 @@ public class PickerActivity extends AppCompatActivity {
             return;
         }
 
-
+        if(!PermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE,this)
+           || !PermissionCommon.isGranted(Manifest.permission.CAMERA,this)){
+            mPermissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+            return;
+        }
 
 
         if (sCheckedImages != null && sCheckedImages.size() >= mPickOptions.limit) {
@@ -732,7 +761,11 @@ public class PickerActivity extends AppCompatActivity {
                 }
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    if (mPermissionCommon.isGranted(Manifest.permission.CAMERA,this)) {
+                        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                    } else {
+                        mPermissionCommon.getPermission(REQ_CODE_PERMISSION_CAMERA,Manifest.permission.CAMERA);
+                    }
                 }
             }
         }
@@ -749,6 +782,9 @@ public class PickerActivity extends AppCompatActivity {
 
         }
 
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            refreshMediaScanner(mCurrentPhotoPath);
+        }
         if (resultCode == RESULT_OK && requestCode == REQUEST_PORTRAIT_FFC) {
             //For capturing image from camera
             galleryAddPic();
@@ -975,21 +1011,28 @@ public class PickerActivity extends AppCompatActivity {
 
     }
 
-   /* @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mPermissionCommon.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
 
     @Override
     public void permissionGranted(final int requestCode) {
         if(requestCode == REQ_CODE_PERMISSION_CAMERA){
             startCamera(findViewById(R.id.iv_camera));
         }
+        dispatchTakePictureIntent();
     }
 
     @Override
-    public void permissionDenied(final int requestCode) {
+    public boolean permissionDenied(int requestCode, boolean neverAsk) {
+        if(neverAsk) {
+            Utils.showToast(this, getResources().getString(R.string.camera_permission_required));
+            return true;
+        } else {
+            mPermissionCommon.getPermission(requestCode,Manifest.permission.CAMERA);
+            return false;
+        }
+    }
 
-    }*/
+    @Override
+    public void onRationalRequestIntercepted(int requestCode) {
+
+    }
 }

@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,7 +27,23 @@
             android:id="@+id/rlMarkerPin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
           >
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvTapOnPin"
+                android:layout_width="136dp"
+                android:layout_height="38dp"
+                android:textSize="14sp"
+                android:background="@drawable/bg_saved_location_marker"
+                android:text="@string/tap_on_pin"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:layout_above="@+id/ivLocationMarker"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                />
 
             <ImageView
                 android:id="@+id/ivPivotCentre"
@@ -37,11 +54,13 @@
 
             <ImageView
                 android:id="@+id/ivLocationMarker"
-                android:layout_width="40dp"
+                android:layout_width="60dp"
                 android:layout_height="40dp"
                 android:layout_above="@+id/ivPivot"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="-4dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:tag="@string/dont_touch_me"
                 android:src="@drawable/ic_bounce_pin" />
 
@@ -77,6 +96,64 @@
 
 
     </View>-->
+    <LinearLayout
+        android:id="@+id/llFinalAddress"
+        android:layout_width="match_parent"
+        android:layout_above="@+id/bNext"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:background="@drawable/bg_white_top_round"
+        android:tag="@string/dont_touch_me"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etPreAddress"
+            android:layout_width="match_parent"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:maxLength="50"
+            tools:text="Hello"
+            android:imeOptions="actionDone"
+            android:background="@drawable/bg_menu_item_color_f7_r"
+            android:textColor="@color/text_color"
+            android:drawableEnd="@drawable/ic_feed_edit_icon"
+            android:inputType="textCapWords"
+            android:drawablePadding="@dimen/spacing_small"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            app:typekitFont="@string/maven"
+            android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/tvFullAddress"
+            android:layout_width="match_parent"
+            android:textSize="14sp"
+            android:textColor="@color/text_color"
+            tools:text="Hello"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            app:typekitFont="@string/maven"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
     <Button
         android:id="@+id/bNext"
         android:layout_width="match_parent"
@@ -102,9 +179,10 @@
             android:id="@+id/imageViewShadow"
             android:layout_width="match_parent"
             android:layout_height="6px"
-            android:background="@drawable/shadow_down" />
+            android:src="@drawable/shadow_down"/>
 
         <RelativeLayout
+            android:id="@+id/rlAddress"
             android:layout_width="match_parent"
             android:layout_height="100px"
             android:layout_gravity="center_horizontal"
@@ -121,7 +199,7 @@
                 android:layout_height="16px"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="37px"
-                android:src="@drawable/circle_red"
+                android:src="@drawable/circle_theme"
                 android:tag="mwar" />
 
             <EditText
@@ -129,7 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
-                android:layout_marginStart="37px"
+                android:layout_marginStart="25px"
                 android:layout_toEndOf="@+id/imageViewSearchGPSIcon"
                 android:layout_toStartOf="@+id/llProgressCross"
                 android:background="@color/transparent"
@@ -147,6 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="5px"
@@ -168,6 +247,14 @@
                 android:padding="16px"
                 android:src="@drawable/ic_cross_et_selector"
                 android:tag="mwar" />
+
+                <ImageView
+                    android:id="@+id/ivSearch"
+                    android:layout_width="90px"
+                    android:layout_height="90px"
+                    android:padding="16px"
+                    android:src="@drawable/ic_search"
+                    android:tag="mwar" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -238,6 +325,14 @@
                     android:padding="16px"
                     android:src="@drawable/ic_cross_et_selector"
                     android:tag="mwar" />
+
+                <ImageView
+                    android:id="@+id/ivSearchDest"
+                    android:layout_width="70px"
+                    android:layout_height="70px"
+                    android:padding="16px"
+                    android:src="@drawable/search_icon"
+                    android:tag="mwar" />
             </LinearLayout>
 
         </RelativeLayout>
@@ -253,7 +348,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/cardViewSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -275,7 +370,7 @@
                         android:splitMotionEvents="false"
                         android:visibility="visible" />
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
                 <ImageView
                     android:layout_width="240px"
@@ -294,14 +389,15 @@
             </LinearLayout>
         </ScrollView>
 
-        <android.support.design.widget.CoordinatorLayout
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/coordinatorLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v4.widget.NestedScrollView
+            <androidx.core.widget.NestedScrollView
                 android:id="@+id/scrollViewSuggestions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="top"
                 app:layout_behavior="com.sabkuchfresh.widgets.LockableBottomSheetBehavior">
 
@@ -313,7 +409,7 @@
 
 
 
-                    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/cardViewSavedPlaces"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -328,28 +424,49 @@
                             android:orientation="vertical"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
-                            <TextView
-                                android:id="@+id/textViewSavedPlaces"
-                                android:layout_width="wrap_content"
-                                android:layout_height="40px"
-                                android:layout_marginStart="30px"
-                                android:layout_marginTop="20px"
-                                android:gravity="center_vertical"
-                                android:singleLine="true"
-                                android:text="@string/saved_places"
-                                android:textAllCaps="true"
-                                android:textColor="@color/text_color_less_light"
-                                android:textSize="@dimen/text_size_24"
-                                android:visibility="visible" />
 
-
-                            <product.clicklabs.jugnoo.utils.NonScrollListView
-                                android:id="@+id/listViewSavedLocations"
+                            <LinearLayout
+                                android:id="@+id/ll_set_location_on_map"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:divider="@color/transparent"
-                                android:dividerHeight="0px"
-                                android:splitMotionEvents="false" />
+                                android:tag="@string/dont_touch_me"
+                                >
+
+
+                                <ImageView
+                                    android:id="@+id/imageViewType"
+                                    android:layout_width="8dp"
+                                    android:layout_height="8dp"
+                                    android:layout_gravity="center_vertical"
+                                    android:src="@drawable/circle_theme"
+                                    android:visibility="visible"
+                                    android:layout_marginStart="15dp"
+                                    />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:typekitFont="@string/maven"
+                                    android:layout_gravity="center"
+                                    android:padding="9dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_marginStart="10dp"
+                                    android:layout_marginEnd="15dp"
+                                    android:gravity="center|start"
+                                    android:background="@drawable/bg_menu_item_color_f7_r"
+                                    android:textSize="15sp"
+                                    android:textColor="@color/text_color"
+                                    android:text="@string/set_location_on_map" />
+                            </LinearLayout>
+
+                            <View
+                                android:id="@+id/vSetLocationOnMapDiv"
+                                android:background="@color/fatafat_divider_color"
+                                android:layout_width="match_parent"
+                                android:layout_height="2px"
+                                android:layout_marginStart="40px"
+                                android:layout_marginEnd="40px"/>
 
                             <TextView
                                 android:id="@+id/textViewRecentAddresses"
@@ -365,6 +482,7 @@
                                 android:textSize="@dimen/text_size_24"
                                 android:visibility="visible" />
 
+
                             <product.clicklabs.jugnoo.utils.NonScrollListView
                                 android:id="@+id/listViewRecentAddresses"
                                 android:layout_width="match_parent"
@@ -375,54 +493,44 @@
                                 android:scrollbars="vertical"
                                 android:splitMotionEvents="false"
                                 android:visibility="visible" />
-
-
-
+                            
+                            
                             <View
-                                android:id="@+id/vSetLocationOnMapDiv"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:tag="@string/dont_touch_me"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:layout_marginTop="10dp"
                                 android:background="@color/fatafat_divider_color"
+                                />
+
+                            <TextView
+                                android:id="@+id/textViewSavedPlaces"
+                                android:layout_width="wrap_content"
+                                android:layout_height="40px"
+                                android:layout_marginStart="30px"
+                                android:layout_marginTop="20px"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text="@string/saved_places"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color_less_light"
+                                android:textSize="@dimen/text_size_24"
+                                android:visibility="visible" />
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewSavedLocations"
                                 android:layout_width="match_parent"
-                                android:layout_height="2px"
-                                android:layout_marginStart="40px"
-                                android:layout_marginEnd="40px"/>
-
-                            <LinearLayout
-                                android:id="@+id/ll_set_location_on_map"
-                                android:paddingTop="22px"
-                                android:paddingBottom="22px"
-                                android:theme="@style/GreyHighlight"
-                                android:background="?attr/selectableItemBackground"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-
-
-                                <ImageView
-                                    android:id="@+id/imageViewType"
-                                    android:layout_width="50px"
-                                    android:layout_height="50px"
-                                    android:layout_centerVertical="true"
-                                    android:layout_marginStart="30px"
-                                    android:src="@drawable/ic_loc_other"
-                                    android:tag="mwar"
-                                    android:visibility="visible" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    app:typekitFont="@string/maven"
-                                    android:layout_gravity="center"
-                                    android:layout_marginStart="20px"
-                                    android:gravity="center|start"
-                                    android:textSize="28px"
-                                    android:textColor="@color/text_color"
-                                    android:text="@string/set_location_on_map"
-                                    android:layout_height="wrap_content" />
-                            </LinearLayout>
-
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0px"
+                                android:splitMotionEvents="false" />
 
                         </LinearLayout>
 
 
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
 
 
@@ -446,9 +554,9 @@
 
                 </LinearLayout>
 
-            </android.support.v4.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
-        </android.support.design.widget.CoordinatorLayout>
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
     </LinearLayout>

@@ -3,15 +3,15 @@ package com.sabkuchfresh.fragments;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.core.view.GravityCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +24,7 @@ import com.sabkuchfresh.adapters.TabbedPagerAdaptor;
 import com.sabkuchfresh.datastructure.SearchSuggestion;
 import com.sabkuchfresh.datastructure.VendorDirectSearch;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.utils.Utils;
 
@@ -145,6 +146,11 @@ public class TabbedSearchFragment extends Fragment {
             }
 
             @Override
+            public void onRestaurantSelected(Item selItem, int vendorId, boolean shouldOpenMerchantInfo) {
+
+            }
+
+            @Override
             public void onBannerInfoDeepIndexClick(int deepIndex) {
                 // NA here
             }
@@ -152,6 +158,11 @@ public class TabbedSearchFragment extends Fragment {
             @Override
             public void openCategory(MenusResponse.Category category) {
                 // NA here
+            }
+
+            @Override
+            public void onBannerClickForViewType(int bannerId) {
+
             }
 
             @Override

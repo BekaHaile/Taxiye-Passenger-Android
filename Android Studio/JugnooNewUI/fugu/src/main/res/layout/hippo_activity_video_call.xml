@@ -29,7 +29,7 @@
                 android:layout_centerInParent="true"
                 android:visibility="visible" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvCallStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                         android:visibility="gone"
                         android:src="@drawable/hippo_man" />
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvCalledPersonName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                         android:textSize="22sp"
                         tools:text="" />
 
-                    <android.support.v7.widget.AppCompatTextView
+                    <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tvCallingStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -125,7 +125,7 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ivHangUp"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
@@ -144,7 +144,7 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ivMuteAudio"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -156,7 +156,7 @@
                     android:visibility="gone"
                     app:srcCompat="@drawable/hippo_ic_mute_microphone_disabled" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ivSwitchCamera"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -170,7 +170,7 @@
                     android:visibility="gone"
                     app:srcCompat="@drawable/hippo_ic_switch_camera" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ivMuteVideo"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -210,7 +210,7 @@
                 android:visibility="gone"
                 android:src="@drawable/hippo_launcher" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/call_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -263,7 +263,7 @@
             </LinearLayout>
         </com.fugu.utils.RippleBackground>
 
-        <android.support.v7.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tvConnecting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -283,7 +283,7 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ivRejectCall"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -291,12 +291,12 @@
                 android:visibility="visible"
                 app:srcCompat="@drawable/hippo_ic_hung_up_call" />
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.33" />
 
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ivAnswerCall"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -348,7 +348,7 @@
 
             </com.fugu.utils.RippleBackground>
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvCalledPersonNameAudio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -357,7 +357,7 @@
                 android:textSize="22sp"
                 tools:text="" />
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvCallingStatusAudio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -374,7 +374,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/fugu_padding_20"
             >
-            <android.support.v7.widget.AppCompatImageView
+            <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/ivHangUpAudio"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
@@ -393,7 +393,7 @@
                 android:visibility="gone"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ivMuteAudio1"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -403,7 +403,7 @@
                     android:paddingTop="@dimen/fugu_padding_10"
                     app:srcCompat="@drawable/hippo_ic_mute_microphone_disabled" />
 
-                <android.support.v7.widget.AppCompatImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/ivSpeakerAudio"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -420,7 +420,7 @@
 
     </RelativeLayout>
 
-    <android.support.v7.widget.AppCompatImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivBack"
         android:layout_width="50dp"
         android:layout_height="50dp"

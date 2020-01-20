@@ -2,9 +2,9 @@ package product.clicklabs.jugnoo.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.cardview.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +15,20 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+
 import product.clicklabs.jugnoo.AddPlaceActivity;
 import product.clicklabs.jugnoo.Constants;
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiFetchUserAddress;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.room.DBObject;
+import product.clicklabs.jugnoo.room.apis.DBCoroutine;
+import product.clicklabs.jugnoo.room.database.SearchLocationDB;
+import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -51,6 +56,8 @@ public class AddressBookFragment extends Fragment {
 
 	private View rootView;
     private FragmentActivity activity;
+
+    private ArrayList<SearchLocation> searchLocations;
 
 	public AddressBookFragment(){
 	}
@@ -97,28 +104,13 @@ public class AddressBookFragment extends Fragment {
 			e.printStackTrace();
 		}
 
+		searchLocations = new ArrayList<>();
 
 		textViewRecentAddresses = (TextView) rootView.findViewById(R.id.textViewRecentAddresses); textViewRecentAddresses.setTypeface(Fonts.mavenMedium(activity));
 		cardViewRecentAddresses = (CardView) rootView.findViewById(R.id.cardViewRecentAddresses);
 		listViewRecentAddresses = (NonScrollListView) rootView.findViewById(R.id.listViewRecentAddresses);
 		textViewRecentAddresses.setVisibility(View.GONE);
 		cardViewRecentAddresses.setVisibility(View.GONE);
-		try {
-			savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, Data.userData.getSearchResultsRecent(), new SavedPlacesAdapter.Callback() {
-				@Override
-				public void onItemClick(SearchResult searchResult) {
-					onSavedLocationEdit(searchResult);
-				}
-
-				@Override
-				public void onDeleteClick(SearchResult searchResult) {
-
-				}
-			}, false, false, false, false);
-			listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
 
 
@@ -139,8 +131,6 @@ public class AddressBookFragment extends Fragment {
 		});
 
 
-		setSavedPlaces();
-
 		getApiFetchUserAddress().hit(true);
 
 		return rootView;
@@ -153,11 +143,52 @@ public class AddressBookFragment extends Fragment {
 		scrollView.scrollTo(0, 0);
 	}
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ASSL.closeActivity(relativeLayoutRoot);
-		System.gc();
+
+	private void fetchRecentLocations(){
+		SearchLocationDB searchLocationDB = DBObject.INSTANCE.getInstance();
+		if(searchLocationDB != null) {
+			DBCoroutine.Companion.getAllLocations(searchLocationDB, searchLocation -> {
+				if (!searchLocations.isEmpty()) {
+					searchLocations.clear();
+				}
+				searchLocations.addAll(searchLocation);
+				setRecentList();
+			});
+		} else {
+			setRecentList();
+		}
+	}
+
+	private void setRecentList(){
+		try {
+			ArrayList<SearchResult> searchResults = PlaceSearchListFragment.getSearchResultsRecentAndSaved(activity, searchLocations);
+			if(savedPlacesAdapterRecent == null) {
+				savedPlacesAdapterRecent = new SavedPlacesAdapter(activity, searchResults, new SavedPlacesAdapter.Callback() {
+					@Override
+					public void onItemClick(SearchResult searchResult) {
+						onSavedLocationEdit(searchResult);
+					}
+
+					@Override
+					public void onDeleteClick(SearchResult searchResult) {
+
+					}
+				}, false, false, false, false);
+				listViewRecentAddresses.setAdapter(savedPlacesAdapterRecent);
+			} else {
+				savedPlacesAdapterRecent.setList(searchResults);
+			}
+			if (savedPlacesAdapterRecent.getCount() > 0) {
+				textViewRecentAddresses.setVisibility(View.VISIBLE);
+				cardViewRecentAddresses.setVisibility(View.VISIBLE);
+				textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
+			} else {
+				textViewRecentAddresses.setVisibility(View.GONE);
+				cardViewRecentAddresses.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 
@@ -175,15 +206,7 @@ public class AddressBookFragment extends Fragment {
 			}
 
 
-			savedPlacesAdapterRecent.notifyDataSetChanged();
-			if (savedPlacesAdapterRecent.getCount() > 0) {
-				textViewRecentAddresses.setVisibility(View.VISIBLE);
-				cardViewRecentAddresses.setVisibility(View.VISIBLE);
-				textViewRecentAddresses.setText(savedPlacesAdapterRecent.getCount() == 1 ? R.string.recent_location : R.string.recent_locations);
-			} else {
-				textViewRecentAddresses.setVisibility(View.GONE);
-				cardViewRecentAddresses.setVisibility(View.GONE);
-			}
+			fetchRecentLocations();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

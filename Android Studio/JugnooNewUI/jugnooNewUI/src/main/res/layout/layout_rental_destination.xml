@@ -22,7 +22,7 @@
         app:typekitFont="@string/maven"
         android:textSize="@dimen/sp_16" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_rental_station"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

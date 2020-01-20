@@ -19,6 +19,10 @@
         <TextView
             android:id="@+id/textViewTitle"
             style="@style/title"
+            android:gravity="center"
+            android:layout_toEndOf="@+id/imageViewBack"
+            android:layout_toStartOf="@+id/tvAbout"
+            android:layout_marginEnd="20px"
             android:text="@string/profile_saved_location_text"/>
 
         <TextView
@@ -30,6 +34,7 @@
             android:layout_centerVertical="true"
             android:drawableStart="@drawable/ic_profile_about"
             android:drawablePadding="@dimen/dp_3"
+            android:layout_marginStart="8dp"
             android:padding="@dimen/dp_10"
             android:tag="@string/dont_touch_me"
             android:text="@string/about"
@@ -344,14 +349,14 @@
                     android:tag="@string/dont_touch_me"
                     >
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvMenuItems"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:overScrollMode="never"
                         android:scrollbars="none"
                         android:visibility="gone">
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
 
                     <!-- change password layout -->
                     <RelativeLayout

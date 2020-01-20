@@ -11,7 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
@@ -76,7 +76,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
 
     TextView textViewScroll;
 
-    boolean loginDataFetched = false;
+    public boolean loginDataFetched = false;
     private int linkedWallet = 0;
     //private int userVerified = 0;
     private String linkedWalletErrorMsg = "";
@@ -530,7 +530,6 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
             RestClient.getApiService().verifyOtp(params, new Callback<LoginResponse>() {
                 @Override
                 public void success(LoginResponse loginResponse, Response response) {
-                    DialogPopup.dismissLoadingDialog();
                     if (missedCallDialog != null) {
                         missedCallDialog.dismiss();
                     }
@@ -568,16 +567,14 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                             } else {
                                 DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
                             }
-                            DialogPopup.dismissLoadingDialog();
-                        } else {
-                            DialogPopup.dismissLoadingDialog();
                         }
 
                     } catch (Exception exception) {
                         exception.printStackTrace();
                         DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                        DialogPopup.dismissLoadingDialog();
                     }
+
+					DialogPopup.dismissLoadingDialog();
                 }
 
                 @Override
@@ -961,7 +958,7 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
                     Prefs.with(OTPConfirmScreen.this).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId()),
                     Data.splashIntentUri, new LatLng(Data.loginLatitude, Data.loginLongitude), SplashNewActivity.openHomeSwitcher);
         } else if (hasFocus && backToSplashOboarding) {
-            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            overridePendingTransition(R.anim.left_in, R.anim.left_out);
             finish();
         }
     }

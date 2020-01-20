@@ -46,7 +46,7 @@ public class Database2 {                                                        
 
     private static String DATABASE_NAME;                        // declaring database variables
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     private DbHelper dbHelper;
 
@@ -133,6 +133,7 @@ public class Database2 {                                                        
 
         @Override
         public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+			dropOldTables(database, oldVersion, newVersion);
             onCreate(database);
         }
 
@@ -211,6 +212,12 @@ public class Database2 {                                                        
 
     }
 
+    private static void dropOldTables(SQLiteDatabase database, int oldVersion, int newVersion){
+    	if(oldVersion == 2 && newVersion == 3){
+			database.execSQL("DROP TABLE IF EXISTS "+TABLE_RIDE_INFO);
+		}
+	}
+
     private void dropAndCreateNotificationTable(SQLiteDatabase database, Context context) {
         try {
             if(!Prefs.with(context).contains(Constants.SECOND_TIME_DB)) {
@@ -270,12 +277,12 @@ public class Database2 {                                                        
         System.gc();
     }
 
-    public int getLastRowIdInRideInfo() {
+    public long getLastRowIdInRideInfo() {
         Cursor cursor = database.rawQuery("SELECT "+POSITION_ID+" FROM "+TABLE_RIDE_INFO+" ORDER BY "+POSITION_ID+" DESC LIMIT 1", null);
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             Log.d("ride_path_db_current_size", String.valueOf(cursor.getCount()));
-            return cursor.getInt(cursor.getColumnIndex(POSITION_ID));
+            return cursor.getLong(cursor.getColumnIndex(POSITION_ID));
         } else {
             return 0;
         }
@@ -319,7 +326,7 @@ public class Database2 {                                                        
             int iDestLong = cursor.getColumnIndex(DESTINATION_LONGITUDE);
 
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-                ridePaths.add(new RidePath(cursor.getInt(iId),
+                ridePaths.add(new RidePath(cursor.getLong(iId),
                         cursor.getDouble(iSrcLat),
                         cursor.getDouble(iSrcLong),
                         cursor.getDouble(iDestLat),
@@ -343,7 +350,7 @@ public class Database2 {                                                        
                 int iSrcLong = cursor.getColumnIndex(SOURCE_LONGITUDE);
                 int iDestLat = cursor.getColumnIndex(DESTINATION_LATITUDE);
                 int iDestLong = cursor.getColumnIndex(DESTINATION_LONGITUDE);
-                ridePath = new RidePath(cursor.getInt(iId),
+                ridePath = new RidePath(cursor.getLong(iId),
                         cursor.getDouble(iSrcLat),
                         cursor.getDouble(iSrcLong),
                         cursor.getDouble(iDestLat),

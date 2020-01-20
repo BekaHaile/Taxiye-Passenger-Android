@@ -1,6 +1,6 @@
 package product.clicklabs.jugnoo.adapters
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +10,9 @@ import kotlinx.android.synthetic.main.list_item_fare_detail_vehicle.view.*
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.utils.Utils
 
-class FareDetailsAdapter(val details: ArrayList<Any>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FareDetailsAdapter(val details: ArrayList<Any>) : androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         return when (viewType){
             VIEW_TYPE_VEHICLE -> {
                 ViewHolderVehicle(LayoutInflater.from(parent.context).inflate(R.layout.list_item_fare_detail_vehicle, parent, false))
@@ -30,7 +30,7 @@ class FareDetailsAdapter(val details: ArrayList<Any>) : RecyclerView.Adapter<Rec
         return details.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         when(holder){
             is ViewHolderVehicle -> holder.bind((details[position] as FareVehicle).vehicle)
             is ViewHolderFareItem -> holder.bind((details[position] as FareItem).name, (details[position] as FareItem).value)
@@ -47,18 +47,18 @@ class FareDetailsAdapter(val details: ArrayList<Any>) : RecyclerView.Adapter<Rec
         }
     }
 
-    inner class ViewHolderVehicle(view : View) : RecyclerView.ViewHolder(view){
+    inner class ViewHolderVehicle(view : View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
         fun bind(vehicleName : String){
             itemView.tvHeader.text = vehicleName
         }
     }
-    inner class ViewHolderFareItem(view : View) : RecyclerView.ViewHolder(view){
+    inner class ViewHolderFareItem(view : View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
         fun bind(fareItem : String, fareValue : String){
             itemView.tvFareItem.text = fareItem
             itemView.tvFareValue.text = fareValue
         }
     }
-    inner class ViewHolderFareExtra(view : View) : RecyclerView.ViewHolder(view){
+    inner class ViewHolderFareExtra(view : View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
         fun bind(extraDetails : String){
             itemView.tvExtra.text = Utils.trimHTML(Utils.fromHtml(extraDetails))
         }

@@ -1,7 +1,7 @@
 package product.clicklabs.jugnoo.apis;
 
 import android.os.AsyncTask;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.google.android.gms.maps.model.LatLng;
 

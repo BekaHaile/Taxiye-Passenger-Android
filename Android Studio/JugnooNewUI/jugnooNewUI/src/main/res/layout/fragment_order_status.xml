@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     android:id="@+id/relative"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,7 +14,7 @@
         android:visibility="gone"/>
 
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:fillViewport="true"
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                     </LinearLayout>
 
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/cvOrderStatus"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
@@ -215,7 +215,7 @@
                                 android:visibility="visible"/>
                         </RelativeLayout>
 
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
                 </RelativeLayout>
 
@@ -437,7 +437,7 @@
                     </RelativeLayout>
 
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -500,9 +500,9 @@
                                 android:splitMotionEvents="false"/>
                         </LinearLayout>
 
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -554,19 +554,26 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/px_26"
                                     android:layout_marginStart="40px"
+                                    android:layout_centerVertical="true"
                                     android:layout_marginTop="@dimen/px_26"
                                     android:text="@string/total_amount"
                                     android:textColor="@color/theme_color"
                                     android:textSize="@dimen/text_size_40"
                                     app:typekitFont="maven"/>
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginTop="@dimen/px_26"
+                                    android:layout_marginBottom="@dimen/px_26"
+                                    android:orientation="vertical">
 
                                 <com.sabkuchfresh.utils.TextViewStrikeThrough
                                     android:id="@+id/tvTotalAmountValOld"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginBottom="@dimen/px_26"
                                     android:layout_marginEnd="@dimen/px_30"
-                                    android:layout_marginTop="@dimen/px_26"
                                     android:layout_toStartOf="@+id/tvTotalAmountVal"
                                     android:text="@string/rupee_0"
                                     android:textColor="@color/text_color_light"
@@ -579,14 +586,13 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentEnd="true"
-                                    android:layout_marginBottom="@dimen/px_26"
                                     android:layout_marginEnd="30px"
-                                    android:layout_marginTop="@dimen/px_26"
                                     android:text="@string/rupee_0"
                                     android:textColor="@color/theme_color"
                                     android:textSize="@dimen/text_size_40"
                                     app:typekitFont="maven"/>
 
+                                </LinearLayout>
 
                                 <TextView
                                     android:id="@+id/tvTotalAmountMessage"
@@ -606,10 +612,10 @@
 
                         </LinearLayout>
 
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/cvPaymentMethod"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
@@ -695,7 +701,7 @@
                                 android:orientation="vertical"/>
                         </LinearLayout>
 
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
 
 
                     <Button
@@ -806,7 +812,7 @@
         </RelativeLayout>
 
 
-    </android.support.v4.widget.NestedScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 
     <ImageView
@@ -816,4 +822,4 @@
         android:background="@drawable/shadow_down_new"
         android:visibility="gone"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

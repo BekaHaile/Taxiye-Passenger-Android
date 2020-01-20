@@ -2,13 +2,11 @@ package product.clicklabs.jugnoo.promotion;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -21,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -35,6 +34,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -50,9 +55,11 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
+import product.clicklabs.jugnoo.home.DeepLinkAction;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.VehicleTypeValue;
+import product.clicklabs.jugnoo.newui.activity.RewardsActivity;
 import product.clicklabs.jugnoo.promotion.adapters.PromoAdapter;
 import product.clicklabs.jugnoo.promotion.fragments.PromoDescriptionFragment;
 import product.clicklabs.jugnoo.promotion.models.Promo;
@@ -62,6 +69,7 @@ import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -74,16 +82,20 @@ import retrofit.mime.TypedByteArray;
 public class PromotionActivity extends BaseFragmentActivity implements Constants,  GAAction, GACategory {
 
     private final String TAG = PromotionActivity.class.getSimpleName();
+    private static final int REQ_CODE_REWARDS = 1090;
     private Button buttonApplyPromo;
     private EditText editTextPromoCode;
 
     private RelativeLayout relative;
     private LinearLayout linearLayoutNoOffers;
     private RecyclerView recyclerViewOffers;
-    private ImageView imageViewBack, imageViewFreeRideAuto;
-    private TextView textViewTitle, textViewFreeRides;
+    private ImageView imageViewBack;
+    private TextView textViewTitle;
+    private ImageView tvScratchCards;
     private LinearLayout llContainer;
 
+    private CardView cardViewPromoBanner;
+    private TextView tvBannerTitle, tvBannerMessage;
 
     private ArrayList<Promo> promosList = new ArrayList<>();
     private PromoAdapter promoAdapter;
@@ -122,9 +134,8 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         buttonApplyPromo = (Button) findViewById(R.id.buttonApplyPromo);
         buttonApplyPromo.setTypeface(Fonts.mavenRegular(this));
         editTextPromoCode = (EditText) findViewById(R.id.editTextPromoCode);
-        textViewFreeRides = (TextView) findViewById(R.id.textViewFreeRides); textViewFreeRides.setTypeface(Fonts.mavenMedium(this));
-        textViewFreeRides.setText(getString(R.string.want_free_rides, getString(R.string.app_name)));
-        imageViewFreeRideAuto = (ImageView) findViewById(R.id.imageViewFreeRideAuto);
+        tvScratchCards =  findViewById(R.id.tvScratchCards);
+        tvScratchCards.setVisibility(View.GONE);
 
         linearLayoutNoOffers = (LinearLayout) findViewById(R.id.linearLayoutNoOffers);
         ((TextView) findViewById(R.id.textViewNoOffers)).setTypeface(Fonts.mavenRegular(this));
@@ -143,16 +154,10 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         });
         recyclerViewOffers.setAdapter(promoAdapter);
 
-        textViewFreeRides.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PromotionActivity.this, ShareActivity.class);
-                intent.putExtra(Constants.KEY_SHARE_ACTIVITY_FROM_DEEP_LINK, false);
-                startActivity(intent);
-                overridePendingTransition(R.anim.bottom_in, R.anim.top_out);
-                GAUtils.event(SIDE_MENU, PROMOTIONS, GET_FREE_JUGNOO_CASH+CLICKED);
-            }
-        });
+
+		cardViewPromoBanner = findViewById(R.id.cardViewPromoBanner);
+		tvBannerTitle = findViewById(R.id.tvBannerTitle); tvBannerTitle.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
+		tvBannerMessage = findViewById(R.id.tvBannerMessage); tvBannerMessage.setTypeface(Fonts.mavenRegular(this));
 
 
         buttonApplyPromo.setOnClickListener(new View.OnClickListener() {
@@ -179,12 +184,6 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             }
         });
 
-        imageViewFreeRideAuto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textViewFreeRides.performClick();
-            }
-        });
 
 
         editTextPromoCode.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -226,6 +225,11 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             }
         });
 
+        tvScratchCards.setOnClickListener(view -> {
+            startActivityForResult(new Intent(PromotionActivity.this, RewardsActivity.class), REQ_CODE_REWARDS);
+            overridePendingTransition(R.anim.right_in, R.anim.right_out);
+        });
+
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
@@ -237,14 +241,56 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             }
         });
         new HomeUtil().forceRTL(this);
-    }
 
-    public void performBackPressed(){
+
+		setPromoBanner();
+	}
+
+	private void setPromoBanner() {
+		try {
+			String bannerData = Prefs.with(this).getString(Constants.KEY_PROMO_BANNER_DATA, "");
+			if(!TextUtils.isEmpty(bannerData)) {
+				JSONObject jObj = new JSONObject(bannerData);
+				String url = jObj.optString(Constants.KEY_URL, "");
+				int deepIndex = jObj.optInt(Constants.KEY_DEEPINDEX, -1);
+
+				cardViewPromoBanner.setVisibility(View.VISIBLE);
+				tvBannerTitle.setText(jObj.optString(Constants.KEY_TITLE, ""));
+				tvBannerMessage.setText(jObj.optString(Constants.KEY_MESSAGE, ""));
+				cardViewPromoBanner.setOnClickListener(v -> {
+					try {
+						if(!TextUtils.isEmpty(url)){
+							Utils.openUrl(PromotionActivity.this, url);
+						} else if(deepIndex > -1){
+							DeepLinkAction.openDeepLink(PromotionActivity.this, new LatLng(Data.latitude, Data.longitude), deepIndex);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
+			} else {
+				cardViewPromoBanner.setVisibility(View.GONE);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			cardViewPromoBanner.setVisibility(View.GONE);
+		}
+	}
+
+	public void performBackPressed(){
         if(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()) != null){
             removeFragment(getSupportFragmentManager().findFragmentByTag(PromoDescriptionFragment.class.getName()));
         } else {
             finish();
             overridePendingTransition(R.anim.left_in, R.anim.left_out);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQ_CODE_REWARDS && resultCode == RESULT_OK) {
+            getCouponsAndPromotions(PromotionActivity.this);
         }
     }
 
@@ -643,7 +689,7 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
         if(pcAll.size() > 0){
             pcAll = countAndRemoveDuplicatePromoCoupons(pcAll);
             for(PromoCoupon pc : pcAll){
-                promosList.add(new Promo(getString(R.string.all), "", pc, R.drawable.ic_promo_all, -1));
+                promosList.add(new Promo(getString(R.string.all), "", pc, R.drawable.ic_promo_all, -1, false, 0));
             }
         }
         if(pcRides.size() > 0) {
@@ -658,31 +704,31 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
                     }
                 }
 
-                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, id, R.color.theme_color));
+                promosList.add(new Promo(getString(R.string.rides), Config.getAutosClientId(), pc, id, R.color.theme_color, false, 0));
             }
         }
         if(pcMeals.size() > 0) {
             pcMeals = countAndRemoveDuplicatePromoCoupons(pcMeals);
             for(PromoCoupon pc : pcMeals){
-                promosList.add(new Promo(getString(R.string.meals), Config.getMealsClientId(), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab));
+                promosList.add(new Promo(getString(R.string.meals), Config.getMealsClientId(), pc, R.drawable.ic_promo_meals, R.color.pink_meals_fab, false, 0));
             }
         }
         if(pcFatafat.size() > 0) {
             pcFatafat = countAndRemoveDuplicatePromoCoupons(pcFatafat);
             for(PromoCoupon pc : pcFatafat){
-                promosList.add(new Promo(getString(R.string.fatafat), Config.getFreshClientId(), pc, R.drawable.ic_promo_fresh, R.color.fresh_promotions_green));
+                promosList.add(new Promo(getString(R.string.fatafat), Config.getFreshClientId(), pc, R.drawable.ic_promo_fresh, R.color.fresh_promotions_green, false, 0));
             }
         }
         if(pcMenus.size() > 0) {
             pcMenus = countAndRemoveDuplicatePromoCoupons(pcMenus);
             for(PromoCoupon pc : pcMenus){
-                promosList.add(new Promo(getString(R.string.menus), Config.getMenusClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+                promosList.add(new Promo(getString(R.string.menus), Config.getMenusClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab, false, 0));
             }
         }
         if(pcDeliveryCustomer.size() > 0) {
             pcDeliveryCustomer = countAndRemoveDuplicatePromoCoupons(pcDeliveryCustomer);
             for(PromoCoupon pc : pcDeliveryCustomer){
-                promosList.add(new Promo(getString(R.string.delivery_new_name), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab));
+                promosList.add(new Promo(getString(R.string.delivery_new_name), Config.getDeliveryCustomerClientId(), pc, R.drawable.ic_promo_menus, R.color.purple_menus_fab, false, 0));
             }
         }
 
@@ -708,10 +754,21 @@ public class PromotionActivity extends BaseFragmentActivity implements Constants
             }
         });
         set.addAll(promoCoupons);
-        promoCoupons = new ArrayList<>(set);
+        ArrayList<PromoCoupon> promoCouponsTemp = new ArrayList<>(set);
+        promoCoupons.clear();
+        for (int i = 0; i < promoCouponsTemp.size(); i++) {
+            if((promoCouponsTemp.get(i).getCouponCardType() == 1 && promoCouponsTemp.get(i).isScratched())
+             || promoCouponsTemp.get(i).getCouponCardType() == 0) {
+                promoCoupons.add(promoCouponsTemp.get(i));
+            }
+        }
+
+        if(promoCouponsTemp.size() != promoCoupons.size()) {
+            tvScratchCards.setVisibility(View.VISIBLE);
+        } else {
+            tvScratchCards.setVisibility(View.GONE);
+        }
         return promoCoupons;
     }
-
-
 
 }

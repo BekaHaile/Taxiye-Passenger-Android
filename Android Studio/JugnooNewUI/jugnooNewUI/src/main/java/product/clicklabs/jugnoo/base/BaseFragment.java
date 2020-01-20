@@ -2,10 +2,8 @@ package product.clicklabs.jugnoo.base;
 
 import android.annotation.TargetApi;
 import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-
-import com.sabkuchfresh.fragments.TrackOrderFragment;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.LocationFetcher;

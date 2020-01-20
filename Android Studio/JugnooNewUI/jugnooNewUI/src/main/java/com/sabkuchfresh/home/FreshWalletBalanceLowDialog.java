@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sabkuchfresh.utils.Utils;
+
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -30,7 +32,7 @@ public class FreshWalletBalanceLowDialog {
 		this.callback = callback;
 	}
 
-	public Dialog show(int messageRes, String amount, int walletIcon) {
+	public Dialog show(int messageRes, String amount, String currencyCode, String currency, int walletIcon) {
 		try {
 			dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 			dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;
@@ -59,10 +61,9 @@ public class FreshWalletBalanceLowDialog {
 			textViewLessAmountValue.setTypeface(Fonts.mavenRegular(activity), Typeface.BOLD);
 			try {
 				if(Double.parseDouble(amount)<0) {
-					amount = amount.replaceAll("-", "");
-					textViewLessAmountValue.setText("-"+activity.getResources().getString(R.string.rupees_value_format, amount));
+					textViewLessAmountValue.setText("-" + Utils.formatCurrencyAmount(Double.parseDouble(amount), currencyCode, currency).replaceAll("-", ""));
 				} else {
-					textViewLessAmountValue.setText(activity.getResources().getString(R.string.rupees_value_format, amount));
+					textViewLessAmountValue.setText(amount);
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

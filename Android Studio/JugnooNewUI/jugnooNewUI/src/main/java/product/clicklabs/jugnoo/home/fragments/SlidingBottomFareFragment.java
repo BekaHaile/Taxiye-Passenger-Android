@@ -1,7 +1,7 @@
 package product.clicklabs.jugnoo.home.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,7 +80,7 @@ public class SlidingBottomFareFragment extends Fragment implements GAAction, GAC
             }
 
 
-            if(Data.autoData.getFareFactor() > 1.0){
+            if(Data.autoData.getFareFactor() > 1.0 && activity.showSurgeIcon()){
                 relativeLayoutPriorityTip.setVisibility(View.VISIBLE);
                 textViewPriorityTipValue.setText(Data.autoData.getFareFactor()+"X");
             } else{
