@@ -50,7 +50,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
 import com.hippo.HippoConfig;
-import com.hippocall.HippoCallConfig;
+//import com.hippocall.HippoCallConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -926,7 +926,7 @@ public class Utils implements GAAction, GACategory{
 								ArrayList<String> userUniqueKeys = new ArrayList<>();
 								userUniqueKeys.add(Data.autoData.getAssignedDriverInfo().getUserIdentifier());
 
-								HippoCallConfig.getInstance().setCallBackListener();
+//								HippoCallConfig.getInstance().setCallBackListener();
 
 								HippoConfig.getInstance().startCall(activity, callType,
 										Data.autoData.getcEngagementId(),
