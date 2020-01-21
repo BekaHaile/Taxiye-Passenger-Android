@@ -2155,6 +2155,21 @@
     <string name="pay_for_delivery">Pay For Your Delivery Using</string>
     <string name="offers_and_coupons_applied_colon">Offers Applied: \n<b>%s</b></string>
 
+    <string name="menu_promotions">Promotions</string>
+    <string name="menu_inbox">Inbox</string>
+    <string name="menu_history">History</string>
+    <string name="menu_chat_support">Chat Support</string>
+    <string name="menu_locale">Language</string>
+    <string name="menu_schedule_ride">Schedule Ride</string>
+    <string name="menu_email_support">Email Support</string>
+    <string name="menu_call_support">Call Support</string>
+    <string name="menu_wallet">Payments</string>
+    <string name="menu_payments">Payments</string>
+    <string name="menu_refer_earn">Refer and Earn</string>
+    <string name="ride_scheduled_status">Ride Scheduled</string>
+    <string name="in_progress_status">In Progress</string>
+    <string name="processed_status">Processed</string>
+    <string name="cancelled_status">Cancelled</string>
 <!--    New UI changes-->
     <string name="text_where_to_go">Where to?</string>
     <string name="add_favorite_place">Add Favorite Place</string>
