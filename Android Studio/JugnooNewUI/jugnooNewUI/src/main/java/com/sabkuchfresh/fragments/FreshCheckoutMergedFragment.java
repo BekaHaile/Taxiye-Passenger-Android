@@ -147,6 +147,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import static android.view.View.GONE;
+
 
 public class FreshCheckoutMergedFragment extends Fragment implements GAAction, DeliverySlotsAdapter.Callback,
         FreshCartItemsAdapter.Callback, PromoCouponDialog.Callback, MenusCartItemsAdapter.Callback {
@@ -797,7 +799,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         }
         vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
-        if(vehicleInfoList != null && vehicleInfoList.size() > 1){
+        if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
+            currentVehicleTypePos = 0;
+            vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
             if (vehicleTypeAdapterMenus == null) {
 
                 vehicleTypeAdapterMenus = new VehicleTypeAdapterMenus((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterMenus.OnItemSelectedListener() {
@@ -817,12 +821,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     checkCount++;
                 }
                 else {
-                    linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
                     rvVehicles.setVisibility(View.VISIBLE);
-                    textViewChooseVehicle.setVisibility(View.GONE);
                     vehicleTypeAdapterMenus.updateList(vehicleInfoList);
                 }
             }
+
+            if(vehicleInfoList.size()>1) {
+                linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
+                rvVehicles.setVisibility(View.VISIBLE);
+                textViewChooseVehicle.setVisibility(View.VISIBLE);
+            }
+            else {
+                linearLayoutDeliveryVehicles.setVisibility(View.GONE);
+                rvVehicles.setVisibility(GONE);
+                textViewChooseVehicle.setVisibility(View.GONE);
+            }
+
         }
         else {
             textViewChooseVehicle.setVisibility(View.GONE);
