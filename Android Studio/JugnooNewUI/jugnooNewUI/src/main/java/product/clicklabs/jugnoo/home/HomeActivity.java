@@ -1307,6 +1307,10 @@ RelativeLayout plusBadge;
                         }
                         @Override
                         public void showCommentBox(int visibility){
+                            if(visibility == View.GONE) {
+                                editTextRSFeedback.setText("");
+                                Utils.hideKeyboard(HomeActivity.this);
+                            }
                             HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibility);
                         }
                     });
@@ -2137,6 +2141,7 @@ RelativeLayout plusBadge;
                 try {
                     int position=(int)Math.abs(score)-1;
                     buttonRSSubmitFeedback.setVisibility(View.VISIBLE);
+                    editTextRSFeedback.setText("");
                     findViewById(R.id.cvAdditionalComments).setVisibility(View.GONE);
                     resetFeedBackListClicked(position);
                     feedbackReasonsAdapter.notifyDataSetChanged();
@@ -2192,6 +2197,10 @@ RelativeLayout plusBadge;
                                         }
                                         @Override
                                         public void showCommentBox(int visibility){
+                                            if(visibility == View.GONE) {
+                                                editTextRSFeedback.setText("");
+                                                Utils.hideKeyboard(HomeActivity.this);
+                                            }
                                             HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibility);
                                         }
                                     });
@@ -2279,9 +2288,9 @@ RelativeLayout plusBadge;
 //                            }
 //                        }
 
-                        if (feedbackStr.length() > 50) {
+                        if (feedbackStr.length() > 150) {
                             editTextRSFeedback.requestFocus();
-                            editTextRSFeedback.setError(getString(R.string.review_must_be_in));
+                            editTextRSFeedback.setError(getString(R.string.review_must_be_in_150));
                         } else {
                             submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                                     rating, feedbackStr, feedbackReasons);
@@ -3660,6 +3669,10 @@ RelativeLayout plusBadge;
 
     @Override
     public void showCommentBox(int visibilty){
+        if(visibilty == View.GONE) {
+            editTextRSFeedback.setText("");
+            Utils.hideKeyboard(HomeActivity.this);
+        }
         HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibilty);
     }
 

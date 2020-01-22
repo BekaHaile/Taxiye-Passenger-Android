@@ -5,7 +5,7 @@
     android:id="@+id/endRideReviewRl"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="70dp"
+    android:layout_marginTop="48dp"
     android:background="@color/menu_item_selector_color"
     android:orientation="vertical"
     android:tag="@string/dont_touch_me"
@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:layout_marginTop="25dp"
         android:visibility="gone">
 
     </LinearLayout>
@@ -25,6 +26,7 @@
         android:id="@+id/scrollViewRideSummary"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="25dp"
         android:layout_below="@+id/linearLayoutRideSummaryContainer"
         android:background="@color/menu_item_selector_color">
 
