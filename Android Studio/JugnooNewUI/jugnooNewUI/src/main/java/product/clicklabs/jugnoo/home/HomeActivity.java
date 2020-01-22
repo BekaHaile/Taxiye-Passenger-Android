@@ -4975,7 +4975,6 @@ RelativeLayout plusBadge;
     }
 
     private void updateDriverTipUI(PassengerScreenMode mode) {
-        vehiclesTabAdapterConfirmRide = new VehiclesTabAdapter(HomeActivity.this, Data.autoData.getRegions(),true);
         if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null  &&
                 Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()
                 && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0
