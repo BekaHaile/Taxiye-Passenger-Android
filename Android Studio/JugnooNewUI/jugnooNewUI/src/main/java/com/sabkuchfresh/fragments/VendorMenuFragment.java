@@ -305,6 +305,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                             if (!activity.isOrderJustCompleted()) {
                                 activity.setMinOrderAmountText(VendorMenuFragment.this);
                             }
+                            activity.appBarLayout.setExpanded(false, true);
                         } catch (Exception e) {
                         }
                     }
