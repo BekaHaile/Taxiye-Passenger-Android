@@ -127,5 +127,6 @@
     <string name="hippo_ticket_ride_faq_name">Rides</string>
 
     <integer name="hippo_call_enabled">1</integer>
+    <integer name="hide_regions_with_no_drivers">1</integer>
 
 </resources>

@@ -1184,4 +1184,5 @@ public interface Constants {
 	String KEY_USERS = "users";
 	String KEY_USER_PHONE_NO = "user_phone_no";
 	String KEY_REINVITE_USERS_ENABLED = "reinvite_users_enabled";
+	String KEY_HIDE_REGIONS_WITH_NO_DRIVERS = "hide_regions_with_no_drivers";
 }
