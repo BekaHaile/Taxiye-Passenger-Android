@@ -707,7 +707,7 @@
                     android:background="@drawable/capsule_theme_color_selector"
                     android:text="@string/call_support"
                     android:textAllCaps="true"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_16"
                     app:typekitFont="@string/maven"/>
