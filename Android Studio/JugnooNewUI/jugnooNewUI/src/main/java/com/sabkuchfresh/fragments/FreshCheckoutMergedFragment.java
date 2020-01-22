@@ -826,7 +826,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 }
             }
 
-            if(vehicleInfoList.size()>1) {
+            if(vehicleInfoList.size()>1 && getResources().getBoolean(R.bool.vehicle_list_menus)) {
                 linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
                 rvVehicles.setVisibility(View.VISIBLE);
                 textViewChooseVehicle.setVisibility(View.VISIBLE);
