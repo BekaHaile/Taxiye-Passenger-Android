@@ -111,8 +111,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
 
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-            builder.setSmallIcon(R.mipmap.fejhifoh);
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
+            builder.setSmallIcon(R.mipmap.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -205,9 +205,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
 
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
 
-            builder.setSmallIcon(R.mipmap.fejhifoh);
+            builder.setSmallIcon(R.mipmap.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -313,11 +313,11 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_theme_size);
 				builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, eta, 16));
 			} else{
-				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
 			}
 
 //			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
-			builder.setSmallIcon(R.mipmap.fejhifoh);
+			builder.setSmallIcon(R.mipmap.notification_icon);
 
 			Intent intentCall = new Intent(context, CallActivity.class);
 			intentCall.putExtra(context.getResources().getString(R.string.call_number), callNumber);
@@ -373,8 +373,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
-            builder.setSmallIcon(R.mipmap.fejhifoh);
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
+            builder.setSmallIcon(R.mipmap.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
 				builder.setPriority(Notification.PRIORITY_HIGH);
@@ -417,8 +417,8 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 					JSONObject messageJson = new JSONObject(remoteMessage.getData().get("message"));
 					HippoCallConfig.getInstance().onNotificationReceived(getApplicationContext(), messageJson);
 				} else {
-					fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
-					fuguNotificationConfig.setSmallIcon(R.mipmap.fejhifoh);
+					fuguNotificationConfig.setLargeIcon(R.mipmap.notification_icon);
+					fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);
 
 
 					if (Build.VERSION.SDK_INT >= 16) {
