@@ -843,7 +843,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
                         return true;
                     }
 
@@ -1104,7 +1104,7 @@ public class MerchantInfoFragment extends Fragment implements GAAction {
                 }
 
                 @Override
-                public boolean onFailure(RetrofitError error) {
+                public boolean onFailure(Exception error) {
                     return false;
                 }
 

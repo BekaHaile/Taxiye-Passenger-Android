@@ -760,7 +760,7 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
                         return true;
                     }
 

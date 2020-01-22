@@ -2,8 +2,6 @@ package com.sabkuchfresh.feed.ui.api;
 
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
-import retrofit.RetrofitError;
-
 /**
  * Created by Parminder Singh on 3/28/17.
  */
@@ -23,7 +21,7 @@ public abstract class APICommonCallback<T extends FeedCommonResponse> {
 
     public abstract boolean onError(T t, String message, int flag);
 
-    public boolean onFailure(RetrofitError error){
+    public boolean onFailure(Exception error){
         return false;
     }
 
