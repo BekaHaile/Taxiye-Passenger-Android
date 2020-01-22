@@ -723,7 +723,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_theme_selector"
                     android:textSize="@dimen/sp_16"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:typekitFont="@string/maven"
                     />
 

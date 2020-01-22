@@ -629,6 +629,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     private void setFeedOrderData(HistoryResponse.Datum datum, Activity activity) {
         tv1r.setText(datum.getOrderStatus());
+        btRateOrder.setVisibility(datum.isPendingFeedback() ? View.VISIBLE : View.GONE);
+
         try{
             tv1r.setTextColor(Color.parseColor(datum.getOrderStatusColor()));
         } catch (Exception e){
