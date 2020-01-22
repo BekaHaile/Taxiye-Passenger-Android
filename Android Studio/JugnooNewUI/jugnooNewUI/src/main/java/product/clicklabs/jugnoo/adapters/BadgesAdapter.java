@@ -7,14 +7,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
@@ -73,7 +72,7 @@ public class BadgesAdapter extends RecyclerView.Adapter<BadgesAdapter.viewholder
         Picasso.with((Activity) activity).load(image)
                 .transform(new CircleTransform())
                 .into(holder.imageView);
-        holder.textView.setText(name);
+        holder.textView.setText(" "+name+" ");
 //        }
     }
 

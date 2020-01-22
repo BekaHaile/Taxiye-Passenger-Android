@@ -2152,7 +2152,6 @@ RelativeLayout plusBadge;
                             badgesScroll.setVisibility(View.VISIBLE);
                             badgesAdapter=new BadgesAdapter(HomeActivity.this,Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges());
                             badgesScroll.setAdapter(badgesAdapter);
-                            badgesScroll.setAdapter(badgesAdapter);
                             badgesScroll.setItemTransformer(new ScaleTransformer.Builder()
                                     .setMaxScale(1.5f)
                                     .setMinScale(0.8f)
@@ -2161,6 +2160,7 @@ RelativeLayout plusBadge;
                                     .build());
 
                             badgesScroll.setOffscreenItems(3);
+							badgesScroll.setItemTransitionTimeMillis(300);
 
                         }
                     });
@@ -4005,6 +4005,13 @@ RelativeLayout plusBadge;
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.autoData.getEndRideData() != null) {
 //                        genieLayout.setVisibility(View.GONE);
+
+						badgesAdapter=null;
+            			badgesNormal.setVisibility(View.GONE);
+            			badgesScroll.setVisibility(View.GONE);
+						findViewById(R.id.cvAdditionalComments).setVisibility(View.GONE);
+						buttonRSSubmitFeedback.setVisibility(View.GONE);
+
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
                         if (Data.autoData.getEndRideData().getIsPooled() == 1
@@ -10004,9 +10011,6 @@ RelativeLayout plusBadge;
                 e.printStackTrace();
             }
 
-            badgesAdapter=null;
-            badgesNormal.setVisibility(View.GONE);
-            badgesScroll.setVisibility(View.GONE);
 
             ReferralActions.incrementTransactionCount(HomeActivity.this);
             userMode = UserMode.PASSENGER;
