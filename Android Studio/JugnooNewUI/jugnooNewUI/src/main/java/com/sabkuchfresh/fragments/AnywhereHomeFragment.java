@@ -1438,7 +1438,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     }
 
                     if(vehicleInfoList.size()>1) {
-                        rvVehicles.setVisibility(GONE);
+                        rvVehicles.setVisibility(View.VISIBLE);
                     }
                     else {
                         rvVehicles.setVisibility(GONE);

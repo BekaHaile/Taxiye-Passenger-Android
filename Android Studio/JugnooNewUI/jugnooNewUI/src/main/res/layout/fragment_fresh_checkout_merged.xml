@@ -870,7 +870,7 @@
                     android:textSize="@dimen/text_size_26"
                     android:visibility="visible" />
 
-                <androidx.appcompat.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/cvVehicles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -897,7 +897,7 @@
                         android:visibility="gone"
                         layout="@layout/order_place_referal" />
 
-                </androidx.appcompat.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
