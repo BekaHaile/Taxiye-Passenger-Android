@@ -1398,6 +1398,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             params.height= (int) (ASSL.minRatio() * 35f);
             params.width= (int) (ASSL.minRatio() * 90f);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.upi_logo);
+        } else if(datum1.getPaymentMode()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+            params.setMargins((int) (ASSL.Xscale() * 34f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 34f));
+            params.setMarginEnd(0);
+            params.height= (int) (ASSL.minRatio() * 35f);
+            params.width= (int) (ASSL.minRatio() * 90f);
+            tvPaymentMethodVal.setText(activity.getString(R.string.card));
         }
         tvPaymentMethodVal.setLayoutParams(params);
 
