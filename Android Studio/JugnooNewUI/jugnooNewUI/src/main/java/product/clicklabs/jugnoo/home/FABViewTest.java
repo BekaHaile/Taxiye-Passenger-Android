@@ -6,7 +6,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.os.Handler;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -27,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -701,15 +701,15 @@ public class FABViewTest implements GACategory, GAAction {
     }
 
     public void showTutorial(){
-        if(Data.userData != null && Data.userData.getShowTutorial() == 1 && getNoOfOfferingsEnabled()>2) {
-            menuLabelsRightTest.open(true);
-            Animation animation = new AlphaAnimation(0f, 1f);
-            animation.setDuration(1000);
-            animation.setFillAfter(false);
-            ivJeanieHelp.setVisibility(View.VISIBLE);
-            ivJeanieHelp.startAnimation(animation);
-            Data.userData.setShowTutorial(0);
-        }
+//        if(Data.userData != null && Data.userData.getShowTutorial() == 1 && getNoOfOfferingsEnabled()>2) {
+//            menuLabelsRightTest.open(true);
+//            Animation animation = new AlphaAnimation(0f, 1f);
+//            animation.setDuration(1000);
+//            animation.setFillAfter(false);
+//            ivJeanieHelp.setVisibility(View.GONE);
+//            ivJeanieHelp.startAnimation(animation);
+//            Data.userData.setShowTutorial(0);
+//        }
     }
 
     private String clientId;
