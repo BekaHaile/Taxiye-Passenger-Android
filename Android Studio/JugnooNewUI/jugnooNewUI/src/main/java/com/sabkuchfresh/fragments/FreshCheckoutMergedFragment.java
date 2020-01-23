@@ -800,8 +800,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
         vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
         if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
-            currentVehicleTypePos = 0;
-            vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
             if (vehicleTypeAdapterMenus == null) {
 
                 vehicleTypeAdapterMenus = new VehicleTypeAdapterMenus((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterMenus.OnItemSelectedListener() {
