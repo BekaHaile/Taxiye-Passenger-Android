@@ -1193,5 +1193,5 @@ public interface Constants {
 	String KEY_REINVITE_USERS_ENABLED = "reinvite_users_enabled";
 	String KEY_HIDE_REGIONS_WITH_NO_DRIVERS = "hide_regions_with_no_drivers";
     String KEY_FEEDBACK_INFO="feedback_info";
-	String KEY_DRIVER_UPI_ID = "driver_upi_id";
+	String KEY_DRIVER_UPI = "driver_upi";
 }

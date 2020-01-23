@@ -1354,7 +1354,7 @@ public class JSONParser implements Constants {
 		}
         driverImage = jLastRideData.optString("driver_image", "");
 
-        String driverUpiId = jLastRideData.optString(KEY_DRIVER_UPI_ID, "");
+        String driverUpiId = jLastRideData.optString(KEY_DRIVER_UPI, "");
 
         int isPooled = jLastRideData.optInt(KEY_IS_POOLED);
 
