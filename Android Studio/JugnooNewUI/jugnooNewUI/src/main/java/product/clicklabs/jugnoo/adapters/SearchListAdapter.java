@@ -86,14 +86,14 @@ public class SearchListAdapter extends BaseAdapter{
         public void afterTextChanged(Editable s) {
             try {
                 SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString().trim());
-                if (s.toString().trim().length() > 1 && s.toString().trim().length() <= 4) {
+                if (s.toString().trim().length() == 1) {
 
 					searchResultsForSearch.clear();
 					addFavoriteLocations(s.toString().trim(),input_finish_checker.editText);
 					setSearchResultsToList(input_finish_checker.editText);
 
                 }
-                else if (s.toString().trim().length() > 4) {
+                else if (s.toString().trim().length() > 1) {
 
 					last_text_edit = System.currentTimeMillis();
 					handler.removeCallbacks(input_finish_checker);
@@ -616,7 +616,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 		@Override
 		public void run() {
-			if (System.currentTimeMillis() > (last_text_edit + delay - 200) && textToSearch.length() > 2) {
+			if (System.currentTimeMillis() > (last_text_edit + delay - 200) && textToSearch.length() > 1) {
 				getSearchResults(textToSearch, SearchListAdapter.this.defaultSearchPivotLatLng,editText);
 			}
 		}
