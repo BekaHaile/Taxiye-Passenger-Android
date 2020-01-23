@@ -1460,7 +1460,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
 
                     @Override
-                    public boolean onFailure(final RetrofitError error) {
+                    public boolean onFailure(final Exception error) {
                         slideInitialDelay();
                         return false;
                     }
@@ -1542,7 +1542,7 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
                         slideInitialDelay();
                         return false;
                     }

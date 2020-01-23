@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit
 
 object RestClient2 {
 
-    @JvmStatic
-    lateinit var apiStreamService:ApiService2
+    @JvmStatic lateinit var apiStreamService:ApiService2
+    @JvmStatic lateinit var apiService:ApiService2
 
 
     private fun getOkHttpClient(retryOnConnectionFailure: Boolean, timeoutSeconds: Long): OkHttpClient {
@@ -30,7 +30,7 @@ object RestClient2 {
         val connectionPool = ConnectionPool(3, (5 * 60 * 1000).toLong(), TimeUnit.MILLISECONDS)
 
         val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BASIC
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
 
         val builder = OkHttpClient.Builder()
@@ -56,6 +56,18 @@ object RestClient2 {
                 .build()
 
         apiStreamService = restAdapter.create(ApiService2::class.java)
+    }
+
+    @JvmStatic
+    fun initApiService(){
+        val restAdapter = Retrofit.Builder()
+                .baseUrl(Config.getServerUrl().plus("/"))
+                .client(getOkHttpClient(true, 30))
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
+                .build()
+
+        apiService = restAdapter.create(ApiService2::class.java)
     }
 
 

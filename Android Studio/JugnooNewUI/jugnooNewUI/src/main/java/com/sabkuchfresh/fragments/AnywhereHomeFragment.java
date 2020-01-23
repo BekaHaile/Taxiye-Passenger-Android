@@ -104,12 +104,12 @@ import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
-import retrofit.RetrofitError;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponDialog;
 import product.clicklabs.jugnoo.adapters.PromoCouponsAdapter;
+
 
 
 import static android.app.Activity.RESULT_OK;
@@ -1022,7 +1022,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
 
 
                         paySlider.setSlideInitial();
@@ -1260,7 +1260,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
 
                         @Override
-                        public boolean onFailure(RetrofitError error) {
+                        public boolean onFailure(Exception error) {
 
                             return !showLoader;
                         }
@@ -1451,7 +1451,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             }
 
             @Override
-            public boolean onFailure(final RetrofitError error) {
+            public boolean onFailure(final Exception error) {
                 return true;
             }
 

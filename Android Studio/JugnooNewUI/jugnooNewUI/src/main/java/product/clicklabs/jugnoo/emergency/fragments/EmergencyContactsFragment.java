@@ -24,6 +24,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -295,7 +300,7 @@ public class EmergencyContactsFragment extends Fragment  {
 			contactBeans.clear();
 			for (EmergencyContact emergencyContact : Data.userData.getEmergencyContactsList()) {
 				ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo,emergencyContact.countryCode, "",
-						ContactBean.ContactBeanViewType.CONTACT);
+						ContactBean.ContactBeanViewType.CONTACT, null, null);
 				contactBean.setId(emergencyContact.id);
 				contactBeans.add(contactBean);
 			}

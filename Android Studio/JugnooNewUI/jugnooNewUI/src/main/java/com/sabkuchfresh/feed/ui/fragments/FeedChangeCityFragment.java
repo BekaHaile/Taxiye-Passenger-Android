@@ -31,7 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import product.clicklabs.jugnoo.R;
-import retrofit.RetrofitError;
 
 /**
  * Created by Parminder Singh on 4/10/17.
@@ -155,7 +154,7 @@ public class FeedChangeCityFragment extends FeedBaseFragment {
             }
 
             @Override
-            public boolean onFailure(RetrofitError error) {
+            public boolean onFailure(Exception error) {
                 return false;
             }
 

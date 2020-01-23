@@ -127,6 +127,7 @@ public final class PermissionCommon {
 
 
                 } else {
+					permissionsInitiated = permissions;
 
                     String permissionDenied = permissionsInitiated[0];
                     for (String permission : permissions) {
@@ -188,8 +189,10 @@ public final class PermissionCommon {
 
 
             case REQUEST_CODE_RATIONAL:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    getPermission(requestCodeInitiated,  permissionsInitiated); //continues to check again if all permissions have been granted or there is still a rational permission pending
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					permissionsInitiated = permissions;
+					getPermission(requestCodeInitiated, permissionsInitiated); //continues to check again if all permissions have been granted or there is still a rational permission pending
+				}
                 else {
                     if (!shouldShowRationalPermission(permissions[0])) {
 
@@ -409,7 +412,7 @@ public final class PermissionCommon {
 
         if (snackBarPermissionDenied == null) {
             view.setVisibility(View.VISIBLE);
-            snackBarPermissionDenied = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+            snackBarPermissionDenied = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
             snackBarPermissionDenied.setActionTextColor(ContextCompat.getColor(activity, R.color.theme_color));
             ((TextView) snackBarPermissionDenied.getView().findViewById(com.google.android.material.R.id.snackbar_text)).setMaxLines(5);
             snackBarPermissionDenied.setAction(activity.getString(R.string.grant), new View.OnClickListener() {
@@ -433,7 +436,7 @@ public final class PermissionCommon {
     private Snackbar getRationalSnackBar(String message) {
 
         if (snackBarRational == null) {
-            snackBarRational = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+            snackBarRational = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
             snackBarRational.setActionTextColor(ContextCompat.getColor(activity, R.color.theme_color));
             ((TextView) snackBarRational.getView().findViewById(com.google.android.material.R.id.snackbar_text)).setMaxLines(5);
 

@@ -437,9 +437,12 @@ public class AutoData {
         }
 // *****************************************************************************************************************************
 
+		boolean hideRegionsWithNoDrivers = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_HIDE_REGIONS_WITH_NO_DRIVERS, 0) == 1;
+
         if(getServiceTypeSelected().getSupportedRideTypes() != null && getServiceTypeSelected().getSupportedRideTypes().size() > 0) {
             for (Region region : regions){
-                if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType()) && !region.getEta().equalsIgnoreCase("-")){
+                if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType())
+						&& (!hideRegionsWithNoDrivers || !region.getEta().equalsIgnoreCase("-"))){
                     regionsTemp.add(region);
                 }
             }
@@ -453,7 +456,7 @@ public class AutoData {
 
         } else {
 			for (Region region : regions){
-				if(!region.getEta().equalsIgnoreCase("-")){
+				if(!hideRegionsWithNoDrivers || !region.getEta().equalsIgnoreCase("-")){
 					regionsTemp.add(region);
 				}
 			}

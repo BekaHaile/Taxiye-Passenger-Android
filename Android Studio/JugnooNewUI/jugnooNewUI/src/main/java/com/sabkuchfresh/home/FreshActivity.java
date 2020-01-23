@@ -3326,6 +3326,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void openPushDialog() {
         dismissPushDialog(false);
+		String pushDialogContent = Prefs.with(this).getString(Constants.SP_PUSH_DIALOG_CONTENT,
+				Constants.EMPTY_JSON_OBJECT);
         PushDialog dialog = new PushDialog(FreshActivity.this, new PushDialog.Callback() {
             @Override
             public void onButtonClicked(int deepIndex, String url, int restaurantId) {
@@ -3344,7 +3346,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Utils.openUrl(FreshActivity.this, url);
                 }
             }
-        }).show();
+        }).show(pushDialogContent);
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         }

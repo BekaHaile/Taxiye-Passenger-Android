@@ -153,6 +153,21 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.branch.referral.Branch;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -160,6 +175,8 @@ import io.reactivex.ObservableOnSubscribe;
 import kotlin.coroutines.CoroutineContext;
 import kotlinx.coroutines.CoroutineScope;
 import okio.BufferedSource;
+import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
@@ -243,6 +260,8 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
+import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
+import product.clicklabs.jugnoo.home.dialogs.ReinviteFriendsDialog;
 import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
@@ -331,6 +350,7 @@ import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
 import static com.sabkuchfresh.feed.utils.FeedUtils.dpToPx;
+import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
 
@@ -1294,7 +1314,6 @@ RelativeLayout plusBadge;
         });
 
         try {
-
             feedbackReasonsAdapter = new FeedbackReasonsAdapter(this, Data.autoData.getFeedbackReasons(),
                     new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
                         @Override
@@ -1316,7 +1335,6 @@ RelativeLayout plusBadge;
                     });
 
             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2654,11 +2672,12 @@ RelativeLayout plusBadge;
     }
     @Override
     public void onClickBadge(int badgeId,int position){
-    if(BadgesAdapter.badgeCLicked){
-        imgBadgesClicked.add(badgeId);
+        if(BadgesAdapter.badgeCLicked){
+            imgBadgesClicked.add(badgeId);
+        }
+        badgesScroll.smoothScrollToPosition(position);
     }
-    badgesScroll.smoothScrollToPosition(position);
-    }
+
 
     public void setServiceTypeAdapter(boolean setAdapter) {
         if(Data.autoData != null) {
@@ -3210,6 +3229,7 @@ RelativeLayout plusBadge;
             }
         }, 500);
 
+
     }
 
 	public TextView getInitialPickupTextView() {
@@ -3328,9 +3348,6 @@ RelativeLayout plusBadge;
         relativeLayoutRideEndWithImage.setVisibility(View.VISIBLE);
         imageViewRideEndWithImage.setImageResource(drawable);
     }
-
-
-
 
 
     private void showServiceUnavailableDialog() {
@@ -4723,7 +4740,6 @@ RelativeLayout plusBadge;
 
                         rentalStateUIHandling(mode);
 
-
                         fabViewIntial.setVisibility(View.GONE);
                         fabViewFinal.setVisibility(View.VISIBLE);
                         fabViewTest = new FABViewTest(this, fabViewFinal);
@@ -4975,7 +4991,6 @@ RelativeLayout plusBadge;
     }
 
     private void updateDriverTipUI(PassengerScreenMode mode) {
-        vehiclesTabAdapterConfirmRide = new VehiclesTabAdapter(HomeActivity.this, Data.autoData.getRegions(),true);
         if(mode==PassengerScreenMode.P_IN_RIDE && Data.autoData!=null  &&
                 Data.autoData.getAssignedDriverInfo()!=null &&   Data.autoData.getIsTipEnabled()
                 && Data.autoData.getAssignedDriverInfo().getIsCorporateRide() == 0
@@ -7983,7 +7998,6 @@ RelativeLayout plusBadge;
                                     Utils.hideSoftKeyboard(activity, textViewInitialSearchNew);
                                     Utils.hideSoftKeyboard(activity, tvPickupRentalOutstation);
 
-
                                     setUserData();
 
                                     showScratchCard(promo);
@@ -10524,26 +10538,46 @@ RelativeLayout plusBadge;
     private DeepLinkAction deepLinkAction = new DeepLinkAction();
 
     private void openPushDialog() {
-        dismissPushDialog(false);
-        PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
-            @Override
-            public void onButtonClicked(int deepIndex, String url, int restaurantId) {
-                if ("".equalsIgnoreCase(url)) {
-                    Data.deepLinkIndex = deepIndex;
-                    Prefs.with(HomeActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "" + restaurantId);
-                    deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
-                } else {
-                    Utils.openUrl(HomeActivity.this, url);
-                }
-            }
-        }).show();
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }
-        if (dialog != null) {
-            pushDialog = dialog;
-        }
-    }
+		try {
+			dismissPushDialog(false);
+
+			if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+				drawerLayout.closeDrawer(GravityCompat.START);
+			}
+
+			String pushDialogContent = Prefs.with(this).getString(Constants.SP_PUSH_DIALOG_CONTENT,
+					Constants.EMPTY_JSON_OBJECT);
+			JSONObject jObj = new JSONObject(pushDialogContent);
+			if(jObj.optInt(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.REINVITE_USERS.getOrdinal()){
+				pushDialog = null;
+
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance("",
+						jObj.optString(Constants.KEY_MESSAGE, ""));
+				reinviteFriendsDialog.show(ft, ReinviteFriendsDialog.class.getSimpleName());
+				Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, EMPTY_JSON_OBJECT);
+			} else {
+
+				PushDialog dialog = new PushDialog(HomeActivity.this, new PushDialog.Callback() {
+					@Override
+					public void onButtonClicked(int deepIndex, String url, int restaurantId) {
+						if ("".equalsIgnoreCase(url)) {
+							Data.deepLinkIndex = deepIndex;
+							Prefs.with(HomeActivity.this).save(Constants.SP_RESTAURANT_ID_TO_DEEP_LINK, "" + restaurantId);
+							deepLinkAction.openDeepLink(HomeActivity.this, getCurrentPlaceLatLng());
+						} else {
+							Utils.openUrl(HomeActivity.this, url);
+						}
+					}
+				}).show(pushDialogContent);
+				if (dialog != null) {
+					pushDialog = dialog;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
     private void dismissPushDialog(boolean clearDialogContent) {
         if (pushDialog != null) {
@@ -10947,7 +10981,6 @@ RelativeLayout plusBadge;
             if (MyApplication.getInstance().isOnline()) {
 
                 //DialogPopup.showLoadingDialog(activity, "Loading...");
-
 
                 HashMap<String, String> params = new HashMap<>();
 
@@ -12770,7 +12803,7 @@ RelativeLayout plusBadge;
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
                         return false;
                     }
 
@@ -13070,7 +13103,7 @@ RelativeLayout plusBadge;
     }
 
     private void setScheduleIcon() {
-        if(passengerScreenMode == P_INITIAL && isScheduleRideEnabled) {
+        if(passengerScreenMode == P_INITIAL && isScheduleRideEnabled && !scheduleRideOpen) {
             topBar.imageViewScheduleRide.setVisibility(View.VISIBLE);
         } else {
             topBar.imageViewScheduleRide.setVisibility(View.GONE);

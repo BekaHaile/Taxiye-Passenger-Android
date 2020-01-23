@@ -39,6 +39,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -51,7 +56,6 @@ import product.clicklabs.jugnoo.emergency.ContactsFetchAsync;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -92,25 +96,6 @@ public class AddEmergencyContactsFragment extends Fragment {
     private FragmentActivity activity;
     private Dialog dialog;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//		FlurryAgent.init(activity, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//		FlurryAgent.onEvent(AddEmergencyContactsFragment.class.getSimpleName() + " started");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//		FlurryAgent.onEndSession(activity);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        HomeActivity.checkForAccessTokenChange(activity);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -265,7 +250,12 @@ public class AddEmergencyContactsFragment extends Fragment {
                 contactsListAdapter.setCountAndNotify();
                 contactsArrayAdapter.notifyDataSetChanged();
             }
-        }).execute();
+
+			@Override
+			public void onCancel() {
+				performBackPressed();
+			}
+		}).execute();
 
         return rootView;
     }
@@ -308,7 +298,7 @@ public class AddEmergencyContactsFragment extends Fragment {
     private void setSelectedObject(boolean selected, ContactBean contactBean) {
         try {
             contactBeans.get(contactBeans.indexOf(new ContactBean(contactBean.getName(),
-                    contactBean.getPhoneNo(),contactBean.getCountryCode(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT))).setSelected(selected);
+                    contactBean.getPhoneNo(),contactBean.getCountryCode(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT, null, null))).setSelected(selected);
             contactsListAdapter.setCountAndNotify();
         } catch (Exception e) {
             e.printStackTrace();

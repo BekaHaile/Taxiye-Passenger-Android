@@ -707,7 +707,7 @@ public class FeedPostDetailFragment extends Fragment implements DeletePostDialog
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
                         return false;
                     }
 

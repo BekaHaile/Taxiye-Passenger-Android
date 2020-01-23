@@ -1107,5 +1107,10 @@
         <item name="android:thumbTint" tools:targetApi="lollipop">@color/colorPrimary</item>
     </style>
 
+    <style name="MyProgressDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="colorAccent">@color/theme_color</item>
+    </style>
+
 
 </resources>

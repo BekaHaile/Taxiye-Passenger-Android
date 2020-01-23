@@ -53,7 +53,7 @@ class UpcomingRidesPresenter(var view:UpcomingRidesContract.View,
                 return false
             }
 
-            override fun onFailure(error: RetrofitError?): Boolean {
+            override fun onFailure(error: Exception): Boolean {
                 listScheduleRideData = null
                 return super.onFailure(error)
             }

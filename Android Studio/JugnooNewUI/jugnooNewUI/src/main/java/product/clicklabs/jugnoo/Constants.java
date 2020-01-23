@@ -1084,7 +1084,6 @@ public interface Constants {
 	String KEY_TUTORIAL_SKIPPED = "tutorial_skipped";
 
 	String KEY_CUSTOMER_LOCATION_ON_MAP_ON_TOP = "customer_set_location_on_map_on_top";
-	String KEY_FEEDBACK_INFO="feedback_info";
 	String KEY_CUSTOMER_BID_INCREMENT = "customer_bid_increment";
 	String KEY_MIN_REGION_FARE = "min_region_fare";
 	String KEY_MAX_REGION_FARE = "max_region_fare";
@@ -1181,4 +1180,10 @@ public interface Constants {
 	String KEY_DRIVER_TRACKING_USING_STREAM_ENABLED = "driver_tracking_using_stream_enabled";
 	String KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE = "driver_marker_anim_duration_inride";
 	String KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT = "driver_marker_anim_duration_accept";
+	String KEY_PHONE_NOS = "phone_nos";
+	String KEY_USERS = "users";
+	String KEY_USER_PHONE_NO = "user_phone_no";
+	String KEY_REINVITE_USERS_ENABLED = "reinvite_users_enabled";
+	String KEY_HIDE_REGIONS_WITH_NO_DRIVERS = "hide_regions_with_no_drivers";
+    String KEY_FEEDBACK_INFO="feedback_info";
 }

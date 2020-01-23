@@ -698,6 +698,10 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE, autoData.optLong(KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE, 9000));
 		Prefs.with(context).save(KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT, autoData.optLong(KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT, 9000));
 
+		Prefs.with(context).save(KEY_REINVITE_USERS_ENABLED, autoData.optInt(KEY_REINVITE_USERS_ENABLED, 1));
+		Prefs.with(context).save(KEY_HIDE_REGIONS_WITH_NO_DRIVERS, autoData.optInt(KEY_HIDE_REGIONS_WITH_NO_DRIVERS,
+				context.getResources().getInteger(R.integer.hide_regions_with_no_drivers)));
+
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 
 		parseJungleApiObjects(context, autoData);
@@ -1185,6 +1189,7 @@ public class JSONParser implements Constants {
             Data.autoData.setPickupSearchResult(null);
             Data.autoData.setDropLatLng(null);
             Data.autoData.setDropAddress("");
+
             Data.autoData.setAssignedDriverInfo(new DriverInfo(Data.autoData.getcDriverId(), jDriverInfo.getString("name"), jDriverInfo.getString("user_image"),
                     jDriverInfo.getString("driver_car_image"), jDriverInfo.getString("driver_car_no"),
                     jDriverInfo.optInt(KEY_OPERATOR_ID, 0)));
@@ -1205,7 +1210,6 @@ public class JSONParser implements Constants {
             HomeActivity.passengerScreenMode = PassengerScreenMode.P_RIDE_END;
             Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jLastRideData.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
-
 
         } catch (Exception e) {
             e.printStackTrace();
