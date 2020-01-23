@@ -1353,6 +1353,9 @@ public class JSONParser implements Constants {
 			driverCarNumber = jLastRideData.getString("driver_car_no");
 		}
         driverImage = jLastRideData.optString("driver_image", "");
+
+        String driverUpiId = jLastRideData.optString(KEY_DRIVER_UPI_ID, "");
+
         int isPooled = jLastRideData.optInt(KEY_IS_POOLED);
 
         double rideTime = -1;
@@ -1460,7 +1463,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId, driverUpiId);
 	}
 
 

@@ -2485,4 +2485,6 @@
     <string name="offer_not_valid_for_selected_drop_location">Offer not valid for your selected drop location</string>
     <string name="add_your_reviews">Add Your Reviews</string>
     <string name="review_must_be_in_150">Review must be in 150 letters.</string>
+    <string name="pay_via">Pay via</string>
+    <string name="upi_supported_app_not_installed">UPI supported app not installed</string>
 </resources>

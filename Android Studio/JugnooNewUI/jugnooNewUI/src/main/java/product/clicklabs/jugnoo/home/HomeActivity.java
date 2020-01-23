@@ -371,6 +371,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
     private static final int REQ_CODE_VIDEO = 9112, RESULT_PAUSE = 5;
+	private static final int REQUEST_CODE_PAY_VIA_UPI = 1026;
 
 
 	private float ONGOING_RIDE_PATH_ZINDEX = 2;
@@ -729,6 +730,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private ImageView ivCrossTutorialBanner;
     private String mLogMsg;
     private Integer mRequestType = 0, mRequestLevelndex = 0;
+
+    private Button btnPayViaUPIRideEnd;
 
     @SuppressLint("NewApi")
     @Override
@@ -1154,6 +1157,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         etTipOtherValue = findViewById(R.id.etTipOtherValue);
         bPayTip = findViewById(R.id.bPayTip);
         etTipOtherValue.clearFocus();
+
+		btnPayViaUPIRideEnd = findViewById(R.id.btnPayViaUPIRideEnd);
+		btnPayViaUPIRideEnd.setTypeface(Fonts.mavenMedium(this));
 
         tvTipFirst.setOnClickListener(new OnClickListener() {
             @Override
@@ -2432,6 +2438,37 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
             }
         });
+
+		btnPayViaUPIRideEnd.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(Data.autoData != null
+						&& Data.autoData.getEndRideData() != null
+						&& Data.autoData.getEndRideData().toPay > 0
+						&& passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+					try {
+						Uri uri =
+								new Uri.Builder()
+										.scheme("upi")
+										.authority("pay")
+										.appendQueryParameter("pa", Data.autoData.getEndRideData().getDriverUpiId())
+										.appendQueryParameter("pn", Data.autoData.getEndRideData().driverName)
+										.appendQueryParameter("tr", "" + Data.autoData.getEndRideData().engagementId)
+										.appendQueryParameter("tn", "Payment for Ride ID: " + Data.autoData.getEndRideData().engagementId)
+										.appendQueryParameter("am", ""+Data.autoData.getEndRideData().toPay)
+										.appendQueryParameter("cu", "INR")
+										.build();
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(uri);
+						startActivityForResult(intent, REQUEST_CODE_PAY_VIA_UPI);
+					} catch (Exception e) {
+						e.printStackTrace();
+						Utils.showToast(HomeActivity.this, getString(R.string.upi_supported_app_not_installed));
+					}
+				}
+			}
+		});
+
 
         View.OnClickListener onClickListenerPokeOnOff = new OnClickListener() {
             @Override
@@ -5091,6 +5128,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             llPayOnline.setVisibility(onlinePaymentVisibility);
             cvPayOnline.setVisibility(onlinePaymentVisibility);
             tvPayOnline.setVisibility(onlinePaymentVisibility);
+
+            if(Data.autoData.getEndRideData().toPay > 0
+					&& !TextUtils.isEmpty(Data.autoData.getEndRideData().getDriverUpiId())){
+				tvPayOnline.setVisibility(View.VISIBLE);
+				btnPayViaUPIRideEnd.setVisibility(View.VISIBLE);
+			} else {
+				btnPayViaUPIRideEnd.setVisibility(View.GONE);
+			}
+
             return onlinePaymentVisibility;
         } catch (Exception e) {
             e.printStackTrace();
@@ -6454,7 +6500,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         }
                     }
-                } else {
+                }
+                else if(requestCode == REQUEST_CODE_PAY_VIA_UPI){
+                	for(String key : data.getExtras().keySet()){
+						Log.v("onActivityResult REQUEST_CODE_PAY_VIA_UPI", "key="+key+", value"+data.getExtras().get(key));
+					}
+					Log.v("onActivityResult REQUEST_CODE_PAY_VIA_UPI", "resultCode="+resultCode+", "+data.getExtras().keySet());
+				}
+                else {
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
                 }

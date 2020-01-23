@@ -627,6 +627,27 @@
                 android:visibility="gone"
                 app:typekitFont="@string/maven" />
 
+            <Button
+                android:id="@+id/btnPayViaUPIRideEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/pay_via"
+                android:layout_gravity="center_horizontal"
+                android:drawableEnd="@drawable/ic_upi_logo"
+                android:textSize="18sp"
+                android:gravity="center_vertical"
+                android:background="@drawable/capsule_white_theme_stroke_selector"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:paddingStart="55dp"
+                android:paddingEnd="48dp"
+                android:textAllCaps="false"
+                android:textColor="@color/text_color"
+                android:layout_marginTop="10dp"
+                android:visibility="gone"
+                android:tag="@string/dont_touch_me"
+                />
+
             <LinearLayout
                 android:id="@+id/llPayOnline"
                 android:layout_width="220dp"
