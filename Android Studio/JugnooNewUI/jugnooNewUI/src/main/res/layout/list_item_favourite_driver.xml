@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:background="?attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_100">
+
+        <ImageView
+            android:id="@+id/ivDriverLine"
+            android:layout_width="@dimen/dp_2"
+            android:layout_height="match_parent"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="1.5dp"
+            android:layout_marginBottom="@dimen/dp_4"
+            android:background="@drawable/ic_promo_all_line"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/imageViewVehicleType"
+            android:layout_width="64px"
+            android:layout_height="64px"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/circle_grocery_new"
+            android:padding="12px"
+            android:src="@drawable/ic_groceries_new_vector"
+            app:layout_constraintStart_toEndOf="@id/ivDriverLine"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tvDriverName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:text="@string/driver_name_f"
+            android:textColor="@color/text_color_selector"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/imageViewVehicleType"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvDriverNameValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
+            android:text="XYZ"
+            android:textColor="@color/text_color_selector"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/tvDriverName"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvVehicleType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:text="@string/vehicle_type"
+            android:textColor="@color/text_color_selector"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/tvDriverRating"
+            app:layout_constraintStart_toEndOf="@id/imageViewVehicleType"
+            app:layout_constraintTop_toBottomOf="@id/tvDriverName" />
+
+        <TextView
+            android:id="@+id/tvVehicleTypeValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:text="value"
+            android:textColor="@color/text_color_selector"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/tvDriverRatingValue"
+            app:layout_constraintStart_toStartOf="@id/tvDriverNameValue"
+            app:layout_constraintTop_toBottomOf="@id/tvDriverNameValue" />
+
+        <TextView
+            android:id="@+id/tvDriverRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:text="@string/rating"
+            android:textColor="@color/text_color_selector"
+            android:textSize="14sp"
+
+
+            app:layout_constraintStart_toEndOf="@id/imageViewVehicleType"
+            app:layout_constraintTop_toBottomOf="@id/tvVehicleType" />
+
+        <TextView
+            android:id="@+id/tvDriverRatingValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:drawableStart="@drawable/ic_star_yellow_10"
+            android:ellipsize="end"
+            android:text="RatingValue"
+            android:textColor="@color/text_color_selector"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@id/tvVehicleTypeValue"
+            app:layout_constraintTop_toBottomOf="@id/tvVehicleTypeValue" />
+
+        <ImageView
+            android:id="@+id/imgVwCrossDriver"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/spacing_small"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/spacing_small"
+            android:src="@drawable/ic_cross"
+            android:theme="@style/GreyHighlight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginEnd="@dimen/dp_5"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

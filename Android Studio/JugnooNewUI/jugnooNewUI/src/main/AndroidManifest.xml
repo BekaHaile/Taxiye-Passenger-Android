@@ -271,6 +271,15 @@
             android:name="com.sabkuchfresh.fatafatchatpay.FatafatChatPayActivity"
             android:label="@string/app_name"
             android:theme="@style/TransparentCompat"/>
+        <activity android:name=".FavouriteDriversActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemePicker.NoActionBar"
+            />
+
+        <activity android:name=".BlockedDriversActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemePicker.NoActionBar"
+            />
 
         <receiver android:name=".home.LocationReceiverBG"/>
 

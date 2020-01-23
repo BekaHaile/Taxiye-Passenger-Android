@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.retrofit;
 
+import com.google.gson.JsonObject;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
 
@@ -20,6 +21,7 @@ import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindPokestopResponse;
+import product.clicklabs.jugnoo.retrofit.model.GetFavouriteDriver;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
@@ -715,5 +717,18 @@ public interface ApiService {
 	@FormUrlEncoded
 	@POST("/fetch_customer_referral_info")
 	void fetchCustomerReferralInfo(@FieldMap Map<String, String> params, Callback<ReferralTxnResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/add_user_driver_mapping")
+    void addUserDriverMapping(@FieldMap Map<String, String> params, Callback<JsonObject> callback);
+
+    @GET("/customer/fetch_user_driver_mapping")
+    void getFetchUserDriverMapping(@QueryMap Map<String, String> params,Callback<GetFavouriteDriver> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/delete_user_driver_mapping")
+    void deleteUserDriverMapping(@FieldMap Map<String, String> params, Callback<JsonObject> callback);
+
+
 
 }

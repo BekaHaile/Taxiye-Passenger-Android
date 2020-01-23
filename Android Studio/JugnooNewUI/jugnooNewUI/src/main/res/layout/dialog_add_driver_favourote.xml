@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tvAddDriverFavourite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:text="@string/Do_you_want_add_driver_as_a_favourote"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        android:tag="@string/dont_touch_me"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvAddDriverFavourite"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/btnFavouriteCancle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:textSize="13sp"
+        android:padding="5dp"
+        style="@style/ButtonThemeCapsule"
+        android:tag="@string/dont_touch_me" />
+
+    <Button
+        android:id="@+id/btnFavouriteAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add"
+        android:textSize="13sp"
+        android:padding="5dp"
+        style="@style/ButtonThemeCapsule"
+        android:layout_marginStart="42dp"
+        android:tag="@string/dont_touch_me" />
+    </LinearLayout>
+
+</RelativeLayout>

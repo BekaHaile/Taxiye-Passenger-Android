@@ -31,10 +31,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.AboutActivity;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
+import product.clicklabs.jugnoo.BlockedDriversActivity;
 import product.clicklabs.jugnoo.ChangeLanguageActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.FareDetailsActivity;
+import product.clicklabs.jugnoo.FavouriteDriversActivity;
 import product.clicklabs.jugnoo.HomeSwitcherActivity;
 import product.clicklabs.jugnoo.JugnooStarActivity;
 import product.clicklabs.jugnoo.JugnooStarSubscribedActivity;
@@ -43,6 +45,7 @@ import product.clicklabs.jugnoo.NotificationCenterActivity;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
+import product.clicklabs.jugnoo.adapters.BlockedDriversAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
@@ -281,7 +284,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_4);
                     holder.imageViewMenuIcon.setPadding(padding, padding, padding, padding);
 
+                }else if(MenuInfoTags.FAVOURITE_DRIVERS.getTag().equalsIgnoreCase(menuInfo.getTag())){
+
+                }else if(MenuInfoTags.BLOCKED_DRIVERS.getTag().equalsIgnoreCase(menuInfo.getTag())){
+
                 }
+
                 else{
                     hideLayout(holder.relative);
                 }
@@ -685,6 +693,12 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             }
             else if(MenuInfoTags.PROS.getTag().equalsIgnoreCase(tag)){
                 openOffering(Config.getProsClientId(), activity,latLng);
+            }
+            else if(MenuInfoTags.FAVOURITE_DRIVERS.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, FavouriteDriversActivity.class));
+            }
+            else if(MenuInfoTags.BLOCKED_DRIVERS.getTag().equalsIgnoreCase(tag)){
+                activity.startActivity(new Intent(activity, BlockedDriversActivity.class));
             }
         } catch (Exception e) {
             e.printStackTrace();

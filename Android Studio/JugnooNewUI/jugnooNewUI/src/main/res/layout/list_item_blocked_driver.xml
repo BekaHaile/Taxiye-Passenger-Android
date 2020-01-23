@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
+<androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="2px"
+    android:layout_marginEnd="25px"
+    android:layout_marginStart="25px"
+    android:layout_marginTop="25px"
+    card_view:cardBackgroundColor="@color/white"
+    card_view:cardCornerRadius="@dimen/button_corner_radius">
+    <RelativeLayout
+        android:id="@+id/relative"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_transparent_menu_item_selector">
+
+        <ImageView
+            android:id="@+id/imageViewBlockedDriverType"
+            android:layout_width="64px"
+            android:layout_height="64px"
+            android:layout_marginStart="20px"
+            android:layout_marginTop="@dimen/px_20"
+            android:background="@drawable/circle_grocery_new"
+            android:padding="12px"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_groceries_new_vector"
+            android:tag="mwar"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/imageViewBlockedDriverType"
+            android:layout_marginBottom="10px">
+            <LinearLayout
+                android:id="@+id/linearLayoutMain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <RelativeLayout
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15px">
+
+                    <TextView
+                        android:id="@+id/tvBlockedDriverName"
+                        android:layout_width="150px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20px"
+                        android:layout_marginStart="20px"
+                        android:text="@string/driver_name_f"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"/>
+
+                    <TextView
+                        android:id="@+id/textViewDriverNameValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/tvBlockedDriverName"
+                        android:text="xtz"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"/>
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15px">
+
+                    <TextView
+                        android:id="@+id/tvBlockedVehicleType"
+                        android:layout_width="150px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20px"
+                        android:layout_marginStart="20px"
+                        android:text="@string/vehicle_type"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"/>
+
+                    <TextView
+                        android:id="@+id/tvVehicleTypeValue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/tvBlockedVehicleType"
+                        android:text="xtz"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"/>
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15px">
+
+                    <TextView
+                        android:id="@+id/tvBlockedDriverRating"
+                        android:layout_width="150px"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20px"
+                        android:layout_marginStart="20px"
+                        android:text="@string/rating"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"/>
+
+                    <TextView
+                        android:id="@+id/tvBlockedDriverRatingValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_star_yellow_10"
+                        android:layout_toEndOf="@id/tvBlockedDriverRating"
+                        android:text="xtz"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/text_size_24"/>
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageViewBlockedCross"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_cross"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="10dp"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
+</LinearLayout>

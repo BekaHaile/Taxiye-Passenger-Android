@@ -22,6 +22,8 @@ public enum MenuInfoTags {
     GROCERY("grocery"),
     MENUS("menus"),
     PAY("pay"),
+    FAVOURITE_DRIVERS("favourite_drivers"),
+    BLOCKED_DRIVERS("blocked_drivers"),
     FEED("feed"),
     PROS("pros"),
     DELIVERY("delivery"),

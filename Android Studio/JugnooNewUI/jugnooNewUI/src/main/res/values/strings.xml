@@ -2151,7 +2151,16 @@
     <string name="rate_order">Rate Order</string>
     <string name="pay_for_delivery">Pay For Your Delivery Using</string>
     <string name="offers_and_coupons_applied_colon">Offers Applied: \n<b>%s</b></string>
+    <string name = "favourite_driver">Favourite Driver</string>
+    <string name="blocked_driver">Blocked Driver</string>
 
+    <string name="driver_name_f">Driver Name:</string>
+    <string name="vehicle_type">Vehicle Type: </string>
+    <string name="rating">Rating :</string>
+    <string name= "no_blocked_drivers">No Blocked Drivers</string>
+    <string name="no_fav_divers">No Favourite Drivers</string>
+    <string name = "Do_you_want_add_driver_as_a_favourote">Do you want add driver \n as a favourote ?</string>
+    <string name="ride_with_favourite_driver">Do you want ride with your\nfavourite driver ?</string>
 <!--    New UI changes-->
     <string name="text_where_to_go">Where to?</string>
     <string name="add_favorite_place">Add Favorite Place</string>
