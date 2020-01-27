@@ -245,21 +245,14 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/relativeLayoutReferContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="77dp"
-        android:visibility="visible"
-        android:layout_alignParentBottom="true"
-        android:tag="@string/dont_touch_me"
-        >
 
         <RelativeLayout
             android:id="@+id/relativeLayoutMultipleTab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true">
+            android:visibility="visible"
+            android:layout_alignParentBottom="true"
+            android:tag="@string/dont_touch_me">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -276,126 +269,124 @@
                 android:orientation="horizontal"
                 android:visibility="visible">
 
-                <LinearLayout
-                    android:id="@+id/linearLayoutLeaderBoard"
+                <RelativeLayout
+                    android:id="@+id/rlLeaderBoard"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:visibility="visible"
-                    android:orientation="horizontal">
+                    android:gravity="center_horizontal"
+                    android:background="?attr/selectableItemBackground"
+                    android:theme="@style/GreyHighlight"
+                    >
 
                     <ImageView
+                        android:id="@+id/ivLeaderboard"
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/leaderboard" />
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/leaderboard"/>
 
                     <TextView
                         android:id="@+id/textViewLeaderboard"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="12dp"
                         android:textColor="@color/text_color"
                         android:gravity="center"
+                        android:layout_centerVertical="true"
                         android:text="@string/leaderboard"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:layout_marginStart="8dp"
+                        android:layout_toEndOf="@+id/ivLeaderboard"
+                        />
 
-                </LinearLayout>
+                </RelativeLayout>
 
                 <ImageView
+                    android:id="@+id/ivDivLeaderboard"
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@color/stroke_color_light"
+                    />
+
+
+                <RelativeLayout
+                    android:id="@+id/rlReinvite"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="visible"
+                    android:gravity="center_horizontal"
+                    android:background="?attr/selectableItemBackground"
+                    android:theme="@style/GreyHighlight">
+
+                    <ImageView
+                        android:id="@+id/ivReinvite"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:srcCompat="@drawable/ic_share_normal_new"
+                        android:layout_centerVertical="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/tvReinvite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="@color/text_color"
+                        android:gravity="center"
+                        android:text="@string/reinvite_friends"
+                        android:layout_centerVertical="true"
+                        android:textSize="16sp"
+                        android:layout_toEndOf="@+id/ivReinvite"
+                        android:layout_marginStart="10dp"
+                        />
+
+                </RelativeLayout>
+
+                <ImageView
+                    android:id="@+id/ivDivReinvite"
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
                     android:src="@color/stroke_color_light" />
 
-                <LinearLayout
-                    android:id="@+id/linearLayoutRefer"
+                <RelativeLayout
+                    android:id="@+id/rlShareDriver"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:visibility="visible"
-                    android:orientation="horizontal">
+                    android:gravity="center_horizontal"
+                    android:background="?attr/selectableItemBackground"
+                    android:theme="@style/GreyHighlight">
 
                     <ImageView
+                        android:id="@+id/ivShareDriver"
                         android:layout_width="16dp"
                         android:layout_height="18dp"
-                        android:src="@drawable/driver" />
+                        android:src="@drawable/driver"
+                        android:layout_centerVertical="true"
+                        />
 
                     <TextView
+                        android:id="@+id/tvShareDriver"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="10dp"
                         android:gravity="center"
                         android:textColor="@color/text_color"
                         android:text="@string/refer_a_driver"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:layout_toEndOf="@+id/ivShareDriver"
+                        />
 
-                </LinearLayout>
+                </RelativeLayout>
 
             </LinearLayout>
 
         </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutReferSingle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:layout_marginEnd="13dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/textViewReferDriver"
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/bg_menu_item_selector_color_tlrrb"
-                android:gravity="center"
-                android:text="@string/want_to_refer_a_driver"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="15sp" />
-
-            <ImageView
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
-                android:background="@drawable/ic_slide_up" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutLeaderboardSingle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:layout_marginEnd="13dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/textViewLeaderboardSingle"
-                android:layout_width="match_parent"
-                android:layout_height="47dp"
-                android:layout_alignParentBottom="true"
-                android:background="@drawable/bg_menu_item_selector_color_tlrrb"
-                android:gravity="center"
-                android:text="@string/leaderboard"
-                android:textColor="@color/text_color"
-                android:textSize="22sp" />
-
-            <ImageView
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginTop="10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
-                android:background="@drawable/ic_slide_up" />
-
-        </RelativeLayout>
-    </RelativeLayout>
 
 </RelativeLayout>

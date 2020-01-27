@@ -61,10 +61,8 @@ public class PushDialog {
 		this.callback = callback;
 	}
 
-	public PushDialog show() {
+	public PushDialog show(String pushDialogContent) {
 		try {
-			String pushDialogContent = Prefs.with(activity).getString(Constants.SP_PUSH_DIALOG_CONTENT,
-					Constants.EMPTY_JSON_OBJECT);
 			JSONObject jObj = new JSONObject(pushDialogContent);
 			if(!pushDialogContent.equalsIgnoreCase(Constants.EMPTY_JSON_OBJECT)
 					&& jObj.optInt(Constants.KEY_SHOW_DIALOG, 0) == 1){
@@ -78,7 +76,7 @@ public class PushDialog {
 				}
 				String buttonText = jObj.optString(Constants.KEY_BUTTON_TEXT, activity.getString(R.string.ok));
 				final String url =  jObj.optString(Constants.KEY_URL, "");
-				final String video = "https://www.radiantmediaplayer.com/media/bbb-360p.mp4"; //jObj.optString(Constants.KEY_VIDEO, "");
+				final String video = jObj.optString(Constants.KEY_VIDEO, "");
 
 				dialog = new Dialog(activity, android.R.style.Theme_Translucent_NoTitleBar);
 				dialog.getWindow().getAttributes().windowAnimations = R.style.Animations_LoadingDialogFade;

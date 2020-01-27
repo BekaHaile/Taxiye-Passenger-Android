@@ -45,6 +45,7 @@ class VehicleFareEstimateDialog {
                 tvPerWaitMinValue.typeface = Fonts.mavenMedium(activity)
                 textViewThreshold.typeface = Fonts.mavenMedium(activity)
                 textViewPoolMessage.typeface = Fonts.mavenMedium(activity)
+                textViewMaxPeople.setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD)
                 imageViewClose.setOnClickListener { dialog.dismiss() }
                 relative.setOnClickListener { dialog.dismiss() }
                 relative.setOnClickListener { dialog.dismiss() }
@@ -81,6 +82,8 @@ class VehicleFareEstimateDialog {
                 } else {
                     llWaitCharges.visibility = View.GONE
                 }
+
+                textViewMaxPeople.text = activity.getString(R.string.max_people).plus(" ").plus(region.maxPeople)
 
             }
             dialog.show()

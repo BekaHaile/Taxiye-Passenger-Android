@@ -775,7 +775,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
 
             @Override
-            public boolean onFailure(final RetrofitError error) {
+            public boolean onFailure(final Exception error) {
                 return true;
             }
 

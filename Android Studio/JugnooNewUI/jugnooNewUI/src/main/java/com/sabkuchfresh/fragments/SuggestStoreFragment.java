@@ -49,7 +49,6 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
-import retrofit.RetrofitError;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
@@ -337,7 +336,7 @@ public class SuggestStoreFragment extends Fragment  {
             }
 
             @Override
-            public boolean onFailure(RetrofitError error) {
+            public boolean onFailure(Exception error) {
                 return false;
             }
 

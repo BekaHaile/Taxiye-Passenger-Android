@@ -39,7 +39,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.Fonts;
-import retrofit.RetrofitError;
 
 /**
  * Created by Parminder Singh on 3/28/17.
@@ -225,7 +224,7 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
                }
 
                @Override
-               public boolean onFailure(RetrofitError error) {
+               public boolean onFailure(Exception error) {
                    return false;
                }
 

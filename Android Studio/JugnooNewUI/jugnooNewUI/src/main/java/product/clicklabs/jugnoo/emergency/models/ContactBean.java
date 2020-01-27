@@ -1,5 +1,7 @@
 package product.clicklabs.jugnoo.emergency.models;
 
+import android.net.Uri;
+
 /**
  * Created by shankar on 2/23/16.
  */
@@ -21,15 +23,23 @@ public class ContactBean {
 	private String type;
 	private boolean selected;
 	private ContactBeanViewType contactBeanViewType;
+	private Uri imageUri;
+	private String imageUrl;
 
 
-	public ContactBean(String name, String phoneNo,String countryCode,String type, ContactBeanViewType contactBeanViewType) {
+	public ContactBean(String name, String phoneNo, String countryCode, String type, ContactBeanViewType contactBeanViewType, Uri imageUri, String imageUrl) {
 		this.name = name;
 		this.phoneNo = phoneNo;
 		this.countryCode = countryCode;
 		this.type = type;
 		this.contactBeanViewType = contactBeanViewType;
+		this.imageUri = imageUri;
+		this.imageUrl = imageUrl;
 		this.selected = false;
+	}
+
+	public ContactBean(String phoneNo){
+		this.phoneNo = phoneNo;
 	}
 
 	@Override
@@ -40,7 +50,8 @@ public class ContactBean {
 	@Override
 	public boolean equals(Object o) {
 		try{
-			return (o instanceof ContactBean && ((ContactBean)o).getPhoneNo().equalsIgnoreCase(this.getPhoneNo()));
+			return o instanceof ContactBean && (((ContactBean)o).getPhoneNo().contains(this.getPhoneNo())
+			|| this.getPhoneNo().contains(((ContactBean)o).getPhoneNo()));
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -93,6 +104,22 @@ public class ContactBean {
 
 	public void setContactBeanViewType(ContactBeanViewType contactBeanViewType) {
 		this.contactBeanViewType = contactBeanViewType;
+	}
+
+	public Uri getImageUri() {
+		return imageUri;
+	}
+
+	public void setImageUri(Uri imageUri) {
+		this.imageUri = imageUri;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 

@@ -62,7 +62,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Prefs;
-import retrofit.RetrofitError;
 
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE;
 
@@ -543,7 +542,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             }
 
             @Override
-            public boolean onFailure(RetrofitError error) {
+            public boolean onFailure(Exception error) {
                 swipeRefreshLayout.setRefreshing(false);
                 return false;
             }
@@ -619,7 +618,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
             }
 
             @Override
-            public boolean onFailure(RetrofitError error) {
+            public boolean onFailure(Exception error) {
                 isPagingApiInProgress = false;
                 toggleProgressBarVisibility(false);
                 return false;
@@ -846,7 +845,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                         }
 
                         @Override
-                        public boolean onFailure(RetrofitError error) {
+                        public boolean onFailure(Exception error) {
                             return true;
                         }
 

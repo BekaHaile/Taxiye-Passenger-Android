@@ -37,7 +37,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.hippo.HippoConfig;
 import com.picker.image.model.ImageEntry;
@@ -62,7 +61,6 @@ import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
 import com.sabkuchfresh.retrofit.model.feed.VehicleInfo;
 import com.sabkuchfresh.utils.ImageCompression;
 import com.sabkuchfresh.utils.Utils;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,15 +79,11 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
-import product.clicklabs.jugnoo.datastructure.PaymentOption;
-import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponDialog;
@@ -100,16 +94,12 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
-import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
-import retrofit.RetrofitError;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
-import product.clicklabs.jugnoo.home.dialogs.PromoCouponDialog;
-import product.clicklabs.jugnoo.adapters.PromoCouponsAdapter;
 
 
 import static android.app.Activity.RESULT_OK;
@@ -1022,7 +1012,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
 
 
                         paySlider.setSlideInitial();
@@ -1260,7 +1250,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
 
                         @Override
-                        public boolean onFailure(RetrofitError error) {
+                        public boolean onFailure(Exception error) {
 
                             return !showLoader;
                         }
@@ -1450,7 +1440,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             }
 
             @Override
-            public boolean onFailure(final RetrofitError error) {
+            public boolean onFailure(final Exception error) {
                 return true;
             }
 
