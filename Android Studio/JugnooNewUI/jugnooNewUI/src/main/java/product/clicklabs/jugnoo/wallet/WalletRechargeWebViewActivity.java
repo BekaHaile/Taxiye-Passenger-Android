@@ -39,8 +39,8 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
     private ProgressBar progressBar;
     int walletType;
 
-    private final String PAYTM_SUCCESS_URL = "https://jugnoo.in/paytm/wallet/success.php";
-    private final String PAYTM_FAILURE_URL = "https://jugnoo.in/paytm/wallet/failure.php";
+    private final String PAYTM_SUCCESS_URL = "paytm/wallet/success.php";
+    private final String PAYTM_FAILURE_URL = "paytm/wallet/failure.php";
 
     private final String MOBIKWIK_SUCCESS_URL = "https://jugnoo.in/mobikwik/wallet/success.php";
     private final String MOBIKWIK_FAILURE_URL = "https://jugnoo.in/mobikwik/wallet/failure.php";
