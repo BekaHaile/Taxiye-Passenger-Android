@@ -709,6 +709,8 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_REINVITE_USERS_ENABLED, autoData.optInt(KEY_REINVITE_USERS_ENABLED, 1));
 		Prefs.with(context).save(KEY_HIDE_REGIONS_WITH_NO_DRIVERS, autoData.optInt(KEY_HIDE_REGIONS_WITH_NO_DRIVERS,
 				context.getResources().getInteger(R.integer.hide_regions_with_no_drivers)));
+		Prefs.with(context).save(KEY_PAY_VIA_UPI_ENABLED, autoData.optInt(KEY_PAY_VIA_UPI_ENABLED,
+				context.getResources().getInteger(R.integer.pay_via_upi_enabled)));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 

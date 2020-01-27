@@ -5129,7 +5129,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             cvPayOnline.setVisibility(onlinePaymentVisibility);
             tvPayOnline.setVisibility(onlinePaymentVisibility);
 
-            if(Data.autoData.getEndRideData().toPay > 0
+            if(Prefs.with(this).getInt(KEY_PAY_VIA_UPI_ENABLED, 0) == 1
+            		&& Data.autoData.getEndRideData().toPay > 0
 					&& !TextUtils.isEmpty(Data.autoData.getEndRideData().getDriverUpiId())){
 				tvPayOnline.setVisibility(View.VISIBLE);
 				btnPayViaUPIRideEnd.setVisibility(View.VISIBLE);
