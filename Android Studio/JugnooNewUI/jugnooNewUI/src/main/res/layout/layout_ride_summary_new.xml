@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:background="@color/white"
     android:id="@+id/endRideReviewRl"
-    android:layout_marginTop="@dimen/top_bar_height"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="48dp"
+    android:background="@color/menu_item_selector_color"
+    android:orientation="vertical"
+    android:tag="@string/dont_touch_me"
     android:splitMotionEvents="false"
     android:visibility="gone">
 
@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
-        >
+        android:layout_marginTop="25dp"
+        android:visibility="gone">
 
     </LinearLayout>
 
@@ -27,130 +27,779 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/linearLayoutRideSummaryContainer"
-        >
+        android:background="@color/menu_item_selector_color">
 
         <LinearLayout
             android:id="@+id/linearLayoutRideSummary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="40px"
-                android:gravity="center_vertical"
                 android:layout_gravity="center_horizontal"
-                >
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
                 <ImageView
                     android:id="@+id/ivEndRideType"
-                    android:layout_width="60px"
-                    android:layout_height="60px"
-                    android:tag="mwar"
-                    android:src="@drawable/ic_auto_grey"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
-
+                    android:src="@drawable/ic_auto_grey"
                     />
 
                 <TextView
                     android:id="@+id/textViewThanks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="7dp"
                     android:text="@string/thanks_for_riding_with_us"
-                    android:textSize="@dimen/text_size_36"
-                    android:layout_marginStart="15px"
-                    android:textColor="@color/text_color"/>
+                    android:textColor="@color/text_color"
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@color/menu_item_selector_color">
 
+                <RelativeLayout
+
+                    android:id="@+id/profileRl"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:elevation="@dimen/dp_50"
+                    android:splitMotionEvents="false">
+
+                    <ImageView
+                        android:id="@+id/profileBack"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
+                        android:background="@drawable/circle_border_auto_selector" />
+
+                    <ImageView
+                        android:id="@+id/ivDriverImageEndRide"
+                        android:layout_width="83dp"
+                        android:layout_height="83dp"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvRideEndTotalFareTakeCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="45dp"
+                    android:layout_marginEnd="14dp"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:gravity="center"
+                    android:visibility="@integer/show_amount_on_ride_summary"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="@dimen/dp_8">
+
+                    <LinearLayout
+                        android:id="@+id/llRideEndTotalFareTakeCash"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="@integer/show_amount_on_ride_summary">
+
+                        <TextView
+                            android:id="@+id/driverName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="55dp"
+                            android:fontFamily="@font/maven_pro_medium"
+                            tools:text="Jetha Lal"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/sp_15" />
+
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dp_10"
+                            android:background="@color/white"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:visibility="@integer/show_amount_on_ride_summary">
+
+                            <LinearLayout
+                                android:layout_width="165dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginBottom="20dp"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/textViewRSTotalFare"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/total_fare"
+                                    android:textColor="@color/grey_dark"
+                                    android:textSize="@dimen/end_ride_fare_title_text_size_dp" />
+
+                                <TextView
+                                    android:id="@+id/textViewRSTotalFareValue"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="@string/_0"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/end_ride_fare_value_text_size_dp" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/ivDivRideEndTakeCash"
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="25dp"
+                                android:layout_marginBottom="25dp"
+                                android:src="@color/grey_dark_less"
+                                android:visibility="@integer/visibility_take_cash" />
+
+                            <LinearLayout
+                                android:id="@+id/llRideEndTakeCash"
+                                android:layout_width="165dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="20dp"
+                                android:layout_marginBottom="20dp"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:visibility="@integer/visibility_take_cash">
+
+                                <TextView
+                                    android:id="@+id/textViewRSCashPaid"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/Cash_to_be_paid"
+                                    android:textColor="@color/grey_dark"
+                                    android:textSize="@dimen/end_ride_fare_title_text_size_dp" />
+
+                                <TextView
+                                    android:id="@+id/textViewRSCashPaidValue"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="5dp"
+                                    android:text="@string/_0"
+                                    android:textColor="@color/text_color"
+                                    android:textSize="@dimen/end_ride_fare_value_text_size_dp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+                <androidx.cardview.widget.CardView
+                    android:layout_below="@id/cvRideEndTotalFareTakeCash"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="14dp"
+                    android:layout_marginBottom="@dimen/dp_10"
+                    android:gravity="center"
+                    android:visibility="@integer/show_amount_on_ride_summary"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="@dimen/dp_8">
+
+                    <LinearLayout
+                        android:id="@+id/llFeedbackMain"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="30dp"
+                            android:layout_marginTop="34dp"
+                            android:layout_marginEnd="30dp">
+
+                            <ImageView
+                                android:visibility="gone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="1dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toStartOf="@+id/textViewRSRateYourRide"
+                                android:src="@color/text_color" />
+
+                            <TextView
+                                android:id="@+id/textViewRSRateYourRide"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:gravity="center"
+                                android:text="@string/how_was_your_experience"
+                                android:textColor="@color/text_color"
+                                android:textStyle="bold"
+                                android:textSize="19sp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="1dp"
+                                android:visibility="gone"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:layout_toEndOf="@+id/textViewRSRateYourRide"
+                                android:src="@color/text_color" />
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlThumbsType"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginBottom="8dp"
+                            android:orientation="horizontal">
+
+
+                            <ImageView
+                                android:id="@+id/imageViewThumbsDown"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:contentDescription="@string/bad_feedback"
+                                android:src="@drawable/ic_thumbs_down_selector" />
+
+                            <ImageView
+                                android:id="@+id/imageViewThumbsUp"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:layout_marginStart="25dp"
+                                android:layout_toEndOf="@+id/imageViewThumbsDown"
+                                android:contentDescription="@string/great_feedback"
+                                android:src="@drawable/ic_thumbs_up_selector" />
+
+                            <TextView
+                                android:id="@+id/textViewThumbsDown"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/imageViewThumbsDown"
+                                android:layout_alignStart="@+id/imageViewThumbsDown"
+                                android:layout_alignEnd="@+id/imageViewThumbsDown"
+                                android:gravity="center"
+                                android:text="@string/bad"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="13sp"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:id="@+id/textViewThumbsUp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/imageViewThumbsUp"
+                                android:layout_alignStart="@+id/imageViewThumbsUp"
+                                android:layout_alignEnd="@+id/imageViewThumbsUp"
+                                android:gravity="center"
+                                android:text="@string/great"
+                                android:textAllCaps="true"
+                                android:textColor="@color/text_color"
+                                android:textSize="13sp"
+                                android:visibility="visible" />
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llRatingFeedbackType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical">
+
+                            <com.sabkuchfresh.utils.RatingBarMenuFeedback
+                                android:id="@+id/ratingBarRSFeedback"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="15dp"
+                                android:numStars="5"
+                                android:rating="0"
+                                android:tag="@string/dont_touch_me"
+                                app:halfStars="false"
+                                app:maxStars="5"
+                                app:onlyForDisplay="false"
+                                app:starOff="@drawable/ic_menu_feedback_star_off"
+                                app:starOn="@drawable/ic_menu_feedback_star_on" />
+
+                            <TextView
+                                android:id="@+id/tvAddCompliment"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="-10dp"
+                                android:layout_marginBottom="@dimen/dp_10"
+                                android:fontFamily="@font/maven_pro_medium"
+                                android:text="@string/add_your_reviews"
+                                android:textColor="@color/grey_dark"
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:visibility="visible" />
+
+                            <LinearLayout
+                                android:id="@+id/llBadges"
+                                android:layout_marginBottom="@dimen/dp_10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_horizontal"
+                                android:animateLayoutChanges="true"
+                                android:gravity="center_horizontal"
+                                android:tag="@string/dont_touch_me"
+                                android:orientation="vertical">
+
+                                <LinearLayout
+                                    android:id="@+id/badgesNormal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_horizontal"
+                                    android:animateLayoutChanges="true"
+                                    android:orientation="horizontal"
+                                    android:visibility="gone">
+
+                                    <RelativeLayout
+                                        android:layout_width="60dp"
+                                        android:layout_height="60dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginEnd="-30dp">
+
+                                        <RelativeLayout
+                                            android:id="@+id/summary_badge"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerHorizontal="true"
+                                            android:splitMotionEvents="false"
+                                            android:tag="@string/dont_touch_me">
+
+                                            <ImageView
+                                                android:id="@+id/badge1back"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:background="@drawable/circle_grey"
+                                                android:tag="@string/dont_touch_me" />
+
+                                            <ImageView
+                                                android:id="@+id/badge1"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_centerInParent="true"
+                                                android:tag="@string/dont_touch_me" />
+                                        </RelativeLayout>
+
+                                        <TextView
+                                            android:id="@+id/tvBadgeName1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_below="@id/summary_badge" />
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:layout_gravity="center"
+                                        android:elevation="@dimen/dp_10">
+
+                                        <RelativeLayout
+                                            android:id="@+id/plus_badge"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerHorizontal="true"
+                                            android:splitMotionEvents="false"
+                                            android:tag="@string/dont_touch_me">
+
+                                            <ImageView
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:background="@drawable/circle_white_stroke_grey"
+                                                android:tag="@string/dont_touch_me" />
+
+                                            <ImageView
+                                                android:id="@+id/badge_plus"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_centerInParent="true"
+                                                android:src="@drawable/ic_plus_dark_selector"
+                                                android:tag="@string/dont_touch_me" />
+                                        </RelativeLayout>
+
+                                        <TextView
+                                            android:id="@+id/tvBadgePlus"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_below="@id/plus_badge" />
+                                    </RelativeLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="60dp"
+                                        android:layout_height="60dp"
+                                        android:layout_gravity="center"
+                                        android:layout_marginStart="-30dp">
+
+                                        <RelativeLayout
+                                            android:id="@+id/summary_badge2"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_centerHorizontal="true"
+                                            android:splitMotionEvents="false"
+                                            android:tag="@string/dont_touch_me">
+
+                                            <ImageView
+                                                android:id="@+id/badge2back"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:background="@drawable/circle_grey"
+                                                android:tag="@string/dont_touch_me" />
+
+                                            <ImageView
+                                                android:id="@+id/badge2"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_centerInParent="true"
+                                                android:tag="@string/dont_touch_me" />
+                                        </RelativeLayout>
+
+                                        <TextView
+                                            android:id="@+id/tvBadgeName2"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_below="@id/summary_badge2" />
+                                    </RelativeLayout>
+
+
+                                </LinearLayout>
+
+                                <com.yarolegovich.discretescrollview.DiscreteScrollView
+                                    android:id="@+id/badges"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/textViewRSWhatImprove"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginTop="7dp"
+                                android:text="@string/what_could_we_improve"
+                                android:textColor="@color/text_color"
+                                android:textSize="15sp"
+                                android:visibility="gone" />
+
+
+                            <product.clicklabs.jugnoo.utils.NonScrollGridView
+                                android:tag="@string/dont_touch_me"
+                                android:id="@+id/gridViewRSFeedbackReasons"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="20dp"
+                                android:layout_marginBottom="20dp"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="0dp"
+                                android:stretchMode="columnWidth"
+                                android:numColumns="auto_fit"
+                                android:gravity="center"
+                                android:splitMotionEvents="false"
+                                android:visibility="visible" />
+
+                            <androidx.cardview.widget.CardView
+                                android:id="@+id/cvAdditionalComments"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:cardBackgroundColor="#f7f7f9"
+                                android:layout_marginBottom="@dimen/dp_20"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:layout_marginTop="@dimen/dp_20"
+                                android:layout_marginEnd="@dimen/dp_10"
+                                app:cardElevation="-5dp"
+                                app:cardCornerRadius="@dimen/dp_10"
+                                android:visibility="gone">
+
+                                <EditText
+                                    android:background="@color/transparent"
+                                    android:id="@+id/editTextRSFeedback"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="100dp"
+                                    android:gravity="start"
+                                    android:hint="@string/leave_a_comment"
+                                    android:padding="10dp"
+                                    android:scrollbars="vertical"
+                                    android:textColor="@color/text_color"
+                                    android:textCursorDrawable="@drawable/cursor_black"
+                                    android:textSize="12sp" />
+                            </androidx.cardview.widget.CardView>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="15dp"
+                                android:layout_marginStart="30dp"
+                                android:layout_marginTop="5dp"
+                                android:visibility="gone" >
+
+                                <TextView
+                                    android:id="@+id/textViewRSOtherError"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/star_required"
+                                    android:textColor="@color/red_status"
+                                    android:textSize="12sp"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <Button
+                                android:visibility="gone"
+                                android:id="@+id/buttonRSSubmitFeedback"
+                                style="@style/ButtonTheme"
+                                android:layout_width="match_parent"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginStart="@dimen/dp_10"
+                                android:layout_marginEnd="@dimen/dp_10"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginBottom="10dp"
+                                android:textAllCaps="false"
+                                android:text="@string/done_caps" />
+
+                            <Button
+                                android:id="@+id/buttonRSSkipFeedback"
+                                android:layout_width="70dp"
+                                android:layout_height="45dp"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginBottom="20dp"
+                                android:background="@drawable/background_transparent"
+                                android:text="@string/skip"
+                                android:textColor="@color/text_color_light_selector"
+                                android:textSize="15sp"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvPayOnline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:tag="@string/dont_touch_me"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="@dimen/dp_8">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tvPayOnline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_30"
+                android:gravity="center_horizontal"
+                android:tag="@string/dont_touch_me"
+                android:text="@string/want_to_pay_online"
+                android:textColor="@color/text_color"
+                android:textSize="@dimen/sp_15"
+                android:visibility="gone"
+                app:typekitFont="@string/maven" />
 
             <LinearLayout
-                android:id="@+id/llRideEndTotalFareTakeCash"
+                android:id="@+id/llPayOnline"
+                android:layout_width="220dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/capsule_theme_color_selector"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:tag="@string/dont_touch_me"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvPayOnlineIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_cards"
+                    android:drawablePadding="@dimen/dp_5"
+                    android:gravity="center_vertical"
+                    android:text="@string/pay_online"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_15"
+                    app:typekitFont="@string/maven" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+            <Button
+                android:id="@+id/buttonAddTipEndRide"
+                style="@style/ButtonTheme"
+                android:layout_width="200dp"
+                android:layout_height="45dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="15dp"
+                android:tag="@string/dont_touch_me"
+                android:text="@string/action_add_tip"
+                android:textAllCaps="true"
+                android:visibility="gone" />
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40px"
-                android:layout_marginStart="30px"
-                android:layout_marginEnd="30px"
-                android:visibility="@integer/show_amount_on_ride_summary"
-                android:background="@drawable/bg_menu_item_selector_color_rb"
-                android:orientation="horizontal"
-                android:gravity="center">
-
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginTop="5dp"
+                android:tag="@string/dont_touch_me"
+                android:background="@color/white"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="@dimen/dp_14"
+                android:layout_marginBottom="@dimen/dp_20"
+                app:cardElevation="@dimen/dp_8">
                 <LinearLayout
-                    android:layout_width="330px"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layout_marginTop="40px"
-                    android:layout_marginBottom="40px"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textViewRSTotalFare"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/total_fare"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/end_ride_fare_title_text_size"/>
-
-                    <TextView
-                        android:id="@+id/textViewRSTotalFareValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
-                        android:text="@string/_0"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/end_ride_fare_value_text_size" />
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/ivDivRideEndTakeCash"
-                    android:layout_width="2px"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="50px"
-                    android:layout_marginTop="50px"
-                    android:src="@color/grey_dark_less"
-                    android:visibility="@integer/visibility_take_cash"
-                    />
-
-                <LinearLayout
-                    android:id="@+id/llRideEndTakeCash"
-                    android:layout_width="330px"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layout_marginTop="40px"
-                    android:layout_marginBottom="40px"
+                    android:id="@+id/llAddTip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
                     android:orientation="vertical"
-                    android:visibility="@integer/visibility_take_cash">
+                    android:tag="@string/dont_touch_me">
 
                     <TextView
-                        android:id="@+id/textViewRSCashPaid"
+                        android:id="@+id/tvTipDriver"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Cash_to_be_paid"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="10dp"
+                        android:text="@string/tip_the_driver"
+                        android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/end_ride_fare_title_text_size"/>
+                        android:textSize="13sp"
+                        app:typekitFont="@string/maven" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvTipFirst"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/circle_white_grey_selector"
+                            android:gravity="center"
+                            android:textColor="@color/text_color"
+                            android:textSize="14sp"
+                            app:typekitFont="@string/maven"
+                            tools:text="Rs10" />
+
+                        <TextView
+                            android:id="@+id/tvTipSecond"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="30dp"
+                            android:background="@drawable/circle_white_grey_selector"
+                            android:gravity="center"
+                            android:textColor="@color/text_color"
+                            android:textSize="14sp"
+                            app:typekitFont="@string/maven"
+                            tools:text="Rs20" />
+
+                        <TextView
+                            android:id="@+id/tvTipThird"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginStart="30dp"
+                            android:background="@drawable/circle_white_grey_selector"
+                            android:gravity="center"
+                            android:textColor="@color/text_color"
+                            android:textSize="14sp"
+                            app:typekitFont="@string/maven"
+                            tools:text="Rs30" />
+
+                    </LinearLayout>
+
+                    <product.clicklabs.jugnoo.widgets.PrefixedEditText
+                        android:id="@+id/etTipOtherValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginStart="45dp"
+                        android:layout_marginTop="35dp"
+                        android:layout_marginEnd="45dp"
+                        android:background="@drawable/background_white_bottom_border"
+                        android:drawablePadding="5dp"
+                        android:hint="@string/add_other_value"
+                        android:inputType="numberDecimal"
+                        android:maxLines="1"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textSize="13sp"
+                        app:typekitFont="@string/maven" />
+
+                    <Button
+                        android:id="@+id/bPayTip"
+                        style="@style/ButtonThemeCapsule"
+                        android:layout_width="110dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/pay"
+                        android:textAllCaps="true"
+                        android:textSize="15sp"
+                        app:typekitFont="@string/maven" />
 
                     <TextView
-                        android:id="@+id/textViewRSCashPaidValue"
+                        android:id="@+id/tvSkipTip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10px"
-                        android:text="@string/_0"
-                        android:textColor="@color/text_color"
-                        android:textSize="@dimen/end_ride_fare_value_text_size"
-                        />
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="60dp"
+                        android:layout_marginBottom="20dp"
+                        android:text="@string/skip"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color_less_light"
+                        android:textSize="15sp"
+                        app:typekitFont="@string/maven" />
+
                 </LinearLayout>
-            </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <LinearLayout
                 android:id="@+id/linearLayoutRSViewInvoice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10px"
+                android:layout_marginBottom="@dimen/dp_10"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -158,430 +807,43 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ic_history_pressed"
-                    android:tag="@string/dont_touch_me"/>
+                    android:tag="@string/dont_touch_me" />
 
                 <TextView
                     android:id="@+id/textViewRSInvoice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:textAllCaps="true"
                     android:text="@string/ride_summary_view_invoice_text"
+                    android:textAllCaps="false"
                     android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_26"
-                    />
-
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/tvPayOnline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/sp_15"
-                android:textColor="@color/text_color"
-                android:gravity="center_horizontal"
-                android:text="@string/want_to_pay_online"
-                android:layout_gravity="center_horizontal"
-                app:typekitFont="@string/maven"
-                android:layout_marginTop="@dimen/dp_30"
-                android:tag="@string/dont_touch_me"
-                android:visibility="gone"
-                />
-            <LinearLayout
-                android:id="@+id/llPayOnline"
-                android:layout_width="220dp"
-                android:layout_height="45dp"
-                android:tag="@string/dont_touch_me"
-                android:background="@drawable/capsule_theme_color_selector"
-                android:orientation="horizontal"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/dp_5"
-                android:layout_marginTop="@dimen/dp_10"
-                android:gravity="center"
-                android:visibility="gone"
-                >
-
-                <TextView
-                    android:id="@+id/tvPayOnlineIn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_15"
-                    android:textAllCaps="true"
-                    android:text="@string/pay_online"
-                    app:typekitFont="@string/maven"
-                    android:drawableStart="@drawable/ic_cards"
-                    android:gravity="center_vertical"
-                    android:drawablePadding="@dimen/dp_5"
-                    />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:id="@+id/llFeedbackMain"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="70px"
-                android:layout_marginStart="60px"
-                android:layout_marginEnd="60px">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="2px"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@+id/textViewRSRateYourRide"
-                    android:src="@color/text_color"/>
-
-                <TextView
-                    android:id="@+id/textViewRSRateYourRide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/how_was_your_experience"
-                    android:textColor="@color/text_color"
-                    android:layout_marginEnd="20px"
-                    android:layout_marginStart="20px"
-                    android:textSize="@dimen/text_size_36"
-                    android:gravity="center"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="2px"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_toEndOf="@+id/textViewRSRateYourRide"
-                    android:src="@color/text_color"/>
-            </RelativeLayout>
-
-
-
-            <RelativeLayout
-                android:id="@+id/rlThumbsType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10px"
-                android:orientation="horizontal">
-
-
-
-                <ImageView
-                    android:id="@+id/imageViewThumbsDown"
-                    android:layout_width="238px"
-                    android:layout_height="238px"
-                    android:contentDescription="@string/bad_feedback"
-                    android:src="@drawable/ic_thumbs_down_selector"
-                    android:tag="mwar"/>
-
-                <ImageView
-                    android:id="@+id/imageViewThumbsUp"
-                    android:layout_width="238px"
-                    android:layout_height="238px"
-                    android:layout_marginStart="50px"
-                    android:contentDescription="@string/great_feedback"
-                    android:src="@drawable/ic_thumbs_up_selector"
-                    android:tag="mwar"
-                    android:layout_toEndOf="@+id/imageViewThumbsDown"/>
-
-                <TextView
-                    android:id="@+id/textViewThumbsDown"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/bad"
-                    android:textAllCaps="true"
-                    android:gravity="center"
-                    android:textColor="@color/text_color"
-                    android:visibility="visible"
-                    android:textSize="@dimen/text_size_30"
-                    android:layout_below="@+id/imageViewThumbsDown"
-                    android:layout_alignStart="@+id/imageViewThumbsDown"
-                    android:layout_alignEnd="@+id/imageViewThumbsDown"
-                    />
-
-                <TextView
-                    android:id="@+id/textViewThumbsUp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/great"
-                    android:textAllCaps="true"
-                    android:gravity="center"
-                    android:textColor="@color/text_color"
-                    android:visibility="visible"
-                    android:textSize="@dimen/text_size_30"
-                    android:layout_below="@+id/imageViewThumbsUp"
-                    android:layout_alignStart="@+id/imageViewThumbsUp"
-                    android:layout_alignEnd="@+id/imageViewThumbsUp"/>
-
-            </RelativeLayout>
-
-            <LinearLayout
-                android:id="@+id/llRatingFeedbackType"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-
-                <com.sabkuchfresh.utils.RatingBarMenuFeedback
-                    android:id="@+id/ratingBarRSFeedback"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="15dp"
-                    android:numStars="5"
-                    android:rating="0"
-                    android:tag="@string/dont_touch_me"
-                    app:halfStars="false"
-                    app:maxStars="5"
-                    app:onlyForDisplay="false"
-                    app:starOff="@drawable/ic_menu_feedback_star_off"
-                    app:starOn="@drawable/ic_menu_feedback_star_on" />
-
-            <TextView
-                android:id="@+id/textViewRSWhatImprove"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40px"
-                android:layout_marginTop="15px"
-                android:visibility="gone"
-                android:text="@string/what_could_we_improve"
-                android:textColor="@color/text_color"
-                android:textSize="30px"/>
-
-            <product.clicklabs.jugnoo.utils.NonScrollGridView
-                android:id="@+id/gridViewRSFeedbackReasons"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40px"
-                android:layout_marginEnd="40px"
-                android:layout_marginTop="20px"
-                android:visibility="gone"
-                android:divider="@color/transparent"
-                android:dividerHeight="0px"
-                android:numColumns="2"
-                android:splitMotionEvents="false"/>
-
-
-            <EditText
-                android:id="@+id/editTextRSFeedback"
-                android:layout_width="match_parent"
-                android:layout_height="200px"
-                android:layout_marginStart="40px"
-                android:layout_marginEnd="40px"
-                android:layout_marginTop="20px"
-                android:background="@drawable/background_white_rounded_bordered"
-                android:gravity="start"
-                android:hint="@string/leave_a_comment"
-                android:padding="20px"
-                android:scrollbars="vertical"
-                android:textColor="@color/grey_dark_more"
-                android:textSize="28px"
-                android:textCursorDrawable="@drawable/cursor_black"
-                />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="32px"
-                android:layout_marginStart="60px"
-                android:layout_marginTop="10px"
-                >
-
-                <TextView
-                    android:id="@+id/textViewRSOtherError"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/star_required"
-                    android:visibility="gone"
-                    android:textColor="@color/red_status"
-                    android:textSize="22px"/>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/buttonRSSubmitFeedback"
-                style="@style/ButtonTheme"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="50px"
-                android:layout_marginTop="20px"
-                android:text="@string/submit_feedback_caps"
-                />
-
-            <Button
-                android:id="@+id/buttonRSSkipFeedback"
-                android:layout_width="150px"
-                android:layout_height="@dimen/button_height"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="40px"
-                android:layout_marginTop="10px"
-                android:background="@drawable/background_transparent"
-                android:text="@string/skip"
-                android:visibility="gone"
-                android:textColor="@color/text_color_light_selector"
-                android:textSize="@dimen/button_small_text_size"/>
-
-            </LinearLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/buttonAddTipEndRide"
-                style="@style/ButtonTheme"
-                android:visibility="visible"
-                android:textAllCaps="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="30px"
-                android:layout_marginTop="20px"
-                android:text="@string/action_add_tip"
-                />
-
-            <LinearLayout
-                android:id="@+id/llAddTip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:tag="@string/dont_touch_me"
-                android:layout_marginTop="30dp"
-                >
-
-                <TextView
-                    android:id="@+id/tvTipDriver"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_color"
-                    android:textSize="13sp"
-                    android:text="@string/tip_the_driver"
-                    android:layout_gravity="center_horizontal"
-                    android:textAllCaps="true"
-                    android:layout_marginTop="10dp"
-                    app:typekitFont="@string/maven"
-                    />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
-                    >
-                    <TextView
-                        android:id="@+id/tvTipFirst"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:textSize="14sp"
-                        android:gravity="center"
-                        android:textColor="@color/text_color"
-                        tools:text="Rs10"
-                        android:background="@drawable/circle_white_grey_selector"
-                        app:typekitFont="@string/maven"
-                        />
-                    <TextView
-                        android:id="@+id/tvTipSecond"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:textSize="14sp"
-                        android:gravity="center"
-                        android:textColor="@color/text_color"
-                        tools:text="Rs20"
-                        android:background="@drawable/circle_white_grey_selector"
-                        android:layout_marginStart="30dp"
-                        app:typekitFont="@string/maven"
-                        />
-                    <TextView
-                        android:id="@+id/tvTipThird"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:textSize="14sp"
-                        android:gravity="center"
-                        android:textColor="@color/text_color"
-                        tools:text="Rs30"
-                        android:background="@drawable/circle_white_grey_selector"
-                        android:layout_marginStart="30dp"
-                        app:typekitFont="@string/maven"
-                        />
-
-                </LinearLayout>
-
-                <product.clicklabs.jugnoo.widgets.PrefixedEditText
-                    android:id="@+id/etTipOtherValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginStart="45dp"
-                    android:layout_marginEnd="45dp"
-                    android:layout_marginTop="35dp"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/background_white_bottom_border"
-                    android:textColor="@color/text_color"
-                    android:textColorHint="@color/text_color_hint"
-                    android:textSize="13sp"
-                    android:drawablePadding="5dp"
-                    android:hint="@string/add_other_value"
-                    android:inputType="numberDecimal"
-                    android:maxLines="1"
-                    app:typekitFont="@string/maven"
-                    />
-
-                <Button
-                    android:id="@+id/bPayTip"
-                    style="@style/ButtonThemeCapsule"
-                    android:layout_width="110dp"
-                    android:layout_height="45dp"
-                    android:textAllCaps="true"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="16dp"
-                    android:text="@string/pay"
-                    app:typekitFont="@string/maven"
-                    />
-
-                <TextView
-                    android:id="@+id/tvSkipTip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_color_less_light"
-                    android:textSize="15sp"
-                    android:text="@string/skip"
-                    android:layout_gravity="center_horizontal"
-                    android:textAllCaps="true"
-                    android:layout_marginTop="60dp"
-                    android:layout_marginBottom="20dp"
-                    app:typekitFont="@string/maven"
-                    />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/textViewRSScroll"
-                android:layout_width="20px"
-                android:layout_height="20px"
-                android:text=" "/>
+                android:layout_width="10dp"
+                android:layout_height="@dimen/dp_10"
+                android:text=" " />
 
         </LinearLayout>
     </ScrollView>
 
 
-    
     <RelativeLayout
         android:id="@+id/relativeLayoutGreat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="@color/white">
-        
+        android:background="@color/white"
+        android:visibility="gone">
+
         <ImageView
             android:id="@+id/imageViewThumbsUpGif"
-            android:layout_width="620px"
-            android:layout_height="969px"
+            android:layout_width="310dp"
+            android:layout_height="485dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_thumbs_up"
-            />
+            android:src="@drawable/ic_thumbs_up" />
     </RelativeLayout>
 
 
@@ -590,87 +852,83 @@
         android:id="@+id/relativeLayoutRideEndWithImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:soundEffectsEnabled="false">
+        android:soundEffectsEnabled="false"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageViewRideEndWithImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:tag="mwar"
-            android:src="@drawable/ride_end_image_1"
-            android:scaleType="centerCrop"/>
+            android:scaleType="centerCrop"
+            android:src="@drawable/ride_end_image_1" />
 
         <ImageView
-            android:layout_width="603px"
-            android:layout_height="64px"
-            android:layout_marginTop="34px"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/happy_text"
-            android:layout_marginBottom="20px"
+            android:layout_width="300dp"
+            android:layout_height="32dp"
             android:layout_above="@+id/relativeLayoutBottomContainer"
-            android:tag="mwar"/>
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/happy_text" />
 
         <RelativeLayout
             android:id="@+id/relativeLayoutBottomContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50px"
-            android:layout_marginEnd="50px"
-            android:layout_marginBottom="56px"
             android:layout_alignParentBottom="true"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="28dp"
             android:background="@drawable/background_white_rounded">
 
             <TextView
                 android:id="@+id/textViewRideEndWithImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30px"
-                android:layout_marginEnd="44px"
-                android:layout_marginStart="44px"
-                android:layout_marginBottom="30px"
+                android:layout_marginStart="22dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="22dp"
+                android:layout_marginBottom="15dp"
                 android:gravity="center"
                 android:textColor="@color/text_color"
-                android:textSize="@dimen/text_size_32"/>
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textViewRideEndWithImage"
+                android:layout_marginBottom="15dp"
                 android:gravity="center"
-                android:layout_marginBottom="32px"
-                android:tag="mwar"
                 android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/buttonEndRideSkip"
-                    android:layout_width="152px"
-                    android:layout_height="80px"
-                    android:text="@string/skip"
+                    android:layout_width="75dp"
+                    android:layout_height="45dp"
                     android:background="@drawable/button_white_grey_theme_border_selector"
+                    android:text="@string/skip"
+                    android:textAllCaps="true"
                     android:textColor="@color/text_color_theme_selector"
-                    android:textSize="@dimen/text_size_34"
-                    android:textAllCaps="true"/>
+                    android:textSize="15sp" />
 
                 <Button
                     android:id="@+id/buttonEndRideInviteFriends"
-                    android:layout_width="364px"
-                    android:layout_height="80px"
-                    android:text="@string/invite_friends"
-                    android:layout_marginStart="20px"
+                    android:layout_width="180dp"
+                    android:layout_height="45dp"
+                    android:layout_marginStart="10dp"
                     android:background="@drawable/background_theme_gradient_selector"
+                    android:text="@string/invite_friends"
+                    android:textAllCaps="true"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_34"
-                    android:textAllCaps="true"/>
+                    android:textSize="15sp" />
             </LinearLayout>
         </RelativeLayout>
     </RelativeLayout>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="6px"
-        android:background="@drawable/shadow_down"
-        />
-
+        android:layout_height="3dp"
+        android:background="@drawable/shadow_down" />
 
 
 </RelativeLayout>

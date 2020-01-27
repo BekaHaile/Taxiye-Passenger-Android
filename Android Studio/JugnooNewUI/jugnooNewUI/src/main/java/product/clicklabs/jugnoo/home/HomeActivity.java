@@ -30,6 +30,21 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Html;
 import android.text.Spannable;
@@ -44,11 +59,13 @@ import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
@@ -111,6 +128,10 @@ import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.Target;
+import com.yarolegovich.discretescrollview.DiscreteScrollView;
+import com.yarolegovich.discretescrollview.transform.DiscreteScrollItemTransformer;
+import com.yarolegovich.discretescrollview.transform.Pivot;
+import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -118,6 +139,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -146,6 +169,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.branch.referral.Branch;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import kotlin.coroutines.CoroutineContext;
+import kotlinx.coroutines.CoroutineScope;
+import okio.BufferedSource;
 import kotlin.coroutines.CoroutineContext;
 import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
@@ -164,6 +193,8 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.RideCancellationActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.adapters.BadgesAdapter;
+import product.clicklabs.jugnoo.adapters.BadgesAdapter;
 import product.clicklabs.jugnoo.adapters.BidsPlacedAdapter;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
@@ -187,6 +218,8 @@ import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.FeedBackInfo;
+import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.LatLngCoordinates;
 import product.clicklabs.jugnoo.datastructure.MapsApiSources;
@@ -227,6 +260,7 @@ import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
+import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
 import product.clicklabs.jugnoo.home.dialogs.ReinviteFriendsDialog;
 import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
@@ -315,6 +349,8 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import static com.sabkuchfresh.feed.utils.FeedUtils.dpToPx;
+import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
 
@@ -328,7 +364,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,
         RewardsDialog.ScratchCardRevealedListener, CoroutineScope,
         RideConfirmationDialog.RideRequestConfirmListener, DriverNotFoundDialog.RideRequestConfirmListener, DriverCallDialog.CallDriverListener,
-		EditDropDialog.Callback {
+		EditDropDialog.Callback, BadgesAdapter.BadgesClickListener {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -443,13 +479,18 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout endRideReviewRl;
     ScrollView scrollViewRideSummary;
     LinearLayout linearLayoutRideSummaryContainer, linearLayoutRideSummary;
-    TextView textViewRSTotalFareValue, textViewRSCashPaidValue;
+    TextView textViewRSTotalFareValue, textViewRSCashPaidValue,tvDesc;
     LinearLayout linearLayoutRSViewInvoice, linearLayoutSendInvites, linearLayoutPaymentModeConfirm;
+	DiscreteScrollView badgesScroll;
+	LinearLayout badgesNormal;
 
+	RelativeLayout plusBadge;
     RatingBarMenuFeedback ratingBarRSFeedback;
     TextView textViewRSWhatImprove, textViewRSOtherError;
     NonScrollGridView gridViewRSFeedbackReasons;
     FeedbackReasonsAdapter feedbackReasonsAdapter;
+    BadgesAdapter badgesAdapter;
+
     EditText editTextRSFeedback;
     Button buttonRSSubmitFeedback, buttonRSSkipFeedback;
     TextView textViewRSScroll, textViewChangeLocality;
@@ -467,6 +508,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private LinearLayout llPayOnline;
     private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate;
     private boolean isFromConfirmToOther;
+    private CardView cvPayOnline;
 
 
     // data variables declaration
@@ -632,7 +674,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private ImageView ivLikePickup, ivLikeDrop;
     private LinearLayout llFeedbackMain, llAddTip;
-    private TextView tvTipFirst, tvTipSecond, tvTipThird, tvSkipTip;
+    private TextView tvTipFirst, tvTipSecond, tvTipThird, tvSkipTip,tvDriverName;
     private PrefixedEditText etTipOtherValue;
     private Button bPayTip;
     private double tipSelected;
@@ -1082,6 +1124,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewRSTotalFareValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewRSTotalFare)).setTypeface(Fonts.mavenMedium(this));
         textViewRSCashPaidValue = (TextView) findViewById(R.id.textViewRSCashPaidValue);
+        tvDesc=findViewById(R.id.tvAddCompliment);
         textViewRSCashPaidValue.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         ((TextView) findViewById(R.id.textViewRSCashPaid)).setTypeface(Fonts.mavenMedium(this));
         linearLayoutRSViewInvoice = (LinearLayout) findViewById(R.id.linearLayoutRSViewInvoice);
@@ -1095,6 +1138,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewThumbsUp = (TextView) findViewById(R.id.textViewThumbsUp);
         textViewThumbsUp.setTypeface(Fonts.avenirNext(this), Typeface.BOLD);
         llPayOnline = (LinearLayout) findViewById(R.id.llPayOnline);
+        cvPayOnline = findViewById(R.id.cvPayOnline);
         tvPayOnline = (TextView) findViewById(R.id.tvPayOnline);
         tvPayOnline.setTypeface(tvPayOnline.getTypeface(), Typeface.BOLD);
         tvPayOnlineIn = (TextView) findViewById(R.id.tvPayOnlineIn);
@@ -1104,6 +1148,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         tvTipFirst = findViewById(R.id.tvTipFirst);
         tvTipSecond = findViewById(R.id.tvTipSecond);
         tvTipThird = findViewById(R.id.tvTipThird);
+        tvDriverName=findViewById(R.id.driverName);
         tvSkipTip = findViewById(R.id.tvSkipTip);
         etTipOtherValue = findViewById(R.id.etTipOtherValue);
         bPayTip = findViewById(R.id.bPayTip);
@@ -1183,6 +1228,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
         ratingBarRSFeedback = (RatingBarMenuFeedback) findViewById(R.id.ratingBarRSFeedback);
+        badgesScroll=findViewById(R.id.badges);
+        badgesNormal=findViewById(R.id.badgesNormal);
+        plusBadge=findViewById(R.id.plus_badge);
         ratingBarRSFeedback.setScore(0, false);
         textViewRSWhatImprove = (TextView) findViewById(R.id.textViewRSWhatImprove);
         textViewRSWhatImprove.setTypeface(Fonts.mavenLight(this));
@@ -1276,7 +1324,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             }
                         }
+                        @Override
+                        public void showCommentBox(int visibility){
+                            if(visibility == View.GONE) {
+                                editTextRSFeedback.setText("");
+                                Utils.hideKeyboard(HomeActivity.this);
+                            }
+                            HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibility);
+                        }
                     });
+
             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -1291,9 +1348,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         textViewRSWhatImprove.setVisibility(View.GONE);
         gridViewRSFeedbackReasons.setVisibility(View.GONE);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-        layoutParams.height = (int) (ASSL.Yscale() * 200);
-        editTextRSFeedback.setLayoutParams(layoutParams);
+//        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+//        layoutParams.height = (int) (ASSL.Yscale() * 200);
+//        editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
         textViewShowFareEstimate = (TextView)findViewById(R.id.tvShowFareEstimate);
         textViewShowFareEstimate.setTypeface(Fonts.mavenRegular(this));
@@ -2100,17 +2157,96 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void scoreChanged(float score) {
                 try {
-                    if (Data.autoData.getFeedbackReasons().size() > 0) {
-                        if (score > 0 && score <= 3) {
-                            textViewRSWhatImprove.setVisibility(View.VISIBLE);
-                            gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+                    int position=(int)Math.abs(score)-1;
+                    buttonRSSubmitFeedback.setVisibility(View.VISIBLE);
+                    editTextRSFeedback.setText("");
+                    findViewById(R.id.cvAdditionalComments).setVisibility(View.GONE);
+                    resetFeedBackListClicked(position);
+                    feedbackReasonsAdapter.notifyDataSetChanged();
+                    plusBadge.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            badgesNormal.setVisibility(View.GONE);
+                            badgesScroll.setVisibility(View.VISIBLE);
+                            badgesAdapter=new BadgesAdapter(HomeActivity.this,Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges());
+                            badgesScroll.setAdapter(badgesAdapter);
+                            badgesScroll.setItemTransformer(new ScaleTransformer.Builder()
+                                    .setMaxScale(1.5f)
+                                    .setMinScale(0.8f)
+                                    .setPivotX(Pivot.X.CENTER) // CENTER is a default one
+                                    .setPivotY(Pivot.Y.CENTER) // CENTER is a default one
+                                    .build());
 
-                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-                            layoutParams.height = (int) (ASSL.Yscale() * 150);
-                            editTextRSFeedback.setLayoutParams(layoutParams);
-                        } else {
-                            setZeroRatingView();
+                            badgesScroll.setOffscreenItems(3);
+							badgesScroll.setItemTransitionTimeMillis(300);
+
                         }
+                    });
+
+                    badgesScroll.setVisibility(View.GONE);
+
+
+                    if(!Data.autoData.getFeedBackInfoRatingData().isEmpty()){
+                        int imageBadgeSize;
+                        tvDesc.setVisibility(View.VISIBLE);
+                        tvDesc.setText(Data.autoData.getFeedBackInfoRatingData().get(position).getDesc());
+                        try {
+
+                            imageBadgeSize=Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().size();
+                            if(imageBadgeSize>1){
+
+                                Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(0).getImageAdress()).transform(new CircleTransform()).into(((ImageView)findViewById(R.id.badge1)));
+                                Picasso.with(HomeActivity.this).load(Data.autoData.getFeedBackInfoRatingData().get(position).getImageBadges().get(1).getImageAdress()).transform(new CircleTransform()).into(((ImageView)findViewById(R.id.badge2)));
+                                badgesNormal.setVisibility(View.VISIBLE);
+                            }
+                            else
+                            {
+                                badgesNormal.setVisibility(View.GONE);
+                            }
+                            feedbackReasonsAdapter = new FeedbackReasonsAdapter(HomeActivity.this, Data.autoData.getFeedBackInfoRatingData().get(position).getTextBadges(),
+                                    new FeedbackReasonsAdapter.FeedbackReasonsListEventHandler() {
+                                        @Override
+                                        public void onLastItemSelected(boolean selected, String name) {
+                                            if (!selected) {
+                                                if (textViewRSOtherError.getText().toString().equalsIgnoreCase(getString(R.string.star_required))) {
+                                                    textViewRSOtherError.setText("");
+                                                }
+                                            }
+                                        }
+                                        @Override
+                                        public void showCommentBox(int visibility){
+                                            if(visibility == View.GONE) {
+                                                editTextRSFeedback.setText("");
+                                                Utils.hideKeyboard(HomeActivity.this);
+                                            }
+                                            HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibility);
+                                        }
+                                    });
+
+                            gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);
+
+
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else{
+                        tvDesc.setVisibility(View.GONE);
+                        badgesNormal.setVisibility(View.GONE);
+						if (Data.autoData.getFeedbackReasons().size() > 0) {
+							if (score > 0 && score <= 3) {
+								textViewRSWhatImprove.setVisibility(View.VISIBLE);
+								gridViewRSFeedbackReasons.setVisibility(View.VISIBLE);
+
+
+//                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+//                            layoutParams.height = (int) (ASSL.Yscale() * 150);
+//                            editTextRSFeedback.setLayoutParams(layoutParams);
+							} else {
+								setZeroRatingView();
+							}
+						}
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2129,7 +2265,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 new KeyboardLayoutListener.KeyBoardStateHandler() {
                     @Override
                     public void keyboardOpened() {
-                        editTextRSFeedback.setHint("");
+//                        editTextRSFeedback.setHint("");
                         scrollViewRideSummary.smoothScrollTo(0, buttonRSSubmitFeedback.getBottom());
                     }
 
@@ -2150,6 +2286,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     Log.e("rating screen =", "= feedbackStr = " + feedbackStr + " , rating = " + rating);
 
                     String feedbackReasons = feedbackReasonsAdapter.getSelectedReasons();
+					if (Data.autoData.getFeedBackInfoRatingData() != null) {
+						feedbackReasons = feedbackReasonsAdapter.getSelectedReasonsId();
+					}
                     boolean isLastReasonSelected = feedbackReasonsAdapter.isLastSelected();
 
                     if (0 == rating) {
@@ -2167,9 +2306,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //                            }
 //                        }
 
-                        if (feedbackStr.length() > 300) {
+                        if (feedbackStr.length() > 150) {
                             editTextRSFeedback.requestFocus();
-                            editTextRSFeedback.setError(getString(R.string.review_must_be_in));
+                            editTextRSFeedback.setError(getString(R.string.review_must_be_in_150));
                         } else {
                             submitFeedbackToDriverAsync(HomeActivity.this, Data.autoData.getcEngagementId(), Data.autoData.getcDriverId(),
                                     rating, feedbackStr, feedbackReasons);
@@ -2522,6 +2661,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         }
     }
+    public void resetFeedBackListClicked(int pos){
+        for(FeedbackReason fr:Data.autoData.getFeedbackReasons()){
+            fr.checked=false;
+        }
+        for (FeedbackReason fr:Data.autoData.getFeedBackInfoRatingData().get(pos).getTextBadges()){
+            fr.checked=false;
+        }
+    }
+    @Override
+    public void onClickBadge(int badgeId,int position){
+        badgesScroll.smoothScrollToPosition(position);
+    }
+
 
     public void setServiceTypeAdapter(boolean setAdapter) {
         if(Data.autoData != null) {
@@ -3528,6 +3680,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
+    @Override
+    public void showCommentBox(int visibilty){
+        if(visibilty == View.GONE) {
+            editTextRSFeedback.setText("");
+            Utils.hideKeyboard(HomeActivity.this);
+        }
+        HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibilty);
+    }
+
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
 			Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
@@ -3857,6 +4018,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 if (mode == PassengerScreenMode.P_RIDE_END) {
                     if (Data.autoData.getEndRideData() != null) {
 //                        genieLayout.setVisibility(View.GONE);
+
+						badgesAdapter=null;
+            			badgesNormal.setVisibility(View.GONE);
+            			badgesScroll.setVisibility(View.GONE);
+						findViewById(R.id.cvAdditionalComments).setVisibility(View.GONE);
+						buttonRSSubmitFeedback.setVisibility(View.GONE);
+
                         mapLayout.setVisibility(View.VISIBLE);
                         endRideReviewRl.setVisibility(View.VISIBLE);
                         if (Data.autoData.getEndRideData().getIsPooled() == 1
@@ -3887,6 +4055,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.autoData.getEndRideData().setDriverNameCarName(Data.autoData.getAssignedDriverInfo().name, Data.autoData.getAssignedDriverInfo().carNumber);
                         Prefs.with(HomeActivity.this).save(SP_DRIVER_BEARING, 0f);
 
+						if (findViewById(R.id.ivDriverImageEndRide) != null
+								&& Data.autoData != null
+								&& Data.autoData.getAssignedDriverInfo() != null) {
+							Picasso.with(this)
+									.load(Data.autoData.getAssignedDriverInfo().image)
+									.transform(new CircleTransform())
+									.into(((ImageView) findViewById(R.id.ivDriverImageEndRide)));
+							tvDriverName.setText(Data.autoData.getAssignedDriverInfo().name);
+						}
 
                         // delete the RidePath Table from Phone Database :)
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
@@ -4694,7 +4871,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         rentalInRideLayout.setVisibility(View.GONE);
                         rentalEndRideLayout.setVisibility(View.GONE);
                         damageReportButton.setVisibility(View.GONE);
-
+                        tvDesc.setText(getResources().getString(R.string.add_your_reviews));
 
                         hideCenterPickupPin();
 
@@ -4747,6 +4924,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 showPokestopOnOffButton(mode);
 
                 setScheduleRideUI(mode);
+                badgesAdapter=null;
+
 
                 try {
                     getTrackingLogHelper().startSyncService(mode, Data.userData.accessToken);
@@ -4904,6 +5083,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             || Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.MPESA.getOrdinal())
                     && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) ? View.VISIBLE : View.GONE;
             llPayOnline.setVisibility(onlinePaymentVisibility);
+            cvPayOnline.setVisibility(onlinePaymentVisibility);
             tvPayOnline.setVisibility(onlinePaymentVisibility);
             return onlinePaymentVisibility;
         } catch (Exception e) {
@@ -5114,9 +5294,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private void setZeroRatingView() {
         textViewRSWhatImprove.setVisibility(View.GONE);
         gridViewRSFeedbackReasons.setVisibility(View.GONE);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
-        layoutParams.height = (int) (ASSL.Yscale() * 200);
-        editTextRSFeedback.setLayoutParams(layoutParams);
+//        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) editTextRSFeedback.getLayoutParams();
+//        layoutParams.height = (int) (ASSL.Yscale() * 200);
+//        editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
     }
 
@@ -7812,6 +7992,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     Data.autoData.setEndRideData(JSONParser.parseEndRideData(jObj, engagementId, Data.autoData.getFareStructure().getFixedFare()));
 
                                     clearSPData();
+									if (jObj.has(Constants.KEY_FEEDBACK_INFO)) {
+										JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_FEEDBACK_INFO);
+										JSONParser.parseFeedBackInfo(jsonArray);
+									}
+
                                     passengerScreenMode = PassengerScreenMode.P_RIDE_END;
                                     switchPassengerScreen(passengerScreenMode);
 
@@ -10129,7 +10314,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (getStarSubscriptionCheckoutFragment() != null) {
                         topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
                     } else {
-                        topBar.textViewTitle.setText(getResources().getString(R.string.rides));
+                        topBar.textViewTitle.setText(getResources().getString(R.string.rating_summary));
                     }
                 }
                 localModeEnabled = modeEnabled;
@@ -10807,9 +10992,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 params.put("engagement_id", engagementId);
                 params.put("driver_id", ratingReceiverId);
                 params.put("feedback", feedbackText);
-                params.put("feedback_reasons", feedbackReasons);
 
+				if (badgesAdapter != null && Data.autoData.getFeedBackInfoRatingData() != null) {
+					String imgBadgeIds = badgesAdapter.getClickedBadgesIds();
+					params.put("image_badge_ids", imgBadgeIds);
+					params.put("text_badge_ids", feedbackReasons);
+				}
+                params.put("feedback_reasons", feedbackReasons);
                 Log.i("params", "=" + params);
+
 
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getApiService().rateTheDriver(params, new Callback<SettleUserDebt>() {
@@ -13495,4 +13686,3 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		updateDropToUIAndServerApi(searchResult, poolFareId);
 	}
 }
-
