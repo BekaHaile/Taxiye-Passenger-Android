@@ -902,7 +902,8 @@ public class UserData {
 				for(PromoCoupon promoCoupon: promoCoupons){
 					if(promoCoupon.getIsSelected() == 1
 							&& promoCoupon.isVehicleTypeExists(vehicleType, operatorId)
-							&& promoCoupon.getType() == CouponType.DROP_BASED.getType()
+							&& (promoCoupon.getType() == CouponType.DROP_BASED.getType()
+							|| promoCoupon.getType() == CouponType.PICKUP_DROP_BASED.getType())
 							&& promoCoupon.getDropRadius() > 0){
 						for(LatLngCoordinates llc : promoCoupon.getDropLocationCoordinates()){
 							if(MapUtils.distance(llc.getLatLng(), Data.autoData.getDropLatLng()) <= promoCoupon.getDropRadius()){
@@ -914,7 +915,8 @@ public class UserData {
 			}
 			for(PromoCoupon promoCoupon: promoCoupons){
 				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(vehicleType, operatorId)
-						  && promoCoupon.getType() != CouponType.DROP_BASED.getType())
+						  && promoCoupon.getType() != CouponType.DROP_BASED.getType()
+						  && promoCoupon.getType() != CouponType.PICKUP_DROP_BASED.getType())
 				  	return promoCoupon;
 			}
 		}

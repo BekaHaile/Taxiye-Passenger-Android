@@ -2469,4 +2469,5 @@
     <string name="contacts_read_cancelled_tap_to_retry">Contacts read cancelled\nTap to retry</string>
     <string name="reinvite_friends">Re-Invite Friends</string>
     <string name="unselect_all">Unselect All</string>
+    <string name="offer_not_valid_for_selected_drop_location">Offer not valid for your selected drop location</string>
 </resources>
