@@ -8227,7 +8227,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 	public void consumeDriverLocationUpdates(String result) {
 		try {
 			Log.d(TAG, "consumeDriverLocationUpdates result="+result);
-			if(result.equalsIgnoreCase("streaming real time data") || !hasWindowFocus()){
+			if(result.equalsIgnoreCase("streaming real time data")){
 				return;
 			}
 
