@@ -15,9 +15,12 @@ import product.clicklabs.jugnoo.datastructure.MapsApiSources
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode
 import product.clicklabs.jugnoo.directions.JungleApisImpl
 import product.clicklabs.jugnoo.utils.ASSL
+import product.clicklabs.jugnoo.utils.Log
 import product.clicklabs.jugnoo.utils.Prefs
 
 object DriverToPickupPath{
+
+    private var TAG:String = DriverToPickupPath::class.java.simpleName
 
     private const val DRIVER_TO_PICKUP_PATH_ZINDEX = 0f
 
@@ -27,6 +30,7 @@ object DriverToPickupPath{
 
     fun showPath(context: Context, passengerScreenMode: PassengerScreenMode, map: GoogleMap,
                  driverLatLng: LatLng, pickupLatLng: LatLng){
+        Log.d(TAG, "showPath  passengerScreenMode= $passengerScreenMode, $map")
         if(Prefs.with(context).getInt(Constants.KEY_DRIVER_TO_PICKUP_PATH_ENABLED, 1) == 1
                 && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)) {
@@ -41,9 +45,11 @@ object DriverToPickupPath{
     private fun showPolylineDriverToPickup(context: Context, directionsResult: JungleApisImpl.DirectionsResult?,
                                            passengerScreenMode: PassengerScreenMode, map: GoogleMap) {
         GlobalScope.launch(Dispatchers.Main){
+            Log.d(TAG, "showPolylineDriverToPickup passengerScreenMode= $passengerScreenMode, directionsResult= $directionsResult, $map")
             if (directionsResult?.latLngs != null
                     && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)) {
                 if (polylineDriverToPickup != null) {
+                    Log.d(TAG, "showPolylineDriverToPickup polylineDriverToPickup removed")
                     polylineDriverToPickup!!.remove()
                 }
                 val polylineOptions = PolylineOptions()
@@ -51,6 +57,7 @@ object DriverToPickupPath{
                         .color(ContextCompat.getColor(context, R.color.google_path_polyline_color))
                         .geodesic(true).zIndex(DRIVER_TO_PICKUP_PATH_ZINDEX)
                 polylineOptions.addAll(directionsResult.latLngs)
+                Log.d(TAG, "showPolylineDriverToPickup ploylline shown")
                 polylineDriverToPickup = map.addPolyline(polylineOptions)
             }
         }
@@ -59,6 +66,7 @@ object DriverToPickupPath{
 
     fun removePolylineDriverToPickup(passengerScreenMode: PassengerScreenMode) {
         GlobalScope.launch(Dispatchers.Main) {
+            Log.d(TAG, "removePolylineDriverToPickup passengerScreenMode= $passengerScreenMode")
             if (PassengerScreenMode.P_REQUEST_FINAL != passengerScreenMode
                     && PassengerScreenMode.P_DRIVER_ARRIVED != passengerScreenMode
                     && polylineDriverToPickup != null) {

@@ -20,7 +20,8 @@ object RestClient2 {
     @JvmStatic lateinit var apiService:ApiService2
 
 
-    private fun getOkHttpClient(retryOnConnectionFailure: Boolean, timeoutSeconds: Long): OkHttpClient {
+    private fun getOkHttpClient(retryOnConnectionFailure: Boolean, timeoutSeconds: Long,
+                                loggingLevel: HttpLoggingInterceptor.Level): OkHttpClient { //loggingLevel BASIC is needed for streaming api to behave like chunk data events
 
         val protocolList = ArrayList<Protocol>()
         protocolList.add(Protocol.HTTP_2)
@@ -30,7 +31,7 @@ object RestClient2 {
         val connectionPool = ConnectionPool(3, (5 * 60 * 1000).toLong(), TimeUnit.MILLISECONDS)
 
         val httpLoggingInterceptor = HttpLoggingInterceptor()
-        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        httpLoggingInterceptor.level = loggingLevel
 
 
         val builder = OkHttpClient.Builder()
@@ -50,7 +51,7 @@ object RestClient2 {
     fun initStreamApiService(){
         val restAdapter = Retrofit.Builder()
                 .baseUrl(Config.getServerUrl().plus("/"))
-                .client(getOkHttpClient(true, 60*60))
+                .client(getOkHttpClient(true, 10*60, HttpLoggingInterceptor.Level.BASIC))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
@@ -62,7 +63,7 @@ object RestClient2 {
     fun initApiService(){
         val restAdapter = Retrofit.Builder()
                 .baseUrl(Config.getServerUrl().plus("/"))
-                .client(getOkHttpClient(true, 30))
+                .client(getOkHttpClient(true, 30, HttpLoggingInterceptor.Level.BODY))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
