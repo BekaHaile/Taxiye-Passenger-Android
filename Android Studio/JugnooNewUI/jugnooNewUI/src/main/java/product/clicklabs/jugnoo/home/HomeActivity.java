@@ -10289,7 +10289,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (getStarSubscriptionCheckoutFragment() != null) {
                         topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
                     } else {
-                        topBar.textViewTitle.setText(getResources().getString(R.string.rating_summary));
+                        topBar.textViewTitle.setText(PassengerScreenMode.P_RIDE_END == passengerScreenMode ? R.string.rating_summary : R.string.rides);
                     }
                 }
                 localModeEnabled = modeEnabled;
