@@ -3305,8 +3305,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void enableMapMyLocation() {
-        if (map != null && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);
+        if (map != null
+				&& ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(passengerScreenMode != PassengerScreenMode.P_IN_RIDE);
         }
     }
 
@@ -4061,6 +4062,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         // delete the RidePath Table from Phone Database :)
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
+						pathToDropLocationPolylineOptions = null;
+						driverToDropPathShown = false;
 
                         findViewById(R.id.llRideEndTotalFareTakeCash).setVisibility(Prefs.with(this)
                                 .getInt(Constants.KEY_SHOW_FARE_DETAILS_AT_RIDE_END, 1) == 1 ? View.VISIBLE : View.GONE);
@@ -4143,6 +4146,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.autoData.setAssignedDriverInfo(null);
 
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
+						pathToDropLocationPolylineOptions = null;
+						driverToDropPathShown = false;
 
 
                         clearMap();
@@ -4897,6 +4902,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 showReferAllDialog();
                 callT20AndReferAllDialog(mode);
+
+				enableMapMyLocation();
 
                 int savedMode = Prefs.with(this).getInt(SP_CURRENT_STATE, P_INITIAL.getOrdinal());
                 if(savedMode != mode.getOrdinal()){
