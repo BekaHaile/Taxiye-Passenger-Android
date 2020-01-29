@@ -2,8 +2,8 @@ package product.clicklabs.jugnoo
 
 import android.content.Context
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.MenuItem
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sabkuchfresh.feed.ui.api.APICommonCallback
 import com.sabkuchfresh.feed.ui.api.ApiCommon
 import com.sabkuchfresh.feed.ui.api.ApiName
@@ -43,8 +43,8 @@ class FareDetailsActivity : BaseAppCompatActivity(){
         attachBaseContextWithoutTypekit(newBase)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             onBackPressed()
             return true
         }

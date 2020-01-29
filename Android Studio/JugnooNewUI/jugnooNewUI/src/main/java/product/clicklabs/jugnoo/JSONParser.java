@@ -3,8 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
@@ -1839,20 +1837,7 @@ public class JSONParser implements Constants {
 
 
     public void clearSPData(final Context context) {
-        SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-        Editor editor = pref.edit();
-
-        editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
-        editor.putString(Data.SP_WAIT_TIME, "0");
-        editor.putString(Data.SP_RIDE_TIME, "0");
-        editor.putString(Data.SP_RIDE_START_TIME, "" + System.currentTimeMillis());
-        editor.putString(Data.SP_LAST_LATITUDE, "0");
-        editor.putString(Data.SP_LAST_LONGITUDE, "0");
-
-        editor.commit();
-
         MyApplication.getInstance().getDatabase().deleteSavedPath();
-        MyApplication.getInstance().getDatabase().close();
     }
 
 

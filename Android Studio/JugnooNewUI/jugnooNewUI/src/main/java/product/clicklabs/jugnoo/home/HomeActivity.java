@@ -3305,8 +3305,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     private void enableMapMyLocation() {
-        if (map != null && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);
+        if (map != null
+				&& ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            map.setMyLocationEnabled(passengerScreenMode != PassengerScreenMode.P_IN_RIDE);
         }
     }
 
@@ -3883,12 +3884,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     public void switchRequestRideUI() {
-        SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-        Editor editor = pref.edit();
-        editor.putString(Data.SP_TOTAL_DISTANCE, "0");
-        editor.putString(Data.SP_LAST_LATITUDE, "" + Data.autoData.getPickupLatLng().latitude);
-        editor.putString(Data.SP_LAST_LONGITUDE, "" + Data.autoData.getPickupLatLng().longitude);
-        editor.commit();
 
         cancelTimerUpdateDrivers();
 
@@ -4067,6 +4062,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                         // delete the RidePath Table from Phone Database :)
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
+						pathToDropLocationPolylineOptions = null;
+						driverToDropPathShown = false;
 
                         findViewById(R.id.llRideEndTotalFareTakeCash).setVisibility(Prefs.with(this)
                                 .getInt(Constants.KEY_SHOW_FARE_DETAILS_AT_RIDE_END, 1) == 1 ? View.VISIBLE : View.GONE);
@@ -4149,6 +4146,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         Data.autoData.setAssignedDriverInfo(null);
 
                         MyApplication.getInstance().getDatabase2().deleteRidePathTable();
+						pathToDropLocationPolylineOptions = null;
+						driverToDropPathShown = false;
 
 
                         clearMap();
@@ -4903,6 +4902,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 showReferAllDialog();
                 callT20AndReferAllDialog(mode);
+
+				enableMapMyLocation();
 
                 int savedMode = Prefs.with(this).getInt(SP_CURRENT_STATE, P_INITIAL.getOrdinal());
                 if(savedMode != mode.getOrdinal()){
@@ -5691,7 +5692,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 imageViewIRPaymentOption.setImageResource(R.drawable.ic_corporate);
             }
             else if (PaymentOption.CASH.getOrdinal() == Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode()) {
-                textViewIRPaymentOptionValue.setText(getString(R.string.pay_later));
+                textViewIRPaymentOptionValue.setText(getString(R.string.cash));
             } else {
                 textViewIRPaymentOptionValue.setText(MyApplication.getInstance().getWalletCore()
                         .getPaymentOptionBalanceText(Data.autoData.getAssignedDriverInfo().getPreferredPaymentMode(),this));
@@ -9194,39 +9195,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void clearRideSPData() {
 
-        SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-        Editor editor = pref.edit();
-
-        editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
-        editor.putString(Data.SP_WAIT_TIME, "0");
-        editor.putString(Data.SP_RIDE_TIME, "0");
-        editor.putString(Data.SP_RIDE_START_TIME, "" + System.currentTimeMillis());
-        editor.putString(Data.SP_LAST_LATITUDE, "0");
-        editor.putString(Data.SP_LAST_LONGITUDE, "0");
-
-        editor.commit();
-
         MyApplication.getInstance().getDatabase().deleteSavedPath();
-        MyApplication.getInstance().getDatabase().close();
 
     }
 
     public void clearSPData() {
 
-        SharedPreferences pref = getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-        Editor editor = pref.edit();
-
-        editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
-        editor.putString(Data.SP_WAIT_TIME, "0");
-        editor.putString(Data.SP_RIDE_TIME, "0");
-        editor.putString(Data.SP_RIDE_START_TIME, "" + System.currentTimeMillis());
-        editor.putString(Data.SP_LAST_LATITUDE, "0");
-        editor.putString(Data.SP_LAST_LONGITUDE, "0");
-
-        editor.commit();
-
         MyApplication.getInstance().getDatabase().deleteSavedPath();
-        MyApplication.getInstance().getDatabase().close();
 
     }
 
@@ -9461,6 +9436,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     long serverRequestEndTime = 0;
     long executionTime = -10;
     long requestPeriod = 20000;
+    boolean requestRideApiInProgress = false;
 
     public void startTimerRequestRide() {
         cancelTimerRequestRide();
@@ -9479,6 +9455,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             } else {
                 requestPeriod = 20000;
             }
+			requestRideApiInProgress = false;
 
             timerRequestRide = new Timer();
             timerTaskRequestRide = new TimerTask() {
@@ -9506,7 +9483,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 }
                             });
                         } else {
-                            if (HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
+							Log.e("request_ride execution", "requestRideApiInProgress =" + requestRideApiInProgress+", SessionId="+Data.autoData.getcSessionId());
+                            if ((!requestRideApiInProgress || !"".equalsIgnoreCase(Data.autoData.getcSessionId()))
+									&& HomeActivity.passengerScreenMode == PassengerScreenMode.P_ASSIGNING) {
                                 updateCancelButtonUI();
 
                                 long apiStartTime = System.currentTimeMillis();
@@ -9655,6 +9634,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     e.printStackTrace();
                                 }
 
+								requestRideApiInProgress = true;
                                 new HomeUtil().putDefaultParams(nameValuePairs);
                                 Response responseRetro = RestClient.getApiService().requestRide(nameValuePairs);
                                 String response = new String(((TypedByteArray) responseRetro.getBody()).getBytes());
@@ -9670,12 +9650,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 if (responseRetro == null || response == null
                                         || response.contains(Constants.SERVER_TIMEOUT)) {
                                     Log.e("timeout", "=");
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-//											DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                                        }
-                                    });
                                 } else {
                                     try {
                                         JSONObject jObj = new JSONObject(response);
@@ -9911,6 +9885,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void cancelTimerRequestRide() {
         try {
+			requestRideApiInProgress = false;
             if (timerTaskRequestRide != null) {
                 timerTaskRequestRide.cancel();
                 timerTaskRequestRide = null;
@@ -10314,7 +10289,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     if (getStarSubscriptionCheckoutFragment() != null) {
                         topBar.textViewTitle.setText(getResources().getString(R.string.pay_online));
                     } else {
-                        topBar.textViewTitle.setText(getResources().getString(R.string.rating_summary));
+                        topBar.textViewTitle.setText(PassengerScreenMode.P_RIDE_END == passengerScreenMode ? R.string.rating_summary : R.string.rides);
                     }
                 }
                 localModeEnabled = modeEnabled;
