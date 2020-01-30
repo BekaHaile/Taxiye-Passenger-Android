@@ -731,7 +731,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private String mLogMsg;
     private Integer mRequestType = 0, mRequestLevelndex = 0;
 
-    private Button btnPayViaUPIRideEnd;
+    private LinearLayout llPayViaUpi;
 
     @SuppressLint("NewApi")
     @Override
@@ -1158,8 +1158,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         bPayTip = findViewById(R.id.bPayTip);
         etTipOtherValue.clearFocus();
 
-		btnPayViaUPIRideEnd = findViewById(R.id.btnPayViaUPIRideEnd);
-		btnPayViaUPIRideEnd.setTypeface(Fonts.mavenMedium(this));
+		llPayViaUpi = findViewById(R.id.llPayViaUpi);
 
         tvTipFirst.setOnClickListener(new OnClickListener() {
             @Override
@@ -2439,7 +2438,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
-		btnPayViaUPIRideEnd.setOnClickListener(new OnClickListener() {
+		llPayViaUpi.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if(Data.autoData != null
@@ -3654,7 +3653,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             float mapTopPadding = 0.0f;
             if (map != null) {
                 if (P_INITIAL == passengerScreenMode) {
-                    mapTopPadding = confirmedScreenOpened ? 300.0f : isNewUI ? 150.0f: 200.0f;
+                    mapTopPadding = confirmedScreenOpened ? 300.0f : isNewUI ? 96.0f: 200.0f;
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
                     params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
                     params.setMarginStart(0);
@@ -5132,10 +5131,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if(Prefs.with(this).getInt(KEY_PAY_VIA_UPI_ENABLED, 0) == 1
             		&& Data.autoData.getEndRideData().toPay > 0
 					&& !TextUtils.isEmpty(Data.autoData.getEndRideData().getDriverUpiId())){
+				cvPayOnline.setVisibility(View.VISIBLE);
 				tvPayOnline.setVisibility(View.VISIBLE);
-				btnPayViaUPIRideEnd.setVisibility(View.VISIBLE);
+				llPayViaUpi.setVisibility(View.VISIBLE);
+				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llPayViaUpi.getLayoutParams();
+				params.setMarginStart(llPayOnline.getVisibility() == View.VISIBLE ? Utils.dpToPx(this, 12) : 0);
+				llPayViaUpi.setLayoutParams(params);
 			} else {
-				btnPayViaUPIRideEnd.setVisibility(View.GONE);
+				llPayViaUpi.setVisibility(View.GONE);
 			}
 
             return onlinePaymentVisibility;
@@ -10597,8 +10600,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			if(jObj.optInt(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.REINVITE_USERS.getOrdinal()){
 				pushDialog = null;
 
+				String image = jObj.optString(Constants.KEY_IMAGE, jObj.optString(Constants.KEY_PICTURE, ""));
+
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance("",
+				ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance(image,
 						jObj.optString(Constants.KEY_MESSAGE, ""));
 				reinviteFriendsDialog.show(ft, ReinviteFriendsDialog.class.getSimpleName());
 				Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, EMPTY_JSON_OBJECT);
