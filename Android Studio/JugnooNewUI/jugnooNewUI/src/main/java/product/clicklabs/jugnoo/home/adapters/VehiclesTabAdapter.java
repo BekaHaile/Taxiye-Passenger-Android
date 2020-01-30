@@ -216,6 +216,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             imageViewSelected = (ImageView) itemView.findViewById(R.id.imageViewSelected);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
             textViewVehicleName.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+            textViewVehicleName.setSelected(true);
             tvETA = (TextView)itemView.findViewById(R.id.tvETA);
             tvETA.setTypeface(Fonts.mavenMedium(activity));
             tvVehicleFare = (TextView)itemView.findViewById(R.id.tvVehicleFare);
