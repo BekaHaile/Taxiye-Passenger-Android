@@ -485,6 +485,17 @@ public class JSONParser implements Constants {
             Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
             Data.autoData.setFaultConditions(autosData.getFaultConditions());
 
+            Data.userData.setGender(autoData.optInt(Constants.KEY_GENDER, 0));
+            Log.d(TAG, "parseUserData Key Gender: gender saved" + autoData.optInt(Constants.KEY_GENDER, 0));
+            Data.userData.setDateOfBirth(autoData.optString(Constants.KEY_DATE_OF_BIRTH, ""));
+
+            Prefs.with(context).save(KEY_CUSTOMER_GENDER_FILTER, autoData.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                    context.getResources().getInteger(R.integer.customer_gender_filter)));
+            Log.d(TAG, "parseConfigParams: filter" + autoData.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                    context.getResources().getInteger(R.integer.customer_gender_filter)));
+            Prefs.with(context).save(KEY_CUSTOMER_DOB_INPUT, autoData.optInt(KEY_CUSTOMER_DOB_INPUT,
+                    context.getResources().getInteger(R.integer.customer_dob_input)));
+
 			long bidRequestRideTimeout = autoData.optLong(KEY_BID_REQUEST_RIDE_TIMEOUT, 420000);
 			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
             Data.autoData.setBidRequestRideTimeout(bidRequestRideTimeout);
@@ -787,6 +798,28 @@ public class JSONParser implements Constants {
 		}
 	}
 
+	public static void allowedAuthChannelTimeConfigVariables(Context context, JSONObject jObj){
+
+        Prefs.with(context).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
+        Prefs.with(context).save(Constants.KEY_SHOW_FACEBOOK_LOGIN, jObj.optInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1));
+        Prefs.with(context).save(Constants.KEY_SHOW_GOOGLE_LOGIN, jObj.optInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1));
+
+        Prefs.with(context).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, context.getString(R.string.terms_of_use_url)));
+        Prefs.with(context).save(Constants.KEY_SHOW_TERMS, jObj.optInt(Constants.KEY_SHOW_TERMS, 1));
+
+        Prefs.with(context).save(Constants.KEY_DEFAULT_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_CODE));
+        Prefs.with(context).save(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE));
+        Prefs.with(context).save(Constants.KEY_DEFAULT_COUNTRY_ISO, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_ISO));
+        Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED, jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
+
+        Prefs.with(context).save(KEY_CUSTOMER_GENDER_FILTER, jObj.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                context.getResources().getInteger(R.integer.customer_gender_filter)));
+        android.util.Log.d("In JSONPARSER", "parseConfigParams: gender filer" + jObj.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                context.getResources().getInteger(R.integer.customer_gender_filter)));
+        Prefs.with(context).save(KEY_CUSTOMER_DOB_INPUT, jObj.optInt(KEY_CUSTOMER_DOB_INPUT,
+                context.getResources().getInteger(R.integer.customer_dob_input)));
+    }
+
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
         if(autoData.has(KEY_DEFAULT_LANG) && Prefs.with(context).getString(KEY_DEFAULT_LANG, "eee").equals("eee")) {
             Prefs.with(context).save(KEY_DEFAULT_LANG, autoData.optString(KEY_DEFAULT_LANG, context.getString(R.string.default_lang)));
@@ -1037,7 +1070,9 @@ public class JSONParser implements Constants {
                 for (Region region : autos.getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
                     region.setIsDefault(false);
-                    Data.autoData.addRegion(region);
+					if(region.isRegionAccGender(context, Data.userData)) {
+						Data.autoData.addRegion(region);
+					}
                     if(region.getRegionFare() != null && region.getRegionFare().getFare() < minRegionFare) {
                         minRegionFare = region.getRegionFare().getFare();
                     }

@@ -8,15 +8,6 @@ import android.content.IntentFilter;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -105,6 +96,15 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -146,6 +146,8 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+
+import static android.view.View.GONE;
 
 
 public class FreshCheckoutMergedFragment extends Fragment implements GAAction, DeliverySlotsAdapter.Callback,
@@ -797,7 +799,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             }
         }
         vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
-        if(vehicleInfoList != null && vehicleInfoList.size() > 1){
+        if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
             if (vehicleTypeAdapterMenus == null) {
 
                 vehicleTypeAdapterMenus = new VehicleTypeAdapterMenus((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterMenus.OnItemSelectedListener() {
@@ -817,12 +819,22 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     checkCount++;
                 }
                 else {
-                    linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
                     rvVehicles.setVisibility(View.VISIBLE);
-                    textViewChooseVehicle.setVisibility(View.GONE);
                     vehicleTypeAdapterMenus.updateList(vehicleInfoList);
                 }
             }
+
+            if(vehicleInfoList.size()>1 && getResources().getBoolean(R.bool.vehicle_list_menus)) {
+                linearLayoutDeliveryVehicles.setVisibility(View.VISIBLE);
+                rvVehicles.setVisibility(View.VISIBLE);
+                textViewChooseVehicle.setVisibility(View.VISIBLE);
+            }
+            else {
+                linearLayoutDeliveryVehicles.setVisibility(View.GONE);
+                rvVehicles.setVisibility(GONE);
+                textViewChooseVehicle.setVisibility(View.GONE);
+            }
+
         }
         else {
             textViewChooseVehicle.setVisibility(View.GONE);

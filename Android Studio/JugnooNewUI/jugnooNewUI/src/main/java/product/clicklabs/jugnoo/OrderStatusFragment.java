@@ -629,6 +629,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
     private void setFeedOrderData(HistoryResponse.Datum datum, Activity activity) {
         tv1r.setText(datum.getOrderStatus());
+        btRateOrder.setVisibility(datum.isPendingFeedback() ? View.VISIBLE : View.GONE);
+
         try{
             tv1r.setTextColor(Color.parseColor(datum.getOrderStatusColor()));
         } catch (Exception e){
@@ -1396,6 +1398,13 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             params.height= (int) (ASSL.minRatio() * 35f);
             params.width= (int) (ASSL.minRatio() * 90f);
             tvPaymentMethodVal.setBackgroundResource(R.drawable.upi_logo);
+        } else if(datum1.getPaymentMode()==PaymentOption.STRIPE_CARDS.getOrdinal()){
+            params.setMargins((int) (ASSL.Xscale() * 34f), 0, 0, 0);
+            params.setMarginStart((int) (ASSL.Xscale() * 34f));
+            params.setMarginEnd(0);
+            params.height= (int) (ASSL.minRatio() * 35f);
+            params.width= (int) (ASSL.minRatio() * 90f);
+            tvPaymentMethodVal.setText(activity.getString(R.string.card));
         }
         tvPaymentMethodVal.setLayoutParams(params);
 

@@ -442,15 +442,28 @@ public class AddEmergencyContactsFragment extends Fragment {
 
             textHead.setText(title);
             textMessage.setText(message);
-
+            if(contactBean.getPhoneNo().contains("+")){
+                llCountryCode.setVisibility(View.GONE);
+//                contactBean.setPhoneNo( editTextPhoneNumber.getText().toString());
+            }else {
+                llCountryCode.setVisibility(View.VISIBLE);
+//                contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
+            }
             Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.mavenRegular(activity));
             ImageView btnClose = (ImageView) dialog.findViewById(R.id.close);
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    contactBean.setCountryCode(tvCountryCode.getText().toString());
-                    contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
+                    if(contactBean.getPhoneNo().contains("+")){
+                        contactBean.setCountryCode("");
+
+                        contactBean.setPhoneNo( editTextPhoneNumber.getText().toString());
+                    }else {
+                        contactBean.setCountryCode(tvCountryCode.getText().toString());
+                        contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
+                    }
+
                     addEmergencyContact(contactBean);
                     dialog.dismiss();
                 }

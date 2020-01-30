@@ -161,9 +161,9 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
 
             tvReferralCodeValue!!.text = Data.userData.referralCode
-            textViewDesc!!.text = Data.userData.referralMessages.referralShortMessage + " " + getString(R.string.details)
+            textViewDesc!!.text = Data.userData.referralMessages.referralShortMessage + (if (Data.userData.referralMessages.referralShortMessage.isEmpty()) "" else " ") + getString(R.string.details)
 
-            val ss = SpannableString(Data.userData.referralMessages.referralShortMessage + "\n " + getString(R.string.details))
+            val ss = SpannableString(Data.userData.referralMessages.referralShortMessage + "\n"+ (if (Data.userData.referralMessages.referralShortMessage.isEmpty()) "" else " ") + getString(R.string.details))
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(textView: View) {
                     try {
@@ -177,7 +177,7 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
                 }
             }
-            ss.setSpan(clickableSpan, textViewDesc!!.text.length - getString(R.string.details).length, textViewDesc!!.text.length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            ss.setSpan(clickableSpan, textViewDesc.text.length - getString(R.string.details).length, textViewDesc!!.text.length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             textViewDesc!!.text = ss
             textViewDesc!!.movementMethod = LinkMovementMethod.getInstance()
