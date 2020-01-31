@@ -14,7 +14,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup
 
 object LogUpiResponse {
 
-    fun api(activity: Activity, engagementId:String, bundle: Bundle?, callback: Callback?){
+    fun api(activity: Activity, engagementId:String, driverUpi:String, bundle: Bundle?, callback: Callback?){
 
         bundle?.run{
             val params = hashMapOf<String, String>()
@@ -34,6 +34,7 @@ object LogUpiResponse {
             }
 
             params[Constants.KEY_ENGAGEMENT_ID] = engagementId
+            params[Constants.KEY_DRIVER_UPI] = driverUpi
             params[Constants.KEY_PAYMENT_RESPONSE] = jsonObject.toString()
 
             ApiCommon<FeedCommonResponse>(activity).execute(params, ApiName.UPDATE_PAYMENT_TO_UPI,

@@ -6511,7 +6511,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 	for(String key : data.getExtras().keySet()){
 						Log.v("onActivityResult REQUEST_CODE_PAY_VIA_UPI", "key="+key+", value="+data.getExtras().get(key));
 					}
-					LogUpiResponse.INSTANCE.api(this, Data.autoData.getcEngagementId(), data.getExtras(), logUpiCallback);
+					LogUpiResponse.INSTANCE.api(this, Data.autoData.getcEngagementId(),
+							Data.autoData.getEndRideData().getDriverUpiId(),
+							data.getExtras(), logUpiCallback);
 
 				}
                 else {
