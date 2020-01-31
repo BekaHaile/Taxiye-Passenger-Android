@@ -1195,4 +1195,6 @@ public interface Constants {
     String KEY_FEEDBACK_INFO="feedback_info";
 	String KEY_DRIVER_UPI = "driver_upi";
 	String KEY_PAY_VIA_UPI_ENABLED = "pay_via_upi_enabled";
+	String KEY_PAYMENT_RESPONSE = "payment_response";
+	String KEY_UPI_RESPONSE = "response";
 }

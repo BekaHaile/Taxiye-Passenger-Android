@@ -180,6 +180,7 @@ import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -2453,8 +2454,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 										.appendQueryParameter("pa", Data.autoData.getEndRideData().getDriverUpiId())
 										.appendQueryParameter("pn", Data.autoData.getEndRideData().driverName)
 										.appendQueryParameter("tr", "" + Data.autoData.getEndRideData().engagementId)
-										.appendQueryParameter("tn", "Payment for Ride ID: " + Data.autoData.getEndRideData().engagementId)
-										.appendQueryParameter("am", ""+Data.autoData.getEndRideData().toPay)
+										.appendQueryParameter("tn", "Payment for Jugnoo Ride")
+										.appendQueryParameter("am", ""+(Config.getServerUrl().equalsIgnoreCase(BuildConfig.LIVE_URL) ? Data.autoData.getEndRideData().toPay : 1))
 										.appendQueryParameter("cu", "INR")
 										.build();
 						Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -5129,6 +5130,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             tvPayOnline.setVisibility(onlinePaymentVisibility);
 
             if(Prefs.with(this).getInt(KEY_PAY_VIA_UPI_ENABLED, 0) == 1
+					&& Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.CASH.getOrdinal()
             		&& Data.autoData.getEndRideData().toPay > 0
 					&& !TextUtils.isEmpty(Data.autoData.getEndRideData().getDriverUpiId())){
 				cvPayOnline.setVisibility(View.VISIBLE);
@@ -6507,9 +6509,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 }
                 else if(requestCode == REQUEST_CODE_PAY_VIA_UPI){
                 	for(String key : data.getExtras().keySet()){
-						Log.v("onActivityResult REQUEST_CODE_PAY_VIA_UPI", "key="+key+", value"+data.getExtras().get(key));
+						Log.v("onActivityResult REQUEST_CODE_PAY_VIA_UPI", "key="+key+", value="+data.getExtras().get(key));
 					}
-					Log.v("onActivityResult REQUEST_CODE_PAY_VIA_UPI", "resultCode="+resultCode+", "+data.getExtras().keySet());
+					LogUpiResponse.INSTANCE.api(this, Data.autoData.getcEngagementId(), data.getExtras(), logUpiCallback);
+
 				}
                 else {
                     Log.v("onActivityResult else part", "onActivityResult else part");
@@ -6531,6 +6534,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         likeClicked = 0;
     }
+
+    private LogUpiResponse.Callback logUpiCallback = new LogUpiResponse.Callback(){
+		@Override
+		public void onSuccess(String engagementId) {
+			getRideSummaryAPI(HomeActivity.this, engagementId, null);
+		}
+	};
 
     private void initiateBleProcess(){
         BluetoothManager bluetoothManager =
@@ -9280,7 +9290,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void customerEndRideInterrupt(final String engagementId, final Promo promo) {
         try {
-            Log.d("HomeActivityRental","CustomerEndRIde");
             if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.autoData.getcEngagementId())) {
                 closeCancelActivity();
                 runOnUiThread(new Runnable() {
