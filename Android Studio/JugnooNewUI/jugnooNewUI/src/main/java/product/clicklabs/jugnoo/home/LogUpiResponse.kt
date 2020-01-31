@@ -14,21 +14,21 @@ import product.clicklabs.jugnoo.utils.DialogPopup
 
 object LogUpiResponse {
 
-    fun api(activity: Activity, engagementId:String, driverUpi:String, bundle: Bundle?, callback: Callback?){
+    fun hitApi(activity: Activity, engagementId:String, driverUpi:String, bundle: Bundle?, logUpiCallback: LogUpiCallback?){
 
         bundle?.run{
             val params = hashMapOf<String, String>()
             val jsonObject = JSONObject()
 
-            keySet()?.let{
-                it.forEach{ key->
+            if(keySet() != null) {
+                for (key in keySet()) {
                     if(key.equals(Constants.KEY_UPI_RESPONSE, true)){
                         val responseVal = get(key).toString()
                         val responseMap = getQueryMap(responseVal)
                         for(inKey in responseMap.keys){
                             jsonObject.put(inKey, responseMap.get(inKey))
                         }
-                        return@forEach
+                        break
                     }
                 }
             }
@@ -40,9 +40,8 @@ object LogUpiResponse {
             ApiCommon<FeedCommonResponse>(activity).execute(params, ApiName.UPDATE_PAYMENT_TO_UPI,
                     object: APICommonCallback<FeedCommonResponse>(){
                         override fun onSuccess(t: FeedCommonResponse?, message: String?, flag: Int) {
-                            callback?.onSuccess(engagementId)
-                            DialogPopup.alertPopupWithListener(activity, "", message) {
-                            }
+                            logUpiCallback?.onApiSuccess(engagementId)
+                            DialogPopup.alertPopup(activity, "", message)
                         }
 
                         override fun onError(t: FeedCommonResponse?, message: String?, flag: Int): Boolean {
@@ -54,20 +53,20 @@ object LogUpiResponse {
 
     }
 
-    private fun getQueryMap(query: String): Map<String, String> {
-        val params = query.split("&".toRegex())
+    fun getQueryMap(query: String): Map<String, String> {
+        val params = query.split("&".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val map = HashMap<String, String>()
         for (param in params) {
-            val name = param.split("=".toRegex())[0]
-            val value = param.split("=".toRegex())[1]
+            val name = param.split("=".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]
+            val value = param.split("=".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
             map[name] = value
         }
         return map
     }
 
 
-    interface Callback{
-        fun onSuccess(engagementId:String)
+    interface LogUpiCallback{
+        fun onApiSuccess(engagementId:String)
     }
 
 

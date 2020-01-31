@@ -6511,7 +6511,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 	for(String key : data.getExtras().keySet()){
 						Log.v("onActivityResult REQUEST_CODE_PAY_VIA_UPI", "key="+key+", value="+data.getExtras().get(key));
 					}
-					LogUpiResponse.INSTANCE.api(this, Data.autoData.getcEngagementId(),
+					LogUpiResponse.INSTANCE.hitApi(this, Data.autoData.getcEngagementId(),
 							Data.autoData.getEndRideData().getDriverUpiId(),
 							data.getExtras(), logUpiCallback);
 
@@ -6537,9 +6537,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         likeClicked = 0;
     }
 
-    private LogUpiResponse.Callback logUpiCallback = new LogUpiResponse.Callback(){
+    private LogUpiResponse.LogUpiCallback logUpiCallback = new LogUpiResponse.LogUpiCallback(){
 		@Override
-		public void onSuccess(String engagementId) {
+		public void onApiSuccess(String engagementId) {
 			getRideSummaryAPI(HomeActivity.this, engagementId, null);
 		}
 	};
