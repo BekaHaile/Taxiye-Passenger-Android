@@ -209,7 +209,7 @@
                     android:layout_marginStart="14dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="14dp"
-                    android:layout_marginBottom="@dimen/dp_10"
+                    android:layout_marginBottom="15dp"
                     android:gravity="center"
                     android:visibility="@integer/show_amount_on_ride_summary"
                     app:cardBackgroundColor="@color/white"
@@ -618,7 +618,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_30"
+                android:layout_marginTop="20dp"
                 android:gravity="center_horizontal"
                 android:tag="@string/dont_touch_me"
                 android:text="@string/want_to_pay_online"
@@ -628,30 +628,67 @@
                 app:typekitFont="@string/maven" />
 
             <LinearLayout
-                android:id="@+id/llPayOnline"
-                android:layout_width="220dp"
-                android:layout_height="45dp"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dp_10"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/capsule_theme_color_selector"
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
                 android:orientation="horizontal"
-                android:tag="@string/dont_touch_me"
-                android:visibility="gone">
+                android:gravity="center"
+                >
 
-                <TextView
-                    android:id="@+id/tvPayOnlineIn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_cards"
-                    android:drawablePadding="@dimen/dp_5"
-                    android:gravity="center_vertical"
-                    android:text="@string/pay_online"
-                    android:textAllCaps="true"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/sp_15"
-                    app:typekitFont="@string/maven" />
+
+                <LinearLayout
+                    android:id="@+id/llPayOnline"
+                    android:layout_width="140dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/button_theme"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:tag="@string/dont_touch_me"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvPayOnlineIn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_cards"
+                        android:drawablePadding="@dimen/dp_5"
+                        android:gravity="center_vertical"
+                        android:text="@string/pay_online"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/sp_15"
+                        app:typekitFont="@string/maven" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llPayViaUpi"
+                    android:layout_width="140dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/button_white_grey_theme_border_selector"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:tag="@string/dont_touch_me"
+                    android:visibility="gone"
+                    android:layout_marginStart="12dp"
+                    >
+
+                    <TextView
+                        android:id="@+id/tvPayPayViaUpi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableEnd="@drawable/ic_upi_logo"
+                        android:drawablePadding="3dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/pay_via"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/sp_15"
+                        app:typekitFont="@string/maven" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
 

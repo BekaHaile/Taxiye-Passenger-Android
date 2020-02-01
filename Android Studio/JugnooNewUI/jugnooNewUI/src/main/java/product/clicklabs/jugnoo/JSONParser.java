@@ -709,6 +709,8 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_REINVITE_USERS_ENABLED, autoData.optInt(KEY_REINVITE_USERS_ENABLED, 1));
 		Prefs.with(context).save(KEY_HIDE_REGIONS_WITH_NO_DRIVERS, autoData.optInt(KEY_HIDE_REGIONS_WITH_NO_DRIVERS,
 				context.getResources().getInteger(R.integer.hide_regions_with_no_drivers)));
+		Prefs.with(context).save(KEY_PAY_VIA_UPI_ENABLED, autoData.optInt(KEY_PAY_VIA_UPI_ENABLED,
+				context.getResources().getInteger(R.integer.pay_via_upi_enabled)));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 
@@ -1353,6 +1355,9 @@ public class JSONParser implements Constants {
 			driverCarNumber = jLastRideData.getString("driver_car_no");
 		}
         driverImage = jLastRideData.optString("driver_image", "");
+
+        String driverUpiId = jLastRideData.optString(KEY_DRIVER_UPI, "");
+
         int isPooled = jLastRideData.optInt(KEY_IS_POOLED);
 
         double rideTime = -1;
@@ -1460,7 +1465,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId, driverUpiId);
 	}
 
 

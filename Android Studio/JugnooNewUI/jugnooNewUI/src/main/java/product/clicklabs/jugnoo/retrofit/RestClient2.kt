@@ -50,7 +50,7 @@ object RestClient2 {
     @JvmStatic
     fun initStreamApiService(){
         val restAdapter = Retrofit.Builder()
-                .baseUrl(Config.getServerUrl().plus("/"))
+                .baseUrl(Config.getServerUrl())
                 .client(getOkHttpClient(true, 5*60, HttpLoggingInterceptor.Level.BASIC))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
@@ -62,7 +62,7 @@ object RestClient2 {
     @JvmStatic
     fun initApiService(){
         val restAdapter = Retrofit.Builder()
-                .baseUrl(Config.getServerUrl().plus("/"))
+                .baseUrl(Config.getServerUrl())
                 .client(getOkHttpClient(true, 30, HttpLoggingInterceptor.Level.BODY))
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))

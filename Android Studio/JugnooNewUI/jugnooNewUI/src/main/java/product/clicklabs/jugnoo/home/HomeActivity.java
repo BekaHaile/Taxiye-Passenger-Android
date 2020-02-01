@@ -180,6 +180,7 @@ import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AddPlaceActivity;
+import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -371,6 +372,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
     private static final int REQ_CODE_VIDEO = 9112, RESULT_PAUSE = 5;
+	private static final int REQUEST_CODE_PAY_VIA_UPI = 1026;
 
 
 	private float ONGOING_RIDE_PATH_ZINDEX = 2;
@@ -729,6 +731,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private ImageView ivCrossTutorialBanner;
     private String mLogMsg;
     private Integer mRequestType = 0, mRequestLevelndex = 0;
+
+    private LinearLayout llPayViaUpi;
 
     @SuppressLint("NewApi")
     @Override
@@ -1154,6 +1158,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         etTipOtherValue = findViewById(R.id.etTipOtherValue);
         bPayTip = findViewById(R.id.bPayTip);
         etTipOtherValue.clearFocus();
+
+		llPayViaUpi = findViewById(R.id.llPayViaUpi);
 
         tvTipFirst.setOnClickListener(new OnClickListener() {
             @Override
@@ -2433,6 +2439,37 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
 
+		llPayViaUpi.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if(Data.autoData != null
+						&& Data.autoData.getEndRideData() != null
+						&& Data.autoData.getEndRideData().toPay > 0
+						&& passengerScreenMode == PassengerScreenMode.P_RIDE_END) {
+					try {
+						Uri uri =
+								new Uri.Builder()
+										.scheme("upi")
+										.authority("pay")
+										.appendQueryParameter("pa", Data.autoData.getEndRideData().getDriverUpiId())
+										.appendQueryParameter("pn", Data.autoData.getEndRideData().driverName)
+										.appendQueryParameter("tr", "" + Data.autoData.getEndRideData().engagementId)
+										.appendQueryParameter("tn", "Payment for Jugnoo Ride")
+										.appendQueryParameter("am", ""+(Config.getServerUrl().equalsIgnoreCase(BuildConfig.LIVE_URL) ? Data.autoData.getEndRideData().toPay : 1))
+										.appendQueryParameter("cu", "INR")
+										.build();
+						Intent intent = new Intent(Intent.ACTION_VIEW);
+						intent.setData(uri);
+						startActivityForResult(intent, REQUEST_CODE_PAY_VIA_UPI);
+					} catch (Exception e) {
+						e.printStackTrace();
+						Utils.showToast(HomeActivity.this, getString(R.string.upi_supported_app_not_installed));
+					}
+				}
+			}
+		});
+
+
         View.OnClickListener onClickListenerPokeOnOff = new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -3617,7 +3654,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             float mapTopPadding = 0.0f;
             if (map != null) {
                 if (P_INITIAL == passengerScreenMode) {
-                    mapTopPadding = confirmedScreenOpened ? 300.0f : isNewUI ? 150.0f: 200.0f;
+                    mapTopPadding = confirmedScreenOpened ? 300.0f : isNewUI ? 96.0f: 200.0f;
                     RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) centreLocationRl.getLayoutParams();
                     params.setMargins(0, (int) (ASSL.Yscale() * mapTopPadding), 0, 0);
                     params.setMarginStart(0);
@@ -5091,6 +5128,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             llPayOnline.setVisibility(onlinePaymentVisibility);
             cvPayOnline.setVisibility(onlinePaymentVisibility);
             tvPayOnline.setVisibility(onlinePaymentVisibility);
+
+            if(Prefs.with(this).getInt(KEY_PAY_VIA_UPI_ENABLED, 0) == 1
+					&& Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.CASH.getOrdinal()
+            		&& Data.autoData.getEndRideData().toPay > 0
+					&& !TextUtils.isEmpty(Data.autoData.getEndRideData().getDriverUpiId())){
+				cvPayOnline.setVisibility(View.VISIBLE);
+				tvPayOnline.setVisibility(View.VISIBLE);
+				llPayViaUpi.setVisibility(View.VISIBLE);
+				LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) llPayViaUpi.getLayoutParams();
+				params.setMarginStart(llPayOnline.getVisibility() == View.VISIBLE ? Utils.dpToPx(this, 12) : 0);
+				llPayViaUpi.setLayoutParams(params);
+			} else {
+				llPayViaUpi.setVisibility(View.GONE);
+			}
+
             return onlinePaymentVisibility;
         } catch (Exception e) {
             e.printStackTrace();
@@ -6454,7 +6506,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             slidingBottomPanel.getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
                         }
                     }
-                } else {
+                }
+                else if(requestCode == REQUEST_CODE_PAY_VIA_UPI){
+                	for(String key : data.getExtras().keySet()){
+						Log.v("onActivityResult REQUEST_CODE_PAY_VIA_UPI", "key="+key+", value="+data.getExtras().get(key));
+					}
+					LogUpiResponse.INSTANCE.hitApi(this, Data.autoData.getcEngagementId(),
+							Data.autoData.getEndRideData().getDriverUpiId(),
+							data.getExtras(), logUpiCallback);
+
+				}
+                else {
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
                 }
@@ -6474,6 +6536,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
         likeClicked = 0;
     }
+
+    private LogUpiResponse.LogUpiCallback logUpiCallback = new LogUpiResponse.LogUpiCallback(){
+		@Override
+		public void onApiSuccess(String engagementId) {
+			getRideSummaryAPI(HomeActivity.this, engagementId, null);
+		}
+	};
 
     private void initiateBleProcess(){
         BluetoothManager bluetoothManager =
@@ -9223,7 +9292,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     @Override
     public void customerEndRideInterrupt(final String engagementId, final Promo promo) {
         try {
-            Log.d("HomeActivityRental","CustomerEndRIde");
             if (userMode == UserMode.PASSENGER && engagementId.equalsIgnoreCase(Data.autoData.getcEngagementId())) {
                 closeCancelActivity();
                 runOnUiThread(new Runnable() {
@@ -10543,8 +10611,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			if(jObj.optInt(Constants.KEY_DEEPINDEX, -1) == AppLinkIndex.REINVITE_USERS.getOrdinal()){
 				pushDialog = null;
 
+				String image = jObj.optString(Constants.KEY_IMAGE, jObj.optString(Constants.KEY_PICTURE, ""));
+
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance("",
+				ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance(image,
 						jObj.optString(Constants.KEY_MESSAGE, ""));
 				reinviteFriendsDialog.show(ft, ReinviteFriendsDialog.class.getSimpleName());
 				Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, EMPTY_JSON_OBJECT);

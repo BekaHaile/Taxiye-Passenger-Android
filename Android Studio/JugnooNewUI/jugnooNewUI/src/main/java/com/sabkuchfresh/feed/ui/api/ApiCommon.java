@@ -308,6 +308,9 @@ public class ApiCommon<T extends FeedCommonResponse> {
 			case REINVITE_USERS:
                 RestClient2.getApiService().reinviteUsers(params).enqueue(callback2);
                 break;
+			case UPDATE_PAYMENT_TO_UPI:
+                RestClient2.getApiService().updatePaymentModeToUpi(params).enqueue(callback2);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 
