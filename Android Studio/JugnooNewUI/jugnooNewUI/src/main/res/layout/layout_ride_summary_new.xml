@@ -10,7 +10,7 @@
     android:id="@+id/endRideReviewRl"
     android:layout_marginTop="@dimen/top_bar_height"
     android:splitMotionEvents="false"
-    android:visibility="visible">
+    android:visibility="gone">
 
     <LinearLayout
         android:id="@+id/linearLayoutRideSummaryContainer"

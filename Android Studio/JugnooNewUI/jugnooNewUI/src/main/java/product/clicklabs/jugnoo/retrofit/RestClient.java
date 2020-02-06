@@ -51,6 +51,8 @@ public class RestClient {
 		setupProsApiRestClient();
 		setupMapsCachingRestClient();
 		setupJungleMapsApi();
+		RestClient2.initStreamApiService();
+		RestClient2.initApiService();
 	}
 
 	private static OkHttpClient getOkHttpClient(boolean retryOnConnectionFailure){

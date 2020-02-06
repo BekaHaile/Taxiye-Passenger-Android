@@ -287,11 +287,11 @@ public class HomeUtil {
 	}
 
 	private ArrayList<Marker> markersSavedAddresses = new ArrayList<>();
-	public void displaySavedAddressesAsFlags(Activity activity, ASSL assl, GoogleMap map, boolean showAddress){
+	public void displaySavedAddressesAsFlags(Activity activity, ASSL assl, GoogleMap map, boolean showAddress, PassengerScreenMode passengerScreenMode){
 		try {
 			if(map != null){
 				removeSavedAddress(map);
-				if(Data.autoData.getUseRecentLocAtRequest() == 1){
+				if(passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getUseRecentLocAtRequest() == 1){
 					if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
 						String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
 						SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
@@ -349,11 +349,11 @@ public class HomeUtil {
 
 
 	private ArrayList<Marker> markersPointsOfInterest = new ArrayList<>();
-	public void displayPointOfInterestMarkers(Activity activity, ASSL assl, GoogleMap map){
+	public void displayPointOfInterestMarkers(Activity activity, ASSL assl, GoogleMap map, PassengerScreenMode passengerScreenMode){
 		try {
 			if (map != null) {
 				removeMarkersPointsOfInterest(map);
-				if (Data.autoData.getUseRecentLocAtRequest() == 1) {
+				if (passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getUseRecentLocAtRequest() == 1) {
 					final LatLng mapTarget = map.getCameraPosition().target;
 					Collections.sort(Data.userData.getPointsOfInterestAddresses(), new Comparator<FetchUserAddressResponse.Address>() {
 						@Override

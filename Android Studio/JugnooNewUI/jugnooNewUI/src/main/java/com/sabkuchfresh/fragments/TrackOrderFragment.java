@@ -11,11 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.util.Pair;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +46,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -628,7 +628,7 @@ openChatScreen();
 														new LatLngInterpolator.LinearFixed(), animateRoute, googleMap,
 														pathColor,
 														untrackedPathColor,
-														pathWidth, callbackAnim, fastDuration);
+														pathWidth, callbackAnim, fastDuration, 9000);
 												latLngsDriverAnim.clear();
 												latLngsDriverAnim.addAll(latLngsAnimateDriver);
 											} else {

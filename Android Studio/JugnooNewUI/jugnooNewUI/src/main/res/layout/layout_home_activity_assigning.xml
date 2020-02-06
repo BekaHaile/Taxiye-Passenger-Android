@@ -7,7 +7,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginTop="@dimen/top_bar_height"
                 android:splitMotionEvents="false"
-                android:visibility="visible"
+                android:visibility="gone"
     >
 
     <RelativeLayout
@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="112dp"
-            android:paddingBottom="10px"
+            android:paddingBottom="5dp"
             android:background="@color/white"
             android:splitMotionEvents="false"
             android:clickable="true"

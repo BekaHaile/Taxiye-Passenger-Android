@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.home.adapters;
 
 import android.app.Activity;
 import android.graphics.Typeface;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.VehicleFareEstimateDialog;
@@ -140,7 +140,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                         .load(region.getImages().getTabHighlighted())
                         .placeholder(region.getTabSelected())
                         .into(holder.imageViewTab);
-                if(showRegionFares && region.getRegionFare() != null && region.getReverseBid() == 0){
+                if(showRegionFares && region.getReverseBid() == 0){
                     holder.textViewVehicleName.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_info_grey, 0);
                 }
             } else{

@@ -55,7 +55,6 @@ import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
-import retrofit.RetrofitError;
 
 /**
  * Created by cl-macmini-01 on 2/6/18.
@@ -294,7 +293,7 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
                     }
 
                     @Override
-                    public boolean onFailure(final RetrofitError error) {
+                    public boolean onFailure(final Exception error) {
                         hideSyncLayout();
                         return false;
                     }
@@ -496,7 +495,7 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
                         return false;
                     }
 
