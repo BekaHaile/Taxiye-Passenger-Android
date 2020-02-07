@@ -309,10 +309,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         Utils.showToast(activity, activity.getString(R.string.error_vehicle_type));
                         throw new Exception();
                     }
-                    if( MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData()==null||MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4().isEmpty()){
-                        Utils.showToast(activity, "Add Card First");
-                        throw new Exception();
-                    }
+//                    if( MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData()==null||MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4().isEmpty()){
+//                        Utils.showToast(activity, "Add Card First");
+//                        throw new Exception();
+//                    }
 
 
                     if (!isAsapSelected) {
@@ -1400,43 +1400,42 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             public void onSuccess(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
 
                 vehicleInfoList = dynamicDeliveryResponse.getVehiclesInfoList();
-                if(vehicleInfoList.size()>1) {
+                if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
                     currentVehicleTypePos = 0;
                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
-                    if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
-                        if (vehicleTypeAdapterFeed == null) {
-                            vehicleTypeAdapterFeed = new VehicleTypeAdapterFeed((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterFeed.OnItemSelectedListener() {
-                                @Override
-                                public void onItemSelected(final VehicleInfo item, final int pos) {
-                                    currentVehicleTypePos = pos;
-                                    if(-1 != vehicleInfoList.get(currentVehicleTypePos).getType()) {
-                                        vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
-                                    }
-                                    fetchDynamicDeliveryCharges(false,false,false);
+                    if (vehicleTypeAdapterFeed == null) {
+                        vehicleTypeAdapterFeed = new VehicleTypeAdapterFeed((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterFeed.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(final VehicleInfo item, final int pos) {
+                                currentVehicleTypePos = pos;
+                                if(-1 != vehicleInfoList.get(currentVehicleTypePos).getType()) {
+                                    vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
                                 }
-                            });
-                        }
-                        if(isPickUpSet) {
-                            if(checkCount == 0) {
-                                rvVehicles.setVisibility(View.VISIBLE);
-                                rvVehicles.setAdapter(vehicleTypeAdapterFeed);
-                                checkCount++;
+                                fetchDynamicDeliveryCharges(false,false,false);
                             }
-                            else {
-                                rvVehicles.setVisibility(View.VISIBLE);
-                                vehicleTypeAdapterFeed.updateList(vehicleInfoList);
-                            }
+                        });
+                    }
+                    if(isPickUpSet) {
+                        if(checkCount == 0) {
+                            rvVehicles.setVisibility(View.VISIBLE);
+                            rvVehicles.setAdapter(vehicleTypeAdapterFeed);
+                            checkCount++;
                         }
+                        else {
+                            rvVehicles.setVisibility(View.VISIBLE);
+                            vehicleTypeAdapterFeed.updateList(vehicleInfoList);
+                        }
+                    }
+
+                    if(vehicleInfoList.size()>1) {
+                        rvVehicles.setVisibility(View.VISIBLE);
                     }
                     else {
-                        vehicleType = vehicleInfoList.get(0).getType();
                         rvVehicles.setVisibility(GONE);
                     }
-                    fetchDynamicDeliveryCharges(false,false,false);
                 }
-                else {
-                    rvVehicles.setVisibility(GONE);
-                }
+                else
+                    Utils.showToast(activity,getString(R.string.no_vehicles_available));
                 fetchDynamicDeliveryCharges(false,false,false);
             }
 
