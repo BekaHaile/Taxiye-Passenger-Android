@@ -54,8 +54,8 @@ object EnterBidDialog {
             if(!TextUtils.isEmpty(etPrefix)){
                 editTextNumber.addTextChangedListener(object : TextWatcher{
                     override fun afterTextChanged(s: Editable?) {
-                        editTextNumber.setPrefix(if(s?.isNullOrEmpty() == true) "" else etPrefix)
-                        editTextNumber.hint = if(s?.isNullOrEmpty() == true) etHint else ""
+                        editTextNumber.setPrefix(if(s?.isEmpty() == true) "" else etPrefix)
+                        editTextNumber.hint = if(s?.isEmpty() == true) etHint else ""
                     }
 
                     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {

@@ -18,6 +18,7 @@ import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.retrofit.model.CouponType;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.utils.MapUtils;
+import product.clicklabs.jugnoo.retrofit.model.GenderValues;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
@@ -100,6 +101,8 @@ public class UserData {
 	private int showJugnooStarInAcccount;
 	private String fuguChannelInfoJson;
 	private int regAs;
+	private int gender;
+	private String dateOfBirth;
 	private int cityId;
 
 	public String getFuguChannelInfoJson() {
@@ -902,7 +905,8 @@ public class UserData {
 				for(PromoCoupon promoCoupon: promoCoupons){
 					if(promoCoupon.getIsSelected() == 1
 							&& promoCoupon.isVehicleTypeExists(vehicleType, operatorId)
-							&& promoCoupon.getType() == CouponType.DROP_BASED.getType()
+							&& (promoCoupon.getType() == CouponType.DROP_BASED.getType()
+							|| promoCoupon.getType() == CouponType.PICKUP_DROP_BASED.getType())
 							&& promoCoupon.getDropRadius() > 0){
 						for(LatLngCoordinates llc : promoCoupon.getDropLocationCoordinates()){
 							if(MapUtils.distance(llc.getLatLng(), Data.autoData.getDropLatLng()) <= promoCoupon.getDropRadius()){
@@ -914,7 +918,8 @@ public class UserData {
 			}
 			for(PromoCoupon promoCoupon: promoCoupons){
 				  if(promoCoupon.getIsSelected()==1 && promoCoupon.isVehicleTypeExists(vehicleType, operatorId)
-						  && promoCoupon.getType() != CouponType.DROP_BASED.getType())
+						  && promoCoupon.getType() != CouponType.DROP_BASED.getType()
+						  && promoCoupon.getType() != CouponType.PICKUP_DROP_BASED.getType())
 				  	return promoCoupon;
 			}
 		}
@@ -1173,6 +1178,36 @@ public class UserData {
 
 	public void setRegAs(int regAs) {
 		this.regAs = regAs;
+	}
+
+	public int getGender() {
+		return gender;
+	}
+	public String getGenderName(Context context) {
+		if(gender == GenderValues.MALE.getType()){
+			return context.getString(R.string.male);
+		} else if(gender == GenderValues.FEMALE.getType()){
+			return context.getString(R.string.female);
+		} else if(gender == GenderValues.OTHER.getType()){
+			return context.getString(R.string.others);
+		} else {
+			return "";
+		}
+	}
+
+	public void setGender(int gender) {
+		this.gender = gender;
+	}
+
+	public String getDateOfBirth() {
+		if(dateOfBirth != null && dateOfBirth.equalsIgnoreCase("null")){
+			dateOfBirth = "";
+		}
+		return dateOfBirth;
+	}
+
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public int getCityId() {

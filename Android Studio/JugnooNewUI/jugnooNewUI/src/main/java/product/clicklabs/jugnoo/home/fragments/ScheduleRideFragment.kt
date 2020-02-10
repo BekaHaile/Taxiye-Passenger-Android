@@ -6,12 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.sabkuchfresh.analytics.GAAction
@@ -69,8 +69,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     var scheduleDaysLimit = 2
     private var isOneWay : Int = -1
     private var apiFareEstimate : ApiFareEstimate? = null
-    private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
-    private val onDateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+    private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
+    private val onDateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
         val date = year.toString() + "-" + (month + 1) + "-" + dayOfMonth
         if (validateDateTime(date, null)) {
             selectedDate = date
@@ -382,9 +382,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
 
 
-    private fun getFormattedDateTime(selectedDate: String?, selectedTime: String?, addHours: Boolean): String {
-        var selectedDate = selectedDate
-        var selectedTime = selectedTime
+    private fun getFormattedDateTime(selectedDate1: String?, selectedTime1: String?, addHours: Boolean): String {
+        var selectedDate = selectedDate1
+        var selectedTime = selectedTime1
         if (TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)) {
             val calendar = Calendar.getInstance()
             if (TextUtils.isEmpty(selectedTime)) {
@@ -501,8 +501,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
     private fun getFareEstimate() {
         if(searchResultPickup != null && searchResultDestination != null && Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) {
-            tvFareEstimate.visibility = View.VISIBLE
-            viewInnerDrop.visibility = View.VISIBLE
+//            tvFareEstimate.visibility = View.VISIBLE
+//            viewInnerDrop.visibility = View.VISIBLE
             getDirectionsAndComputeFare(searchResultPickup!!.latLng, searchResultPickup!!.address, searchResultDestination!!.latLng, searchResultDestination!!.address)
         } else {
             tvFareEstimate.visibility = View.GONE

@@ -114,4 +114,13 @@
     <!--show fleet-->
     <bool name="show_fleet">true</bool>
 
+    <string name="anywhere">Enter Pickup Location</string>
+    <color name="orange_rides_fab_pressed">@color/colorPrimaryDark</color>
+    <color name="theme_color_start">@color/colorPrimary</color>
+    <color name="green_delivery_customer_fab">@color/colorPrimary</color>
+    <color name="green_delivery_customer_fab_pressed">@color/colorPrimaryDark</color>
+    <color name="text_color_orange">@color/colorPrimary</color>
+
+    <bool name="vehicle_list_menus">false</bool>
+
 </resources>

@@ -3,8 +3,6 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.text.TextUtils;
 
 import com.facebook.appevents.AppEventsConstants;
@@ -43,6 +41,7 @@ import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EmergencyContact;
 import product.clicklabs.jugnoo.datastructure.EndRideData;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.FeedBackInfo;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
@@ -486,6 +485,17 @@ public class JSONParser implements Constants {
             Data.autoData.setReferralPopupContent(autosData.getReferralPopupContent());
             Data.autoData.setFaultConditions(autosData.getFaultConditions());
 
+            Data.userData.setGender(autoData.optInt(Constants.KEY_GENDER, 0));
+            Log.d(TAG, "parseUserData Key Gender: gender saved" + autoData.optInt(Constants.KEY_GENDER, 0));
+            Data.userData.setDateOfBirth(autoData.optString(Constants.KEY_DATE_OF_BIRTH, ""));
+
+            Prefs.with(context).save(KEY_CUSTOMER_GENDER_FILTER, autoData.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                    context.getResources().getInteger(R.integer.customer_gender_filter)));
+            Log.d(TAG, "parseConfigParams: filter" + autoData.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                    context.getResources().getInteger(R.integer.customer_gender_filter)));
+            Prefs.with(context).save(KEY_CUSTOMER_DOB_INPUT, autoData.optInt(KEY_CUSTOMER_DOB_INPUT,
+                    context.getResources().getInteger(R.integer.customer_dob_input)));
+
 			long bidRequestRideTimeout = autoData.optLong(KEY_BID_REQUEST_RIDE_TIMEOUT, 420000);
 			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
             Data.autoData.setBidRequestRideTimeout(bidRequestRideTimeout);
@@ -699,6 +709,8 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_REINVITE_USERS_ENABLED, autoData.optInt(KEY_REINVITE_USERS_ENABLED, 1));
 		Prefs.with(context).save(KEY_HIDE_REGIONS_WITH_NO_DRIVERS, autoData.optInt(KEY_HIDE_REGIONS_WITH_NO_DRIVERS,
 				context.getResources().getInteger(R.integer.hide_regions_with_no_drivers)));
+		Prefs.with(context).save(KEY_PAY_VIA_UPI_ENABLED, autoData.optInt(KEY_PAY_VIA_UPI_ENABLED,
+				context.getResources().getInteger(R.integer.pay_via_upi_enabled)));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 
@@ -787,6 +799,28 @@ public class JSONParser implements Constants {
 			e.printStackTrace();
 		}
 	}
+
+	public static void allowedAuthChannelTimeConfigVariables(Context context, JSONObject jObj){
+
+        Prefs.with(context).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
+        Prefs.with(context).save(Constants.KEY_SHOW_FACEBOOK_LOGIN, jObj.optInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1));
+        Prefs.with(context).save(Constants.KEY_SHOW_GOOGLE_LOGIN, jObj.optInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1));
+
+        Prefs.with(context).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, context.getString(R.string.terms_of_use_url)));
+        Prefs.with(context).save(Constants.KEY_SHOW_TERMS, jObj.optInt(Constants.KEY_SHOW_TERMS, 1));
+
+        Prefs.with(context).save(Constants.KEY_DEFAULT_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_CODE));
+        Prefs.with(context).save(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE));
+        Prefs.with(context).save(Constants.KEY_DEFAULT_COUNTRY_ISO, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_ISO));
+        Prefs.with(context).save(SP_OTP_VIA_CALL_ENABLED, jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
+
+        Prefs.with(context).save(KEY_CUSTOMER_GENDER_FILTER, jObj.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                context.getResources().getInteger(R.integer.customer_gender_filter)));
+        android.util.Log.d("In JSONPARSER", "parseConfigParams: gender filer" + jObj.optInt(KEY_CUSTOMER_GENDER_FILTER,
+                context.getResources().getInteger(R.integer.customer_gender_filter)));
+        Prefs.with(context).save(KEY_CUSTOMER_DOB_INPUT, jObj.optInt(KEY_CUSTOMER_DOB_INPUT,
+                context.getResources().getInteger(R.integer.customer_dob_input)));
+    }
 
 	public static void parseAndSetLocale(Context context, JSONObject autoData) {
         if(autoData.has(KEY_DEFAULT_LANG) && Prefs.with(context).getString(KEY_DEFAULT_LANG, "eee").equals("eee")) {
@@ -1038,7 +1072,9 @@ public class JSONParser implements Constants {
                 for (Region region : autos.getRegions()) {
                     region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
                     region.setIsDefault(false);
-                    Data.autoData.addRegion(region);
+					if(region.isRegionAccGender(context, Data.userData)) {
+						Data.autoData.addRegion(region);
+					}
                     if(region.getRegionFare() != null && region.getRegionFare().getFare() < minRegionFare) {
                         minRegionFare = region.getRegionFare().getFare();
                     }
@@ -1209,12 +1245,44 @@ public class JSONParser implements Constants {
             Prefs.with(context).save(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getAutosClientId());
             Prefs.with(context).save(Constants.KEY_EMERGENCY_NO, jLastRideData.optString(KEY_EMERGENCY_NO, context.getString(R.string.police_number)));
 
+			//Driver FeedBack
+			if (jObj.has(KEY_FEEDBACK_INFO)) {
+				JSONArray jsonArray = jObj.getJSONArray(KEY_FEEDBACK_INFO);
+				parseFeedBackInfo(jsonArray);
+			}
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public static void parseFeedBackInfo(JSONArray jsonArray){
+        ArrayList<FeedBackInfo.ImageBadges> imageBadges;
+        ArrayList<FeedbackReason> textBadges;
+       if(jsonArray.length()>0) {
+           for (int i = 0; i < jsonArray.length(); i++) {
+               imageBadges=new ArrayList<>();
+               textBadges=new ArrayList<>();
+               JSONObject jObj = jsonArray.optJSONObject(i);
+               if(jObj.has("image_badges")){
+                   JSONArray imgArr=jObj.optJSONArray("image_badges");
+                   for(int j=0;j<imgArr.length();j++){
+                       JSONObject imageBadge=imgArr.optJSONObject(j);
+                       imageBadges.add( new FeedBackInfo.ImageBadges(imageBadge.optString("name"),imageBadge.optInt("badge_id"),imageBadge.optString("image"), imageBadge.optInt("can_comment", 0) == 1));
+                   }
+               }
+               if(jObj.has("text_badges")){
+                   JSONArray txtArr=jObj.optJSONArray("text_badges");
+                   for(int j=0;j<txtArr.length();j++){
+                       JSONObject textBadge=txtArr.optJSONObject(j);
+                       textBadges.add( new FeedbackReason(textBadge.optString("name"),textBadge.optInt("badge_id"),textBadge.optInt("can_comment")==1));
+                   }
+               }
+               Data.autoData.getFeedBackInfoRatingData().add(new FeedBackInfo(jObj.optInt("rating"),jObj.optString("desc"),imageBadges,textBadges));
 
+           }
+       }
+    }
 
 	public static EndRideData parseEndRideData(JSONObject jLastRideData, String engagementId, double initialBaseFare) throws Exception{
 		double baseFare = initialBaseFare;
@@ -1287,6 +1355,9 @@ public class JSONParser implements Constants {
 			driverCarNumber = jLastRideData.getString("driver_car_no");
 		}
         driverImage = jLastRideData.optString("driver_image", "");
+
+        String driverUpiId = jLastRideData.optString(KEY_DRIVER_UPI, "");
+
         int isPooled = jLastRideData.optInt(KEY_IS_POOLED);
 
         double rideTime = -1;
@@ -1394,7 +1465,7 @@ public class JSONParser implements Constants {
                 fuguChannelData.getFuguChannelId(), fuguChannelData.getFuguChannelName(), fuguChannelData.getFuguTags(),
                 showPaymentOptions, paymentOption, operatorId, currency, distanceUnit, iconUrl, tollCharge,
                 driverTipAmount, luggageChargesNew,netCustomerTax,taxPercentage, reverseBid, isCorporateRide,
-                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId);
+                partnerName, showTipOption, paidUsingPOS, stripeCardsAmount, meterFareApplicable, driverId, driverUpiId);
 	}
 
 
@@ -1806,20 +1877,7 @@ public class JSONParser implements Constants {
 
 
     public void clearSPData(final Context context) {
-        SharedPreferences pref = context.getSharedPreferences(Data.SHARED_PREF_NAME, 0);
-        Editor editor = pref.edit();
-
-        editor.putString(Data.SP_TOTAL_DISTANCE, "-1");
-        editor.putString(Data.SP_WAIT_TIME, "0");
-        editor.putString(Data.SP_RIDE_TIME, "0");
-        editor.putString(Data.SP_RIDE_START_TIME, "" + System.currentTimeMillis());
-        editor.putString(Data.SP_LAST_LATITUDE, "0");
-        editor.putString(Data.SP_LAST_LONGITUDE, "0");
-
-        editor.commit();
-
         MyApplication.getInstance().getDatabase().deleteSavedPath();
-        MyApplication.getInstance().getDatabase().close();
     }
 
 

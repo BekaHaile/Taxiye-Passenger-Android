@@ -53,14 +53,7 @@ public class Data {
     public static final String NO_PROMO_APPLIED = "No Promo Code applied";
 
     public static final String SHARED_PREF_NAME = "myPref";
-    public static final String SP_ACCESS_TOKEN_KEY = "access_token",
-
-    SP_TOTAL_DISTANCE = "total_distance",
-            SP_WAIT_TIME = "wait_time",
-            SP_RIDE_TIME = "ride_time",
-            SP_RIDE_START_TIME = "ride_start_time",
-            SP_LAST_LATITUDE = "last_latitude",
-            SP_LAST_LONGITUDE = "last_longitude";
+    public static final String SP_ACCESS_TOKEN_KEY = "access_token";
 
 
     public static String P_RIDE_END = "P_RIDE_END", P_IN_RIDE = "P_IN_RIDE", P_DRIVER_ARRIVED = "P_DRIVER_ARRIVED", P_REQUEST_FINAL = "P_REQUEST_FINAL",

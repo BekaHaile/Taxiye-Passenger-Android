@@ -3,7 +3,6 @@ package product.clicklabs.jugnoo.promotion.fragments
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -31,7 +30,7 @@ import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.MyApplication
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.HomeActivity
-import product.clicklabs.jugnoo.home.ReinviteFriendsActivity
+import product.clicklabs.jugnoo.home.dialogs.ReinviteFriendsDialog
 import product.clicklabs.jugnoo.promotion.ReferralActions
 import product.clicklabs.jugnoo.promotion.ShareActivity
 import product.clicklabs.jugnoo.promotion.adapters.MediaInfoFragmentAdapter
@@ -120,7 +119,15 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
         rlShareDriver.setOnClickListener { getReferDriverDialog().show() }
 
-        rlReinvite.setOnClickListener { startActivity(Intent(requireContext(), ReinviteFriendsActivity::class.java)) }
+        rlReinvite.setOnClickListener {
+            referralTxnResponse?.run{referralData?.run{
+                val message = c2cReinviteMessage ?: ""
+                val image = c2cReinviteImage ?: ""
+                val ft = childFragmentManager.beginTransaction()
+                val reinviteFriendsDialog = ReinviteFriendsDialog.newInstance(image, message)
+                reinviteFriendsDialog.show(ft, ReinviteFriendsDialog::class.java.simpleName)
+            } }
+        }
 
         tvReferralsCount!!.setOnClickListener { v -> openReferralTxnFragment(ReferralTxnFragment.STATE_REFERRALS) }
         tvCashEarned!!.setOnClickListener { v -> openReferralTxnFragment(ReferralTxnFragment.STATE_TOTAL) }
@@ -161,9 +168,9 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
 
             tvReferralCodeValue!!.text = Data.userData.referralCode
-            textViewDesc!!.text = Data.userData.referralMessages.referralShortMessage + " " + getString(R.string.details)
+            textViewDesc!!.text = Data.userData.referralMessages.referralShortMessage + (if (Data.userData.referralMessages.referralShortMessage.isEmpty()) "" else " ") + getString(R.string.details)
 
-            val ss = SpannableString(Data.userData.referralMessages.referralShortMessage + "\n " + getString(R.string.details))
+            val ss = SpannableString(Data.userData.referralMessages.referralShortMessage + "\n"+ (if (Data.userData.referralMessages.referralShortMessage.isEmpty()) "" else " ") + getString(R.string.details))
             val clickableSpan = object : ClickableSpan() {
                 override fun onClick(textView: View) {
                     try {
@@ -177,7 +184,7 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
                 }
             }
-            ss.setSpan(clickableSpan, textViewDesc!!.text.length - getString(R.string.details).length, textViewDesc!!.text.length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            ss.setSpan(clickableSpan, textViewDesc.text.length - getString(R.string.details).length, textViewDesc!!.text.length + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
             textViewDesc!!.text = ss
             textViewDesc!!.movementMethod = LinkMovementMethod.getInstance()
@@ -227,22 +234,24 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
     }
 
-    private fun setReferralStats(referralTxnResponse: ReferralTxnResponse?) {
-        if(referralTxnResponse?.referralData != null
-                && referralTxnResponse.referralData!!.referralsCount != null
-                && referralTxnResponse.referralData!!.referralEarnedTotal != null
-                && referralTxnResponse.referralData!!.referralEarnedToday != null) {
-            setHighlightText(tvReferralsCount!!, getString(R.string.referrals),
-                    referralTxnResponse.referralData!!.referralsCount!!.toInt().toString())
-            setHighlightText(tvCashEarned!!, getString(R.string.cash_earned),
-                    Utils.formatCurrencyValue(Data.autoData.currency, referralTxnResponse.referralData!!.referralEarnedTotal!!))
-            setHighlightText(tvCashEarnedToday!!, getString(R.string.earned_today),
-                    Utils.formatCurrencyValue(Data.autoData.currency, referralTxnResponse.referralData!!.referralEarnedToday!!))
+    private fun setReferralData(referralTxnResponse: ReferralTxnResponse?) {
+        referralTxnResponse?.run{
+            referralData?.run{
+                if(referralsCount != null && referralEarnedTotal != null && referralEarnedToday != null) {
+                    setHighlightText(tvReferralsCount!!, getString(R.string.referrals),
+                            referralsCount!!.toInt().toString())
+                    setHighlightText(tvCashEarned!!, getString(R.string.cash_earned),
+                            Utils.formatCurrencyValue(Data.autoData.currency, referralEarnedTotal!!))
+                    setHighlightText(tvCashEarnedToday!!, getString(R.string.earned_today),
+                            Utils.formatCurrencyValue(Data.autoData.currency, referralEarnedToday!!))
 
-            Data.userData.referralMessages.referralsCount = referralTxnResponse.referralData!!.referralsCount!!
-            Data.userData.referralMessages.referralEarnedTotal = referralTxnResponse.referralData!!.referralEarnedTotal!!
-            Data.userData.referralMessages.referralEarnedToday = referralTxnResponse.referralData!!.referralEarnedToday!!
+                    Data.userData.referralMessages.referralsCount = referralsCount!!
+                    Data.userData.referralMessages.referralEarnedTotal = referralEarnedTotal!!
+                    Data.userData.referralMessages.referralEarnedToday = referralEarnedToday!!
+                }
+            }
         }
+
     }
 
     private fun getReferDriverDialog(): ReferDriverDialog {
@@ -298,7 +307,7 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
                     .execute(params, ApiName.REFERRAL_INFO, object: APICommonCallback<ReferralTxnResponse>(){
                         override fun onSuccess(t: ReferralTxnResponse?, message: String?, flag: Int) {
                             referralTxnResponse = t
-                            setReferralStats(referralTxnResponse)
+                            setReferralData(referralTxnResponse)
                         }
 
                         override fun onError(t: ReferralTxnResponse?, message: String?, flag: Int): Boolean {

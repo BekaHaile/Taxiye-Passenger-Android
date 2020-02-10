@@ -494,7 +494,7 @@
                 android:orientation="vertical"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="5dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:cardPreventCornerOverlap="true"
                 app:cardUseCompatPadding="false">
 
@@ -707,7 +707,7 @@
                     android:background="@drawable/capsule_theme_color_selector"
                     android:text="@string/call_support"
                     android:textAllCaps="true"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:textSize="@dimen/sp_16"
                     app:typekitFont="@string/maven"/>
@@ -723,7 +723,7 @@
                     android:textAllCaps="true"
                     android:textColor="@color/text_color_theme_selector"
                     android:textSize="@dimen/sp_16"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:typekitFont="@string/maven"
                     />
 

@@ -1030,6 +1030,10 @@ public interface Constants {
     String KEY_CUSTOMER_GOOGLE_TRAFFIC_ENABLED = "customer_google_traffic_enabled";
 
     String KEY_SHOW_TIP_OPTION = "show_tip_option";
+    String KEY_GENDER = "gender";
+    String KEY_DATE_OF_BIRTH = "date_of_birth";
+    String DOB_DATE_FORMAT = "yyyy-MM-dd";
+
 
     String KEY_CUSTOMER_REQUEST_RIDE_BID_FAST_INTERVAL = "customer_request_ride_bid_fast_interval";
     String KEY_PAID_USING_POS = "paid_using_pos";
@@ -1180,9 +1184,17 @@ public interface Constants {
 	String KEY_DRIVER_TRACKING_USING_STREAM_ENABLED = "driver_tracking_using_stream_enabled";
 	String KEY_DRIVER_MARKER_ANIM_DURATION_INRIDE = "driver_marker_anim_duration_inride";
 	String KEY_DRIVER_MARKER_ANIM_DURATION_ACCEPT = "driver_marker_anim_duration_accept";
+    String KEY_APPLICABLE_GENDER = "applicable_gender";
+    String KEY_CUSTOMER_GENDER_FILTER = "customer_gender_filter";
+    String KEY_CUSTOMER_DOB_INPUT = "customer_dob_input";
 	String KEY_PHONE_NOS = "phone_nos";
 	String KEY_USERS = "users";
 	String KEY_USER_PHONE_NO = "user_phone_no";
 	String KEY_REINVITE_USERS_ENABLED = "reinvite_users_enabled";
 	String KEY_HIDE_REGIONS_WITH_NO_DRIVERS = "hide_regions_with_no_drivers";
+    String KEY_FEEDBACK_INFO="feedback_info";
+	String KEY_DRIVER_UPI = "driver_upi";
+	String KEY_PAY_VIA_UPI_ENABLED = "pay_via_upi_enabled";
+	String KEY_PAYMENT_RESPONSE = "payment_response";
+	String KEY_UPI_RESPONSE = "response";
 }

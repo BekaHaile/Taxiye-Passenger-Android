@@ -201,7 +201,7 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
         FuguLog.e(TAG, "startCamera");
 
         /** Code to check whether the Location Permission is Granted */
-        String[] permissionsRequired = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissionsRequired = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
 
         /*  Check if the Permission for the Camera was Granted  */
         if (!FuguConfig.getInstance().askUserToGrantPermission(activity,

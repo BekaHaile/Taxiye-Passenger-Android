@@ -92,8 +92,14 @@
     <dimen name="end_ride_fare_value_text_size">
         45px
     </dimen>
+    <dimen name="end_ride_fare_value_text_size_dp">
+        22sp
+    </dimen>
     <dimen name="end_ride_fare_title_text_size">
         26px
+    </dimen>
+    <dimen name="end_ride_fare_title_text_size_dp">
+        13sp
     </dimen>
 
 

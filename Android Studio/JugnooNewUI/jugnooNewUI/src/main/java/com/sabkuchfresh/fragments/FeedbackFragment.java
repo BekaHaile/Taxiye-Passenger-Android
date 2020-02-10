@@ -5,11 +5,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -40,6 +35,11 @@ import com.sabkuchfresh.utils.Utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -477,6 +477,10 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                             } else {
                                 GAUtils.event(getGaCategory(), FEEDBACK, ISSUE+SELECTED+name);
                             }
+                        }
+                        @Override
+                        public void showCommentBox(int visibility){
+//                            HomeActivity.this.findViewById(R.id.cvAdditionalComments).setVisibility(visibility);
                         }
                     });
             gridViewRSFeedbackReasons.setAdapter(feedbackReasonsAdapter);

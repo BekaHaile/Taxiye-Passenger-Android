@@ -4,7 +4,8 @@
               android:layout_height="match_parent"
               android:background="@color/menu_item_selector_color_F7"
               android:orientation="vertical"
-              xmlns:app="http://schemas.android.com/apk/res-auto">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/topBar"
@@ -188,7 +189,7 @@
                             android:inputType="text"
                             android:maxLines="1"
                             android:lines="1"
-                            android:text="Mohit"
+                            tools:text="Mohit"
                             android:scrollHorizontally="true"
                             android:ellipsize="end"
                             android:paddingBottom="@dimen/dp_6"
@@ -198,15 +199,10 @@
                             android:textCursorDrawable="@drawable/cursor_black"
                             android:textSize="@dimen/sp_15"/>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            >
 
                             <EditText
                                 android:id="@+id/editTextEmail"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@drawable/bg_white_orange_bb"
                                 android:gravity="center_vertical"
@@ -222,7 +218,6 @@
                                 android:textCursorDrawable="@drawable/cursor_black"
                                 android:textSize="@dimen/sp_13"/>
 
-                        </LinearLayout>
 
                         <!-- Phone -->
                         <RelativeLayout
@@ -246,7 +241,7 @@
                                     android:layout_height="wrap_content"
                                     android:includeFontPadding="false"
                                     android:textColor="@color/text_color"
-                                    android:text="2"
+                                    tools:text="2"
                                     android:textSize="15sp"
                                     android:drawablePadding="3dp"
                                     android:padding="4dp"
@@ -289,6 +284,32 @@
                                 android:visibility="visible"/>
 
                         </RelativeLayout>
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/spinnerGender"
+                            android:layout_width="match_parent"
+                            android:layout_height="28dp"
+                            android:tag="@string/dont_touch_me"
+                            android:gravity="center_vertical"
+                            android:popupBackground="@drawable/background_white_rounded_bordered"
+                            android:background="@drawable/bg_white_orange_bb"/>
+
+                        <EditText
+                            android:id="@+id/etDOB"
+                            android:layout_width="match_parent"
+                            android:layout_height="28dp"
+                            android:tag="@string/dont_touch_me"
+                            android:textDirection="locale"
+                            android:focusable="false"
+                            android:longClickable="false"
+                            android:hint="@string/date_of_birth"
+                            android:imeOptions="actionDone"
+                            android:inputType="textPersonName|textCapCharacters"
+                            android:textSize="15sp"
+                            android:textColor="@color/text_color"
+                            android:textColorHint="@color/text_color_light"
+                            android:background="@drawable/bg_white_orange_bb"
+                            />
 
                     </LinearLayout>
 

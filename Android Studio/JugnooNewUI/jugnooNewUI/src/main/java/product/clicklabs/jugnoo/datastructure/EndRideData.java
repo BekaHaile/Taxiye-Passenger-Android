@@ -44,6 +44,7 @@ public class EndRideData {
 	private int showTipOption, meterFareApplicable;
 	private double paidUsingPOS;
 	private int driverId;
+	private String driverUpiId;
 
 	public EndRideData(String engagementId, String driverName, String driverCarNumber, String driverImage,
 					   String pickupAddress, String dropAddress, String pickupTime, String dropTime,
@@ -57,7 +58,7 @@ public class EndRideData {
 					   int paymentOption, int operatorId, String currency, String distanceUnit, String iconUrl, double tollCharge, double driverTipAmount,
 					   double luggageChargesNew, double netCustomerTax, double taxPercentage, int reverseBid, int isCorporateRide,
 					   String partnerName, int showTipOption,double paidUsingPOS, ArrayList<DiscountType> stripeCardsAmount, int meterFareApplicable,
-					   int driverId){
+					   int driverId, String driverUpiId){
 		this.totalRide = totalRide;
 		this.engagementId = engagementId;
 		this.driverName = driverName;
@@ -141,6 +142,7 @@ public class EndRideData {
 		this.stripeCardsAmount = stripeCardsAmount;
 		this.meterFareApplicable = meterFareApplicable;
 		this.driverId = driverId;
+		this.driverUpiId = driverUpiId;
 
 		this.finalFare = meterFareApplicable == 0 ? (this.fare + this.luggageCharge + this.convenienceCharge + this.luggageChargesNew - this.discount + this.sumAdditionalCharges
 				+ this.tollCharge + this.driverTipAmount + this.netCustomerTax) : this.fare;
@@ -385,5 +387,13 @@ public class EndRideData {
 
 	public void setDriverId(int driverId) {
 		this.driverId = driverId;
+	}
+
+	public String getDriverUpiId() {
+		return driverUpiId;
+	}
+
+	public void setDriverUpiId(String driverUpiId) {
+		this.driverUpiId = driverUpiId;
 	}
 }

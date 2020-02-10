@@ -158,6 +158,7 @@
                             android:layout_centerInParent="true"
                             android:tag="@string/dont_touch_me"
                             android:text="@string/please_confirm_delivery_address"
+                            android:layout_toStartOf="@+id/imageViewDeliveryAddressForward"
                             android:textColor="@color/red_alert_no_address"
                             android:textSize="14.5sp"
                             android:visibility="gone"
@@ -855,7 +856,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32px"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textViewChooseVehicle"
@@ -869,7 +870,7 @@
                     android:textSize="@dimen/text_size_26"
                     android:visibility="visible" />
 
-                <androidx.appcompat.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/cvVehicles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -896,7 +897,7 @@
                         android:visibility="gone"
                         layout="@layout/order_place_referal" />
 
-                </androidx.appcompat.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 

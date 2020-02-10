@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.View;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -138,8 +139,14 @@ public class ApiGetRideSummary {
 								} else{
 									itemsMain = MyApplication.getInstance().getDatabase2().getSupportDataItems(supportCategory);
 								}
-
+								//todo try with feedbackinfo model
+								if(jObj.has(Constants.KEY_FEEDBACK_INFO))
+								{
+									JSONArray jsonArray=jObj.getJSONArray(Constants.KEY_FEEDBACK_INFO);
+									JSONParser.parseFeedBackInfo(jsonArray);
+								}
 								callback.onSuccess(endRideData, finalDatum, itemsMain);
+
 							} else if(ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
 								if(callback.onActionFailed(message)){
 									retryDialog(message);

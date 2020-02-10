@@ -1085,6 +1085,9 @@
         <item name="android:fontFamily">@font/maven_pro_regular</item>
     </style>
 
+    <style name="DatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/theme_color</item>
+    </style>
 
     <style name="fullscreen_dialog" parent="android:Theme" >
         <item name="android:windowNoTitle">true</item>
