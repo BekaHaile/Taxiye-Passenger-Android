@@ -33,7 +33,7 @@
     <string name="confirm_request">Confirm Request</string>
 
     <string name="enter_code">Enter Code</string>
-    <string name="done">Done</string>
+    <string name="done_caps">DONE</string>
 
     <string name="logout">Logout</string>
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
@@ -130,6 +130,7 @@
     <string name="view_invoice">View Invoice</string>
     <string name="trip_overview">Trip Overview</string>
     <string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
+    <string name="done">Done</string>
     <string name="skip">Skip</string>
     <string name="star_required">* Required</string>
     <string name="leave_a_comment">Leave a comment</string>
@@ -139,6 +140,7 @@
     <string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
     <string name="review_must_be_in">Review must be in 300 letters.</string>
     <string name="order_expereince">How was your Experience?</string>
+    <string name="rating_summary">Rating</string>
 
     <!-- Add Places -->
 
@@ -2179,6 +2181,7 @@
     <string name="congestion_charges_per_min">Congestion charges per min</string>
 
 
+
     <!--    Country Names-->
     <string name="andorra">Andorra</string>
     <string name="uae">United Arab Emirates</string>
@@ -2494,4 +2497,9 @@
     <string name="contacts_read_cancelled_tap_to_retry">Contacts read cancelled\nTap to retry</string>
     <string name="reinvite_friends">Re-Invite Friends</string>
     <string name="unselect_all">Unselect All</string>
+    <string name="offer_not_valid_for_selected_drop_location">Offer not valid for your selected drop location</string>
+    <string name="add_your_reviews">Add Your Reviews</string>
+    <string name="review_must_be_in_150">Review must be in 150 letters.</string>
+    <string name="pay_via">Pay via</string>
+    <string name="upi_supported_app_not_installed">UPI supported app not installed</string>
 </resources>

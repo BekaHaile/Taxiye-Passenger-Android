@@ -27,6 +27,8 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
     private ArrayList<FeedbackReason> positiveReasons;
     private FeedbackReasonsListEventHandler feedbackReasonsListEventHandler;
     private boolean showPositiveReasons;
+    private int textBadgeCount=0;
+    private int canCommentCount=0;
 
     public FeedbackReasonsAdapter(Context context, ArrayList<FeedbackReason> feedbackReasons, FeedbackReasonsListEventHandler feedbackReasonsListEventHandler) {
         this.context = context;
@@ -86,8 +88,8 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         holder.textViewFeedbackReason.setText(feedbackReason.name);
 
         if (feedbackReason.checked) {
-            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_green_color_selector);
-            holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.white));
+            holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_white_theme_stroke);
+            holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.theme_color));
         } else {
             holder.textViewFeedbackReason.setBackgroundResource(R.drawable.capsule_white_stroke);
             holder.textViewFeedbackReason.setTextColor(context.getResources().getColor(R.color.text_color));
@@ -101,10 +103,20 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
                 try {
                     holder = (ViewHolderFeedbackReason) v.getTag();
                     if (currentList.get(holder.id).checked) {
+                        textBadgeCount--;
                         currentList.get(holder.id).checked = false;
+                        if(currentList.get(holder.id).canComment)
+                            canCommentCount--;
                     } else {
+                        if(textBadgeCount<5){
+                            textBadgeCount++;
                         currentList.get(holder.id).checked = true;
+                        if(currentList.get(holder.id).canComment)
+                            canCommentCount++;
+
                     }
+                    }
+                    showAdditionalComments();
                     notifyDataSetChanged();
 
                     feedbackReasonsListEventHandler.onLastItemSelected(isLastSelected(), currentList.get(holder.id).name);
@@ -118,6 +130,12 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void showAdditionalComments(){
+        if(canCommentCount>0)
+            feedbackReasonsListEventHandler.showCommentBox(View.VISIBLE);
+        else
+            feedbackReasonsListEventHandler.showCommentBox(View.GONE);
+    }
     public String getSelectedReasons() {
         ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
         String reasons = "";
@@ -133,7 +151,21 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
         }
         return reasons;
     }
-
+    public String getSelectedReasonsId() {
+        ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
+        String reasons = "";
+        if (currentList != null && currentList.size() > 0) {
+            for (int i = 0; i < currentList.size(); i++) {
+                if (currentList.get(i).checked) {
+                    reasons = reasons + currentList.get(i).badgeId + ",";
+                }
+            }
+            if (!reasons.equalsIgnoreCase("")) {
+                reasons = reasons.substring(0, reasons.length() - 1);
+            }
+        }
+        return reasons;
+    }
     public boolean isLastSelected() {
         ArrayList<FeedbackReason> currentList = showPositiveReasons ? positiveReasons : feedbackReasons;
         if (currentList != null && currentList.size() > 0) {
@@ -164,6 +196,7 @@ public class FeedbackReasonsAdapter extends BaseAdapter {
 
     public interface FeedbackReasonsListEventHandler {
         void onLastItemSelected(boolean selected, String name);
+        void showCommentBox(int visibilty);
     }
 
     public void resetData(boolean showPositiveReasons) {

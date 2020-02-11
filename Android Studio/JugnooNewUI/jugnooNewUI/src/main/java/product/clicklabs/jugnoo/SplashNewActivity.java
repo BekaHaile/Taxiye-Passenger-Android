@@ -3249,7 +3249,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									if(jObj.optJSONObject(KEY_USER_DATA).optInt(KEY_SIGNUP_ONBOARDING, 0) == 1){
 										JSONParser.parseSignupOnboardingKeys(activity, jObj);
-										changeUIState(State.SPLASH_ONBOARDING);
 
 										String authKey = jObj.optJSONObject(KEY_USER_DATA).optString("auth_key", "");
 										if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){

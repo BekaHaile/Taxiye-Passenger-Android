@@ -59,9 +59,6 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
         >
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
         <meta-data
             android:name="payu_merchant_id"
             android:value="HjlOjY"/>
