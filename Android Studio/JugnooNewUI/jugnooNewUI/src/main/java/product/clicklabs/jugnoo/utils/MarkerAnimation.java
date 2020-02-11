@@ -177,7 +177,7 @@ public class MarkerAnimation {
                     straightLineCase();
                 }
                 else if(list == null || list.size() == 0) {
-					JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(source, destination, "metric", MapsApiSources.CUSTOMER_MARKER_ANIMATION, false);
+					JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(source, destination, "metric", MapsApiSources.CUSTOMER_MARKER_ANIMATION, false, false);
 					if(result != null){
 						list = result.getLatLngs();
 						totalDistance = result.getPath().getDistance();

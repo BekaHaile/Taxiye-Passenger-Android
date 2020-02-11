@@ -72,7 +72,7 @@ public class ApiFareEstimate {
 						return;
 					}
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
-					JungleApisImpl.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, new JungleApisImpl.Callback() {
+					JungleApisImpl.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, true, new JungleApisImpl.Callback() {
 								@Override
 								public void onSuccess(@NotNull List<LatLng> latLngs, @NotNull Path path) {
 									try {

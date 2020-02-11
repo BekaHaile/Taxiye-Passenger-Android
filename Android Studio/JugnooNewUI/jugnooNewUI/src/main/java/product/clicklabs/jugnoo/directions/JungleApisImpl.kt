@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.directions
 
+import android.text.TextUtils
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse
@@ -55,11 +56,11 @@ object JungleApisImpl {
             return field
         }
 
-    fun getDirectionsPath(source:LatLng, destination:LatLng, units:String, apiSource:String, callback:Callback?) {
+    fun getDirectionsPath(source:LatLng, destination:LatLng, units:String, apiSource:String, ignoreDistanceThreshold:Boolean, callback:Callback?) {
 
         GlobalScope.launch(Dispatchers.IO){
             try {
-                val directionsResult = getDirectionsPathSync(source, destination, units, apiSource, true)
+                val directionsResult = getDirectionsPathSync(source, destination, units, apiSource, true, ignoreDistanceThreshold)
                 if(directionsResult != null){
                     launch(Dispatchers.Main){callback?.onSuccess(directionsResult.latLngs, directionsResult.path)}
                 } else {
@@ -93,7 +94,7 @@ object JungleApisImpl {
         }
     }
 
-    fun getDirectionsPathSync(source:LatLng, destination:LatLng, units:String, apiSource:String, fallbackNeeded:Boolean = true) : DirectionsResult? {
+    fun getDirectionsPathSync(source: LatLng, destination: LatLng, units: String, apiSource: String, fallbackNeeded: Boolean = true, ignoreDistanceThreshold: Boolean = false) : DirectionsResult? {
         var directionsResult:DirectionsResult? = null
 
         //safety check to not hit directions api if distance between source and destination is more than 200Kms(server configurable)
@@ -388,8 +389,10 @@ object JungleApisImpl {
                 params[Constants.KEY_JUNGLE_CURRENT_LNG] = latLng.longitude.toString()
                 params[Constants.KEY_JUNGLE_PLACEID] = placeId
 
-                params[Constants.KEY_JUNGLE_API_KEY] = if(jungleObj.has(Constants.KEY_JUNGLE_API_KEY)){
-                    jungleObj.optString(Constants.KEY_JUNGLE_API_KEY)
+                val key = jungleObj.optString(Constants.KEY_JUNGLE_API_KEY, "")
+
+                params[Constants.KEY_JUNGLE_API_KEY] = if(!TextUtils.isEmpty(key)){
+                    key
                 } else {
                     GoogleRestApis.MAPS_BROWSER_KEY()
                 }

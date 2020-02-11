@@ -8680,7 +8680,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     try {
                         List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
-							JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(pickupLatLng, Data.autoData.getDropLatLng(), "metric", MapsApiSources.CUSTOMER_DRIVER_TO_DROP, false);
+							JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(pickupLatLng, Data.autoData.getDropLatLng(), "metric", MapsApiSources.CUSTOMER_DRIVER_TO_DROP, false, false);
                             if (result != null) {
                                 listPath = result.getLatLngs();
 								driverToDropPathShown = true;
