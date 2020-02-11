@@ -1106,6 +1106,7 @@ public interface Constants {
 	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";
 	String KEY_JUNGLE_POINTS = "points";
 	String KEY_JUNGLE_OPTIONS = "options";
+	String KEY_JUNGLE_FM_TOKEN = "fm_token";
 	String KEY_JUNGLE_TYPE = "type";
 	String KEY_JUNGLE_OFFERING = "offering";
 	String KEY_JUNGLE_APP_ID = "app_id";
@@ -1122,6 +1123,7 @@ public interface Constants {
 	String KEY_JUNGLE_TEXT = "text";
 	String KEY_JUNGLE_LAT = "lat";
 	String KEY_JUNGLE_LNG = "lng";
+    String KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER = "jungle_fm_api_key_android_customer";
 
 	String JUNGLE_JSON_OBJECT = "{\""+KEY_JUNGLE_OPTIONS+"\":0}";
     String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
