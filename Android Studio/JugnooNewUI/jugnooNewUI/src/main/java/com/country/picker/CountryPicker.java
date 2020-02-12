@@ -247,7 +247,7 @@ public class CountryPicker
       new Country("TN", MyApplication.getInstance().getmActivity().getString(R.string.tunisia), "+216", R.drawable.flag_tn, "TND"),
       new Country("TO", MyApplication.getInstance().getmActivity().getString(R.string.tonga), "+676", R.drawable.flag_to, "TOP"),
       new Country("TR", MyApplication.getInstance().getmActivity().getString(R.string.turkey), "+90", R.drawable.flag_tr, "TRY"),
-      new Country("TT", MyApplication.getInstance().getmActivity().getString(R.string.trinidad_and_tobago), "+1", R.drawable.flag_tt, "TTD"),
+      new Country("TT", MyApplication.getInstance().getmActivity().getString(R.string.trinidad_and_tobago), "+1868", R.drawable.flag_tt, "TTD"),
       new Country("TV", MyApplication.getInstance().getmActivity().getString(R.string.tuvalu), "+688", R.drawable.flag_tv, "AUD"),
       new Country("TW", MyApplication.getInstance().getmActivity().getString(R.string.taiwan), "+886", R.drawable.flag_tw, "TWD"),
       new Country("TZ", MyApplication.getInstance().getmActivity().getString(R.string.tanzania), "+255", R.drawable.flag_tz, "TZS"),
