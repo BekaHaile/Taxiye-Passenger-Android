@@ -45,7 +45,7 @@ public class MenusVendorOffersAdapter extends PagerAdapter {
 	public void onBindViewHolder(MenusVendorOffersAdapter.ViewHolderVendorOffer holder, int position) {
 		MenusResponse.BannerInfo bannerInfo = bannerInfos.get(position);
 		if(!TextUtils.isEmpty(bannerInfo.getImageLink())) {
-			Picasso.with(context).load(bannerInfo.getImageLink())
+			Picasso.with(context).load(bannerInfo.getImageLink()).fit()
 					.placeholder(R.drawable.ic_fresh_item_placeholder)
 					.error(R.drawable.ic_fresh_item_placeholder)
 					.into(holder.ivRestImage);
