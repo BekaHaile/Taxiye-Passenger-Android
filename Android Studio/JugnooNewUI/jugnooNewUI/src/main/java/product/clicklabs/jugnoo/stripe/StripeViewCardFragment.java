@@ -102,6 +102,7 @@ public class StripeViewCardFragment extends Fragment implements callback {
         unbinder = ButterKnife.bind(this, rootView);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
         if (stripeCardData != null && stripeCardData.size()>0) {
+        if ((paymentOption == PaymentOption.STRIPE_CARDS && stripeCardData != null && stripeCardData.size() > 0 )|| (paymentOption == PaymentOption.PAY_STACK_CARD && stripeCardData != null && stripeCardData.size() > 0)) {
             ivMore.setVisibility(View.VISIBLE);
             setAdapter();
         }

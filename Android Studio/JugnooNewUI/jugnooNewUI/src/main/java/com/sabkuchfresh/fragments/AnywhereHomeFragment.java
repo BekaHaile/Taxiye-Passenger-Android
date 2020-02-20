@@ -6,6 +6,8 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.SpannableString;
@@ -304,14 +306,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_delivery_address));
                         throw new Exception();
                     }
-                    if(vehicleInfoList == null || vehicleInfoList.isEmpty() || currentVehicleTypePos == -1) {
-                        Utils.showToast(activity, activity.getString(R.string.error_vehicle_type));
-                        throw new Exception();
-                    }
-                    if( MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData()==null||MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4().isEmpty()){
-                        Utils.showToast(activity, "Add Card First");
-                        throw new Exception();
-                    }
+//                    if(vehicleInfoList == null || vehicleInfoList.isEmpty() || currentVehicleTypePos == -1) {
+//                        Utils.showToast(activity, activity.getString(R.string.error_vehicle_type));
+//                        throw new Exception();
+//                    }
+//                    if( MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData()==null||MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4().isEmpty()){
+//                        Utils.showToast(activity, "Add Card First");
+//                        throw new Exception();
+//                    }
 
 
                     if (!isAsapSelected) {
@@ -896,7 +898,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.addPart(Constants.PROMO_CODE, new TypedString(String.valueOf(currentPromoApplied.getReferalName())));
             params.addPart(Constants.KEY_ORDER_OFFER_ID, new TypedString(String.valueOf(currentPromoApplied.getId())));
         }
-
+        if (paymentMethod== PaymentOption.PAY_STACK_CARD.getOrdinal()
+                ||paymentMethod == PaymentOption.STRIPE_CARDS.getOrdinal()
+        ) {
+            String cardId = Prefs.with(activity).getString(Constants.STRIPE_SELECTED_POS, "0");
+            if (!cardId.equalsIgnoreCase("0")) {
+                params.addPart(Constants.KEY_CARD_ID, new TypedString(String.valueOf(cardId)));
+            }
+        }
         String finalDateTime = null;
         if (!isAsapSelected) {
             finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
@@ -1399,7 +1408,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             public void onSuccess(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
 
                 vehicleInfoList = dynamicDeliveryResponse.getVehiclesInfoList();
-                if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
+                if (vehicleInfoList != null && !vehicleInfoList.isEmpty()) {
                     currentVehicleTypePos = 0;
                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
                     if (vehicleTypeAdapterFeed == null) {
@@ -1407,41 +1416,34 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             @Override
                             public void onItemSelected(final VehicleInfo item, final int pos) {
                                 currentVehicleTypePos = pos;
-                                if(-1 != vehicleInfoList.get(currentVehicleTypePos).getType()) {
+                                if (-1 != vehicleInfoList.get(currentVehicleTypePos).getType()) {
                                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
                                 }
-                                fetchDynamicDeliveryCharges(false,false,false);
+                                fetchDynamicDeliveryCharges(false, false, false);
                             }
                         });
                     }
-                    if(isPickUpSet) {
-                        if(checkCount == 0) {
+                    if (isPickUpSet) {
+                        if (checkCount == 0) {
                             rvVehicles.setVisibility(View.VISIBLE);
                             rvVehicles.setAdapter(vehicleTypeAdapterFeed);
                             checkCount++;
-                        }
-                        else {
+                        } else {
                             rvVehicles.setVisibility(View.VISIBLE);
                             vehicleTypeAdapterFeed.updateList(vehicleInfoList);
                         }
                     }
 
-                    if(vehicleInfoList.size()>1) {
+                    if (vehicleInfoList.size() > 1) {
                         rvVehicles.setVisibility(View.VISIBLE);
-                    }
-                    else {
+                    } else {
                         rvVehicles.setVisibility(GONE);
                     }
-                }
-                else
-                    Utils.showToast(activity,getString(R.string.no_vehicles_available));
+                } else
+                    Utils.showToast(activity, getString(R.string.no_vehicles_available));
                 fetchDynamicDeliveryCharges(false,false,false);
             }
 
-            @Override
-            public boolean onFailure(final Exception error) {
-                return true;
-            }
 
             @Override
             public boolean onError(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
@@ -1494,28 +1496,26 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             @Override
             public void onPaymentOptionSelected(PaymentOption paymentOption) {
                 paymentMethod = paymentOption.getOrdinal();
-
                 if(paymentOptionDialog!=null){
-
                     WalletCore walletCore = new WalletCore(activity);
                     tvPaymentOption.setText(walletCore.getPaymentOptionName(paymentMethod, activity));
                     paymentOptionDialog.dismiss();
                 }
-
                 if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption()==1) {
 
                     android.util.Log.d(TAG, "onPaymentOptionSelected: " + paymentMethod);
 
-                }
-                else if(MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption()==9) {
+                } else if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
                     tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4());
                     paymentOptionDialog.dismiss();
+                } else if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
+                    tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(getContext(), paymentMethod));
+                    paymentOptionDialog.dismiss();
+                }
+                if(paymentMethod!=-1){
+                    ivPaymentOption.setImageDrawable(activity.getResources().getDrawable(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(paymentMethod)));
                 }
 
-                if(paymentMethod!=-1){
-                    ivPaymentOption.setImageDrawable(activity.getResources().getDrawable(MyApplication.getInstance().getWalletCore()
-                            .getPaymentOptionIconSmall(paymentMethod)));
-                }
             }
 
             @Override

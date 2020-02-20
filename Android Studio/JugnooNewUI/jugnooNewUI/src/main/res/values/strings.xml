@@ -2503,4 +2503,11 @@
     <string name="review_must_be_in_150">Review must be in 150 letters.</string>
     <string name="pay_via">Pay via</string>
     <string name="upi_supported_app_not_installed">UPI supported app not installed</string>
+    <string name="enable_night_map">Enable night map</string>
+    <string name="disable_night_map">Disable night map</string>
+    <string name="map_them_will_automatically_change_now">Map theme will automaticaly changed to dark in the evening now</string>
+    <string name="customer">Customer</string>
+    <string name="transfer_to">Transfer to</string>
+    <string name="select_transfer_to">Select Transfer to</string>
+    <string name="no_vehicles_available">Vehicle Not Available</string>
 </resources>

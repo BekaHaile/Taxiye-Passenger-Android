@@ -434,7 +434,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         rvStripeCards = rootView.findViewById(R.id.rvStripeCards);
         rvStripeCards.setLayoutManager(new LinearLayoutManager(activity));
         rvStripeCards.setHasFixedSize(false);
-        rvPayStackCards = rootView.findViewById(R.id.rvPayStack);
+        rvPayStackCards = rootView.findViewById(R.id.rvPayStackCards);
         rvPayStackCards.setLayoutManager(new LinearLayoutManager(activity));
         rvPayStackCards.setHasFixedSize(false);
 
@@ -2316,15 +2316,15 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                     }
                         else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
                             if (paymentModeConfigData.getCardsData() != null) {
-                                linearLayoutWalletContainer.addView(rvStripeCards);
+                                linearLayoutWalletContainer.addView(rvPayStackCards);
                                 payStackCardAdapter = new StripeCardAdapter(paymentModeConfigData.getCardsData(),
-                                        rvStripeCards, Fonts.mavenLight(activity), new StripeCardAdapter.OnSelectedCallback() {
+                                        rvPayStackCards, Fonts.mavenLight(activity), new StripeCardAdapter.OnSelectedCallback() {
                                     @Override
                                     public void onItemSelected(@NotNull StripeCardData stripeCards, int pos) {
 
                                         Prefs.with(activity).save(Constants.STRIPE_SELECTED_POS, stripeCards.getCardId());
-                                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
-//                                            callback.onPaymentModeUpdated();
+                                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.PAY_STACK_CARD);
+    //                                            callback.onPaymentModeUpdated();
                                         Log.e("check", stripeCards.getCardId());
                                     }
                                 }, activity);
@@ -2333,9 +2333,9 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             }
                             linearLayoutWalletContainer.addView(relativeAddPayStackCard);
                             PaymentModeConfigData stripeConfigData = MyApplication.getInstance().getWalletCore().getConfigData(PaymentOption.PAY_STACK_CARD.getOrdinal());
-                                tvPayStackCardNumber.setText(getString(R.string.add_card_payments));
-                                ivPayStackIcon.setImageResource(R.drawable.ic_card_default);
-                                imageViewAddStripeCard.setVisibility(View.VISIBLE);
+                            tvPayStackCardNumber.setText(getString(R.string.add_card_payments));
+                            ivPayStackIcon.setImageResource(R.drawable.ic_card_default);
+                            imageViewAddStripeCard.setVisibility(View.VISIBLE);
                         }
 
                     }
