@@ -85,6 +85,7 @@ public class Data {
     public static final String DEVICE_TYPE = "0";
     public static String uniqueDeviceId = "";
 
+    public static String currencyConfirm="NGN";
 
     public static FacebookUserData facebookUserData;
     public static GoogleSignInAccount googleSignInAccount;

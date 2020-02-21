@@ -1045,7 +1045,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         }
 
         if (totalAmount() > 0 && jcUsed() > 0) {
-            chargesList.add(new Tax(activity.getString(R.string.jugnoo_cash), jcUsed()));
+            chargesList.add(new Tax(activity.getString(R.string.jugnoo_cash,getString(R.string.app_name)), jcUsed()));
         }
 
 
@@ -2287,7 +2287,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             jugnooVpaHandle =  paymentModeConfigData.getJugnooVpaHandle();
                             tvLabelIciciUpi.setText(activity.getString(R.string.label_below_icici_payment_edt, jugnooVpaHandle));
                             tvUPICashback.setText(!TextUtils.isEmpty(paymentModeConfigData.getUpiCashbackValue())?paymentModeConfigData.getUpiCashbackValue():"");
-                        }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                        }else if (paymentModeConfigData.getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal() &&  (activity.getVendorOpened().getApplicablePaymentMode()==ApplicablePaymentMode.BOTH.getOrdinal() || activity.getVendorOpened().getApplicablePaymentMode()==ApplicablePaymentMode.ONLINE.getOrdinal())) {
                             if (paymentModeConfigData.getCardsData() != null) {
                                 linearLayoutWalletContainer.addView(rvStripeCards);
                                 stripeCardAdapter = new StripeCardAdapter(paymentModeConfigData.getCardsData(),
@@ -2314,7 +2314,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                             ivStripeCardIcon.setImageResource(R.drawable.ic_card_default);
                             imageViewAddStripeCard.setVisibility(View.VISIBLE);
                     }
-                        else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
+                        else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal() && (activity.getVendorOpened().getApplicablePaymentMode()==ApplicablePaymentMode.BOTH.getOrdinal() || activity.getVendorOpened().getApplicablePaymentMode()==ApplicablePaymentMode.ONLINE.getOrdinal())) {
                             if (paymentModeConfigData.getCardsData() != null) {
                                 linearLayoutWalletContainer.addView(rvPayStackCards);
                                 payStackCardAdapter = new StripeCardAdapter(paymentModeConfigData.getCardsData(),

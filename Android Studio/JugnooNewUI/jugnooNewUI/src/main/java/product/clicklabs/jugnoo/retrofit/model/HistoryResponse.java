@@ -14,9 +14,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.datastructure.DiscountType;
+import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.retrofit.model.Deliveries;
-
 /**
  * Created by gurmail on 19/08/16.
  */
@@ -375,7 +377,7 @@ public class HistoryResponse {
 
         @Expose
         @SerializedName("deliveries")
-        private ArrayList<Deliveries> deliveries;
+        private ArrayList<product.clicklabs.jugnoo.retrofit.model.Deliveries> deliveries;
 
         @Expose
         @SerializedName("is_corporate")
@@ -399,6 +401,35 @@ public class HistoryResponse {
 
         public String getDriver_id() {
             return driver_id;
+        }
+
+        @SerializedName("card_details")
+        private List<CardDetails> cardDetails;
+        private ArrayList<DiscountType> stripeCardsAmount;
+
+        public ArrayList<DiscountType> getStripeCardsAmount() {
+            ArrayList<DiscountType> stripeCardsAmountTemp = new ArrayList<>();
+            if (getCardDetails() != null) {
+                for (int i = 0; i < getCardDetails().size(); i++) {
+                    DiscountType discountType = new DiscountType(WalletCore.getStripeCardDisplayString(MyApplication.getInstance(),
+                            getCardDetails().get(i).getLast4()),
+                            getCardDetails().get(i).getAmountPaid(),
+                            getCardDetails().get(i).getId());
+                    if (discountType.value > 0) {
+                        int index = stripeCardsAmountTemp.indexOf(discountType);
+                        if (index > -1) {
+                            stripeCardsAmountTemp.get(index).setValue(stripeCardsAmountTemp.get(index).getValue() + discountType.value);
+                        } else {
+                            stripeCardsAmountTemp.add(discountType);
+                        }
+                    }
+                }
+            }
+            return stripeCardsAmountTemp;
+        }
+
+        public List<CardDetails> getCardDetails() {
+            return cardDetails;
         }
 
         public int getIsPaid() {
@@ -1255,7 +1286,7 @@ public class HistoryResponse {
             this.historyIcon = historyIcon;
         }
 
-        public ArrayList<Deliveries> getDeliveries() {
+        public ArrayList<product.clicklabs.jugnoo.retrofit.model.Deliveries> getDeliveries() {
             return deliveries;
         }
 
