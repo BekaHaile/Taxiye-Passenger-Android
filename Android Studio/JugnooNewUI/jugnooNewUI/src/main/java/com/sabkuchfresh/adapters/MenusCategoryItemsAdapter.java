@@ -506,7 +506,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 boolean isNewItemAdded =false;
                 if (item1.getItemSelectedList().size() > 0) {
-                    item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
+//                    item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
 
                         boolean sameInstructions = false;
                         for (ItemSelected itemSelected: item1.getItemSelectedList()) {
