@@ -43,6 +43,7 @@ import com.sabkuchfresh.retrofit.model.RecentOrder;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.sabkuchfresh.widgets.DeliveryDisplayCategoriesView;
+import com.sabkuchfresh.widgets.FavouriteVendorsView;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RoundBorderTransform;
 
@@ -83,7 +84,7 @@ import retrofit.client.Response;
  * Created by shankar on 1/20/17.
  */
 
-public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DeliveryDisplayCategoriesView.Callback {
+public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements ItemListener, DeliveryDisplayCategoriesView.Callback,FavouriteVendorsView.Callback {
 
     private static final String TAG = DeliveryHomeAdapter.class.getName();
     private static final int VIEW_TITLE_CATEGORY = 1;
@@ -104,6 +105,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int ITEM_ADD_STORE = 16;
     private static final int VIEW_DIRECT_SEARCH_VENDOR = 17;
     private static final int VIEW_SEARCH_SUGGESTION = 18;
+    private static final int VIEW_FAVOURITE_VENDOR = 19;
     private static final int RECENT_ORDERS_TO_SHOW = 2;
     private final static ColorMatrix BW_MATRIX = new ColorMatrix();
     private final static ColorMatrixColorFilter BW_FILTER;
@@ -124,6 +126,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private Callback callback;
     private boolean ordersExpanded;
     private CategoriesData categoriesData;
+    private FavouriteVendors favouriteVendors;
     private ArrayList<Object> collapsedRecentOrdersData = new ArrayList<>();
     private int posFromWhichOrdersStart;
     private int paddingRecentOrders;
@@ -392,6 +395,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             menusResponse.setSuggestionsList(null);
         }
 
+        if(!isPagination){
+        if (menusResponse.getFavouriteVendors() != null && menusResponse.getFavouriteVendors().size() > 0) {
+            favouriteVendors = new FavouriteVendors(menusResponse.getFavouriteVendors());
+            dataToDisplay.add(favouriteVendors);
+        }
+        } else if(favouriteVendors != null){
+            if (menusResponse.getFavouriteVendors() != null && menusResponse.getFavouriteVendors().size() > 0) {
+                favouriteVendors.getFavouriteVendors().addAll(menusResponse.getFavouriteVendors());
+            }
+        }
+
         //vendors Assignment
         if (menusResponse.getVendors() != null) {
             /*
@@ -647,7 +661,9 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             case ITEM_BANNER_FATAFAT_RESTAURANTS:
                 v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_banner_fatafat_restaurants, parent, false);
                 return new ViewHolderItemBannerFatafat(v);
-
+            case VIEW_FAVOURITE_VENDOR:
+                v = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_favourite_vendor, parent, false);
+                return new FavouriteVendorsView(activity,v, this);
 
             default:
                 throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
@@ -677,7 +693,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             holder.tvLine2End.setText(vendorDirectSearch.getLine2End());
             holder.tvLine2End.setTextColor(Color.parseColor(vendorDirectSearch.getLine2EndColor()));
 
-        }else if (mholder instanceof ViewHolderSearchSuggestion) {
+        }
+        if (mholder instanceof FavouriteVendorsView) {
+
+            FavouriteVendorsView favouriteVendorsView = (FavouriteVendorsView) mholder;
+            FavouriteVendors favouriteVendors = (FavouriteVendors) dataToDisplay.get(position);
+            favouriteVendorsView.setFavouriteVendors(favouriteVendors.getFavouriteVendors());
+
+        }
+        else if (mholder instanceof ViewHolderSearchSuggestion) {
 
             DeliveryHomeAdapter.ViewHolderSearchSuggestion holder = ((DeliveryHomeAdapter.ViewHolderSearchSuggestion) mholder);
             SearchSuggestion searchSuggestions = (SearchSuggestion) dataToDisplay.get(position);
@@ -1263,7 +1287,6 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (object instanceof RecentOrder)
             return NEW_VIEW_ORDER_ITEM;
 
-
         if (object instanceof MenusResponse.Vendor)
             return VIEW_VENDOR;
 
@@ -1301,6 +1324,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if (object instanceof OutOfRadiusBanner)
             return ITEM_BANNER_FATAFAT_RESTAURANTS;
+
+        if(object instanceof FavouriteVendors)
+            return VIEW_FAVOURITE_VENDOR;
+
 
         Log.e(TAG, ">" + object);
 
@@ -1434,6 +1461,15 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (activity.getCategoryIdOpened() != category.getId()) {
             callback.openCategory(category);
         }
+    }
+    @Override
+    public void onFavouriteVendorClick(MenusResponse.Vendor favouriteVendor) {
+
+        callback.onRestaurantSelected(favouriteVendor.getRestaurantId()
+                , favouriteVendor.getShouldOpenMerchantInfo());
+//        if (activity.getCategoryIdOpened() != category.getId()) {
+//            callback.openCategory(category);
+//        }
     }
 
     @Override
@@ -1860,6 +1896,17 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         public List<MenusResponse.Category> getCategories() {
             return categories;
+        }
+    }
+    private static class FavouriteVendors {
+        private List<MenusResponse.Vendor> favouriteVendors;
+
+        private FavouriteVendors(List<MenusResponse.Vendor> favouriteVendors) {
+            this.favouriteVendors = favouriteVendors;
+        }
+
+        public List<MenusResponse.Vendor> getFavouriteVendors() {
+            return favouriteVendors;
         }
     }
 

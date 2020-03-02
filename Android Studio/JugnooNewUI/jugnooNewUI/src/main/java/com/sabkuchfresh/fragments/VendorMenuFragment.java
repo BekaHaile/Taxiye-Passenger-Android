@@ -490,8 +490,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
                     }
 
-                    tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
-                    switchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
+                    tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.GONE);
+                    switchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.GONE);
 
                     if (switchVegToggle.getVisibility() == View.GONE && tvOfferTitle.getVisibility() == View.GONE) {
                         viewPromoTitle.setVisibility(View.GONE);

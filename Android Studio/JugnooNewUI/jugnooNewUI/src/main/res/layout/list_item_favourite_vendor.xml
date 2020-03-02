@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/llRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:background="@drawable/bg_transparent_menu_item_selector"
+    android:orientation="vertical">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/ivFavouriteVendorImage"
+        android:layout_width="@dimen/dp_80"
+        android:layout_height="@dimen/dp_80"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_fresh_new_placeholder"
+        />
+
+        <View
+            android:id="@+id/view_review_shadow"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_30"
+            android:layout_alignBottom="@id/ivFavouriteVendorImage"
+            android:background="@drawable/shadow_up_fresh_home_item"
+            />
+
+        <TextView
+            android:id="@+id/tvReviewCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="3dp"
+            android:drawableStart="@drawable/ic_star_yellow_10"
+            android:layout_alignEnd="@id/ivFavouriteVendorImage"
+            android:layout_alignBottom="@id/ivFavouriteVendorImage"
+            android:gravity="end|bottom"
+            android:paddingBottom="2dp"
+            android:paddingEnd="2dp"
+            android:text="3.5"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            app:typekitFont="@string/maven_r" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvFavouriteVendorName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dp_5"
+        android:maxLines="2"
+        android:text="@string/home_services_and_repairs"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/sp_11"
+        app:typekitFont="@string/maven"
+        />
+
+
+</LinearLayout>

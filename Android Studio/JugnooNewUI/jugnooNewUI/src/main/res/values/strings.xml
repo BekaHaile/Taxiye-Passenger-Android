@@ -1318,6 +1318,7 @@
     <string name="label_category_all">All</string>
     <string name="label_see_all">See All</string>
     <string name="ongoing_orders">Ongoing Orders</string>
+    <string name="featured_sellers">Featured Sellers</string>
 
     <string name="you_have_already_reviewed_format">You have already reviewed %s</string>
     <string name="more_reviews_not_shown_text">%s reviews are not shown here as the reviewers only posted rating without describing their experience</string>

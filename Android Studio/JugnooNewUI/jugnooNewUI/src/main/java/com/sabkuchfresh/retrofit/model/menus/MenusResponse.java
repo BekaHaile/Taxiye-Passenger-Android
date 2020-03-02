@@ -77,7 +77,6 @@ public class MenusResponse {
 	@SerializedName("vendors")
 	@Expose
 	private List<Vendor> vendors = new ArrayList<Vendor>();
-
 	@SerializedName("suggestions")
 	private List<SearchSuggestion> suggestionsList;
 
@@ -244,7 +243,7 @@ public class MenusResponse {
 	}
 
 
-	public class Vendor {
+	public static class Vendor {
 
 		@SerializedName("restaurant_id")
 		@Expose
@@ -252,6 +251,9 @@ public class MenusResponse {
 		@SerializedName("name")
 		@Expose
 		private String name;
+		@SerializedName("restaurant_type")
+		@Expose
+		private int restaurantType;
 		@SerializedName("image")
 		@Expose
 		private String image;
@@ -332,7 +334,6 @@ public class MenusResponse {
 		@Expose
 		private String address;
 
-		//		@SerializedName("buffer_time")
 		@SerializedName("close_in_buffer")
 		@Expose
 		private Long bufferTime;
@@ -418,6 +419,11 @@ public class MenusResponse {
 		@SerializedName("activation_status")
 		@Expose
 		private int activationStatus;
+
+
+		public Vendor(int id) {
+			this.restaurantId = id;
+		}
 
 		public boolean getShouldOpenMerchantInfo() {
 			return shouldOpenMerchantInfo == 1;
@@ -698,7 +704,14 @@ public class MenusResponse {
 			} else {
 				return 0;
 			}
-			//	return pureVegetarian;
+		}
+
+		public int getRestaurantType() {
+			return restaurantType;
+		}
+
+		public void setRestaurantType(int restaurantType) {
+			this.restaurantType = restaurantType;
 		}
 
 		public void setPureVegetarian(Integer pureVegetarian) {
@@ -711,7 +724,6 @@ public class MenusResponse {
 			} else {
 				return 0;
 			}
-			//	return offersDiscounts;
 		}
 
 		public void setOffersDiscounts(Integer offersDiscounts) {
@@ -880,7 +892,6 @@ public class MenusResponse {
 			return activationStatus;
 		}
 	}
-
 
 	public class BannerInfo {
 		@SerializedName("image_link")
@@ -1162,11 +1173,29 @@ public class MenusResponse {
 	}
 
 	public List<Vendor> getVendors() {
-		return vendors;
+		List<Vendor> vendorsWithTypeZero = new ArrayList<Vendor>();
+		vendorsWithTypeZero.clear();
+		for (int i = 0; i < vendors.size(); i++) {
+			if(vendors.get(i).getRestaurantType()==0){
+				vendorsWithTypeZero.add(vendors.get(i));
+			}
+		}
+		return vendorsWithTypeZero;
 	}
 
 	public void setVendors(List<Vendor> vendors) {
 		this.vendors = vendors;
+	}
+
+	public List<Vendor> getFavouriteVendors() {
+		List<Vendor> vendorsWithTypeOne = new ArrayList<Vendor>(); //one means favourite
+		vendorsWithTypeOne.clear();
+		for (int i = 0; i < vendors.size(); i++) {
+			if(vendors.get(i).getRestaurantType()==1){
+				vendorsWithTypeOne.add(vendors.get(i));
+			}
+		}
+		return vendorsWithTypeOne;
 	}
 
 }

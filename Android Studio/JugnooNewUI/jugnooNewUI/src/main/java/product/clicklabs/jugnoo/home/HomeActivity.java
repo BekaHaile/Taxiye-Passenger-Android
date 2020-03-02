@@ -11768,6 +11768,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			damageReportButton.setVisibility(View.GONE);
 		}
 
+        if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerNotesEnabled() == 1 ||
+                getResources().getBoolean(R.bool.show_add_notes)) {
+            rlNotes.setVisibility(View.VISIBLE);
+            findViewById(R.id.ivNotes).setVisibility(View.VISIBLE);
+        } else {
+            rlNotes.setVisibility(View.GONE);
+            findViewById(R.id.ivNotes).setVisibility(View.GONE);
+        }
+
         return changed;
     }
 
