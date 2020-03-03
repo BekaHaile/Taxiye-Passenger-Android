@@ -13398,6 +13398,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 && (Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())
                 || Data.autoData.getServiceTypeSelected().getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType()))){
             constraintLayoutRideTypeConfirm.setVisibility(View.VISIBLE);
+            //TODO remove service not available here
+            setServiceAvailablityUI("");
             linearLayoutRequestMain.setVisibility(View.GONE);
             relativeLayoutSearchContainer.setVisibility(View.GONE);
             if(!TextUtils.isEmpty(Data.autoData.getServiceTypeSelected().getImages())) {
