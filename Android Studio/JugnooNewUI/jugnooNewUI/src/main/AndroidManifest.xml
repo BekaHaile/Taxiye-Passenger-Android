@@ -81,7 +81,7 @@
             android:name=".SplashNewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

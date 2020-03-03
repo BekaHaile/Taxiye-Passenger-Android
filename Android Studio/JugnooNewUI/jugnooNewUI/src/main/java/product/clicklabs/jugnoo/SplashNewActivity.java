@@ -464,6 +464,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		setTheme(R.style.AppTheme);
 		super.onCreate(savedInstanceState);
 
 		try {

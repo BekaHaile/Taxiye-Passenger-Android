@@ -14,12 +14,12 @@
 
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+  <!--  <style name="AppTheme" parent="AppBaseTheme">
+        &lt;!&ndash; All customizations that are NOT specific to a particular API-level can go here. &ndash;&gt;
         <item name="android:dropDownListViewStyle">
             @style/SpinnerStyle
         </item>
-    </style>
+    </style>-->
 
 
     <style name="PopupMenuTheme" parent="AppTheme">
@@ -57,6 +57,12 @@
 
     <!-- Application theme. -->
     <style name="BaseAppCompatTheme" parent="Theme.AppCompat.Light.NoActionBar"/>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowBackground">@drawable/launch_screen</item>
+    <!-- Optional, on Android 5+ you can modify the colorPrimaryDark color to match the windowBackground color for further branding-->
+    <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
+    </style>
 
     <style name="AppThemePicker" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">
