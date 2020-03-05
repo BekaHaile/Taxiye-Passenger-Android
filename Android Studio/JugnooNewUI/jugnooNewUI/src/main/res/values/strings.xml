@@ -2509,5 +2509,4 @@
     <string name="customer">Customer</string>
     <string name="transfer_to">Transfer to</string>
     <string name="select_transfer_to">Select Transfer to</string>
-    <string name="no_vehicles_available">Vehicle Not Available</string>
 </resources>

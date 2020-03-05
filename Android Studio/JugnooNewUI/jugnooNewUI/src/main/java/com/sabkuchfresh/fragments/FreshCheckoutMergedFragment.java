@@ -8,8 +8,6 @@ import android.content.IntentFilter;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -31,6 +29,16 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.appevents.AppEventsConstants;
 import com.facebook.appevents.AppEventsLogger;
@@ -99,15 +107,6 @@ import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
 
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -142,7 +141,6 @@ import product.clicklabs.jugnoo.utils.NonScrollListView;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.UserDebtDialog;
-import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.wallet.models.PaymentActivityPath;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 import product.clicklabs.jugnoo.widgets.MySpinner;
@@ -174,7 +172,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private FreshCartItemsAdapter freshCartItemsAdapter;
 
     private LinearLayout linearLayoutDeliverySlot;
-    private RecyclerView recyclerViewDeliverySlots;
     private RecyclerView recyclerViewDeliverySlots, rvStripeCards,rvPayStackCards;
     private TextView textViewNoDeliverySlot;
     private DeliverySlotsAdapter deliverySlotsAdapter;
@@ -183,11 +180,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private ImageView imageViewAddressType, imageViewDeliveryAddressForward;
     private TextView textViewAddressName, textViewAddressValue, tvNoAddressAlert;
 
-    private RelativeLayout relativeLayoutPaytm,relativeLayoutStripeCard, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutJugnooPay, relativeLayoutCash;
+    private RelativeLayout relativeLayoutPaytm, relativeLayoutStripeCard, relativeAddPayStackCard, relativeLayoutMobikwik, relativeLayoutFreeCharge, relativeLayoutJugnooPay, relativeLayoutCash;
     private LinearLayout linearLayoutWalletContainer;
-    private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewRadioMobikwik, imageViewAddMobikwik,imageViewStripeRadio,imageViewAddStripeCard,
+    private ImageView imageViewPaytmRadio, imageViewAddPaytm, imageViewPayStackRadio, ivPayStackIcon, imageViewRadioMobikwik, imageViewAddMobikwik, imageViewStripeRadio, imageViewAddStripeCard, imageViewAddPayStackCard,
             imageViewRadioFreeCharge, imageViewAddFreeCharge, imageViewRadioJugnooPay, imageViewAddJugnooPay, imageViewCashRadio,ivStripeCardIcon;
-    private TextView textViewPaytmValue, tvStripeCardNumber, textViewMobikwikValue, textViewFreeChargeValue;
+    private TextView textViewPaytmValue, tvStripeCardNumber, textViewMobikwikValue, textViewFreeChargeValue, tvPayStackCardNumber;
     private RelativeLayout rlOtherModesToPay, rlUPI;
     private ImageView ivOtherModesToPay, ivUPI;
     private TextView tvOtherModesToPay, tvUPI;
@@ -493,6 +490,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         linearLayoutWalletContainer.setVisibility(View.GONE);
         relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
         relativeLayoutStripeCard = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutStripeCard);
+        relativeAddPayStackCard = (RelativeLayout) rootView.findViewById(R.id.relativeAddPayStackCard);
         relativeLayoutIcici = (RelativeLayout) rootView.findViewById(R.id.rlIciciUpi);
         relativeLayoutMobikwik = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutMobikwik);
         relativeLayoutFreeCharge = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutFreeCharge);
@@ -501,8 +499,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         edtIciciVpa = (EditText) rootView.findViewById(R.id.edtIciciVpa);
         tvLabelIciciUpi = (TextView) rootView.findViewById(R.id.tv_label_below_edt_icici);
         imageViewPaytmRadio = (ImageView) rootView.findViewById(R.id.imageViewPaytmRadio);
+        imageViewPayStackRadio = (ImageView) rootView.findViewById(R.id.imageViewPayStackRadio);
         imageViewStripeRadio = (ImageView) rootView.findViewById(R.id.imageViewStripeRadio);
         imageViewAddStripeCard = (ImageView) rootView.findViewById(R.id.imageViewAddStripeCard);
+        imageViewAddPayStackCard = (ImageView) rootView.findViewById(R.id.imageViewAddPayStackCard);
         imageViewAddPaytm = (ImageView) rootView.findViewById(R.id.imageViewAddPaytm);
         imageViewRadioMobikwik = (ImageView) rootView.findViewById(R.id.imageViewRadioMobikwik);
         imageViewIcici = (ImageView) rootView.findViewById(R.id.ivRadioIciciUpi);
@@ -514,9 +514,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         imageViewCashRadio = (ImageView) rootView.findViewById(R.id.imageViewCashRadio);
         textViewPaytmValue = (TextView) rootView.findViewById(R.id.textViewPaytmValue);
         tvStripeCardNumber = (TextView) rootView.findViewById(R.id.tvStripeCardNumber);
+        tvPayStackCardNumber = (TextView) rootView.findViewById(R.id.tvPayStackCardNumber);
         ivStripeCardIcon = (ImageView) rootView.findViewById(R.id.ivStripeCardIcon);
+        ivPayStackIcon = (ImageView) rootView.findViewById(R.id.ivPayStackIcon);
         textViewPaytmValue.setTypeface(Fonts.mavenMedium(activity));
         tvStripeCardNumber.setTypeface(Fonts.mavenMedium(activity));
+        tvPayStackCardNumber.setTypeface(Fonts.mavenMedium(activity));
         textViewMobikwikValue = (TextView) rootView.findViewById(R.id.textViewMobikwikValue);
         textViewMobikwikValue.setTypeface(Fonts.mavenMedium(activity));
         textViewFreeChargeValue = (TextView) rootView.findViewById(R.id.textViewFreeChargeValue);
@@ -611,6 +614,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
         relativeLayoutCash.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutPaytm.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutStripeCard.setOnClickListener(onClickListenerPaymentOptionSelector);
+        relativeAddPayStackCard.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutMobikwik.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutFreeCharge.setOnClickListener(onClickListenerPaymentOptionSelector);
         relativeLayoutJugnooPay.setOnClickListener(onClickListenerPaymentOptionSelector);
@@ -1153,6 +1157,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                 callbackPaymentOptionSelector);
 //                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
                         break;
+                    case R.id.relativeAddPayStackCard:
+                        MyApplication.getInstance().getWalletCore().paymentOptionSelectionAtFreshCheckout(activity, PaymentOption.PAY_STACK_CARD,
+                                callbackPaymentOptionSelector);
+//                        callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.STRIPE_CARDS);
+                        break;
                 }
                 GAUtils.event(activity.getGaCategory(), CHECKOUT + WALLET + MODIFIED, String.valueOf(activity.getPaymentOption()));
             } catch (Exception e) {
@@ -1389,16 +1398,17 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 imageViewPaytmRadio.setImageResource(R.drawable.ic_radio_button_selected);
             } else if(activity.getPaymentOption()==PaymentOption.STRIPE_CARDS){
-                imageViewStripeRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 if (stripeCardAdapter != null) {
                     stripeCardAdapter.selectDefault();
+                } else {
+                    imageViewStripeRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 }
-
             }
             else if(activity.getPaymentOption()==PaymentOption.PAY_STACK_CARD){
-                imageViewPayStackRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 if (payStackCardAdapter != null) {
                     payStackCardAdapter.selectDefault();
+                } else {
+                    imageViewPayStackRadio.setImageResource(R.drawable.ic_radio_button_selected);
                 }
             }else if (activity.getPaymentOption() == PaymentOption.MOBIKWIK) {
                 imageViewRadioMobikwik.setImageResource(R.drawable.ic_radio_button_selected);

@@ -1094,23 +1094,17 @@ public class WalletCore {
                     callbackPaymentOptionSelector.onWalletAdd(PaymentOption.JUGNOO_PAY);
                 }
             } else if (paymentOption == PaymentOption.STRIPE_CARDS || paymentOption == PaymentOption.ACCEPT_CARD) {
-
-
                 PaymentModeConfigData configData = getConfigData(paymentOption.getOrdinal());
-
                 if (configData == null) return;
-
-
-                if (configData.getCardsData() == null || configData.getCardsData().size() == 0) {
-                    try {
-                        addCardIntent(activity, paymentOption.getOrdinal());
-                        callbackPaymentOptionSelector.onWalletAdd(paymentOption);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return;
+                try {
+                    addCardIntent(activity, paymentOption.getOrdinal());
+                    callbackPaymentOptionSelector.onWalletAdd(paymentOption);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else if (paymentOption == PaymentOption.PAY_STACK_CARD) {
+                PaymentModeConfigData configData = getConfigData(paymentOption.getOrdinal());
+                if (configData == null) return;
                 try {
                     addCardIntent(activity, paymentOption.getOrdinal());
                     callbackPaymentOptionSelector.onWalletAdd(paymentOption);

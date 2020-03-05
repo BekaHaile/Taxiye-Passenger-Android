@@ -2,11 +2,6 @@ package product.clicklabs.jugnoo.stripe;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +9,12 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -78,7 +79,8 @@ public class StripeViewCardFragment extends Fragment implements callback {
         StripeViewCardFragment stripeViewCardFragment = new StripeViewCardFragment();
         Gson gson = new Gson();
         Bundle bundle = new Bundle();
-        bundle.putString(ARGS_CARD_DATA, gson.toJsonTree(stripeData, new TypeToken<List<StripeCardData>>() {}.getType()).getAsJsonArray().toString());
+        bundle.putString(ARGS_CARD_DATA, gson.toJsonTree(stripeData, new TypeToken<List<StripeCardData>>() {
+        }.getType()).getAsJsonArray().toString());
         bundle.putSerializable(ARGS_PAYMENT_OPTION, paymentOption);
         stripeViewCardFragment.setArguments(bundle);
         return stripeViewCardFragment;
@@ -90,7 +92,8 @@ public class StripeViewCardFragment extends Fragment implements callback {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey(ARGS_CARD_DATA)) {
             Gson gson = new Gson();
-            stripeCardData = gson.fromJson(getArguments().getString(ARGS_CARD_DATA), new TypeToken<List<StripeCardData>>(){}.getType());
+            stripeCardData = gson.fromJson(getArguments().getString(ARGS_CARD_DATA), new TypeToken<List<StripeCardData>>() {
+            }.getType());
             paymentOption = (PaymentOption) getArguments().getSerializable(ARGS_PAYMENT_OPTION);
         }
     }
@@ -101,10 +104,11 @@ public class StripeViewCardFragment extends Fragment implements callback {
         View rootView = inflater.inflate(R.layout.fragment_view_card, container, false);
         unbinder = ButterKnife.bind(this, rootView);
         textViewTitle.setTypeface(Fonts.avenirNext(getActivity()));
-        if (stripeCardData != null && stripeCardData.size()>0) {
-        if ((paymentOption == PaymentOption.STRIPE_CARDS && stripeCardData != null && stripeCardData.size() > 0 )|| (paymentOption == PaymentOption.PAY_STACK_CARD && stripeCardData != null && stripeCardData.size() > 0)) {
-            ivMore.setVisibility(View.VISIBLE);
-            setAdapter();
+        if (stripeCardData != null && stripeCardData.size() > 0) {
+            if ((paymentOption == PaymentOption.STRIPE_CARDS && stripeCardData != null && stripeCardData.size() > 0) || (paymentOption == PaymentOption.PAY_STACK_CARD && stripeCardData != null && stripeCardData.size() > 0)) {
+                ivMore.setVisibility(View.VISIBLE);
+                setAdapter();
+            }
         }
         return rootView;
     }
@@ -196,7 +200,7 @@ public class StripeViewCardFragment extends Fragment implements callback {
                     @Override
                     public void onSuccess(StripeCardResponse stripeCardResponse, String message, int flag) {
 
-                        if(Prefs.with(requireActivity()).getString(Constants.STRIPE_SELECTED_POS, "0").equalsIgnoreCase(card_id)){
+                        if (Prefs.with(requireActivity()).getString(Constants.STRIPE_SELECTED_POS, "0").equalsIgnoreCase(card_id)) {
                             Prefs.with(requireActivity()).save(Constants.STRIPE_SELECTED_POS, "0");
                         }
                         if (stripeCardsStateListener != null) {
@@ -221,11 +225,11 @@ public class StripeViewCardFragment extends Fragment implements callback {
 
     public void notifyAdapter(ArrayList<StripeCardData> stripeCardDataN) {
         if (adapter != null) {
-        if(stripeCardData.size()>0){
-            stripeCardData.clear();
-            for(int i=0;i<stripeCardDataN.size();i++){
-                stripeCardData.add(stripeCardDataN.get(i));
-            }
+            if (stripeCardData.size() > 0) {
+                stripeCardData.clear();
+                for (int i = 0; i < stripeCardDataN.size(); i++) {
+                    stripeCardData.add(stripeCardDataN.get(i));
+                }
                 adapter.notifyDataSetChanged();
             }
         }
