@@ -175,7 +175,7 @@ public class HomeUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		Prefs.with(activity).save(Constants.FIRSTTIME_LOGIN,-1);
 		FacebookLoginHelper.logoutFacebook();
 
 		GCMIntentService.clearNotifications(activity);

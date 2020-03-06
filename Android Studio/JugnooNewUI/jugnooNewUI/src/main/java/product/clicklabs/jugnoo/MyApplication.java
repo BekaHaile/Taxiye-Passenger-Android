@@ -3,6 +3,7 @@ package product.clicklabs.jugnoo;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -76,8 +77,21 @@ public class MyApplication extends MultiDexApplication {
     public Branch branch;
     private BroadcastReceiver fuguChatCustomActionReceiver;
     public Activity mActivity;
+    private Intent mOpenActivityAfterFinishTutorial;
 
+    public Activity getmCurrentActivity() {
+        return this.mCurrentActivity;
+    }
+    public void setmCurrentActivity(final Activity mCurrentActivity) {
+        this.mCurrentActivity = mCurrentActivity;
+    }
 
+    public Intent getmOpenActivityAfterFinishTutorial() {
+        return this.mOpenActivityAfterFinishTutorial;
+    }
+    public void setmOpenActivityAfterFinishTutorial(final Intent mOpenActivityAfterFinishTutorial) {
+        this.mOpenActivityAfterFinishTutorial = mOpenActivityAfterFinishTutorial;
+    }
 
     @Override
     public void onCreate() {

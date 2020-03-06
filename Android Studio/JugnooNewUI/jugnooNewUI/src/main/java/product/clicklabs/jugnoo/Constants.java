@@ -1199,4 +1199,5 @@ public interface Constants {
 	String KEY_PAY_VIA_UPI_ENABLED = "pay_via_upi_enabled";
 	String KEY_PAYMENT_RESPONSE = "payment_response";
 	String KEY_UPI_RESPONSE = "response";
+    String FIRSTTIME_LOGIN = "FIRST_LOGIN";
 }

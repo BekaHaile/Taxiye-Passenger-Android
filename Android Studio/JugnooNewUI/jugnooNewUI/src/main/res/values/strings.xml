@@ -2034,7 +2034,7 @@
     <string name="confirm_payment_via_card_ending_format">Confirm payment via card ending with %s</string>
     <string name="please_select_some_amount">Please select some amount</string>
 
-  <!--Notes-->
+    <!--Notes-->
     <string name="notes">Notes</string>
     <string name="write_notes_here">Write notes here...</string>
     <string name="save_notes">Save notes</string>
