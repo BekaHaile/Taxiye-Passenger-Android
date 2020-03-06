@@ -2509,4 +2509,5 @@
     <string name="customer">Customer</string>
     <string name="transfer_to">Transfer to</string>
     <string name="select_transfer_to">Select Transfer to</string>
+    <string name="store_accepts_online_payment_only">Store accepts online payment only</string>
 </resources>

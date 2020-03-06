@@ -1322,16 +1322,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 if (isMenusOrDeliveryOpen()) {
                     if (activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.CASH.getOrdinal()) {
                         activity.setPaymentOption(PaymentOption.CASH);
-                    } else if (activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
-                            && activity.getPaymentOption() == PaymentOption.CASH) {
-                        activity.setPaymentOption(PaymentOption.PAY_STACK_CARD);
                     }
                 } else {
                     if (getPaymentInfoMode() == ApplicablePaymentMode.CASH.getOrdinal()) {
                         activity.setPaymentOption(PaymentOption.CASH);
-                    } else if (getPaymentInfoMode() == ApplicablePaymentMode.ONLINE.getOrdinal()
-                            && activity.getPaymentOption() == PaymentOption.CASH) {
-                        activity.setPaymentOption(PaymentOption.PAYTM);
                     }
                 }
 
@@ -1442,7 +1436,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void placeOrder() {
         try {
             boolean goAhead = true;
-            if (activity.getPaymentOption() == PaymentOption.PAYTM) {
+            if(activity.getPaymentOption() == PaymentOption.CASH
+                    && activity.getVendorOpened().getApplicablePaymentMode() == ApplicablePaymentMode.ONLINE.getOrdinal()){
+                DialogPopup.alertPopup(activity, "", getString(R.string.store_accepts_online_payment_only));
+                goAhead = false;
+            }
+            else if (activity.getPaymentOption() == PaymentOption.PAYTM) {
                 if (Data.userData.getPaytmBalance() < Math.round(payableAmount())) {
                     if (Data.userData.getPaytmEnabled() == 0) {
                         relativeLayoutPaytm.performClick();

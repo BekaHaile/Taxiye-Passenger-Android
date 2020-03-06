@@ -1406,7 +1406,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             public void onSuccess(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
 
                 vehicleInfoList = dynamicDeliveryResponse.getVehiclesInfoList();
-                if (vehicleInfoList != null && !vehicleInfoList.isEmpty()) {
+                if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
                     currentVehicleTypePos = 0;
                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
                     if (vehicleTypeAdapterFeed == null) {
@@ -1414,34 +1414,41 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                             @Override
                             public void onItemSelected(final VehicleInfo item, final int pos) {
                                 currentVehicleTypePos = pos;
-                                if (-1 != vehicleInfoList.get(currentVehicleTypePos).getType()) {
+                                if(-1 != vehicleInfoList.get(currentVehicleTypePos).getType()) {
                                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
                                 }
-                                fetchDynamicDeliveryCharges(false, false, false);
+                                fetchDynamicDeliveryCharges(false,false,false);
                             }
                         });
                     }
-                    if (isPickUpSet) {
-                        if (checkCount == 0) {
+                    if(isPickUpSet) {
+                        if(checkCount == 0) {
                             rvVehicles.setVisibility(View.VISIBLE);
                             rvVehicles.setAdapter(vehicleTypeAdapterFeed);
                             checkCount++;
-                        } else {
+                        }
+                        else {
                             rvVehicles.setVisibility(View.VISIBLE);
                             vehicleTypeAdapterFeed.updateList(vehicleInfoList);
                         }
                     }
 
-                    if (vehicleInfoList.size() > 1) {
+                    if(vehicleInfoList.size()>1) {
                         rvVehicles.setVisibility(View.VISIBLE);
-                    } else {
+                    }
+                    else {
                         rvVehicles.setVisibility(GONE);
                     }
-                } else
-                    Utils.showToast(activity, getString(R.string.no_vehicles_available));
+                }
+                else
+                    Utils.showToast(activity,getString(R.string.no_vehicles_available));
                 fetchDynamicDeliveryCharges(false,false,false);
             }
 
+            @Override
+            public boolean onFailure(final Exception error) {
+                return true;
+            }
 
             @Override
             public boolean onError(final NearbyDriversResponse dynamicDeliveryResponse, final String message, final int flag) {
@@ -1504,7 +1511,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     android.util.Log.d(TAG, "onPaymentOptionSelected: " + paymentMethod);
 
                 } else if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
-                    tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4());
+                    tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(getContext(), paymentMethod));
                     paymentOptionDialog.dismiss();
                 } else if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
                     tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(getContext(), paymentMethod));
