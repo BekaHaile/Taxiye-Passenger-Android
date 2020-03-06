@@ -315,6 +315,7 @@ import product.clicklabs.jugnoo.t20.T20Dialog;
 import product.clicklabs.jugnoo.t20.T20Ops;
 import product.clicklabs.jugnoo.t20.models.Schedule;
 import product.clicklabs.jugnoo.tutorials.NewUserFlow;
+import product.clicklabs.jugnoo.tutorials.newtutorials.activities.TutorialActivites;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomInfoWindow;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
@@ -2643,9 +2644,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
         }
 
-
         checkForYoutubeIntent();
-
+        /* Open Tutorial Activity */
+        String tutorialBannerText = Prefs.with(this).getString(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, "");
+        if(!tutorialBannerText.isEmpty()) {
+            Intent intent = new Intent(this, TutorialActivites.class);
+            intent.putExtra(TutorialActivites.class.getSimpleName().concat("position"), Constants.FIRSTTIME_LOGIN);
+            startActivity(intent);
+        }
     }
 
     private void onReqestRideConfirmClick() {

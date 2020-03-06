@@ -542,7 +542,9 @@
                                 android:id="@+id/llExtraCharges"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical"></LinearLayout>
+                                android:orientation="vertical">
+
+                            </LinearLayout>
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
@@ -652,6 +654,15 @@
                                 style="@style/HorizontalDividerLight"
                                 android:layout_marginStart="@dimen/px_34"
                                 android:layout_marginEnd="@dimen/px_34"/>
+
+                            <product.clicklabs.jugnoo.utils.NonScrollListView
+                                android:id="@+id/listViewStripeTxns"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:divider="@color/transparent"
+                                android:dividerHeight="3dp"
+                                android:layout_marginTop="6px"
+                                android:splitMotionEvents="false"/>
 
                             <RelativeLayout
                                 android:id="@+id/rlWalletDeducted"

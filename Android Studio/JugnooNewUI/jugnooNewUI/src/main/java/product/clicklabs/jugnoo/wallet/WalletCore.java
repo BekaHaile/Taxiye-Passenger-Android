@@ -475,6 +475,7 @@ public class WalletCore {
         for (PaymentModeConfigData configData : getPaymentModeConfigDatas()) {
             if (configData.getPaymentOption() == paymentOption) {
                 if(paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()
+                        || paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()
                         && configData.getCardsData() != null && configData.getCardsData().size() > 0){
                     String cardId = Prefs.with(context).getString(Constants.STRIPE_SELECTED_POS, "0");
                     if(cardId.equalsIgnoreCase("0")){
@@ -1092,28 +1093,24 @@ public class WalletCore {
                             .openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.JUGNOO_PAY.getOrdinal());
                     callbackPaymentOptionSelector.onWalletAdd(PaymentOption.JUGNOO_PAY);
                 }
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS || paymentOption == PaymentOption.ACCEPT_CARD
-                     || paymentOption == PaymentOption.PAY_STACK_CARD){
-
-
-                PaymentModeConfigData configData  = getConfigData(paymentOption.getOrdinal());
-
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS || paymentOption == PaymentOption.ACCEPT_CARD) {
+                PaymentModeConfigData configData = getConfigData(paymentOption.getOrdinal());
                 if (configData == null) return;
-
-
-                if (paymentOption == PaymentOption.STRIPE_CARDS || configData.getCardsData() == null || configData.getCardsData().size() == 0) {
-                    try {
-                        addCardIntent(activity,paymentOption.getOrdinal());
-                        callbackPaymentOptionSelector.onWalletAdd(paymentOption);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return;
+                try {
+                    addCardIntent(activity, paymentOption.getOrdinal());
+                    callbackPaymentOptionSelector.onWalletAdd(paymentOption);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                callbackPaymentOptionSelector.onPaymentOptionSelected(paymentOption);
-
-
+            } else if (paymentOption == PaymentOption.PAY_STACK_CARD) {
+                PaymentModeConfigData configData = getConfigData(paymentOption.getOrdinal());
+                if (configData == null) return;
+                try {
+                    addCardIntent(activity, paymentOption.getOrdinal());
+                    callbackPaymentOptionSelector.onWalletAdd(paymentOption);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 callbackPaymentOptionSelector.onPaymentOptionSelected(paymentOption);
             }
