@@ -80,10 +80,10 @@ public class MyApplication extends MultiDexApplication {
     private Intent mOpenActivityAfterFinishTutorial;
 
     public Activity getmCurrentActivity() {
-        return this.mCurrentActivity;
+        return this.mActivity;
     }
     public void setmCurrentActivity(final Activity mCurrentActivity) {
-        this.mCurrentActivity = mCurrentActivity;
+        this.mActivity = mCurrentActivity;
     }
 
     public Intent getmOpenActivityAfterFinishTutorial() {

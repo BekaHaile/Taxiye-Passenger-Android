@@ -1,9 +1,9 @@
 package product.clicklabs.jugnoo.tutorials.newtutorials.activities
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v4.view.ViewPager
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import kotlinx.android.synthetic.main.tutorial_activity.*
 import product.clicklabs.jugnoo.*
 import product.clicklabs.jugnoo.tutorials.newtutorials.adapters.TutorialDAO
