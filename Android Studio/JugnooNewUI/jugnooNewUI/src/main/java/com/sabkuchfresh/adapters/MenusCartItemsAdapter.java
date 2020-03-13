@@ -2,8 +2,8 @@ package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.util.Pair;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,21 +45,27 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 	private Callback callback;
 	private boolean checkForCouponApplied;
 	private int appType;
+	private String currencyCode;
+	private String currency;
 	private UserCheckoutResponse.SubscriptionInfo subscription;
 
 	public MenusCartItemsAdapter(Activity context, ArrayList<Item> items, boolean checkForCouponApplied,
-								 Callback callback) {
+								 Callback callback,  String currencyCode, String currency) {
 		this.context = context;
 		this.items = items;
 		this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.callback = callback;
+		this.currencyCode = currencyCode;
+		this.currency = currency;
 		this.checkForCouponApplied = checkForCouponApplied;
 		appType = Prefs.with(context).getInt(Constants.APP_TYPE, Data.AppType);
 	}
 
-	public synchronized void setResults(ArrayList<Item> items, UserCheckoutResponse.SubscriptionInfo subscription) {
+	public synchronized void setResults(ArrayList<Item> items, UserCheckoutResponse.SubscriptionInfo subscription, String currencyCode, String currency) {
 		this.items = items;
 		this.subscription = subscription;
+		this.currencyCode = currencyCode;
+		this.currency = currency;
 		notifyDataSetChanged();
 	}
 
@@ -206,8 +212,10 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		}
 
 		mHolder.textViewItemName.setText(mcv.getName());
-		mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-				Utils.getMoneyDecimalFormat().format(mcv.getPrice())));
+
+
+		mHolder.textViewItemPrice.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(mcv.getPrice(), currencyCode, currency));
+
 		mHolder.textViewQuantity.setText(String.valueOf(mcv.getQuantity()));
 		mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
 		LinearLayout.LayoutParams paramsName = (LinearLayout.LayoutParams) mHolder.textViewItemName.getLayoutParams();

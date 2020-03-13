@@ -3,8 +3,8 @@ package com.sabkuchfresh.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -45,15 +45,18 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
     private ItemSelected itemSelected;
     private ArrayList<CustomizeOption> customizeOptions;
     private Callback callback;
+    private String currencyCode, currency;
 
     private static final int ITEM = 0;
     private static final int CUSTOMIZE_ITEM = 1;
     private static final int CUSTOMIZE_OPTION = 2;
 
-    public MenusItemCustomizeAdapter(Activity context, Item item, Callback callback) {
+    public MenusItemCustomizeAdapter(Activity context, Item item, Callback callback, String currencyCode, String currency) {
         this.context = context;
         this.callback = callback;
         customizeOptions = new ArrayList<>();
+        this.currencyCode = currencyCode;
+        this.currency = currency;
         setList(item);
     }
 
@@ -310,8 +313,8 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             mHolder.tvCustomizeOptionItemName.setText(customizeOption.getCustomizeOptionName());
 
             if(customizeOption.getCustomizePrice() > 0){
-                mHolder.tvCustomizeOptionItemPrice.setText(context.getString(R.string.rupees_value_format,
-                        Utils.getMoneyDecimalFormat().format(customizeOption.getCustomizePrice())));
+
+                mHolder.tvCustomizeOptionItemPrice.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(customizeOption.getCustomizePrice(), currencyCode, currency));
             } else {
                 mHolder.tvCustomizeOptionItemPrice.setText("");
             }

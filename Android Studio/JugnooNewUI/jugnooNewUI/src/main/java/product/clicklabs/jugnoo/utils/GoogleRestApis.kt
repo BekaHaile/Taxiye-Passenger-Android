@@ -218,29 +218,34 @@ object GoogleRestApis {
 //        } else {
             response = RestClient.getGoogleApiService().autocompletePredictions(input, sessiontoken, components, location, radius, MAPS_BROWSER_KEY())
 //        }
-        logGoogleRestAPI("0", "0", API_NAME_AUTOCOMPLETE)
+        try {
+            val arr = location.split(",")
+            logGoogleRestAPI(arr[0], arr[1], API_NAME_AUTOCOMPLETE, input, sessiontoken)
+        } catch (e: Exception) {}
         return response
     }
-    fun getPlaceDetails(placeId:String): Response {
+    fun getPlaceDetails(placeId:String, sessiontoken:String): Response {
 
         Log.i(GoogleRestApis::class.java.simpleName, "getPlaceDetails")
         val response:Response
-        if (MAPS_APIS_SIGN()) {
-            val urlToSign = ("/maps/api/geocode/json?" +
-                    "place_id=" + placeId
-                    + "&client=" + MAPS_CLIENT()
-                    + "&channel=" + CHANNEL())
-            var googleSignature: String? = null
-            try {
-                googleSignature = generateGoogleSignature(urlToSign)
-            } catch (ignored: Exception) {
-            }
-
-
-            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_CLIENT(), CHANNEL(), googleSignature)
-        } else {
-            response = RestClient.getGoogleApiService().placeDetails(placeId, MAPS_BROWSER_KEY())
-        }
+//        if (MAPS_APIS_SIGN()) {
+//            val urlToSign = ("/maps/api/place/details/json?fields=geometry&" +
+//                    "place_id=" + placeId
+//                    + "&sessiontoken=" + sessiontoken
+//                    + "&client=" + MAPS_CLIENT()
+//                    + "&channel=" + CHANNEL())
+//            var googleSignature: String? = null
+//            try {
+//                googleSignature = generateGoogleSignature(urlToSign)
+//            } catch (ignored: Exception) {
+//            }
+//            Log.e(GoogleRestApis::class.java.simpleName, "urlToSign=$urlToSign")
+//
+//
+//            response = RestClient.getGoogleApiService().placeDetailsByPlaceId(placeId, sessiontoken, MAPS_CLIENT(), CHANNEL(), googleSignature)
+//        } else {
+            response = RestClient.getGoogleApiService().placeDetailsByPlaceId(placeId, sessiontoken, MAPS_BROWSER_KEY())
+//        }
 
         logGoogleRestAPI("0", "0", API_NAME_PLACES)
         return response
@@ -278,13 +283,19 @@ object GoogleRestApis {
     }
 
 
-    fun logGoogleRestAPI(latitude: String, longitude: String, apiName: String) {
+    fun logGoogleRestAPI(latitude: String, longitude: String, apiName: String, input:String? = null, sessiontoken:String? = null) {
         if(Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_GOOGLE_APIS_LOGGING, 0) == 1) {
             val map = hashMapOf<String, String>()
             map[Constants.KEY_ACCESS_TOKEN] = AccessTokenGenerator.getAccessTokenPair(MyApplication.getInstance()).first
             map[Constants.KEY_LATITUDE] = latitude
             map[Constants.KEY_LONGITUDE] = longitude
             map[Constants.KEY_API_NAME] = apiName
+            if(input != null) {
+                map[Constants.KEY_INPUT] = input
+            }
+            if(sessiontoken != null) {
+                map[Constants.KEY_SESSIONTOKEN] = sessiontoken
+            }
             HomeUtil.addDefaultParams(map)
             RestClient.getApiService().logGoogleApiHits(map)
         }

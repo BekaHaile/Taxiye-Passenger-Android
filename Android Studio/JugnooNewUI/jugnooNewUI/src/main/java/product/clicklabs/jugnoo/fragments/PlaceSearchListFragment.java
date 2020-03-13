@@ -8,14 +8,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.NestedScrollView;
-import android.support.v7.widget.CardView;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.cardview.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -379,13 +379,13 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		}else{
 			ViewGroup.LayoutParams params = imageViewType.getLayoutParams();
 			if(searchMode == PlaceSearchMode.DROP.getOrdinal()) {
-				params.height = 30;
-				params.width = 30;
-				imageViewType.setImageResource(R.drawable.ic_shape);
+				params.height = 20;
+				params.width = 20;
+				imageViewType.setImageResource(R.drawable.circle_red);
 			} else {
 				params.height = 20;
 				params.width = 20;
-				imageViewType.setImageResource(R.drawable.circle_theme);
+				imageViewType.setImageResource(R.drawable.circle_green);
 			}
 			imageViewType.setLayoutParams(params);
 			String text = bundle.getString(KEY_SEARCH_FIELD_TEXT, "");
@@ -527,7 +527,6 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 		});
 		setMap();
 
-		searchListAdapter.addSavedLocationsToList();
 		updateSavedPlacesLists();
 		showSearchLayout();
 

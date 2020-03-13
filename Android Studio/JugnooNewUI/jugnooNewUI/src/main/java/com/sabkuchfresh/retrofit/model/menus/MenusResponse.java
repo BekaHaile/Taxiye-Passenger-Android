@@ -77,7 +77,6 @@ public class MenusResponse {
 	@SerializedName("vendors")
 	@Expose
 	private List<Vendor> vendors = new ArrayList<Vendor>();
-
 	@SerializedName("suggestions")
 	private List<SearchSuggestion> suggestionsList;
 
@@ -244,7 +243,7 @@ public class MenusResponse {
 	}
 
 
-	public class Vendor {
+	public static class Vendor {
 
 		@SerializedName("restaurant_id")
 		@Expose
@@ -252,6 +251,9 @@ public class MenusResponse {
 		@SerializedName("name")
 		@Expose
 		private String name;
+		@SerializedName("restaurant_type")
+		@Expose
+		private int restaurantType;
 		@SerializedName("image")
 		@Expose
 		private String image;
@@ -332,7 +334,6 @@ public class MenusResponse {
 		@Expose
 		private String address;
 
-		//		@SerializedName("buffer_time")
 		@SerializedName("close_in_buffer")
 		@Expose
 		private Long bufferTime;
@@ -415,6 +416,14 @@ public class MenusResponse {
 		@SerializedName("is_open_merchant_info")
 		@Expose
 		private int shouldOpenMerchantInfo;
+		@SerializedName("activation_status")
+		@Expose
+		private int activationStatus;
+
+
+		public Vendor(int id) {
+			this.restaurantId = id;
+		}
 
 		public boolean getShouldOpenMerchantInfo() {
 			return shouldOpenMerchantInfo == 1;
@@ -695,7 +704,14 @@ public class MenusResponse {
 			} else {
 				return 0;
 			}
-			//	return pureVegetarian;
+		}
+
+		public int getRestaurantType() {
+			return restaurantType;
+		}
+
+		public void setRestaurantType(int restaurantType) {
+			this.restaurantType = restaurantType;
 		}
 
 		public void setPureVegetarian(Integer pureVegetarian) {
@@ -708,7 +724,6 @@ public class MenusResponse {
 			} else {
 				return 0;
 			}
-			//	return offersDiscounts;
 		}
 
 		public void setOffersDiscounts(Integer offersDiscounts) {
@@ -872,8 +887,11 @@ public class MenusResponse {
 		public boolean isHasRated() {
 			return hasRated;
 		}
-	}
 
+		public int getActivationStatus() {
+			return activationStatus;
+		}
+	}
 
 	public class BannerInfo {
 		@SerializedName("image_link")
@@ -889,6 +907,21 @@ public class MenusResponse {
 		@SerializedName("is_open_merchant_info")
 		@Expose
 		private int shouldOpenMerchantInfo;
+		@SerializedName("webview_link")
+		@Expose
+		private String webViewLink;
+		@SerializedName("ext_link")
+		@Expose
+		private String extLink;
+		@SerializedName("restaurant_item_id")
+		@Expose
+		private int restaurantItemId = -1;
+		@SerializedName("view_type")
+		@Expose
+		private int viewType = -1;
+		@SerializedName("banner_id")
+		@Expose
+		private int bannerId;
 
 		public boolean getShouldOpenMerchantInfo() {
 			return shouldOpenMerchantInfo == 1;
@@ -910,6 +943,26 @@ public class MenusResponse {
 				deepIndex = -1;
 			}
 			return deepIndex;
+		}
+
+		public String getWebViewLink() {
+			return webViewLink;
+		}
+
+		public String getExtLink() {
+			return extLink;
+		}
+
+		public int getRestaurantItemId() {
+			return restaurantItemId;
+		}
+
+		public int getViewType() {
+			return viewType;
+		}
+
+		public int getBannerId() {
+			return bannerId;
 		}
 	}
 
@@ -1120,11 +1173,29 @@ public class MenusResponse {
 	}
 
 	public List<Vendor> getVendors() {
-		return vendors;
+		List<Vendor> vendorsWithTypeZero = new ArrayList<Vendor>();
+		vendorsWithTypeZero.clear();
+		for (int i = 0; i < vendors.size(); i++) {
+			if(vendors.get(i).getRestaurantType()==0){
+				vendorsWithTypeZero.add(vendors.get(i));
+			}
+		}
+		return vendorsWithTypeZero;
 	}
 
 	public void setVendors(List<Vendor> vendors) {
 		this.vendors = vendors;
+	}
+
+	public List<Vendor> getFavouriteVendors() {
+		List<Vendor> vendorsWithTypeOne = new ArrayList<Vendor>(); //one means favourite
+		vendorsWithTypeOne.clear();
+		for (int i = 0; i < vendors.size(); i++) {
+			if(vendors.get(i).getRestaurantType()==1){
+				vendorsWithTypeOne.add(vendors.get(i));
+			}
+		}
+		return vendorsWithTypeOne;
 	}
 
 }

@@ -7,7 +7,7 @@ class PlaceDetailsResponse {
 
     @SerializedName("results")
     @Expose
-    var results: List<Result>? = null
+    var results: MutableList<Result>? = null
 
 }
 class Result {
@@ -31,5 +31,13 @@ class Location {
     @SerializedName("lng")
     @Expose
     var lng: Double? = null
+
+}
+
+class PlaceDetailsResponseGoogle {
+
+    @SerializedName("result")
+    @Expose
+    var result: Result? = null
 
 }

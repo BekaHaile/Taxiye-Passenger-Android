@@ -14,6 +14,9 @@ import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.FareStructure;
 import product.clicklabs.jugnoo.retrofit.model.Package;
+import product.clicklabs.jugnoo.datastructure.UserData;
+import product.clicklabs.jugnoo.retrofit.model.GenderValues;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 
 /**
@@ -107,6 +110,9 @@ public class Region {
     @SerializedName("disclaimer_text")
     @Expose
 	private String disclaimerText;
+	@SerializedName("applicable_gender")
+	@Expose
+	private int applicableGender;
 
 	private boolean isDefault = false;
 
@@ -208,6 +214,14 @@ public class Region {
 		this.disclaimerText = disclaimerText;
 	}
 
+	public int getApplicableGender() {
+		return applicableGender;
+	}
+
+	public void setApplicableGender(int applicableGender) {
+		this.applicableGender = applicableGender;
+	}
+
 	public class OfferTexts {
 
 		@SerializedName("text1")
@@ -262,6 +276,12 @@ public class Region {
 		@SerializedName("fare")
 		@Expose
 		private double fare;
+		@SerializedName("min_fare")
+		@Expose
+		private double minFare;
+		@SerializedName("max_fare")
+		@Expose
+		private double maxFare;
 		@SerializedName("fare_without_discount")
 		@Expose
 		private double fareWithoutDiscount;
@@ -312,6 +332,14 @@ public class Region {
 
 		public void setPoolFareId(int poolFareId) {
 			this.poolFareId = poolFareId;
+		}
+
+		public double getMinFare() {
+			return minFare;
+		}
+
+		public double getMaxFare() {
+			return maxFare;
 		}
 	}
 
@@ -702,4 +730,12 @@ public class Region {
 	public void setStations(List<Stations> stations) {
 		this.stations = stations;
 	}
+	public boolean isRegionAccGender(Context context, UserData userData){
+		return userData == null
+				|| userData.getGender() == GenderValues.ALL.getType()
+				|| getApplicableGender() == GenderValues.ALL.getType()
+				|| (Prefs.with(context).getInt(Constants.KEY_CUSTOMER_GENDER_FILTER, context.getResources().getInteger(R.integer.customer_gender_filter)) == 1
+				&& userData.getGender() == getApplicableGender());
+	}
+
 }

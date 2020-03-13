@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.DrawerLayout
+    <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -153,9 +153,6 @@
                      android:layout_alignParentBottom="true"
                 />
 
-            <!-- rental destination layout -->
-            <!--<include-->
-                <!--layout="@layout/layout_rental_destination"/>-->
 
             <!-- end ride layout -->
             <include layout="@layout/layout_ride_summary_new" />
@@ -312,7 +309,7 @@
         <include layout="@layout/layout_home_activity_menu" />
 
 
-    </android.support.v4.widget.DrawerLayout>
+    </androidx.drawerlayout.widget.DrawerLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayoutContainer"

@@ -5,12 +5,12 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SwitchCompat;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
@@ -35,10 +35,14 @@ import com.sabkuchfresh.bus.SortSelection;
 import com.sabkuchfresh.bus.SwipeCheckout;
 import com.sabkuchfresh.bus.UpdateMainList;
 import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.retrofit.model.menus.Item;
+import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.sabkuchfresh.widgets.PagerSlidingTabStrip;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -301,6 +305,7 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                             if (!activity.isOrderJustCompleted()) {
                                 activity.setMinOrderAmountText(VendorMenuFragment.this);
                             }
+                            activity.appBarLayout.setExpanded(false, true);
                         } catch (Exception e) {
                         }
                     }
@@ -412,6 +417,34 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                                 break;
                             }
                         }
+                    } else if(itemId != -1) {
+                        for (int i = 0; i < activity.getMenuProductsResponse().getCategories().size(); i++) {
+                            List<Subcategory> subcategories = activity.getMenuProductsResponse().getCategories().get(i).getSubcategories();
+                            List<Item> items = activity.getMenuProductsResponse().getCategories().get(i).getItems();
+                            boolean isTabFound = false;
+                            if (subcategories != null) {
+                                for (int k = 0; k < subcategories.size(); k++) {
+                                    for (int j = 0; j < subcategories.get(k).getItems().size(); j++) {
+                                        if (subcategories.get(k).getItems().get(j).getRestaurantItemId() == itemId) {
+                                            tabPosition = i;
+                                            isTabFound = true;
+                                            break;
+                                        }
+                                    }
+                                    if (isTabFound) {
+                                        break;
+                                    }
+                                }
+                            } else if (items != null) {
+                                for (int j = 0; j < items.size(); j++) {
+                                    if (items.get(j).getRestaurantItemId() == itemId) {
+                                        tabPosition = i;
+                                        break;
+                                    }
+                                }
+                            }
+
+                        }
                     }
 
                     menusCategoryFragmentsAdapter.filterCategoriesAccIsVeg(activity.getMenuProductsResponse().getCategories(), -1,tabPosition);
@@ -425,6 +458,11 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                     if (menusCategoryFragmentsAdapter != null && categoryId != -1) {
                         // scroll to correct category
                         if(tabPosition!=-1){
+                            viewPager.setCurrentItem(tabPosition);
+                        }
+                    } else if(menusCategoryFragmentsAdapter != null && itemId != -1) {
+                        // scroll to correct category
+                        if (tabPosition != -1) {
                             viewPager.setCurrentItem(tabPosition);
                         }
                     }
@@ -452,8 +490,8 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
 
                     }
 
-                    tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
-                    switchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.VISIBLE);
+                    tvSwitchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.GONE);
+                    switchVegToggle.setVisibility(activity.getVendorOpened().getPureVegetarian() == 1 ? View.GONE : View.GONE);
 
                     if (switchVegToggle.getVisibility() == View.GONE && tvOfferTitle.getVisibility() == View.GONE) {
                         viewPromoTitle.setVisibility(View.GONE);
@@ -469,6 +507,17 @@ public class VendorMenuFragment extends Fragment implements PagerSlidingTabStrip
                         }
                     });
                     activity.getSlots().get(activity.menusSort).setCheck(true);
+
+                    if(menusCategoryFragmentsAdapter != null && itemId != -1) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Fragment page = (Fragment) menusCategoryFragmentsAdapter.instantiateItem(viewPager, viewPager.getCurrentItem());
+                                ((MenusCategoryItemsFragment) page).setSelectedItem(itemId);
+                            }
+                        }, 100);
+
+                    }
                 }
             }
         } catch (Exception exception) {

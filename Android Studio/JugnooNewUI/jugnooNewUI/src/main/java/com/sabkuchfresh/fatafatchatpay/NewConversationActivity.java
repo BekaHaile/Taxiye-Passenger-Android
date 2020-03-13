@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,7 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.fugu.FuguConfig;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.adapters.UserContactAdapter;
 import com.sabkuchfresh.datastructure.UserContactObject;
 import com.sabkuchfresh.feed.models.ContactResponseModel;
@@ -55,7 +55,6 @@ import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
-import retrofit.RetrofitError;
 
 /**
  * Created by cl-macmini-01 on 2/6/18.
@@ -294,7 +293,7 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
                     }
 
                     @Override
-                    public boolean onFailure(final RetrofitError error) {
+                    public boolean onFailure(final Exception error) {
                         hideSyncLayout();
                         return false;
                     }
@@ -480,12 +479,11 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
                             if (createChatResponse != null && !TextUtils.isEmpty(createChatResponse.getChannelId())
                                     && createChatResponse.getFuguData() != null) {
 
-                                FuguConfig.getInstance().openChat(NewConversationActivity.this,
+                                HippoConfig.getInstance().openChat(NewConversationActivity.this,
                                         Long.parseLong(createChatResponse.getChannelId()));
                             }
                             // indicate to fugu that a new peer chat is created ( so we can refresh the chat
                             // activity when we resume it )
-                            FuguConfig.getInstance().setNewPeerChatCreated();
                             finish();
 
                         }
@@ -497,7 +495,7 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
                     }
 
                     @Override
-                    public boolean onFailure(RetrofitError error) {
+                    public boolean onFailure(Exception error) {
                         return false;
                     }
 

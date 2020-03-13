@@ -33,7 +33,7 @@
     <string name="confirm_request">Confirm Request</string>
 
     <string name="enter_code">Enter Code</string>
-    <string name="done">Done</string>
+    <string name="done_caps">DONE</string>
 
     <string name="logout">Logout</string>
     <string name="are_you_sure_you_want_to_logout">Are you sure you want to logout?</string>
@@ -130,6 +130,7 @@
     <string name="view_invoice">View Invoice</string>
     <string name="trip_overview">Trip Overview</string>
     <string name="submit_feedback_caps">SUBMIT FEEDBACK</string>
+    <string name="done">Done</string>
     <string name="skip">Skip</string>
     <string name="star_required">* Required</string>
     <string name="leave_a_comment">Leave a comment</string>
@@ -139,6 +140,7 @@
     <string name="please_provide_reason_for_rating">Please provide your reason for the rating</string>
     <string name="review_must_be_in">Review must be in 300 letters.</string>
     <string name="order_expereince">How was your Experience?</string>
+    <string name="rating_summary">Rating</string>
 
     <!-- Add Places -->
 
@@ -169,9 +171,9 @@
     <string name="insert_sd_card">Please insert SD Card to use this app</string>
 
     <!-- NL Home Screen -->
-    <string name="nl_min_fare">BASE FARE</string>
-    <string name="nl_offers">OFFERS</string>
-    <string name="nl_change_locality">CHANGE LOCALITY</string>
+    <string name="nl_min_fare">Base Fare</string>
+    <string name="nl_offers">Offers</string>
+    <string name="nl_change_locality">Change Locality</string>
     <string name="get_fare_estimate">Get Fare Estimate</string>
     <string name="nl_per_km">Per Km</string>
     <string name="nl_per_min">Per Min</string>
@@ -429,7 +431,7 @@
         <item>+46,SE</item>
         <item>+41,CH</item>
         <item>+963,SY</item>
-        <item>+1,TT</item>
+        <item>+1868,TT</item>
         <item>+886,TW</item>
         <item>+992,TJ</item>
         <item>+255,TZ</item>
@@ -773,7 +775,7 @@
     <string name="easy_and_affordable_commute">Easy and affordable commute</string>
     <string name="variety_of_quality_readymade_meals">Variety of quality readymade meals</string>
     <string name="affordable_high_quality_fruits_veggies">Affordable &amp; high Quality fruits &amp; veggies</string>
-    <string name="delivery_new_name">Fatafat</string>
+    <string name="text_fatafat">Delivery</string>
     <string name="please_swipe_down_to_reload">Please swipe down to reload</string>
 
 
@@ -842,7 +844,7 @@
     <string name="saved_location">Saved location</string>
     <string name="we_could_not_verify">Sorry, we could not verify through\nmissed call. Please try again.</string>
     <string name="selecting_a_pickup_spot">Selecting a pickup spot will save you time and make it easier to find your driver.</string>
-    <string name="no_available_offers">No Available Offers</string>
+    <string name="no_available_offers">No offers available yet!</string>
     <string name="select_an_offer">Select an Offer</string>
 
 
@@ -991,7 +993,7 @@
 
     <string name="no_menus_available_with_these_filters">Sorry, no results found. Try again with fewer filters.</string>
     <string name="no_menus_available_your_location">Sorry, online ordering isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
-    <string name="no_delivery_available_your_location">Sorry, fatafat isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
+    <string name="text_no_fatafat_available_your_location">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
     <string name="oops_no_results_found">Oops, No results found</string>
     <string name="quick_filters">Quick Filters</string>
     <string name="free_delivery">Free Delivery</string>
@@ -1316,6 +1318,7 @@
     <string name="label_category_all">All</string>
     <string name="label_see_all">See All</string>
     <string name="ongoing_orders">Ongoing Orders</string>
+    <string name="featured_sellers">Featured Sellers</string>
 
     <string name="you_have_already_reviewed_format">You have already reviewed %s</string>
     <string name="more_reviews_not_shown_text">%s reviews are not shown here as the reviewers only posted rating without describing their experience</string>
@@ -1355,7 +1358,7 @@
 \n- Grocery/daily needs items
 \n- Pick &amp; drop documents/keys/other items</string>
     <string name="anywhere_hint_order_via_chat">Please enter item details</string>
-    <string name="action_order_via_fatafat">Order via Fatafat</string>
+    <string name="action_order_via_fatafat">Order via %s</string>
     <string name="action_create_custom_order">Custom order</string>
     <string name="label_custom_order">Get anything delivered anywhere by \n  placing a custom order.</string>
     <string name="label_fav_restaurant">Couldn’t find your \n favourite store yet?</string>
@@ -1372,8 +1375,8 @@
         <item quantity="zero">No Rating</item>
         <item quantity="other">%d Ratings</item>
     </plurals>
-    <string name="fatafat_banner_heading"><b>Get it delivered via Fatafat \n</b></string>
-    <string name="fatafat_banner_sub_heading">Your location is outside store\'s delivery area but you can get it through Fatafat</string>
+    <string name="fatafat_banner_heading"><b>Get it delivered via %s \n</b></string>
+    <string name="fatafat_banner_sub_heading">Your location is outside store\'s delivery area but you can get it through %s</string>
     <string name="estimated_delivery_charges">Estimated Delivery Charges</string>
     <string name="estimated_charges">Estimated Charges</string>
     <string name="upload_photo">Upload Photo</string>
@@ -1979,7 +1982,7 @@
     <string name="expected_toll_charge">Expected Toll Charges</string>
     <string name="schedule_ride_alert">*We cannot always guarantee that a driver will be available</string>
     <string name="vehicle">Vehicle</string>
-    <string name="vehicle_fare_estimate_alert">The fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
+    <string name="vehicle_fare_estimate_alert">The estimated fare shown is based on your drop location (destination). The final fare may vary depending upon the traffic conditions and the route taken to your destination or if journey changes. The fare will be based on the rates provided.</string>
     <string name="choose_a_place">Choose a place</string>
     <string name="add_saved_place">Add Saved Place</string>
     <string name="tip_the_driver">Tip the Driver</string>
@@ -1991,6 +1994,9 @@
     <string name="accept">Accept</string>
     <string name="bid">Bid</string>
     <string name="wrong_address_selected">Wrong address selected</string>
+    <string name="please_select_your_gender">Please select your gender</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="please_select_your_dob">Please select your date of birth</string>
     <string name="pos">POS</string>
     <string name="hourly_package">Hourly\nPackage</string>
     <string name="safe">Safe</string>
@@ -2028,7 +2034,7 @@
     <string name="confirm_payment_via_card_ending_format">Confirm payment via card ending with %s</string>
     <string name="please_select_some_amount">Please select some amount</string>
 
-  <!--Notes-->
+    <!--Notes-->
     <string name="notes">Notes</string>
     <string name="write_notes_here">Write notes here...</string>
     <string name="save_notes">Save notes</string>
@@ -2042,6 +2048,13 @@
     <string name="tap_on_pin">Tap on pin</string>
     <string name="tap_on_pin_caps">Tap On Pin</string>
     <string name="favourite">Favourite%s</string>
+    <string name="text_disclaimer">We will dispatching Taxi with class 4 license with authorisation Taxi companies only</string>
+    <string name="select_pickup_address">Select pickup address</string>
+
+
+
+    <string name="btn_rate_order">Rate order</string>
+    <string name="error_vehicle_type">Please choose proper vehicle type and pickup address before proceeding.</string>
 
 
     <!-- Scanner Layout -->
@@ -2126,19 +2139,377 @@
     <string name="offer_cannot_be_less_than_min_value">Offer can\'t be less than minimum value</string>
     <string name="offer_cannot_be_more_than_max_value">Offer can\'t be more than max value</string>
     <string name="copied">Copied</string>
+    <string name="text_rewards">Rewards</string>
+    <string name="you_have_scratch_cards">You have scratch cards</string>
+    <string name="no_scratch_coupon">No Scratch Coupon!!\nTake rides to earn more coupons.</string>
     <string name="select_drop_location_estimate_fare">Select drop location to find estimate fare</string>
     <string name="text_terms_and_conditions_apply"><![CDATA[*Terms & Conditions Apply]]></string>
     <string name="suggested_fare">Suggested Fare</string>
+    <string name="tap_to_scratch">Tap to Scratch</string>
+    <string name="text_no_internet_connection">No Internet Connection</string>
     <string name="please_confirm_you_have_selected_pickup_address">Please select the correct pickup address</string>
 
+    <string name="text_no_delivery_available">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
 
+
+
+    <string name="pickup">Pickup</string>
+    <string name="rate_order">Rate Order</string>
+    <string name="pay_for_delivery">Pay For Your Delivery Using</string>
+    <string name="offers_and_coupons_applied_colon">Offers Applied: \n<b>%s</b></string>
+
+    <string name="menu_promotions">Promotions</string>
+    <string name="menu_inbox">Inbox</string>
+    <string name="menu_history">History</string>
+    <string name="menu_chat_support">Chat Support</string>
+    <string name="menu_locale">Language</string>
+    <string name="menu_schedule_ride">Schedule Ride</string>
+    <string name="menu_email_support">Email Support</string>
+    <string name="menu_call_support">Call Support</string>
+    <string name="menu_wallet">Payments</string>
+    <string name="menu_payments">Payments</string>
+    <string name="menu_refer_earn">Refer and Earn</string>
+    <string name="ride_scheduled_status">Ride Scheduled</string>
+    <string name="in_progress_status">In Progress</string>
+    <string name="processed_status">Processed</string>
+    <string name="cancelled_status">Cancelled</string>
 <!--    New UI changes-->
-    <string name="text_where_to_go">Where to go</string>
+    <string name="text_where_to_go">Where to?</string>
     <string name="add_favorite_place">Add Favorite Place</string>
     <string name="label_confirm_ride_request">Confirm Ride Request</string>
     <string name="text_congestion_time">Congestion Time</string>
     <string name="type_atleast_4_characters">Type atleast 4 characters</string>
     <string name="congestion_charges_per_min">Congestion charges per min</string>
+
+
+
+    <!--    Country Names-->
+    <string name="andorra">Andorra</string>
+    <string name="uae">United Arab Emirates</string>
+    <string name="afghanistan">Afghanistan</string>
+    <string name="anguilla">Anguilla</string>
+    <string name="albania">Albania</string>
+    <string name="armenia">Armenia</string>
+    <string name="angola">Angola</string>
+    <string name="antartica">Antarctica</string>
+    <string name="antigua_and_barbuda">Antigua and Barbuda</string>
+    <string name="argentina">Argentina</string>
+    <string name="american_samoa">American Samoa</string>
+    <string name="austria">Austria</string>
+    <string name="australia">Australia</string>
+    <string name="aruba">Aruba</string>
+    <string name="aland_island">Aland Islands</string>
+    <string name="azerbaijan">Azerbaijan</string>
+    <string name="bosnia_and_herzegovina">Bosnia and Herzegovina</string>
+    <string name="barbados">Barbados</string>
+    <string name="bangladesh">Bangladesh</string>
+    <string name="belgium">Belgium</string>
+    <string name="burkina_faso">Burkina Faso</string>
+    <string name="bulgaria">Bulgaria</string>
+    <string name="bahrain">Bahrain</string>
+    <string name="burundi">Burundi</string>
+    <string name="benin">Benin</string>
+    <string name="saint_barthlelemy">Saint Barthelemy</string>
+    <string name="bermuda">Bermuda</string>
+    <string name="brunei_darussalam">Brunei Darussalam</string>
+    <string name="bolivia_plurinational_state_of">Bolivia, Plurinational State of</string>
+    <string name="bonaire">Bonaire</string>
+    <string name="brazil">Brazil</string>
+    <string name="bahamas">Bahamas</string>
+    <string name="bhutan">Bhutan</string>
+    <string name="bouvet_island">Bouvet Island</string>
+    <string name="botswana">Botswana</string>
+    <string name="belarus">Belarus</string>
+    <string name="belize">Belize</string>
+    <string name="canada">Canada</string>
+    <string name="cocos_island">Cocos (Keeling) Islands</string>
+    <string name="congo_the_democratic_republic_of_the">Congo, The Democratic Republic of the</string>
+    <string name="central_african_republic">Central African Republic</string>
+    <string name="congo">Congo</string>
+    <string name="switzerland">Switzerland</string>
+    <string name="ivory_coast">Ivory Coast</string>
+    <string name="cook_islands">Cook Islands</string>
+    <string name="chile">Chile</string>
+    <string name="cameroon">Cameroon</string>
+    <string name="china">China</string>
+    <string name="colombia">Colombia</string>
+    <string name="costa_rica">Costa Rica</string>
+    <string name="cuba">Cuba</string>
+    <string name="cape_verde">Cape Verde</string>
+    <string name="curacao">Curacao</string>
+    <string name="christmas_island">Christmas Island</string>
+    <string name="cyprus">Cyprus</string>
+    <string name="czech_republic">Czech Republic</string>
+    <string name="germany">Germany</string>
+    <string name="djibouti">Djibouti</string>
+    <string name="denmark">Denmark</string>
+    <string name="dominica">Dominica</string>
+    <string name="dominican_republic">Dominican Republic</string>
+    <string name="algeria">Algeria</string>
+    <string name="ecuador">Ecuador</string>
+    <string name="estonia">Estonia</string>
+    <string name="egypt">Egypt</string>
+    <string name="western_sahara">Western Sahara</string>
+    <string name="eritrea">Eritrea</string>
+    <string name="spain">Spain</string>
+    <string name="ethiopia">Ethiopia</string>
+    <string name="finland">Finland</string>
+    <string name="fiji">Fiji</string>
+    <string name="falkland_islands_malvina">Falkland Islands (Malvinas)</string>
+    <string name="micronesia_federated_states_of">Micronesia, Federated States of</string>
+    <string name="faroe_islands">Faroe Islands</string>
+    <string name="france">France</string>
+    <string name="gabon">Gabon</string>
+    <string name="united_kingdom">United Kingdom</string>
+    <string name="grenada">Grenada</string>
+    <string name="georgia">Georgia</string>
+    <string name="french_guiana">French Guiana</string>
+    <string name="guernsey">Guernsey</string>
+    <string name="ghana">Ghana</string>
+    <string name="gibraltar">Gibraltar</string>
+    <string name="greenland">Greenland</string>
+    <string name="gambia">Gambia</string>
+    <string name="guinea">Guinea</string>
+    <string name="guadeloupe">Guadeloupe</string>
+    <string name="equatorial_guinea">Equatorial Guinea</string>
+    <string name="greece">Greece</string>
+    <string name="south_georgia_and_the_south_sandwich_island">South Georgia and the South Sandwich Islands</string>
+    <string name="guatemala">Guatemala</string>
+    <string name="guam">Guam</string>
+    <string name="guinea_bissau">Guinea-Bissau</string>
+    <string name="guyana">Guyana</string>
+    <string name="hong_kong">Hong Kong</string>
+    <string name="heard_island_and_mcdonald_island">Heard Island and McDonald Islands</string>
+    <string name="honduras">Honduras</string>
+    <string name="croatia">Croatia</string>
+    <string name="haiti">Haiti</string>
+    <string name="hungary">Hungary</string>
+    <string name="indonesia">Indonesia</string>
+    <string name="ireland">Ireland</string>
+    <string name="israel">Israel</string>
+    <string name="isle_of_man">Isle of Man</string>
+    <string name="india">India</string>
+    <string name="bristish_indian_ocean_territory">British Indian Ocean Territory</string>
+    <string name="iraq">Iraq</string>
+    <string name="iran_islamic_republic_of">Iran, Islamic Republic of</string>
+    <string name="iceland">Iceland</string>
+    <string name="italy">Italy</string>
+    <string name="jersey">Jersey</string>
+    <string name="jamaica">Jamaica</string>
+    <string name="jordan">Jordan</string>
+    <string name="japan">Japan</string>
+    <string name="kenya">Kenya</string>
+    <string name="kyrgyzstan">Kyrgyzstan</string>
+    <string name="cambodia">Cambodia</string>
+    <string name="kiribati">Kiribati</string>
+    <string name="comoros">Comoros</string>
+    <string name="saint_kitts_and_nevis">Saint Kitts and Nevis</string>
+    <string name="north_korea">North Korea</string>
+    <string name="south_korea">South Korea</string>
+    <string name="kuwait">Kuwait</string>
+    <string name="cayman_islands">Cayman Islands</string>
+    <string name="kazakhstan">Kazakhstan</string>
+    <string name="lao_peoples_democratic_republic">Lao People\'s Democratic Republic</string>
+    <string name="lebanon">Lebanon</string>
+    <string name="saint_lucia">Saint Lucia</string>
+    <string name="liechtenstein">Liechtenstein</string>
+    <string name="sri_lanka">Sri Lanka</string>
+    <string name="liberia">Liberia</string>
+    <string name="lesotho">Lesotho</string>
+    <string name="lithuania">Lithuania</string>
+    <string name="luxembourg">Luxembourg</string>
+    <string name="latvia">Latvia</string>
+    <string name="libyan_arab_jamahiriya">Libyan Arab Jamahiriya</string>
+    <string name="morocco">Morocco</string>
+    <string name="monaco">Monaco</string>
+    <string name="moldova_republic_of">Moldova, Republic of</string>
+    <string name="montenegro">Montenegro</string>
+    <string name="saint_martin">Saint Martin</string>
+    <string name="madagascar">Madagascar</string>
+    <string name="marshall_islands">Marshall Islands</string>
+    <string name="mer_yugoslav_republic_of">Macedonia, The Former Yugoslav Republic of</string>
+    <string name="mali">Mali</string>
+    <string name="myanmar">Myanmar</string>
+    <string name="mongolia">Mongolia</string>
+    <string name="macao">Macao</string>
+    <string name="northern_meriana_islands">Northern Mariana Islands</string>
+    <string name="martinique">Martinique</string>
+    <string name="mauritania">Mauritania</string>
+    <string name="montserrat">Montserrat</string>
+    <string name="malta">Malta</string>
+    <string name="mauritius">Mauritius</string>
+    <string name="maldives">Maldives</string>
+    <string name="malawi">Malawi</string>
+    <string name="mexico">Mexico</string>
+    <string name="malaysia">Malaysia</string>
+    <string name="mozambique">Mozambique</string>
+    <string name="nambia">Namibia</string>
+    <string name="new_caledonia">New Caledonia</string>
+    <string name="niger">Niger</string>
+    <string name="norfolk_island">Norfolk Island</string>
+    <string name="nigeria">Nigeria</string>
+    <string name="nicaragua">Nicaragua</string>
+    <string name="netherlands">Netherlands</string>
+    <string name="norway">Norway</string>
+    <string name="nepal">Nepal</string>
+    <string name="nauru">Nauru</string>
+    <string name="niue">Niue</string>
+    <string name="newzealand_">New Zealand</string>
+    <string name="oman">Oman</string>
+    <string name="panama">Panama</string>
+    <string name="peru">Peru</string>
+    <string name="french_polynesia">French Polynesia</string>
+    <string name="papua_new_guinea">Papua New Guinea</string>
+    <string name="philippines">Philippines</string>
+    <string name="pakistan">Pakistan</string>
+    <string name="poland">Poland</string>
+    <string name="saint_pierre_and_miquelon">Saint Pierre and Miquelon</string>
+    <string name="pitcairn">Pitcairn</string>
+    <string name="puerto_rico">Puerto Rico</string>
+    <string name="palestinian_territory_occupied">Palestinian Territory, Occupied</string>
+    <string name="portugal">Portugal</string>
+    <string name="palau">Palau</string>
+    <string name="paraguay">Paraguay</string>
+    <string name="qatar">Qatar</string>
+    <string name="reunion">Reunion</string>
+    <string name="romania">Romania</string>
+    <string name="serbia">Serbia</string>
+    <string name="russia">Russia</string>
+    <string name="rwanda">Rwanda</string>
+    <string name="saudi_arabia">Saudi Arabia</string>
+    <string name="solomon_islands">Solomon Islands</string>
+    <string name="seychelles">Seychelles</string>
+    <string name="sudan">Sudan</string>
+    <string name="sweden">Sweden</string>
+    <string name="singapore">Singapore</string>
+    <string name="saint_helena_ascensio_and_tristan_da_cunha">Saint Helena, Ascension and Tristan Da Cunha</string>
+    <string name="slovenia">Slovenia</string>
+    <string name="svalbard_and_jan_mayen">Svalbard and Jan Mayen</string>
+    <string name="slovakia">Slovakia</string>
+    <string name="sierra_leone">Sierra Leone</string>
+    <string name="san_marino">San Marino</string>
+    <string name="senegal">Senegal</string>
+    <string name="somalia">Somalia</string>
+    <string name="suriname">Suriname</string>
+    <string name="south_sudan">South Sudan</string>
+    <string name="sao_tome_and_principe">Sao Tome and Principe</string>
+    <string name="salvador">El Salvador</string>
+    <string name="sint_maarten">Sint Maarten</string>
+    <string name="syrian_arab_republic">Syrian Arab Republic</string>
+    <string name="swaziland">Swaziland</string>
+    <string name="turks_and_caicos_islands">Turks and Caicos Islands</string>
+    <string name="chad">Chad</string>
+    <string name="french_southern_territories">French Southern Territories</string>
+    <string name="togo">Togo</string>
+    <string name="thailand">Thailand</string>
+    <string name="tajikistan">Tajikistan</string>
+    <string name="tokelau">Tokelau</string>
+    <string name="east_timor">East Timor</string>
+    <string name="turkmenistan">Turkmenistan</string>
+    <string name="tunisia">Tunisia</string>
+    <string name="tonga">Tonga</string>
+    <string name="turkey">Turkey</string>
+    <string name="trinidad_and_tobago">Trinidad and Tobago</string>
+    <string name="tuvalu">Tuvalu</string>
+    <string name="taiwan">Taiwan</string>
+    <string name="tanzania">Tanzania, United Republic of</string>
+    <string name="ukraine">Ukraine</string>
+    <string name="uganda">Uganda</string>
+    <string name="minor_outlying">U.S. Minor Outlying Islands</string>
+    <string name="usa">United States</string>
+    <string name="uruguay">Uruguay</string>
+    <string name="uzbekistan">Uzbekistan</string>
+    <string name="vatican_city">Holy See (Vatican City State)</string>
+    <string name="vincent_grenadines">Saint Vincent and the Grenadines</string>
+    <string name="venenzuala">Venezuela, Bolivarian Republic of</string>
+    <string name="virgin_islands_british">Virgin Islands, British</string>
+    <string name="virgin_islands_us">Virgin Islands, U.S.</string>
+    <string name="vietnam">Vietnam</string>
+    <string name="vanuatu">Vanuatu</string>
+    <string name="wallis_futuna">Wallis and Futuna</string>
+    <string name="samoa">Samoa</string>
+    <string name="kosovo">Kosovo</string>
+    <string name="yemen">Yemen</string>
+    <string name="mayotte">Mayotte</string>
+    <string name="south_africa_">South Africa</string>
+    <string name="zambia">Zambia</string>
+    <string name="zimbabwe">Zimbabwe</string>
+
+    <string name="referrals">Referrals</string>
+    <string name="cash_earned">Cash Earned</string>
+    <string name="cash_earned_today">Cash Earned Today</string>
+    <string name="earned_today">Earned Today</string>
+    <string name="free_rides_for_life">Free Rides for Life</string>
+    <string name="error_player">There was an error initializing the YouTubePlayer (%1$s)</string>
+    <string name="watch_how_to_earn_free_rides">Watch How to Earn Free Rides for Life!</string>
+    <string name="no_i_already_know"><u>No, I already know how to get Free Rides ></u></string>
+    <string name="referral_code_applied">Promocode Applied</string>
+    <string name="oops">Oops!</string>
+    <string name="no_rides_found_at_this_rate">No rides found at this rate!</string>
+    <string name="you_can_enter_manual_fare">You can enter manual fare for higher\nprobability of booking</string>
+    <string name="fare_addition">Fare Addition</string>
+    <string name="no_drivers_found">No Drivers found!</string>
+    <string name="you_can_connect_the_nearby_drivers">You can connect with nearby drivers directly</string>
+    <string name="hint_tip_amount">Tip amount</string>
+    <string name="text_want_to_prioritize_your_request">Drivers are not accepting your request currently!</string>
+    <string name="text_you_can_add_a_tip_to">You can add a tip to current fare for higher probability of booking</string>
+    <string name="text_help_me_to_book_a_ride">Unable to book a ride from %s. Please help me to book a ride.</string>
+    <string name="unable_to_book_a_ride">Unable to book a Ride?</string>
+    <string name="choose_vehicle_type">Choose Vehicle Type</string>
+    <string name="msg_adding_tip_can_increase_the_chances_of_booking">Adding tip to the driver can increase the chances of booking.</string>
+    <string name="text_here_is_what_you_can_do">Here\'s what you can do</string>
+    <string name="text_call_nearby_drivers">Call nearby drivers</string>
+    <string name="add_more_tip_for_better_acceptance">Add more tip to the current fare for better acceptance of ride</string>
+    <string name="we_are_unable_to_process_your_request">We are unable to process your request at this time. Please try again later.</string>
+    <string name="please_select_appropriate_pickup_and_drop_location_to_continue">Please select appropriate pickup and drop location to continue.</string>
+    <string name="new_destination_fare">New Destination Fare</string>
+    <string name="change_in_fare_on_drop_change">It seems there is change in fare with the new destination request</string>
+    <string name="previous_fare">Previous Fare</string>
+    <string name="updated_fare">Updated Fare</string>
+    <string name="please_confirm_the_fare_update">Please confirm the fare update</string>
+    <string name="earnings">Earnings</string>
+    <string name="earnings_today">Earnings Today</string>
+    <string name="total_earnings">Total Earnings</string>
+    <string name="referred_on">Referred on</string>
+    <string name="no_vehicles_available">Sorry!! No vehicle available in this area</string>
+
+    <string name="select_gender">Select Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="please_select_gender">Please select gender</string>
+    <string name="please_enter_date_of_birth">Please enter date of birth</string>
+    <string name="pay_later">Pay Later</string>
+    <string name="your_trips">Your Trips</string>
+    <string name="contact_user_format">Contact %s</string>
+    <string name="free_call">Free Call</string>
+    <string name="carrier_charges_may_apply">*Carrier charges may apply</string>
+    <string name="tap_to_retry">Tap to Retry</string>
+    <string name="reinvite">Re-Invite</string>
+    <string name="call_out_your_friends_who_are_app_members">Call out your friends who are already %s members  and earn money!</string>
+    <string name="become_a">Become a</string>
+    <string name="better_friend">better friend</string>
+    <string name="to_your">to\nyour</string>
+    <string name="friend">friend!</string>
+    <string name="select_all">Select All</string>
+    <string name="select_n_all">Select\nall</string>
+    <string name="no_contacts_found">No contacts found</string>
+    <string name="no_contacts_in_your_phone">No contacts in your phone</string>
+    <string name="none_of_your_contacts_are_on_app">None of your contacts are on %s</string>
+    <string name="contacts_read_cancelled_tap_to_retry">Contacts read cancelled\nTap to retry</string>
+    <string name="reinvite_friends">Re-Invite Friends</string>
+    <string name="unselect_all">Unselect All</string>
+    <string name="offer_not_valid_for_selected_drop_location">Offer not valid for your selected drop location</string>
+    <string name="add_your_reviews">Add Your Reviews</string>
+    <string name="review_must_be_in_150">Review must be in 150 letters.</string>
+    <string name="pay_via">Pay via</string>
+    <string name="upi_supported_app_not_installed">UPI supported app not installed</string>
+    <string name="enable_night_map">Enable night map</string>
+    <string name="disable_night_map">Disable night map</string>
+    <string name="map_them_will_automatically_change_now">Map theme will automaticaly changed to dark in the evening now</string>
+    <string name="customer">Customer</string>
+    <string name="transfer_to">Transfer to</string>
+    <string name="select_transfer_to">Select Transfer to</string>
+    <string name="store_accepts_online_payment_only">Store accepts online payment only</string>
     <string name="service_unavailable_in_this_area">Service unavailable in this area</string>
     <string name="want_to_earn_money_from_transport_business">Want to Earn Money from transport business in your city?</string>
     <string name="partner_with_jugnoo">Partner with Jugnoo</string>

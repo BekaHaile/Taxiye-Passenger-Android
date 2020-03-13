@@ -8,11 +8,12 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.fugu.FuguConfig;
+
+import com.hippo.HippoConfig;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -108,7 +109,7 @@ public class BaseFragmentActivity extends FragmentActivity {
     private boolean openingFugu;
 
     private void fuguShowConversations() {
-        FuguConfig.getInstance().showConversations(this, getString(R.string.fugu_support_title));
+        HippoConfig.getInstance().showConversations(this, getString(R.string.fugu_support_title));
     }
 
     public Handler mHandler;

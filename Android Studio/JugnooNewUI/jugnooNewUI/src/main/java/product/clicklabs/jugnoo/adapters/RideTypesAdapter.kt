@@ -1,8 +1,8 @@
 package product.clicklabs.jugnoo.adapters
 
 import android.graphics.Typeface
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.RecyclerView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,9 +12,9 @@ import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.retrofit.model.ServiceType
 import product.clicklabs.jugnoo.utils.ASSL
 
-class RideTypesAdapter(private var serviceTypes: ArrayList<ServiceType>, val recyclerView:RecyclerView
+class RideTypesAdapter(private var serviceTypes: ArrayList<ServiceType>, val recyclerView: androidx.recyclerview.widget.RecyclerView
                        , private val typeface: Typeface?, private  val onSelectedCallback: OnSelectedCallback) :
-        RecyclerView.Adapter<RideTypesAdapter.ViewHolderService>(),ItemListener {
+        androidx.recyclerview.widget.RecyclerView.Adapter<RideTypesAdapter.ViewHolderService>(),ItemListener {
 
     init{
         recyclerView.visibility = if(serviceTypes.size == 0||serviceTypes.size == 1) View.GONE else View.VISIBLE
@@ -28,7 +28,7 @@ class RideTypesAdapter(private var serviceTypes: ArrayList<ServiceType>, val rec
 
     override fun onClickItem(viewClicked: View?, parentView: View?) {
         val pos = recyclerView.getChildLayoutPosition(parentView!!)
-        if(pos != RecyclerView.NO_POSITION){
+        if(pos != androidx.recyclerview.widget.RecyclerView.NO_POSITION){
             for(corp in serviceTypes){
                 corp.selected = false
             }
@@ -54,12 +54,12 @@ class RideTypesAdapter(private var serviceTypes: ArrayList<ServiceType>, val rec
         holder.bind(serviceTypes[position].name, serviceTypes[position].selected, position)
 
 
-        val params = holder.itemView.relative.getLayoutParams() as RecyclerView.LayoutParams
+        val params = holder.itemView.relative.getLayoutParams() as androidx.recyclerview.widget.RecyclerView.LayoutParams
         params.width = getItemWidth()
         holder.itemView.relative.setLayoutParams(params)
     }
 
-    inner class ViewHolderService(view : View, listener:ItemListener) : RecyclerView.ViewHolder(view){
+    inner class ViewHolderService(view : View, listener:ItemListener) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
         init{
             if(typeface != null) {
                 itemView.tvRideType.typeface = typeface

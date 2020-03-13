@@ -25,8 +25,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -51,6 +49,7 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -66,6 +65,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -77,19 +77,24 @@ import java.util.Currency;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.GCMIntentService;
+import product.clicklabs.jugnoo.HippoCallStub;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppPackage;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.home.dialogs.ThreeButtonDialog;
 
 import static product.clicklabs.jugnoo.home.HomeActivity.passengerScreenMode;
 
@@ -530,7 +535,8 @@ public class Utils implements GAAction, GACategory{
 	private static DecimalFormat decimalFormatMoney;
 	public static DecimalFormat getMoneyDecimalFormat(){
 		if(decimalFormatMoney == null){
-			decimalFormatMoney = new DecimalFormat("#.##");
+			decimalFormatMoney=(DecimalFormat) NumberFormat.getNumberInstance(Locale.ENGLISH);
+			decimalFormatMoney.applyPattern("0.00");
 		}
 		return decimalFormatMoney;
 	}
@@ -894,7 +900,52 @@ public class Utils implements GAAction, GACategory{
 
 	public static void callDriverDuringRide(Activity activity){
 		try {
-			Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
+			if(Data.autoData == null || Data.autoData.getAssignedDriverInfo() == null){
+				return;
+			}
+
+			if(!TextUtils.isEmpty(Data.autoData.getAssignedDriverInfo().getUserIdentifier())
+					&& Prefs.with(activity).getInt(Constants.KEY_HIPPO_CALL_ENABLED, 0) == 1){
+
+				ThreeButtonDialog.INSTANCE.show(activity,
+						activity.getString(R.string.contact_user_format, Data.autoData.getAssignedDriverInfo().name),
+						activity.getString(R.string.carrier_charges_may_apply),
+						Data.autoData.getAssignedDriverInfo().phoneNumber,
+						activity.getString(R.string.free_call),
+						activity.getString(R.string.cancel),
+						true,
+						new ThreeButtonDialog.Callback() {
+							@Override
+							public void onPositiveClick() {
+								Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
+							}
+
+							@Override
+							public void onNeutralClick() {
+								String callType = Prefs.with(activity).getString(Constants.KEY_HIPPO_CALL_TYPE, "audio");
+								ArrayList<String> userUniqueKeys = new ArrayList<>();
+								userUniqueKeys.add(Data.autoData.getAssignedDriverInfo().getUserIdentifier());
+
+								HippoCallStub.init();
+
+								HippoConfig.getInstance().startCall(activity, callType,
+										Data.autoData.getcEngagementId(),
+										Data.userData.userIdentifier,
+										Data.autoData.getAssignedDriverInfo().name,
+										userUniqueKeys,
+										Data.autoData.getAssignedDriverInfo().image);
+							}
+
+							@Override
+							public void onNegativeClick() {
+
+							}
+						}
+				);
+			}
+			else {
+				Utils.openCallIntent(activity, Data.autoData.getAssignedDriverInfo().phoneNumber);
+			}
 			if(PassengerScreenMode.P_IN_RIDE == passengerScreenMode){
 				GAUtils.event(RIDES, RIDE+IN_PROGRESS, CALL+BUTTON+CLICKED);
 			}
@@ -1088,8 +1139,13 @@ public class Utils implements GAAction, GACategory{
 			currencyNumberFormat.setGroupingUsed(false);
 		}
 		int precision = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CURRENCY_PRECISION, 0);
-		currencyNumberFormat.setMinimumFractionDigits(setPrecision ? precision : 0);
-		currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
+		if(MyApplication.getInstance().getResources().getBoolean(R.bool.currency_precision_from_server)){
+			currencyNumberFormat.setMinimumFractionDigits(setPrecision ? precision : 0);
+			currencyNumberFormat.setMaximumFractionDigits(setPrecision ? precision : Math.max(2, precision));
+		} else {
+			currencyNumberFormat.setMinimumFractionDigits(2);
+			currencyNumberFormat.setMaximumFractionDigits(2);
+		}
 
 		if(TextUtils.isEmpty(currency)){
 			currency = MyApplication.getInstance().getString(R.string.default_currency);
@@ -1104,6 +1160,7 @@ public class Utils implements GAAction, GACategory{
 		return result;
 
 	}
+
 	public static String formatCurrencyValue(String currency, String value){
 		try {
 			return formatCurrencyValue(currency, Double.parseDouble(value));
@@ -1154,6 +1211,15 @@ public class Utils implements GAAction, GACategory{
 		}
 	}
 
+	public static boolean isImageFile(String path) {
+		String mimeType = URLConnection.guessContentTypeFromName(path);
+		return mimeType != null && mimeType.startsWith("image");
+	}
+
+	public static boolean isVideoFile(String path) {
+		String mimeType = URLConnection.guessContentTypeFromName(path);
+		return mimeType != null && mimeType.startsWith("video");
+	}
 }
 
 

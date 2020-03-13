@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.apis;
 
+import android.os.Handler;
 import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -57,7 +58,7 @@ public class ApiFindADriver {
 
 	public void hit(String accessToken, final LatLng latLng, final LatLng dropLatLng, final int showAllDrivers, int showDriverInfo,
 					Region regionSelected, final boolean beforeRequestRide, final boolean confirmedScreenOpened,
-					final boolean savedAddressUsed, HashMap<String, String> params){
+					final boolean savedAddressUsed, HashMap<String, String> params, boolean showLoader){
 		this.regionSelected = regionSelected;
 		try {
 			if(callback != null) {
@@ -90,6 +91,9 @@ public class ApiFindADriver {
 			Log.i("params in find_a_driver", "=" + params);
 			final long startTime = System.currentTimeMillis();
 
+			if(showLoader) {
+				new Handler().postDelayed(() -> DialogPopup.showLoadingDialog(activity, ""), 200);
+			}
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().findADriverCall(params, new retrofit.Callback<FindADriverResponse>() {
 				@Override
@@ -109,6 +113,7 @@ public class ApiFindADriver {
 
 						Data.setLatLngOfJeanieLastShown(latLng);
 						Data.autoData.setLastRefreshLatLng(latLng);
+						Data.autoData.setRequestLevels(findADriverResponse.getRequestLevels());
 						refreshLatLng = latLng;
 						refreshTime = System.currentTimeMillis();
 						if(callback != null && !confirmedScreenOpened) {
@@ -135,6 +140,7 @@ public class ApiFindADriver {
 							}
 						}
 					} catch (Exception e) {
+						DialogPopup.dismissLoadingDialog();
 						e.printStackTrace();
 					}
 					if(callback != null) {
@@ -222,7 +228,9 @@ public class ApiFindADriver {
 				for (Region region : findADriverResponse.getRegions()) {
 					region.setVehicleIconSet(homeUtil.getVehicleIconSet(region.getIconSet()));
 					region.setIsDefault(false);
-					Data.autoData.addRegion(region);
+					if(region.isRegionAccGender(activity, Data.userData)) {
+						Data.autoData.addRegion(region);
+					}
 					if(region.getRegionFare() != null && region.getRegionFare().getFare() < minRegionFare) {
 						minRegionFare = region.getRegionFare().getFare();
 					}

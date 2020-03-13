@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
@@ -21,10 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.AppCompatTextView;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -43,6 +40,7 @@ import android.view.animation.OvershootInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -51,6 +49,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -66,7 +65,11 @@ import com.facebook.appevents.AppEventsLogger;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -77,12 +80,19 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
+import product.clicklabs.jugnoo.adapters.GenderDropdownAdapter;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.config.ConfigMode;
@@ -99,6 +109,8 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.rentals.InstructionDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.Gender;
+import product.clicklabs.jugnoo.retrofit.model.GenderValues;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -125,13 +137,15 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
+import static product.clicklabs.jugnoo.Constants.KEY_DELIVERY_ID;
 
-import static com.fugu.FuguConfig.clearFuguData;
+
 
 
 public class SplashNewActivity extends BaseAppCompatActivity implements  Constants, GAAction, GACategory, OnCountryPickerListener {
 
 	private AlertDialog dialogLocationPermission;
+
 	private PermissionCommon.PermissionListener permissionListener = new PermissionCommon.PermissionListener() {
 				@Override
 				public void permissionGranted(int requestCode) {
@@ -261,6 +275,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	ImageView imageViewWalletOptionCheck;
 	TextView textViewWalletOptionMessage, tvScroll;
 	View extra;
+	RelativeLayout rlGender, rlDOB;
+	Spinner spinnerGender;
+	EditText etDOB;
 
 
 	public boolean loginDataFetched = false, resumed = false, newActivityStarted = false;
@@ -374,7 +391,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								} else {
 									if (Data.deepLinkIndex == -1) {
 										Data.deepLinkIndex = referringParams.optInt(KEY_DEEPINDEX, -1);
-										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, "");
+										Data.deepLinkReferralCode = referringParams.optString(KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
 										Log.v("deepLinkReferralCode", "---> "+Data.deepLinkReferralCode);
 										refreeUserId = referringParams.optString(KEY_USER_ID, "");
 									}
@@ -450,6 +467,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		super.onCreate(savedInstanceState);
 
 		try {
+			MyApplication.getInstance().setmActivity(this);
 			HashMap<String,String> rationalMap = (new HashMap<>());
 			rationalMap.put(Manifest.permission.ACCESS_FINE_LOCATION,
 			BuildConfig.FLAVOR.equals("jugnoo")?getString(R.string.perm_location_rational_splash_jugnoo,getString(R.string.app_name)):
@@ -469,7 +487,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			if(!Prefs.with(this).getBoolean(FUGU_CACHE_CLEARED,false)){
 				try {
-					clearFuguData(SplashNewActivity.this);
+					HippoConfig.clearHippoData(SplashNewActivity.this);
 					Prefs.with(this).save(FUGU_CACHE_CLEARED,true);
 					Log.e("Splash","Fugu Data cleared on startup");
 				} catch (Exception e) {
@@ -525,9 +543,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				GAUtils.event(RIDES, HOME, RIDE_ACCEPTED_PUSH+CLICKED);
 			}
 
-
-
-
+			handleChatActivityFromPush();
 
 
 			Data.locationSettingsNoPressed = false;
@@ -605,10 +621,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 
 
-			ArrayAdapter<String> adapter;
-
-			adapter = new ArrayAdapter<>(this, R.layout.dropdown_textview, new String[0]);
-			adapter.setDropDownViewResource(R.layout.dropdown_textview);
 
 			editTextPhoneNumber = (EditText) findViewById(R.id.editTextPhoneNumber);
 
@@ -616,7 +628,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			linearLayoutLogin = (RelativeLayout) findViewById(R.id.linearLayoutLogin);
 			editTextEmail = (AutoCompleteTextView) findViewById(R.id.editTextEmail);
 			editTextEmail.setTypeface(Fonts.mavenMedium(this));
-			editTextEmail.setAdapter(adapter);
 			editTextPassword = (EditText) findViewById(R.id.editTextPassword);
 			editTextPassword.setTypeface(Fonts.mavenMedium(this));
 			textViewEmailRequired = (TextView) findViewById(R.id.textViewEmailRequired);
@@ -881,10 +892,29 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								Utils.showToast(SplashNewActivity.this, getString(R.string.invalid_email_error));
 								return;
 							}
+							if(Prefs.with(SplashNewActivity.this).getInt(KEY_CUSTOMER_GENDER_FILTER, 0) == 1
+									&& spinnerGender.getSelectedItemPosition() == 0){
+								Utils.showToast(SplashNewActivity.this, getString(R.string.please_select_your_gender));
+								return;
+							}
+							if(Prefs.with(SplashNewActivity.this).getInt(KEY_CUSTOMER_DOB_INPUT, 0) == 1
+									&& TextUtils.isEmpty(etDOB.getText().toString().trim())){
+								Utils.showToast(SplashNewActivity.this, getString(R.string.please_select_your_dob));
+								return;
+							}
+
 							if(tvSkip.getVisibility() == View.VISIBLE && TextUtils.isEmpty(name) && TextUtils.isEmpty(email) && TextUtils.isEmpty(referralCode)){
 								tvSkip.performClick();
 								return;
 							}
+
+							if(!TextUtils.isEmpty(Data.deepLinkReferralCode)
+									&& loginResponseData != null
+									&& loginResponseData.getUserData() != null
+									&& loginResponseData.getUserData().getPromoSuccess() == 1){
+								referralCode = "";
+							}
+
 							apiUpdateUserProfile(SplashNewActivity.this, accessToken, name, email, referralCode);
 							Utils.hideSoftKeyboard(SplashNewActivity.this, etOnboardingName);
 							GAUtils.event(JUGNOO, REFERRAL_CODE_SCREEN, SUBMIT+CLICKED);
@@ -1499,13 +1529,62 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			}
 		});
 		new HomeUtil().forceRTL(this);
+
+
+		calendar = Calendar.getInstance();
+
+		rlGender = findViewById(R.id.rlGender);
+		rlDOB = findViewById(R.id.rlDOB);
+		spinnerGender = findViewById(R.id.spinnerGender);
+		etDOB = findViewById(R.id.etDOB);
+		etDOB.setTypeface(Fonts.mavenRegular(this));
+
+
+		ArrayList<Gender> genders = new ArrayList<>();
+		genders.add(new Gender(0, getString(R.string.select_gender)));
+		genders.add(new Gender(GenderValues.MALE.getType(), getString(R.string.male)));
+		genders.add(new Gender(GenderValues.FEMALE.getType(), getString(R.string.female)));
+		genders.add(new Gender(GenderValues.OTHER.getType(), getString(R.string.others)));
+		ArrayAdapter<Gender> adapter = new GenderDropdownAdapter(this, android.R.layout.simple_spinner_dropdown_item, genders, selectedGenderPosition);
+		spinnerGender.setAdapter(adapter);
+
+		spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+				selectedGenderPosition = i;
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+
+			}
+		});
+		etDOB.setOnClickListener(view -> openDatePicker());
+
+	}
+	private int selectedGenderPosition = 0;
+	private Calendar calendar = Calendar.getInstance();
+
+	private void openDatePicker(){
+		DatePickerDialog.OnDateSetListener onDateSetListener = (datePicker, year, monthOfYear, dayOfMonth) -> {
+			if(calendar != null){
+				calendar.set(Calendar.YEAR, year);
+				calendar.set(Calendar.MONTH, monthOfYear);
+				calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+				etDOB.setText(new SimpleDateFormat(DOB_DATE_FORMAT, Locale.ENGLISH).format(calendar.getTime()));
+			}
+		};
+
+		DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DatePickerDialogTheme, onDateSetListener,
+				calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+		datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+		datePickerDialog.getDatePicker().setMinDate((long) (System.currentTimeMillis() - (3.154e+12)));
+		datePickerDialog.show();
+
 	}
 
 
 
-	private interface OnCompleteListener {
-		void onComplete();
-	}
 
 
 
@@ -1757,7 +1836,23 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				if(Prefs.with(this).getInt(Constants.KEY_SHOW_PROMO_ONBOARDING, 1) == 1){
 					tvReferralTitle.setVisibility(View.VISIBLE);
 					etReferralCode.setVisibility(View.VISIBLE);
+					etReferralCode.setText(Data.deepLinkReferralCode);
 					findViewById(R.id.ivEtPromoDiv).setVisibility(View.VISIBLE);
+
+					if(etReferralCode.getText().length() > 0
+							&& loginResponseData != null
+							&& loginResponseData.getUserData() != null
+							&& loginResponseData.getUserData().getPromoSuccess() == 1){
+						tvReferralTitle.setText(R.string.referral_code_applied);
+						etReferralCode.setEnabled(false);
+						etReferralCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_tick_coupon, 0);
+						findViewById(R.id.ivEtPromoDiv).setVisibility(View.GONE);
+					} else {
+						tvReferralTitle.setText(R.string.do_you_have_a_referral_code);
+						etReferralCode.setEnabled(true);
+						etReferralCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
+					}
+
 				} else {
 					tvReferralTitle.setVisibility(View.GONE);
 					etReferralCode.setVisibility(View.GONE);
@@ -1985,7 +2080,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	private void sendToRegisterThroughSms(boolean openLS) {
 		try {
-			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
+			if (state != State.SPLASH_ONBOARDING && !"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				Log.e("Data.deepLinkReferralCode value in sendToRegisterThroughSms", "--->"+Data.deepLinkReferralCode);
                 Data.deepLinkIndex = -1;
                 SplashNewActivity.registerationType = RegisterationType.EMAIL;
@@ -2001,7 +2096,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
     //				changeUIState(State.SIGNUP);
     //			}
             } else if(openLS){
-				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this) && state != State.SPLASH_LS_NEW) {
+				if(PermissionCommon.isGranted(Manifest.permission.ACCESS_FINE_LOCATION, this)
+						&& state != State.SPLASH_LS_NEW && state != State.CLAIM_GIFT && state != State.SPLASH_ONBOARDING) {
 					splashLSState(false);
 				}
 			}
@@ -2041,18 +2137,25 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						}
 					});
 		} else {
-			try {
-				FirebaseInstanceId.getInstance().getToken();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if ("".equalsIgnoreCase(Prefs.with(this).getString(Constants.SP_DEVICE_TOKEN, ""))) {
-//					DialogPopup.showLoadingDialogDownwards(SplashNewActivity.this, "Loading...");
-				getHandlerGoToAccessToken().removeCallbacks(getRunnableGoToAccessToken());
-				getHandlerGoToAccessToken().postDelayed(getRunnableGoToAccessToken(), 5000);
-			} else {
-				goToAccessTokenLogin();
-			}
+			DialogPopup.showLoadingDialog(this, getString(R.string.loading));
+			FirebaseInstanceId.getInstance().getInstanceId()
+					.addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+						@Override
+						public void onComplete(@NonNull Task<InstanceIdResult> task) {
+							if (!task.isSuccessful()) {
+								Log.w(TAG, "getInstanceId failed");
+								return;
+							}
+
+							// Get new Instance ID token
+							String token = task.getResult().getToken();
+							Prefs.with(SplashNewActivity.this).save(Constants.SP_DEVICE_TOKEN, token);
+
+							DialogPopup.dismissLoadingDialog();
+
+							goToAccessTokenLogin();
+						}
+					});
 		}
 	}
 
@@ -2117,7 +2220,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 		requestLocationUpdatesExplicit();
 
-		retryAccessTokenLogin();
+		if(state != State.SPLASH_ONBOARDING && state != State.CLAIM_GIFT){
+			retryAccessTokenLogin();
+		}
 		resumed = true;
 		userVerfied = 0;
 		AppEventsLogger.activateApp(getApplication());
@@ -2125,7 +2230,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		if(OTPConfirmScreen.backToSplashOboarding){
 			OTPConfirmScreen.backToSplashOboarding = false;
 			accessToken = OTPConfirmScreen.accessTokenOnBoarding;
-			changeUIState(State.SPLASH_ONBOARDING);
+			signupOnboardingState();
 		}
 
 
@@ -2249,7 +2354,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						loginResponseStr = response;
 						loginResponseData = loginResponse;
 						SplashNewActivity.this.accessToken = accessToken;
-						changeUIState(State.SPLASH_ONBOARDING);
+						signupOnboardingState();
 					}
 				}
 
@@ -2281,7 +2386,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	public static boolean allowedAuthChannelsHitOnce = false;
 	private boolean allowedAuthChannelsHitInProgress = false;
-	public void getAllowedAuthChannels(final Activity activity){
+	public void getAllowedAuthChannels(final Activity activity, final boolean claimGIftClicked, boolean onboardingCase){
 		if (MyApplication.getInstance().isOnline()) {
 			if(allowedAuthChannelsHitOnce || allowedAuthChannelsHitInProgress){
 				return;
@@ -2396,17 +2501,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						}
 
 						//"login_channel": 0 //0-Default fbAccountKit, 1-Inhouse apis
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_FACEBOOK_LOGIN, jObj.optInt(Constants.KEY_SHOW_FACEBOOK_LOGIN, 1));
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_GOOGLE_LOGIN, jObj.optInt(Constants.KEY_SHOW_GOOGLE_LOGIN, 1));
-
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_TERMS_OF_USE_URL, jObj.optString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url)));
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_SHOW_TERMS, jObj.optInt(Constants.KEY_SHOW_TERMS, 1));
-
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_CODE));
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE, jObj.optString(Constants.KEY_DEFAULT_SUB_COUNTRY_CODE));
-						Prefs.with(SplashNewActivity.this).save(Constants.KEY_DEFAULT_COUNTRY_ISO, jObj.optString(Constants.KEY_DEFAULT_COUNTRY_ISO));
-						Prefs.with(SplashNewActivity.this).save(SP_OTP_VIA_CALL_ENABLED, jObj.optInt(KEY_OTP_VIA_CALL_ENABLED, 0));
+						JSONParser.allowedAuthChannelTimeConfigVariables(activity, jObj);
 
 
 						JSONParser.parseAndSetLocale(SplashNewActivity.this, jObj);
@@ -2419,8 +2514,16 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								activity.getBaseContext().getResources().getDisplayMetrics());
 						activity.onConfigurationChanged(config);
 
+						rlGender.setVisibility(Prefs.with(SplashNewActivity.this).getInt(KEY_CUSTOMER_GENDER_FILTER, 0) == 1 ? View.VISIBLE : View.GONE);
+						rlDOB.setVisibility(Prefs.with(SplashNewActivity.this).getInt(KEY_CUSTOMER_DOB_INPUT, 0) == 1 ? View.VISIBLE : View.GONE);
+
+
 						allowedAuthChannelsHitOnce = true;
-						splashLSState(false);
+						if(onboardingCase){
+							signupOnboardingState();
+						} else {
+							splashLSState(claimGIftClicked);
+						}
 
 					}catch (Exception e){
 						e.printStackTrace();
@@ -3028,7 +3131,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				public void failure(RetrofitError error) {
 					Log.e(TAG, "loginUsingEmailOrPhoneNo error=" + error.toString());
 					DialogPopup.dismissLoadingDialog();
-					DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
+					DialogPopup.alertPopup(activity, "", activity.getString(R.string.we_are_unable_to_process_your_request));
 				}
 			});
 		} else{
@@ -3146,7 +3249,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								if (!SplashNewActivity.checkIfUpdate(jObj, activity)) {
 									if(jObj.optJSONObject(KEY_USER_DATA).optInt(KEY_SIGNUP_ONBOARDING, 0) == 1){
 										JSONParser.parseSignupOnboardingKeys(activity, jObj);
-										changeUIState(State.SPLASH_ONBOARDING);
 
 										String authKey = jObj.optJSONObject(KEY_USER_DATA).optString("auth_key", "");
 										if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_SHOW_SKIP_ONBOARDING, 1) == 1){
@@ -3154,6 +3256,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 										}
 										String authSecret = authKey + Config.getClientSharedSecret();
 										accessToken = SHA256Convertor.getSHA256String(authSecret);
+										changeUIState(State.SPLASH_ONBOARDING);
 									} else{
 										loginDataFetched = true;
 										new JSONParser().parseAccessTokenLoginData(activity, responseStr,
@@ -3493,7 +3596,15 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				changeUIState(State.SPLASH_LS_NEW);
 			}
 		} else {
-			getAllowedAuthChannels(this);
+			getAllowedAuthChannels(this, claimGIftClicked, false);
+		}
+	}
+
+	private void signupOnboardingState() {
+		if(allowedAuthChannelsHitOnce) {
+			changeUIState(State.SPLASH_ONBOARDING);
+		} else {
+			getAllowedAuthChannels(this, false, true);
 		}
 	}
 
@@ -4308,6 +4419,12 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			if(!TextUtils.isEmpty(referralCode)) {
 				params.put(Constants.KEY_REFERRAL_CODE, referralCode);
 			}
+			if(spinnerGender.getSelectedItemPosition() > 0){
+				params.put(Constants.KEY_GENDER, String.valueOf(((Gender)spinnerGender.getSelectedItem()).getType()));
+			}
+			if(!TextUtils.isEmpty(etDOB.getText().toString().trim())){
+				params.put(Constants.KEY_DATE_OF_BIRTH, etDOB.getText().toString().trim());
+			}
 
 			new HomeUtil().putDefaultParams(params);
 			RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
@@ -4339,6 +4456,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								if((jObj.has("username_correct")) && (jObj.optInt("username_correct", 0) == 1)){
 									if(!TextUtils.isEmpty(updatedName)) {
 										Data.userData.userName = updatedName;
+									}
+								}
+								if(jObj.optInt(KEY_REFERRAL_CORRECT, 0) == 1){
+									if(Data.userData != null){
+										Data.userData.setPromoSuccess(1);
 									}
 								}
 								onWindowFocusChanged(true);
@@ -4542,5 +4664,29 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		textViewPhoneNumberRequired.setText(R.string.nl_splash_required);
 		btnPhoneLogin.setText(R.string.continue_text);
 
+	}
+
+	Handler handlerToOpenChatActivity;
+	private void handleChatActivityFromPush() {
+		//Opens Chat Activity after receiving Access Token.
+		int delayForChatActivity = 0;
+		if(handlerToOpenChatActivity == null) {
+			handlerToOpenChatActivity = new Handler();
+		}
+		handlerToOpenChatActivity.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				if(Data.userData!= null && Data.userData.accessToken != null) {
+					String deliveryId = getIntent().getStringExtra(Constants.KEY_DELIVERY_ID);
+					if(deliveryId!=null && !deliveryId.isEmpty()) {
+						startActivity(ChatActivity.createIntent(SplashNewActivity.this,deliveryId));
+						handlerToOpenChatActivity.removeCallbacks(null);
+					}
+				} else {
+					handleChatActivityFromPush();
+				}
+
+			}
+		}, 50);
 	}
 }

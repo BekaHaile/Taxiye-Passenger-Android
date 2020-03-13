@@ -29,7 +29,7 @@
         android:layout_below="@+id/tvOfferingName"
         >
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_14"
@@ -98,7 +98,7 @@
                 </LinearLayout>
             </ScrollView>
 
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
     </RelativeLayout>
 

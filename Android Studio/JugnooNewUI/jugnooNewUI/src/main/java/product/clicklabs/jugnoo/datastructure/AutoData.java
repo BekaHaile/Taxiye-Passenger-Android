@@ -14,6 +14,7 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
+import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
 import product.clicklabs.jugnoo.retrofit.model.Package;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
@@ -25,7 +26,19 @@ import product.clicklabs.jugnoo.utils.Prefs;
  * Created by gurmail on 18/08/16.
  */
 public class AutoData {
-	private int isReverseBid;
+
+
+    private ArrayList<FeedBackInfo> feedBackInfoRatingData=new ArrayList<>();
+
+    public void setFeedBackInfoRatingData(ArrayList<FeedBackInfo> feedBackInfoRateData) {
+        this.feedBackInfoRatingData = feedBackInfoRateData;
+    }
+
+    public ArrayList<FeedBackInfo> getFeedBackInfoRatingData() {
+        return feedBackInfoRatingData;
+    }
+
+    private int isReverseBid;
 	private long bidRequestRideTimeout, bidTimeout;
 	private String fuguChannelId;
     private String fuguChannelName;
@@ -83,6 +96,8 @@ public class AutoData {
     private int bluetoothEnabled =0;
     private String  previousSelService = "";
     private int resendEmailInvoiceEnabled;
+    private double noDriverFoundTip;
+    private ArrayList<FindADriverResponse.RequestLevels> requestLevels;
 
     // RENTAL
 
@@ -422,14 +437,32 @@ public class AutoData {
         }
 // *****************************************************************************************************************************
 
+		boolean hideRegionsWithNoDrivers = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_HIDE_REGIONS_WITH_NO_DRIVERS, 0) == 1;
+
         if(getServiceTypeSelected().getSupportedRideTypes() != null && getServiceTypeSelected().getSupportedRideTypes().size() > 0) {
             for (Region region : regions){
-                if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType())){
+                if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType())
+						&& (!hideRegionsWithNoDrivers || !region.getEta().equalsIgnoreCase("-"))){
                     regionsTemp.add(region);
                 }
             }
+			if(regionsTemp.size() == 0){
+				for (Region region : regions){
+					if(getServiceTypeSelected().getSupportedRideTypes().contains(region.getRideType())){
+						regionsTemp.add(region);
+					}
+				}
+			}
+
         } else {
-            regionsTemp.addAll(regions);
+			for (Region region : regions){
+				if(!hideRegionsWithNoDrivers || !region.getEta().equalsIgnoreCase("-")){
+					regionsTemp.add(region);
+				}
+			}
+			if(regionsTemp.size() == 0){
+				regionsTemp.addAll(regions);
+			}
         }
         return regionsTemp;
     }
@@ -736,7 +769,7 @@ public class AutoData {
     }
 
     public boolean showRegionSpecificFare() {
-        return showRegionSpecificFare == 1;
+        return getNewUIFlag() || showRegionSpecificFare == 1;
     }
 
     public void setShowRegionSpecificFare(int showRegionSpecificFare) {
@@ -854,6 +887,29 @@ public class AutoData {
 	public void setChangedBidValue(double changedBidValue) {
 		this.changedBidValue = changedBidValue;
 	}
+
+    public double getNoDriverFoundTip() {
+        return noDriverFoundTip;
+    }
+
+    public void setNoDriverFoundTip(double noDriverFoundTip) {
+        this.noDriverFoundTip = noDriverFoundTip;
+    }
+
+    public ArrayList<FindADriverResponse.RequestLevels> getRequestLevels() {
+        if(requestLevels == null) {
+            FindADriverResponse.RequestLevels level = new FindADriverResponse().new RequestLevels();
+            level.setLevel(0);
+            level.setTipEnabled(0);
+            level.setEnabled(1);
+            requestLevels = new ArrayList<>();
+        }
+        return requestLevels;
+    }
+
+    public void setRequestLevels(ArrayList<FindADriverResponse.RequestLevels> requestLevels) {
+        this.requestLevels = requestLevels;
+    }
 
     public int getCustomerVerificationStatus() {
         return customerVerificationStatus;

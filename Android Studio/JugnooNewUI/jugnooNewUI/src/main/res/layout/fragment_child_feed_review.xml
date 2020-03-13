@@ -126,7 +126,7 @@
 
                 </LinearLayout>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvRestaurantSuggestions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -192,7 +192,7 @@
                 app:starOff="@drawable/ic_menu_feedback_star_off"
                 app:starOn="@drawable/ic_menu_feedback_star_on" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_photos"
                 android:visibility="gone"
                 android:layout_width="match_parent"

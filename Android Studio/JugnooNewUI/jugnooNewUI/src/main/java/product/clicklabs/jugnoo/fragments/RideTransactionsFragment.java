@@ -2,13 +2,13 @@ package product.clicklabs.jugnoo.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,7 +131,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 									historyData.getProductType() == ProductType.FEED.getOrdinal()) {
 								if (activity instanceof RideTransactionsActivity) {
 										new TransactionUtils().openOrderStatusFragment(activity, ((RideTransactionsActivity) activity).getContainer(),
-												historyData.getOrderId(), historyData.getProductType(), 0);
+												historyData.getOrderId(), historyData.getProductType(), 0, false, false);
 								} else if (activity instanceof SupportActivity) {
 									new TransactionUtils().openRideIssuesFragment(activity,
 											((SupportActivity) activity).getContainer(),

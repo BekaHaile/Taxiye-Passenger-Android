@@ -11,20 +11,21 @@ import android.content.pm.PermissionInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TextView;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import product.clicklabs.jugnoo.R;
 
 /**
@@ -126,6 +127,7 @@ public final class PermissionCommon {
 
 
                 } else {
+					permissionsInitiated = permissions;
 
                     String permissionDenied = permissionsInitiated[0];
                     for (String permission : permissions) {
@@ -187,8 +189,10 @@ public final class PermissionCommon {
 
 
             case REQUEST_CODE_RATIONAL:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                    getPermission(requestCodeInitiated,  permissionsInitiated); //continues to check again if all permissions have been granted or there is still a rational permission pending
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+					permissionsInitiated = permissions;
+					getPermission(requestCodeInitiated, permissionsInitiated); //continues to check again if all permissions have been granted or there is still a rational permission pending
+				}
                 else {
                     if (!shouldShowRationalPermission(permissions[0])) {
 
@@ -408,9 +412,9 @@ public final class PermissionCommon {
 
         if (snackBarPermissionDenied == null) {
             view.setVisibility(View.VISIBLE);
-            snackBarPermissionDenied = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+            snackBarPermissionDenied = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
             snackBarPermissionDenied.setActionTextColor(ContextCompat.getColor(activity, R.color.theme_color));
-            ((TextView) snackBarPermissionDenied.getView().findViewById(android.support.design.R.id.snackbar_text)).setMaxLines(5);
+            ((TextView) snackBarPermissionDenied.getView().findViewById(com.google.android.material.R.id.snackbar_text)).setMaxLines(5);
             snackBarPermissionDenied.setAction(activity.getString(R.string.grant), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -432,9 +436,9 @@ public final class PermissionCommon {
     private Snackbar getRationalSnackBar(String message) {
 
         if (snackBarRational == null) {
-            snackBarRational = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+            snackBarRational = Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE);
             snackBarRational.setActionTextColor(ContextCompat.getColor(activity, R.color.theme_color));
-            ((TextView) snackBarRational.getView().findViewById(android.support.design.R.id.snackbar_text)).setMaxLines(5);
+            ((TextView) snackBarRational.getView().findViewById(com.google.android.material.R.id.snackbar_text)).setMaxLines(5);
 
         }
 

@@ -249,6 +249,7 @@
                     android:textColor="@color/text_color"
                     android:textSize="12sp"
                     android:layout_marginTop="16dp"
+                    tools:text="Convenience Charges 10"
                     />
 
                 <TextView
@@ -258,7 +259,21 @@
                     android:gravity="center"
                     android:textColor="@color/text_color"
                     android:textSize="12sp"
+                    tools:text="Ride fare 20 per km after 10km"
                     />
+
+
+                <TextView
+                    android:id="@+id/textViewMaxPeople"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"
+                    android:layout_marginTop="10dp"
+                    tools:text="Max People: 10"
+                    />
+
 
             </LinearLayout>
 

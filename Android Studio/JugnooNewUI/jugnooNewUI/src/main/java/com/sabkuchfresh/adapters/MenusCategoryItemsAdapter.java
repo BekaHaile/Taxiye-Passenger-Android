@@ -2,8 +2,8 @@ package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -36,6 +36,7 @@ import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import product.clicklabs.jugnoo.Constants;
@@ -62,19 +63,25 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     private static final int BLANK_ITEM = 1;
     private static final int SUB_CATEGORY_ITEM = 2;
     private static final int SEARCHED_CATEGORY_ITEM = 3;
+    private ItemAdded itemAdded;
 
     // indicates vendorDirectSearchItemPosition
     private int vendorDirectSearchSubCatIndex, vendorDirectSearchItemIndex;
     private VendorDirectSearch vendorDirectSearch;
+    private String currencyCode, currency;
+    private int selItemId = -1;
+    private HashMap<Integer, MainViewHolder> hashMap = new HashMap<>();
 
     private boolean isVendorMenuFragment;
-    public MenusCategoryItemsAdapter(Activity context, int categoryPos, Category category, Callback callback) {
+    public MenusCategoryItemsAdapter(Activity context, int categoryPos, Category category, Callback callback, String currencyCode, String currency,ItemAdded itemAdded) {
         this.context = context;
         this.callback = callback;
         this.categoryPos = categoryPos;
         this.category = category;
+        this.itemAdded = itemAdded;
         isVendorMenuFragment = true;
-
+        this.currencyCode = currencyCode;
+        this.currency = currency;
         if(((FreshActivity)context).getVendorDirectSearchObject()!=null){
             vendorDirectSearch = ((FreshActivity)context).getVendorDirectSearchObject();
         }
@@ -146,10 +153,12 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
 
-    public MenusCategoryItemsAdapter(Activity context, ArrayList<Item> items, Callback callback) {
+    public MenusCategoryItemsAdapter(Activity context, ArrayList<Item> items, Callback callback, String currencyCode, String currency) {
         this.context = context;
         this.callback = callback;
         this.categoryPos = -1;
+        this.currencyCode = currencyCode;
+        this.currency = currency;
         setList(items, false, null);
     }
 
@@ -244,6 +253,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        if(position == 0){
+            hashMap.clear();
+        }
+
         if(holder instanceof MainViewHolder) {
             MainViewHolder mHolder = ((MainViewHolder) holder);
             final Item item = subItems.get(position);
@@ -452,6 +466,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             });
 
+            hashMap.put(item.getRestaurantItemId(), mHolder);
         } else if(holder instanceof ViewHolderBlank) {
             ViewHolderBlank titleholder = ((ViewHolderBlank) holder);
             titleholder.relative.setVisibility(View.VISIBLE);
@@ -491,22 +506,52 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             } else {
                 boolean isNewItemAdded =false;
                 if (item1.getItemSelectedList().size() > 0) {
-                    item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
+//                    item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
 
-                } else {
-                    ItemSelected itemSelected = new ItemSelected();
-                    itemSelected.setRestaurantItemId(item1.getRestaurantItemId());
-                    itemSelected.setQuantity(1);
-                    itemSelected.setTotalPrice(item1.getPrice());
-                    item1.getItemSelectedList().add(itemSelected);
-                    isNewItemAdded=true;
+                        boolean sameInstructions = false;
+                        for (ItemSelected itemSelected: item1.getItemSelectedList()) {
+                            if (itemSelected.getItemInstructions().equals("")) {
+                                itemSelected.setQuantity(itemSelected.getQuantity() + 1);
+                                sameInstructions = true;
+                                break;
+                            }
+                        }
+                        if (!sameInstructions) {
+                            ItemSelected itemSelected = new ItemSelected();
+                            itemSelected.setRestaurantItemId(item1.getRestaurantItemId());
+                            itemSelected.setQuantity(1);
+                            itemSelected.setTotalPrice(item1.getPrice());
+                            itemSelected.setItemInstructions("");
+                            item1.getItemSelectedList().add(itemSelected);
+                            isNewItemAdded = true;
+                        }
+                    } else {
+                        ItemSelected itemSelected = new ItemSelected();
+                        itemSelected.setRestaurantItemId(item1.getRestaurantItemId());
+                        itemSelected.setQuantity(1);
+                        itemSelected.setItemInstructions("");
+                        itemSelected.setTotalPrice(item1.getPrice());
+                        item1.getItemSelectedList().add(itemSelected);
+                        isNewItemAdded = true;
+                    }
+                    notifyDataSetChanged();
+                    if (selItemId != -1) {
+                        if (itemAdded != null) {
+                            itemAdded.onItemAdded(vendorDirectSearchItemIndex);
+                        }
+                        selItemId = -1;
+                        vendorDirectSearchItemIndex = 0;
+                    }
+                    callback.onPlusClicked(pos, item1, isNewItemAdded);
                 }
-                notifyDataSetChanged();
-                callback.onPlusClicked(pos, item1, isNewItemAdded);
-            }
         } else {
             Utils.showToast(context, context.getString(R.string.order_quantity_limited));
         }
+    }
+
+    public interface ItemAdded {
+        void onItemAdded(int position);
+        void onItemFound(int position, int itemId);
     }
 
     @Override
@@ -670,14 +715,15 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
         if(!TextUtils.isEmpty(item.getDisplayPrice())){
             textView.append(item.getDisplayPrice());
         } else {
-            textView.append(context.getString(R.string.rupees_value_format, com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getPrice())));
+
+            textView.append(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(item.getPrice(), currencyCode, currency));
         }
 
         if(item.getOldPrice() != null && !item.getOldPrice().equals(item.getPrice())){
+
             final StrikethroughSpan sts = new StrikethroughSpan();
             final ForegroundColorSpan fcs = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.theme_color));
-            final SpannableStringBuilder sbst = new SpannableStringBuilder(context.getString(R.string.rupees_value_format,
-                    com.sabkuchfresh.utils.Utils.getMoneyDecimalFormat().format(item.getOldPrice())));
+            final SpannableStringBuilder sbst = new SpannableStringBuilder(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(item.getOldPrice(), currencyCode, currency));
             sbst.setSpan(sts, 0, sbst.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             sbst.setSpan(fcs, 0, sbst.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.append("  ");
@@ -689,6 +735,36 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
             sbfcs.setSpan(fcs, 0, sbfcs.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             textView.append("  ");
             textView.append(sbfcs);
+        }
+    }
+
+    public void setSelectedItemId(int itemId) {
+        this.selItemId = itemId;
+
+        if(selItemId != -1){
+            if(!hashMap.isEmpty()) {
+                MainViewHolder mainHolder = hashMap.get(selItemId);
+                if (mainHolder != null) {
+                    vendorDirectSearchItemIndex = mainHolder.getAdapterPosition();
+                    mainHolder.imageViewPlus.performClick();
+                } else {
+                    boolean isItemFound = false;
+                    int index = 0;
+                    for(int i = 0; i < subItems.size(); i++){
+                        if(subItems.get(i).getRestaurantItemId() != null && subItems.get(i).getRestaurantItemId() == itemId){
+                            isItemFound = true;
+                            index = i;
+                            break;
+                        }
+                    }
+                    if(isItemFound) {
+                        vendorDirectSearchItemIndex = index;
+                        itemAdded.onItemFound(index, itemId);
+                    } else {
+                        selItemId = -1;
+                    }
+                }
+            }
         }
     }
 

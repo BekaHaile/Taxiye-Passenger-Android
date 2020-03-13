@@ -56,6 +56,9 @@ public class DriverInfo {
 	private Double tipAmount;
 	private int rideType;
 	private int gpsLockStatus;
+	private int fareMandatory;
+	private double tipBeforeRequestRide;
+	private String userIdentifier;
 
 	public String getDeviceToken() {
 		return deviceToken;
@@ -78,6 +81,8 @@ public class DriverInfo {
 
 
 
+	private String vehicleImage;
+	private String vehicleName;
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -112,7 +117,8 @@ public class DriverInfo {
 					  int freeRide, String promoName, String eta, double fareFixed, int preferredPaymentMode, Schedule scheduleT20,
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
-					  String currency, String markerUrl, Double tipAmount, int isCorporateRide, String cardId, int rideType, int gpsLockStatus){
+					  String currency, String markerUrl, Double tipAmount, int isCorporateRide, String cardId, int rideType, int gpsLockStatus,
+					  int fareMandatory, double tipBeforeRequestRide, String userIdentifier,String vehicleImage, String vehicleName){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -148,6 +154,11 @@ public class DriverInfo {
 		Prefs.with(context).save(Constants.STRIPE_SELECTED_POS, cardId);
 		this.rideType = rideType;
 		this.gpsLockStatus = gpsLockStatus;
+		this.fareMandatory = fareMandatory;
+		this.tipBeforeRequestRide = tipBeforeRequestRide;
+		this.userIdentifier = userIdentifier;
+		this.vehicleImage = vehicleImage;
+		this.vehicleName = vehicleName;
 	}
 
 	//for last ride data
@@ -296,7 +307,7 @@ public class DriverInfo {
 	private Bitmap getMarkerBitmap(Activity activity, boolean loader){
 		if(loader) {
 			return CustomMapMarkerCreator.createMarkerBitmapForResource(activity,
-					R.drawable.ic_vehicle_loader, 51f, 71f);
+					R.drawable.ic_marker_transparent, 51f, 71f);
 		} else {
 			if (vehicleIconSet == VehicleIconSet.ERICKSHAW) {
 				return CustomMapMarkerCreator.createMarkerBitmapForResource(activity,
@@ -354,6 +365,30 @@ public class DriverInfo {
 
 	public void setRideType(int rideType) {
 		this.rideType = rideType;
+	}
+
+	public int getFareMandatory() {
+		return fareMandatory;
+	}
+
+	public void setFareMandatory(int fareMandatory) {
+		this.fareMandatory = fareMandatory;
+	}
+
+	public double getTipBeforeRequestRide() {
+		return tipBeforeRequestRide;
+	}
+
+	public void setTipBeforeRequestRide(double tipBeforeRequestRide) {
+		this.tipBeforeRequestRide = tipBeforeRequestRide;
+	}
+
+	public String getUserIdentifier() {
+		return userIdentifier;
+	}
+
+	public void setUserIdentifier(String userIdentifier) {
+		this.userIdentifier = userIdentifier;
 	}
 
 	public enum PaymentMethod{
@@ -423,4 +458,19 @@ public class DriverInfo {
 		this.gpsLockStatus = gpsLockStatus;
 	}
 
+	public String getVehicleImage() {
+		return vehicleImage;
+	}
+
+	public void setVehicleImage(String vehicleImage) {
+		this.vehicleImage = vehicleImage;
+	}
+
+	public String getVehicleName() {
+		return vehicleName;
+	}
+
+	public void setVehicleName(String vehicleName) {
+		this.vehicleName = vehicleName;
+	}
 }

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -1085,11 +1085,34 @@
         <item name="android:fontFamily">@font/maven_pro_regular</item>
     </style>
 
+    <style name="DatePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/theme_color</item>
+    </style>
 
     <style name="fullscreen_dialog" parent="android:Theme" >
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="ScratchCardDialog" parent="@android:style/Theme.Panel">
+        <item name="android:windowAnimationStyle">@style/ScratchCardDialog.Window</item>
+    </style>
+
+    <style name="ScratchCardDialog.Window" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/scratch_fad_in</item>
+        <item name="android:windowExitAnimation">@anim/scratch_fade_out</item>
+    </style>
+    <style name="MediaController">
+        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="android:progressBackgroundTint" tools:targetApi="lollipop">@color/white</item>
+        <item name="android:progressTint" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:thumbTint" tools:targetApi="lollipop">@color/colorPrimary</item>
+    </style>
+
+    <style name="MyProgressDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="colorAccent">@color/theme_color</item>
     </style>
 
 </resources>

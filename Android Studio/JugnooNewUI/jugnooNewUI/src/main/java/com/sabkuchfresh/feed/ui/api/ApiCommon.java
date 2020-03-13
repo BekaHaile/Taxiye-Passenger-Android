@@ -1,13 +1,13 @@
 package com.sabkuchfresh.feed.ui.api;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.RestClient2;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.Callback;
@@ -24,6 +25,7 @@ import retrofit.client.Response;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
+import retrofit2.Call;
 
 /**
  * Created by Parminder Singh on 3/27/17.
@@ -34,6 +36,7 @@ import retrofit.mime.TypedString;
  */
 public class ApiCommon<T extends FeedCommonResponse> {
     private Callback callback;
+    private retrofit2.Callback callback2;
     private Activity activity;
     private boolean showLoader = true;
     private boolean putDefaultParams = true;
@@ -136,60 +139,29 @@ public class ApiCommon<T extends FeedCommonResponse> {
             callback = new Callback<T>() {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
-                    setInProgress(false);
-
-                    if (showLoader) {
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                    if (isCancelled() || activity.isFinishing())
-                        return;
-
-                    try {
-                        if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
-                            apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
-                            apiCommonCallback.onFinish();
-
-
-                        } else {
-                            if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage() == null ? feedCommonResponse.getError() : feedCommonResponse.getMessage(),
-                                    feedCommonResponse.getFlag())) {
-                                DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage() == null ? feedCommonResponse.getError() : feedCommonResponse.getMessage());
-                            }
-                            apiCommonCallback.onFinish();
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (!apiCommonCallback.onException(e)) {
-                            retryDialog(DialogErrorType.CONNECTION_LOST);
-                        }
-                        apiCommonCallback.onFinish();
-
-                    }
-
-
-                }
+					handleSuccess(feedCommonResponse);
+				}
 
                 @Override
                 public void failure(RetrofitError error) {
-                    setInProgress(false);
-                    if (showLoader) {
-                        DialogPopup.dismissLoadingDialog();
-                    }
-                    if (isCancelled() || activity.isFinishing())
-                        return;
-                    error.printStackTrace();
-                    if (!apiCommonCallback.onFailure(error)) {
-
-                        retryDialog(DialogErrorType.CONNECTION_LOST);
-                    }
-                    apiCommonCallback.onFinish();
-
-
-
-                }
+					handleFailure(error);
+				}
             };
         }
+		if (callback2 == null) {
+			callback2 = new retrofit2.Callback<T>(){
+
+				@Override
+				public void onResponse(Call<T> call, retrofit2.Response<T> response) {
+					handleSuccess(response.body());
+				}
+
+				@Override
+				public void onFailure(Call<T> call, Throwable t) {
+					handleFailure(new Exception(t));
+				}
+			};
+		}
 
         if (isMultiPartRequest) {
             new HomeUtil().putDefaultParamsMultipart(multipartTypedOutput);
@@ -335,6 +307,31 @@ public class ApiCommon<T extends FeedCommonResponse> {
 			case CANCEL_BID:
                 RestClient.getApiService().cancelBid(params, callback);
                 break;
+            case NEARBY_AGENTS:
+                RestClient.getFatafatApiService().nearbyAgents(params,callback);
+                break;
+            case NEARBY_AGENTS_MENUS:
+                RestClient.getMenusApiService().nearbyAgents(params,callback);
+                break;
+
+            case SCRATCH_CARD:
+                RestClient.getApiService().scratchCard(params, callback);
+                break;
+			case FARE_ESTIMATE_WITH_NEW_DROP:
+                RestClient.getApiService().fareEstimateWithNewDrop(params, callback);
+                break;
+			case REFERRAL_INFO:
+                RestClient.getApiService().fetchCustomerReferralInfo(params, callback);
+                break;
+			case FILTER_ACTIVE_USERS:
+                RestClient2.getApiService().filterActiveUsers(params).enqueue(callback2);
+                break;
+			case REINVITE_USERS:
+                RestClient2.getApiService().reinviteUsers(params).enqueue(callback2);
+                break;
+			case UPDATE_PAYMENT_TO_UPI:
+                RestClient2.getApiService().updatePaymentModeToUpi(params).enqueue(callback2);
+                break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
 
@@ -343,7 +340,55 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
     }
 
-    private void retryDialog(DialogErrorType dialogErrorType) {
+	private void handleFailure(Exception error) {
+		setInProgress(false);
+		if (showLoader) {
+			DialogPopup.dismissLoadingDialog();
+		}
+		if (isCancelled() || activity.isFinishing())
+			return;
+		error.printStackTrace();
+		if (!apiCommonCallback.onFailure(error)) {
+
+			retryDialog(DialogErrorType.CONNECTION_LOST);
+		}
+		apiCommonCallback.onFinish();
+	}
+
+	private void handleSuccess(T feedCommonResponse) {
+		setInProgress(false);
+
+		if (showLoader) {
+			DialogPopup.dismissLoadingDialog();
+		}
+		if (isCancelled() || activity.isFinishing())
+			return;
+
+		try {
+			if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+				apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
+				apiCommonCallback.onFinish();
+
+
+			} else {
+				if (!apiCommonCallback.onError(feedCommonResponse, feedCommonResponse.getMessage() == null ? feedCommonResponse.getError() : feedCommonResponse.getMessage(),
+						feedCommonResponse.getFlag())) {
+					DialogPopup.alertPopup(activity, "", feedCommonResponse.getMessage() == null ? feedCommonResponse.getError() : feedCommonResponse.getMessage());
+				}
+				apiCommonCallback.onFinish();
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (!apiCommonCallback.onException(e)) {
+				retryDialog(DialogErrorType.CONNECTION_LOST);
+			}
+			apiCommonCallback.onFinish();
+
+		}
+	}
+
+	private void retryDialog(DialogErrorType dialogErrorType) {
         DialogPopup.dialogNoInternet(activity, dialogErrorType,
                 new Utils.AlertCallBackWithButtonsInterface() {
                     @Override

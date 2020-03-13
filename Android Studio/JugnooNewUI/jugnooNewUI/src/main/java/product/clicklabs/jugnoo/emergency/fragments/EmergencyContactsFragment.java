@@ -5,11 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +19,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -295,7 +295,7 @@ public class EmergencyContactsFragment extends Fragment  {
 			contactBeans.clear();
 			for (EmergencyContact emergencyContact : Data.userData.getEmergencyContactsList()) {
 				ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo,emergencyContact.countryCode, "",
-						ContactBean.ContactBeanViewType.CONTACT);
+						ContactBean.ContactBeanViewType.CONTACT, null, null);
 				contactBean.setId(emergencyContact.id);
 				contactBeans.add(contactBean);
 			}

@@ -9,9 +9,11 @@ import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRideResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.promotion.models.ReferralTxnResponse;
 import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
+import product.clicklabs.jugnoo.retrofit.model.FareEstimateResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchDocumentResponse;
@@ -26,6 +28,7 @@ import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
+import product.clicklabs.jugnoo.retrofit.model.ScratchCard;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.retrofit.model.UploadDocumentResponse;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
@@ -697,6 +700,23 @@ public interface ApiService {
 	@FormUrlEncoded
 	@POST("/get_information")
 	Response fetchTutorialData(@FieldMap Map<String, String> params);
+
+	@FormUrlEncoded
+	@POST("/customer/scratch_coupon")
+	void scratchCard(@FieldMap Map<String, String> params, Callback<ScratchCard> callback);
+
+	@FormUrlEncoded
+	@POST("/customer/add_drivers_contacted_on_timeout")
+	void logDriverCall(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/get_fare_estimate_with_new_drop_location")
+	void fareEstimateWithNewDrop(@FieldMap Map<String, String> params, Callback<FareEstimateResponse> callback);
+
+
+	@FormUrlEncoded
+	@POST("/fetch_customer_referral_info")
+	void fetchCustomerReferralInfo(@FieldMap Map<String, String> params, Callback<ReferralTxnResponse> callback);
 
     @POST("/customer/upload_document")
     void uploadVerificationDocuments(@Body MultipartTypedOutput params,

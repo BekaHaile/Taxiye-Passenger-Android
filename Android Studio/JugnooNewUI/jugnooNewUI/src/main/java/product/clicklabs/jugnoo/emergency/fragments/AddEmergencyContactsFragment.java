@@ -4,11 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
@@ -39,6 +34,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -51,7 +51,6 @@ import product.clicklabs.jugnoo.emergency.ContactsFetchAsync;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.adapters.ContactsListAdapter;
 import product.clicklabs.jugnoo.emergency.models.ContactBean;
-import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -92,25 +91,6 @@ public class AddEmergencyContactsFragment extends Fragment {
     private FragmentActivity activity;
     private Dialog dialog;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-//		FlurryAgent.init(activity, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(activity, Config.getFlurryKey());
-//		FlurryAgent.onEvent(AddEmergencyContactsFragment.class.getSimpleName() + " started");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-//		FlurryAgent.onEndSession(activity);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        HomeActivity.checkForAccessTokenChange(activity);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -265,7 +245,12 @@ public class AddEmergencyContactsFragment extends Fragment {
                 contactsListAdapter.setCountAndNotify();
                 contactsArrayAdapter.notifyDataSetChanged();
             }
-        }).execute();
+
+			@Override
+			public void onCancel() {
+				performBackPressed();
+			}
+		}).execute();
 
         return rootView;
     }
@@ -308,7 +293,7 @@ public class AddEmergencyContactsFragment extends Fragment {
     private void setSelectedObject(boolean selected, ContactBean contactBean) {
         try {
             contactBeans.get(contactBeans.indexOf(new ContactBean(contactBean.getName(),
-                    contactBean.getPhoneNo(),contactBean.getCountryCode(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT))).setSelected(selected);
+                    contactBean.getPhoneNo(),contactBean.getCountryCode(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT, null, null))).setSelected(selected);
             contactsListAdapter.setCountAndNotify();
         } catch (Exception e) {
             e.printStackTrace();
@@ -457,15 +442,28 @@ public class AddEmergencyContactsFragment extends Fragment {
 
             textHead.setText(title);
             textMessage.setText(message);
-
+            if(contactBean.getPhoneNo().contains("+")){
+                llCountryCode.setVisibility(View.GONE);
+//                contactBean.setPhoneNo( editTextPhoneNumber.getText().toString());
+            }else {
+                llCountryCode.setVisibility(View.VISIBLE);
+//                contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
+            }
             Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.mavenRegular(activity));
             ImageView btnClose = (ImageView) dialog.findViewById(R.id.close);
             btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    contactBean.setCountryCode(tvCountryCode.getText().toString());
-                    contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
+                    if(contactBean.getPhoneNo().contains("+")){
+                        contactBean.setCountryCode("");
+
+                        contactBean.setPhoneNo( editTextPhoneNumber.getText().toString());
+                    }else {
+                        contactBean.setCountryCode(tvCountryCode.getText().toString());
+                        contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
+                    }
+
                     addEmergencyContact(contactBean);
                     dialog.dismiss();
                 }

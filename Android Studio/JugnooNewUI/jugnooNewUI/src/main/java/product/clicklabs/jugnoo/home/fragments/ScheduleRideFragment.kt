@@ -6,12 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface.BOLD
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.sabkuchfresh.analytics.GAAction
@@ -30,6 +30,7 @@ import product.clicklabs.jugnoo.Constants.SCHEDULE_DAYS_LIMIT
 import product.clicklabs.jugnoo.adapters.RentalPackagesAdapter
 import product.clicklabs.jugnoo.apis.ApiFareEstimate
 import product.clicklabs.jugnoo.datastructure.CouponInfo
+import product.clicklabs.jugnoo.datastructure.MapsApiSources
 import product.clicklabs.jugnoo.datastructure.PromoCoupon
 import product.clicklabs.jugnoo.datastructure.SearchResult
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment
@@ -68,8 +69,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     var scheduleDaysLimit = 2
     private var isOneWay : Int = -1
     private var apiFareEstimate : ApiFareEstimate? = null
-    private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
-    private val onDateSetListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+    private val onTimeSetListener = TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute -> setTimeToVars(hourOfDay.toString() + ":" + minute + ":00") }
+    private val onDateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
         val date = year.toString() + "-" + (month + 1) + "-" + dayOfMonth
         if (validateDateTime(date, null)) {
             selectedDate = date
@@ -85,7 +86,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     private var serviceType: ServiceType? = null
     private var openSchedule:Boolean = false
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is InteractionListener) {
             interactionListener = context
@@ -260,6 +261,11 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             updatePackagesAccRegionSelected(null)
             btSchedule.setText(if (!openSchedule) R.string.book else R.string.schedule)
             tvScheduleMessage.text = if (serviceType != null) Utils.trimHTML(Utils.fromHtml(serviceType!!.info)) else requireActivity().getString(R.string.schedule_ride_alert)
+            if(serviceType != null && serviceType!!.info.isNotEmpty()) {
+                tvNote.visibility = View.VISIBLE
+            } else {
+                tvNote.visibility = View.GONE
+            }
         }
 
         updatePaymentOption()
@@ -274,8 +280,11 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             for (pc in region.packages) {
                 pc.selected = false
             }
-            region.packages[0].selected = true
-            this@ScheduleRideFragment.selectedPackage = region.packages[0]
+            if((Data.autoData == null || Data.autoData.serviceTypeSelected == null
+                    || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))) {
+                region.packages[0].selected = true
+                this@ScheduleRideFragment.selectedPackage = region.packages[0]
+            }
         }
         if (packagesAdapter == null) {
             packagesAdapter = RentalPackagesAdapter(activity as Context,
@@ -362,9 +371,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
 
 
-    private fun getFormattedDateTime(selectedDate: String?, selectedTime: String?, addHours: Boolean): String {
-        var selectedDate = selectedDate
-        var selectedTime = selectedTime
+    private fun getFormattedDateTime(selectedDate1: String?, selectedTime1: String?, addHours: Boolean): String {
+        var selectedDate = selectedDate1
+        var selectedTime = selectedTime1
         if (TextUtils.isEmpty(selectedDate) || TextUtils.isEmpty(selectedTime)) {
             val calendar = Calendar.getInstance()
             if (TextUtils.isEmpty(selectedTime)) {
@@ -392,10 +401,10 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     fun searchResultReceived(searchResult: SearchResult, placeSearchMode: PlaceSearchListFragment.PlaceSearchMode?) {
         if (placeSearchMode == PlaceSearchListFragment.PlaceSearchMode.PICKUP) {
-            tvPickup.text = searchResult.nameForText
+            tvPickup.text = searchResult.getNameForText(activity)
             searchResultPickup = searchResult
         } else {
-            tvDestination.text = searchResult.nameForText
+            tvDestination.text = searchResult.getNameForText(activity)
             searchResultDestination = searchResult
         }
         getFareEstimate()
@@ -403,6 +412,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     private fun getDirectionsAndComputeFare(sourceLatLng: LatLng, sourceAddress: String, destLatLng: LatLng, destAddress: String) {
         try {
+            if(selectedPackage == null) {
+                return
+            }
             val region = (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected
             selectedPackage?.isRoundTrip = if(isOneWay == 1) 0 else 1
             if(apiFareEstimate == null) {
@@ -436,26 +448,39 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     override fun onPoolSuccess(currency: String, fare: Double, rideDistance: Double, rideDistanceUnit: String,
                                                rideTime: Double, rideTimeUnit: String, poolFareId: Int, convenienceCharge: Double,
                                                text: String, tollCharge: Double) {
+                        tvFareEstimate.visibility = View.VISIBLE
+                        viewInnerDrop.visibility = View.VISIBLE
+                        tvFareEstimate.text = getString(R.string.fare_estimate).plus(": ")
+                                .plus(Utils.formatCurrencyValue(currency, if(isOneWay == 1) fare.toString() else (2 * fare).toString()))
+                        if (Prefs.with(context).getInt(Constants.KEY_CUSTOMER_CURRENCY_CODE_WITH_FARE_ESTIMATE, 0) == 1) {
+                            tvFareEstimate.append(" ")
+                            tvFareEstimate.append(getString(R.string.bracket_in_format, currency))
+                        }
                     }
 
                     override fun onNoRetry() {
-                        tvFareEstimate.visibility = View.GONE
+                        tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onRetry() {
-                        tvFareEstimate.visibility = View.GONE
+                        tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onFareEstimateFailure() {
-                        tvFareEstimate.visibility = View.GONE
+                        tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onDirectionsFailure() {
-                        tvFareEstimate.visibility = View.GONE
+                        tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
                 })
             }
-            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage?: if(region != null) region.packages[0] else null, "c_fe_sch")
+            apiFareEstimate?.getDirectionsAndComputeFare(sourceLatLng, destLatLng, 0, true, selectedRegion, CouponInfo(-1, ""), selectedPackage?: if(region != null) region.packages[0] else null,
+                    MapsApiSources.CUSTOMER_FARE_ESTIMATE_SCHEDULE)
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -464,8 +489,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
     private fun getFareEstimate() {
         if(searchResultPickup != null && searchResultDestination != null && Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) {
-            tvFareEstimate.visibility = View.VISIBLE
-            viewInnerDrop.visibility = View.VISIBLE
+//            tvFareEstimate.visibility = View.VISIBLE
+//            viewInnerDrop.visibility = View.VISIBLE
             getDirectionsAndComputeFare(searchResultPickup!!.latLng, searchResultPickup!!.address, searchResultDestination!!.latLng, searchResultDestination!!.address)
         } else {
             tvFareEstimate.visibility = View.GONE
@@ -549,6 +574,10 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     fun getPaymentOptionDialog(): PaymentOptionDialog? {
         if (paymentOptionDialog == null) {
             paymentOptionDialog = PaymentOptionDialog(activity, (requireActivity() as HomeActivity).getCallbackPaymentOptionSelector(), object : PaymentOptionDialog.Callback {
+                override fun getSelectedPaymentOption() {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
                 override fun onDialogDismiss() {
 
                 }
@@ -557,7 +586,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     (requireActivity() as HomeActivity).updateConfirmedStatePaymentUI()
                     try {
                         GAUtils.event(GACategory.RIDES, GAAction.HOME + GAAction.WALLET + GAAction.SELECTED, MyApplication.getInstance().walletCore
-                                .getPaymentOptionName(Data.autoData.pickupPaymentOption))
+                                .getPaymentOptionName(Data.autoData.pickupPaymentOption, requireContext()))
                     } catch (e: Exception) {
                     }
 
@@ -579,7 +608,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             imageViewPaymentModeConfirm.setImageResource(MyApplication.getInstance().getWalletCore()
                     .getPaymentOptionIconSmall(Data.autoData.getPickupPaymentOption()))
             textViewPaymentModeValueConfirm.text = MyApplication.getInstance().getWalletCore()
-                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption())
+                    .getPaymentOptionBalanceText(Data.autoData.getPickupPaymentOption(),activity)
 
         }
 
@@ -688,9 +717,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     fun getOneWayPackages(selectedRegion:Region?): ArrayList<Package> {
         oneWayPackages.clear()
-        if(selectedRegion != null) {
-            for (i in 0 until selectedRegion.packages.size) {
-                if (selectedRegion.packages.get(i).returnTrip == 0) {
+        if(selectedRegion != null && selectedRegion.packages !=null ) {
+            for (i in 0 until selectedRegion!!.packages.size) {
+                if (selectedRegion!!.packages.get(i).returnTrip == 0) {
                     val pck = Package()
 
                     pck.packageId = selectedRegion.packages.get(i).packageId
@@ -721,7 +750,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 }
             }
         }
-        if(oneWayPackages.size > 0){
+        if(oneWayPackages.size > 0
+                && (Data.autoData == null || Data.autoData.serviceTypeSelected == null
+                        || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))){
             oneWayPackages[0].selected = true
             selectedPackage = oneWayPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
@@ -763,7 +794,9 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 }
             }
         }
-        if(roundTripPackages.size > 0){
+        if(roundTripPackages.size > 0
+                && (Data.autoData == null || Data.autoData.serviceTypeSelected == null
+                        || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))){
             roundTripPackages[0].selected = true
             selectedPackage = roundTripPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()

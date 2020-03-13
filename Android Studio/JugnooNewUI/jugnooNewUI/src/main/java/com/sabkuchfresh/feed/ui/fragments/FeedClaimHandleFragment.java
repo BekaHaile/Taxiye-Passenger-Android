@@ -1,9 +1,9 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,7 +41,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Utils;
-import retrofit.RetrofitError;
 
 /**
  * Created by Parminder Singh on 4/10/17.
@@ -272,7 +271,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
                 }
 
                 @Override
-                public boolean onFailure(RetrofitError error) {
+                public boolean onFailure(Exception error) {
                     Toast.makeText(activity, R.string.error_get_handle_suggestions, Toast.LENGTH_SHORT).show();
                     ivRefreshSuggestions.clearAnimation();
                     return true;
@@ -349,7 +348,7 @@ public final class FeedClaimHandleFragment extends FeedBaseFragment implements G
             }
 
             @Override
-            public boolean onFailure(RetrofitError error) {
+            public boolean onFailure(Exception error) {
                 return false;
             }
 

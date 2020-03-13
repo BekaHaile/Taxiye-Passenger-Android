@@ -3,7 +3,7 @@ package product.clicklabs.jugnoo.home.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,12 +125,11 @@ public class PromoCouponsAdapter extends BaseAdapter {
 					int position = ((ViewHolder) v.getTag()).id;
 					PromoCoupon promoCoupon = offerList.get(position);
 					if (callback.getSelectedCoupon() != null && callback.getSelectedCoupon().matchPromoCoupon(promoCoupon)){
-						callback.setSelectedCoupon(-1);
+						callback.setSelectedCoupon(-1, null);
 
 					} else {
 
-						callback.setSelectedCoupon(position);
-						callback.onCouponSelected();
+						callback.setSelectedCoupon(position, promoCoupon);
 					}
 					notifyDataSetChanged();
 				} catch (Exception e) {
@@ -160,10 +159,8 @@ public class PromoCouponsAdapter extends BaseAdapter {
 
 	public interface Callback{
 
-		void onCouponSelected();
 		PromoCoupon getSelectedCoupon();
-		boolean setSelectedCoupon(int position);
-		void applyPromoCoupon(String text);
+		boolean setSelectedCoupon(int position, PromoCoupon pc);
 
 	}
 

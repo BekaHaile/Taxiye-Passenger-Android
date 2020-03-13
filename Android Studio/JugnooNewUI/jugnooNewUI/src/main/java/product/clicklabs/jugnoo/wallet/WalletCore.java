@@ -3,8 +3,8 @@ package product.clicklabs.jugnoo.wallet;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -428,30 +428,30 @@ public class WalletCore {
         }
     }
 
-    public String getPaymentOptionBalanceText(int paymentOption) {
+    public String getPaymentOptionBalanceText(int paymentOption, Context context1) {
         try {
             if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
-                return String.format(context.getResources().getString(R.string.rupees_value_format),
+                return String.format(context1.getResources().getString(R.string.rupees_value_format),
                         Data.userData.getPaytmBalanceStr());
             } else if (paymentOption == PaymentOption.MOBIKWIK.getOrdinal()) {
-                return String.format(context.getResources().getString(R.string.rupees_value_format),
+                return String.format(context1.getResources().getString(R.string.rupees_value_format),
                         Data.userData.getMobikwikBalanceStr());
             } else if (paymentOption == PaymentOption.FREECHARGE.getOrdinal()) {
-                return String.format(context.getResources().getString(R.string.rupees_value_format),
+                return String.format(context1.getResources().getString(R.string.rupees_value_format),
                         Data.userData.getFreeChargeBalanceStr());
             } else if (paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()) {
-                return getRazorpayName(context);
+                return getRazorpayName(context1);
             } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()
                     ||paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
-                return getConfigDisplayNameCards(context,paymentOption);
+                return getConfigDisplayNameCards(context1,paymentOption);
             } else if (paymentOption == PaymentOption.MPESA.getOrdinal()) {
-                return getMPesaName(context);
+                return getMPesaName(context1);
             } else if (paymentOption == PaymentOption.CORPORATE.getOrdinal()) {
-                return context.getString(R.string.corporate);
+                return context1.getString(R.string.corporate);
             } else if (paymentOption == PaymentOption.POS.getOrdinal()) {
-                return context.getString(R.string.pos);
+                return context1.getString(R.string.pos);
             } else {
-                return context.getResources().getString(R.string.cash);
+                return context1.getResources().getString(R.string.cash);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -475,6 +475,7 @@ public class WalletCore {
         for (PaymentModeConfigData configData : getPaymentModeConfigDatas()) {
             if (configData.getPaymentOption() == paymentOption) {
                 if(paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()
+                        || paymentOption == PaymentOption.PAY_STACK_CARD.getOrdinal()
                         && configData.getCardsData() != null && configData.getCardsData().size() > 0){
                     String cardId = Prefs.with(context).getString(Constants.STRIPE_SELECTED_POS, "0");
                     if(cardId.equalsIgnoreCase("0")){
@@ -535,7 +536,7 @@ public class WalletCore {
         return name;
     }
 
-    public String getPaymentOptionName(int paymentOption) {
+    public String getPaymentOptionName(int paymentOption, Context context) {
         try {
             if (paymentOption == PaymentOption.PAYTM.getOrdinal()) {
                 return context.getResources().getString(R.string.paytm);
@@ -544,7 +545,7 @@ public class WalletCore {
             } else if (paymentOption == PaymentOption.FREECHARGE.getOrdinal()) {
                 return context.getResources().getString(R.string.freecharge);
             } else if (paymentOption == PaymentOption.RAZOR_PAY.getOrdinal()) {
-                return getPaymentOptionBalanceText(paymentOption);
+                return getPaymentOptionBalanceText(paymentOption,context);
             } else if (paymentOption == PaymentOption.STRIPE_CARDS.getOrdinal()||paymentOption==PaymentOption.ACCEPT_CARD.getOrdinal()
                         ||paymentOption==PaymentOption.PAY_STACK_CARD.getOrdinal() ) {
                 return getConfigDisplayNameCards(context,paymentOption);
@@ -687,6 +688,9 @@ public class WalletCore {
 
     public void parsePaymentModeConfigDatas(JSONObject jObj) {
         try {
+        	if(!jObj.has(Constants.KEY_PAYMENT_MODE_CONFIG_DATA)){
+        		return;
+			}
             JSONArray jsonArray = jObj.getJSONArray(Constants.KEY_PAYMENT_MODE_CONFIG_DATA);
             paymentModeConfigDatas = new ArrayList<>();
             int cashPosition = -1;
@@ -1089,28 +1093,24 @@ public class WalletCore {
                             .openPaymentActivityInCaseOfWalletNotAdded(activity, PaymentOption.JUGNOO_PAY.getOrdinal());
                     callbackPaymentOptionSelector.onWalletAdd(PaymentOption.JUGNOO_PAY);
                 }
-            } else if (paymentOption == PaymentOption.STRIPE_CARDS || paymentOption == PaymentOption.ACCEPT_CARD
-                     || paymentOption == PaymentOption.PAY_STACK_CARD){
-
-
-                PaymentModeConfigData configData  = getConfigData(paymentOption.getOrdinal());
-
+            } else if (paymentOption == PaymentOption.STRIPE_CARDS || paymentOption == PaymentOption.ACCEPT_CARD) {
+                PaymentModeConfigData configData = getConfigData(paymentOption.getOrdinal());
                 if (configData == null) return;
-
-
-                if (paymentOption == PaymentOption.STRIPE_CARDS || configData.getCardsData() == null || configData.getCardsData().size() == 0) {
-                    try {
-                        addCardIntent(activity,paymentOption.getOrdinal());
-                        callbackPaymentOptionSelector.onWalletAdd(paymentOption);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return;
+                try {
+                    addCardIntent(activity, paymentOption.getOrdinal());
+                    callbackPaymentOptionSelector.onWalletAdd(paymentOption);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                callbackPaymentOptionSelector.onPaymentOptionSelected(paymentOption);
-
-
+            } else if (paymentOption == PaymentOption.PAY_STACK_CARD) {
+                PaymentModeConfigData configData = getConfigData(paymentOption.getOrdinal());
+                if (configData == null) return;
+                try {
+                    addCardIntent(activity, paymentOption.getOrdinal());
+                    callbackPaymentOptionSelector.onWalletAdd(paymentOption);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 callbackPaymentOptionSelector.onPaymentOptionSelected(paymentOption);
             }

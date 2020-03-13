@@ -7,9 +7,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -18,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -258,23 +259,30 @@ public class RatingBarMenuFeedback extends LinearLayout {
 
             if (mDisplayText) {
                 if (i == mCurrentScore) {
-                    switch (i) {
-                        case 1:
-                            mStarsViews[i - 1].setText(getContext().getString(R.string.terrible));
-                            break;
-                        case 2:
-                            mStarsViews[i - 1].setText(getContext().getString(R.string.bad_only));
-                            break;
-                        case 3:
-                            mStarsViews[i - 1].setText(getContext().getString(R.string.okay));
-                            break;
-                        case 4:
-                            mStarsViews[i - 1].setText(getContext().getString(R.string.good));
-                            break;
-                        case 5:
-                            mStarsViews[i - 1].setText(getContext().getString(R.string.great));
-                            break;
+                    if(!Data.autoData.getFeedBackInfoRatingData().isEmpty()){
+//                        mStarsViews[i - 1].setText(Data.autoData.getFeedBackInfoRatingData().get(i-1).getDesc());
+
                     }
+                    else {
+						switch (i) {
+							case 1:
+
+								mStarsViews[i - 1].setText(getContext().getString(R.string.terrible));
+								break;
+							case 2:
+								mStarsViews[i - 1].setText(getContext().getString(R.string.bad_only));
+								break;
+							case 3:
+								mStarsViews[i - 1].setText(getContext().getString(R.string.okay));
+								break;
+							case 4:
+								mStarsViews[i - 1].setText(getContext().getString(R.string.good));
+								break;
+							case 5:
+								mStarsViews[i - 1].setText(getContext().getString(R.string.great));
+								break;
+						}
+					}
                 } else {
                     mStarsViews[i - 1].setText(null);
                 }

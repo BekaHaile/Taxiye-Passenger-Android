@@ -1,36 +1,36 @@
 package product.clicklabs.jugnoo.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.sabkuchfresh.utils.Utils;
 
 import java.util.ArrayList;
 
-import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.model.FetchChatResponse;
-import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
 
 
 /**
  * Created by aneesh on 10/4/15.
  */
-public class ChatSuggestionAdapter extends RecyclerView.Adapter<ChatSuggestionAdapter.infoTileViewHolder> {
+public class ChatSuggestionAdapter extends RecyclerView.Adapter<ChatSuggestionAdapter.SuggestionViewHolder> {
 
 	private ArrayList<FetchChatResponse.Suggestion> chatHistories;
 	private Context context;
 	private Callback callback;
-	private FetchChatResponse fetchChatResponse;
+	private int margin;
 
 	public ChatSuggestionAdapter(Context context, ArrayList<FetchChatResponse.Suggestion> chatHistories, Callback callback) {
 		this.chatHistories = chatHistories;
 		this.context = context;
 		this.callback = callback;
+		margin = Utils.dpToPx(context, 10);
 	}
 
 	@Override
@@ -39,51 +39,43 @@ public class ChatSuggestionAdapter extends RecyclerView.Adapter<ChatSuggestionAd
 	}
 
 	@Override
-	public void onBindViewHolder(infoTileViewHolder infoTileViewHolder, int i) {
+	public void onBindViewHolder(SuggestionViewHolder holder, int i) {
 		final FetchChatResponse.Suggestion itr = chatHistories.get(i);
 
-		infoTileViewHolder.name.setTypeface(Fonts.mavenRegular(context));
-		infoTileViewHolder.name.setText(itr.getSuggestion());
+		holder.name.setTypeface(Fonts.mavenRegular(context));
+		holder.name.setText(itr.getSuggestion());
 
-		infoTileViewHolder.relative.setTag(i);
-		infoTileViewHolder.relative.setOnClickListener(new View.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-//				infoTileResponses.get((int) v.getTag()).completed = 1;
-
-				try {
-					int pos = (int) v.getTag();
-					callback.onSuggestionClick(pos, chatHistories.get(pos));
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+		holder.name.setTag(i);
+		holder.name.setOnClickListener(v -> {
+			try {
+				int pos = (int) v.getTag();
+				callback.onSuggestionClick(pos, chatHistories.get(pos));
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		});
 
 	}
 
 	@Override
-	public infoTileViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+	public SuggestionViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
 		View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item_chat_suggestion, viewGroup, false);
 
-		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, 100);
+		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT);
+		layoutParams.setMarginStart(margin);
+		layoutParams.setMarginEnd(margin);
 		itemView.setLayoutParams(layoutParams);
-		ASSL.DoMagic(itemView);
 
-		return new infoTileViewHolder(itemView);
+		return new SuggestionViewHolder(itemView);
 	}
 
 
-	public class infoTileViewHolder extends RecyclerView.ViewHolder {
-		protected LinearLayout relative;
+	public class SuggestionViewHolder extends RecyclerView.ViewHolder {
 		protected TextView name;
 		protected int id;
-		public infoTileViewHolder(View v) {
+		public SuggestionViewHolder(View v) {
 			super(v);
-			relative = (LinearLayout)v.findViewById(R.id.relative);
-			name = (TextView) v.findViewById(R.id.name);
+			name = v.findViewById(R.id.name);
 			name.setTypeface(Fonts.mavenRegular(context));
 		}
 	}

@@ -1,9 +1,9 @@
 package product.clicklabs.jugnoo.adapters
 
 import android.content.Context
-import android.support.constraint.ConstraintLayout
-import android.support.v4.view.PagerAdapter
-import android.support.v4.view.ViewPager
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +38,7 @@ class InfoPagerAdapter(private var mContext: Context, private var infoList: List
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val itemView = mLayoutInflater.inflate(R.layout.info_pager_item, container, false)
         val params = itemView.layoutParams
-        params.height = ViewPager.LayoutParams.MATCH_PARENT
+        params.height = androidx.viewpager.widget.ViewPager.LayoutParams.MATCH_PARENT
         itemView.layoutParams = params
 
         val info = infoList!![position]

@@ -2,8 +2,8 @@ package product.clicklabs.jugnoo.home.dialogs
 
 import android.app.Activity
 import android.app.Dialog
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
+import com.google.android.material.tabs.TabLayout
+import androidx.viewpager.widget.ViewPager
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
@@ -43,7 +43,7 @@ object TutorialInfoDialog{
 
                 val imageViewClose = findViewById<ImageView>(R.id.imageViewClose)
                 val ivNext = findViewById<ImageView>(R.id.ivNext)
-                val viewPagerInfo = findViewById<ViewPager>(R.id.viewPagerInfo)
+                val viewPagerInfo = findViewById<androidx.viewpager.widget.ViewPager>(R.id.viewPagerInfo)
                 val tabDots = findViewById<TabLayout>(R.id.tabDots)
                 val infoPagerAdapter = InfoPagerAdapter(activity, list)
                 viewPagerInfo.adapter = infoPagerAdapter

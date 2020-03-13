@@ -2,9 +2,6 @@ package com.sabkuchfresh.feed.ui.fragments;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,6 +27,9 @@ import com.sabkuchfresh.home.FreshActivity;
 
 import java.util.HashMap;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -39,7 +39,6 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.utils.Fonts;
-import retrofit.RetrofitError;
 
 /**
  * Created by Parminder Singh on 3/28/17.
@@ -225,7 +224,7 @@ public class FeedReserveSpotFragment extends Fragment implements GACategory, GAA
                }
 
                @Override
-               public boolean onFailure(RetrofitError error) {
+               public boolean onFailure(Exception error) {
                    return false;
                }
 

@@ -3,6 +3,11 @@ package product.clicklabs.jugnoo.promotion.dialogs;
 import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Typeface;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -13,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -30,6 +37,7 @@ import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
+import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -74,9 +82,6 @@ public class ReferDriverDialog {
 
 			((TextView) dialog.findViewById(R.id.textViewCameAcross)).setTypeface(Fonts.mavenRegular(activity));
 			((TextView) dialog.findViewById(R.id.textViewCameAcross)).setText(activity.getString(R.string.came_across_auto_driver, activity.getString(R.string.app_name)));
-			((TextView) dialog.findViewById(R.id.textViewKindlyRecommend)).setTypeface(Fonts.mavenMedium(activity), Typeface.BOLD);
-			((TextView) dialog.findViewById(R.id.textViewIfTheyAreInterested)).setTypeface(Fonts.mavenRegular(activity));
-			((TextView) dialog.findViewById(R.id.textViewIfTheyAreInterested)).setText(activity.getString(R.string.if_they_are_interested, activity.getString(R.string.app_name)));
 
 			editTextName = (EditText) dialog.findViewById(R.id.editTextName); editTextName.setTypeface(Fonts.mavenRegular(activity));
 			editTextPhone = (EditText) dialog.findViewById(R.id.editTextPhone); editTextPhone.setTypeface(Fonts.mavenRegular(activity));
@@ -146,6 +151,50 @@ public class ReferDriverDialog {
 					});
 			keyboardLayoutListener.setResizeTextView(false);
 			linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+
+			ImageView ivC2DReferralImage = dialog.findViewById(R.id.ivC2DReferralImage);
+			TextView tvC2DReferralMessage = dialog.findViewById(R.id.tvC2DReferralMessage);
+			tvC2DReferralMessage.setTypeface(Fonts.mavenMedium(activity));
+
+
+			String image = Prefs.with(activity).getString(Constants.KEY_C_2_D_REFERRAL_IMAGE, "");
+			String info = Prefs.with(activity).getString(Constants.KEY_C_2_D_REFERRAL_INFO, "");
+
+			if(!TextUtils.isEmpty(image)){
+				Picasso.with(activity)
+						.load(image)
+						.placeholder(R.drawable.ic_promotions_driver_refer)
+						.error(R.drawable.ic_promotions_driver_refer)
+						.into(ivC2DReferralImage);
+			}
+			if(!TextUtils.isEmpty(info)){
+				tvC2DReferralMessage.setText(info);
+
+				String details = Prefs.with(activity).getString(Constants.KEY_C_2_D_REFERRAL_DETAILS, "");
+				if(!TextUtils.isEmpty(details)){
+					SpannableStringBuilder ssb = new SpannableStringBuilder("\n"+activity.getString(R.string.details));
+
+					ClickableSpan clickableSpan = new ClickableSpan() {
+						@Override
+						public void onClick(View textView) {
+							try {
+								boolean html = Utils.DetectHtml.isHtml(details);
+								DialogPopup.alertPopupLeftOriented(activity, "",
+										details, true, true, html);
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					};
+					ssb.setSpan(clickableSpan, 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+					tvC2DReferralMessage.append(ssb);
+					tvC2DReferralMessage.setMovementMethod(LinkMovementMethod.getInstance());
+				}
+
+
+			}
+
 
 			dialog.show();
 			activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);

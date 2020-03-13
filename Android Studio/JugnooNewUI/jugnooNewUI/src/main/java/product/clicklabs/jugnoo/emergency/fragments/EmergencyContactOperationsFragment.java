@@ -5,12 +5,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
@@ -40,6 +34,12 @@ import com.tokenautocomplete.FilteredArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -119,7 +119,12 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
                         public void onPostExecute(ArrayList<ContactBean> contactBeans) {
                             phoneContactsListAdapter.notifyDataSetChanged();
                         }
-                    }).execute();
+
+						@Override
+						public void onCancel() {
+							performBackPressed();
+						}
+					}).execute();
 
                     if (requestCode == REQUEST_CODE_ADD_CONTACT) {
                         new FragTransUtils().openAddEmergencyContactsFragment(activity,
@@ -462,7 +467,7 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
             emergencyContactBeans.clear();
             for (EmergencyContact emergencyContact : Data.userData.getEmergencyContactsList()) {
                 ContactBean contactBean = new ContactBean(emergencyContact.name, emergencyContact.phoneNo,emergencyContact.countryCode, "",
-                        ContactBean.ContactBeanViewType.CONTACT);
+                        ContactBean.ContactBeanViewType.CONTACT, null, null);
                 contactBean.setId(emergencyContact.id);
                 emergencyContactBeans.add(contactBean);
             }
@@ -496,7 +501,7 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
     private void setSelectedObject(boolean selected, ContactBean contactBean) {
         try {
             int index = phoneContactBeans.indexOf(new ContactBean(contactBean.getName(),
-                    contactBean.getPhoneNo(),contactBean.getCountryCode(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT));
+                    contactBean.getPhoneNo(),contactBean.getCountryCode(), contactBean.getType(), ContactBean.ContactBeanViewType.CONTACT, null, null));
             phoneContactBeans.get(index).setSelected(selected);
             phoneContactsListAdapter.notifyDataSetChanged();
             ((LinearLayoutManager) recyclerViewPhoneContacts.getLayoutManager()).scrollToPositionWithOffset(index, 20);

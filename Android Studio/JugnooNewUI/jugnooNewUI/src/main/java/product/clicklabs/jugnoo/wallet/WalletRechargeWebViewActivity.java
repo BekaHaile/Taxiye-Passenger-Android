@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -19,6 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import androidx.fragment.app.FragmentActivity;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,8 +39,8 @@ public class WalletRechargeWebViewActivity extends FragmentActivity {
     private ProgressBar progressBar;
     int walletType;
 
-    private final String PAYTM_SUCCESS_URL = "https://jugnoo.in/paytm/wallet/success.php";
-    private final String PAYTM_FAILURE_URL = "https://jugnoo.in/paytm/wallet/failure.php";
+    private final String PAYTM_SUCCESS_URL = "paytm/wallet/success.php";
+    private final String PAYTM_FAILURE_URL = "paytm/wallet/failure.php";
 
     private final String MOBIKWIK_SUCCESS_URL = "https://jugnoo.in/mobikwik/wallet/success.php";
     private final String MOBIKWIK_FAILURE_URL = "https://jugnoo.in/mobikwik/wallet/failure.php";

@@ -14,20 +14,20 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,7 +35,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fugu.interfaces.PermissionCallback;
 import com.picker.image.model.AlbumEntry;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.CameraSupport;
@@ -72,6 +71,8 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
     private static final int REQUEST_PORTRAIT_RFC = 1337;
     private static final int REQUEST_PORTRAIT_FFC = REQUEST_PORTRAIT_RFC + 1;
     public static final int REQUEST_IMAGE_CAPTURE = 99;
+    private static final int REQUEST_CODE_SELECT_IMAGES=1002;
+    private static final int REQ_CODE_IMAGE_PERMISSION = 1001;
     public static ArrayList<ImageEntry> sCheckedImages = new ArrayList<>();
     private final static int REQ_CODE_PERMISSION_CAMERA = 1005;
 
@@ -89,6 +90,7 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
     private CoordinatorLayout coordinatorLayout;
     private TextView tvImageCount;
     private TextView toolbarTitle;
+    private Picker picker;
     private RecyclerView recyclerViewSelectedImages;
     private String[] permissionsRequestArray;
     private PermissionCommon mPermissionCommon;
@@ -102,6 +104,23 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
             finish();
             onCancel();
         }
+
+        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+            @Override
+            public void permissionGranted(int requestCode) {
+                dispatchTakePictureIntent();
+            }
+
+            @Override
+            public boolean permissionDenied(int requestCode, boolean neverAsk) {
+                return true;
+            }
+
+            @Override
+            public void onRationalRequestIntercepted(int requestCode) {
+
+            }
+        });
 
         if(savedInstanceState==null)
           mPickOptions = (EventBus.getDefault().getStickyEvent(Events.OnPublishPickOptionsEvent.class)).options;
@@ -284,7 +303,11 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
             return;
         }
 
-
+        if(!PermissionCommon.isGranted(Manifest.permission.WRITE_EXTERNAL_STORAGE,this)
+           || !PermissionCommon.isGranted(Manifest.permission.CAMERA,this)){
+            mPermissionCommon.getPermission(REQ_CODE_IMAGE_PERMISSION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA);
+            return;
+        }
 
 
         if (sCheckedImages != null && sCheckedImages.size() >= mPickOptions.limit) {
@@ -759,6 +782,9 @@ public class PickerActivity extends AppCompatActivity implements PermissionCommo
 
         }
 
+        if(requestCode== REQUEST_CODE_SELECT_IMAGES && resultCode==RESULT_OK){
+            refreshMediaScanner(mCurrentPhotoPath);
+        }
         if (resultCode == RESULT_OK && requestCode == REQUEST_PORTRAIT_FFC) {
             //For capturing image from camera
             galleryAddPic();

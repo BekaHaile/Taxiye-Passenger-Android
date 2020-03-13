@@ -8,14 +8,24 @@ data class RequestRideConfirm(var pickup : String?,
                               var vehicleIcon : String?,
                               var vehicleName : String?,
                               var note : String?,
-                              var estimateFare : String?) : Parcelable {
+                              var estimateFare : String?,
+                              var fare : Double = 0.0,
+                              var minFare : Double = 0.0,
+                              var maxFare : Double = 0.0,
+                              var currency : String?,
+                              var showTip : Boolean) : Parcelable {
     constructor(parcel: Parcel) : this(
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
             parcel.readString(),
-            parcel.readString()) {
+            parcel.readString(),
+            parcel.readDouble(),
+            parcel.readDouble(),
+            parcel.readDouble(),
+            parcel.readString(),
+            parcel.readByte() != 0.toByte()) {
     }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -25,6 +35,11 @@ data class RequestRideConfirm(var pickup : String?,
         parcel.writeString(vehicleName)
         parcel.writeString(note)
         parcel.writeString(estimateFare)
+        parcel.writeDouble(fare)
+        parcel.writeDouble(minFare)
+        parcel.writeDouble(maxFare)
+        parcel.writeString(currency)
+        parcel.writeByte(if (showTip) 1 else 0)
     }
 
     override fun describeContents(): Int {

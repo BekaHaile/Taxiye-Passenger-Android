@@ -10,7 +10,7 @@
     android:splitMotionEvents="false"
     >
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cvRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -19,14 +19,14 @@
         card_view:cardCornerRadius="@dimen/button_corner_radius"
         >
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fadeScrollbars="true"
             android:scrollbars="vertical"
             />
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <View
         android:id="@+id/vShadow"

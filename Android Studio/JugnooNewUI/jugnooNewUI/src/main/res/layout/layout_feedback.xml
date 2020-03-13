@@ -163,7 +163,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/rupee_0"
                         android:textColor="@color/text_color"
-                        android:textSize="@dimen/sp_30" />
+                        android:textSize="@dimen/sp_15" />
                 </LinearLayout>
             </RelativeLayout>
 

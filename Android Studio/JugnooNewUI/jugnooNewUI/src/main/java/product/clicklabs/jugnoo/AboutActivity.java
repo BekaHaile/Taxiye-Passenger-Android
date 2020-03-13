@@ -74,7 +74,7 @@ public class AboutActivity extends BaseActivity {
         textViewFAQ = (TextView) findViewById(R.id.textViewFAQ);
         textViewFAQ.setTypeface(Fonts.mavenLight(this));
 
-        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_ABOUT);
+//        textViewTitle.setText(MyApplication.getInstance().ACTIVITY_NAME_ABOUT);
         textViewTitle.getPaint().setShader(Utils.textColorGradient(this, textViewTitle));
 
         relativeLayoutRateUs.setOnClickListener(new View.OnClickListener() {

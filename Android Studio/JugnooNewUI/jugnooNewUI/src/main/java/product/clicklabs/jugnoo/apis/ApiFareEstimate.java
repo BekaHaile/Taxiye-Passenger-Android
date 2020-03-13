@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -72,7 +72,7 @@ public class ApiFareEstimate {
 						return;
 					}
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
-					JungleApisImpl.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, new JungleApisImpl.Callback() {
+					JungleApisImpl.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, true, new JungleApisImpl.Callback() {
 								@Override
 								public void onSuccess(@NotNull List<LatLng> latLngs, @NotNull Path path) {
 									try {
@@ -89,14 +89,14 @@ public class ApiFareEstimate {
 											directionsSuccess(promoCoupon, callFareEstimate, sourceLatLng, destLatLng, isPooled, region, selectedPackage);
 										} else {
 											DialogPopup.dismissLoadingDialog();
-											retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+											retryDialogDirections(context.getString(R.string.please_select_appropriate_pickup_and_drop_location_to_continue), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
 											callback.onDirectionsFailure();
 										}
 
 									} catch (Exception e) {
 										e.printStackTrace();
 										DialogPopup.dismissLoadingDialog();
-										retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+										retryDialogDirections(context.getString(R.string.please_select_appropriate_pickup_and_drop_location_to_continue), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
 										callback.onDirectionsFailure();
 									}
 								}
@@ -104,7 +104,7 @@ public class ApiFareEstimate {
 								@Override
 								public void onFailure() {
 									DialogPopup.dismissLoadingDialog();
-									retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+									retryDialogDirections(context.getString(R.string.please_select_appropriate_pickup_and_drop_location_to_continue), sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
 									callback.onDirectionsFailure();
 								}
 							});
@@ -291,20 +291,21 @@ public class ApiFareEstimate {
 
     private void retryDialogDirections(String message, final LatLng sourceLatLng, final LatLng destLatLng, final int isPooled, final boolean callFareEstimate,
 									   final Region region, final PromoCoupon promoCoupon, final Package selectedPackage, final String source){
-        DialogPopup.alertPopupTwoButtonsWithListeners((Activity) context, "", message, context.getString(R.string.retry), context.getString(R.string.cancel),
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
-                        callback.onRetry();
-                    }
-                },
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        callback.onNoRetry();
-                    }
-                }, false, false);
+    	DialogPopup.alertPopup((Activity) context, "", message);
+//        DialogPopup.alertPopupTwoButtonsWithListeners((Activity) context, "", message, context.getString(R.string.retry), context.getString(R.string.cancel),
+//                new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        getDirectionsAndComputeFare(sourceLatLng, destLatLng, isPooled, callFareEstimate, region,promoCoupon, selectedPackage, source);
+//                        callback.onRetry();
+//                    }
+//                },
+//                new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        callback.onNoRetry();
+//                    }
+//                }, false, false);
     }
 
 }

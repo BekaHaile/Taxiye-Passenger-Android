@@ -56,7 +56,11 @@ public enum AppLinkIndex {
 
 	FATAFAT_PAY_VIA_CHAT(26), // open Fatafat chat pay
 
-	FUGU_SUPPORT(27)
+	FUGU_SUPPORT(27),
+
+	TICKET_SUPPORT(28),
+
+	REINVITE_USERS(29),
 
 	;
 

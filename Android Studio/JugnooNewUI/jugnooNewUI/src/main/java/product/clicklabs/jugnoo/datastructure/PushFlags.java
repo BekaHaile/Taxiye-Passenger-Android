@@ -41,7 +41,8 @@ public enum PushFlags {
 	DRIVER_ETA(104),
 	PROS_STATUS_SILENT(56),
 	SHOW_NOTIFICATION_WITH_DEEPLINK(57),
-	UNLOCK_BLE_DEVICE(180);
+	UNLOCK_BLE_DEVICE(180),
+	NO_DRIVER_FOUND_HELP(113);
 
 	private int ordinal;
 
@@ -50,6 +51,9 @@ public enum PushFlags {
 	}
 
 	public int getOrdinal() {
+		return ordinal;
+	}
+	public int getKOrdinal() {
 		return ordinal;
 	}
 }

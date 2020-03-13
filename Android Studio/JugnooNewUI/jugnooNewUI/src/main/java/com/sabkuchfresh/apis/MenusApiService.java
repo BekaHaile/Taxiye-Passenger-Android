@@ -7,6 +7,7 @@ import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.retrofit.model.UserCheckoutResponse;
 import com.sabkuchfresh.retrofit.model.common.IciciPaymentRequestStatus;
+import com.sabkuchfresh.retrofit.model.feed.NearbyDriversResponse;
 import com.sabkuchfresh.retrofit.model.menus.CuisineResponse;
 import com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
@@ -22,7 +23,9 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
+import retrofit.http.GET;
 import retrofit.http.POST;
+import retrofit.http.QueryMap;
 import retrofit.mime.MultipartTypedOutput;
 
 /**
@@ -145,6 +148,10 @@ public interface MenusApiService {
 	@POST("/user_category_logs")
 	void userCategoryLogs(@FieldMap Map<String, String> params,
 						 Callback<FeedCommonResponse> callback);
+
+	@GET("/nearby_agents")
+	void nearbyAgents(@QueryMap Map<String, String> params, Callback<NearbyDriversResponse> callback);
+
 
 
 }

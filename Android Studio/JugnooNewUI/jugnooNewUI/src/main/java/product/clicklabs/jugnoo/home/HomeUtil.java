@@ -4,19 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.fugu.FuguConfig;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.hippo.HippoConfig;
+import com.hippo.HippoTicketAttributes;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
@@ -28,6 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
 import io.branch.referral.Branch;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
@@ -42,6 +43,8 @@ import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
+import product.clicklabs.jugnoo.home.models.HippoTicketModel;
+import product.clicklabs.jugnoo.home.models.HippoTicketRideModel;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
@@ -172,7 +175,7 @@ public class HomeUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		Prefs.with(activity).save(Constants.FIRSTTIME_LOGIN,-1);
 		FacebookLoginHelper.logoutFacebook();
 
 		GCMIntentService.clearNotifications(activity);
@@ -194,7 +197,6 @@ public class HomeUtil {
 			intent.putExtra(Constants.KEY_LOGGED_OUT, 1);
 			intent.putExtra(Constants.KEY_MESSAGE, message);
 		}
-		intent.putExtra(Constants.KEY_SPLASH_STATE, SplashNewActivity.State.SPLASH_LS.getOrdinal());
 		activity.startActivity(intent);
 		activity.overridePendingTransition(R.anim.left_in, R.anim.left_out);
 
@@ -285,11 +287,11 @@ public class HomeUtil {
 	}
 
 	private ArrayList<Marker> markersSavedAddresses = new ArrayList<>();
-	public void displaySavedAddressesAsFlags(Activity activity, ASSL assl, GoogleMap map, boolean showAddress){
+	public void displaySavedAddressesAsFlags(Activity activity, ASSL assl, GoogleMap map, boolean showAddress, PassengerScreenMode passengerScreenMode){
 		try {
 			if(map != null){
 				removeSavedAddress(map);
-				if(Data.autoData.getUseRecentLocAtRequest() == 1){
+				if(passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getUseRecentLocAtRequest() == 1){
 					if (!Prefs.with(activity).getString(SPLabels.ADD_HOME, "").equalsIgnoreCase("")) {
 						String homeString = Prefs.with(activity).getString(SPLabels.ADD_HOME, "");
 						SearchResult searchResult = new Gson().fromJson(homeString, SearchResult.class);
@@ -347,11 +349,11 @@ public class HomeUtil {
 
 
 	private ArrayList<Marker> markersPointsOfInterest = new ArrayList<>();
-	public void displayPointOfInterestMarkers(Activity activity, ASSL assl, GoogleMap map){
+	public void displayPointOfInterestMarkers(Activity activity, ASSL assl, GoogleMap map, PassengerScreenMode passengerScreenMode){
 		try {
 			if (map != null) {
 				removeMarkersPointsOfInterest(map);
-				if (Data.autoData.getUseRecentLocAtRequest() == 1) {
+				if (passengerScreenMode == PassengerScreenMode.P_INITIAL && Data.autoData.getUseRecentLocAtRequest() == 1) {
 					final LatLng mapTarget = map.getCameraPosition().target;
 					Collections.sort(Data.userData.getPointsOfInterestAddresses(), new Comparator<FetchUserAddressResponse.Address>() {
 						@Override
@@ -418,11 +420,11 @@ public class HomeUtil {
 		if (Data.isFuguChatEnabled()) {
 			try {
 				if(productType == ProductType.MENUS.getOrdinal()){
-					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
+					HippoConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_MENUS_DELIVERY_LATE());
 				} else if(productType == ProductType.DELIVERY_CUSTOMER.getOrdinal()){
-					FuguConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_DELIVERY_CUSTOMER_DELIVERY_LATE());
+					HippoConfig.getInstance().openChat(activity, Data.CHANNEL_ID_FUGU_DELIVERY_CUSTOMER_DELIVERY_LATE());
 				} else {
-					FuguConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
+					HippoConfig.getInstance().showConversations(activity,activity.getString(R.string.fugu_support_title));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -523,5 +525,27 @@ public class HomeUtil {
 			}
 		}
 		return paymentOption;
+	}
+
+
+	public static void openHippoTicketSupport(Context context){
+		if(Data.userData != null) {
+			HippoTicketModel hippoTicketModel = new HippoTicketModel(Integer.parseInt(Data.userData.getUserId()), Data.userData.getRegAs());
+			HippoTicketAttributes.Builder builder = new HippoTicketAttributes.Builder();
+			builder.setFaqName(Prefs.with(context).getString(Constants.HIPPO_SUPPORT_FAQ_NAME,
+					context.getString(R.string.customer_hippo_support_faq_name)));
+			HippoConfig.getInstance().showFAQSupport(builder.build(), hippoTicketModel);
+		}
+	}
+
+	public static void openHippoTicketForRide(Context context, int engagementId, int driverId){
+		if(Data.userData != null) {
+			HippoTicketRideModel hippoTicketModel = new HippoTicketRideModel(Integer.parseInt(Data.userData.getUserId()), Data.userData.getRegAs(),
+					driverId, engagementId);
+			HippoTicketAttributes.Builder builder = new HippoTicketAttributes.Builder();
+			builder.setFaqName(Prefs.with(context).getString(Constants.KEY_HIPPO_TICKET_RIDE_FAQ_NAME,
+					context.getString(R.string.hippo_ticket_ride_faq_name)));
+			HippoConfig.getInstance().showFAQSupport(builder.build(), hippoTicketModel);
+		}
 	}
 }

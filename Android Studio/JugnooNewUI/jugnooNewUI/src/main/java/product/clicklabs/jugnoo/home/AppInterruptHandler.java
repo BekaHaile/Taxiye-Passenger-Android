@@ -4,6 +4,8 @@ import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
 import org.json.JSONObject;
 
+import product.clicklabs.jugnoo.promotion.models.Promo;
+
 public interface AppInterruptHandler {
 	
 	void refreshDriverLocations();
@@ -14,11 +16,11 @@ public interface AppInterruptHandler {
 	
 	void rideRequestAcceptedInterrupt(JSONObject jObj);
 	
-	void onNoDriversAvailablePushRecieved(String logMessage);
+	void onNoDriversAvailablePushRecieved(String logMessage, int requestType);
 	
 	void startRideForCustomer(int flag, String message, PlaceOrderResponse.ReferralPopupContent popupContent);
 	
-	void customerEndRideInterrupt(String engagementId);
+	void customerEndRideInterrupt(String engagementId, Promo promo);
 	
 	void onAfterRideFeedbackSubmitted(int givenRating);
 	
@@ -39,4 +41,6 @@ public interface AppInterruptHandler {
 	void onUpdatePoolRideStatus(JSONObject jsonObject);
 
 	void updateGpsLockStatus(int gpsLockStatus);
+
+	void onNoDriverHelpPushReceived(JSONObject jsonObject);
 }

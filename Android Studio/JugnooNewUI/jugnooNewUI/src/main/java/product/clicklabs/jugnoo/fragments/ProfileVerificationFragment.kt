@@ -2,14 +2,14 @@ package product.clicklabs.jugnoo.fragments
 
 import android.graphics.Typeface
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.LinearLayoutManager
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.sabkuchfresh.analytics.GAAction
 import com.sabkuchfresh.analytics.GAAction.PROFILE
 import com.sabkuchfresh.analytics.GAAction.USER

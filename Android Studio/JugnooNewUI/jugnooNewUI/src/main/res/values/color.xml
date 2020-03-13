@@ -312,7 +312,7 @@
     <color name="text_color_fatafat_light">#CC353542</color>
     <color name="text_color_fatafat_bold">#353542</color>
     <color name="fatafat_fab_pressed">#D9353542</color>
-    <color name="text_color_orange">#ff742c</color>
+    <color name="text_color_orange">#fe8252</color>
     <color name="text_color_fugu_secondary">#86868E</color>
 
     <!-- Fatafat tutorial -->
@@ -329,5 +329,7 @@
     <color name="otp_text_color">@color/text_color</color>
     <color name="background_no_net">@null</color>
     <color name="grey_f0">#f0f0f0</color>
+
+    <color name="grey_alpha_66">#44666666</color>
 
 </resources>

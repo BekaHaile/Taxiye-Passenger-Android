@@ -1,7 +1,6 @@
 package com.sabkuchfresh.fatafatchatpay;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,6 +15,7 @@ import com.sabkuchfresh.utils.AppConstant;
 
 import java.util.HashMap;
 
+import androidx.annotation.Nullable;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -25,7 +25,6 @@ import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
-import retrofit.RetrofitError;
 
 /**
  * Created by cl-macmini-01 on 12/18/17.
@@ -114,7 +113,7 @@ public class FatafatChatPayActivity extends RazorpayBaseActivity implements View
                     }
 
                     @Override
-                    public boolean onFailure(final RetrofitError error) {
+                    public boolean onFailure(final Exception error) {
                         return false;
                     }
 

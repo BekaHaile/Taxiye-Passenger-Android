@@ -1,9 +1,9 @@
 package product.clicklabs.jugnoo.promotion.adapters;
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -29,7 +29,7 @@ public class PromotionsFragmentAdapter extends FragmentPagerAdapter{
 	public Fragment getItem(int position) {
 		switch(position){
 			case 0:
-				return new ReferralsFragment();
+				return ReferralsFragment.newInstance();
 
 			case 1:
 				if(Data.userData != null && Data.userData.getReferralActivityEnabled() == 1) {

@@ -11,11 +11,16 @@ import product.clicklabs.jugnoo.R;
 public abstract class PromoCoupon implements Serializable {
 
 	public abstract int getId();
+	public abstract int couponId();
+	public abstract int benefitType();
 	public abstract String getTitle();
 	public abstract Double getDiscount();
 	public abstract Integer getMasterCoupon();
 	public abstract boolean equals(Object o);
 	public abstract Integer getIsSelected();
+	public abstract boolean isScratched();
+	public abstract void setIsScratched(int isScratched);
+	public abstract Integer getCouponCardType();
 	public abstract Integer getIsValid();
 	public abstract int getType();
 	public abstract double getDropRadius();

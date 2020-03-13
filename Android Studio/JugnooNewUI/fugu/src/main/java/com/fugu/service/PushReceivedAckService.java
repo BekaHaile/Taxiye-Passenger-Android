@@ -2,19 +2,15 @@ package com.fugu.service;
 
 import android.app.Service;
 import android.content.Intent;
-import android.location.Location;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
-import com.fugu.database.CommonData;
 import com.fugu.retrofit.APIError;
 import com.fugu.retrofit.CommonParams;
 import com.fugu.retrofit.CommonResponse;
 import com.fugu.retrofit.ResponseResolver;
 import com.fugu.retrofit.RestClient;
 import com.fugu.utils.FuguLog;
-
-import java.util.HashMap;
 
 /**
  * Created by gurmail on 22/06/18.

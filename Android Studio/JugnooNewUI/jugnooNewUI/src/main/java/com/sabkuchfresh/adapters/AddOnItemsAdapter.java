@@ -32,12 +32,15 @@ public class AddOnItemsAdapter extends BaseAdapter {
     private LayoutInflater mInflater;
     private List<SubItem> subItems;
     private MealAdapter.Callback callback;
+    private String currencyCode, currency;
 
-    public AddOnItemsAdapter(Context context, ArrayList<SubItem> subItems, MealAdapter.Callback callback) {
+    public AddOnItemsAdapter(Context context, ArrayList<SubItem> subItems, MealAdapter.Callback callback, String currencyCode, String currency) {
         this.context = context;
         this.mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.subItems = subItems;
         this.callback = callback;
+        this.currencyCode = currencyCode;
+        this.currency = currency;
     }
 
     public synchronized void setResults(ArrayList<SubItem> subItems){
@@ -87,9 +90,8 @@ public class AddOnItemsAdapter extends BaseAdapter {
 
         mHolder.textViewItemName.setText(subItem.getSubItemName());
         mHolder.textViewItemUnit.setText(subItem.getBaseUnit());
-        mHolder.textViewItemPrice.setText(String.format(context.getResources().getString(R.string.rupees_value_format),
-                Utils.getMoneyDecimalFormat().format(subItem.getPrice())));
 
+        mHolder.textViewItemPrice.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(subItem.getPrice(), currencyCode, currency));
 
         mHolder.imageViewPlus.setImageResource(R.drawable.ic_plus_dark_selector);
         mHolder.linearLayoutQuantitySelector.setVisibility(View.VISIBLE);

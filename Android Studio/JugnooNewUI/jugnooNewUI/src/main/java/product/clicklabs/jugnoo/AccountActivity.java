@@ -2,20 +2,24 @@ package product.clicklabs.jugnoo;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,10 +49,14 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import product.clicklabs.jugnoo.adapters.AccountMenuItemsAdapter;
+import product.clicklabs.jugnoo.adapters.GenderDropdownAdapter;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.config.Config;
@@ -68,9 +76,12 @@ import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.DocumentData;
+import product.clicklabs.jugnoo.retrofit.model.Gender;
+import product.clicklabs.jugnoo.retrofit.model.GenderValues;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.DateOperations;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.FBAccountKit;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -147,6 +158,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private PermissionCommon permissionCommon;
     private Picker picker;
     private ImageCompression imageCompressionTask;
+
+    private AppCompatSpinner spinnerGender;
+    private EditText etDOB;
 
     private RelativeLayout relativeLayoutProfileVerification;
     private TextView textViewProfileVerification;
@@ -518,7 +532,17 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 z&& Data.userData.phoneNo.equalsIgnoreCase("+91" + phoneNoChanged)) {
                             Utils.showToast(AccountActivity.this, getString(R.string.nothing_changed));
                         }*/ else {
-                            String finalPhoneNoChanged = phoneNoChanged;
+							if (spinnerGender.isEnabled() && Prefs.with(AccountActivity.this).getInt(Constants.KEY_CUSTOMER_GENDER_FILTER, 0) == 1
+									&& selectedGenderPosition == 0) {
+								Utils.showToast(AccountActivity.this, getString(R.string.please_select_gender));
+								return;
+							}
+							if (etDOB.isEnabled() && Prefs.with(AccountActivity.this).getInt(Constants.KEY_CUSTOMER_DOB_INPUT, 0) == 1
+									&& etDOB.getText().toString().isEmpty()) {
+								Utils.showToast(AccountActivity.this, getString(R.string.please_enter_date_of_birth));
+								return;
+							}
+                        	String finalPhoneNoChanged = phoneNoChanged;
                             boolean phoneEdited = !Data.userData.phoneNo.equalsIgnoreCase(countryCode + finalPhoneNoChanged);
                             if(phoneEdited && Data.userData.getRegAs() == 1
                                     && Prefs.with(AccountActivity.this).getInt(Constants.KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT, 0) == 1){
@@ -545,6 +569,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         editTextUserName.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextEmail.setEnabled(true);
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        if(Data.userData.getGender() == 0) {
+                            spinnerGender.setEnabled(true);
+                            spinnerGender.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        }
+                        if(TextUtils.isEmpty(Data.userData.getDateOfBirth())) {
+                            etDOB.setEnabled(true);
+                            etDOB.setBackgroundResource(R.drawable.bg_white_orange_bb);
+                        }
                         editTextPhone.setEnabled(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1);
                         tvCountryCode.setEnabled(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1);
                         if(Prefs.with(AccountActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1) {
@@ -859,6 +891,31 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 return false;
             }
         });
+
+        spinnerGender = findViewById(R.id.spinnerGender); spinnerGender.setVisibility(View.GONE);
+        etDOB = findViewById(R.id.etDOB); etDOB.setVisibility(View.GONE);
+        spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedGenderPosition = i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        ArrayList<Gender> genders = new ArrayList<>();
+        genders.add(new Gender(0, getString(R.string.select_gender)));
+        genders.add(new Gender(GenderValues.MALE.getType(), getString(R.string.male)));
+        genders.add(new Gender(GenderValues.FEMALE.getType(), getString(R.string.female)));
+        genders.add(new Gender(GenderValues.OTHER.getType(), getString(R.string.others)));
+
+        ArrayAdapter<Gender> adapter = new GenderDropdownAdapter(this, android.R.layout.simple_spinner_dropdown_item, genders, selectedGenderPosition);
+        spinnerGender.setAdapter(adapter);
+        etDOB.setOnClickListener(view -> openDatePicker());
+        etDOB.setTypeface(Fonts.mavenMedium(this));
+
         relativeLayoutProfileVerification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -967,6 +1024,21 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             editTextUserName.setError(null);
             editTextEmail.setError(null);
             editTextPhone.setError(null);
+            spinnerGender.setEnabled(false); spinnerGender.setBackgroundResource(R.drawable.background_white);
+            etDOB.setEnabled(false); etDOB.setBackgroundResource(R.drawable.background_white);
+
+            selectedGenderPosition = Data.userData.getGender();
+            spinnerGender.setSelection(Data.userData.getGender());
+
+            if(!TextUtils.isEmpty(Data.userData.getDateOfBirth())) {
+                etDOB.setText(DateOperations.utcToLocalWithTZFallback(Data.userData.getDateOfBirth()).split(" ")[0]);
+            } else {
+                etDOB.setText("");
+            }
+
+            spinnerGender.setVisibility(Prefs.with(this).getInt(Constants.KEY_CUSTOMER_GENDER_FILTER, 0) == 0 ? View.GONE : View.VISIBLE);
+            etDOB.setVisibility(Prefs.with(this).getInt(Constants.KEY_CUSTOMER_DOB_INPUT, 0) == 0 ? View.GONE : View.VISIBLE);
+
 
             setUserNameToFields();
             if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
@@ -1134,6 +1206,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             params.put(Constants.KEY_UPDATED_PHONE_NO, updatedPhone);
             params.put(Constants.KEY_UPDATED_COUNTRY_CODE, countryCode);
 
+            if(Data.userData.getGender() == 0 && selectedGenderPosition != Data.userData.getGender()){
+                params.put(Constants.KEY_GENDER, String.valueOf(selectedGenderPosition));
+            }
+            if(TextUtils.isEmpty(Data.userData.getDateOfBirth()) && !etDOB.getText().toString().equalsIgnoreCase(Data.userData.getDateOfBirth())){
+                params.put(Constants.KEY_DATE_OF_BIRTH, etDOB.getText().toString());
+            }
+
             new HomeUtil().putDefaultParams(params);
             RestClient.getApiService().updateUserProfile(params, new Callback<SettleUserDebt>() {
                 @Override
@@ -1165,6 +1244,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                 updateSubscriptionMessage(updatedName);
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
+                                if(Data.userData.getGender() == 0){
+                                    Data.userData.setGender(selectedGenderPosition);
+                                }
+                                if(TextUtils.isEmpty(Data.userData.getDateOfBirth())){
+                                    Data.userData.setDateOfBirth(etDOB.getText().toString());
+                                }
+
                                 setUserNameToFields();
                                 if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
                                         && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
@@ -1234,6 +1320,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
 
+                DialogPopup.showLoadingDialog(this, "Loading...");
                 new HomeUtil().putDefaultParams(params);
                 RestClient.getApiService().reloadMyProfile(params, new Callback<SettleUserDebt>() {
                     @Override
@@ -1263,6 +1350,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                     Data.userData.userImage = userImage;
                                     Data.userData.setCountryCode(countryCode);
                                     Data.userData.emailVerificationStatus = emailVerificationStatus;
+                                    if(Data.userData != null) {
+                                        Data.userData.setGender(jObj.optInt(Constants.KEY_GENDER, Data.userData.getGender()));
+                                        Data.userData.setDateOfBirth(jObj.optString(Constants.KEY_DATE_OF_BIRTH, Data.userData.getDateOfBirth()));
+                                    }
 
                                     setUserData();
 
@@ -1273,11 +1364,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         } catch (Exception exception) {
                             exception.printStackTrace();
                         }
+                        DialogPopup.dismissLoadingDialog();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
                         Log.e(TAG, "reloadMyProfile error="+error.toString());
+                        DialogPopup.dismissLoadingDialog();
                     }
                 });
             }
@@ -1699,6 +1792,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     try {
                         JSONObject jObj = new JSONObject(responseStr);
                         Prefs.with(AccountActivity.this).save(Constants.KEY_LOGIN_CHANNEL, jObj.optInt(Constants.KEY_LOGIN_CHANNEL, 0));
+
+                        JSONParser.allowedAuthChannelTimeConfigVariables(AccountActivity.this, jObj);
+
                         setEditPhoneUI();
                     }catch (Exception e){
                         e.printStackTrace();
@@ -1741,6 +1837,26 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     @Override
     public void onSelectCountry(Country country) {
         tvCountryCode.setText(country.getDialCode());
+    }
+
+    private int selectedGenderPosition = 0;
+    private Calendar calendar = Calendar.getInstance();
+    private void openDatePicker(){
+        DatePickerDialog.OnDateSetListener onDateSetListener = (datePicker, year, monthOfYear, dayOfMonth) -> {
+            if(calendar != null){
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, monthOfYear);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                etDOB.setText(new SimpleDateFormat(Constants.DOB_DATE_FORMAT, Locale.ENGLISH).format(calendar.getTime()));
+            }
+        };
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.DatePickerDialogTheme, onDateSetListener,
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+        datePickerDialog.getDatePicker().setMinDate((long) (System.currentTimeMillis() - (3.154e+12)));
+        datePickerDialog.show();
+
     }
 
     public void openProfileVerificationFragment(FragmentActivity activity, View container, boolean addFrag) {

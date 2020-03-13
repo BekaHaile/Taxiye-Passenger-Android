@@ -1,7 +1,6 @@
 package com.sabkuchfresh.home;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
@@ -10,11 +9,11 @@ import com.sabkuchfresh.feed.ui.api.ApiName;
 
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.home.FABViewTest;
 import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
-import retrofit.RetrofitError;
 
 /**
  * Created by Parminder Saini on 19/01/18.
@@ -93,7 +92,7 @@ public class OfferingsVisibilityController {
                    }
 
                    @Override
-                   public boolean onFailure(RetrofitError error) {
+                   public boolean onFailure(Exception error) {
                        isApiInProgress = false;
                        return true;
                    }

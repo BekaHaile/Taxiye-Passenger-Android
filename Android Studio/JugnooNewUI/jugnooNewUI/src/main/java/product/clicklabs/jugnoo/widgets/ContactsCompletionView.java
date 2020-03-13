@@ -36,7 +36,7 @@ public class ContactsCompletionView extends TokenCompleteTextView<ContactBean> {
 
 	@Override
 	protected ContactBean defaultObject(String completionText) {
-		return new ContactBean("", "","", "", ContactBean.ContactBeanViewType.CONTACT);
+		return new ContactBean("", "","", "", ContactBean.ContactBeanViewType.CONTACT, null, null);
 	}
 
 }

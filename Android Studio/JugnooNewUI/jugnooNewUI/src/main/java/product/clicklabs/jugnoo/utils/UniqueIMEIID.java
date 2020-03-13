@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
@@ -43,10 +43,10 @@ public class UniqueIMEIID {
 		String suffix = BuildConfig.DEBUG ? BuildConfig.FLAVOR:"";
 
 		androidSecureId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		if(!TextUtils.isEmpty(imei))return imei+suffix+"lkj";
-		if(!TextUtils.isEmpty(serial))return serial+suffix+"lkj";
+		if(!TextUtils.isEmpty(imei))return imei;
+		if(!TextUtils.isEmpty(serial))return serial;
 
-		return androidSecureId+suffix+"lkj";
+		return androidSecureId;
 
 
 

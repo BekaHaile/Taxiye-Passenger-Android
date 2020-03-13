@@ -2,11 +2,11 @@ package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
@@ -111,11 +111,12 @@ public class MenuBar {
 
 			recyclerViewMenu.setAdapter(menuAdapter);
 			setProfileData();
+
+			setActivityNames(itemsToShow);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		setActivityNames();
 
 		menuLayout.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -124,7 +125,6 @@ public class MenuBar {
 			}
 		});
 
-		setupFreshUI();
 	}
 
 
@@ -189,31 +189,33 @@ public class MenuBar {
 	}
 
 
-	private void setActivityNames(){
+	private void setActivityNames(ArrayList<MenuInfo> menuInfos){
 		try {
-			for(int i=0; i<Data.userData.getMenuInfoList().size(); i++){
-                if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.GAME.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_PLAY = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_WALLET = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_INBOX = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_PROMOTIONS = Data.userData.getMenuInfoList().get(i).getName();
-                }else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
-					MyApplication.getInstance().ACTIVITY_NAME_OFFERS = Data.userData.getMenuInfoList().get(i).getName();
-				} else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_HISTORY = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.REFER_A_DRIVER.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_REFER_A_DRIVER = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.SUPPORT.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_SUPPORT = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.ABOUT.getTag())){
-                    MyApplication.getInstance().ACTIVITY_NAME_ABOUT = Data.userData.getMenuInfoList().get(i).getName();
-                } else if(Data.userData.getMenuInfoList().get(i).getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())){
-					MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR = Data.userData.getMenuInfoList().get(i).getName();
+			for(MenuInfo menuInfo : menuInfos){
+                if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.GAME.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_PLAY = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.FREE_RIDES_NEW.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_FREE_RIDES = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.WALLET.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_WALLET = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.INBOX.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_INBOX = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_PROMOTIONS = menuInfo.getName();
+                }else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.OFFERS.getTag())){
+					MyApplication.getInstance().ACTIVITY_NAME_OFFERS = menuInfo.getName();
+				} else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.HISTORY.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_HISTORY = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.REFER_A_DRIVER.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_REFER_A_DRIVER = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.SUPPORT.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_SUPPORT = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.ABOUT.getTag())){
+                    MyApplication.getInstance().ACTIVITY_NAME_ABOUT = menuInfo.getName();
+                } else if(menuInfo.getTag().equalsIgnoreCase(MenuInfoTags.JUGNOO_STAR.getTag())){
+					MyApplication.getInstance().ACTIVITY_NAME_JUGNOO_STAR = menuInfo.getName();
 				}
             }
 		} catch (Exception e) {
@@ -241,17 +243,11 @@ public class MenuBar {
 			}
 		}
 
+
 		return itemsToShow;
 	}
 
 
-	public void setupFreshUI(){
-		try {
-			menuAdapter.setList(getSideMenuList());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	public Activity getActivity(){
 		return activity;

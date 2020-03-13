@@ -5,11 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.StyleRes;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.StyleRes;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 
 import com.sabkuchfresh.adapters.FreshSortingAdapter;
-import com.sabkuchfresh.feed.utils.FeedUtils;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.SortResponseModel;
 

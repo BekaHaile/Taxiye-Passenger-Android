@@ -1,44 +1,22 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.menus.Category;
 import com.sabkuchfresh.retrofit.model.menus.Item;
-import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
-import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
-import com.sabkuchfresh.retrofit.model.menus.Subcategory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.utils.ASSL;
-import product.clicklabs.jugnoo.utils.Fonts;
-import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.Prefs;
-import product.clicklabs.jugnoo.utils.Utils;
 
 
 /**

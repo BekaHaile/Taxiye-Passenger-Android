@@ -38,11 +38,20 @@
         app:pstsUnderlineHeight="0px" />
 
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tabs"/>
+
+
+    <RelativeLayout
+        android:id="@+id/rlContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:soundEffectsEnabled="false"
+        android:layout_below="@+id/topBar"
+        android:visibility="gone"/>
 
 
     <ImageView

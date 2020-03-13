@@ -19,18 +19,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -58,8 +58,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
 import com.facebook.CallbackManager;
-import com.fugu.FuguNotificationConfig;
 import com.google.android.gms.analytics.ecommerce.Product;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
@@ -68,6 +68,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
+import com.hippo.HippoNotificationConfig;
 import com.jugnoo.pay.activities.PaySDKUtils;
 import com.jugnoo.pay.models.MessageRequest;
 import com.razorpay.Checkout;
@@ -224,7 +225,7 @@ import product.clicklabs.jugnoo.utils.Prefs;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys {
+public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys, FeedbackFragment.ParentActivityMethods {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -259,7 +260,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private View topView;
     private FetchFeedbackResponse.Review currentReview;
-    private FuguNotificationConfig fuguNotificationConfig  = new FuguNotificationConfig();
+    private HippoNotificationConfig fuguNotificationConfig  = new HippoNotificationConfig();
     /**
      * this holds the reference for the Otto Bus which we declared in LavocalApplication
      */
@@ -302,6 +303,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private KeyboardLayoutListener.KeyBoardStateHandler mChildKeyboardListener;
     private boolean menusIsOpenMerchantInfo = true; // keep default value as true ( to account for deepIndex cases )
     private VendorDirectSearch vendorDirectSearch;
+    private String currencyCode, currency;
 
 
     public View getFeedHomeAddPostView() {
@@ -580,7 +582,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         backPressedCount = 0;
 
         if(Data.getFuguChatBundle()!=null) {
-            fuguNotificationConfig.handleFuguPushNotification(FreshActivity.this, Data.getFuguChatBundle());
+            fuguNotificationConfig.handleHippoPushNotification(FreshActivity.this, Data.getFuguChatBundle());
             Data.setFuguChatBundle(null);
         }
 
@@ -1396,7 +1398,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
-    public Product product;
+//    public Product product;
     public List<Product> productList = new ArrayList<>();
 
     public List<Product> getProduct() {
@@ -1833,7 +1835,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 topBar.imageViewBack.setVisibility(isDeliveryOpenInBackground()?View.VISIBLE:View.GONE);
                 drawerLayout.setDrawerLockMode(isDeliveryOpenInBackground()?DrawerLayout.LOCK_MODE_LOCKED_CLOSED:DrawerLayout.LOCK_MODE_UNLOCKED, GravityCompat.START);
                 topBar.title.setVisibility(View.VISIBLE);
-                topBar.title.setText(Data.getFeedName(this));
+                topBar.title.setText(R.string.delivery_new_name);
 
                 if (Prefs.with(FreshActivity.this).getInt(Constants.FAB_ENABLED_BY_USER, 1) == 1) {
                     fabViewTest.setRelativeLayoutFABTestVisibility(isDeliveryOpenInBackground()?View.GONE:View.VISIBLE);
@@ -2197,8 +2199,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             textViewMinOrderVis = View.VISIBLE;
                         } else if (totalPrice < getVendorOpened().getMinimumOrderAmount()) {
                             textViewMinOrderVis = View.VISIBLE;
-                            textViewMinOrder.setText(getString(R.string.minimum_order) + " "
-                                    + getString(R.string.rupees_value_format, Utils.getMoneyDecimalFormatWithoutFloat().format(getVendorOpened().getMinimumOrderAmount())));
+
+                            textViewMinOrder.setText(getString(R.string.minimum_order).concat(" ").concat(Utils.formatCurrencyAmount(getVendorOpened().getMinimumOrderAmount(), currencyCode, currency)));
+
                         } else if (totalQuantity > 0 && getVendorOpened().getShowFreeDeliveryText() == 1
                                 && totalPrice < getVendorOpened().getDeliveryAmountThreshold()) {
                             textViewMinOrderVis = View.VISIBLE;
@@ -2605,7 +2608,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      * Method used to open feedback screen
      */
     public void openFeedback(String clientId) {
-        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,clientId);
+        LoginResponse.FeedbackData feedbackData = null;
+
+        if (clientId.equals(Config.getFreshClientId())) {
+            feedbackData = Data.getFreshData();
+        } else if (clientId.equals(Config.getMealsClientId())) {
+            feedbackData = Data.getMealsData();
+        } else if (clientId.equals(Config.getGroceryClientId())) {
+            feedbackData = Data.getGroceryData();
+        } else if (clientId.equals(Config.getMenusClientId())) {
+            feedbackData = Data.getMenusData();
+        } else if (clientId.equals(Config.getDeliveryCustomerClientId())) {
+            feedbackData = Data.getDeliveryCustomerData();
+        } else if (clientId.equals(Config.getFeedClientId())) {
+            feedbackData = Data.getFeedData();
+        }
+        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,clientId, feedbackData, true);
     }
 
     public void openAddToAddressBook(Bundle bundle) {
@@ -2720,7 +2738,12 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             getMenusFragment().switchCategory(null);
             return;
         } else if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            finishWithToast();
+            if (getMenusFragment() != null && getMenusFragment().mBannerId != -1) {
+                getMenusFragment().mBannerId = -1;
+                getMenusFragment().getAllMenus(true, getSelectedLatLng(), false, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
+            } else {
+                finishWithToast();
+            }
             return;
         } else {
             if (getTopFragment() instanceof FreshSearchFragment) {
@@ -2883,11 +2906,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void setSuperCategoriesData(SuperCategoriesData superCategoriesData) {
+        currencyCode = getString(R.string.default_currency);
+        currency = getString(R.string.default_currency);
         this.superCategoriesData = superCategoriesData;
     }
 
     public void setProductsResponse(ProductsResponse productsResponse) {
         this.productsResponse = productsResponse;
+        currencyCode = getString(R.string.default_currency);
+        currency = getString(R.string.default_currency);
         mContactNo = productsResponse.getSupportContact();
     }
 
@@ -2897,6 +2924,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setMenuProductsResponse(VendorMenuResponse vendorMenuResponse) {
         this.vendorMenuResponse = vendorMenuResponse;
+        currencyCode = vendorMenuResponse.getCurrencyCode();
+        currency = vendorMenuResponse.getCurrency();
         mContactNo = vendorMenuResponse.getSupportContact();
     }
 
@@ -2914,6 +2943,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public void setUserCheckoutResponse(UserCheckoutResponse userCheckoutResponse) {
         this.userCheckoutResponse = userCheckoutResponse;
+        currencyCode = userCheckoutResponse.getCurrencyCode();
+        currency = userCheckoutResponse.getCurrency();
     }
 
     public RelativeLayout getRelativeLayoutContainer() {
@@ -3296,6 +3327,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     private void openPushDialog() {
         dismissPushDialog(false);
+		String pushDialogContent = Prefs.with(this).getString(Constants.SP_PUSH_DIALOG_CONTENT,
+				Constants.EMPTY_JSON_OBJECT);
         PushDialog dialog = new PushDialog(FreshActivity.this, new PushDialog.Callback() {
             @Override
             public void onButtonClicked(int deepIndex, String url, int restaurantId) {
@@ -3314,7 +3347,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                     Utils.openUrl(FreshActivity.this, url);
                 }
             }
-        }).show();
+        }).show(pushDialogContent);
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         }
@@ -3645,7 +3678,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             if(getVendorOpened().getOutOfRadius()==1 && isDeliveryOpenInBackground() &&  getMenusFragment()!=null && getMenusFragment().isCustomOrderEnabled()
                     && Data.getFeedData()!=null){
                 FreshCheckoutMergedFragment.orderViaFatafat(this, FreshCheckoutMergedFragment.prepareItemsInCartForMenus(this,null),null,
-                        this,updateCartValuesGetTotalPrice().first);
+                        this,updateCartValuesGetTotalPrice().first, getString(R.string.default_currency), getString(R.string.default_currency));
                 return;
             }
 
@@ -3728,8 +3761,10 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return vendorOpened;
     }
 
-    public void setVendorOpened(MenusResponse.Vendor vendorOpened) {
+    public void setVendorOpened(MenusResponse.Vendor vendorOpened, String currencyCode, String currency) {
         this.vendorOpened = vendorOpened;
+        this.currencyCode = currencyCode;
+        this.currency = currency;
         getMenusCart().updateRestaurant(vendorOpened);
     }
 
@@ -3741,6 +3776,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     public void setMenusResponse(MenusResponse menusResponse) {
+        currencyCode = getString(R.string.default_currency);
+        currency = getString(R.string.default_currency);
         this.menusResponse = menusResponse;
     }
 
@@ -5211,11 +5248,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     private Handler handler;
+
+    @Override
+    public void setTitle(final String text) {
+        getTopBar().title.setText(text);
+    }
+
     public Handler getHandler(){
         if(handler == null){
             handler = new Handler();
         }
         return handler;
+    }
+
+    @Override
+    public View getFragmentContainer() {
+        return getRelativeLayoutContainer();
     }
 
     public double getTotalPrice(){

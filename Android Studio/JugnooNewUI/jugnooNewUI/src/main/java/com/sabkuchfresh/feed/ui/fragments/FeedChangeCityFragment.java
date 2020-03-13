@@ -1,9 +1,9 @@
 package com.sabkuchfresh.feed.ui.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -31,7 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import product.clicklabs.jugnoo.R;
-import retrofit.RetrofitError;
 
 /**
  * Created by Parminder Singh on 4/10/17.
@@ -155,7 +154,7 @@ public class FeedChangeCityFragment extends FeedBaseFragment {
             }
 
             @Override
-            public boolean onFailure(RetrofitError error) {
+            public boolean onFailure(Exception error) {
                 return false;
             }
 

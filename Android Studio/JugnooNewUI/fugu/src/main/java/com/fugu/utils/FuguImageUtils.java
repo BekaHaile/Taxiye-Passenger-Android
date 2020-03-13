@@ -24,9 +24,9 @@ import android.provider.OpenableColumns;
 import android.renderscript.Allocation;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
-import android.support.v4.content.FileProvider;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -44,7 +44,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fugu.BuildConfig;
 import com.fugu.FuguConfig;
 import com.fugu.R;
 import com.fugu.adapter.FuguAttachmentAdapter;
@@ -202,7 +201,7 @@ public class FuguImageUtils implements FuguAppConstant, Animation.AnimationListe
         FuguLog.e(TAG, "startCamera");
 
         /** Code to check whether the Location Permission is Granted */
-        String[] permissionsRequired = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] permissionsRequired = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA};
 
         /*  Check if the Permission for the Camera was Granted  */
         if (!FuguConfig.getInstance().askUserToGrantPermission(activity,

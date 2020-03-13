@@ -1,7 +1,7 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,7 +45,7 @@ public class MenusVendorOffersAdapter extends PagerAdapter {
 	public void onBindViewHolder(MenusVendorOffersAdapter.ViewHolderVendorOffer holder, int position) {
 		MenusResponse.BannerInfo bannerInfo = bannerInfos.get(position);
 		if(!TextUtils.isEmpty(bannerInfo.getImageLink())) {
-			Picasso.with(context).load(bannerInfo.getImageLink())
+			Picasso.with(context).load(bannerInfo.getImageLink()).fit()
 					.placeholder(R.drawable.ic_fresh_item_placeholder)
 					.error(R.drawable.ic_fresh_item_placeholder)
 					.into(holder.ivRestImage);

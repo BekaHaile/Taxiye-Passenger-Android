@@ -2,7 +2,7 @@ package product.clicklabs.jugnoo.adapters;
 
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,8 +42,6 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 		RecyclerView.LayoutParams layoutParams = new RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
 		itemView.setLayoutParams(layoutParams);
-		ASSL.DoMagic(itemView);
-
 
 		return new ChatViewHolder(itemView, context);
 	}
