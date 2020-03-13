@@ -2610,7 +2610,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         tvSnackUserNotVerified = findViewById(R.id.tvSnackUserNotVerified);
         tvSnackUserNotVerified.setTypeface(Fonts.mavenMedium(this));
-        if (Data.userData != null && (Data.autoData.getCustomerVerificationStatus() == DocStatuses.REJECTED.getStatus() || Data.autoData.getCustomerVerificationStatus() == DocStatuses.NOT_UPLOADED.getStatus())) {
+        if (Prefs.with(this).getInt(SHOW_CUSTOMER_VERIFICATION,0)==1
+                && Data.userData != null
+                && (Data.autoData.getCustomerVerificationStatus() == DocStatuses.REJECTED.getStatus() || Data.autoData.getCustomerVerificationStatus() == DocStatuses.NOT_UPLOADED.getStatus())) {
             tvSnackUserNotVerified.setVisibility(View.VISIBLE);
             tvSnackUserNotVerified.setOnClickListener(new OnClickListener() {
                 @Override
@@ -2624,7 +2626,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         } else {
             tvSnackUserNotVerified.setVisibility(View.GONE);
         }
-        if (Data.userData != null && (Data.autoData.getCustomerVerificationStatus() == DocStatuses.REJECTED.getStatus() || Data.autoData.getCustomerVerificationStatus() == DocStatuses.NOT_UPLOADED.getStatus())) {
+        if (Prefs.with(this).getInt(SHOW_CUSTOMER_VERIFICATION,0)==1
+                && Data.userData != null && (Data.autoData.getCustomerVerificationStatus() == DocStatuses.REJECTED.getStatus() || Data.autoData.getCustomerVerificationStatus() == DocStatuses.NOT_UPLOADED.getStatus())) {
             tvSnackUserNotVerified.setVisibility(View.VISIBLE);
             tvSnackUserNotVerified.setOnClickListener(new OnClickListener() {
                 @Override

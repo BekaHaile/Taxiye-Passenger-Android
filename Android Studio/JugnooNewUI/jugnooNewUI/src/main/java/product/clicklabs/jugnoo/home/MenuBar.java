@@ -34,6 +34,9 @@ import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
+
+import static product.clicklabs.jugnoo.Constants.SHOW_CUSTOMER_VERIFICATION;
 
 /**
  * Created by shankar on 4/8/16.
@@ -82,12 +85,14 @@ public class MenuBar {
 		tvVerificationNote = drawerLayout.findViewById(R.id.tvVerificationNote);
 		viewVerifiedIcon= drawerLayout.findViewById(R.id.viewVerifiedIcon);
 		tvVerificationNote.setTypeface(Fonts.mavenRegular(activity));
-		if (Data.autoData!= null && Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.REJECTED.getStatus() || Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.NOT_UPLOADED.getStatus()) {
+		if (Prefs.with(activity).getInt(SHOW_CUSTOMER_VERIFICATION,0)==1 && (Data.autoData!= null
+				&& Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.REJECTED.getStatus()
+				|| Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.NOT_UPLOADED.getStatus())) {
 			tvVerificationNote.setVisibility(View.VISIBLE);
 			Animation animation = AnimationUtils.loadAnimation(activity, R.anim.blink);
 			tvVerificationNote.setAnimation(animation);
 			viewVerifiedIcon.setVisibility(View.GONE);
-		} else if (Data.autoData!= null && Data.autoData.getCustomerVerificationStatus() == 1) {
+		} else if (Prefs.with(activity).getInt(SHOW_CUSTOMER_VERIFICATION,0)==1 && Data.autoData!= null && Data.autoData.getCustomerVerificationStatus() == 1) {
 			viewVerifiedIcon.setVisibility(View.VISIBLE);
 			tvVerificationNote.setVisibility(View.GONE);
 			tvVerificationNote.clearAnimation();

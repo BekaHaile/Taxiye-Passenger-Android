@@ -916,6 +916,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         etDOB.setOnClickListener(view -> openDatePicker());
         etDOB.setTypeface(Fonts.mavenMedium(this));
 
+        if(Prefs.with(this).getInt(Constants.SHOW_CUSTOMER_VERIFICATION,0)==1)
+            relativeLayoutProfileVerification.setVisibility(View.VISIBLE);
+        else
+            relativeLayoutProfileVerification.setVisibility(View.GONE);
+
         relativeLayoutProfileVerification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
