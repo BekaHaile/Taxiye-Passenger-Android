@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.AccountActivity;
 import product.clicklabs.jugnoo.AppMenuTagNames;
+import product.clicklabs.jugnoo.BuildConfig;
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
@@ -30,6 +34,9 @@ import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Prefs;
+
+import static product.clicklabs.jugnoo.Constants.SHOW_CUSTOMER_VERIFICATION;
 
 /**
  * Created by shankar on 4/8/16.
@@ -53,9 +60,10 @@ public class MenuBar {
 
 	public MenuAdapter menuAdapter;
 	private ImageView imageViewProfile;
-	private TextView textViewUserName,textViewViewPhone;
+	private TextView textViewUserName,textViewViewPhone,tvVerificationNote;
 	private View viewStarIcon;
 	private RelativeLayout relativeLayout;
+	private ImageView viewVerifiedIcon;
 
 	public MenuBar(Activity activity, DrawerLayout rootView){
 		this.activity = activity;
@@ -74,7 +82,25 @@ public class MenuBar {
 		recyclerViewMenu.setItemAnimator(new DefaultItemAnimator());
 		recyclerViewMenu.setHasFixedSize(false);
 		imageViewProfile = (ImageView) drawerLayout.findViewById(R.id.imageViewProfile);//textViewUserName
-
+		tvVerificationNote = drawerLayout.findViewById(R.id.tvVerificationNote);
+		viewVerifiedIcon= drawerLayout.findViewById(R.id.viewVerifiedIcon);
+		tvVerificationNote.setTypeface(Fonts.mavenRegular(activity));
+		if (Prefs.with(activity).getInt(SHOW_CUSTOMER_VERIFICATION,0)==1 && (Data.autoData!= null
+				&& Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.REJECTED.getStatus()
+				|| Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.NOT_UPLOADED.getStatus())) {
+			tvVerificationNote.setVisibility(View.VISIBLE);
+			Animation animation = AnimationUtils.loadAnimation(activity, R.anim.blink);
+			tvVerificationNote.setAnimation(animation);
+			viewVerifiedIcon.setVisibility(View.GONE);
+		} else if (Prefs.with(activity).getInt(SHOW_CUSTOMER_VERIFICATION,0)==1 && Data.autoData!= null && Data.autoData.getCustomerVerificationStatus() == 1) {
+			viewVerifiedIcon.setVisibility(View.VISIBLE);
+			tvVerificationNote.setVisibility(View.GONE);
+			tvVerificationNote.clearAnimation();
+		} else {
+			viewVerifiedIcon.setVisibility(View.GONE);
+			tvVerificationNote.setVisibility(View.GONE);
+			tvVerificationNote.clearAnimation();
+		}
 		textViewUserName = (TextView) drawerLayout.findViewById(R.id.textViewUserName); textViewUserName.setTypeface(Fonts.mavenMedium(activity));
 		textViewViewPhone = (TextView) drawerLayout.findViewById(R.id.textViewViewPhone); textViewViewPhone.setTypeface(Fonts.mavenRegular(activity));
 		viewStarIcon = (View) drawerLayout.findViewById(R.id.viewStarIcon);

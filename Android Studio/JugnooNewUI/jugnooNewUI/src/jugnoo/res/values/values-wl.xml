@@ -129,6 +129,7 @@
     <integer name="hippo_call_enabled">1</integer>
     <integer name="hide_regions_with_no_drivers">1</integer>
     <integer name="pay_via_upi_enabled">1</integer>
+    <integer name="show_customer_verification">0</integer>
 
     <integer name="customer_dob_input">0</integer>
     <integer name="customer_gender_filter">0</integer>

@@ -2510,4 +2510,27 @@
     <string name="transfer_to">Transfer to</string>
     <string name="select_transfer_to">Select Transfer to</string>
     <string name="store_accepts_online_payment_only">Store accepts online payment only</string>
+    <string name="service_unavailable_in_this_area">Service unavailable in this area</string>
+    <string name="want_to_earn_money_from_transport_business">Want to Earn Money from transport business in your city?</string>
+    <string name="partner_with_jugnoo">Partner with Jugnoo</string>
+
+    <string name="profile_verification">Profile Verification</string>
+    <string name="verification_status">Verification Status</string>
+    <string name="status_colon_approval"><b>Status:</b> %s</string>
+    <string name="please_upload_images">Please upload images before proceeding.</string>
+    <string name="pending">Pending</string>
+    <string name="uploaded">Uploaded</string>
+    <string name="rejected">Rejected</string>
+    <string name="verified">Verified</string>
+    <string name="approval_pending">Approval Pending</string>
+    <string name="rejection_reason">Rejection Reason</string>
+    <string name="upload_pending">Upload Pending</string>
+    <string name="upload_again">Upload Again</string>
+    <string name="doc_status_rejected">Your documents are rejected. Please upload again.</string>
+    <string name="min_documents_required">Please upload %s documents before proceeding.</string>
+    <string name="tap_here_to_verify">Tap here to verify your account</string>
+    <string name="are_you_sure_to_delete_document">Are you sure to delete this document?</string>
+    <string name="your_documents_are_rejected_upload_again">Your documents are rejected due to certain reasons.</string>
+    <string name="user_not_verified_snack">You are not verified yet. Please verify your account.</string>
+
 </resources>

@@ -105,6 +105,7 @@ public class AutoData {
 
     private int newBottomRequestUIEnabled;
     private double initialBidValue, changedBidValue;
+    private int customerVerificationStatus = 0;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -113,7 +114,7 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare, int resendEmailInvoiceEnabled,int bluetoothEnabled) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare, int resendEmailInvoiceEnabled,int bluetoothEnabled,int customerVerificationStatus) {
         this.bluetoothEnabled = bluetoothEnabled;
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
@@ -143,6 +144,7 @@ public class AutoData {
         this.showRegionSpecificFare = showRegionSpecificFare;
         this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
 		defaultServiceType();
+		this.customerVerificationStatus = customerVerificationStatus;
 	}
 
 	public void defaultServiceType() {
@@ -907,5 +909,13 @@ public class AutoData {
 
     public void setRequestLevels(ArrayList<FindADriverResponse.RequestLevels> requestLevels) {
         this.requestLevels = requestLevels;
+    }
+
+    public int getCustomerVerificationStatus() {
+        return customerVerificationStatus;
+    }
+
+    public void setCustomerVerificationStatus(int customerVerificationStatus) {
+        this.customerVerificationStatus = customerVerificationStatus;
     }
 }
