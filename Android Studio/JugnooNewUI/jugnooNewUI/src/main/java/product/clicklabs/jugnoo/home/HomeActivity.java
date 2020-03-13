@@ -241,6 +241,7 @@ import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.emergency.EmergencyDialog;
 import product.clicklabs.jugnoo.emergency.EmergencyDisableDialog;
 import product.clicklabs.jugnoo.fragments.PlaceSearchListFragment;
+import product.clicklabs.jugnoo.fragments.ProfileVerificationFragment;
 import product.clicklabs.jugnoo.fragments.RideSummaryFragment;
 import product.clicklabs.jugnoo.fragments.StarSubscriptionCheckoutFragment;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
@@ -691,6 +692,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private Button buttonConfirmRideType;
     private TextView tvHourlyPackage,tvMultipleStops,tvSafe,tvOneWayTrip,tvRoundTrips,tvAdvanceBookings;
     private String mNotes = "";
+    private TextView tvSnackUserNotVerified;
     private boolean mIsPickup = false, isPickupSet = false;
 
     private  ApiAddHomeWorkAddress apiAddHomeWorkAddress;
@@ -2606,6 +2608,24 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             e.printStackTrace();
         }
 
+        tvSnackUserNotVerified = findViewById(R.id.tvSnackUserNotVerified);
+        tvSnackUserNotVerified.setTypeface(Fonts.mavenMedium(this));
+        if (Prefs.with(this).getInt(SHOW_CUSTOMER_VERIFICATION,0)==1
+                && Data.userData != null
+                && (Data.autoData.getCustomerVerificationStatus() == DocStatuses.REJECTED.getStatus() || Data.autoData.getCustomerVerificationStatus() == DocStatuses.NOT_UPLOADED.getStatus())) {
+            tvSnackUserNotVerified.setVisibility(View.VISIBLE);
+            tvSnackUserNotVerified.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomeActivity.this, AccountActivity.class);
+                    intent.putExtra(ProfileVerificationFragment.class.getSimpleName(), true);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.right_in, R.anim.right_out);
+                }
+            });
+        } else {
+            tvSnackUserNotVerified.setVisibility(View.GONE);
+        }
         relativeLayoutSearchContainerNew = findViewById(R.id.relativeLayoutSearchContainerNew);
         relativeLayoutDestSearchBarNew = findViewById(R.id.relativeLayoutDestSearchBarNew);
         relativeLayoutInitialSearchBarNew = findViewById(R.id.relativeLayoutInitialSearchBarNew);
@@ -10462,13 +10482,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private void setTopBarMenuIcon(){
 		topBar.imageViewMenu.setImageResource(rvRideTypes.getVisibility() == View.VISIBLE
+                || tvSnackUserNotVerified.getVisibility() == View.VISIBLE
 				|| topBar.textViewTitle.getVisibility() == View.VISIBLE ?
 				R.drawable.ic_menu_selector : R.drawable.ic_menu_home_new_selector);
 	}
 
     public void setTopBarTransNewUI() {
 		RelativeLayout.LayoutParams paramsInitial = (RelativeLayout.LayoutParams) initialLayout.getLayoutParams();
-        if(((passengerScreenMode == P_INITIAL && rvRideTypes.getVisibility() == View.GONE)
+        if(((passengerScreenMode == P_INITIAL && rvRideTypes.getVisibility() == View.GONE && tvSnackUserNotVerified.getVisibility() == View.GONE)
 				|| (passengerScreenMode == P_ASSIGNING && relativeLayoutAssigningDropLocationParent.getVisibility() == View.GONE))
 				&& (Data.autoData.getBidInfos() == null || Data.autoData.getBidInfos().size() == 0)
 				&& isNewUI && !confirmedScreenOpened && !scheduleRideOpen && !specialPickupScreenOpened) {

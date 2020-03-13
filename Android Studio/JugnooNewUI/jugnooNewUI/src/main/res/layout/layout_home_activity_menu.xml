@@ -43,6 +43,15 @@
                 android:tag="mwar"/>
 
             <ImageView
+                android:id="@+id/viewVerifiedIcon"
+                android:layout_width="@dimen/px_40"
+                android:layout_height="@dimen/px_40"
+                android:layout_alignEnd="@id/imageViewProfile"
+                android:src="@drawable/ic_checked"
+                android:tag="mwar"
+                android:visibility="gone" />
+
+            <ImageView
                 android:id="@+id/viewStarIcon"
                 android:layout_width="@dimen/px_60"
                 android:layout_height="@dimen/px_60"
@@ -57,6 +66,7 @@
             android:layout_toEndOf="@id/iv_jugnoo_image"
             android:layout_toStartOf="@+id/iv_arrow"
             android:layout_width="wrap_content"
+            android:id="@+id/llDetails"
             android:layout_marginEnd="10px"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -84,7 +94,23 @@
                 android:text="@string/view_account"
                 android:textColor="@color/white"
                 android:textSize="@dimen/px_27"/>
+            <TextView
+                android:id="@+id/tvVerificationNote"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/llDetails"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/px_27"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/dp_4"
+                android:drawablePadding="@dimen/px_5"
+                android:drawableStart="@drawable/ic_info_yellow"
+                android:ellipsize="end"
+                android:text="@string/tap_here_to_verify"/>
         </LinearLayout>
+
+
 
 
         <ImageView

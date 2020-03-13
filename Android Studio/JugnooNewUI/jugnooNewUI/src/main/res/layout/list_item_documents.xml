@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/rideHistoryItem"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/background_white"
+    android:orientation="vertical"
+    android:splitMotionEvents="false">
+
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutImageStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="12dp"
+        android:visibility="visible"
+        >
+
+        <RelativeLayout
+            android:id="@+id/rlAddImage1"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginEnd="14dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/placeholder"
+            android:orientation="vertical"
+            android:padding="0dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/ivSetCapturedImage"
+                android:layout_width="86dp"
+                android:layout_height="86dp"
+                android:layout_centerInParent="true"
+                android:tag="mwar"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/deleteImage1"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="100dp"
+            android:src="@drawable/ic_cross_popup_selector"
+            android:tag="mwar"
+            android:visibility="gone"/>
+
+        <RelativeLayout
+            android:id="@+id/rlAddImage2"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:visibility="gone"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/rlAddImage1"
+            android:background="@drawable/placeholder"
+            android:tag="mwar">
+
+            <ImageView
+                android:id="@+id/ivSetCapturedImage2"
+                android:layout_width="86dp"
+                android:layout_height="86dp"
+                android:layout_centerInParent="true"
+                android:tag="mwar"/>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/deleteImage2"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="216dp"
+            android:src="@drawable/ic_cross_popup_selector"
+            android:tag="mwar"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/imageViewUploadDoc"
+            android:layout_width="95dp"
+            android:layout_height="95dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="14dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@id/rlAddImage2"
+            android:background="@drawable/add_img_selector"
+            android:visibility="visible"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rlDocumentStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:layout_marginStart="26dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/tvDocStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/pending"
+            android:textColor="@color/theme_color"
+            android:textSize="13sp"/>
+
+        <ImageView
+            android:id="@+id/imageViewDocStatusImage"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="4dp"
+            android:layout_toEndOf="@+id/tvDocStatus"
+            android:src="@drawable/orange_cross"
+            android:tag="mwar"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>

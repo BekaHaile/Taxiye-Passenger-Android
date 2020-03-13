@@ -16,6 +16,7 @@ import product.clicklabs.jugnoo.retrofit.model.FareDetailsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FareEstimateResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchActiveLocaleResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchCorporatesResponse;
+import product.clicklabs.jugnoo.retrofit.model.FetchDocumentResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchSubscriptionSavingsResponse;
 import product.clicklabs.jugnoo.retrofit.model.FetchUserAddressResponse;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
@@ -29,6 +30,7 @@ import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
 import product.clicklabs.jugnoo.retrofit.model.ScratchCard;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
+import product.clicklabs.jugnoo.retrofit.model.UploadDocumentResponse;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
@@ -716,4 +718,15 @@ public interface ApiService {
 	@POST("/fetch_customer_referral_info")
 	void fetchCustomerReferralInfo(@FieldMap Map<String, String> params, Callback<ReferralTxnResponse> callback);
 
+    @POST("/customer/upload_document")
+    void uploadVerificationDocuments(@Body MultipartTypedOutput params,
+                           Callback<UploadDocumentResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/fetch_documents")
+    void fetchDocuments(@FieldMap Map<String,String> params,Callback<FetchDocumentResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/customer/delete_document")
+    void deleteDocument(@FieldMap Map<String,String> params, Callback<UploadDocumentResponse> callback);
 }

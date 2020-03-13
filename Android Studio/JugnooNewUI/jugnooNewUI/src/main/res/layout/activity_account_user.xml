@@ -531,6 +531,44 @@
                             android:textSize="@dimen/sp_14"/>
 
                     </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/relativeLayoutProfileVerification"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackground"
+                        android:tag="@string/dont_touch_me">
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginStart="@dimen/dp_12"
+                            android:layout_marginEnd="@dimen/dp_12"
+                            android:background="@color/nl_white_dark"/>
+
+                        <TextView
+                            android:id="@+id/textViewProfileVerification"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="@dimen/dp_17"
+                            android:layout_marginStart="@dimen/dp_17"
+                            android:layout_marginTop="@dimen/dp_17"
+                            android:gravity="center"
+                            android:text="@string/profile_verification"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/sp_14"/>
+                        <ImageView
+                            android:id="@+id/ivProfileVerifyStatus"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_info_yellow"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/dp_17"/>
+
+                    </RelativeLayout>
                 </LinearLayout>
 
 
@@ -957,6 +995,4 @@
         android:id="@+id/relativeLayoutContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-
 </LinearLayout>

@@ -433,6 +433,7 @@ public class JSONParser implements Constants {
             int rideEndGoodFeedbackViewType = autoData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             String rideEndGoodFeedbackText = autoData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getString(R.string.end_ride_with_image_text, context.getString(R.string.app_name)));
             String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
+            int customerVerificationStatus = autoData.optInt(KEY_CUSTOMER_VERIFICATION_STATUS,0);
 
             Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
             Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, autoData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
@@ -477,7 +478,7 @@ public class JSONParser implements Constants {
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
                     , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2,
-                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare(), resendEmailInvoiceEnabled,isBluetoothEnabled);
+                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare(), resendEmailInvoiceEnabled,isBluetoothEnabled, customerVerificationStatus);
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -711,6 +712,8 @@ public class JSONParser implements Constants {
 				context.getResources().getInteger(R.integer.hide_regions_with_no_drivers)));
 		Prefs.with(context).save(KEY_PAY_VIA_UPI_ENABLED, autoData.optInt(KEY_PAY_VIA_UPI_ENABLED,
 				context.getResources().getInteger(R.integer.pay_via_upi_enabled)));
+		Prefs.with(context).save(SHOW_CUSTOMER_VERIFICATION, autoData.optInt(SHOW_CUSTOMER_VERIFICATION,
+				context.getResources().getInteger(R.integer.show_customer_verification)));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 

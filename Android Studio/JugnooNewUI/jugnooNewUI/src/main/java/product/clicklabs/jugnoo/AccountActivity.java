@@ -66,6 +66,8 @@ import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.fragments.AddressBookFragment;
+import product.clicklabs.jugnoo.fragments.DocumentUploadFragment;
+import product.clicklabs.jugnoo.fragments.ProfileVerificationFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.JeanieIntroDialog;
@@ -73,6 +75,7 @@ import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogActivity;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.DocumentData;
 import product.clicklabs.jugnoo.retrofit.model.Gender;
 import product.clicklabs.jugnoo.retrofit.model.GenderValues;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
@@ -159,6 +162,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private AppCompatSpinner spinnerGender;
     private EditText etDOB;
 
+    private RelativeLayout relativeLayoutProfileVerification;
+    private TextView textViewProfileVerification;
+    private ImageView ivProfileVerifyStatus;
+
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -227,7 +234,21 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         viewStarIcon = (View) findViewById(R.id.viewStarIcon); viewStarIcon.setVisibility(View.GONE);
         //imageViewChangePassword.setRotation(270f);
 
-
+        relativeLayoutProfileVerification = findViewById(R.id.relativeLayoutProfileVerification);
+        textViewProfileVerification = findViewById(R.id.textViewProfileVerification);
+        textViewProfileVerification.setTypeface(Fonts.mavenMedium(this));
+        ivProfileVerifyStatus = findViewById(R.id.ivProfileVerifyStatus);
+        if (Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.REJECTED.ordinal()) {
+            ivProfileVerifyStatus.setVisibility(View.VISIBLE);
+            ivProfileVerifyStatus.setImageResource(R.drawable.ic_cancel_red);
+        } else if (Data.autoData.getCustomerVerificationStatus() == Constants.DocStatuses.VERIFIED.ordinal()) {
+            ivProfileVerifyStatus.setVisibility(View.VISIBLE);
+            ivProfileVerifyStatus.setImageResource(R.drawable.ic_checked);
+        } else {
+            //ivProfileVerifyStatus.setVisibility(View.GONE);
+            ivProfileVerifyStatus.setVisibility(View.VISIBLE);
+            ivProfileVerifyStatus.setImageResource(R.drawable.ic_info_yellow);
+        }
 
 
 		relativeLayoutAddHome = (RelativeLayout) findViewById(R.id.relativeLayoutAddHome);
@@ -603,7 +624,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         });
 
 
-
         imageViewChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -896,6 +916,17 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         etDOB.setOnClickListener(view -> openDatePicker());
         etDOB.setTypeface(Fonts.mavenMedium(this));
 
+        if(Prefs.with(this).getInt(Constants.SHOW_CUSTOMER_VERIFICATION,0)==1)
+            relativeLayoutProfileVerification.setVisibility(View.VISIBLE);
+        else
+            relativeLayoutProfileVerification.setVisibility(View.GONE);
+
+        relativeLayoutProfileVerification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openProfileVerificationFragment(AccountActivity.this,relativeLayoutContainer,true);
+            }
+        });
 
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING);
         GAUtils.trackScreenView(PROFILE_SCREEN);
@@ -903,8 +934,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         setMenuItemsAdapter();
 
         getAllowedAuthChannels();
-
-	}
+        /* check and Show the profile fragment */
+        if (getIntent().hasExtra(ProfileVerificationFragment.class.getSimpleName())) {
+            if (getIntent().getBooleanExtra(ProfileVerificationFragment.class.getSimpleName(), false)) {
+                openProfileVerificationFragment(AccountActivity.this, relativeLayoutContainer, true);
+            }
+        }
+    }
 
 	private AccountMenuItemsAdapter accountMenuItemsAdapter;
     private void setMenuItemsAdapter() {
@@ -1049,7 +1085,19 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     public void performBackPressed(){
         if(getSupportFragmentManager().getBackStackEntryCount() > 0){
-            openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
+            if(getSupportFragmentManager()
+                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(AddressBookFragment.class.getName())) {
+                openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
+            } else if(getSupportFragmentManager()
+                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(ProfileVerificationFragment.class.getName())){
+                openProfileVerificationFragment(AccountActivity.this,relativeLayoutContainer,false);
+            } else if(getSupportFragmentManager()
+                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(DocumentUploadFragment.class.getName())){
+                textViewTitle.setText(R.string.verification_status);
+                getSupportFragmentManager().popBackStack();
+            } else {
+                getSupportFragmentManager().popBackStack();
+            }
         }
         else if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
             if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
@@ -1102,9 +1150,27 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
 
             scrollView.scrollTo(0, 0);
-            textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.profile_saved_location_text);
+            if (!getIntent().hasExtra(ProfileVerificationFragment.class.getSimpleName())) {
+                textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.profile_saved_location_text);
+            }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0 && getSupportFragmentManager().findFragmentByTag(ProfileVerificationFragment.class.getName()) instanceof ProfileVerificationFragment) {
+            ProfileVerificationFragment fragment = (ProfileVerificationFragment) getSupportFragmentManager().findFragmentByTag(ProfileVerificationFragment.class.getName());
+            if (!isFinishing() && fragment != null && fragment.isAdded()) {
+                textViewTitle.setText(R.string.verification_status);
+            } else {
+                textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.profile_saved_location_text);
+            }
+        }
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0 && getSupportFragmentManager().findFragmentByTag(DocumentUploadFragment.class.getName()) instanceof DocumentUploadFragment) {
+            DocumentUploadFragment fragment = (DocumentUploadFragment) getSupportFragmentManager().findFragmentByTag(DocumentUploadFragment.class.getName());
+            if (!isFinishing() && fragment != null && fragment.isAdded()) {
+                if (documentData != null) {
+                    textViewTitle.setText(documentData.getDocumentName());
+                }
+            }
         }
     }
 
@@ -1320,7 +1386,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 
 
-	void logoutAsync(final Activity activity) {
+	public void logoutAsync(final Activity activity) {
 		if (MyApplication.getInstance().isOnline()) {
 
 			DialogPopup.showLoadingDialog(activity, getString(R.string.please_wait));
@@ -1556,8 +1622,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private TransactionUtils transactionUtils = new TransactionUtils();
 
     public void openAddressBookFragment(FragmentActivity activity, View container, boolean addFrag) {
-        if(addFrag) {
-            if(transactionUtils.checkIfFragmentAdded(activity, AddressBookFragment.class.getName())){
+        if (addFrag) {
+            if (transactionUtils.checkIfFragmentAdded(activity, AddressBookFragment.class.getName())) {
                 activity.getSupportFragmentManager().popBackStack();
             }
             if (!transactionUtils.checkIfFragmentAdded(activity, AddressBookFragment.class.getName())) {
@@ -1566,7 +1632,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         .add(container.getId(), new AddressBookFragment(),
                                 AddressBookFragment.class.getName())
                         .addToBackStack(AddressBookFragment.class.getName());
-                if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
                     transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
                 }
@@ -1576,7 +1642,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 rlMain.setVisibility(View.GONE);
                 tvAbout.setVisibility(View.GONE);
             }
-        } else{
+        } else {
             super.onBackPressed();
             textViewTitle.setText(R.string.title_my_profile);
             rlMain.setVisibility(View.VISIBLE);
@@ -1584,7 +1650,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         }
     }
 
-    public AddressBookFragment getAddressBookFragment(){
+    public AddressBookFragment getAddressBookFragment() {
         return (AddressBookFragment) getSupportFragmentManager().findFragmentByTag(AddressBookFragment.class.getName());
     }
 
@@ -1796,5 +1862,54 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         datePickerDialog.getDatePicker().setMinDate((long) (System.currentTimeMillis() - (3.154e+12)));
         datePickerDialog.show();
 
+    }
+
+    public void openProfileVerificationFragment(FragmentActivity activity, View container, boolean addFrag) {
+        if (addFrag) {
+            if (transactionUtils.checkIfFragmentAdded(activity, ProfileVerificationFragment.class.getName())) {
+                activity.getSupportFragmentManager().popBackStack();
+            }
+            if (!transactionUtils.checkIfFragmentAdded(activity, ProfileVerificationFragment.class.getName())) {
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                        .add(container.getId(), ProfileVerificationFragment.Companion.newInstance(),
+                                ProfileVerificationFragment.class.getName())
+                        .addToBackStack(ProfileVerificationFragment.class.getName());
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+                }
+                transaction.commitAllowingStateLoss();
+
+                textViewTitle.setText(R.string.verification_status);
+                rlMain.setVisibility(View.GONE);
+                tvAbout.setVisibility(View.GONE);
+            }
+        } else {
+            super.onBackPressed();
+            textViewTitle.setText(R.string.title_my_profile);
+            rlMain.setVisibility(View.VISIBLE);
+            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private DocumentData documentData = null;
+
+    public void openDocumentUploadFragment(DocumentData documentData) {
+        this.documentData = documentData;
+        if (transactionUtils.checkIfFragmentAdded(this, ProfileVerificationFragment.class.getName())) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                    .add(relativeLayoutContainer.getId(), DocumentUploadFragment.Companion.newInstance(documentData),
+                            DocumentUploadFragment.class.getName())
+                    .addToBackStack(DocumentUploadFragment.class.getName());
+            if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                transaction.hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                        .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+            }
+            transaction.commitAllowingStateLoss();
+            //textViewTitle.setText(R.string.profile_verification);
+            textViewTitle.setText(documentData.getDocumentName());
+        }
     }
 }
