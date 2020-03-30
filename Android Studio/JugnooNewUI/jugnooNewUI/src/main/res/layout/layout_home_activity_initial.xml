@@ -57,6 +57,21 @@
                     android:src="@drawable/circle_red"
                     android:tag="mwar" />
 
+                <TextView android:id="@+id/tvStopsBesidesDropOldUi"
+                    android:layout_width="40dp"
+                    android:layout_height="17dp"
+                    android:text="3 stops to"
+                    android:singleLine="true"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:background="@drawable/background_grey_rounded_bordered"
+                    android:textSize="7sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/maven_pro_medium"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:visibility="gone"
+                    />
+
                 <TextView
                     android:id="@+id/textViewDestSearch"
                     android:layout_width="match_parent"

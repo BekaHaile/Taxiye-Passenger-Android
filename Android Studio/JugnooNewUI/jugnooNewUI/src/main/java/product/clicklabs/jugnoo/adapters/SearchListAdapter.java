@@ -600,6 +600,7 @@ public class SearchListAdapter extends BaseAdapter{
         void onPlaceSaved();
 		void onNotifyDataSetChanged(int count);
 		void onSetLocationOnMapClicked();
+		default void onPlaceSearchPostForStop(SearchResult searchResult, int position){}
 	}
 
 	private class CustomRunnable implements Runnable {

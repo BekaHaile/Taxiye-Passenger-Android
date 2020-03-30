@@ -41,12 +41,14 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import product.clicklabs.jugnoo.apis.ApiTrackPush;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
+import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -591,6 +593,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 								HomeActivity.appInterruptHandler.customerEndRideInterrupt(engagementId, promo);
 							}
 						}
+						if (MultiStopsActivity.appInterruptHandler != null) {
+							MultiStopsActivity.appInterruptHandler.customerEndRideInterrupt(engagementId, promo);
+						}
 						if(Prefs.with(this).getInt(KEY_CUSTOMER_PLAY_SOUND_RIDE_END, 0) == 1){
 							SoundMediaPlayer.INSTANCE.startSound(this, R.raw.ride_status_update, 1, false);
 							playSound = 0;
@@ -631,7 +636,16 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						}
 						notificationManager(this, title, logMessage, playSound);
 
-					} else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag
+					}else if (PushFlags.END_STOP.getOrdinal() == flag) {
+
+						String logMessage = jObj.getString("message");
+						Data.autoData.getMultiDestList().clear();
+						Data.autoData.getMultiDestList().addAll(Objects.requireNonNull(AutoData.parseMultiDestList(Objects.requireNonNull(jObj.optJSONObject("data")).getJSONArray(Constants.MULTIPLE_DESTINATIONS_LIST))));
+						if (MultiStopsActivity.appInterruptHandler != null) {
+							MultiStopsActivity.appInterruptHandler.onStopUpdated();
+						}
+
+					}  else if (PushFlags.DISPLAY_MESSAGE.getOrdinal() == flag
 							|| PushFlags.PROS_STATUS_SILENT.getOrdinal() == flag || PushFlags.SHOW_NOTIFICATION_WITH_DEEPLINK.getOrdinal()==flag) {
 						if (jObj.has("client_id") && PushFlags.SHOW_NOTIFICATION_WITH_DEEPLINK.getOrdinal()!=flag) {
 							String clientId = jObj.getString("client_id");

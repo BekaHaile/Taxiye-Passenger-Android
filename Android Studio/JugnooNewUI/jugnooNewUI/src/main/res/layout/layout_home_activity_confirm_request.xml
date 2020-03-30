@@ -122,9 +122,24 @@
                 android:splitMotionEvents="false"
                 android:visibility="visible"
                 >
-                
 
+                <TextView android:id="@+id/tvStopsBesidesDropNewUi"
+                    android:layout_width="40dp"
+                    android:layout_height="17dp"
+                    android:singleLine="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="-8dp"
+                    android:background="@drawable/background_grey_rounded_bordered"
+                    android:textSize="7sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/maven_pro_medium"
+                    android:visibility="gone"
+                    />
                 <TextView
+                    android:layout_toEndOf="@id/tvStopsBesidesDropNewUi"
                     android:id="@+id/textViewDestSearchNew"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -157,6 +172,16 @@
                         android:src="@drawable/ic_cross_et_selector"
                         android:tag="mwar"
                         android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/imageViewDropAddNew"
+                        android:layout_width="70px"
+                        android:layout_height="70px"
+                        android:layout_marginEnd="5px"
+                        android:padding="16px"
+                        android:src="@drawable/ic_plus_theme"
+                        android:tag="mwar"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 

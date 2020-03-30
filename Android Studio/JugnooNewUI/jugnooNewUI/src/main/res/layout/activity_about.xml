@@ -7,69 +7,68 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/topBar"
             android:layout_width="@dimen/screen_width"
             android:layout_height="@dimen/top_bar_height"
-            android:background="@color/white" >
+            android:background="@color/white">
 
             <TextView
                 android:id="@+id/textViewTitle"
-                android:text="@string/about_caps"
-                style="@style/title" />
+                style="@style/title"
+                android:text="@string/about_caps" />
 
             <ImageView
                 android:id="@+id/imageViewBack"
-                style="@style/back_image"
-                />
+                style="@style/back_image" />
         </RelativeLayout>
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="6px"
-            android:background="@drawable/shadow_down"
-            />
+            android:background="@drawable/shadow_down" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:splitMotionEvents="false" 
             android:background="@color/menu_item_selector_color"
-            
+            android:orientation="vertical"
+            android:splitMotionEvents="false"
+
             >
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutRateUs"
                 android:layout_width="match_parent"
                 android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
+                android:background="@drawable/background_white_yellow_selector">
 
                 <ImageView
                     android:layout_width="43px"
                     android:layout_height="43px"
-                    android:src="@drawable/ic_about_rateus"
-                    android:layout_marginStart="@dimen/px_36"
                     android:layout_centerVertical="true"
-                    android:tag="mwar"/>
+                    android:layout_marginStart="@dimen/px_36"
+                    android:src="@drawable/ic_about_rateus"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewRateUs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="@string/rate_us_on_play_store"
                     android:layout_marginStart="@dimen/px_110"
+                    android:text="@string/rate_us_on_play_store"
                     android:textColor="@color/text_color"
                     android:textSize="34px" />
 
                 <ImageView
                     style="@style/forward_image"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10px"
-                    />
+                    android:layout_marginEnd="10px" />
 
                 <ImageView
                     android:layout_width="match_parent"
@@ -82,15 +81,15 @@
                 android:id="@+id/relativeLayoutLikeUs"
                 android:layout_width="match_parent"
                 android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
+                android:background="@drawable/background_white_yellow_selector">
 
                 <ImageView
                     android:layout_width="42px"
                     android:layout_height="40px"
-                    android:src="@drawable/ic_about_like"
-                    android:layout_marginStart="@dimen/px_36"
                     android:layout_centerVertical="true"
-                    android:tag="mwar"/>
+                    android:layout_marginStart="@dimen/px_36"
+                    android:src="@drawable/ic_about_like"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewLikeUs"
@@ -103,8 +102,8 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10px" />
 
                 <ImageView
@@ -113,20 +112,20 @@
                     android:layout_alignParentBottom="true"
                     android:src="@color/stroke_color_light" />
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/relativeLayoutTNC"
                 android:layout_width="match_parent"
                 android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
+                android:background="@drawable/background_white_yellow_selector">
 
                 <ImageView
                     android:layout_width="40px"
                     android:layout_height="43px"
-                    android:src="@drawable/ic_about_tnc"
-                    android:layout_marginStart="@dimen/px_36"
                     android:layout_centerVertical="true"
-                    android:tag="mwar"/>
+                    android:layout_marginStart="@dimen/px_36"
+                    android:src="@drawable/ic_about_tnc"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewTNC"
@@ -139,8 +138,8 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10px" />
 
                 <ImageView
@@ -149,20 +148,20 @@
                     android:layout_alignParentBottom="true"
                     android:src="@color/stroke_color_light" />
             </RelativeLayout>
-            
+
             <RelativeLayout
                 android:id="@+id/relativeLayoutPrivacy"
                 android:layout_width="match_parent"
                 android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
+                android:background="@drawable/background_white_yellow_selector">
 
                 <ImageView
                     android:layout_width="34px"
                     android:layout_height="46px"
-                    android:src="@drawable/ic_about_privacy"
-                    android:layout_marginStart="@dimen/px_36"
                     android:layout_centerVertical="true"
-                    android:tag="mwar"/>
+                    android:layout_marginStart="@dimen/px_36"
+                    android:src="@drawable/ic_about_privacy"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewPrivacy"
@@ -175,8 +174,8 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10px" />
 
                 <ImageView
@@ -190,15 +189,15 @@
                 android:id="@+id/relativeLayoutAbout"
                 android:layout_width="match_parent"
                 android:layout_height="120px"
-                android:background="@drawable/background_white_yellow_selector" >
+                android:background="@drawable/background_white_yellow_selector">
 
                 <ImageView
                     android:layout_width="43px"
                     android:layout_height="43px"
-                    android:src="@drawable/ic_about_who_we_are"
-                    android:layout_marginStart="@dimen/px_36"
                     android:layout_centerVertical="true"
-                    android:tag="mwar"/>
+                    android:layout_marginStart="@dimen/px_36"
+                    android:src="@drawable/ic_about_who_we_are"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewAbout"
@@ -211,8 +210,8 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10px" />
 
                 <ImageView
@@ -221,6 +220,7 @@
                     android:layout_alignParentBottom="true"
                     android:src="@color/stroke_color_light" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/relativeLayoutFAQ"
                 android:layout_width="match_parent"
@@ -231,10 +231,10 @@
                 <ImageView
                     android:layout_width="43px"
                     android:layout_height="43px"
-                    android:src="@drawable/ic_about_who_we_are"
-                    android:layout_marginStart="@dimen/px_36"
                     android:layout_centerVertical="true"
-                    android:tag="mwar"/>
+                    android:layout_marginStart="@dimen/px_36"
+                    android:src="@drawable/ic_about_who_we_are"
+                    android:tag="mwar" />
 
                 <TextView
                     android:id="@+id/textViewFAQ"
@@ -247,8 +247,8 @@
                     android:textSize="34px" />
 
                 <ImageView
-                    android:layout_alignParentEnd="true"
                     style="@style/forward_image"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="10px" />
 
                 <ImageView

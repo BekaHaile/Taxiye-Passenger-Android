@@ -2033,7 +2033,7 @@
     <string name="confirm_payment_via_card_ending_format">Confirm payment via card ending with %s</string>
     <string name="please_select_some_amount">Please select some amount</string>
 
-  <!--Notes-->
+    <!--Notes-->
     <string name="notes">Notes</string>
     <string name="write_notes_here">Write notes here...</string>
     <string name="save_notes">Save notes</string>
@@ -2049,7 +2049,6 @@
     <string name="favourite">Favourite%s</string>
     <string name="text_disclaimer">We will dispatching Taxi with class 4 license with authorisation Taxi companies only</string>
     <string name="select_pickup_address">Select pickup address</string>
-
 
 
     <string name="btn_rate_order">Rate order</string>
@@ -2151,7 +2150,6 @@
     <string name="text_no_delivery_available">Sorry, delivery isn\'t available in your location yet. We\'ll be there soon-hang tight!</string>
 
 
-
     <string name="pickup">Pickup</string>
     <string name="rate_order">Rate Order</string>
     <string name="pay_for_delivery">Pay For Your Delivery Using</string>
@@ -2172,14 +2170,13 @@
     <string name="in_progress_status">In Progress</string>
     <string name="processed_status">Processed</string>
     <string name="cancelled_status">Cancelled</string>
-<!--    New UI changes-->
+    <!--    New UI changes-->
     <string name="text_where_to_go">Where to?</string>
     <string name="add_favorite_place">Add Favorite Place</string>
     <string name="label_confirm_ride_request">Confirm Ride Request</string>
     <string name="text_congestion_time">Congestion Time</string>
     <string name="type_atleast_4_characters">Type atleast 4 characters</string>
     <string name="congestion_charges_per_min">Congestion charges per min</string>
-
 
 
     <!--    Country Names-->
@@ -2502,4 +2499,8 @@
     <string name="review_must_be_in_150">Review must be in 150 letters.</string>
     <string name="pay_via">Pay via</string>
     <string name="upi_supported_app_not_installed">UPI supported app not installed</string>
+    <string name="add_multi_dest">Add Multiple Destinations</string>
+    <string name="add_stop">Add Stop</string>
+    <string name="select_atlease_one_top">Please select at least one stop</string>
+    <string name="stops_to">Stops to</string>
 </resources>
