@@ -15,7 +15,8 @@ public interface Constants {
     String QUESTION_TYPE = "question_type";
     String SKIP = "skip_feedback";
     String QUESTION = "question";
-
+    String MULTIPLE_DESTINATIONS_ALLOWED="multiple_destinations_allowed";
+    String MULTIPLE_DESTINATIONS_LIST="multiple_destinations";
     //For Submit
     String TEXT = "support_query";
 
@@ -870,6 +871,10 @@ public interface Constants {
     int ORDER_MODE_UNAVAILABLE = 3;
     int ORDER_MODE_CHAT= 0;
     int CATEGORY_ID_RESTAURANTS= 1;
+    int STOP_PENDING=0;
+    int STOP_REACHED=3;
+
+
     String CATEGORY_RESTAURANTS_NAME = "Restaurants";
     String CATEGORY = "category";
     String ITEM_CATEGORY_ID = "item_category_id";
@@ -1124,6 +1129,7 @@ public interface Constants {
 	String KEY_JUNGLE_LAT = "lat";
 	String KEY_JUNGLE_LNG = "lng";
     String KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER = "jungle_fm_api_key_android_customer";
+    String KEY_WAYPOINTS = "waypoints";
 
 	String JUNGLE_JSON_OBJECT = "{\""+KEY_JUNGLE_OPTIONS+"\":0}";
     String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
@@ -1217,4 +1223,5 @@ public interface Constants {
 			return this.i;
 		}
 	}
+	String STOP_PRESSED_POSITION = "stop_pressed_position";
 }

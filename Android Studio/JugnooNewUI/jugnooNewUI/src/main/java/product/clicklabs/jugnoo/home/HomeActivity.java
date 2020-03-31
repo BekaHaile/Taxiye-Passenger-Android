@@ -1,6 +1,7 @@
 package product.clicklabs.jugnoo.home;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -68,6 +69,7 @@ import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -102,6 +104,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.SquareCap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -189,6 +192,7 @@ import product.clicklabs.jugnoo.FareEstimateActivity;
 import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.LocationFetcher;
+import product.clicklabs.jugnoo.MultiStopsActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
@@ -214,6 +218,7 @@ import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
+import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.BidInfo;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -234,6 +239,7 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
+import product.clicklabs.jugnoo.datastructure.SearchMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.directions.JungleApisImpl;
@@ -352,11 +358,14 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
+import static com.google.android.gms.maps.model.JointType.ROUND;
 import static com.sabkuchfresh.feed.utils.FeedUtils.dpToPx;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_DRIVER_ARRIVED;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
+import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_IN_RIDE;
+import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_REQUEST_FINAL;
 
 //import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 //import com.google.ads.conversiontracking.AdWordsConversionReporter;
@@ -375,6 +384,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
     private static final int REQ_CODE_VIDEO = 9112, RESULT_PAUSE = 5;
 	private static final int REQUEST_CODE_PAY_VIA_UPI = 1026;
+	private static final int REQUEST_CODE_MULTI_STOPS=6;
 
 
 	private float ONGOING_RIDE_PATH_ZINDEX = 2;
@@ -422,7 +432,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Button buttonCancelInAppCampaignRequest;
     RecyclerView rvRideTypes;
     RideTypesAdapter rideTypesAdapter;
-
+    TextView tvStopsBesidesDrop,tvStopsBesidesDropNewUiAssigning,tvStopsBesidesDropNewUiInRide;
     RelativeLayout relativeLayoutGoogleAttr;
     ImageView imageViewGoogleAttrCross, imageViewConfirmDropLocationEdit;
     TextView textViewGoogleAttrText;
@@ -725,6 +735,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     RelativeLayout relativeLayoutSearchContainerNew, relativeLayoutDestSearchBarNew, relativeLayoutInitialSearchBarNew;
     TextView textViewDestSearchNew,textViewInitialSearchNew;
     ImageView imageViewDropCrossNew;
+    ImageView imageViewDropAddNew;
     LinearLayout linearLayoutConfirmOption,linearLayoutBidValue;
     EditText editTextBidValue;
     private int regionIdFareSetInETBid;
@@ -737,6 +748,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private Integer mRequestType = 0, mRequestLevelndex = 0;
 
     private LinearLayout llPayViaUpi;
+    String multiDestList="";
 
     @SuppressLint("NewApi")
     @Override
@@ -864,7 +876,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewChangeLocality = (TextView) findViewById(R.id.textViewChangeLocality);
         textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
         buttonChangeLocalityMyLocation = (Button) findViewById(R.id.buttonChangeLocalityMyLocation);
-
+        tvStopsBesidesDrop=findViewById(R.id.tvStopsBesidesDropNewUi);
         initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
         confirmMyLocationBtn = (Button) findViewById(R.id.confirmMyLocationBtn);
         changeLocalityBtn = (Button) findViewById(R.id.changeLocalityBtn);
@@ -981,6 +993,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         assigningLayout = (RelativeLayout) findViewById(R.id.assigningLayout);
 		rlAssigningNormal = findViewById(R.id.rlAssigningNormal);
 		rlAssigningBidding = findViewById(R.id.rlAssigningBidding);
+        tvStopsBesidesDropNewUiAssigning=findViewById(R.id.tvStopsBesidesDropNewUiAssigning);
 		rlBidTimer = findViewById(R.id.rlBidTimer);
         textViewFindingDriver = (TextView) findViewById(R.id.textViewFindingDriver);
         textViewFindingDriver.setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
@@ -1020,6 +1033,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
         //Request Final Layout
         requestFinalLayout = (RelativeLayout) findViewById(R.id.requestFinalLayout);
+        tvStopsBesidesDropNewUiInRide =  findViewById(R.id.tvStopsBesidesDropNewUiInRide);
 
         relativeLayoutInRideInfo = (RelativeLayout) findViewById(R.id.relativeLayoutInRideInfo);
         textViewInRidePromoName = (TextView) findViewById(R.id.textViewInRidePromoName);
@@ -1878,6 +1892,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     translateViewBottomTop(relativeLayoutDestSearchBar, false);
                     translateViewTopBottom(relativeLayoutInitialSearchBar, true);
                     Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
+                    updateUiForMultipleStops();
                 /*if(dropInitialMarker != null) {
                     dropInitialMarker.remove();
                 }*/
@@ -2125,6 +2140,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             @Override
             public void onClick(View v) {
                 try {
+                    if(Data.autoData.getMultiDestAllowed()
+                            && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getMultiDestEnabledForRide()==1){
+                        openMultiStopsActivity();
+                        return;
+                    }
+
                     if (Data.autoData.getAssignedDriverInfo().getIsPooledRide() != 1
 							&& Prefs.with(HomeActivity.this).getInt(KEY_REVERSE_BID, 0) != 1) {
                         initDropLocationSearchUI(true);
@@ -2647,12 +2668,21 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             }
         });
         imageViewDropCrossNew = findViewById(R.id.imageViewDropCrossNew);
+        imageViewDropAddNew = findViewById(R.id.imageViewDropAddNew);
         imageViewDropCrossNew.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 imageViewDropCross.performClick();
             }
         });
+
+        imageViewDropAddNew.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            openMultiStopsActivity();
+            }
+        });
+
         textViewInitialSearchNew = findViewById(R.id.textViewInitialSearchNew); textViewInitialSearchNew.setTypeface(Fonts.mavenRegular(this));
         if(isNewUI) {
             relativeLayoutSearchContainerNew.setVisibility(View.VISIBLE);
@@ -3761,6 +3791,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void initiateRequestRide(boolean newRequest) {
         if (newRequest) {
+            multiDestList=getStringForMultiDestdata();
 			Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
             if (!isPoolRideAtConfirmation()) {
                 double fareFactor = regionSelected.getCustomerFareFactor();
@@ -4999,7 +5030,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 setScheduleRideUI(mode);
                 badgesAdapter=null;
-
+                updateUiForMultipleStops();
 
                 try {
                     getTrackingLogHelper().startSyncService(mode, Data.userData.accessToken);
@@ -6567,6 +6598,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							data.getExtras(), logUpiCallback);
 
 				}
+                else if(requestCode==REQUEST_CODE_MULTI_STOPS){
+                    if(passengerScreenMode==P_IN_RIDE ||passengerScreenMode==P_DRIVER_ARRIVED)
+                        sendDropLocationAPI(this,Data.autoData.getDropLatLng(),new ProgressWheel(this),true,Data.autoData.getDropAddress(),0);
+                    switchPassengerScreen(passengerScreenMode);
+                }
                 else {
                     Log.v("onActivityResult else part", "onActivityResult else part");
                     callbackManager.onActivityResult(requestCode, resultCode, data);
@@ -8206,6 +8242,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             params.put("session_id", Data.autoData.getcSessionId());
             params.put(KEY_OP_DROP_LATITUDE, "" + dropLatLng.latitude);
             params.put(KEY_OP_DROP_LONGITUDE, "" + dropLatLng.longitude);
+//            if(!Data.autoData.getMultiDestList().isEmpty())
+            params.put(MULTIPLE_DESTINATIONS_LIST,getStringForMultiDestdata());
             if(!address.equalsIgnoreCase(Constants.UNNAMED)) {
                 params.put(KEY_DROP_LOCATION_ADDRESS, address);
             } else {
@@ -8731,7 +8769,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     try {
                         List<LatLng> listPath = null;
                         if (MyApplication.getInstance().isOnline() && Data.autoData.getDropLatLng() != null && pickupLatLng != null && toShowPathToDrop()) {
-							JungleApisImpl.DirectionsResult result = JungleApisImpl.INSTANCE.getDirectionsPathSync(pickupLatLng, Data.autoData.getDropLatLng(), "metric", MapsApiSources.CUSTOMER_DRIVER_TO_DROP, false, false);
+                            JungleApisImpl.DirectionsResult result;
+                            if(!Data.autoData.getMultiDestList().isEmpty())
+                                result =JungleApisImpl.INSTANCE.getDirectionsPathWaypointsSync(pickupLatLng,getWaypointsMultiStops(), Data.autoData.getDropLatLng(), "metric", MapsApiSources.CUSTOMER_DRIVER_TO_DROP, false, false);
+                            else
+                                result = JungleApisImpl.INSTANCE.getDirectionsPathSync(pickupLatLng, Data.autoData.getDropLatLng(), "metric", MapsApiSources.CUSTOMER_DRIVER_TO_DROP, false, false);
                             if (result != null) {
                                 listPath = result.getLatLngs();
 								driverToDropPathShown = true;
@@ -8759,7 +8801,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                                     if (pathToDropLocationPolyline != null) {
                                                         pathToDropLocationPolyline.remove();
                                                     }
-                                                    pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
+                                                    if(getResources().getBoolean(R.bool.show_path_anim))
+                                                        showPathAnimation(finalListPath,pathToDropLocationPolylineOptions);
+                                                    else
+                                                        pathToDropLocationPolyline = map.addPolyline(pathToDropLocationPolylineOptions);
                                                 }
                                             } catch (Exception e) {
                                                 e.printStackTrace();
@@ -9125,6 +9170,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         });
     }
 
+    @Override
+    public void onStopUpdated() {
+
+    }
 
     // 0 = not found   1 = accept
     @Override
@@ -9643,7 +9692,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 								//30.7500, 76.7800
 //								nameValuePairs.add(new BasicNameValuePair("latitude", "30.7500"));
 //								nameValuePairs.add(new BasicNameValuePair("longitude", "76.7800"));
-
+                                if(!multiDestList.equalsIgnoreCase("")){
+                                    nameValuePairs.put("multiple_destinations",multiDestList);
+                                }
 								Region regionSelected = slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected();
 
                                 if (myLocation != null) {
@@ -10766,9 +10817,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						if (polylineP2D != null) {
 							polylineP2D.remove();
 						}
-						polylineP2D = map.addPolyline(polylineOptionsP2D);
-
-						pickupLocationEtaMarker();
+                        //todo ankur animation modular
+                        if(getResources().getBoolean(R.bool.show_path_anim))
+                            showPathAnimation(list,pathToDropLocationPolylineOptions);
+                        else
+                            polylineP2D = map.addPolyline(polylineOptionsP2D);
+                        pickupLocationEtaMarker();
 
 						if(dropLocationMarker != null){
 							dropLocationMarker.remove();
@@ -10892,9 +10946,19 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 					}
 				});
 			}
-
-			apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
+            if(!Data.autoData.getMultiDestList().isEmpty()){
+                ArrayList<LatLng> waypoints=new ArrayList<>();
+                for (AutoData.MultiDestData v:Data.autoData.getMultiDestList()) {
+                    waypoints.add(v.getLatlng());
+                }
+			    apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), waypoints,Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
 					region, promoCouponSelected, null, MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME);
+            }
+            else{
+                apiFareEstimate.getDirectionsAndComputeFare(Data.autoData.getPickupLatLng(), Data.autoData.getDropLatLng(), isPooled, Data.autoData.showRegionSpecificFare() ?false: callFareEstimate,
+                        region, promoCouponSelected, null, MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME);
+            }
+
         } else {
             textViewDestSearch.setText(getResources().getString(R.string.destination_required));
             textViewDestSearch.setTextColor(getResources().getColor(R.color.red));
@@ -12588,6 +12652,201 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     public void openNotification() {
         menuBar.getMenuAdapter().onClickAction(MenuInfoTags.INBOX.getTag(), 0, 0, HomeActivity.this, getCurrentPlaceLatLng());
+    }
+
+    private void openMultiStopsActivity(){
+        //add final destination in the multiDest list and send off to the multidestactivity
+        Intent intent=new Intent(HomeActivity.this, MultiStopsActivity.class);
+        intent.putExtra("passenger_screen_mode",passengerScreenMode);
+        startActivityForResult(intent,REQUEST_CODE_MULTI_STOPS);
+    }
+
+    public void updateUiForMultipleStops(){
+        if(Data.autoData.getMultiDestAllowed()){
+            showStopsBesidesDrop();
+            setStopsMarkers();
+            addStopsBtnVisibility();
+        }
+    }
+    public void addStopsBtnVisibility(){
+            if(Data.autoData.getDropLatLng()!=null
+                    && slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getMultiDestEnabledForRide()==1){
+                imageViewDropAddNew.setVisibility(View.VISIBLE);
+            }else
+                imageViewDropAddNew.setVisibility(View.GONE);
+    }
+
+    private ArrayList<Marker> stopMarkers=new ArrayList<>();
+
+    private void setStopsMarkers(){
+        if (Data.autoData.getDropLatLng() != null
+                && (PassengerScreenMode.P_ASSIGNING == passengerScreenMode
+                || PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
+                || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode
+                || PassengerScreenMode.P_IN_RIDE == passengerScreenMode
+                ||(PassengerScreenMode.P_INITIAL==passengerScreenMode
+                &&(confirmedScreenOpened||isNewUI)))) {
+            ArrayList<AutoData.MultiDestData> localMultiDestList = new ArrayList<>(Data.autoData.getMultiDestList());
+
+
+            if (Data.autoData.getMultiDestAllowed()) {
+//                if(confirmedScreenOpened&&!localMultiDestList.isEmpty()){
+//                    localMultiDestList.remove(localMultiDestList.size()-1);
+//                }
+                int i = 1;
+                if(!stopMarkers.isEmpty()){
+                    for (Marker marker : stopMarkers) {
+                        marker.remove();
+                    }
+
+                }
+                for (AutoData.MultiDestData stop : localMultiDestList) {
+                    stopMarkers.add(map.addMarker(getStopMarkerOptions(stop.getLatlng(), String.valueOf(i))));
+                    i++;
+                }
+            }
+        }
+    }
+    public MarkerOptions getStopMarkerOptions(LatLng customerLatLng,String text){
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.title("End Location");
+        markerOptions.snippet("");
+        markerOptions.position(customerLatLng);
+        markerOptions.zIndex(HOME_MARKER_ZINDEX);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(CustomMapMarkerCreator.createStopMarker(HomeActivity.this,assl,"D"+text)));
+        return markerOptions;
+    }
+
+    public void showStopsBesidesDrop(){
+        if(!Data.autoData.getMultiDestList().isEmpty()){
+            tvStopsBesidesDrop.setVisibility(View.VISIBLE);
+            tvStopsBesidesDropNewUiAssigning.setVisibility(View.VISIBLE);
+            tvStopsBesidesDropNewUiInRide.setVisibility(View.VISIBLE);
+            tvStopsBesidesDrop.setText(Data.autoData.getMultiDestList().size() + " "+ getString(R.string.stops_to));
+            tvStopsBesidesDropNewUiAssigning.setText(Data.autoData.getMultiDestList().size() + " "+ getString(R.string.stops_to));
+            tvStopsBesidesDropNewUiInRide.setText(Data.autoData.getMultiDestList().size() + " "+ getString(R.string.stops_to));
+        }
+        else{
+            tvStopsBesidesDrop.setVisibility(View.GONE);
+            tvStopsBesidesDropNewUiAssigning.setVisibility(View.GONE);
+            tvStopsBesidesDropNewUiInRide.setVisibility(View.GONE);
+        }
+
+    }
+    Polyline greyPolyLine, overlayPolyline;
+
+    private void showPathAnimation(final List<LatLng> finalPoints,PolylineOptions polylineOptionsP2D){
+        HomeActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(greyPolyLine!=null && overlayPolyline !=null){
+                    greyPolyLine.remove();
+                    overlayPolyline.remove();
+                }
+                PolylineOptions polylineOptions;
+                final ValueAnimator polylineAnimator;
+
+                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                for (LatLng latLng : finalPoints) {
+                    builder.include(latLng);
+                }
+                polylineOptions = new PolylineOptions();
+                polylineOptions.color(Color.GRAY);
+                polylineOptions.width(8);
+                polylineOptions.startCap(new SquareCap());
+                polylineOptions.endCap(new SquareCap());
+                polylineOptions.jointType(ROUND);
+                polylineOptions.addAll(finalPoints);
+                greyPolyLine = map.addPolyline(polylineOptions);
+
+//                polylineOptions = new PolylineOptions();
+//                polylineOptions.width(8);
+//                polylineOptions.color(getResources().getColor(R.color.theme_color));
+//                polylineOptions.startCap(new SquareCap());
+//                polylineOptions.endCap(new SquareCap());
+//                polylineOptions.zIndex(5f);
+//                polylineOptions.jointType(ROUND);
+                polylineOptionsP2D.color(getResources().getColor(R.color.theme_color));
+                polylineP2D.remove();
+                overlayPolyline = map.addPolyline(polylineOptionsP2D);
+                polylineAnimator = ValueAnimator.ofInt(0, 100);
+                polylineAnimator.setDuration(1800);
+                polylineAnimator.setInterpolator(new LinearInterpolator());
+                polylineAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                        List<LatLng> points = greyPolyLine.getPoints();
+                        int percentValue = (int) valueAnimator.getAnimatedValue();
+                        int size = points.size();
+                        int newPoints = (int) (size * (percentValue / 100.0f));
+                        List<LatLng> p = points.subList(0, newPoints);
+                        overlayPolyline.setPoints(p);
+                    }
+                });
+
+                polylineAnimator.addListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (true) {
+                            List<LatLng> greyLatLng = greyPolyLine.getPoints();
+                            if (greyLatLng != null) {
+                                greyLatLng.clear();
+
+                            }
+                            polylineAnimator.start();
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                        polylineAnimator.cancel();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+                    }
+                });
+
+                polylineAnimator.start();
+            }
+        });
+    }
+    public String getStringForMultiDestdata(){
+        ArrayList<MultiDestResponse> multiDestResponses=new ArrayList<>();
+        int order_id=0;
+        for(AutoData.MultiDestData multiDestData : Data.autoData.getMultiDestList()){
+            multiDestResponses.add(new MultiDestResponse(String.valueOf(multiDestData.getLatlng().latitude),String.valueOf(multiDestData.getLatlng().longitude),multiDestData.getDropAddress(),order_id+1));
+            order_id++;
+        }
+        Gson gson = new Gson();
+        return gson.toJson(multiDestResponses);
+    }
+    public class MultiDestResponse{
+        String latitude,longitude,chosen_address;
+        int order_id;
+        public MultiDestResponse(String latitude,String longitude,String chosen_address,int order_id){
+            this.chosen_address=chosen_address;
+            this.latitude=latitude;
+            this.longitude=longitude;
+            this.order_id=order_id;
+        }
+    }
+    private ArrayList<JSONObject> getWaypointsMultiStops() throws JSONException {
+        ArrayList<JSONObject> waypoints =new ArrayList<>();
+        for(AutoData.MultiDestData multiDestData:Data.autoData.getMultiDestList()){
+            if(multiDestData.getStopReachStatus()==Constants.STOP_PENDING){
+                JSONObject jsonObject=new JSONObject();
+                waypoints.add(jsonObject.put(KEY_LAT,multiDestData.getLatlng().latitude+""));
+                waypoints.add(jsonObject.put(KEY_LNG,multiDestData.getLatlng().longitude+""));
+            }
+
+        }
+     return waypoints;
     }
 
     private BroadcastReceiver pushBroadcastReceiver = new BroadcastReceiver() {

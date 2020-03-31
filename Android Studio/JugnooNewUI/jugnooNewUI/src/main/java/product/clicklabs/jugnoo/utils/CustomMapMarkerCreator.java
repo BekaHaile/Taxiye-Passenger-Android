@@ -66,6 +66,61 @@ public class CustomMapMarkerCreator {
         shape.draw(canvas);
         return mDotMarkerBitmap;
     }
+    public static Bitmap createSmallStopMarker(Activity activity, ASSL assl,String text){
+		float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());
+		int width = (int)(60.0f * scale * 0.65f);
+		int height = (int)(80.0f * scale * 0.65f);
+		final TextView textView = new TextView(activity);
+		textView.setText(text);
+		final Rect boundsText = new Rect();
+//		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (scale * (float) fontSize));
+		textView.setTextSize(7);
+		textView.setTypeface(Fonts.mavenMedium(activity));
+		Bitmap mDotMarkerBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+		Canvas canvas = new Canvas(mDotMarkerBitmap);
+		Drawable shape = activity.getResources().getDrawable(R.drawable.delivery_orange_pin);
+		final Paint paint = textView.getPaint();
+		paint.getTextBounds(text, 0, textView.length(), boundsText);
+		paint.setTextAlign(Paint.Align.CENTER);
+		paint.setColor(Color.BLACK);
+		shape.setBounds(0, 0, mDotMarkerBitmap.getWidth(), mDotMarkerBitmap.getHeight());
+		shape.draw(canvas);
+		canvas.drawText(text, (canvas.getWidth() / 2) - 10.0f, (43f * scale), paint);
+		return mDotMarkerBitmap;
+
+	}
+	public static Bitmap createStopMarker(Activity context,ASSL assl,String text){
+		float scale = Math.min(assl.Xscale(), assl.Yscale());
+		final TextView textView = new TextView(context);
+		textView.setText(text);
+//		textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (int) (scale * (float) fontSize));
+		textView.setTextSize(10);
+		textView.setTypeface(Fonts.mavenMedium(context));
+
+		final Rect boundsText = new Rect();
+		int width = (int) (86.0f * 1.0 * scale);
+		int height = (int) (97.0f * 1.0 * scale);
+
+		final Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+		final Bitmap bmpText = Bitmap.createBitmap(width, height, conf);
+
+		final Paint paint = textView.getPaint();
+		paint.getTextBounds(text, 0, textView.length(), boundsText);
+		paint.setTextAlign(Paint.Align.CENTER);
+
+		final Canvas canvasText = new Canvas(bmpText);
+		Drawable shape;
+
+		shape = context.getResources().getDrawable(R.drawable.delivery_orange_pin);
+		paint.setColor(Color.BLACK);
+
+
+		shape.setBounds(0, 8, bmpText.getWidth(), bmpText.getHeight());
+		shape.draw(canvasText);
+		canvasText.drawText(text, (canvasText.getWidth() / 2) - 10.0f, (43f * scale), paint);
+		return bmpText;
+	}
+
 
     public static Bitmap createPinMarkerBitmapStart(Activity activity){
         float scale = Math.min(ASSL.Xscale(), ASSL.Yscale());

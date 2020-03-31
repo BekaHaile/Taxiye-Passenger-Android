@@ -64,6 +64,10 @@ public class Region {
 	@Expose
 	private OfferTexts offerTexts;
 
+	@SerializedName("multiple_destinations_enabled")
+	@Expose
+	private Integer multiDestEnabledForRide;
+
 	private VehicleIconSet vehicleIconSet;
 
 	private FareStructure fareStructure;
@@ -271,7 +275,11 @@ public class Region {
 		}
 
 	}
-
+	public int getMultiDestEnabledForRide(){
+		if(multiDestEnabledForRide==null)
+			return 0;
+		return multiDestEnabledForRide;
+	}
 	public class RegionFare{
 		@SerializedName("fare")
 		@Expose

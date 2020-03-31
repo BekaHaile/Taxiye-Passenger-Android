@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import io.paperdb.Paper;
@@ -435,6 +436,8 @@ public class JSONParser implements Constants {
             String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
             int customerVerificationStatus = autoData.optInt(KEY_CUSTOMER_VERIFICATION_STATUS,0);
 
+            int multiDestAllowed=autoData.optInt(Constants.MULTIPLE_DESTINATIONS_ALLOWED,0);
+            Prefs.with(context).save(Constants.MULTIPLE_DESTINATIONS_ALLOWED,multiDestAllowed);
             Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
             Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, autoData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
 					LOCATION_UPDATE_INTERVAL));
@@ -501,7 +504,7 @@ public class JSONParser implements Constants {
 			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
             Data.autoData.setBidRequestRideTimeout(bidRequestRideTimeout);
             Data.autoData.setBidTimeout(bidTimeout);
-
+            Data.autoData.setMultiDestAllowed(multiDestAllowed==1);
             if(Data.autoData.getPromoCoupons() == null){
                 Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
             } else{
@@ -1577,6 +1580,7 @@ public class JSONParser implements Constants {
 
             String vehicleImage ="";
             String vehicleName = "";
+            JSONArray multidest=null;
 
             HomeActivity.userMode = UserMode.PASSENGER;
 
@@ -1829,7 +1833,13 @@ public class JSONParser implements Constants {
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
-
+                JSONObject lastEngInfo=jObject1.optJSONArray("last_engagement_info").optJSONObject(0);
+                multidest=lastEngInfo.optJSONArray("multiple_destinations");
+                if(multidest!=null&&multidest.length()!=0)
+                {
+                    Data.autoData.getMultiDestList().clear();
+                    Data.autoData.getMultiDestList().addAll(Objects.requireNonNull(AutoData.parseMultiDestList(multidest)));
+                }
                 Data.autoData.setFuguChannelId(fuguChannelData.getFuguChannelId());
                 Data.autoData.setFuguChannelName(fuguChannelData.getFuguChannelName());
                 Data.autoData.setFuguTags(fuguChannelData.getFuguTags());

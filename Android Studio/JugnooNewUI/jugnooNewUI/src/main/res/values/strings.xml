@@ -2533,4 +2533,8 @@
     <string name="your_documents_are_rejected_upload_again">Your documents are rejected due to certain reasons.</string>
     <string name="user_not_verified_snack">You are not verified yet. Please verify your account.</string>
 
+    <string name="add_multi_dest">Add Multiple Destinations</string>
+    <string name="add_stop">Add Stop</string>
+    <string name="select_atlease_one_top">Please select at least one stop</string>
+    <string name="stops_to">Stops to</string>
 </resources>
