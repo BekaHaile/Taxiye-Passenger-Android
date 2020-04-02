@@ -1173,14 +1173,19 @@ public class MenusResponse {
 	}
 
 	public List<Vendor> getVendors() {
-		List<Vendor> vendorsWithTypeZero = new ArrayList<Vendor>();
-		vendorsWithTypeZero.clear();
-		for (int i = 0; i < vendors.size(); i++) {
-			if(vendors.get(i).getRestaurantType()==0){
-				vendorsWithTypeZero.add(vendors.get(i));
+		if(vendors!=null) {
+			List<Vendor> vendorsWithTypeZero = new ArrayList<Vendor>();
+			vendorsWithTypeZero.clear();
+			for (int i = 0; i < vendors.size(); i++) {
+				if (vendors.get(i).getRestaurantType() == 0) {
+					vendorsWithTypeZero.add(vendors.get(i));
+				}
 			}
+			return vendorsWithTypeZero;
 		}
-		return vendorsWithTypeZero;
+		else {
+			return vendors;
+		}
 	}
 
 	public void setVendors(List<Vendor> vendors) {
@@ -1188,14 +1193,19 @@ public class MenusResponse {
 	}
 
 	public List<Vendor> getFavouriteVendors() {
-		List<Vendor> vendorsWithTypeOne = new ArrayList<Vendor>(); //one means favourite
-		vendorsWithTypeOne.clear();
-		for (int i = 0; i < vendors.size(); i++) {
-			if(vendors.get(i).getRestaurantType()==1){
-				vendorsWithTypeOne.add(vendors.get(i));
+		if(vendors!=null) {
+			List<Vendor> vendorsWithTypeOne = new ArrayList<Vendor>(); //one means favourite
+			vendorsWithTypeOne.clear();
+			for (int i = 0; i < vendors.size(); i++) {
+				if (vendors.get(i).getRestaurantType() == 1) {
+					vendorsWithTypeOne.add(vendors.get(i));
+				}
 			}
+			return vendorsWithTypeOne;
 		}
-		return vendorsWithTypeOne;
+		else {
+			return vendors;
+		}
 	}
 
 }
