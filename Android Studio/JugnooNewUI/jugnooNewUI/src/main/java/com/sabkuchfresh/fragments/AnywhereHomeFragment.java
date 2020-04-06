@@ -198,6 +198,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private int currentVehicleTypePos = -1;
     private boolean isPickUpSet = false;
     private int vehicleType = -1;
+    private int regionId = -1;
+    private int rideType = -1;
     private int checkCount = 0;
     private List<VehicleInfo> vehicleInfoList = new ArrayList<>();
     private String defaultCurrencyFromResponse = "";
@@ -884,6 +886,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
         if(vehicleInfoList != null && !vehicleInfoList.isEmpty() && currentVehicleTypePos != -1 && vehicleType != -1) {
             params.addPart(Constants.KEY_VEHICLE_TYPE, new TypedString(""+vehicleType));
+            params.addPart(Constants.KEY_RIDE_TYPE, new TypedString(""+rideType));
+            params.addPart(Constants.KEY_REGION_ID, new TypedString(""+regionId));
         }
 
         params.addPart(Constants.KEY_PAYMENT_MODE,new TypedString(String.valueOf(paymentMethod)));
@@ -1070,6 +1074,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         vehicleInfoList = null;
         vehicleTypeAdapterFeed = null;
         vehicleType = -1;
+        rideType = -1;
+        regionId = -1;
         isPickUpSet = false;
         checkCount = 0;
         edtTaskDescription.setText(null);
@@ -1142,6 +1148,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
             if(currentVehicleTypePos != -1 && vehicleType != -1) {
                 params.put(Constants.KEY_VEHICLE_TYPE,String.valueOf(vehicleType));
+                params.put(Constants.KEY_RIDE_TYPE,String.valueOf(rideType));
+                params.put(Constants.KEY_REGION_ID,String.valueOf(regionId));
             }
 
 
@@ -1409,6 +1417,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
                     currentVehicleTypePos = 0;
                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+                    rideType = vehicleInfoList.get(currentVehicleTypePos).getRideType();
+                    regionId = vehicleInfoList.get(currentVehicleTypePos).getRegionId();
                     if (vehicleTypeAdapterFeed == null) {
                         vehicleTypeAdapterFeed = new VehicleTypeAdapterFeed((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterFeed.OnItemSelectedListener() {
                             @Override
@@ -1416,6 +1426,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                 currentVehicleTypePos = pos;
                                 if(-1 != vehicleInfoList.get(currentVehicleTypePos).getType()) {
                                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+                                    rideType = vehicleInfoList.get(currentVehicleTypePos).getRideType();
+                                    regionId = vehicleInfoList.get(currentVehicleTypePos).getRegionId();
                                 }
                                 fetchDynamicDeliveryCharges(false,false,false);
                             }
