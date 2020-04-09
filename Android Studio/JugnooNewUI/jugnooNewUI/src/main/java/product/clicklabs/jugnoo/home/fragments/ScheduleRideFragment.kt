@@ -407,7 +407,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvDestination.text = searchResult.getNameForText(activity)
             searchResultDestination = searchResult
         }
-        getFareEstimate()
+//        getFareEstimate()
     }
 
     private fun getDirectionsAndComputeFare(sourceLatLng: LatLng, sourceAddress: String, destLatLng: LatLng, destAddress: String) {
@@ -648,15 +648,29 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 (activity as HomeActivity).selectedRideTypeForScheduleRide = rideType!!
                 if(!isFromThisFragment) {
                     selectedRegion = this
-                    isOneWay = 1
+                    if(getOneWayPackages(selectedRegion).size>0) {
+                        isOneWay = 1
 
-                    tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                            R.drawable.ic_radio_button_checked,
-                            0, 0, 0)
-                    tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                            R.drawable.ic_radio_button_unchecked,
-                            0, 0, 0)
-                    packagesAdapter!!.setList(getOneWayPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
+                        tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                R.drawable.ic_radio_button_checked,
+                                0, 0, 0)
+                        tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                R.drawable.ic_radio_button_unchecked,
+                                0, 0, 0)
+                        packagesAdapter!!.setList(getOneWayPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
+                        selectedPackage = getOneWayPackages(selectedRegion).get(0)
+                    }
+                    else if(getRoundTripPackages(selectedRegion).size>0){
+                        isOneWay = 0
+                        tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                R.drawable.ic_radio_button_unchecked,
+                                0, 0, 0)
+                        tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                R.drawable.ic_radio_button_checked,
+                                0, 0, 0)
+                        packagesAdapter!!.setList(getRoundTripPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
+                        selectedPackage = getRoundTripPackages(selectedRegion).get(0)
+                    }
                 }
             }
 
