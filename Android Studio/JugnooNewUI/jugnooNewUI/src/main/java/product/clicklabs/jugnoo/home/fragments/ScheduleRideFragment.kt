@@ -239,7 +239,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             if(Data.autoData != null && regions.size > 0) {
                 selectedRegion = regions[0]
             }
-            setSelectedRegionData()
+            setSelectedRegionData(true)
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
 
@@ -616,12 +616,12 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     fun updateVehicleAdapter() {
         if (view != null) {
-            setSelectedRegionData()
+            setSelectedRegionData(false)
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
         }
     }
 
-    private fun setSelectedRegionData() {
+    private fun setSelectedRegionData(isFromThisFragment: Boolean) {
         var regionSelected = (activity as HomeActivity).selectedRegionForScheduleRide
 
         val regions = Data.autoData.regions
@@ -646,6 +646,18 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 (activity as HomeActivity).selectedRegionForScheduleRide = this
                 (activity as HomeActivity).selectedIdForScheduleRide = regionId!!
                 (activity as HomeActivity).selectedRideTypeForScheduleRide = rideType!!
+                if(!isFromThisFragment) {
+                    selectedRegion = this
+                    isOneWay = 1
+
+                    tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_radio_button_checked,
+                            0, 0, 0)
+                    tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_radio_button_unchecked,
+                            0, 0, 0)
+                    packagesAdapter!!.setList(getOneWayPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
+                }
             }
 
 
