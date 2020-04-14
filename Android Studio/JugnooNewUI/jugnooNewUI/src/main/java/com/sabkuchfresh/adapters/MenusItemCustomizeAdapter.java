@@ -54,6 +54,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
     private boolean showSpecialInstructions;
     private String instructions;
     private String currencyCode, currency;
+    private SparseIntArray mapItemOptionsAdded = new SparseIntArray();
 
     private static final int ITEM = 0;
     private static final int CUSTOMIZE_ITEM = 1;
@@ -88,10 +89,13 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             coCustomizeItem.setIsCustomizeItem(1);
             coCustomizeItem.setCustomizeItemPos(i);
             customizeOptions.add(coCustomizeItem);
+            mapItemOptionsAdded.put(customizeItem.getCustomizeId(), 0);
 
             CustomizeItemSelected customizeItemSelected = null;
-            if(customizeItem.getIsCheckBox() == 0){
-                customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId());
+            if(customizeItem.getIsCheckBox() == 0 || customizeItem.getCustomizeItemLowerLimit() > 0){
+                customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId(),
+                        customizeItem.getCustomizeItemName(),
+                        customizeItem.getCustomizeItemLowerLimit(), customizeItem.getCustomizeItemUpperLimit());
             }
 
             for(CustomizeOption customizeOption : customizeItem.getCustomizeOptions()){
@@ -110,6 +114,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
             if(customizeItemSelected != null){
                 itemSelected.getCustomizeItemSelectedList().add(customizeItemSelected);
+                mapItemOptionsAdded.put(customizeItem.getCustomizeId(), 0);
             }
         }
         itemSelected.setTotalPrice(totalPrice);
@@ -314,7 +319,16 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             mHolder.textViewSubCategoryName.append(sb);
             mHolder.textViewSubCategoryName.append(" ");
-            mHolder.textViewSubCategoryName.append(customizeItem.getIsCheckBox() == 1 ? context.getString(R.string.optional_bracket) : context.getString(R.string.required_bracket));
+            String toAppend = "";
+            int lower = customizeItem.getCustomizeItemLowerLimit();
+            int upper = customizeItem.getCustomizeItemUpperLimit();
+
+            if (lower > 0 && upper < Integer.MAX_VALUE) toAppend = context.getString(R.string.select_between_lower_upper, lower, upper);
+            else if (lower == 0 && upper < Integer.MAX_VALUE) toAppend = context.getString(R.string.select_atmost_upper, upper);
+            else if (lower > 0 && upper == Integer.MAX_VALUE) toAppend = context.getString(R.string.select_atleast_lower, lower);
+            else if (customizeItem.getIsCheckBox() == 1) toAppend = context.getString(R.string.optional_bracket);
+            else toAppend = context.getString(R.string.required_bracket);
+            mHolder.textViewSubCategoryName.append(toAppend);
 
         } else if(holder instanceof ViewHolderCustomizeOption) {
             ViewHolderCustomizeOption mHolder = ((ViewHolderCustomizeOption) holder);
@@ -370,9 +384,44 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                         CustomizeItem customizeItem = getCustomizeItem(customizeOption);
                         CustomizeItemSelected customizeItemSelected = item.getCustomizeItemSelected(customizeItem, true, itemSelected);
                         if(customizeOption.getIsMultiSelect() == 1){
+
+                            int itemAdded = mapItemOptionsAdded.get(customizeItem.getCustomizeId());
+                            Integer customizeUpperItemLimit = customizeItem.getCustomizeItemUpperLimit();
+                            Integer customizeLowerItemLimit = 0;
+
+                            if (customizeItem.getCustomizeItemLowerLimit() < customizeUpperItemLimit) {
+                                customizeLowerItemLimit = customizeItem.getCustomizeItemLowerLimit();
+                            }
+
                             if(customizeItemSelected.getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
-                                customizeItemSelected.getCustomizeOptions().remove(customizeOption.getCustomizeOptionId());
+                                // being removed
+
+                                // check for lower limit
+                                if (customizeLowerItemLimit == 0 || itemAdded - 1 >= customizeLowerItemLimit) {
+                                    customizeItemSelected.getCustomizeOptions().remove(customizeOption.getCustomizeOptionId());
+                                    mapItemOptionsAdded.put(customizeItem.getCustomizeId(), --itemAdded);
+                                } else {
+                                    Utils.showToast(context,
+                                            context.getString(R.string.error_customization_lower_limit,
+                                                    customizeItem.getCustomizeItemLowerLimit(),
+                                                    customizeItem.getCustomizeItemName()));
+                                    return;
+                                }
+
                             } else{
+                                // being added
+                                if (customizeUpperItemLimit != 0) {
+                                    if(itemAdded >= customizeUpperItemLimit) {
+                                        Utils.showToast(context,
+                                                context.getString(R.string.error_customization_limit,
+                                                        customizeItem.getCustomizeItemUpperLimit(),
+                                                        customizeItem.getCustomizeItemName()));
+                                        return;
+                                    } else {
+                                        mapItemOptionsAdded.put(customizeItem.getCustomizeId(), ++itemAdded);
+                                    }
+                                }
+
                                 customizeItemSelected.getCustomizeOptions().add(customizeOption.getCustomizeOptionId());
                             }
                         } else {
@@ -513,6 +562,33 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         void updateItemTotalPrice(ItemSelected itemSelected);
         void onItemMinusClick(boolean allItemsFinished);
         void onItemPlusClick();
+    }
+
+    public boolean validateItemQuantityLimit() {
+        boolean isValid = true;
+
+        for (CustomizeItemSelected item: itemSelected.getCustomizeItemSelectedList()) {
+
+            int quantityAdded = mapItemOptionsAdded.get(item.getCustomizeId());
+
+            if (item.getLowerLimit() != 0 && quantityAdded < item.getLowerLimit()) {
+                Utils.showToast(context,
+                        context.getString(R.string.error_customization_lower_limit,
+                                item.getLowerLimit(),
+                                item.getName()));
+                isValid = false;
+                break;
+            } else if (quantityAdded > item.getUpperLimit()) {
+                Utils.showToast(context,
+                        context.getString(R.string.error_customization_limit,
+                                item.getUpperLimit(),
+                                item.getName()));
+                isValid = false;
+
+            }
+        }
+
+        return isValid;
     }
 
 }

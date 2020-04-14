@@ -282,7 +282,8 @@ public class Item {
 	}
 
 	public CustomizeItemSelected getCustomizeItemSelected(CustomizeItem customizeItem, boolean addSelected, ItemSelected itemSelected){
-		CustomizeItemSelected customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId());
+		CustomizeItemSelected customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId(),
+				customizeItem.getCustomizeItemName(), customizeItem.getCustomizeItemLowerLimit(), customizeItem.getCustomizeItemUpperLimit());
 		int index = itemSelected.getCustomizeItemSelectedList().indexOf(customizeItemSelected);
 		if(index > -1){
 			customizeItemSelected = itemSelected.getCustomizeItemSelectedList().get(index);

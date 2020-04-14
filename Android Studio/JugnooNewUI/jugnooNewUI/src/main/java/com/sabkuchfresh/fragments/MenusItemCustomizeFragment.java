@@ -115,6 +115,9 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 					activity.rlAddToCart.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
+
+							if (!menusItemCustomizeAdapter.validateItemQuantityLimit()) return;
+
 							if(activity.getTotalPrice() <= 0){
 								activity.saveDeliveryAddressModel();
 							}

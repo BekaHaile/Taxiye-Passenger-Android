@@ -2547,4 +2547,10 @@
     <string name="special_instructions">Special Instructions</string>
     <string name="special_instructions_hint">Add a note (extra sauce, no onions etc.)</string>
     <string name="price_colon">Price: %s</string>
+    <string name="add_card_toast">Add Card First</string>
+    <string name="error_customization_limit">You can select maximum %d items for %s</string>
+    <string name="error_customization_lower_limit">You have to select minimum %d item(s) for %s</string>
+    <string name="select_between_lower_upper">(Select between %d and %d items)</string>
+    <string name="select_atmost_upper">(Select upto %d item(s))</string>
+    <string name="select_atleast_lower">(Select atleast %d item(s))</string>
 </resources>
