@@ -243,8 +243,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn(), false), currentSystemTime);
         }
         long minutes = ((timeDiff1 / (1000L * 60L)));
-        if (DateOperations.getTimeDifferenceInHHmmss(vendor.getCloseIn(), vendor.getOpensAt()) >= 0
-                && minutes <= 0) {
+        if ((DateOperations.getTimeDifferenceInHHMM(currentSystemTime,
+                DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt(), false)) < 0) // if current time is less than open time
+                || (DateOperations.getTimeDifferenceInHHmmss(vendor.getCloseIn(), vendor.getOpensAt()) >= 0
+                && minutes <= 0)) {
             vendor.setIsClosed(1);
         }
         return minutes;
