@@ -546,7 +546,9 @@ public class JSONParser implements Constants {
 
             parseConfigParams(context, autoData);
 
-            if(Data.userData != null){
+            parseSafetyInfoData(autosData);
+
+			if(Data.userData != null){
             	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
 
@@ -556,6 +558,18 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
     }
+
+	private void parseSafetyInfoData(LoginResponse.Autos autosData) {
+    	Data.autoData.setSafetyInfoData(autosData.getSafetyInfoData());
+
+//		ArrayList<String> infoData = new ArrayList<>();
+//		infoData.add("Our drivers are being checked regularly");
+//		infoData.add("Hand sanitization facilities have been provided in the cabs");
+//		infoData.add("Cabs are being sanitized throughly regularly");
+//		Data.autoData.setSafetyInfoData(new SafetyInfoData(infoData, "Your safety is our top concern!",
+//				"https://fchat.s3.ap-south-1.amazonaws.com/default/TjI1WUF4U0.1587365616963.png",
+//				"https://fchat.s3.ap-south-1.amazonaws.com/default/TjI1WUF4U0.1587365616963.png"));
+	}
 
 	private void parseConfigParams(Context context, JSONObject autoData) {
     	String specifiedCountry = context.getResources().getBoolean(R.bool.specified_country_search_result_enabled) ?

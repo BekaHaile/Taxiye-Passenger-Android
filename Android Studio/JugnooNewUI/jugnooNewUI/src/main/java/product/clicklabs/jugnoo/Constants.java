@@ -1224,4 +1224,13 @@ public interface Constants {
 		}
 	}
 	String STOP_PRESSED_POSITION = "stop_pressed_position";
+    String KEY_API_KEY = "api_key";
+    String KEY_FIRST_NAME = "first_name";
+    String KEY_LAST_NAME = "last_name";
+    String KEY_YELO_USER_INFO = "yelo_user_info";
+
+	String KEY_CUSTOMER_SAFETY_CHECKLIST = "customer_safety_checklist";
+	String KEY_IMAGE_URL = "image_url";
+	String KEY_IMAGE_URL_SMALL = "image_url_small";
+	String KEY_LIST = "list";
 }

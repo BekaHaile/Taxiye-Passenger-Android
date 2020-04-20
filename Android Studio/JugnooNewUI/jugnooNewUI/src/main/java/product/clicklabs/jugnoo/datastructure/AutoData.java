@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
+import product.clicklabs.jugnoo.home.models.SafetyInfoData;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
@@ -109,6 +110,8 @@ public class AutoData {
     private double initialBidValue, changedBidValue;
     private int customerVerificationStatus = 0;
     private boolean multiDestAllowed;
+
+	private SafetyInfoData safetyInfoData;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -1026,5 +1029,13 @@ public class AutoData {
         }
 
     }
+
+	public SafetyInfoData getSafetyInfoData() {
+		return safetyInfoData;
+	}
+
+	public void setSafetyInfoData(SafetyInfoData safetyInfoData) {
+		this.safetyInfoData = safetyInfoData;
+	}
 
 }

@@ -1115,4 +1115,13 @@
         <item name="colorAccent">@color/theme_color</item>
     </style>
 
+    <style name="CustomDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.7</item>
+        <item name="android:windowBackground">@color/transparent</item>
+
+    </style>
+
 </resources>

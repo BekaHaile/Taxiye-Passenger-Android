@@ -271,6 +271,7 @@ import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
 import product.clicklabs.jugnoo.home.dialogs.ReinviteFriendsDialog;
 import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
+import product.clicklabs.jugnoo.home.dialogs.SafetyInfoDialog;
 import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
 import product.clicklabs.jugnoo.home.dialogs.ServiceUnavailableDialog;
@@ -377,7 +378,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         RideTypesAdapter.OnSelectedCallback, SaveLocationDialog.SaveLocationListener, RentalStationAdapter.RentalStationAdapterOnClickHandler,
         RewardsDialog.ScratchCardRevealedListener, CoroutineScope,
         RideConfirmationDialog.RideRequestConfirmListener, DriverNotFoundDialog.RideRequestConfirmListener, DriverCallDialog.CallDriverListener,
-		EditDropDialog.Callback, BadgesAdapter.BadgesClickListener {
+		EditDropDialog.Callback, BadgesAdapter.BadgesClickListener, SafetyInfoDialog.Callback {
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
@@ -749,6 +750,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
     private LinearLayout llPayViaUpi;
     String multiDestList="";
+
+    private ConstraintLayout constraintLayoutSafetyInfo;
+    private ImageView ivSafetyInfoPicture, ivSafetyInfoClose;
 
     @SuppressLint("NewApi")
     @Override
@@ -2694,6 +2698,27 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             linearLayoutConfirmOption.setBackground(getResources().getDrawable(R.color.menu_item_selector_color_F7));
         }
 
+
+        //safety info layout
+		constraintLayoutSafetyInfo = findViewById(R.id.constraintLayoutSafetyInfo);
+		ivSafetyInfoPicture = findViewById(R.id.ivSafetyInfoPicture);
+		ivSafetyInfoClose = findViewById(R.id.ivSafetyInfoClose);
+
+		ivSafetyInfoPicture.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				openSafetyInfoDialog();
+			}
+		});
+		ivSafetyInfoClose.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				constraintLayoutSafetyInfo.setVisibility(View.GONE);
+				safetyInfoBannerDismissed = true;
+			}
+		});
+
+
         checkForYoutubeIntent();
         /* Open Tutorial Activity */
         String tutorialBannerText = Prefs.with(this).getString(KEY_CUSTOMER_TUTORIAL_BANNER_TEXT, "");
@@ -4521,6 +4546,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 						cvTutorialBanner.setVisibility(TextUtils.isEmpty(tutorialBannerText)
 								|| Prefs.with(this).getBoolean(Constants.KEY_TUTORIAL_SKIPPED, false) ? View.GONE : View.VISIBLE);
 						tvTutorialBanner.setText(tutorialBannerText);
+
+						setSafetyInfoBanner();
 
                         break;
 
@@ -14075,5 +14102,41 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 	public void onEditDropConfirm(@Nullable LatLng dropLatLng, @Nullable String dropAddress, @Nullable String dropName, Integer poolFareId) {
     	SearchResult searchResult = new SearchResult(dropName, dropAddress, "", dropLatLng.latitude, dropLatLng.longitude);
 		updateDropToUIAndServerApi(searchResult, poolFareId);
+	}
+
+	@Nullable
+	@Override
+	public AutoData getAutoData() {
+		return Data.autoData;
+	}
+
+	@Override
+	public void onSafetyInfoDialogDismiss() {
+	}
+
+	private boolean safetyInfoBannerDismissed = false;
+	private void openSafetyInfoDialog(){
+		SafetyInfoDialog safetyInfoDialog = SafetyInfoDialog.Companion.newInstance();
+		safetyInfoDialog.show(getSupportFragmentManager().beginTransaction(), SafetyInfoDialog.class.getName());
+	}
+
+	private void setSafetyInfoBanner(){
+    	if(Data.autoData == null){
+    		return;
+		}
+		if(isNewUI() && Data.autoData.getSafetyInfoData() != null && !safetyInfoBannerDismissed){
+			constraintLayoutSafetyInfo.setVisibility(View.VISIBLE);
+
+			if(!TextUtils.isEmpty(Data.autoData.getSafetyInfoData().getImageSmall())){
+				Picasso.with(this).load(Data.autoData.getSafetyInfoData().getImageSmall())
+                            .placeholder(R.drawable.ic_notification_placeholder)
+						.error(R.drawable.ic_notification_placeholder)
+						.resize((int)(ASSL.minRatio()*720f), (int)(ASSL.minRatio()*202f))
+						.into(ivSafetyInfoPicture);
+			}
+
+		} else {
+			constraintLayoutSafetyInfo.setVisibility(View.GONE);
+		}
 	}
 }

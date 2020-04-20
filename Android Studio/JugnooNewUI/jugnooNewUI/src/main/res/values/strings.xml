@@ -2539,4 +2539,5 @@
     <string name="stops_to">Stops to</string>
     <string name="perm_contacts">%s would need to access your contacts</string>
     <string name="perm_contacts_rational">This will enable you to add emergency contacts so as to alert your close ones when needed.Contacts will be uploaded to our server for a seamless experience</string>
+    <string name="your_safety_is_our_top_concern">Your safety is our top concern!</string>
 </resources>

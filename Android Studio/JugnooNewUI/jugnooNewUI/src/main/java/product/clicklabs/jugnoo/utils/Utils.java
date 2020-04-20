@@ -710,14 +710,11 @@ public class Utils implements GAAction, GACategory{
 
 
 	public static int dpToPx(Context context, int dp) {
-		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-		int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-		return px;
+		return dpToPx(context, (float) dp);
 	}
 
 	public static int convertDpToPx(Context context, int dp) {
-		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-		return Math.round(dp * (displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+		return dpToPx(context, (float) dp);
 	}
 
 	public static int pxToDp(Context context, int px) {
