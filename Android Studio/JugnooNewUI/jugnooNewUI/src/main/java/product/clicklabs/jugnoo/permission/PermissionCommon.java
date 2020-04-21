@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.DialogPopup;
 
 /**
  * Created by socomo-46 on 22/09/16.
@@ -250,7 +251,7 @@ public final class PermissionCommon {
             case Manifest.permission.WRITE_EXTERNAL_STORAGE:
                 return activity.getString(R.string.need_permission_storage_format, appName);
             case Manifest.permission.READ_CONTACTS:
-                return activity.getString(R.string.need_permission_contact_format, appName);
+                return activity.getString(R.string.perm_contacts_rational);
             default:
                 return activity.getString(R.string.need_permission_format, appName);
         }
@@ -341,9 +342,18 @@ public final class PermissionCommon {
 
             }
         }
+        if(permissionsToAsk.contains(Manifest.permission.READ_CONTACTS)){
+            DialogPopup.alertPopupWithListener(activity, activity.getString(R.string.perm_contacts,activity.getString(R.string.app_name)), activity.getString(R.string.perm_contacts_rational),activity.getString(R.string.ok), new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    requestPermissions(permissionsToAsk.toArray(new String[permissionsToAsk.size()]), REQUEST_CODE);
+                }
+            },false,true,false);
+        }
 
         //At activity point if shouldAsk is true there is no rational Permission that exists and  No explanation needed, we can request for the permissions.
-        requestPermissions(permissionsToAsk.toArray(new String[permissionsToAsk.size()]), REQUEST_CODE);
+        else
+            requestPermissions(permissionsToAsk.toArray(new String[permissionsToAsk.size()]), REQUEST_CODE);
 
 
     }

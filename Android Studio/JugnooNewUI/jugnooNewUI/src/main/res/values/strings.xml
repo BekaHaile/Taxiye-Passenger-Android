@@ -2537,4 +2537,6 @@
     <string name="add_stop">Add Stop</string>
     <string name="select_atlease_one_top">Please select at least one stop</string>
     <string name="stops_to">Stops to</string>
+    <string name="perm_contacts">%s would need to access your contacts</string>
+    <string name="perm_contacts_rational">This will enable you to add emergency contacts so as to alert your close ones when needed.Contacts will be uploaded to our server for a seamless experience</string>
 </resources>
