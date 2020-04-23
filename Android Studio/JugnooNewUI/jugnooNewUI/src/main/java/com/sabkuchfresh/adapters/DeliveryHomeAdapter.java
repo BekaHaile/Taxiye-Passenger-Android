@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -231,7 +232,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private static DateFormat getDateFormatHHMMA() {
         if (dateFormat == null) {
-            dateFormat = new SimpleDateFormat("hh:mm a");
+            dateFormat = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
         }
         return dateFormat;
     }
@@ -243,8 +244,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             timeDiff1 = DateOperations.getTimeDifferenceInHHMM(DateOperations.convertDayTimeAPViaFormat(vendor.getCloseIn(), false), currentSystemTime);
         }
         long minutes = ((timeDiff1 / (1000L * 60L)));
-        if (DateOperations.getTimeDifferenceInHHmmss(vendor.getCloseIn(), vendor.getOpensAt()) >= 0
-                && minutes <= 0) {
+        if ((DateOperations.getTimeDifferenceInHHMM(currentSystemTime,
+                DateOperations.convertDayTimeAPViaFormat(vendor.getOpensAt(), false)) < 0) // if current time is less than open time
+                || (DateOperations.getTimeDifferenceInHHmmss(vendor.getCloseIn(), vendor.getOpensAt()) >= 0
+                && minutes <= 0)) {
             vendor.setIsClosed(1);
         }
         return minutes;
