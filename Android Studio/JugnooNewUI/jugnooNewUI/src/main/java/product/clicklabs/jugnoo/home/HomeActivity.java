@@ -14131,7 +14131,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 				Picasso.with(this).load(Data.autoData.getSafetyInfoData().getImageSmall())
                             .placeholder(R.drawable.ic_notification_placeholder)
 						.error(R.drawable.ic_notification_placeholder)
-						.resize((int)(ASSL.minRatio()*720f), (int)(ASSL.minRatio()*202f))
+						.resize(Utils.dpToPx(this, 360f), Utils.dpToPx(this, 101f))
+						.centerCrop()
 						.into(ivSafetyInfoPicture);
 			}
 
