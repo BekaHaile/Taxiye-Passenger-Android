@@ -1052,7 +1052,10 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holderOffers.menusVendorOffersAdapter = new MenusVendorOffersAdapter(activity, bannerInfos, new MenusVendorOffersAdapter.Callback() {
                     @Override
                     public void onBannerInfoClick(MenusResponse.BannerInfo bannerInfo) {
-                        if (bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1) {
+                    	if(bannerInfo.isOpenSafetyDialog()){
+                    		callback.onSafetyInfoBannerClick();
+						}
+                        else if (bannerInfo.getRestaurantId() == -1 && bannerInfo.getDeepIndex() != -1) {
                             callback.onBannerInfoDeepIndexClick(bannerInfo.getDeepIndex());
                         } else if (bannerInfo.getRestaurantId() != -1 && bannerInfo.getDeepIndex() == -1 && bannerInfo.getRestaurantItemId() == -1) {
 //                            callback.onRestaurantSelected(bannerInfo.getRestaurantId(),
@@ -1079,6 +1082,7 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 holderOffers.menusVendorOffersAdapter.setList(bannerInfos);
             }
             holderOffers.pagerMenusVendorOffers.setAdapter(holderOffers.menusVendorOffersAdapter);
+			holderOffers.pagerMenusVendorOffers.measure(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             holderOffers.tabDots.setupWithViewPager(holderOffers.pagerMenusVendorOffers, true);
             for (int i = 0; i < holderOffers.tabDots.getTabCount(); i++) {
@@ -1704,6 +1708,8 @@ public class DeliveryHomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         boolean showSuggestions();
 
         void onSuggestionClicked(SearchSuggestion searchSuggestions);
+
+		void onSafetyInfoBannerClick();
     }
 
     private static class ViewDivider extends RecyclerView.ViewHolder {

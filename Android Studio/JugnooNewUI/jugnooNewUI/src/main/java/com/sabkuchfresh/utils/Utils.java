@@ -632,9 +632,7 @@ public class Utils {
 
 
 	public static int dpToPx(Context context, int dp) {
-		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-		int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-		return px;
+    	return product.clicklabs.jugnoo.utils.Utils.dpToPx(context, (float)dp);
 	}
 
 	public static int pxToDp(Context context, int px) {

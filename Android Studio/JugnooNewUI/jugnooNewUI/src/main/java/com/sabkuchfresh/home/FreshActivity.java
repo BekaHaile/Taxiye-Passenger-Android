@@ -189,6 +189,7 @@ import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
+import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
@@ -205,6 +206,7 @@ import product.clicklabs.jugnoo.home.MenuBar;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
 import product.clicklabs.jugnoo.home.dialogs.PaytmRechargeDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
+import product.clicklabs.jugnoo.home.dialogs.SafetyInfoDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
@@ -225,7 +227,8 @@ import product.clicklabs.jugnoo.utils.Prefs;
 /**
  * Created by shankar on 4/6/16.
  */
-public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys, FeedbackFragment.ParentActivityMethods {
+public class FreshActivity extends BaseAppCompatActivity implements PaymentResultWithDataListener, GAAction, GACategory, PaperDBKeys, FeedbackFragment.ParentActivityMethods,
+		SafetyInfoDialog.Callback {
 
     private final String TAG = FreshActivity.class.getSimpleName();
     private DrawerLayout drawerLayout;
@@ -6088,4 +6091,15 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     public void setDirectVendorSearchObject(VendorDirectSearch vendorSearchItem){
         this.vendorDirectSearch = vendorSearchItem;
     }
+
+	@Override
+	public void onSafetyInfoDialogDismiss() {
+
+	}
+
+	@org.jetbrains.annotations.Nullable
+	@Override
+	public AutoData getAutoData() {
+		return Data.autoData;
+	}
 }

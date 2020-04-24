@@ -12,6 +12,7 @@ import com.sabkuchfresh.retrofit.model.RecentOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -181,10 +182,32 @@ public class MenusResponse {
 	}
 
 	public List<BannerInfo> getBannerInfos() {
+		if(Data.autoData != null && Data.autoData.getSafetyInfoData() != null){
+			BannerInfo bannerInfoSafety = new BannerInfo(Data.autoData.getSafetyInfoData().getImageSmall());
+			if(bannerInfos == null){
+				bannerInfos = new ArrayList<>();
+			}
+			int index = -1;
+			for(int i=0; i<bannerInfos.size(); i++){
+				BannerInfo bannerInfo = bannerInfos.get(i);
+				if(bannerInfo.openSafetyDialog){
+					index = i;
+					break;
+				}
+			}
+			if(index > -1){
+				bannerInfos.set(index, bannerInfoSafety);
+			} else {
+				bannerInfos.add(0, bannerInfoSafety);
+			}
+		}
 		return bannerInfos;
 	}
 
 	public boolean getShowBanner() {
+		if(Data.autoData != null && Data.autoData.getSafetyInfoData() != null){
+			return true;
+		}
 		return showBanner;
 	}
 
@@ -923,6 +946,8 @@ public class MenusResponse {
 		@Expose
 		private int bannerId;
 
+		private boolean openSafetyDialog = false;
+
 		public boolean getShouldOpenMerchantInfo() {
 			return shouldOpenMerchantInfo == 1;
 		}
@@ -963,6 +988,20 @@ public class MenusResponse {
 
 		public int getBannerId() {
 			return bannerId;
+		}
+
+		//for safety info banner object
+		public BannerInfo(String imageUrl){
+			this.openSafetyDialog = true;
+			this.imageLink = imageUrl;
+		}
+
+		public boolean isOpenSafetyDialog() {
+			return openSafetyDialog;
+		}
+
+		public void setOpenSafetyDialog(boolean openSafetyDialog) {
+			this.openSafetyDialog = openSafetyDialog;
 		}
 	}
 
