@@ -269,7 +269,6 @@ import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
-import product.clicklabs.jugnoo.home.dialogs.ReinviteFriendsDialog;
 import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SafetyInfoDialog;
 import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
@@ -10774,10 +10773,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 				String image = jObj.optString(Constants.KEY_IMAGE, jObj.optString(Constants.KEY_PICTURE, ""));
 
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance(image,
-						jObj.optString(Constants.KEY_MESSAGE, ""));
-				reinviteFriendsDialog.show(ft, ReinviteFriendsDialog.class.getSimpleName());
+//				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//				ReinviteFriendsDialog reinviteFriendsDialog = ReinviteFriendsDialog.newInstance(image,
+//						jObj.optString(Constants.KEY_MESSAGE, ""));
+//				reinviteFriendsDialog.show(ft, ReinviteFriendsDialog.class.getSimpleName());
 				Prefs.with(this).save(SP_PUSH_DIALOG_CONTENT, EMPTY_JSON_OBJECT);
 			} else {
 

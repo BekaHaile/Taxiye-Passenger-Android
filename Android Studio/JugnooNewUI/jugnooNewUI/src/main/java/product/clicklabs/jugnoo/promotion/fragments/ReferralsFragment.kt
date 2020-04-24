@@ -30,7 +30,6 @@ import product.clicklabs.jugnoo.Data
 import product.clicklabs.jugnoo.MyApplication
 import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.home.HomeActivity
-import product.clicklabs.jugnoo.home.dialogs.ReinviteFriendsDialog
 import product.clicklabs.jugnoo.promotion.ReferralActions
 import product.clicklabs.jugnoo.promotion.ShareActivity
 import product.clicklabs.jugnoo.promotion.adapters.MediaInfoFragmentAdapter
@@ -124,8 +123,8 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
                 val message = c2cReinviteMessage ?: ""
                 val image = c2cReinviteImage ?: ""
                 val ft = childFragmentManager.beginTransaction()
-                val reinviteFriendsDialog = ReinviteFriendsDialog.newInstance(image, message)
-                reinviteFriendsDialog.show(ft, ReinviteFriendsDialog::class.java.simpleName)
+//                val reinviteFriendsDialog = ReinviteFriendsDialog.newInstance(image, message)
+//                reinviteFriendsDialog.show(ft, ReinviteFriendsDialog::class.java.simpleName)
             } }
         }
 
