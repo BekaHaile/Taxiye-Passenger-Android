@@ -751,8 +751,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private LinearLayout llPayViaUpi;
     String multiDestList="";
 
+    private CardView cardViewSafetyInfo;
     private ConstraintLayout constraintLayoutSafetyInfo;
-    private ImageView ivSafetyInfoPicture, ivSafetyInfoClose;
+    private ImageView ivSafetyInfoPicture, ivSafetyInfoClose, ivSafetyInfoPictureOld, ivSafetyInfoCloseOld;
 
     @SuppressLint("NewApi")
     @Override
@@ -2704,6 +2705,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		ivSafetyInfoPicture = findViewById(R.id.ivSafetyInfoPicture);
 		ivSafetyInfoClose = findViewById(R.id.ivSafetyInfoClose);
 
+		cardViewSafetyInfo = findViewById(R.id.cardViewSafetyInfo);
+		ivSafetyInfoPictureOld = findViewById(R.id.ivSafetyInfoPictureOld);
+		ivSafetyInfoCloseOld = findViewById(R.id.ivSafetyInfoCloseOld);
+
 		ivSafetyInfoPicture.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -2714,6 +2719,20 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 			@Override
 			public void onClick(View v) {
 				constraintLayoutSafetyInfo.setVisibility(View.GONE);
+				safetyInfoBannerDismissed = true;
+			}
+		});
+
+		ivSafetyInfoPictureOld.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				openSafetyInfoDialog();
+			}
+		});
+		ivSafetyInfoCloseOld.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				cardViewSafetyInfo.setVisibility(View.GONE);
 				safetyInfoBannerDismissed = true;
 			}
 		});
@@ -14124,20 +14143,35 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     	if(Data.autoData == null){
     		return;
 		}
-		if(isNewUI() && Data.autoData.getSafetyInfoData() != null && !safetyInfoBannerDismissed){
-			constraintLayoutSafetyInfo.setVisibility(View.VISIBLE);
 
-			if(!TextUtils.isEmpty(Data.autoData.getSafetyInfoData().getImageSmall())){
-				Picasso.with(this).load(Data.autoData.getSafetyInfoData().getImageSmall())
-                            .placeholder(R.drawable.ic_notification_placeholder)
-						.error(R.drawable.ic_notification_placeholder)
-						.resize(Utils.dpToPx(this, 360f), Utils.dpToPx(this, 101f))
-						.centerCrop()
-						.into(ivSafetyInfoPicture);
+		constraintLayoutSafetyInfo.setVisibility(View.GONE);
+		cardViewSafetyInfo.setVisibility(View.GONE);
+
+		if(Data.autoData.getSafetyInfoData() != null && !safetyInfoBannerDismissed){
+			if(isNewUI()) {
+				constraintLayoutSafetyInfo.setVisibility(View.VISIBLE);
+
+				if (!TextUtils.isEmpty(Data.autoData.getSafetyInfoData().getImageSmall())) {
+					Picasso.with(this).load(Data.autoData.getSafetyInfoData().getImageSmall())
+							.placeholder(R.drawable.ic_notification_placeholder)
+							.error(R.drawable.ic_notification_placeholder)
+							.resize(Utils.dpToPx(this, 360f), Utils.dpToPx(this, 101f))
+							.centerCrop()
+							.into(ivSafetyInfoPicture);
+				}
+			} else {
+				cardViewSafetyInfo.setVisibility(View.VISIBLE);
+
+				if (!TextUtils.isEmpty(Data.autoData.getSafetyInfoData().getImageUrlStrip())) {
+					Picasso.with(this).load(Data.autoData.getSafetyInfoData().getImageUrlStrip())
+							.placeholder(R.drawable.ic_notification_placeholder)
+							.error(R.drawable.ic_notification_placeholder)
+							.resize(Utils.dpToPx(this, 337.5f), Utils.dpToPx(this, 76.5f))
+							.centerCrop()
+							.into(ivSafetyInfoPictureOld);
+				}
 			}
 
-		} else {
-			constraintLayoutSafetyInfo.setVisibility(View.GONE);
 		}
 	}
 }

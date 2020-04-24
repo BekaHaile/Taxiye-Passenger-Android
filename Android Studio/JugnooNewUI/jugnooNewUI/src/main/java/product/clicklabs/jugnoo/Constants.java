@@ -1232,5 +1232,6 @@ public interface Constants {
 	String KEY_CUSTOMER_SAFETY_CHECKLIST = "customer_safety_checklist";
 	String KEY_IMAGE_URL = "image_url";
 	String KEY_IMAGE_URL_SMALL = "image_url_small";
+	String KEY_IMAGE_URL_STRIP = "image_url_strip";
 	String KEY_LIST = "list";
 }

@@ -16,7 +16,10 @@ class SafetyInfoData (
         var image:String?,
         @SerializedName(Constants.KEY_IMAGE_URL_SMALL)
         @Expose
-        var imageSmall:String?
+        var imageSmall:String?,
+        @SerializedName(Constants.KEY_IMAGE_URL_STRIP)
+        @Expose
+        var imageUrlStrip:String?
 ){
 }
 class SafetyPoint(
