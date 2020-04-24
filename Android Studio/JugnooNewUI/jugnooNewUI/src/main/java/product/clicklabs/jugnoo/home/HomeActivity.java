@@ -14138,6 +14138,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		safetyInfoDialog.show(getSupportFragmentManager().beginTransaction(), SafetyInfoDialog.class.getName());
 	}
 
+	private Target targetSafetyInfo;
 	private void setSafetyInfoBanner(){
     	if(Data.autoData == null){
     		return;
@@ -14147,29 +14148,33 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		cardViewSafetyInfo.setVisibility(View.GONE);
 
 		if(Data.autoData.getSafetyInfoData() != null && !safetyInfoBannerDismissed){
-			if(isNewUI()) {
-				constraintLayoutSafetyInfo.setVisibility(View.VISIBLE);
-
-				if (!TextUtils.isEmpty(Data.autoData.getSafetyInfoData().getImageSmall())) {
-					Picasso.with(this).load(Data.autoData.getSafetyInfoData().getImageSmall())
-							.placeholder(R.drawable.ic_notification_placeholder)
-							.error(R.drawable.ic_notification_placeholder)
-							.resize(Utils.dpToPx(this, 360f), Utils.dpToPx(this, 101f))
-							.centerCrop()
-							.into(ivSafetyInfoPicture);
+			targetSafetyInfo = new Target() {
+				@Override
+				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+					if(isNewUI()) {
+						constraintLayoutSafetyInfo.setVisibility(View.VISIBLE);
+						ivSafetyInfoPicture.setImageBitmap(bitmap);
+					} else {
+						cardViewSafetyInfo.setVisibility(View.VISIBLE);
+						ivSafetyInfoPictureOld.setImageBitmap(bitmap);
+					}
 				}
-			} else {
-				cardViewSafetyInfo.setVisibility(View.VISIBLE);
 
-				if (!TextUtils.isEmpty(Data.autoData.getSafetyInfoData().getImageUrlStrip())) {
-					Picasso.with(this).load(Data.autoData.getSafetyInfoData().getImageUrlStrip())
-							.placeholder(R.drawable.ic_notification_placeholder)
-							.error(R.drawable.ic_notification_placeholder)
-							.resize(Utils.dpToPx(this, 337.5f), Utils.dpToPx(this, 76.5f))
-							.centerCrop()
-							.into(ivSafetyInfoPictureOld);
+				@Override
+				public void onBitmapFailed(Drawable drawable) {
+
 				}
-			}
+
+				@Override
+				public void onPrepareLoad(Drawable drawable) {
+
+				}
+			};
+
+			Picasso.with(this).load(Data.autoData.getSafetyInfoData().getImageUrlStrip())
+					.resize(Utils.dpToPx(this, 337.5f), Utils.dpToPx(this, 76.5f))
+					.centerCrop()
+					.into(targetSafetyInfo);
 
 		}
 	}

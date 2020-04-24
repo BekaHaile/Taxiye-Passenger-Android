@@ -183,7 +183,7 @@ public class MenusResponse {
 
 	public List<BannerInfo> getBannerInfos() {
 		if(Data.autoData != null && Data.autoData.getSafetyInfoData() != null){
-			BannerInfo bannerInfoSafety = new BannerInfo(Data.autoData.getSafetyInfoData().getImageSmall());
+			BannerInfo bannerInfoSafety = new BannerInfo(Data.autoData.getSafetyInfoData().getImageUrlStrip());
 			if(bannerInfos == null){
 				bannerInfos = new ArrayList<>();
 			}

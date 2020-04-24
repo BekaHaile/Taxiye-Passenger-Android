@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
-import com.sabkuchfresh.utils.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -19,6 +18,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 19/05/17.
@@ -52,9 +52,9 @@ public class MenusVendorOffersAdapter extends PagerAdapter {
 					.error(R.drawable.ic_notification_placeholder);
 
 			if(bannerInfo.isOpenSafetyDialog()){
-				requestCreator.resize(Utils.dpToPx(context, 360), Utils.dpToPx(context, 101));
+				requestCreator.resize(Utils.dpToPx(context, 337.5f), Utils.dpToPx(context, 76.5f));
 			} else {
-				requestCreator.resize(Utils.dpToPx(context, 360), Utils.dpToPx(context, 220));
+				requestCreator.resize(Utils.dpToPx(context, 360f), Utils.dpToPx(context, 220f));
 			}
 			requestCreator.centerCrop();
 
