@@ -82,11 +82,13 @@
                     android:singleLine="true"
                     android:gravity="center"
                     android:padding="2dp"
+                    android:layout_marginStart="27px"
                     android:background="@drawable/background_grey_rounded_bordered"
                     android:textSize="7sp"
+                    android:layout_toEndOf="@id/imageViewDestSearchGPSIcon"
                     android:textColor="@color/black"
                     android:fontFamily="@font/maven_pro_medium"
-                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_centerVertical="true"
                     android:visibility="gone"
                     />
 
@@ -97,7 +99,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="37px"
                     android:layout_toStartOf="@+id/layout_edit_destination"
-                    android:layout_toEndOf="@+id/imageViewDestSearchGPSIcon"
+                    android:layout_toEndOf="@+id/tvStopsBesidesDropOldUi"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
                     android:hint="@string/assigning_state_edit_text_hint"
@@ -115,6 +117,15 @@
                     android:layout_width="wrap_content"
                     android:gravity="center_vertical"
                     android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/imageViewDropAddNew"
+                        android:layout_width="70px"
+                        android:layout_height="70px"
+                        android:padding="16px"
+                        android:src="@drawable/ic_plus_theme"
+                        android:tag="mwar"
+                        android:visibility="gone"/>
+
                     <ImageView
                         android:id="@+id/ivLikeDrop"
                         android:layout_width="40dp"

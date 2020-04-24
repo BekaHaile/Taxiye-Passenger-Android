@@ -430,7 +430,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     Button buttonCancelInAppCampaignRequest;
     RecyclerView rvRideTypes;
     RideTypesAdapter rideTypesAdapter;
-    TextView tvStopsBesidesDrop,tvStopsBesidesDropNewUiAssigning,tvStopsBesidesDropNewUiInRide;
+    TextView tvStopsBesidesDrop,tvStopsBesidesDropNewUiAssigning,tvStopsBesidesDropNewUiInRide,tvStopsBesidesDropOldUi;
     RelativeLayout relativeLayoutGoogleAttr;
     ImageView imageViewGoogleAttrCross, imageViewConfirmDropLocationEdit;
     TextView textViewGoogleAttrText;
@@ -879,6 +879,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewChangeLocality.setTypeface(Fonts.mavenLight(this));
         buttonChangeLocalityMyLocation = (Button) findViewById(R.id.buttonChangeLocalityMyLocation);
         tvStopsBesidesDrop=findViewById(R.id.tvStopsBesidesDropNewUi);
+        tvStopsBesidesDropOldUi=findViewById(R.id.tvStopsBesidesDropOldUi);
         initialMyLocationBtn = (Button) findViewById(R.id.initialMyLocationBtn);
         confirmMyLocationBtn = (Button) findViewById(R.id.confirmMyLocationBtn);
         changeLocalityBtn = (Button) findViewById(R.id.changeLocalityBtn);
@@ -1894,6 +1895,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     translateViewBottomTop(relativeLayoutDestSearchBar, false);
                     translateViewTopBottom(relativeLayoutInitialSearchBar, true);
                     Prefs.with(HomeActivity.this).save(SPLabels.ENTERED_DESTINATION, "");
+                    Data.autoData.getMultiDestList().clear();
+                    slidingBottomPanel.getRequestRideOptionsFragment().updateRegionsUI();
                     updateUiForMultipleStops();
                 /*if(dropInitialMarker != null) {
                     dropInitialMarker.remove();
@@ -12552,14 +12555,17 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     public void showStopsBesidesDrop(){
         if(!Data.autoData.getMultiDestList().isEmpty()){
             tvStopsBesidesDrop.setVisibility(View.VISIBLE);
+            tvStopsBesidesDropOldUi.setVisibility(View.VISIBLE);
             tvStopsBesidesDropNewUiAssigning.setVisibility(View.VISIBLE);
             tvStopsBesidesDropNewUiInRide.setVisibility(View.VISIBLE);
             tvStopsBesidesDrop.setText(Data.autoData.getMultiDestList().size() + " "+ getString(R.string.stops_to));
             tvStopsBesidesDropNewUiAssigning.setText(Data.autoData.getMultiDestList().size() + " "+ getString(R.string.stops_to));
             tvStopsBesidesDropNewUiInRide.setText(Data.autoData.getMultiDestList().size() + " "+ getString(R.string.stops_to));
+            tvStopsBesidesDropOldUi.setText(Data.autoData.getMultiDestList().size() + " "+ getString(R.string.stops_to));
         }
         else{
             tvStopsBesidesDrop.setVisibility(View.GONE);
+            tvStopsBesidesDropOldUi.setVisibility(View.GONE);
             tvStopsBesidesDropNewUiAssigning.setVisibility(View.GONE);
             tvStopsBesidesDropNewUiInRide.setVisibility(View.GONE);
         }
