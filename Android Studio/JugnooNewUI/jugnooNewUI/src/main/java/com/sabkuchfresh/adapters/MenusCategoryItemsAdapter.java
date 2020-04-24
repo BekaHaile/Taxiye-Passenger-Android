@@ -409,11 +409,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         CallbackCheckForAdd callbackCheckForAdd = new CallbackCheckForAdd() {
                             @Override
                             public void addConfirmed(int position, Item item) {
-                                doPlus(position, item);
+                                doPlus(position, item, true);
                             }
                         };
                         if(callback.checkForAdd(pos, item1, callbackCheckForAdd)) {
-                            doPlus(pos, item1);
+                            doPlus(pos, item1, true);
                         }
                     }catch (Exception e) {
                         e.printStackTrace();
@@ -448,6 +448,9 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                             } else if(item1.getItemSelectedList().size() == 1 ) {
                                 // if only one item present for item, same type of customisation or instructions for item
                                 item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() - 1);
+                                if (item1.getItemSelectedList().get(0).getQuantity() == 0) {
+                                    item1.getItemSelectedList().clear();
+                                }
                                 notifyDataSetChanged();
                                 callback.onMinusClicked(pos, item1);
                             }
@@ -464,6 +467,8 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                         Item item1 = subItems.get(pos);
                         if(!item1.isActive() && callback.getVendorOpened() != null){
                             Utils.showToast(context, callback.getVendorOpened().getItemInactiveAlertText(context), Toast.LENGTH_LONG);
+                        } else {
+                            doPlus(pos, item1, true);
                         }
                     } catch (Exception e){
                         e.printStackTrace();
@@ -500,7 +505,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
 
 	}
 
-    private void doPlus(int pos, Item item1){
+    private void doPlus(int pos, Item item1, final boolean showItemDetailPage){
         if (item1.getTotalQuantity() < 50) {
             if (item1.getCustomizeItem().size() > 0) {
                 if(categoryPos > -1){
@@ -509,9 +514,11 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     ((FreshActivity) context).openMenusItemCustomizeFragment(item1.getCategoryPos(), item1.getSubCategoryPos(), item1.getItemPos());
                 }
             } else {
-                boolean isNewItemAdded =false;
-                if (item1.getItemSelectedList().size() > 0) {
-//                    item1.getItemSelectedList().get(0).setQuantity(item1.getItemSelectedList().get(0).getQuantity() + 1);
+                if (showItemDetailPage) {
+                    ((FreshActivity) context).openItemDetailFragment(pos, item1);
+                } else {
+                    boolean isNewItemAdded = false;
+                    if (item1.getItemSelectedList().size() > 0) {
 
                         boolean sameInstructions = false;
                         for (ItemSelected itemSelected: item1.getItemSelectedList()) {
@@ -549,6 +556,7 @@ public class MenusCategoryItemsAdapter extends RecyclerView.Adapter<RecyclerView
                     }
                     callback.onPlusClicked(pos, item1, isNewItemAdded);
                 }
+            }
         } else {
             Utils.showToast(context, context.getString(R.string.order_quantity_limited));
         }

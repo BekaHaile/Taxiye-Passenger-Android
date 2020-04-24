@@ -4124,6 +4124,11 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                         if(!TextUtils.isEmpty(itemSelected.getCustomizeText())){
                             sb.append(newLine).append(itemSelected.getCustomizeText());
                         }
+                        // check for special instructions, add to Item text if available
+                        if(!TextUtils.isEmpty(itemSelected.getItemInstructions())){
+                            sb.append(newLine).append(context.getString(R.string.special_instructions)).append(colon)
+                                    .append(newLine).append(itemSelected.getItemInstructions());
+                        }
                         sb.append(newLine);
                         sb.append(newLine);
                         count++;
