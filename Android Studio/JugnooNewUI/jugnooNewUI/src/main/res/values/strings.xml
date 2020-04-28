@@ -2540,4 +2540,6 @@
     <string name="perm_contacts">%s would need to access your contacts</string>
     <string name="perm_contacts_rational">This will enable you to add emergency contacts so as to alert your close ones when needed.Contacts will be uploaded to our server for a seamless experience</string>
     <string name="your_safety_is_our_top_concern">Your safety is our top concern!</string>
+    <string name="packages_not_available">Packages are not available</string>
+    <string name="pls_select_a_package">Please select a Package</string>
 </resources>

@@ -208,6 +208,21 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     } else if ((activity as HomeActivity).selectedIdForScheduleRide <= 0) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_vehicle))
                         throw Exception()
+                    } else if(selectedPackage == null) {
+                        if(isOneWay == 1) {
+                            if(getOneWayPackages(selectedRegion).size > 0) {
+                                Utils.showToast(activity, activity!!.getString(R.string.pls_select_a_package))
+                            } else {
+                                Utils.showToast(activity, activity!!.getString(R.string.packages_not_available))
+                            }
+                        } else if(isOneWay == 0) {
+                            if(getRoundTripPackages(selectedRegion).size > 0) {
+                                Utils.showToast(activity, activity!!.getString(R.string.pls_select_a_package))
+                            } else {
+                                Utils.showToast(activity, activity!!.getString(R.string.packages_not_available))
+                            }
+                        }
+                        throw Exception()
                     } else {
                         if(isOneWay == 1) {
                             (activity as HomeActivity).setNotes("One Way")
@@ -782,6 +797,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             oneWayPackages[0].selected = true
             selectedPackage = oneWayPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
+        } else {
+            selectedPackage = null
         }
         return oneWayPackages
     }
@@ -826,6 +843,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             roundTripPackages[0].selected = true
             selectedPackage = roundTripPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
+        } else {
+            selectedPackage = null
         }
         return roundTripPackages
     }
