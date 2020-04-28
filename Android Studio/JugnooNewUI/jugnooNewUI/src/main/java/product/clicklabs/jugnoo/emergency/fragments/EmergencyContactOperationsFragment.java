@@ -405,20 +405,20 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
 
 
 
-        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
-                new KeyboardLayoutListener.KeyBoardStateHandler() {
-                    @Override
-                    public void keyboardOpened() {
-                        linearLayoutEmergencyContacts.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void keyBoardClosed() {
-                        linearLayoutEmergencyContacts.setVisibility(View.VISIBLE);
-                    }
-                });
-        keyboardLayoutListener.setResizeTextView(false);
-        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
+//        KeyboardLayoutListener keyboardLayoutListener = new KeyboardLayoutListener(linearLayoutMain, textViewScroll,
+//                new KeyboardLayoutListener.KeyBoardStateHandler() {
+//                    @Override
+//                    public void keyboardOpened() {
+//                        linearLayoutEmergencyContacts.setVisibility(View.GONE);
+//                    }
+//
+//                    @Override
+//                    public void keyBoardClosed() {
+//                        linearLayoutEmergencyContacts.setVisibility(View.VISIBLE);
+//                    }
+//                });
+//        keyboardLayoutListener.setResizeTextView(false);
+//        linearLayoutMain.getViewTreeObserver().addOnGlobalLayoutListener(keyboardLayoutListener);
 
 
         if (ContactsListAdapter.ListMode.SEND_RIDE_STATUS == listMode) {
@@ -551,7 +551,7 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
         if (contacts.size() == 0) {
             DialogPopup.alertPopup(activity, "",
                     activity.getResources().getString(R.string.send_ride_status_no_contacts_message));
-        } else if (contacts.size() > 10) {
+        } else if (contacts.size() > 5) {
             DialogPopup.alertPopupTwoButtonsWithListeners(activity,
                     "",
                     String.format(activity.getResources()
