@@ -47,7 +47,6 @@ public class ApiCurrentStatusIciciUpi {
     public static void checkIciciPaymentStatusApi(final FreshActivity activity, final boolean isMenus, final ApiCurrentStatusListener apiCurrentStatusListener, final int apptype) {
         if (MyApplication.getInstance().isOnline()) {
             HashMap<String, String> params = new HashMap<>();
-            HomeUtil.addDefaultParams(params);
             params.put(Constants.KEY_ORDER_ID, String.valueOf(activity.getPlaceOrderResponse().getOrderId()));
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             if(isMenus){
@@ -57,6 +56,7 @@ public class ApiCurrentStatusIciciUpi {
                 params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
 
             }
+            HomeUtil.addDefaultParams(params);
             Callback<IciciPaymentRequestStatus> iciciPaymentStatusCallback = new Callback<IciciPaymentRequestStatus>() {
                 @Override
                 public void success(IciciPaymentRequestStatus commonResponse, Response response) {

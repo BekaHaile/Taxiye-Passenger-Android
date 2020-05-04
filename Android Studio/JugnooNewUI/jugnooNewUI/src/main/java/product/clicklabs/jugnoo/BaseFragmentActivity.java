@@ -17,6 +17,7 @@ import com.hippo.HippoConfig;
 
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.utils.JugnooExceptionHandler;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
@@ -56,6 +57,8 @@ public class BaseFragmentActivity extends FragmentActivity {
 			return;
 		}
 		new HomeUtil().forceRTL(this);
+		if (BuildConfig.DEBUG)
+			Thread.setDefaultUncaughtExceptionHandler(JugnooExceptionHandler.getInstance(this));
 	}
 
 	@Override

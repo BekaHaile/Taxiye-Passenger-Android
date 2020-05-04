@@ -215,6 +215,7 @@ public class HomeUtil {
 		params.put(Constants.KEY_OPERATOR_TOKEN, MyApplication.getInstance().getString(R.string.operator_token));
 		params.put(Constants.KEY_CUSTOMER_PACKAGE_NAME, MyApplication.getInstance().getPackageName());
 		params.put(Constants.KEY_LOCALE, LocaleHelper.getLanguage(MyApplication.getInstance()));
+		Utils.logRequestBody(params);
 	}
 
 	public void putDefaultParamsMultipart(MultipartTypedOutput multipartTypedOutput){
@@ -224,6 +225,7 @@ public class HomeUtil {
 		multipartTypedOutput.addPart(Constants.KEY_OPERATOR_TOKEN, new TypedString(MyApplication.getInstance().getString(R.string.operator_token)));
 		multipartTypedOutput.addPart(Constants.KEY_CUSTOMER_PACKAGE_NAME, new TypedString(MyApplication.getInstance().getPackageName()));
 		multipartTypedOutput.addPart(Constants.KEY_LOCALE, new TypedString(LocaleHelper.getLanguage(MyApplication.getInstance())));
+		Utils.logRequestBody(multipartTypedOutput);
 	}
 
 	public ArrayList<SearchResult> getSavedPlacesWithHomeWork(Activity activity){
