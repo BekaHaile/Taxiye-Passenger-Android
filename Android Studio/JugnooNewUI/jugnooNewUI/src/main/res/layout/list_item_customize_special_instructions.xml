@@ -35,10 +35,6 @@
         android:minHeight="50dp"
         android:paddingBottom="4dp"
         android:textColor="@color/text_color"
-        tools:text="asdasdasdasdasd
-asasdasdas
-da
-sdasdasddasdasdasd
-asasdasdasdasdasdasdasdasd" />
+        tools:text="" />
 
 </LinearLayout>

@@ -563,6 +563,7 @@
                                     android:textSize="@dimen/text_size_40"
                                     app:typekitFont="maven"/>
                                 <LinearLayout
+                                    android:id="@+id/llAmount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_alignParentEnd="true"
@@ -600,7 +601,7 @@
                                     android:id="@+id/tvTotalAmountMessage"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_below="@+id/tvTotalAmount"
+                                    android:layout_below="@+id/llAmount"
                                     android:layout_marginBottom="@dimen/px_26"
                                     android:layout_marginStart="@dimen/px_40"
                                     android:layout_marginEnd="@dimen/px_40"
