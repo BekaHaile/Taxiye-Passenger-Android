@@ -4299,7 +4299,28 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 							public void run() {
 								RelativeLayout.LayoutParams paramsInitial = (RelativeLayout.LayoutParams) initialLayout.getLayoutParams();
 								if(!isNewUI()) {
-									setEnteredDestination();
+								    if(Data.autoData.getMultiDestList().isEmpty())
+									    setEnteredDestination();
+								    else{
+                                        if (Data.autoData.getDropLatLng() != null) {
+                                            if (textViewDestSearch.getText().toString().isEmpty()
+                                                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.enter_destination))
+                                                    || textViewDestSearch.getText().toString().equalsIgnoreCase(getResources().getString(R.string.destination_required))) {
+                                                translateViewBottom(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutDestSearchBar, true, false);
+                                                translateViewTop(((ViewGroup) relativeLayoutDestSearchBar.getParent()), relativeLayoutInitialSearchBar, false, false);
+                                            }
+
+                                            textViewDestSearch.setText(Data.autoData.getDropAddress());
+                                            textViewDestSearch.setTextColor(getResources().getColor(R.color.text_color));
+                                            textViewDestSearchNew.setText(Data.autoData.getDropAddress());
+                                            textViewDestSearchNew.setTextColor(getResources().getColor(R.color.text_color));
+
+                                            relativeLayoutDestSearchBar.setBackgroundResource(R.drawable.background_white_rounded_bordered);
+                                            imageViewDropCross.setVisibility(View.VISIBLE);
+                                            imageViewDropCrossNew.setVisibility(View.VISIBLE);
+                                            setLikeDropVisibilityAndBG();
+                                        }
+                                    }
 									paramsInitial.topMargin = (int) (ASSL.Yscale() * 96F);
 								} else {
 									paramsInitial.topMargin = 0;
