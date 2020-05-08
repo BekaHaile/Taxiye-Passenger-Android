@@ -208,7 +208,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     } else if ((activity as HomeActivity).selectedIdForScheduleRide <= 0) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_vehicle))
                         throw Exception()
-                    } else if(selectedPackage == null) {
+                    } else if(selectedPackage == null&&!(activity as HomeActivity).scheduleRideOpen) {
                         if(isOneWay == 1) {
                             if(getOneWayPackages(selectedRegion).size > 0) {
                                 Utils.showToast(activity, activity!!.getString(R.string.pls_select_a_package))
