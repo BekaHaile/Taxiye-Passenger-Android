@@ -1,6 +1,6 @@
 package com.sabkuchfresh.home;
 
-import android.app.IntentService;
+/*import android.app.IntentService;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -27,9 +27,9 @@ import product.clicklabs.jugnoo.utils.Utils;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-/**
+*//**
  * Created by Shankar on 3/14/15.
- */
+ *//*
 public class FeedContactsUploadService extends IntentService {
 
 	private static final String TAG = FeedContactsUploadService.class.getSimpleName();
@@ -191,4 +191,4 @@ public class FeedContactsUploadService extends IntentService {
 		sendBroadcast(intent);
 		stopSelf();
 	}
-}
+}*/
