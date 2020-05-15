@@ -1,4 +1,5 @@
 package product.clicklabs.jugnoo.smartlock.controller;
+/*
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -91,9 +92,11 @@ public class SmartLockController {
         if(m_myData!=null){
             // = null;
         }
-       /* if(m_myData.device.getAddress().equals(macId)){
+       */
+/* if(m_myData.device.getAddress().equals(macId)){
             mSmartlockCallbacks.makePair(true);
-        }else{*/
+        }else{*//*
+
             mac = macId;
             pairDevice();
         //}
@@ -119,10 +122,12 @@ public class SmartLockController {
             //finish();
             return;
         }
+*/
 /*
         if (!mBluetoothAdapter.isEnabled()) {
             mSmartlockCallbacks.checkForBluetoth();
-        }*/
+        }*//*
+
 
 
     }
@@ -287,10 +292,12 @@ public class SmartLockController {
                     Log.e("device data 1",mes.obj.toString());
                     break;
                 } case 2: {
-                  /*  Toast toast = Toast.makeText(context, mes.obj.toString(),
+                  */
+/*  Toast toast = Toast.makeText(context, mes.obj.toString(),
                             Toast.LENGTH_SHORT);
                     toast.setGravity(Gravity.CENTER, 0, 0);
-                    toast.show();*/
+                    toast.show();*//*
+
                     break;
                 }
 
@@ -520,3 +527,4 @@ public class SmartLockController {
 
 
 }
+*/
