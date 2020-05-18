@@ -144,7 +144,9 @@
 -keepclassmembers class com.sabkuchfresh.retrofit.model.menus.FetchFeedbackResponse$ReviewImage {
     private <fields>;
 }
-
+-keepclassmembers,allowobfuscation class * {
+  @com.google.gson.annotations.SerializedName <fields>;
+}
 #Paper Db
 -keep class org.objenesis.** { *; }
 -keep interface org.objenesis.** { *; }

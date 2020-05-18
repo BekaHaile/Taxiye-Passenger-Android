@@ -3958,10 +3958,10 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
     private void checkIciciPaymentStatusApi() {
         if (MyApplication.getInstance().isOnline()) {
             HashMap<String, String> params = new HashMap<>();
-            HomeUtil.addDefaultParams(params);
             params.put(Constants.KEY_ORDER_ID, String.valueOf(activity.getPlaceOrderResponse().getOrderId()));
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
             params.put(Constants.KEY_CLIENT_ID, Prefs.with(activity).getString(Constants.KEY_SP_LAST_OPENED_CLIENT_ID, Config.getFreshClientId()));
+            HomeUtil.addDefaultParams(params);
             if (iciciPaymentStatusCallback == null) {
 
                 iciciPaymentStatusCallback = new Callback<IciciPaymentRequestStatus>() {

@@ -314,7 +314,6 @@ import product.clicklabs.jugnoo.room.apis.DBCoroutine;
 import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.room.model.SearchLocation;
 import product.clicklabs.jugnoo.smartlock.callbacks.SmartlockCallbacks;
-import product.clicklabs.jugnoo.smartlock.controller.SmartLockController;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -6543,7 +6542,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             if (resultCode == RESULT_OK) {
                 if(requestCode==REQ_BLE_ENABLE){
                  Log.e(TAG,"bluetooth permission result");
-                 initiateBleProcess();
+                // initiateBleProcess();
                 }else if(requestCode==REQ_CODE_ADD_CARD_DRIVER_TIP){
                     if(driverTipInteractor!=null && driverTipInteractor.actionButton!=null){
                         driverTipInteractor.actionButton.performClick();
@@ -6629,7 +6628,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 qrCode = bikeNumber;
                                 Log.e(TAG,"bluetooth enabled"+ Data.autoData.getBluetoothEnabled());
                                 if(Data.autoData.getBluetoothEnabled()==1){
-                                    initiateBleProcess();
+                                  //  initiateBleProcess();
                                 }else{
                                     requestRideClick();
                                 }
@@ -6641,7 +6640,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             qrCode = data.getStringExtra("qrCode");
                             qrCodeDetails = data.getStringExtra("qr_code_details");
                             if(Data.autoData.getBluetoothEnabled()==1){
-                                initiateBleProcess();
+                              //  initiateBleProcess();
                             }else{
                                 requestRideClick();
                             }
@@ -6691,7 +6690,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 		}
 	};
 
-    private void initiateBleProcess(){
+   /* private void initiateBleProcess(){
         BluetoothManager bluetoothManager =
                 (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -6741,7 +6740,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 smartLockObj.makePair(macId);
             }
         }
-    }
+    }*/
 
     // Extracting Bike number from the scan
     public String extractQRCode(final String result) {
@@ -6767,7 +6766,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    SmartLockController smartLockObj = new SmartLockController(new SmartlockCallbacks() {
+ /*   SmartLockController smartLockObj = new SmartLockController(new SmartlockCallbacks() {
         @Override
         public void makePair(boolean status) {
             Log.d(TAG,"bluetooth device connected"+status);
@@ -6806,9 +6805,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
 
-    });
+    });*/
 
-    private void callUpdateServerApi(int lockStatus) {
+/*    private void callUpdateServerApi(int lockStatus) {
         HashMap<String, String> nameValuePairs = new HashMap<>();
         nameValuePairs.put("access_token", Data.userData.accessToken);
         nameValuePairs.put("engagement_id", "" + Data.autoData.getcEngagementId());
@@ -6833,16 +6832,16 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
 
-    }
+    }*/
 
-    @Override
+/*    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {//The three parameters are the request code with the same custom, the permission array, the authorization result, and the permission array
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         Log.e(TAG,"bluetooth permission result"+requestCode);
         if (requestCode == 1) {
             smartLockObj.makePair(macId);
         }
-    }
+    }*/
 
 
     public static void checkForAccessTokenChange(Activity activity) {
@@ -9940,9 +9939,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                             if (ApiResponseFlags.ASSIGNING_DRIVERS.getOrdinal() == flag) {
                                                 final String log = jObj.getString("log");
                                                 final int lockStatus = jObj.optInt("gps_lock_status", 0);
-                                                if(lockStatus==3){
+                                                /*if(lockStatus==3){
                                                     smartLockObj.downDevice();
-                                                }
+                                                }*/
                                                 Log.e("ASSIGNING_DRIVERS log", "=" + log);
                                                 final String start_time = jObj.getString("start_time");
                                                 if (executionTime < 0) {
@@ -12968,9 +12967,10 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 String message = intent.getStringExtra(KEY_MESSAGE);
                                 Data.userData.setPaytmRechargeInfo(JSONParser.parsePaytmRechargeInfo(new JSONObject(message)));
                                 openPaytmRechargeDialog();
-                            }else if (PushFlags.UNLOCK_BLE_DEVICE.getOrdinal() == flag){
+                           /* }else if (PushFlags.UNLOCK_BLE_DEVICE.getOrdinal() == flag){
                                 smartLockObj.downDevice();
-                            } else if (PushFlags.CHAT_MESSAGE.getOrdinal() == flag) {
+                            }*/
+                            }else if (PushFlags.CHAT_MESSAGE.getOrdinal() == flag) {
                                 tvChatCount.setVisibility(View.VISIBLE);
                                 tvChatCount.setText(String.valueOf(Prefs.with(HomeActivity.this).getInt(KEY_CHAT_COUNT, 1)));
                             } else if (Constants.OPEN_DEEP_INDEX == flag) {
@@ -13673,13 +13673,13 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         public void onSuccess(FeedCommonResponse feedCommonResponse, String message, int flag) {
                             rentalEndRideLayout.setVisibility(View.GONE);
                             Log.d("HomeActivityRental"," Flag Update Lock Status Success " + String.valueOf(flag));
-                            if(Data.autoData.getBluetoothEnabled()==1){
+                         /*   if(Data.autoData.getBluetoothEnabled()==1){
                                 if(gpsLockStatus==GpsLockStatus.REQ_UNLOCK){
                                     smartLockObj.downDevice();
                                 }else if(gpsLockStatus==GpsLockStatus.END_RIDE_LOCK) {
                                     smartLockObj.upDevice();
                                 }
-                            }
+                            }*/
                             switchRentalInRideUI(gpsLockStatus);
                             rentalInRideLayout.postDelayed(new Runnable() {
                                 @Override
@@ -13711,9 +13711,9 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                         if(feedCommonResponse.getGpsLockStatus() != -1) {
                             Data.autoData.getAssignedDriverInfo().setGpsLockStatus(feedCommonResponse.getGpsLockStatus());
                         } else if(feedCommonResponse.getGpsLockStatus()==GpsLockStatus.END_RIDE_LOCK.getOrdinal()){
-                            if(Data.autoData.getBluetoothEnabled()==1){
+                           /* if(Data.autoData.getBluetoothEnabled()==1){
                                 smartLockObj.disconnectDevice();
-                            }
+                            }*/
                         }else{
                             Data.autoData.getAssignedDriverInfo().setGpsLockStatus(gpsLockStatusOld);
                         }
