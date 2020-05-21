@@ -21,6 +21,11 @@ public class CustomizeItemSelected{
 	private List<Integer> customizeOptions;
 
 
+	private int lowerLimit = 0;
+	private int upperLimit = Integer.MAX_VALUE;
+	private String name = "";
+
+
 	@SerializedName("options")
 	private List<CustomiseOptionsId> options;
 
@@ -28,8 +33,11 @@ public class CustomizeItemSelected{
 		Log.i("TAG", "CustomizeItemSelected: "+getCustomizeId());
 	}
 
-	public CustomizeItemSelected(Integer customizeId){
+	public CustomizeItemSelected(Integer customizeId, String name, int lowerLimit, int upperLimit){
 		this.customizeId = customizeId;
+		this.upperLimit = upperLimit;
+		this.lowerLimit = lowerLimit;
+		this.name = name;
 	}
 
 	public Integer getCustomizeId() {
@@ -57,6 +65,18 @@ public class CustomizeItemSelected{
 
 	public void setCustomizeOptions(List<Integer> customizeOptions) {
 		this.customizeOptions = customizeOptions;
+	}
+
+	public int getLowerLimit() {
+		return lowerLimit;
+	}
+
+	public int getUpperLimit() {
+		return upperLimit;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	@Override

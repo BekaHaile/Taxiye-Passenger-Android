@@ -1,7 +1,5 @@
 package com.sabkuchfresh.retrofit.model.menus;
 
-import android.text.TextUtils;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -73,7 +71,8 @@ public class ItemSelected {
 						return false;
 					}
 				}
-				return true;
+
+				return this.getItemInstructions().equals(((ItemSelected) o).getItemInstructions());
 			} else {
 				return false;
 			}

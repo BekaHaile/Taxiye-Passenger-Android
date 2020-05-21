@@ -328,6 +328,7 @@ public class AddEmergencyContactsFragment extends Fragment {
                                 int flag = jObj.getInt(Constants.KEY_FLAG);
                                 if (ApiResponseFlags.ACTION_FAILED.getOrdinal() == flag) {
                                     DialogPopup.dialogBanner(activity, message);
+                                    performBackPressed();
                                 } else if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
                                     DialogPopup.dialogBanner(activity, message);
                                     performBackPressed();

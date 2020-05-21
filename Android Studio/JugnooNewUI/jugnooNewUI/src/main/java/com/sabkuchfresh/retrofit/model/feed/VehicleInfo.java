@@ -11,6 +11,14 @@ public class VehicleInfo implements Parcelable {
     @Expose
     public int type;
 
+    @SerializedName("region_id")
+    @Expose
+    public int regionId;
+
+    @SerializedName("ride_type")
+    @Expose
+    public int rideType;
+
     @SerializedName("name")
     @Expose
     public String name;
@@ -25,6 +33,14 @@ public class VehicleInfo implements Parcelable {
 
     public int getType() {
         return type;
+    }
+
+    public int getRegionId() {
+        return regionId;
+    }
+
+    public int getRideType() {
+        return rideType;
     }
 
     public String getName() {
@@ -48,6 +64,8 @@ public class VehicleInfo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.type);
+        dest.writeInt(this.regionId);
+        dest.writeInt(this.rideType);
         dest.writeString(this.name);
         dest.writeString(this.image);
         dest.writeParcelable(this.images, flags);
@@ -58,6 +76,8 @@ public class VehicleInfo implements Parcelable {
 
     protected VehicleInfo(Parcel in) {
         this.type = in.readInt();
+        this.regionId = in.readInt();
+        this.rideType = in.readInt();
         this.name = in.readString();
         this.image = in.readString();
         this.images = in.readParcelable(Images.class.getClassLoader());

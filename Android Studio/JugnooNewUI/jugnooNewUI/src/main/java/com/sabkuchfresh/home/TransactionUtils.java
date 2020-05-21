@@ -1,8 +1,6 @@
 package com.sabkuchfresh.home;
 
 import android.os.Bundle;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -18,6 +16,7 @@ import com.sabkuchfresh.fragments.FeedbackFragment;
 import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
 import com.sabkuchfresh.fragments.FreshFragment;
 import com.sabkuchfresh.fragments.FreshSearchFragment;
+import com.sabkuchfresh.fragments.ItemDetailFragment;
 import com.sabkuchfresh.fragments.MealAddonItemsFragment;
 import com.sabkuchfresh.fragments.MealsBulkOrderFragment;
 import com.sabkuchfresh.fragments.MenusItemCustomizeFragment;
@@ -39,6 +38,8 @@ import com.sabkuchfresh.retrofit.model.SuperCategoriesData;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.fragments.ScheduleRideFragment;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
@@ -289,6 +290,19 @@ public class TransactionUtils {
                     .add(container.getId(), MenusItemCustomizeFragment.newInstance(categoryPos, subCategoryPos, itemPos),
                             MenusItemCustomizeFragment.class.getName())
                     .addToBackStack(MenusItemCustomizeFragment.class.getName())
+                    .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commitAllowingStateLoss();
+        }
+    }
+
+
+    public void openItemDetailFragment(FragmentActivity activity, View container, int pos) {
+        if (!checkIfFragmentAdded(activity, ItemDetailFragment.TAG)) {
+            activity.getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+                    .add(container.getId(), ItemDetailFragment.newInstance(pos), ItemDetailFragment.TAG)
+                    .addToBackStack(ItemDetailFragment.TAG)
                     .hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
                             .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
                     .commitAllowingStateLoss();

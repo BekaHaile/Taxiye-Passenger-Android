@@ -5157,7 +5157,22 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                 Data.autoData.getEndRideData().getShowTipOption() == 1){
            buttonAddTipEndRide.setVisibility(View.GONE);
            llFeedbackMain.setVisibility(View.GONE);
-           llAddTip.setVisibility(View.VISIBLE);
+            if(Data.autoData.getEndRideData().getPaymentOption() == PaymentOption.CASH.getOrdinal()) {
+                llAddTip.setVisibility(View.GONE);
+                tvSkipTip.performClick();
+            }
+            else{
+                llAddTip.setVisibility(View.VISIBLE);
+            }
+           //reset
+           tipSelected = 0;
+           tvTipFirst.setBackgroundResource(R.drawable.circle_white_grey_selector);
+           tvTipSecond.setBackgroundResource(R.drawable.circle_white_grey_selector);
+           tvTipThird.setBackgroundResource(R.drawable.circle_white_grey_selector);
+           tvTipFirst.setTextColor(ContextCompat.getColor(this, R.color.text_color));
+           tvTipSecond.setTextColor(ContextCompat.getColor(this, R.color.text_color));
+           tvTipThird.setTextColor(ContextCompat.getColor(this, R.color.text_color));
+
            double first = 10, second = 20, third = 30;
             try {
                 String tipValues = Prefs.with(this).getString(KEY_CUSTOMER_TIP_VALUES, "10,20,30");
