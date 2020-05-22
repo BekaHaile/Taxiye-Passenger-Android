@@ -2,6 +2,7 @@ package com.sabkuchfresh.apis;
 
 import com.sabkuchfresh.feed.models.ContactResponseModel;
 import com.sabkuchfresh.feed.models.FetchOrderStatusResponse;
+import com.sabkuchfresh.retrofit.model.OrderCancelReasonsResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
 import com.sabkuchfresh.retrofit.model.feed.NearbyDriversResponse;
@@ -81,5 +82,14 @@ public interface FatafatApiService {
     @POST("/cancel_order")
     void cancelOrder(@FieldMap Map<String, String> params,
                      Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/razorpay/payment_callback")
+    Response razorpayPaymentCallback(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/fetch_cancellation_reasons")
+    void fetchCancellationReasons(@FieldMap Map<String, String> params,
+                                  Callback<OrderCancelReasonsResponse> callback);
 
 }
