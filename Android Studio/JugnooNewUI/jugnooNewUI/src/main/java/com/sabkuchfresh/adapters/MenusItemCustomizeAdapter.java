@@ -326,7 +326,9 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             else if (lower > 0 && upper == Integer.MAX_VALUE) toAppend = context.getString(R.string.select_atleast_lower, lower);
             else if (customizeItem.getIsCheckBox() == 1) toAppend = context.getString(R.string.optional_bracket);
             else toAppend = context.getString(R.string.required_bracket);
-            mHolder.textViewSubCategoryName.append(toAppend);
+//            mHolder.textViewSubCategoryName.append(toAppend);
+            mHolder.textViewSubCategoryName.append(customizeItem.getIsCheckBox() == 1 ? toAppend : context.getString(R.string.required_bracket));
+
 
         } else if(holder instanceof ViewHolderCustomizeOption) {
             ViewHolderCustomizeOption mHolder = ((ViewHolderCustomizeOption) holder);
@@ -566,23 +568,24 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         boolean isValid = true;
 
         for (CustomizeItemSelected item: itemSelected.getCustomizeItemSelectedList()) {
+            if(item.getCustomizeOptions().size()<1) {
+                int quantityAdded = mapItemOptionsAdded.get(item.getCustomizeId());
 
-            int quantityAdded = mapItemOptionsAdded.get(item.getCustomizeId());
+                if (item.getLowerLimit() != 0 && quantityAdded < item.getLowerLimit()) {
+                    Utils.showToast(context,
+                            context.getString(R.string.error_customization_lower_limit,
+                                    item.getLowerLimit(),
+                                    item.getName()));
+                    isValid = false;
+                    break;
+                } else if (quantityAdded > item.getUpperLimit()) {
+                    Utils.showToast(context,
+                            context.getString(R.string.error_customization_limit,
+                                    item.getUpperLimit(),
+                                    item.getName()));
+                    isValid = false;
 
-            if (item.getLowerLimit() != 0 && quantityAdded < item.getLowerLimit()) {
-                Utils.showToast(context,
-                        context.getString(R.string.error_customization_lower_limit,
-                                item.getLowerLimit(),
-                                item.getName()));
-                isValid = false;
-                break;
-            } else if (quantityAdded > item.getUpperLimit()) {
-                Utils.showToast(context,
-                        context.getString(R.string.error_customization_limit,
-                                item.getUpperLimit(),
-                                item.getName()));
-                isValid = false;
-
+                }
             }
         }
 
