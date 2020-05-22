@@ -48,15 +48,15 @@ public class MenusVendorOffersAdapter extends PagerAdapter {
 		MenusResponse.BannerInfo bannerInfo = bannerInfos.get(position);
 		if(!TextUtils.isEmpty(bannerInfo.getImageLink())) {
 			RequestCreator requestCreator = Picasso.with(context).load(bannerInfo.getImageLink())
-					.placeholder(R.drawable.ic_notification_placeholder)
-					.error(R.drawable.ic_notification_placeholder);
+					.placeholder(R.drawable.banners_placeholder)
+					.error(R.drawable.banners_placeholder);
 
 			if(bannerInfo.isOpenSafetyDialog()){
 				requestCreator.resize(Utils.dpToPx(context, 337.5f), Utils.dpToPx(context, 76.5f));
 			} else {
 				requestCreator.resize(Utils.dpToPx(context, 360f), Utils.dpToPx(context, 220f));
 			}
-			requestCreator.centerCrop();
+			requestCreator.centerInside();
 
 			requestCreator.into(holder.ivRestImage);
 		} else {
