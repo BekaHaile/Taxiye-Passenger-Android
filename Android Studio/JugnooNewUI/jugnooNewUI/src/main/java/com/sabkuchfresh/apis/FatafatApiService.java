@@ -23,7 +23,6 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.QueryMap;
 import retrofit.mime.MultipartTypedOutput;
-import retrofit.mime.TypedInput;
 
 /**
  * Created by shankar on 4/7/16.
@@ -62,8 +61,6 @@ public interface FatafatApiService {
                      Callback<CreateChatResponse> callback);
 
 
-    @POST("/chat/validate_contacts")
-    Response validateContacts(@Body TypedInput body);
 
     @FormUrlEncoded
     @POST("/chat/fetch_contacts")

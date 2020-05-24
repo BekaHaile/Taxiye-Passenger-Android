@@ -261,14 +261,6 @@ public interface ApiService {
     @POST("/emergency/alert")
     Response emergencyAlertSync(@FieldMap Map<String, String> params);
 
-    @FormUrlEncoded
-    @POST("/refer_all_contacts")
-    void referAllContacts(@FieldMap Map<String, String> params,
-                        Callback<SettleUserDebt> callback);
-
-    @FormUrlEncoded
-    @POST("/refer_all_contacts")
-    Response referAllContactsSync(@FieldMap Map<String, String> params);
 
 
     @FormUrlEncoded

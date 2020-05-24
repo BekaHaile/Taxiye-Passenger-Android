@@ -380,7 +380,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
 
     private static final int REQUEST_CODE_LOCATION_SERVICE = 1024;
-    private static final int REQ_CODE_PERMISSION_CONTACT = 1000;
     private static final int REQ_CODE_VIDEO = 9112, RESULT_PAUSE = 5;
 	private static final int REQUEST_CODE_PAY_VIA_UPI = 1026;
 	private static final int REQUEST_CODE_MULTI_STOPS=6;
@@ -4051,8 +4050,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             navigateToCurrLoc();
         } else if (requestCode == REQUEST_CODE_LOCATION_SERVICE) {
             startInRideLocationService();
-        } else if (requestCode == REQ_CODE_PERMISSION_CONTACT) {
-            fetchContacts();
         }
     }
 
@@ -5048,7 +5045,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
                 openPaytmRechargeDialog();
 
-                showReferAllDialog();
                 callT20AndReferAllDialog(mode);
 
 				enableMapMyLocation();
@@ -6006,177 +6002,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void fetchContacts() {
-        if (getPermissionCommon().isGranted(Manifest.permission.READ_CONTACTS, this)) {
-            Intent syncContactsIntent = new Intent(HomeActivity.this, ContactsUploadService.class);
-            syncContactsIntent.putExtra("access_token", Data.userData.accessToken);
-            syncContactsIntent.putExtra("session_id", Data.autoData.getcSessionId());
-            syncContactsIntent.putExtra("engagement_id", Data.autoData.getcEngagementId());
-            syncContactsIntent.putExtra(KEY_IS_LOGIN_POPUP, "0");
-            startService(syncContactsIntent);
-            registerDialogDismissReceiver();
-            dismissReferAllDialog();
-        } else {
-            getPermissionCommon().getPermission(REQ_CODE_PERMISSION_CONTACT, Manifest.permission.READ_CONTACTS);
-        }
-    }
-
-
-    private void showReferAllDialog() {
-        try {
-            if (PassengerScreenMode.P_IN_RIDE == passengerScreenMode) {
-                //******** If return 0 then show popup, contact not saved in database.
-                if (Data.autoData.getReferAllStatus() == 0
-                        && (Prefs.with(HomeActivity.this).getInt(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0) == 0)
-                        && dialogUploadContacts == null
-                        && getString(R.string.no_promo_code_applied).equalsIgnoreCase(Data.autoData.getAssignedDriverInfo().promoName)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
-                            Data.autoData.getReferAllTitle(),
-                            Data.autoData.getReferAllText(),
-                            getResources().getString(R.string.upload_contact_yes),
-                            getResources().getString(R.string.upload_contact_no_thanks),
-                            false,
-                            new OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (MyApplication.getInstance().isOnline()) {
-                                        Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 1);
-                                        fetchContacts();
-                                    } else {
-                                        DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
-                                                new Utils.AlertCallBackWithButtonsInterface() {
-                                                    @Override
-                                                    public void positiveClick(View view) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void neutralClick(View view) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void negativeClick(View view) {
-
-                                                    }
-                                                });
-                                    }
-                                }
-                            }, new OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (MyApplication.getInstance().isOnline()) {
-                                        Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, -1);
-                                        uploadContactsApi(false);
-                                        dismissReferAllDialog();
-                                    } else {
-                                        DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
-                                                new Utils.AlertCallBackWithButtonsInterface() {
-                                                    @Override
-                                                    public void positiveClick(View view) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void neutralClick(View view) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void negativeClick(View view) {
-
-                                                    }
-                                                });
-                                    }
-                                }
-                            }, new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface dialog) {
-                                }
-                            });
-                }
-            } else if (P_INITIAL == passengerScreenMode) {
-                if (Data.autoData.getReferAllStatusLogin() == 0
-                        && dialogUploadContacts == null) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                    dialogUploadContacts = DialogPopup.uploadContactsTwoButtonsWithListeners(HomeActivity.this,
-                            Data.autoData.getReferAllTitleLogin(),
-                            Data.autoData.getReferAllTextLogin(),
-                            getResources().getString(R.string.upload_contact_yes),
-                            getResources().getString(R.string.upload_contact_no_thanks),
-                            false,
-                            new OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (MyApplication.getInstance().isOnline()) {
-
-                                        Data.autoData.setReferAllStatus(1);
-                                        Data.autoData.setReferAllStatusLogin(1);
-                                        fetchContacts();
-                                    } else {
-                                        DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
-                                                new Utils.AlertCallBackWithButtonsInterface() {
-                                                    @Override
-                                                    public void positiveClick(View view) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void neutralClick(View view) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void negativeClick(View view) {
-
-                                                    }
-                                                });
-                                    }
-                                }
-                            }, new OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    if (MyApplication.getInstance().isOnline()) {
-                                        Data.autoData.setReferAllStatus(0);
-                                        Data.autoData.setReferAllStatusLogin(-1);
-                                        uploadContactsApi(true);
-                                        dismissReferAllDialog();
-                                    } else {
-                                        DialogPopup.dialogNoInternet(HomeActivity.this, DialogErrorType.NO_NET,
-                                                new Utils.AlertCallBackWithButtonsInterface() {
-                                                    @Override
-                                                    public void positiveClick(View view) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void neutralClick(View view) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void negativeClick(View view) {
-
-                                                    }
-                                                });
-                                    }
-                                }
-                            }, new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface dialog) {
-//                                    showPoolIntroDialog();
-                                    showPromoFailedAtSignupDialog();
-                                }
-                            });
-                } else {
-                    showPromoFailedAtSignupDialog();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
 
     @Override
@@ -11134,58 +10959,6 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
 
-    private void uploadContactsApi(final boolean fromLogin) {
-        HashMap<String, String> params = new HashMap<>();
-        if (MyApplication.getInstance().isOnline()) {
-
-            DialogPopup.showLoadingDialog(this, getString(R.string.loading));
-            params.put(KEY_ACCESS_TOKEN, Data.userData.accessToken);
-            if (fromLogin) {
-                params.put(KEY_ENGAGEMENT_ID, "");
-                params.put(KEY_USER_RESPONSE, "-2");
-                params.put(KEY_IS_LOGIN_POPUP, "1");
-            } else {
-                params.put(KEY_ENGAGEMENT_ID, Data.autoData.getcEngagementId());
-                params.put(KEY_USER_RESPONSE, "-1");
-            }
-            Log.i("access_token and session_id", Data.userData.accessToken + ", " + Data.autoData.getcSessionId() + ", " + Data.autoData.getcEngagementId());
-
-            Log.i("params request_dup_registration", "=" + params);
-
-            new HomeUtil().putDefaultParams(params);
-            RestClient.getApiService().referAllContacts(params, new Callback<SettleUserDebt>() {
-                @Override
-                public void success(SettleUserDebt settleUserDebt, Response response) {
-                    String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
-                    Log.i(TAG, "referAllContacts response = " + responseStr);
-                    DialogPopup.dismissLoadingDialog();
-                    try {
-                        JSONObject jObj = new JSONObject(responseStr);
-                        int flag = jObj.getInt("flag");
-                        String message = JSONParser.getServerMessage(jObj);
-                        Log.e("message=", "=" + message);
-                        if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
-                            if (!fromLogin) {
-                                Data.autoData.setReferAllStatus(-1);
-                            }
-                        } else {
-                            //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
-                        }
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                        //DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
-                    }
-                }
-
-                @Override
-                public void failure(RetrofitError error) {
-                    DialogPopup.dismissLoadingDialog();
-                    Log.e(TAG, "referAllContacts error=" + error.toString());
-                    //Prefs.with(HomeActivity.this).save(SPLabels.UPLOAD_CONTACT_NO_THANKS, 0);
-                }
-            });
-        }
-    }
 
 
     public void skipFeedbackForCustomerAsync(final Activity activity, final String engagementId) {

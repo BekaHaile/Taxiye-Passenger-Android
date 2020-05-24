@@ -280,9 +280,6 @@
         <receiver android:name=".home.LocationReceiverBG"/>
 
         <service
-            android:name=".home.ContactsUploadService"
-            android:enabled="true"/>
-        <service
             android:name=".home.SyncIntentService"
             android:enabled="true"/>
         <service

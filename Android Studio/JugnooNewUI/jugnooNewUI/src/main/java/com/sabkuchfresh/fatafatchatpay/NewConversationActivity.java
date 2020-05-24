@@ -1,17 +1,11 @@
 package com.sabkuchfresh.fatafatchatpay;
 
-import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -41,15 +35,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.paperdb.Paper;
 import product.clicklabs.jugnoo.BaseAppCompatActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.PaperDBKeys;
 import product.clicklabs.jugnoo.R;
-import product.clicklabs.jugnoo.home.ContactsUploadService;
 import product.clicklabs.jugnoo.home.HomeUtil;
-import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.retrofit.CreateChatResponse;
 import product.clicklabs.jugnoo.utils.ContactBean;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -76,29 +72,12 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
     private Animation rotateAnim;
     private ImageView ivContactSync;
     private RelativeLayout rlSync;
-    private PermissionCommon mPermissionCommon;
     private TextView tvJugnooConnection;
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_conversation);
-        mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
-            @Override
-            public void permissionGranted(int requestCode) {
-                performSyncOperation();
-            }
-
-            @Override
-            public boolean permissionDenied(int requestCode, boolean neverAsk) {
-                return true;
-            }
-
-            @Override
-            public void onRationalRequestIntercepted(int requestCode) {
-
-            }
-        }) ;
         initViews();
         registerSyncUpdateReceiver();
 
@@ -122,18 +101,11 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
             // hide
             Utils.hideSoftKeyboard(this, etSearchConnections);
         }
-        if (!areContactsSyncedOneTime) {
-            // sync
-            syncContacts();
-        } else {
-            allContactsList = Paper.book().read(PaperDBKeys.DB_ALL_CONTACTS_LIST);
-            if (allContactsList != null) {
-                // user has synced one time , only fetch contacts
-                fetchContacts(false);
-            } else {
-                syncContacts();
-            }
-        }
+		allContactsList = Paper.book().read(PaperDBKeys.DB_ALL_CONTACTS_LIST);
+		if (allContactsList != null) {
+			// user has synced one time , only fetch contacts
+			fetchContacts(false);
+		}
         new HomeUtil().forceRTL(this);
     }
 
@@ -333,23 +305,6 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
         }
     }
 
-    /**
-     * Sync contacts
-     */
-    private void syncContacts() {
-        //DialogPopup.showLoadingDialog(this, "");
-
-        mPermissionCommon.getPermission(REQUEST_CODE_CONTACTS, Manifest.permission.READ_CONTACTS);
-
-    }
-    private void performSyncOperation(){
-        showSyncLayout();
-        // start the contact upload sync in background
-        Intent syncContactsIntent = new Intent(this, ContactsUploadService.class);
-        syncContactsIntent.putExtra(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-        syncContactsIntent.putExtra(Constants.KEY_COMING_FROM_NEW_CONVERSATION, true);
-        startService(syncContactsIntent);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -363,9 +318,6 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
 
     @Override
     public void onClick(final View v) {
-        if (v.getId() == R.id.imgBtnSync) {
-            syncContacts();
-        }
     }
 
     /**
@@ -510,11 +462,6 @@ public class NewConversationActivity extends BaseAppCompatActivity implements Vi
 
                     }
                 });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
-        mPermissionCommon.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
 
