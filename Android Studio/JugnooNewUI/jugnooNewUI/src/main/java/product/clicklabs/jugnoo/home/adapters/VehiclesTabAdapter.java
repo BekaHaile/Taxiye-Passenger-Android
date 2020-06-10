@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import androidx.recyclerview.widget.RecyclerView;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.dialogs.VehicleFareEstimateDialog;
@@ -35,16 +36,37 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
     private VehicleFareEstimateDialog estimateDialog;
 
     public VehiclesTabAdapter(HomeActivity activity, ArrayList<Region> regions,boolean showFares) {
-        this.regions = regions;
+        this.regions = filterRegionsForMultiDest(regions);
         this.activity = activity;
         this.showRegionFares = showFares;
         this.estimateDialog = new VehicleFareEstimateDialog();
     }
 
     public void setList(ArrayList<Region> regions){
-		this.regions = regions;
+		this.regions = filterRegionsForMultiDest(regions);
 		notifyDataSetChanged();
 	}
+
+    private ArrayList<Region> filterRegionsForMultiDest(ArrayList<Region> regions){
+        if(!Data.autoData.getMultiDestAllowed()
+                || Data.autoData.getMultiDestList().isEmpty()){
+            return regions;
+        }
+        else{
+            ArrayList<Region> filteredRegions=new ArrayList<>();
+            for(Region region : regions){
+                if(showRegion(region))
+                    filteredRegions.add(region);
+            }
+            return filteredRegions;
+        }
+    }
+
+	private boolean showRegion(Region region){
+        return Data.autoData.getMultiDestAllowed()
+                && !Data.autoData.getMultiDestList().isEmpty()
+                && region.getMultiDestEnabledForRide()==1;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -177,6 +199,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                activity.updateUiForMultipleStops();
             }
         });
 
@@ -216,6 +239,7 @@ public class VehiclesTabAdapter extends RecyclerView.Adapter<VehiclesTabAdapter.
             imageViewSelected = (ImageView) itemView.findViewById(R.id.imageViewSelected);
             textViewVehicleName = (TextView)itemView.findViewById(R.id.textViewVehicleName);
             textViewVehicleName.setTypeface(Fonts.avenirNext(activity), Typeface.BOLD);
+            textViewVehicleName.setSelected(true);
             tvETA = (TextView)itemView.findViewById(R.id.tvETA);
             tvETA.setTypeface(Fonts.mavenMedium(activity));
             tvVehicleFare = (TextView)itemView.findViewById(R.id.tvVehicleFare);

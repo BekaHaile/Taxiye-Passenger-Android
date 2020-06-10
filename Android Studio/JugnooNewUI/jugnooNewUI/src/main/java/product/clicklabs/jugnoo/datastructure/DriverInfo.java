@@ -81,6 +81,8 @@ public class DriverInfo {
 
 
 
+	private String vehicleImage;
+	private String vehicleName;
 	public DriverInfo(String userId){
 		this.userId = userId;
 	}
@@ -116,7 +118,7 @@ public class DriverInfo {
 					  int vehicleType, String iconSet, String cancelRideThrashHoldTime, int cancellationCharges, int isPooledRide,
 					  String poolRideStatusString, ArrayList<String> fellowRiders, double bearing, int chatEnabled, int operatorId,
 					  String currency, String markerUrl, Double tipAmount, int isCorporateRide, String cardId, int rideType, int gpsLockStatus,
-					  int fareMandatory, double tipBeforeRequestRide, String userIdentifier){
+					  int fareMandatory, double tipBeforeRequestRide, String userIdentifier,String vehicleImage, String vehicleName){
 		this.userId = userId;
 		this.latLng = new LatLng(latitude, longitude);
 		this.name = name;
@@ -155,6 +157,8 @@ public class DriverInfo {
 		this.fareMandatory = fareMandatory;
 		this.tipBeforeRequestRide = tipBeforeRequestRide;
 		this.userIdentifier = userIdentifier;
+		this.vehicleImage = vehicleImage;
+		this.vehicleName = vehicleName;
 	}
 
 	//for last ride data
@@ -454,4 +458,19 @@ public class DriverInfo {
 		this.gpsLockStatus = gpsLockStatus;
 	}
 
+	public String getVehicleImage() {
+		return vehicleImage;
+	}
+
+	public void setVehicleImage(String vehicleImage) {
+		this.vehicleImage = vehicleImage;
+	}
+
+	public String getVehicleName() {
+		return vehicleName;
+	}
+
+	public void setVehicleName(String vehicleName) {
+		this.vehicleName = vehicleName;
+	}
 }

@@ -226,7 +226,7 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 				}
 
 			}
-
+			updateMultiDestListIfStopPressed(searchResult);
 		}
 
 		@Override
@@ -1392,4 +1392,12 @@ public class PlaceSearchListFragment extends Fragment implements  Constants {
 			return new LatLng(30.75, 76.78);
 		}
 	}
+
+	private void updateMultiDestListIfStopPressed(SearchResult searchResult){
+		Bundle bundle=getArguments();
+		if(bundle!=null && bundle.containsKey(Constants.STOP_PRESSED_POSITION)){
+			searchListActionsHandler.onPlaceSearchPostForStop(searchResult,bundle.getInt(Constants.STOP_PRESSED_POSITION));
+		}
+	}
+
 }

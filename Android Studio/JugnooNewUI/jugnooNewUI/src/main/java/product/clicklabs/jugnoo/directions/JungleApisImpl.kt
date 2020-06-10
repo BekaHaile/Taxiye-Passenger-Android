@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.directions
 
+import android.text.TextUtils
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.Gson
 import com.sabkuchfresh.datastructure.GoogleGeocodeResponse
@@ -10,6 +11,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import product.clicklabs.jugnoo.Constants
 import product.clicklabs.jugnoo.MyApplication
+import product.clicklabs.jugnoo.apis.ApiGoogleDirectionWaypoints
 import product.clicklabs.jugnoo.datastructure.MapsApiSources
 import product.clicklabs.jugnoo.directions.room.database.DirectionsPathDatabase
 import product.clicklabs.jugnoo.directions.room.model.Path
@@ -26,6 +28,7 @@ import retrofit.mime.TypedByteArray
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 object JungleApisImpl {
@@ -55,11 +58,11 @@ object JungleApisImpl {
             return field
         }
 
-    fun getDirectionsPath(source:LatLng, destination:LatLng, units:String, apiSource:String, callback:Callback?) {
+    fun getDirectionsPath(source:LatLng, destination:LatLng, units:String, apiSource:String, ignoreDistanceThreshold:Boolean, callback:Callback?) {
 
         GlobalScope.launch(Dispatchers.IO){
             try {
-                val directionsResult = getDirectionsPathSync(source, destination, units, apiSource, true)
+                val directionsResult = getDirectionsPathSync(source, destination, units, apiSource, true, ignoreDistanceThreshold)
                 if(directionsResult != null){
                     launch(Dispatchers.Main){callback?.onSuccess(directionsResult.latLngs, directionsResult.path)}
                 } else {
@@ -74,6 +77,7 @@ object JungleApisImpl {
 
     fun putJungleOptionsParams(params:HashMap<String, String>, jungleObj:JSONObject){
         val option = jungleObj.optInt(Constants.KEY_JUNGLE_OPTIONS, 0)
+        params[Constants.KEY_JUNGLE_FM_TOKEN] = Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER, "")
         params[Constants.KEY_JUNGLE_OPTIONS] = option.toString()
         params[Constants.KEY_JUNGLE_TYPE] = JUNGLE_TYPE_VALUE
         params[Constants.KEY_JUNGLE_OFFERING] = JUNGLE_OFFERING_VALUE
@@ -92,7 +96,7 @@ object JungleApisImpl {
         }
     }
 
-    fun getDirectionsPathSync(source:LatLng, destination:LatLng, units:String, apiSource:String, fallbackNeeded:Boolean = true) : DirectionsResult? {
+    fun getDirectionsPathSync(source: LatLng, destination: LatLng, units: String, apiSource: String, fallbackNeeded: Boolean = true, ignoreDistanceThreshold: Boolean = false) : DirectionsResult? {
         var directionsResult:DirectionsResult? = null
 
         //safety check to not hit directions api if distance between source and destination is more than 200Kms(server configurable)
@@ -230,6 +234,148 @@ object JungleApisImpl {
                 directionsResult = DirectionsResult(list, paths[0])
             }
         }
+        return directionsResult
+    }
+
+    fun getDirectionsPathWaypointsSync(source: LatLng, waypoints: ArrayList<JSONObject>,destination: LatLng, units: String, apiSource: String, fallbackNeeded: Boolean = true, ignoreDistanceThreshold: Boolean = false) : DirectionsResult? {
+        var directionsResult:DirectionsResult? = null
+
+        //safety check to not hit directions api if distance between source and destination is more than 200Kms(server configurable)
+//        try {
+//            val directionsDistanceThreshold = Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_DIRECTIONS_MAX_DISTANCE_THRESHOLD, "200000.0")
+//            if(MapUtils.distance(source, destination) > directionsDistanceThreshold.toDouble()){
+//                Log.e(JungleApisImpl::class.java.simpleName+"_distance_threshold_case", "directionsDistanceThreshold=$directionsDistanceThreshold, distance="+MapUtils.distance(source, destination))
+//                return directionsResult
+//            }
+//        } catch (e: Exception) {}
+
+        val timeStamp = System.currentTimeMillis()
+
+        val sourceLat = numberFormat!!.format(source.latitude).toDouble()
+        val sourceLng = numberFormat!!.format(source.longitude).toDouble()
+        val destinationLat = numberFormat!!.format(destination.latitude).toDouble()
+        val destinationLng = numberFormat!!.format(destination.longitude).toDouble()
+
+//        val paths = db!!.getDao().getPath(
+//                sourceLat,
+//                sourceLng,
+//                destinationLat,
+//                destinationLng,
+//                timeStamp - Constants.DAY_MILLIS*30)
+        val paths=null
+        val cachingEnabled = Prefs.with(MyApplication.getInstance()).getInt(Constants.KEY_CUSTOMER_DIRECTIONS_CACHING, 1) == 1
+        //path is not found
+
+//        if(!cachingEnabled){
+
+            //separate configuration for directions api in case of fare estimate
+            var objKey = Constants.KEY_JUNGLE_DIRECTIONS_OBJ
+            if(apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_HOME, true)
+                    || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_SCHEDULE, true)
+                    || apiSource.equals(MapsApiSources.CUSTOMER_FARE_ESTIMATE_ACTIVITY, true)){
+                objKey = Constants.KEY_CFE_JUNGLE_DIRECTIONS_OBJ
+            }
+
+            val jungleObj = try{JSONObject(Prefs.with(MyApplication.getInstance()).getString(objKey, Constants.EMPTY_JSON_OBJECT))}
+            catch(e:java.lang.Exception){JSONObject(Constants.EMPTY_JSON_OBJECT)}
+            Log.e(JungleApisImpl::class.java.simpleName, "jungleObj=$jungleObj, objKey=$objKey")
+
+
+            try {
+                if(checkIfJungleApiEnabled(jungleObj)){
+
+                    val pointsJ = JSONArray()
+                    val startJ = JSONObject()
+                    startJ.put(Constants.KEY_LAT, sourceLat.toString()).put(Constants.KEY_LNG, sourceLng.toString())
+                    val destJ = JSONObject()
+                    destJ.put(Constants.KEY_LAT, destinationLat.toString()).put(Constants.KEY_LNG, destinationLng.toString())
+                    pointsJ.put(startJ).put(destJ)
+                    val params = HashMap<String, String>()
+                    params[Constants.KEY_JUNGLE_POINTS] = pointsJ.toString()
+                    params[Constants.KEY_WAYPOINTS] = waypoints.toString()
+                    putJungleOptionsParams(params, jungleObj)
+
+                    val response = RestClient.getJungleMapsApi().directions(params)
+
+
+                    val result = String((response.body as TypedByteArray).bytes)
+                    val jObj = JSONObject(result)
+
+                    val list = mutableListOf<LatLng>()
+                    list.addAll(MapUtils.getLatLngListFromPathJungle(result))
+                    val distanceValue = jObj.getJSONObject("data").getJSONArray("paths").getJSONObject(0).getDouble("distance")
+                    val timeValue = jObj.getJSONObject("data").getJSONArray("paths").getJSONObject(0).getDouble("time")/1000
+
+                    val path = Path(
+                            sourceLat,
+                            sourceLng,
+                            destinationLat,
+                            destinationLng,
+                            distanceValue, timeValue,
+                            timeStamp)
+
+                    directionsResult = DirectionsResult(list, path)
+
+                } else {
+                    throw Exception()
+                }
+
+            } catch (e: Exception) {
+                //if exception encountered in jungle directions api and fallback to google is not needed then return error case
+                if(checkIfJungleApiEnabled(jungleObj) && !fallbackNeeded){
+                    Log.e(JungleApisImpl::class.java.simpleName, "_fallback_not_needed_case")
+                    return directionsResult
+                }
+
+                //google directions hit
+                try {
+                    val response = GoogleRestApis.getDirectionsWaypoints("$sourceLat,$sourceLng", "$destinationLat,$destinationLng",
+                            waypoints.toString())
+                    val result = String((response.body as TypedByteArray).bytes)
+                    val jObj = JSONObject(result)
+
+                    val list = mutableListOf<LatLng>()
+                    list.addAll(MapUtils.getLatLngListFromPath(result))
+                    val distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value")
+                    val timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value")
+
+                    val path = Path(
+                            sourceLat,
+                            sourceLng,
+                            destinationLat,
+                            destinationLng,
+                            distanceValue, timeValue,
+                            timeStamp)
+
+                    directionsResult = DirectionsResult(list, path)
+                } catch (e: Exception) {
+                }
+            }
+
+
+//            if(cachingEnabled && directionsResult != null) {
+//                db!!.getDao().deleteAllPath(timeStamp)
+//                db!!.getDao().insertPath(directionsResult.path)
+//
+//                //inserting path points
+//                val points = mutableListOf<Point>()
+//                for (latlng in directionsResult.latLngs) {
+//                    points.add(Point(timeStamp, latlng.latitude, latlng.longitude))
+//                }
+//                db!!.getDao().insertPathPoints(points)
+//            }
+
+//        }
+//        else {
+//            val segments = db!!.getDao().getPathPoints(paths[0].timeStamp)
+//            if (segments != null) {
+//                val list = mutableListOf<LatLng>()
+//                for(segment in segments){
+//                    list.add(LatLng(segment.lat, segment.lng))
+//                }
+//                directionsResult = DirectionsResult(list, paths[0])
+//            }
+//        }
         return directionsResult
     }
 
@@ -387,11 +533,14 @@ object JungleApisImpl {
                 params[Constants.KEY_JUNGLE_CURRENT_LNG] = latLng.longitude.toString()
                 params[Constants.KEY_JUNGLE_PLACEID] = placeId
 
-                params[Constants.KEY_JUNGLE_API_KEY] = if(jungleObj.has(Constants.KEY_JUNGLE_API_KEY)){
-                    jungleObj.optString(Constants.KEY_JUNGLE_API_KEY)
+                val key = jungleObj.optString(Constants.KEY_JUNGLE_API_KEY, "")
+
+                params[Constants.KEY_JUNGLE_API_KEY] = if(!TextUtils.isEmpty(key)){
+                    key
                 } else {
                     GoogleRestApis.MAPS_BROWSER_KEY()
                 }
+                params[Constants.KEY_JUNGLE_FM_TOKEN] = Prefs.with(MyApplication.getInstance()).getString(Constants.KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER, "")
 
                 params[Constants.KEY_JUNGLE_TYPE] = JUNGLE_TYPE_VALUE
                 params[Constants.KEY_JUNGLE_OFFERING] = JUNGLE_OFFERING_VALUE

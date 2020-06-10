@@ -2,8 +2,6 @@ package com.sabkuchfresh.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import androidx.core.util.Pair;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +22,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
@@ -130,6 +130,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 					mcv.setPrice(itemSelected.getTotalPrice());
 					mcv.setQuantity(itemSelected.getQuantity());
 					mcv.setCustomizeText(itemSelected.getCustomizeText());
+					mcv.setItemInstructions(itemSelected.getItemInstructions());
 					return mcv;
 				}
 				count++;
@@ -230,6 +231,14 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			paramsName.setMargins(0, 0, 0, (int)(ASSL.Yscale() * 10.0f));
 			paramsName.setMarginStart(0);
 			paramsName.setMarginEnd(0);
+		}
+		if (!TextUtils.isEmpty(mcv.getItemInstructions())) {
+			String s = context.getString(R.string.special_instructions) + ":\n" +
+					mcv.getItemInstructions();
+			mHolder.textViewInstructions.setText(s);
+			mHolder.textViewInstructions.setVisibility(View.VISIBLE);
+		} else {
+			mHolder.textViewInstructions.setVisibility(View.GONE);
 		}
 		mHolder.textViewItemName.setLayoutParams(paramsName);
 
@@ -358,7 +367,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		public RelativeLayout relative;
 		public LinearLayout linearLayoutContent;
 		private ImageView imageViewItemImage, imageViewSep, imageViewFoodType, imageViewMinus, imageViewPlus;
-		public TextView textViewItemName, textViewItemPrice, textViewQuantity, textViewItemCustomizeText;
+		public TextView textViewItemName, textViewItemPrice, textViewQuantity, textViewItemCustomizeText, textViewInstructions;
 
 		public MainViewHolder(View itemView, Context context) {
 			super(itemView);
@@ -374,6 +383,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 			textViewItemPrice = (TextView) itemView.findViewById(R.id.textViewItemPrice); textViewItemPrice.setTypeface(Fonts.mavenMedium(context));
 			textViewQuantity = (TextView) itemView.findViewById(R.id.textViewQuantity); textViewQuantity.setTypeface(Fonts.mavenMedium(context));
 			textViewItemCustomizeText = (TextView) itemView.findViewById(R.id.textViewItemCustomizeText); textViewItemCustomizeText.setTypeface(Fonts.mavenRegular(context));
+			textViewInstructions = (TextView) itemView.findViewById(R.id.textViewInstructions); textViewInstructions.setTypeface(Fonts.mavenRegular(context));
 		}
 	}
 
@@ -392,6 +402,7 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 		private Double price;
 		private Integer quantity;
 		private String customizeText;
+		private String itemInstructions = "";
 
 		public String getName() {
 			return name;
@@ -431,6 +442,15 @@ public class MenusCartItemsAdapter extends BaseAdapter {
 
 		public void setCustomizeText(String customizeText) {
 			this.customizeText = customizeText;
+		}
+
+		public String getItemInstructions() {
+			return itemInstructions;
+		}
+
+		public void setItemInstructions(String itemInstructions) {
+			if (itemInstructions == null) itemInstructions = "";
+			this.itemInstructions = itemInstructions;
 		}
 	}
 

@@ -1,7 +1,6 @@
 package com.sabkuchfresh.adapters;
 
 import android.content.Context;
-import androidx.viewpager.widget.PagerAdapter;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +10,15 @@ import android.widget.RelativeLayout;
 
 import com.sabkuchfresh.retrofit.model.menus.MenusResponse;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.List;
 
+import androidx.viewpager.widget.PagerAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.utils.Utils;
 
 /**
  * Created by shankar on 19/05/17.
@@ -45,12 +47,20 @@ public class MenusVendorOffersAdapter extends PagerAdapter {
 	public void onBindViewHolder(MenusVendorOffersAdapter.ViewHolderVendorOffer holder, int position) {
 		MenusResponse.BannerInfo bannerInfo = bannerInfos.get(position);
 		if(!TextUtils.isEmpty(bannerInfo.getImageLink())) {
-			Picasso.with(context).load(bannerInfo.getImageLink())
-					.placeholder(R.drawable.ic_fresh_item_placeholder)
-					.error(R.drawable.ic_fresh_item_placeholder)
-					.into(holder.ivRestImage);
+			RequestCreator requestCreator = Picasso.with(context).load(bannerInfo.getImageLink())
+					.placeholder(R.drawable.banners_placeholder)
+					.error(R.drawable.banners_placeholder);
+
+			if(bannerInfo.isOpenSafetyDialog()){
+				requestCreator.resize(Utils.dpToPx(context, 337.5f), Utils.dpToPx(context, 76.5f));
+			} else {
+				requestCreator.resize(Utils.dpToPx(context, 360f), Utils.dpToPx(context, 220f));
+			}
+			requestCreator.centerInside();
+
+			requestCreator.into(holder.ivRestImage);
 		} else {
-			Picasso.with(context).load(R.drawable.ic_fresh_item_placeholder).into(holder.ivRestImage);
+			Picasso.with(context).load(R.drawable.ic_notification_placeholder).into(holder.ivRestImage);
 		}
 
 		holder.relative.setTag(position);

@@ -2,10 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +25,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -38,6 +38,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.dialogs.SafetyInfoDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import retrofit.Callback;
@@ -185,6 +186,12 @@ public class TabbedSearchResultFragment extends Fragment implements View.OnClick
                 }
 
             }
+
+			@Override
+			public void onSafetyInfoBannerClick() {
+				SafetyInfoDialog safetyInfoDialog = SafetyInfoDialog.Companion.newInstance();
+				safetyInfoDialog.show(getChildFragmentManager().beginTransaction(), SafetyInfoDialog.class.getName());
+			}
         }, rvSearch, status,statusMeals,statusFatafat);
 
         rvSearch.setAdapter(deliveryHomeAdapter);

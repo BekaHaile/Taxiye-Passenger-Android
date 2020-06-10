@@ -24,6 +24,12 @@ public class CustomizeItem {
 	@SerializedName("is_check_box")
 	@Expose
 	private Integer isCheckBox;
+	@SerializedName("customize_item_limit")
+	@Expose
+	private Integer customizeItemLimit;
+	@SerializedName("customize_item_lower_limit")
+	@Expose
+	private Integer customizeItemLowerLimit;
 
 
 	public Integer getCustomizeId() {
@@ -36,6 +42,14 @@ public class CustomizeItem {
 
 	public String getCustomizeItemName() {
 		return customizeItemName;
+	}
+
+	public Integer getCustomizeItemUpperLimit() {
+		return customizeItemLimit == null || customizeItemLimit == 0 ? Integer.MAX_VALUE : customizeItemLimit;
+	}
+
+	public Integer getCustomizeItemLowerLimit() {
+		return customizeItemLowerLimit == null ? 0 : customizeItemLowerLimit;
 	}
 
 	public void setCustomizeItemName(String customizeItemName) {

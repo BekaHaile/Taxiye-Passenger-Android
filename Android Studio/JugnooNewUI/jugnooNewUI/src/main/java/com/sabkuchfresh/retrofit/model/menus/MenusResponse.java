@@ -12,6 +12,7 @@ import com.sabkuchfresh.retrofit.model.RecentOrder;
 import java.util.ArrayList;
 import java.util.List;
 
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
 import product.clicklabs.jugnoo.utils.DateOperations;
@@ -77,7 +78,6 @@ public class MenusResponse {
 	@SerializedName("vendors")
 	@Expose
 	private List<Vendor> vendors = new ArrayList<Vendor>();
-
 	@SerializedName("suggestions")
 	private List<SearchSuggestion> suggestionsList;
 
@@ -182,10 +182,32 @@ public class MenusResponse {
 	}
 
 	public List<BannerInfo> getBannerInfos() {
+		if(Data.autoData != null && Data.autoData.getSafetyInfoData() != null){
+			BannerInfo bannerInfoSafety = new BannerInfo(Data.autoData.getSafetyInfoData().getImageUrlStrip());
+			if(bannerInfos == null){
+				bannerInfos = new ArrayList<>();
+			}
+			int index = -1;
+			for(int i=0; i<bannerInfos.size(); i++){
+				BannerInfo bannerInfo = bannerInfos.get(i);
+				if(bannerInfo.openSafetyDialog){
+					index = i;
+					break;
+				}
+			}
+			if(index > -1){
+				bannerInfos.set(index, bannerInfoSafety);
+			} else {
+				bannerInfos.add(0, bannerInfoSafety);
+			}
+		}
 		return bannerInfos;
 	}
 
 	public boolean getShowBanner() {
+		if(Data.autoData != null && Data.autoData.getSafetyInfoData() != null){
+			return true;
+		}
 		return showBanner;
 	}
 
@@ -244,7 +266,7 @@ public class MenusResponse {
 	}
 
 
-	public class Vendor {
+	public static class Vendor {
 
 		@SerializedName("restaurant_id")
 		@Expose
@@ -252,6 +274,9 @@ public class MenusResponse {
 		@SerializedName("name")
 		@Expose
 		private String name;
+		@SerializedName("restaurant_type")
+		@Expose
+		private int restaurantType;
 		@SerializedName("image")
 		@Expose
 		private String image;
@@ -332,7 +357,6 @@ public class MenusResponse {
 		@Expose
 		private String address;
 
-		//		@SerializedName("buffer_time")
 		@SerializedName("close_in_buffer")
 		@Expose
 		private Long bufferTime;
@@ -418,6 +442,11 @@ public class MenusResponse {
 		@SerializedName("activation_status")
 		@Expose
 		private int activationStatus;
+
+
+		public Vendor(int id) {
+			this.restaurantId = id;
+		}
 
 		public boolean getShouldOpenMerchantInfo() {
 			return shouldOpenMerchantInfo == 1;
@@ -698,7 +727,14 @@ public class MenusResponse {
 			} else {
 				return 0;
 			}
-			//	return pureVegetarian;
+		}
+
+		public int getRestaurantType() {
+			return restaurantType;
+		}
+
+		public void setRestaurantType(int restaurantType) {
+			this.restaurantType = restaurantType;
 		}
 
 		public void setPureVegetarian(Integer pureVegetarian) {
@@ -711,7 +747,6 @@ public class MenusResponse {
 			} else {
 				return 0;
 			}
-			//	return offersDiscounts;
 		}
 
 		public void setOffersDiscounts(Integer offersDiscounts) {
@@ -881,7 +916,6 @@ public class MenusResponse {
 		}
 	}
 
-
 	public class BannerInfo {
 		@SerializedName("image_link")
 		@Expose
@@ -911,6 +945,8 @@ public class MenusResponse {
 		@SerializedName("banner_id")
 		@Expose
 		private int bannerId;
+
+		private boolean openSafetyDialog = false;
 
 		public boolean getShouldOpenMerchantInfo() {
 			return shouldOpenMerchantInfo == 1;
@@ -952,6 +988,20 @@ public class MenusResponse {
 
 		public int getBannerId() {
 			return bannerId;
+		}
+
+		//for safety info banner object
+		public BannerInfo(String imageUrl){
+			this.openSafetyDialog = true;
+			this.imageLink = imageUrl;
+		}
+
+		public boolean isOpenSafetyDialog() {
+			return openSafetyDialog;
+		}
+
+		public void setOpenSafetyDialog(boolean openSafetyDialog) {
+			this.openSafetyDialog = openSafetyDialog;
 		}
 	}
 
@@ -1162,11 +1212,39 @@ public class MenusResponse {
 	}
 
 	public List<Vendor> getVendors() {
-		return vendors;
+		if(vendors!=null) {
+			List<Vendor> vendorsWithTypeZero = new ArrayList<Vendor>();
+			vendorsWithTypeZero.clear();
+			for (int i = 0; i < vendors.size(); i++) {
+				if (vendors.get(i).getRestaurantType() == 0) {
+					vendorsWithTypeZero.add(vendors.get(i));
+				}
+			}
+			return vendorsWithTypeZero;
+		}
+		else {
+			return vendors;
+		}
 	}
 
 	public void setVendors(List<Vendor> vendors) {
 		this.vendors = vendors;
+	}
+
+	public List<Vendor> getFavouriteVendors() {
+		if(vendors!=null) {
+			List<Vendor> vendorsWithTypeOne = new ArrayList<Vendor>(); //one means favourite
+			vendorsWithTypeOne.clear();
+			for (int i = 0; i < vendors.size(); i++) {
+				if (vendors.get(i).getRestaurantType() == 1) {
+					vendorsWithTypeOne.add(vendors.get(i));
+				}
+			}
+			return vendorsWithTypeOne;
+		}
+		else {
+			return vendors;
+		}
 	}
 
 }

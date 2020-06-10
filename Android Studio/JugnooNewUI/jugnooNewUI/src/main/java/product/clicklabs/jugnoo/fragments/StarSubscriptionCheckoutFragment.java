@@ -1839,10 +1839,9 @@ public class StarSubscriptionCheckoutFragment extends Fragment implements PromoC
     private void checkIciciPaymentStatusApi() {
         if (MyApplication.getInstance().isOnline()) {
             HashMap<String, String> params = new HashMap<>();
-            HomeUtil.addDefaultParams(params);
             params.put(Constants.KEY_ORDER_ID, String.valueOf(getPlaceOrderResponse().getOrderId()));
             params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
-
+            HomeUtil.addDefaultParams(params);
             // if we come from fatafat chat payment, send feed client id
             if(isFromFatafatChat){
                 params.put(Constants.KEY_CLIENT_ID,Config.getFeedClientId());

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/rLFavouriteVendor"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:tag="@string/dont_touch_me"
+    android:visibility="visible"
+    >
+
+
+    <TextView
+        android:id="@+id/tv_cateogory_title"
+        android:paddingTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="15dp"
+        android:layout_toEndOf="@+id/icon_title"
+        android:text="@string/featured_sellers"
+        android:textColor="@color/text_color"
+        android:textSize="14.3sp"
+        app:typekitFont="@string/maven"/>
+
+    <View
+        android:id="@+id/view_gradient_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_divider_choose_category"
+        android:layout_below="@+id/recycler_favourite_vendors"
+        android:background="@drawable/shadow_gradient_seperator"
+        android:visibility="visible"
+        />
+
+
+    <View
+        android:id="@+id/view_bottom_blank"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recycler_favourite_vendors"
+        android:layout_marginTop="1dp"
+        android:background="@color/black_60"
+        android:clickable="true"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_favourite_vendors"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_cateogory_title"
+        android:background="@android:color/white"
+        android:layout_marginTop="5dp"
+        android:paddingBottom="3dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:paddingTop="5dp"
+        android:visibility="visible">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+  <!--  <View
+        android:id="@id/view_gradient"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_divider_choose_category"
+        android:background="@drawable/shadow_gradient_seperator"/>-->
+
+
+</RelativeLayout>

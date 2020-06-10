@@ -49,6 +49,9 @@ import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tagmanager.DataLayer;
 import com.google.android.gms.tagmanager.TagManager;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import com.hippo.HippoConfig;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
@@ -710,14 +713,11 @@ public class Utils implements GAAction, GACategory{
 
 
 	public static int dpToPx(Context context, int dp) {
-		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-		int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-		return px;
+		return dpToPx(context, (float) dp);
 	}
 
 	public static int convertDpToPx(Context context, int dp) {
-		DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-		return Math.round(dp * (displayMetrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+		return dpToPx(context, (float) dp);
 	}
 
 	public static int pxToDp(Context context, int px) {
@@ -1219,6 +1219,36 @@ public class Utils implements GAAction, GACategory{
 	public static boolean isVideoFile(String path) {
 		String mimeType = URLConnection.guessContentTypeFromName(path);
 		return mimeType != null && mimeType.startsWith("video");
+	}
+
+	public static void logRequestBody(Object object) {
+		try {
+			if (BuildConfig.DEBUG)
+				Log.i(TAG, "REQUEST_BODY: " + prettyJson(object));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	static String prettyJson(Object object) {
+		String json = "";
+		if (BuildConfig.DEBUG && object != null) {
+			Gson parser = new GsonBuilder().setPrettyPrinting().create();
+			try {
+				json = parser.toJson(new JsonParser().parse(objecttoJson(object)));
+			} catch (Exception e) {
+				try {
+					json = parser.toJson(new JsonParser().parse(object.toString()));
+				} catch (Exception ignore) {}
+			}
+			if (json.isEmpty() || json.equalsIgnoreCase(""))
+				json = objecttoJson(object);
+		}
+		return json;
+	}
+
+	private static String objecttoJson(Object object) {
+		return new Gson().toJson(object).replace("\\", "");
 	}
 }
 

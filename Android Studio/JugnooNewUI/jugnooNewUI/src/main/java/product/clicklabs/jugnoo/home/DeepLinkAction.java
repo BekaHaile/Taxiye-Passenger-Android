@@ -129,7 +129,7 @@ public class DeepLinkAction {
 				MenuAdapter.onClickAction(MenuInfoTags.TICKET_SUPPORT.getTag(),0,0,activity,latlng);
 			}
 			else if(AppLinkIndex.REINVITE_USERS.getOrdinal() == deepIndex){
-				activity.startActivity(new Intent(activity, ReinviteFriendsActivity.class));
+//				activity.startActivity(new Intent(activity, ReinviteFriendsActivity.class));
 			}
 
 		} catch(Exception e){

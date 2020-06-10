@@ -5,8 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,6 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -68,9 +68,9 @@ public class PaymentOptionDialog implements View.OnClickListener {
     private TextView textViewPayForRides, textViewPaytm, textViewStripeCard, textViewAcceptCard, textViewPayStack, textViewPaytmValue, textViewMobikwik,
             textViewMobikwikValue, textViewFreeCharge, textViewFreeChargeValue, tvOtherModesToPay, textViewMpesa,
             textViewMpesaValue;
-    private RecyclerView rvCorporates, rvStripeCards;
+    private RecyclerView rvCorporates, rvStripeCards,rvPayStack;
     private CorporatesAdapter corporatesAdapter;
-    private StripeCardAdapter stripeCardAdapter;
+    private StripeCardAdapter stripeCardAdapter,paystackCardAdapter;
 
     public PaymentOptionDialog(Activity activity, CallbackPaymentOptionSelector callbackPaymentOptionSelector, Callback callback) {
         this.activity = activity;
@@ -143,8 +143,11 @@ public class PaymentOptionDialog implements View.OnClickListener {
             rvCorporates.setLayoutManager(new LinearLayoutManager(activity));
             rvCorporates.setHasFixedSize(false);
             rvStripeCards = dialog.findViewById(R.id.rvStripeCards);
+            rvPayStack = dialog.findViewById(R.id.rvPayStack);
             rvStripeCards.setLayoutManager(new LinearLayoutManager(activity));
             rvStripeCards.setHasFixedSize(false);
+            rvPayStack.setLayoutManager(new LinearLayoutManager(activity));
+            rvPayStack.setHasFixedSize(false);
 
 
             textViewPaytmValue = (TextView) dialog.findViewById(R.id.textViewPaytmValue);
@@ -442,7 +445,6 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
                     }
                 }
-
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
                     if (paymentModeConfigData.getEnabled() == 1) {
 
@@ -520,13 +522,27 @@ public class PaymentOptionDialog implements View.OnClickListener {
                                     textViewAcceptCard.setText(activity.getString(R.string.action_add_card_accept_card));
                                 }
                             } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
-                                linearLayoutWalletContainer.addView(relativeLayoutPayStack);
-                                if (paymentModeConfigData.getCardsData() != null && paymentModeConfigData.getCardsData().size() > 0) {
-                                    WalletCore.getStripeCardDisplayString(activity, paymentModeConfigData.getCardsData().get(0), textViewPayStack, ivPayStackIcon);
-                                } else {
-                                    ivPayStackIcon.setImageResource(R.drawable.ic_card_default);
-                                    textViewPayStack.setText(activity.getString(R.string.action_add_card_pay_stack));
+                                if (paymentModeConfigData.getCardsData() != null) {
+                                    linearLayoutWalletContainer.addView(rvPayStack);
+                                    paystackCardAdapter = new StripeCardAdapter(paymentModeConfigData.getCardsData(),
+                                            rvPayStack, Fonts.mavenLight(activity), new StripeCardAdapter.OnSelectedCallback() {
+                                        @Override
+                                        public void onItemSelected(@NotNull StripeCardData stripeCards, int pos) {
+                                            if (dialog != null && dialog.isShowing()) {
+                                                dialog.dismiss();
+                                                Prefs.with(activity).save(Constants.STRIPE_SELECTED_POS, stripeCards.getCardId());
+                                                callbackPaymentOptionSelector.onPaymentOptionSelected(PaymentOption.PAY_STACK_CARD);
+                                                callback.onPaymentModeUpdated();
+                                            }
+                                            Log.e("check", stripeCards.getCardId());
+                                        }
+                                    }, activity);
+                                    rvPayStack.setAdapter(paystackCardAdapter);
+                                    paystackCardAdapter.selectDefault();
                                 }
+                                linearLayoutWalletContainer.addView(relativeLayoutPayStack);
+                                ivPayStackIcon.setImageResource(R.drawable.ic_card_default);
+                                textViewPayStack.setText(activity.getString(R.string.action_add_card_stripe));
                             }
 
                             if (paymentOption == paymentModeConfigData.getPaymentOption()) {

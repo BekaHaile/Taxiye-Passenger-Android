@@ -43,7 +43,6 @@ import com.sabkuchfresh.feed.ui.dialogs.DeletePostDialog;
 import com.sabkuchfresh.feed.ui.dialogs.DialogPopupTwoButtonCapsule;
 import com.sabkuchfresh.feed.ui.dialogs.EditPostPopup;
 import com.sabkuchfresh.feed.utils.BadgeDrawable;
-import com.sabkuchfresh.home.FeedContactsUploadService;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.retrofit.model.feed.feeddetail.FeedComment;
 import com.sabkuchfresh.retrofit.model.feed.generatefeed.FeedDetail;
@@ -110,7 +109,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         if (context instanceof FreshActivity) {
             activity = (FreshActivity) context;
             activity.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION_CONTACTS_UPLOADED));
-            mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
+           /* mPermissionCommon = new PermissionCommon(this).setCallback(new PermissionCommon.PermissionListener() {
                 @Override
                 public void permissionGranted(int requestCode) {
                     startContactSync();
@@ -125,7 +124,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
                 public void onRationalRequestIntercepted(int requestCode) {
 
                 }
-            });
+            });*/
         }
     }
 
@@ -326,7 +325,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         return rootView;
     }
 
-    private void startContactSync() {
+/*    private void startContactSync() {
         try {
 
             if (Data.getFeedData() != null && Data.getFeedData().getContactsSynced() != null && Data.getFeedData().getContactsSynced() == 0) {
@@ -340,7 +339,7 @@ public class FeedHomeFragment extends Fragment implements GACategory, GAAction, 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {

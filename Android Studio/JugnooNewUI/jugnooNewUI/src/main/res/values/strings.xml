@@ -1318,6 +1318,7 @@
     <string name="label_category_all">All</string>
     <string name="label_see_all">See All</string>
     <string name="ongoing_orders">Ongoing Orders</string>
+    <string name="featured_sellers">Featured Sellers</string>
 
     <string name="you_have_already_reviewed_format">You have already reviewed %s</string>
     <string name="more_reviews_not_shown_text">%s reviews are not shown here as the reviewers only posted rating without describing their experience</string>
@@ -2033,7 +2034,7 @@
     <string name="confirm_payment_via_card_ending_format">Confirm payment via card ending with %s</string>
     <string name="please_select_some_amount">Please select some amount</string>
 
-  <!--Notes-->
+    <!--Notes-->
     <string name="notes">Notes</string>
     <string name="write_notes_here">Write notes here...</string>
     <string name="save_notes">Save notes</string>
@@ -2166,6 +2167,21 @@
     <string name="no_fav_divers">No Favourite Drivers</string>
     <string name = "Do_you_want_add_driver_as_a_favourote">Do you want add driver \n as a favourote ?</string>
     <string name="ride_with_favourite_driver">Do you want ride with your\nfavourite driver ?</string>
+    <string name="menu_promotions">Promotions</string>
+    <string name="menu_inbox">Inbox</string>
+    <string name="menu_history">History</string>
+    <string name="menu_chat_support">Chat Support</string>
+    <string name="menu_locale">Language</string>
+    <string name="menu_schedule_ride">Schedule Ride</string>
+    <string name="menu_email_support">Email Support</string>
+    <string name="menu_call_support">Call Support</string>
+    <string name="menu_wallet">Payments</string>
+    <string name="menu_payments">Payments</string>
+    <string name="menu_refer_earn">Refer and Earn</string>
+    <string name="ride_scheduled_status">Ride Scheduled</string>
+    <string name="in_progress_status">In Progress</string>
+    <string name="processed_status">Processed</string>
+    <string name="cancelled_status">Cancelled</string>
 <!--    New UI changes-->
     <string name="text_where_to_go">Where to?</string>
     <string name="add_favorite_place">Add Favorite Place</string>
@@ -2496,4 +2512,54 @@
     <string name="review_must_be_in_150">Review must be in 150 letters.</string>
     <string name="pay_via">Pay via</string>
     <string name="upi_supported_app_not_installed">UPI supported app not installed</string>
+    <string name="enable_night_map">Enable night map</string>
+    <string name="disable_night_map">Disable night map</string>
+    <string name="map_them_will_automatically_change_now">Map theme will automaticaly changed to dark in the evening now</string>
+    <string name="customer">Customer</string>
+    <string name="transfer_to">Transfer to</string>
+    <string name="select_transfer_to">Select Transfer to</string>
+    <string name="store_accepts_online_payment_only">Store accepts online payment only</string>
+    <string name="service_unavailable_in_this_area">Service unavailable in this area</string>
+    <string name="want_to_earn_money_from_transport_business">Want to Earn Money from transport business in your city?</string>
+    <string name="partner_with_jugnoo">Partner with Jugnoo</string>
+
+    <string name="profile_verification">Profile Verification</string>
+    <string name="verification_status">Verification Status</string>
+    <string name="status_colon_approval"><b>Status:</b> %s</string>
+    <string name="please_upload_images">Please upload images before proceeding.</string>
+    <string name="pending">Pending</string>
+    <string name="uploaded">Uploaded</string>
+    <string name="rejected">Rejected</string>
+    <string name="verified">Verified</string>
+    <string name="approval_pending">Approval Pending</string>
+    <string name="rejection_reason">Rejection Reason</string>
+    <string name="upload_pending">Upload Pending</string>
+    <string name="upload_again">Upload Again</string>
+    <string name="doc_status_rejected">Your documents are rejected. Please upload again.</string>
+    <string name="min_documents_required">Please upload %s documents before proceeding.</string>
+    <string name="tap_here_to_verify">Tap here to verify your account</string>
+    <string name="are_you_sure_to_delete_document">Are you sure to delete this document?</string>
+    <string name="your_documents_are_rejected_upload_again">Your documents are rejected due to certain reasons.</string>
+    <string name="user_not_verified_snack">You are not verified yet. Please verify your account.</string>
+
+    <string name="add_multi_dest">Add Multiple Destinations</string>
+    <string name="add_stop">Add Stop</string>
+    <string name="select_atlease_one_top">Please select at least one stop</string>
+    <string name="stops_to">Stops to</string>
+    <string name="perm_contacts">%s would need to access your contacts</string>
+    <string name="perm_contacts_rational">This will enable you to add emergency contacts so as to alert your close ones when needed.Contacts will be uploaded to our server for a seamless experience</string>
+    <string name="your_safety_is_our_top_concern">Your safety is our top concern!</string>
+    <string name="packages_not_available">Packages are not available</string>
+    <string name="pls_select_a_package">Please select a Package</string>
+    <string name="payment_mode">payment mode</string>
+    <string name="search_merchants">Search Merchants</string>
+    <string name="special_instructions">Special Instructions</string>
+    <string name="special_instructions_hint">Add a note (extra sauce, no onions etc.)</string>
+    <string name="price_colon">Price: %s</string>
+    <string name="add_card_toast">Add Card First</string>
+    <string name="error_customization_limit">You can select maximum %d items for %s</string>
+    <string name="error_customization_lower_limit">You have to select minimum %d item(s) for %s</string>
+    <string name="select_between_lower_upper">(Select between %d and %d items)</string>
+    <string name="select_atmost_upper">(Select upto %d item(s))</string>
+    <string name="select_atleast_lower">(Select atleast %d item(s))</string>
 </resources>

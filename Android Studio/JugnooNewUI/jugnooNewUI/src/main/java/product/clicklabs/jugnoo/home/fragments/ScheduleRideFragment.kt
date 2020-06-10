@@ -214,6 +214,21 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     } else if ((activity as HomeActivity).selectedIdForScheduleRide <= 0) {
                         Utils.showToast(activity, activity!!.getString(R.string.please_select_vehicle))
                         throw Exception()
+                    } else if(selectedPackage == null&&!(activity as HomeActivity).scheduleRideOpen) {
+                        if(isOneWay == 1) {
+                            if(getOneWayPackages(selectedRegion).size > 0) {
+                                Utils.showToast(activity, activity!!.getString(R.string.pls_select_a_package))
+                            } else {
+                                Utils.showToast(activity, activity!!.getString(R.string.packages_not_available))
+                            }
+                        } else if(isOneWay == 0) {
+                            if(getRoundTripPackages(selectedRegion).size > 0) {
+                                Utils.showToast(activity, activity!!.getString(R.string.pls_select_a_package))
+                            } else {
+                                Utils.showToast(activity, activity!!.getString(R.string.packages_not_available))
+                            }
+                        }
+                        throw Exception()
                     } else {
                         if(isOneWay == 1) {
                             (activity as HomeActivity).setNotes("One Way")
@@ -245,7 +260,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             if(Data.autoData != null && regions.size > 0) {
                 selectedRegion = regions[0]
             }
-            setSelectedRegionData()
+            setSelectedRegionData(true)
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
 
@@ -419,7 +434,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvScheduleDest.text = searchResult.getNameForText(activity)
             searchResultDestination = searchResult
         }
-        getFareEstimate()
+//        getFareEstimate()
     }
 
     private fun getDirectionsAndComputeFare(sourceLatLng: LatLng, sourceAddress: String, destLatLng: LatLng, destAddress: String) {
@@ -628,12 +643,12 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     fun updateVehicleAdapter() {
         if (view != null) {
-            setSelectedRegionData()
+            setSelectedRegionData(false)
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
         }
     }
 
-    private fun setSelectedRegionData() {
+    private fun setSelectedRegionData(isFromThisFragment: Boolean) {
         var regionSelected = (activity as HomeActivity).selectedRegionForScheduleRide
 
         val regions = Data.autoData.regions
@@ -658,6 +673,32 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                 (activity as HomeActivity).selectedRegionForScheduleRide = this
                 (activity as HomeActivity).selectedIdForScheduleRide = regionId!!
                 (activity as HomeActivity).selectedRideTypeForScheduleRide = rideType!!
+                if(!isFromThisFragment) {
+                    selectedRegion = this
+                    if(getOneWayPackages(selectedRegion).size>0) {
+                        isOneWay = 1
+
+                        tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                R.drawable.ic_radio_button_checked,
+                                0, 0, 0)
+                        tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                R.drawable.ic_radio_button_unchecked,
+                                0, 0, 0)
+                        packagesAdapter!!.setList(getOneWayPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
+                        selectedPackage = getOneWayPackages(selectedRegion).get(0)
+                    }
+                    else if(getRoundTripPackages(selectedRegion).size>0){
+                        isOneWay = 0
+                        tvOneWay.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                R.drawable.ic_radio_button_unchecked,
+                                0, 0, 0)
+                        tvRoundTrip.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                                R.drawable.ic_radio_button_checked,
+                                0, 0, 0)
+                        packagesAdapter!!.setList(getRoundTripPackages(selectedRegion), Data.autoData.currency, Data.autoData.distanceUnit)
+                        selectedPackage = getRoundTripPackages(selectedRegion).get(0)
+                    }
+                }
             }
 
 
@@ -768,6 +809,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             oneWayPackages[0].selected = true
             selectedPackage = oneWayPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
+        } else {
+            selectedPackage = null
         }
         return oneWayPackages
     }
@@ -812,6 +855,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             roundTripPackages[0].selected = true
             selectedPackage = roundTripPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
+        } else {
+            selectedPackage = null
         }
         return roundTripPackages
     }

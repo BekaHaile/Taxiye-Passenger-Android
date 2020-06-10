@@ -3,15 +3,6 @@ package com.sabkuchfresh.fragments;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.tabs.TabLayout;
-import androidx.fragment.app.Fragment;
-import androidx.core.view.GravityCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.material.tabs.TabLayout;
 import com.sabkuchfresh.adapters.DeliveryHomeAdapter;
 import com.sabkuchfresh.adapters.TabbedPagerAdaptor;
 import com.sabkuchfresh.datastructure.SearchSuggestion;
@@ -33,6 +25,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -42,6 +42,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.home.dialogs.SafetyInfoDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -197,6 +198,12 @@ public class TabbedSearchFragment extends Fragment {
                 Utils.hideKeyboard(activity);
 
             }
+
+			@Override
+			public void onSafetyInfoBannerClick() {
+				SafetyInfoDialog safetyInfoDialog = SafetyInfoDialog.Companion.newInstance();
+				safetyInfoDialog.show(getChildFragmentManager().beginTransaction(), SafetyInfoDialog.class.getName());
+			}
         }, rvRecentSearches, status, statusMeals, statusFatafat);
 
         rvRecentSearches.setAdapter(deliveryHomeAdapter);

@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import io.paperdb.Paper;
@@ -433,7 +434,10 @@ public class JSONParser implements Constants {
             int rideEndGoodFeedbackViewType = autoData.optInt(KEY_RIDE_END_GOOD_FEEDBACK_VIEW_TYPE, RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal());
             String rideEndGoodFeedbackText = autoData.optString(KEY_RIDE_END_GOOD_FEEDBACK_TEXT, context.getString(R.string.end_ride_with_image_text, context.getString(R.string.app_name)));
             String baseFarePoolText = autoData.optString("base_fare_pool_text", "");
+            int customerVerificationStatus = autoData.optInt(KEY_CUSTOMER_VERIFICATION_STATUS,0);
 
+            int multiDestAllowed=autoData.optInt(Constants.MULTIPLE_DESTINATIONS_ALLOWED,0);
+            Prefs.with(context).save(Constants.MULTIPLE_DESTINATIONS_ALLOWED,multiDestAllowed);
             Prefs.with(context).save(Constants.KEY_SHOW_POKEMON_DATA, autoData.optInt(KEY_SHOW_POKEMON_DATA, 0));
             Prefs.with(context).save(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL, autoData.optLong(KEY_SP_CUSTOMER_LOCATION_UPDATE_INTERVAL,
 					LOCATION_UPDATE_INTERVAL));
@@ -477,7 +481,7 @@ public class JSONParser implements Constants {
 					poolDestinationPopupText1, poolDestinationPopupText2, poolDestinationPopupText3, rideEndGoodFeedbackViewType,
 					rideEndGoodFeedbackText, baseFarePoolText, referAllStatus, referAllText, referAllTitle, referAllStatusLogin, referAllTextLogin
                     , referAllTitleLogin, nearbyPickupRegionses, inRideSendInviteTextBoldV2, inRideSendInviteTextNormalV2, rideStartInviteTextDeepIndexV2,
-                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare(), resendEmailInvoiceEnabled,isBluetoothEnabled);
+                    isRazorpayEnabled,isTipEnabled, autosData.getShowRegionSpecificFare(), resendEmailInvoiceEnabled,isBluetoothEnabled, customerVerificationStatus);
 
             Data.autoData.setUseRecentLocAtRequest(autosData.getUseRecentLocAtRequest());
             Data.autoData.setUseRecentLocAutoSnapMinDistance(autosData.getUseRecentLocAutoSnapMinDistance());
@@ -500,7 +504,7 @@ public class JSONParser implements Constants {
 			long bidTimeout = autoData.optLong(KEY_BID_TIMEOUT, 30000);
             Data.autoData.setBidRequestRideTimeout(bidRequestRideTimeout);
             Data.autoData.setBidTimeout(bidTimeout);
-
+            Data.autoData.setMultiDestAllowed(multiDestAllowed==1);
             if(Data.autoData.getPromoCoupons() == null){
                 Data.autoData.setPromoCoupons(new ArrayList<PromoCoupon>());
             } else{
@@ -542,7 +546,9 @@ public class JSONParser implements Constants {
 
             parseConfigParams(context, autoData);
 
-            if(Data.userData != null){
+            parseSafetyInfoData(autosData);
+
+			if(Data.userData != null){
             	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
 
@@ -552,6 +558,18 @@ public class JSONParser implements Constants {
             e.printStackTrace();
         }
     }
+
+	private void parseSafetyInfoData(LoginResponse.Autos autosData) {
+    	Data.autoData.setSafetyInfoData(autosData.getSafetyInfoData());
+
+//		ArrayList<String> infoData = new ArrayList<>();
+//		infoData.add("Our drivers are being checked regularly");
+//		infoData.add("Hand sanitization facilities have been provided in the cabs");
+//		infoData.add("Cabs are being sanitized throughly regularly");
+//		Data.autoData.setSafetyInfoData(new SafetyInfoData(infoData, "Your safety is our top concern!",
+//				"https://fchat.s3.ap-south-1.amazonaws.com/default/TjI1WUF4U0.1587365616963.png",
+//				"https://fchat.s3.ap-south-1.amazonaws.com/default/TjI1WUF4U0.1587365616963.png"));
+	}
 
 	private void parseConfigParams(Context context, JSONObject autoData) {
     	String specifiedCountry = context.getResources().getBoolean(R.bool.specified_country_search_result_enabled) ?
@@ -711,6 +729,8 @@ public class JSONParser implements Constants {
 				context.getResources().getInteger(R.integer.hide_regions_with_no_drivers)));
 		Prefs.with(context).save(KEY_PAY_VIA_UPI_ENABLED, autoData.optInt(KEY_PAY_VIA_UPI_ENABLED,
 				context.getResources().getInteger(R.integer.pay_via_upi_enabled)));
+		Prefs.with(context).save(SHOW_CUSTOMER_VERIFICATION, autoData.optInt(SHOW_CUSTOMER_VERIFICATION,
+				context.getResources().getInteger(R.integer.show_customer_verification)));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 
@@ -775,6 +795,8 @@ public class JSONParser implements Constants {
 				Data.jungleApisDisable = 0;
 				return;
 			}
+
+			Prefs.with(context).save(KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER, context.getString(R.string.jungle_map_fm_token));
 
 			String jungleObjStr = BuildConfig.DEBUG ? JUNGLE_JSON_OBJECT : EMPTY_JSON_OBJECT;
 			JSONObject jungleObj = userData.optJSONObject(KEY_JUNGLE_DIRECTIONS_OBJ);
@@ -1570,6 +1592,9 @@ public class JSONParser implements Constants {
             double tipBeforeRequestRide = 0.0;
             String userIdentifier = "";
 
+            String vehicleImage ="";
+            String vehicleName = "";
+            JSONArray multidest=null;
 
             HomeActivity.userMode = UserMode.PASSENGER;
 
@@ -1668,8 +1693,18 @@ public class JSONParser implements Constants {
                             if (jObject.has("driver_car_no")) {
                                 driverCarNumber = jObject.getString("driver_car_no");
                             }
+                            vehicleImage = jObject.optString("vehicle_image");
                             if (jObject.has("free_ride")) {
                                 freeRide = jObject.getInt("free_ride");
+                            }
+                            if(jObject.has("vehicle_color")) {
+                                vehicleName = vehicleName.concat(jObject.optString("vehicle_color") + " ");
+                            }
+                            if(jObject.has("vehicle_brand")) {
+                                vehicleName = vehicleName.concat(jObject.optString("vehicle_brand") + " ");
+                            }
+                            if(jObject.has("vehicle_model")) {
+                                vehicleName = vehicleName.concat(jObject.optString("vehicle_model"));
                             }
 
                             promoName = getPromoName(context, jObject);
@@ -1808,11 +1843,17 @@ public class JSONParser implements Constants {
                         driverImage, driverCarImage, driverPhone, driverRating, driverCarNumber, freeRide, promoName, eta,
                         fareFixed, preferredPaymentMode, scheduleT20, vehicleType, iconSet, cancelRideThrashHoldTime, cancellationCharges,
                         isPooledRide, poolStatusString, fellowRiders, bearing, chatEnabled, operatorId, currency, vehicleIconUrl,tipAmount,
-                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier));
+                        isCorporateRide, cardId, rideType, gpsLockStatus, fareMandatory, tipBeforeRequestRide, userIdentifier,vehicleImage,vehicleName));
 
                 Data.autoData.setFareFactor(fareFactor);
                 Data.autoData.setReferralPopupContent(referralPopupContent);
-
+                JSONObject lastEngInfo=jObject1.optJSONArray("last_engagement_info").optJSONObject(0);
+                multidest=lastEngInfo.optJSONArray("multiple_destinations");
+                if(multidest!=null&&multidest.length()!=0)
+                {
+                    Data.autoData.getMultiDestList().clear();
+                    Data.autoData.getMultiDestList().addAll(Objects.requireNonNull(AutoData.parseMultiDestList(multidest)));
+                }
                 Data.autoData.setFuguChannelId(fuguChannelData.getFuguChannelId());
                 Data.autoData.setFuguChannelName(fuguChannelData.getFuguChannelName());
                 Data.autoData.setFuguTags(fuguChannelData.getFuguTags());

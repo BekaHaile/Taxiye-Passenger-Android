@@ -1,60 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/relativeLayoutConfirmRequest"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:visibility="visible">
 
-    <Button
-        android:id="@+id/confirmMyLocationBtn"
-        android:layout_width="121px"
-        android:layout_height="117px"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/recyclerViewVehicles"
-        android:layout_marginEnd="30px"
-        android:background="@drawable/mylocation_btn_selector"
-        android:tag="mwar"
-        android:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/imageViewPokemonOnOffConfirm"
-        android:layout_width="90px"
-        android:layout_height="90px"
-        android:src="@drawable/ic_poke_on_off_button"
-        android:tag="mwar"
-        android:layout_marginStart="56px"
-        android:layout_marginTop="15px"
-        android:visibility="gone"
-        />
-
-
-    <TextView
-        android:id="@+id/tvFreeRidesForLife"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/rlMyLocation"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tag="@string/dont_touch_me"
-        android:textColor="@color/white"
-        android:background="@drawable/capsule_theme_color_selector"
-        android:text="@string/free_rides_for_life"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:textSize="14sp"
-        android:layout_above="@+id/relativeLayoutConfirmBottom"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:visibility="visible"
-        android:elevation="5dp"
-        />
+
+        >
+
+        <Button
+            android:id="@+id/confirmMyLocationBtn"
+            android:layout_width="121px"
+            android:layout_height="117px"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/recyclerViewVehicles"
+            android:layout_marginEnd="30px"
+            android:background="@drawable/mylocation_btn_selector"
+            android:tag="mwar"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/imageViewPokemonOnOffConfirm"
+            android:layout_width="90px"
+            android:layout_height="90px"
+            android:src="@drawable/ic_poke_on_off_button"
+            android:tag="mwar"
+            android:layout_marginStart="56px"
+            android:layout_marginTop="15px"
+            android:visibility="gone"
+            />
+
+
+
+        <TextView
+            android:id="@+id/tvFreeRidesForLife"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:tag="@string/dont_touch_me"
+            android:textColor="@color/white"
+            android:background="@drawable/capsule_theme_color_selector"
+            android:text="@string/free_rides_for_life"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textSize="14sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:visibility="visible"
+            android:elevation="5dp"
+            />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayoutSafetyInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="@string/dont_touch_me"
+            android:elevation="5dp"
+            android:visibility="gone"
+            >
+            <ImageView
+                android:id="@+id/ivSafetyInfoPicture"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                />
+            <ImageView
+                android:id="@+id/ivSafetyInfoClose"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="6dp"
+                app:srcCompat="@drawable/ic_close_thick_grey"
+                android:theme="@style/GreyHighlight"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/relativeLayoutConfirmBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/confirmMyLocationBtn"
+        android:layout_below="@+id/rlMyLocation"
         android:clickable="true"
         android:focusable="true"
         android:background="@color/white">
@@ -122,9 +165,25 @@
                 android:splitMotionEvents="false"
                 android:visibility="visible"
                 >
-                
 
+
+                <TextView android:id="@+id/tvStopsBesidesDropNewUi"
+                    android:layout_width="40dp"
+                    android:layout_height="17dp"
+                    android:singleLine="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="-8dp"
+                    android:background="@drawable/background_grey_rounded_bordered"
+                    android:textSize="7sp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/maven_pro_medium"
+                    android:visibility="gone"
+                    />
                 <TextView
+                    android:layout_toEndOf="@id/tvStopsBesidesDropNewUi"
                     android:id="@+id/textViewDestSearchNew"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -157,6 +216,16 @@
                         android:src="@drawable/ic_cross_et_selector"
                         android:tag="mwar"
                         android:visibility="visible" />
+
+                    <ImageView
+                        android:id="@+id/imageViewDropAddNew"
+                        android:layout_width="70px"
+                        android:layout_height="70px"
+                        android:layout_marginEnd="5px"
+                        android:padding="16px"
+                        android:src="@drawable/ic_plus_theme"
+                        android:tag="mwar"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -507,5 +576,8 @@
             android:theme="@style/GreyHighlight"
             />
     </RelativeLayout>
+
+
+
 
 </RelativeLayout>

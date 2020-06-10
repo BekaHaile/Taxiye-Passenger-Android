@@ -198,6 +198,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private int currentVehicleTypePos = -1;
     private boolean isPickUpSet = false;
     private int vehicleType = -1;
+    private int regionId = -1;
+    private int rideType = -1;
     private int checkCount = 0;
     private List<VehicleInfo> vehicleInfoList = new ArrayList<>();
     private String defaultCurrencyFromResponse = "";
@@ -304,10 +306,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_delivery_address));
                         throw new Exception();
                     }
-                    if(vehicleInfoList == null || vehicleInfoList.isEmpty() || currentVehicleTypePos == -1) {
-                        Utils.showToast(activity, activity.getString(R.string.error_vehicle_type));
-                        throw new Exception();
-                    }
+//                    if(vehicleInfoList == null || vehicleInfoList.isEmpty() || currentVehicleTypePos == -1) {
+//                        Utils.showToast(activity, activity.getString(R.string.error_vehicle_type));
+//                        throw new Exception();
+//                    }
 //                    if( MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData()==null||MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4().isEmpty()){
 //                        Utils.showToast(activity, "Add Card First");
 //                        throw new Exception();
@@ -884,6 +886,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
         if(vehicleInfoList != null && !vehicleInfoList.isEmpty() && currentVehicleTypePos != -1 && vehicleType != -1) {
             params.addPart(Constants.KEY_VEHICLE_TYPE, new TypedString(""+vehicleType));
+            params.addPart(Constants.KEY_RIDE_TYPE, new TypedString(""+rideType));
+            params.addPart(Constants.KEY_REGION_ID, new TypedString(""+regionId));
         }
 
         params.addPart(Constants.KEY_PAYMENT_MODE,new TypedString(String.valueOf(paymentMethod)));
@@ -896,7 +900,14 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.addPart(Constants.PROMO_CODE, new TypedString(String.valueOf(currentPromoApplied.getReferalName())));
             params.addPart(Constants.KEY_ORDER_OFFER_ID, new TypedString(String.valueOf(currentPromoApplied.getId())));
         }
-
+        if (paymentMethod== PaymentOption.PAY_STACK_CARD.getOrdinal()
+                ||paymentMethod == PaymentOption.STRIPE_CARDS.getOrdinal()
+        ) {
+            String cardId = Prefs.with(activity).getString(Constants.STRIPE_SELECTED_POS, "0");
+            if (!cardId.equalsIgnoreCase("0")) {
+                params.addPart(Constants.KEY_CARD_ID, new TypedString(String.valueOf(cardId)));
+            }
+        }
         String finalDateTime = null;
         if (!isAsapSelected) {
             finalDateTime = getFormattedDateTime(selectedDate, selectedTime, true);
@@ -1063,6 +1074,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         vehicleInfoList = null;
         vehicleTypeAdapterFeed = null;
         vehicleType = -1;
+        rideType = -1;
+        regionId = -1;
         isPickUpSet = false;
         checkCount = 0;
         edtTaskDescription.setText(null);
@@ -1135,6 +1148,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
             if(currentVehicleTypePos != -1 && vehicleType != -1) {
                 params.put(Constants.KEY_VEHICLE_TYPE,String.valueOf(vehicleType));
+                params.put(Constants.KEY_RIDE_TYPE,String.valueOf(rideType));
+                params.put(Constants.KEY_REGION_ID,String.valueOf(regionId));
             }
 
 
@@ -1402,6 +1417,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
                     currentVehicleTypePos = 0;
                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+                    rideType = vehicleInfoList.get(currentVehicleTypePos).getRideType();
+                    regionId = vehicleInfoList.get(currentVehicleTypePos).getRegionId();
                     if (vehicleTypeAdapterFeed == null) {
                         vehicleTypeAdapterFeed = new VehicleTypeAdapterFeed((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterFeed.OnItemSelectedListener() {
                             @Override
@@ -1409,6 +1426,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                 currentVehicleTypePos = pos;
                                 if(-1 != vehicleInfoList.get(currentVehicleTypePos).getType()) {
                                     vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
+                                    rideType = vehicleInfoList.get(currentVehicleTypePos).getRideType();
+                                    regionId = vehicleInfoList.get(currentVehicleTypePos).getRegionId();
                                 }
                                 fetchDynamicDeliveryCharges(false,false,false);
                             }
@@ -1494,28 +1513,26 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             @Override
             public void onPaymentOptionSelected(PaymentOption paymentOption) {
                 paymentMethod = paymentOption.getOrdinal();
-
                 if(paymentOptionDialog!=null){
-
                     WalletCore walletCore = new WalletCore(activity);
                     tvPaymentOption.setText(walletCore.getPaymentOptionName(paymentMethod, activity));
                     paymentOptionDialog.dismiss();
                 }
-
                 if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption()==1) {
 
                     android.util.Log.d(TAG, "onPaymentOptionSelected: " + paymentMethod);
 
-                }
-                else if(MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption()==9) {
-                    tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas().get(0).getCardsData().get(0).getLast4());
+                } else if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption() == PaymentOption.STRIPE_CARDS.getOrdinal()) {
+                    tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(getContext(), paymentMethod));
+                    paymentOptionDialog.dismiss();
+                } else if (MyApplication.getInstance().getWalletCore().getConfigData(paymentMethod).getPaymentOption() == PaymentOption.PAY_STACK_CARD.getOrdinal()) {
+                    tvPaymentOption.setText(MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(getContext(), paymentMethod));
                     paymentOptionDialog.dismiss();
                 }
-
                 if(paymentMethod!=-1){
-                    ivPaymentOption.setImageDrawable(activity.getResources().getDrawable(MyApplication.getInstance().getWalletCore()
-                            .getPaymentOptionIconSmall(paymentMethod)));
+                    ivPaymentOption.setImageDrawable(activity.getResources().getDrawable(MyApplication.getInstance().getWalletCore().getPaymentOptionIconSmall(paymentMethod)));
                 }
+
             }
 
             @Override

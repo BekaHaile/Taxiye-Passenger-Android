@@ -6,14 +6,6 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +48,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -69,6 +69,7 @@ import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.adapters.MenuAdapter;
+import product.clicklabs.jugnoo.home.dialogs.SafetyInfoDialog;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
@@ -278,7 +279,13 @@ public class MenusFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             public void onSuggestionClicked(final SearchSuggestion searchSuggestions) {
                 // NA here
             }
-        }, recyclerViewRestaurant, status,statusMeals,statusFatafat);
+
+			@Override
+			public void onSafetyInfoBannerClick() {
+				SafetyInfoDialog safetyInfoDialog = SafetyInfoDialog.Companion.newInstance();
+				safetyInfoDialog.show(getChildFragmentManager().beginTransaction(), SafetyInfoDialog.class.getName());
+			}
+		}, recyclerViewRestaurant, status,statusMeals,statusFatafat);
 
         recyclerViewRestaurant.setAdapter(deliveryHomeAdapter);
         activity.setLocalityAddressFirstTime(activity.getAppType());

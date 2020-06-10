@@ -129,9 +129,12 @@
     <integer name="hippo_call_enabled">1</integer>
     <integer name="hide_regions_with_no_drivers">1</integer>
     <integer name="pay_via_upi_enabled">1</integer>
+    <integer name="show_customer_verification">0</integer>
 
     <integer name="customer_dob_input">0</integer>
     <integer name="customer_gender_filter">0</integer>
     <bool name="vehicle_list_menus">false</bool>
+    <string name="jungle_map_fm_token">770c7ad0-4415-11ea-964f-ab5bc15e9ad2</string>
+    <drawable name="banners_placeholder">@drawable/ic_notification_placeholder</drawable>
 
 </resources>

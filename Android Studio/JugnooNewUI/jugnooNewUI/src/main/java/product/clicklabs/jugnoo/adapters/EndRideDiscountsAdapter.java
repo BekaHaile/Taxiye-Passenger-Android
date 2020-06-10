@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.datastructure.DiscountType;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
+import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
 
 
@@ -26,7 +28,7 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
     LayoutInflater mInflater;
 	ViewHolderDiscount holder;
     Context context;
-    boolean showNegativeValues;
+    boolean showNegativeValues, isFromOrderHistory;
 
     ArrayList<DiscountType> discountTypes;
     String currency;
@@ -59,6 +61,12 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
 		notifyDataSetChanged();
 	}
 
+    public synchronized void setList(ArrayList<DiscountType> discountTypes, String currency, boolean isFromOrderHistory){
+        this.discountTypes = discountTypes;
+        this.currency = currency;
+        this.isFromOrderHistory = isFromOrderHistory;
+        notifyDataSetChanged();
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -88,13 +96,18 @@ public class EndRideDiscountsAdapter extends BaseAdapter {
 //                            .getString(R.string.rupees_value_format),
 //                    Utils.getMoneyDecimalFormat().format(discountType.value)));
 //        } else{
+        if(isFromOrderHistory) {
+            holder.textViewDiscountValue.setTextSize(20);
+            holder.textViewDiscount.setTextSize(20);
+            convertView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            convertView.setPadding(0, 18, 0, 18);
+        }
             holder.textViewDiscount.setText(discountType.getName());
             holder.textViewDiscountValue.setText(Utils.formatCurrencyValue(currency, showNegativeValues ? -discountType.value : discountType.value));
 //        }
 
         return convertView;
     }
-
 
     private class ViewHolderDiscount {
         TextView textViewDiscount, textViewDiscountValue;

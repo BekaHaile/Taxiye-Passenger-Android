@@ -1,9 +1,6 @@
 package com.sabkuchfresh.home;
 
 import android.app.Activity;
-import androidx.fragment.app.Fragment;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -21,6 +18,9 @@ import com.sabkuchfresh.fragments.MealFragment;
 import com.sabkuchfresh.fragments.MenusFragment;
 import com.sabkuchfresh.utils.AppConstant;
 
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.ProgressWheel;
@@ -339,6 +339,10 @@ public class TopBar implements GAAction, GACategory {
 
     public TextView getTvAddressLayoutTitle() {
         return tvAddressLayoutTitle;
+    }
+
+    public void hide(boolean hide) {
+        topRl.setVisibility(hide ? View.GONE : View.VISIBLE);
     }
 }
 

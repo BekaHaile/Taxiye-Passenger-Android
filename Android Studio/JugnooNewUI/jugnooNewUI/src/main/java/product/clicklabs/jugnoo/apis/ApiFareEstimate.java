@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class ApiFareEstimate {
 						return;
 					}
                     DialogPopup.showLoadingDialog(context, context.getString(R.string.loading));
-					JungleApisImpl.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, new JungleApisImpl.Callback() {
+					JungleApisImpl.INSTANCE.getDirectionsPath(sourceLatLng, destLatLng, getDistanceUnit(), source, true, new JungleApisImpl.Callback() {
 								@Override
 								public void onSuccess(@NotNull List<LatLng> latLngs, @NotNull Path path) {
 									try {
@@ -118,6 +119,65 @@ public class ApiFareEstimate {
         } catch (Exception e) {
             e.printStackTrace();
             callback.onDirectionsFailure();
+        }
+    }
+
+    public void getDirectionsAndComputeFare(final LatLng sourceLatLng, final ArrayList<LatLng> multiDestLatLngs,final LatLng destLatLng, final int isPooled,
+                                            final boolean callFareEstimate, final Region region, final PromoCoupon promoCoupon,
+                                            final Package selectedPackage, final String source){
+        if (multiDestLatLngs != null) {
+            ArrayList<LatLng> waypoints = new ArrayList<>();
+            waypoints.add(sourceLatLng);
+            waypoints.addAll(multiDestLatLngs);
+            waypoints.add(destLatLng);
+            new ApiGoogleDirectionWaypoints(waypoints, false, new ApiGoogleDirectionWaypoints.Callback() {
+                @Override
+                public void onPre() {
+
+                }
+
+                @Override
+                public void onFinish(List<LatLng> list, String result) {
+                    try {
+
+                        Log.i("result", "=" + result);
+                        JSONObject jObj = new JSONObject(result);
+
+                        if (jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
+
+//                            startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address");
+//                            endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address");
+
+                            distanceText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("text");
+                            timeText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
+
+                            distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
+                            timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
+                            callback.onSuccess(list, distanceText, timeText,
+                                    distanceValue, timeValue, promoCoupon);
+                            if (callFareEstimate) {
+                                getFareEstimate((Activity) context, sourceLatLng, destLatLng,
+                                        distanceValue / 1000d, timeValue / 60d, isPooled, region, promoCoupon,
+                                        list,selectedPackage);
+                            }
+                        } else {
+                            DialogPopup.dismissLoadingDialog();
+//                            retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), null,null,sourceLatLng, multiDestLatLngs, destLatLng, isPooled, callFareEstimate, region,selectedPackage, promoCoupon);
+                            DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop));
+
+                            callback.onDirectionsFailure();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        DialogPopup.dismissLoadingDialog();
+//                        retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, multiDestLatLngs, destLatLng, isPooled, callFareEstimate, region, promoCoupon);
+                        DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop));
+
+                        callback.onDirectionsFailure();
+                    }
+                }
+            }).execute();
         }
     }
 

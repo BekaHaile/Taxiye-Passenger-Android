@@ -29,6 +29,7 @@ import product.clicklabs.jugnoo.home.models.JeanieIntroDialogContent;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
+import product.clicklabs.jugnoo.home.models.SafetyInfoData;
 
 /**
  * Created by shankar on 1/5/16.
@@ -877,6 +878,9 @@ public class LoginResponse {
 		@SerializedName("referral_images")
 		@Expose
 		private ArrayList<MediaInfo> referralImages;
+		@SerializedName(Constants.KEY_CUSTOMER_SAFETY_CHECKLIST)
+		@Expose
+		private SafetyInfoData safetyInfoData;
 
 
 		public List<Driver> getDrivers() {
@@ -1092,6 +1096,14 @@ public class LoginResponse {
 
 		public ArrayList<MediaInfo> getReferralImages() {
 			return referralImages;
+		}
+
+		public SafetyInfoData getSafetyInfoData() {
+			return safetyInfoData;
+		}
+
+		public void setSafetyInfoData(SafetyInfoData safetyInfoData) {
+			this.safetyInfoData = safetyInfoData;
 		}
 
 	}

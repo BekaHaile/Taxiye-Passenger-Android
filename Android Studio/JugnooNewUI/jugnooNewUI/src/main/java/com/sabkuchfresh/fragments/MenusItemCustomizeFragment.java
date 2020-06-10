@@ -2,10 +2,6 @@ package com.sabkuchfresh.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +16,10 @@ import com.sabkuchfresh.retrofit.model.menus.CustomizeItemSelected;
 import com.sabkuchfresh.retrofit.model.menus.Item;
 import com.sabkuchfresh.retrofit.model.menus.ItemSelected;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -109,12 +109,15 @@ public class MenusItemCustomizeFragment extends Fragment implements GAAction {
 								public void onItemPlusClick(){
 										GAUtils.event(activity.getGaCategory(), GAAction.CUSTOMIZE_ITEM, GAAction.ITEM + GAAction.INCREASED);
 								}
-							}, currencyCode, currency);
+							}, currencyCode, currency,true);
 					rvCustomizeItem.setAdapter(menusItemCustomizeAdapter);
 
 					activity.rlAddToCart.setOnClickListener(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
+
+							if (!menusItemCustomizeAdapter.validateItemQuantityLimit()) return;
+
 							if(activity.getTotalPrice() <= 0){
 								activity.saveDeliveryAddressModel();
 							}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView android:id="@+id/textView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:text="Our drivers are being checked regularly asdhjkash asdjkhask"
+    android:textColor="@color/text_color"
+    android:textSize="15sp"
+    android:paddingStart="21dp"
+    android:paddingEnd="16dp"
+    android:paddingTop="7dp"
+    android:paddingBottom="7dp"
+    app:typekitFont="maven"
+    android:drawableStart="@drawable/circle_text_color_tiny"
+    android:drawablePadding="18dp"
+    xmlns:tools="http://schemas.android.com/tools" />

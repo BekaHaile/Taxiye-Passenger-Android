@@ -31,7 +31,7 @@ object DriverToPickupPath{
                 && (PassengerScreenMode.P_REQUEST_FINAL == passengerScreenMode
                 || PassengerScreenMode.P_DRIVER_ARRIVED == passengerScreenMode)) {
             GlobalScope.launch(Dispatchers.IO) {
-                val directionsResult = JungleApisImpl.getDirectionsPathSync(driverLatLng, pickupLatLng, "metric", MapsApiSources.CUSTOMER_DRIVER_TO_PICKUP, false)
+                val directionsResult = JungleApisImpl.getDirectionsPathSync(driverLatLng, pickupLatLng, "metric", MapsApiSources.CUSTOMER_DRIVER_TO_PICKUP, false, false)
                 showPolylineDriverToPickup(context, directionsResult, passengerScreenMode, map)
             }
         }

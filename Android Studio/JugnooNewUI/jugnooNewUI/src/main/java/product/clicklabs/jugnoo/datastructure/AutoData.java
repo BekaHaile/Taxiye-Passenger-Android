@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.google.android.gms.maps.model.LatLng;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,7 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.model.Campaigns;
+import product.clicklabs.jugnoo.home.models.SafetyInfoData;
 import product.clicklabs.jugnoo.retrofit.model.Corporate;
 import product.clicklabs.jugnoo.retrofit.model.FindADriverResponse;
 import product.clicklabs.jugnoo.retrofit.model.NearbyPickupRegions;
@@ -105,6 +108,10 @@ public class AutoData {
 
     private int newBottomRequestUIEnabled;
     private double initialBidValue, changedBidValue;
+    private int customerVerificationStatus = 0;
+    private boolean multiDestAllowed;
+
+	private SafetyInfoData safetyInfoData;
 
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
@@ -113,7 +120,7 @@ public class AutoData {
                     int rideEndGoodFeedbackViewType, String rideEndGoodFeedbackText, String baseFarePoolText, int referAllStatus, String referAllText,
                     String referAllTitle, int referAllStatusLogin, String referAllTextLogin, String referAllTitleLogin,
                     NearbyPickupRegions nearbyPickupRegionses, String inRideSendInviteTextBoldV2, String inRideSendInviteTextNormalV2,
-                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare, int resendEmailInvoiceEnabled,int bluetoothEnabled) {
+                    int rideStartInviteTextDeepIndexV2, int isRazorpayEnabled,int isTipEnabled, int showRegionSpecificFare, int resendEmailInvoiceEnabled,int bluetoothEnabled,int customerVerificationStatus) {
         this.bluetoothEnabled = bluetoothEnabled;
         this.destinationHelpText = destinationHelpText;
         this.rideSummaryBadText = rideSummaryBadText;
@@ -143,6 +150,7 @@ public class AutoData {
         this.showRegionSpecificFare = showRegionSpecificFare;
         this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
 		defaultServiceType();
+		this.customerVerificationStatus = customerVerificationStatus;
 	}
 
 	public void defaultServiceType() {
@@ -558,6 +566,8 @@ public class AutoData {
 
     public void setDropLatLng(LatLng dropLatLng) {
         this.dropLatLng = dropLatLng;
+        if(dropLatLng==null)
+            multiDestList.clear();
     }
 
     public int getPickupPaymentOption() {
@@ -828,6 +838,26 @@ public class AutoData {
         this.resendEmailInvoiceEnabled = resendEmailInvoiceEnabled;
     }
 
+    public static ArrayList<MultiDestData> parseMultiDestList(JSONArray multidest){
+
+//For login using access token
+
+
+        ArrayList<AutoData.MultiDestData> multiDestData=new ArrayList<>();
+        if(multidest.length()<=0)return null;
+        for(int i=0;i<multidest.length();i++){
+            LatLng latLng=new LatLng(multidest.optJSONObject(i).optDouble("chosen_drop_latitude"),multidest.optJSONObject(i).optDouble("chosen_drop_longitude"));
+            String stopAddress=multidest.optJSONObject(i).optString("chosen_address");
+            int stopReachedStatus=multidest.optJSONObject(i).optInt("stop_status");
+            int stopId=multidest.optJSONObject(i).optInt("stop_id");
+            int orderId=multidest.optJSONObject(i).optInt("order_id");
+
+            multiDestData.add(Data.autoData.new MultiDestData(latLng,stopAddress,0,stopReachedStatus,stopId,orderId));
+        }
+        return multiDestData;
+
+    }
+
 
     public List<String> getFaultConditions() {
         return FaultConditions;
@@ -908,4 +938,104 @@ public class AutoData {
     public void setRequestLevels(ArrayList<FindADriverResponse.RequestLevels> requestLevels) {
         this.requestLevels = requestLevels;
     }
+
+    public int getCustomerVerificationStatus() {
+        return customerVerificationStatus;
+    }
+
+    public void setCustomerVerificationStatus(int customerVerificationStatus) {
+        this.customerVerificationStatus = customerVerificationStatus;
+    }
+
+    public boolean getMultiDestAllowed(){
+        return multiDestAllowed;
+    }
+
+    public void setMultiDestAllowed(boolean multiDestAllowed){
+        this.multiDestAllowed=multiDestAllowed;
+    }
+
+    public ArrayList<MultiDestData> getMultiDestList() {
+        return multiDestList;
+    }
+
+    public void addMultiDestLatlng(MultiDestData multiDest) {
+        this.multiDestList.add(multiDest);
+    }
+
+    private ArrayList<MultiDestData> multiDestList=new ArrayList<>();
+
+    public class MultiDestData{
+
+        private LatLng latlng;
+        private String dropAddress;
+        private int dropAddressId;
+        private int stopReachStatus;
+        private int stopId;
+        private int orderId;
+        private String dropAddressForName="";
+
+        public int getStopId() {
+            return stopId;
+        }
+
+        public void setOrderId(int orderId) {
+            this.orderId = orderId;
+        }
+
+        public int getOrderId() {
+            return orderId;
+        }
+
+        public void setStopId(int stopId) {
+            this.stopId = stopId;
+        }
+
+        public LatLng getLatlng() {
+            return latlng;
+        }
+
+        public String getDropAddress() {
+            return dropAddress;
+        }
+
+        public String getDropAddressForName() { return dropAddressForName; }
+
+        public void setDropAddressForName(String dropAddressForName) { this.dropAddressForName = dropAddressForName; }
+
+        public int getDropAddressId() {
+            return dropAddressId;
+        }
+        public int getStopReachStatus(){return stopReachStatus; }
+        public void setStopReachStatus(int stopReachStatus){this.stopReachStatus=stopReachStatus;}
+
+        public MultiDestData(LatLng latLng, String dropAddress, int dropAddressId,int stopReachStatus){
+            this.dropAddress=dropAddress;
+            this.latlng=latLng;
+            this.dropAddressId=dropAddressId;
+            this.stopReachStatus=stopReachStatus;
+
+
+        }
+        public MultiDestData(LatLng latLng, String dropAddress, int dropAddressId,int stopReachStatus,int stopId,int orderId){
+            this.dropAddress=dropAddress;
+            this.latlng=latLng;
+            this.dropAddressId=dropAddressId;
+            this.stopReachStatus=stopReachStatus;
+            this.orderId=orderId;
+            this.stopId=stopId;
+
+
+        }
+
+    }
+
+	public SafetyInfoData getSafetyInfoData() {
+		return safetyInfoData;
+	}
+
+	public void setSafetyInfoData(SafetyInfoData safetyInfoData) {
+		this.safetyInfoData = safetyInfoData;
+	}
+
 }

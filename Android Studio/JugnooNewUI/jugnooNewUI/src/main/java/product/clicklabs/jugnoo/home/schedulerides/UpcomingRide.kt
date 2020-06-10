@@ -3,6 +3,9 @@ package product.clicklabs.jugnoo.home.schedulerides
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.sabkuchfresh.feed.models.FeedCommonResponse
+import product.clicklabs.jugnoo.Data.context
+import product.clicklabs.jugnoo.MyApplication
+import product.clicklabs.jugnoo.R
 import product.clicklabs.jugnoo.utils.DateOperations
 
 /**
@@ -18,10 +21,10 @@ data class UpcomingRide(@Expose @SerializedName("pickup_id") var engagementId:St
 
        fun getRideStatus(): String {
               return when (status) {
-                     0 -> "Ride Scheduled"
-                     1 -> "In Progress"
-                     2 -> "Processed"
-                     else -> "Cancelled"
+                     0 -> MyApplication.getInstance().getmActivity().resources.getString(R.string.ride_scheduled_status)
+                     1 -> MyApplication.getInstance().getmActivity().resources.getString(R.string.in_progress_status)
+                     2 -> MyApplication.getInstance().getmActivity().resources.getString(R.string.processed_status)
+                     else -> MyApplication.getInstance().getmActivity().resources.getString(R.string.cancelled_status)
               }
        }
 

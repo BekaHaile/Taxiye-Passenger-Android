@@ -94,7 +94,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 			list = MapUtils.getLatLngListFromPath(s);
 		}
 		if(callback != null) {
-			callback.onFinish(list);
+			callback.onFinish(list,s);
 		}
 	}
 
@@ -114,7 +114,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 
 	public interface Callback{
 		void onPre();
-		void onFinish(List<LatLng> list);
+		void onFinish(List<LatLng> list,String response);
 	}
 
 	//https://maps.googleapis.com/maps/api/directions/json?origin=30.7178599,76.8091295&destination=30.731916,76.747618&waypoints=via:30.759040%2C76.775368%7Cvia:%2030.720925%2C76.774135

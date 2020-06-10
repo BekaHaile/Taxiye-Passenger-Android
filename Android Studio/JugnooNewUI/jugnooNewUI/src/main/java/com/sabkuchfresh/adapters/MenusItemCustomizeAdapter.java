@@ -3,12 +3,13 @@ package com.sabkuchfresh.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.StyleSpan;
+import android.util.SparseIntArray;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.Fonts;
@@ -45,16 +49,21 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
     private ItemSelected itemSelected;
     private ArrayList<CustomizeOption> customizeOptions;
     private Callback callback;
+    private boolean showSpecialInstructions;
+    private String instructions;
     private String currencyCode, currency;
+    private SparseIntArray mapItemOptionsAdded = new SparseIntArray();
 
     private static final int ITEM = 0;
     private static final int CUSTOMIZE_ITEM = 1;
     private static final int CUSTOMIZE_OPTION = 2;
+    private static final int SPECIAL_INSTRUCTIONS = 3;
 
-    public MenusItemCustomizeAdapter(Activity context, Item item, Callback callback, String currencyCode, String currency) {
+    public MenusItemCustomizeAdapter(Activity context, Item item, Callback callback, String currencyCode, String currency,boolean showSpecialInstructions) {
         this.context = context;
         this.callback = callback;
         customizeOptions = new ArrayList<>();
+        this.showSpecialInstructions = showSpecialInstructions;
         this.currencyCode = currencyCode;
         this.currency = currency;
         setList(item);
@@ -78,10 +87,13 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             coCustomizeItem.setIsCustomizeItem(1);
             coCustomizeItem.setCustomizeItemPos(i);
             customizeOptions.add(coCustomizeItem);
+            mapItemOptionsAdded.put(customizeItem.getCustomizeId(), 0);
 
             CustomizeItemSelected customizeItemSelected = null;
-            if(customizeItem.getIsCheckBox() == 0){
-                customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId());
+            if(customizeItem.getIsCheckBox() == 0 || customizeItem.getCustomizeItemLowerLimit() > 0){
+                customizeItemSelected = new CustomizeItemSelected(customizeItem.getCustomizeId(),
+                        customizeItem.getCustomizeItemName(),
+                        customizeItem.getCustomizeItemLowerLimit(), customizeItem.getCustomizeItemUpperLimit());
             }
 
             for(CustomizeOption customizeOption : customizeItem.getCustomizeOptions()){
@@ -100,6 +112,7 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
             if(customizeItemSelected != null){
                 itemSelected.getCustomizeItemSelectedList().add(customizeItemSelected);
+                mapItemOptionsAdded.put(customizeItem.getCustomizeId(), 0);
             }
         }
         itemSelected.setTotalPrice(totalPrice);
@@ -127,6 +140,9 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             v.setLayoutParams(layoutParams);
             ASSL.DoMagic(v);
             return new ViewHolderCustomizeOption(v, context);
+        } else if (viewType == SPECIAL_INSTRUCTIONS) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_customize_special_instructions, parent, false);
+            return new SpecialInstructionsViewHolder(v);
         }
         throw new RuntimeException("there is no type that matches the type " + viewType + " + make sure your using types correctly");
     }
@@ -135,7 +151,9 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public int getItemViewType(int position) {
-        if(customizeOptions.get(position).getIsItem() == 1){
+        if (position == customizeOptions.size()) {
+            return SPECIAL_INSTRUCTIONS;
+        } else if(customizeOptions.get(position).getIsItem() == 1){
             return ITEM;
         } else if(customizeOptions.get(position).getIsCustomizeItem() == 1){
             return CUSTOMIZE_ITEM;
@@ -147,13 +165,31 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        CustomizeOption customizeOption = customizeOptions.get(position);
-        if(holder instanceof ViewHolderItem) {
-            ViewHolderItem mHolder = (ViewHolderItem) holder;
-            mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
-            mHolder.imageViewFoodType.setVisibility(item.showFoodType() ? View.VISIBLE : View.GONE);
-            mHolder.textViewItemCategoryName.setText(item.getItemName());
-            mHolder.textViewItemCategoryName.setMinimumHeight(((int)(ASSL.Yscale() * 70f)));
+        if (holder instanceof SpecialInstructionsViewHolder) {
+            ((SpecialInstructionsViewHolder) (holder)).etInstructions.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    instructions = s.toString();
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+
+            });
+        } else {
+            CustomizeOption customizeOption = customizeOptions.get(position);
+            if (holder instanceof ViewHolderItem) {
+                ViewHolderItem mHolder = (ViewHolderItem) holder;
+                mHolder.imageViewFoodType.setImageResource(item.getIsVeg() == 1 ? R.drawable.veg : R.drawable.nonveg);
+                mHolder.imageViewFoodType.setVisibility(item.showFoodType() ? View.VISIBLE : View.GONE);
+                mHolder.textViewItemCategoryName.setText(item.getItemName());
+                mHolder.textViewItemCategoryName.setMinimumHeight(((int) (ASSL.Yscale() * 70f)));
 
             int total = itemSelected.getQuantity();
             mHolder.textViewQuantity.setText(String.valueOf(total));
@@ -232,21 +268,22 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             };
 
-            mHolder.imageViewPlus.setOnClickListener(plusClick);
-            mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        if(itemSelected.getQuantity() > 1) {
-                            itemSelected.setQuantity(itemSelected.getQuantity() - 1);
-                            notifyDataSetChanged();
-                            callback.updateItemTotalPrice(itemSelected);
-                            callback.onItemMinusClick(false);
-                        } else {
-                            callback.onItemMinusClick(true);
+                mHolder.imageViewPlus.setOnClickListener(plusClick);
+                mHolder.imageViewMinus.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            if (itemSelected.getQuantity() > 1) {
+                                itemSelected.setQuantity(itemSelected.getQuantity() - 1);
+                                notifyDataSetChanged();
+                                callback.updateItemTotalPrice(itemSelected);
+                                callback.onItemMinusClick(false);
+                            } else {
+                                callback.onItemMinusClick(true);
+                            }
+                        } catch (Exception e) {
                         }
-                    } catch (Exception e){}
-                }
+                    }
             });
             mHolder.ivItemImage.setTag(position);
             mHolder.ivItemImage.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +317,18 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
             sb.setSpan(bss, 0, sb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             mHolder.textViewSubCategoryName.append(sb);
             mHolder.textViewSubCategoryName.append(" ");
-            mHolder.textViewSubCategoryName.append(customizeItem.getIsCheckBox() == 1 ? context.getString(R.string.optional_bracket) : context.getString(R.string.required_bracket));
+            String toAppend = "";
+            int lower = customizeItem.getCustomizeItemLowerLimit();
+            int upper = customizeItem.getCustomizeItemUpperLimit();
+
+            if (lower > 0 && upper < Integer.MAX_VALUE) toAppend = context.getString(R.string.select_between_lower_upper, lower, upper);
+            else if (lower == 0 && upper < Integer.MAX_VALUE) toAppend = context.getString(R.string.select_atmost_upper, upper);
+            else if (lower > 0 && upper == Integer.MAX_VALUE) toAppend = context.getString(R.string.select_atleast_lower, lower);
+            else if (customizeItem.getIsCheckBox() == 1) toAppend = context.getString(R.string.optional_bracket);
+            else toAppend = context.getString(R.string.required_bracket);
+//            mHolder.textViewSubCategoryName.append(toAppend);
+            mHolder.textViewSubCategoryName.append(customizeItem.getIsCheckBox() == 1 ? toAppend : context.getString(R.string.required_bracket));
+
 
         } else if(holder instanceof ViewHolderCustomizeOption) {
             ViewHolderCustomizeOption mHolder = ((ViewHolderCustomizeOption) holder);
@@ -336,9 +384,44 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                         CustomizeItem customizeItem = getCustomizeItem(customizeOption);
                         CustomizeItemSelected customizeItemSelected = item.getCustomizeItemSelected(customizeItem, true, itemSelected);
                         if(customizeOption.getIsMultiSelect() == 1){
+
+                            int itemAdded = mapItemOptionsAdded.get(customizeItem.getCustomizeId());
+                            Integer customizeUpperItemLimit = customizeItem.getCustomizeItemUpperLimit();
+                            Integer customizeLowerItemLimit = 0;
+
+                            if (customizeItem.getCustomizeItemLowerLimit() < customizeUpperItemLimit) {
+                                customizeLowerItemLimit = customizeItem.getCustomizeItemLowerLimit();
+                            }
+
                             if(customizeItemSelected.getCustomizeOptions().contains(customizeOption.getCustomizeOptionId())){
-                                customizeItemSelected.getCustomizeOptions().remove(customizeOption.getCustomizeOptionId());
+                                // being removed
+
+                                // check for lower limit
+                                if (customizeLowerItemLimit == 0 || itemAdded - 1 >= customizeLowerItemLimit) {
+                                    customizeItemSelected.getCustomizeOptions().remove(customizeOption.getCustomizeOptionId());
+                                    mapItemOptionsAdded.put(customizeItem.getCustomizeId(), --itemAdded);
+                                } else {
+                                    Utils.showToast(context,
+                                            context.getString(R.string.error_customization_lower_limit,
+                                                    customizeItem.getCustomizeItemLowerLimit(),
+                                                    customizeItem.getCustomizeItemName()));
+                                    return;
+                                }
+
                             } else{
+                                // being added
+                                if (customizeUpperItemLimit != 0) {
+                                    if(itemAdded >= customizeUpperItemLimit) {
+                                        Utils.showToast(context,
+                                                context.getString(R.string.error_customization_limit,
+                                                        customizeItem.getCustomizeItemUpperLimit(),
+                                                        customizeItem.getCustomizeItemName()));
+                                        return;
+                                    } else {
+                                        mapItemOptionsAdded.put(customizeItem.getCustomizeId(), ++itemAdded);
+                                    }
+                                }
+
                                 customizeItemSelected.getCustomizeOptions().add(customizeOption.getCustomizeOptionId());
                             }
                         } else {
@@ -357,12 +440,15 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
                 }
             });
 
+            }
         }
 	}
 
     @Override
     public int getItemCount() {
-        return customizeOptions == null ? 0 : customizeOptions.size();
+        if (customizeOptions == null) return 0;
+        else if (showSpecialInstructions) return customizeOptions.size() + 1;
+        else return customizeOptions.size();
     }
 
 //    private CustomizeItemSelected getCustomizeItemSelected(CustomizeItem customizeItem, boolean addSelected){
@@ -449,7 +535,22 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         }
     }
 
+    class SpecialInstructionsViewHolder extends RecyclerView.ViewHolder {
+        private AppCompatEditText etInstructions;
+        private AppCompatEditText tvLabelInstructions;
+
+        SpecialInstructionsViewHolder(View itemView) {
+            super(itemView);
+            etInstructions = itemView.findViewById(R.id.etInstructions);
+            tvLabelInstructions = itemView.findViewById(R.id.tvLabelInstructions);
+
+            etInstructions.setTypeface(Fonts.mavenRegular(context));
+            tvLabelInstructions.setTypeface(Fonts.mavenRegular(context));
+        }
+    }
+
     public ItemSelected getItemSelected() {
+        itemSelected.setItemInstructions(instructions);
         return itemSelected;
     }
 
@@ -461,6 +562,34 @@ public class MenusItemCustomizeAdapter extends RecyclerView.Adapter<RecyclerView
         void updateItemTotalPrice(ItemSelected itemSelected);
         void onItemMinusClick(boolean allItemsFinished);
         void onItemPlusClick();
+    }
+
+    public boolean validateItemQuantityLimit() {
+        boolean isValid = true;
+
+        for (CustomizeItemSelected item: itemSelected.getCustomizeItemSelectedList()) {
+            if(item.getCustomizeOptions().size()<1) {
+                int quantityAdded = mapItemOptionsAdded.get(item.getCustomizeId());
+
+                if (item.getLowerLimit() != 0 && quantityAdded < item.getLowerLimit()) {
+                    Utils.showToast(context,
+                            context.getString(R.string.error_customization_lower_limit,
+                                    item.getLowerLimit(),
+                                    item.getName()));
+                    isValid = false;
+                    break;
+                } else if (quantityAdded > item.getUpperLimit()) {
+                    Utils.showToast(context,
+                            context.getString(R.string.error_customization_limit,
+                                    item.getUpperLimit(),
+                                    item.getName()));
+                    isValid = false;
+
+                }
+            }
+        }
+
+        return isValid;
     }
 
 }

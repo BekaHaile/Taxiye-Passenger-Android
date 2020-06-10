@@ -2,6 +2,7 @@ package com.sabkuchfresh.apis;
 
 import com.sabkuchfresh.feed.models.ContactResponseModel;
 import com.sabkuchfresh.feed.models.FetchOrderStatusResponse;
+import com.sabkuchfresh.retrofit.model.OrderCancelReasonsResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
 import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
 import com.sabkuchfresh.retrofit.model.feed.NearbyDriversResponse;
@@ -22,7 +23,6 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.QueryMap;
 import retrofit.mime.MultipartTypedOutput;
-import retrofit.mime.TypedInput;
 
 /**
  * Created by shankar on 4/7/16.
@@ -61,8 +61,6 @@ public interface FatafatApiService {
                      Callback<CreateChatResponse> callback);
 
 
-    @POST("/chat/validate_contacts")
-    Response validateContacts(@Body TypedInput body);
 
     @FormUrlEncoded
     @POST("/chat/fetch_contacts")
@@ -81,5 +79,14 @@ public interface FatafatApiService {
     @POST("/cancel_order")
     void cancelOrder(@FieldMap Map<String, String> params,
                      Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/razorpay/payment_callback")
+    Response razorpayPaymentCallback(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
+    @POST("/fetch_cancellation_reasons")
+    void fetchCancellationReasons(@FieldMap Map<String, String> params,
+                                  Callback<OrderCancelReasonsResponse> callback);
 
 }

@@ -15,7 +15,8 @@ public interface Constants {
     String QUESTION_TYPE = "question_type";
     String SKIP = "skip_feedback";
     String QUESTION = "question";
-
+    String MULTIPLE_DESTINATIONS_ALLOWED="multiple_destinations_allowed";
+    String MULTIPLE_DESTINATIONS_LIST="multiple_destinations";
     //For Submit
     String TEXT = "support_query";
 
@@ -870,6 +871,10 @@ public interface Constants {
     int ORDER_MODE_UNAVAILABLE = 3;
     int ORDER_MODE_CHAT= 0;
     int CATEGORY_ID_RESTAURANTS= 1;
+    int STOP_PENDING=0;
+    int STOP_REACHED=3;
+
+
     String CATEGORY_RESTAURANTS_NAME = "Restaurants";
     String CATEGORY = "category";
     String ITEM_CATEGORY_ID = "item_category_id";
@@ -1106,6 +1111,7 @@ public interface Constants {
 	String KEY_JUNGLE_AUTOCOMPLETE_OBJ = "jungle_autocomplete_obj";
 	String KEY_JUNGLE_POINTS = "points";
 	String KEY_JUNGLE_OPTIONS = "options";
+	String KEY_JUNGLE_FM_TOKEN = "fm_token";
 	String KEY_JUNGLE_TYPE = "type";
 	String KEY_JUNGLE_OFFERING = "offering";
 	String KEY_JUNGLE_APP_ID = "app_id";
@@ -1122,6 +1128,8 @@ public interface Constants {
 	String KEY_JUNGLE_TEXT = "text";
 	String KEY_JUNGLE_LAT = "lat";
 	String KEY_JUNGLE_LNG = "lng";
+    String KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER = "jungle_fm_api_key_android_customer";
+    String KEY_WAYPOINTS = "waypoints";
 
 	String JUNGLE_JSON_OBJECT = "{\""+KEY_JUNGLE_OPTIONS+"\":0}";
     String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
@@ -1197,4 +1205,33 @@ public interface Constants {
 	String KEY_PAY_VIA_UPI_ENABLED = "pay_via_upi_enabled";
 	String KEY_PAYMENT_RESPONSE = "payment_response";
 	String KEY_UPI_RESPONSE = "response";
+    String FIRSTTIME_LOGIN = "FIRST_LOGIN";
+    String SHOW_CUSTOMER_VERIFICATION = "show_cust_verification";
+    String KEY_CUSTOMER_VERIFICATION_STATUS = "customer_verification_status";
+
+	String MIME_TYPE = "application/octet-stream";
+
+	enum DocStatuses {
+		UPLOADED(4), VERIFIED(3), REJECTED(2), APPROVAL_PENDING(1), NOT_UPLOADED(0);
+		int i;
+
+		DocStatuses(int i) {
+			this.i = i;
+		}
+
+		public int getStatus() {
+			return this.i;
+		}
+	}
+	String STOP_PRESSED_POSITION = "stop_pressed_position";
+    String KEY_API_KEY = "api_key";
+    String KEY_FIRST_NAME = "first_name";
+    String KEY_LAST_NAME = "last_name";
+    String KEY_YELO_USER_INFO = "yelo_user_info";
+
+	String KEY_CUSTOMER_SAFETY_CHECKLIST = "customer_safety_checklist";
+	String KEY_IMAGE_URL = "image_url";
+	String KEY_IMAGE_URL_SMALL = "image_url_small";
+	String KEY_IMAGE_URL_STRIP = "image_url_strip";
+	String KEY_LIST = "list";
 }

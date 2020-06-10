@@ -60,10 +60,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import product.clicklabs.jugnoo.adapters.EndRideDiscountsAdapter;
 import product.clicklabs.jugnoo.adapters.ImageWithTextAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
+import product.clicklabs.jugnoo.datastructure.DiscountType;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
@@ -135,6 +137,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     private int llShadowPeekHeight, openLiveTracking;
     private JSONObject responseOrderDataApi;
     private boolean isFeedOrder;
+    private NonScrollListView listViewStripeTxns;
+    private EndRideDiscountsAdapter stripeTxnsAdapter;
     private HomeUtil homeUtil = new HomeUtil();
     private String currencyCode, currency;
     private String vehicleImage;
@@ -479,6 +483,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         tvAmountPayableVal = (TextView) cvPaymentMethod.findViewById(R.id.tvAmountPayableVal);
         vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
         llFinalAmount = (LinearLayout) cvPaymentMethod.findViewById(R.id.llFinalAmount);
+        listViewStripeTxns = (NonScrollListView) cvPaymentMethod.findViewById(R.id.listViewStripeTxns);
+        stripeTxnsAdapter = new EndRideDiscountsAdapter(activity, false);
+        listViewStripeTxns.setAdapter(stripeTxnsAdapter);
         llFinalAmount.setVisibility(View.GONE);
     }
 
@@ -756,6 +763,36 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             } else {
                 cardDeliveriesFeedPhotos.setVisibility(View.GONE);
             }
+        }
+    }
+
+    private void setStripeData(HistoryResponse.Datum datum, Activity activity) {
+        ArrayList<DiscountType> stripeCardEntries = datum.getStripeCardsAmount();
+        if(stripeCardEntries.size() > 0){
+            listViewStripeTxns.setVisibility(View.VISIBLE);
+            stripeTxnsAdapter.setList(stripeCardEntries, datum.getCurrencyCode(), true);
+        }
+//        else if(Utils.compareDouble(datum.getPaidUsingStripe(), 0) > 0){
+//            listViewStripeTxns.setVisibility(View.VISIBLE);
+//            ArrayList<DiscountType> discountTypes = new ArrayList<>();
+//
+//            if(!TextUtils.isEmpty(endRideData.getLast_4())){
+//                discountTypes.add(new DiscountType(WalletCore.getStripeCardDisplayString(activity,endRideData.getLast_4()),
+//                        endRideData.getPaidUsingStripe(), 0));
+//            }else{
+//                String card = MyApplication.getInstance().getWalletCore().getConfigDisplayNameCards(activity, PaymentOption.STRIPE_CARDS.getOrdinal());
+//                if(TextUtils.isDigitsOnly(card)){
+//                    card = WalletCore.getStripeCardDisplayString(activity, card);
+//                }
+//                discountTypes.add(new DiscountType(card,
+//                        endRideData.getPaidUsingStripe(), 0));
+//
+//            }
+//            stripeTxnsAdapter.setList(discountTypes, endRideData.getCurrency());
+////                    tvEndRideStripeCardValue.setText(Utils.formatCurrencyValue(endRideData.getCurrency(), endRideData.getPaidUsingStripe()));
+//        }
+        else{
+            listViewStripeTxns.setVisibility(View.GONE);
         }
     }
 
@@ -1341,26 +1378,34 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         llFinalAmount.removeAllViews();
         vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
         if (datum1.getJugnooDeducted() > 0) {
-            vDividerPayment = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash), datum1.getJugnooDeducted(), false);
+            vDividerPayment = addFinalAmountView(llFinalAmount, activity.getString(R.string.jugnoo_cash, activity.getString(R.string.app_name)), datum1.getJugnooDeducted(), false);
+        }
+        if (datum1.getWalletDeducted() > 0) {
+            vDividerPayment = addFinalAmountView(llFinalAmount,getString(R.string.card),datum1.getWalletDeducted(),false);
         }
 
-        if (datum1.getWalletDeducted() > 0) {
+        if(datum1.getStripeCardsAmount().size() > 0) {
+            setStripeData(datum1, activity);
+            rlWalletDeducted.setVisibility(View.GONE);
+            llFinalAmount.setVisibility(View.GONE);
+        } else if (datum1.getWalletDeducted() > 0) {
+            listViewStripeTxns.setVisibility(View.GONE);
             rlWalletDeducted.setVisibility(View.VISIBLE);
             llPaymentSummary.removeView(rlWalletDeducted);
             llFinalAmount.addView(rlWalletDeducted);
-
-            tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(Math.abs(datum1.getWalletDeducted()), currencyCode, currency));
-
+//            tvAmountPayableVal.setText(activity.getString(R.string.rupees_value_format,
+//                    Utils.getMoneyDecimalFormat().format(datum1.getWalletDeducted())));
+            tvAmountPayableVal.setText(Data.currencyConfirm+Utils.getMoneyDecimalFormat().format(datum1.getAmount()));
             llFinalAmount.setVisibility(View.VISIBLE);
             vDividerPayment = cvPaymentMethod.findViewById(R.id.vDividerPayment);
         } else {
+            listViewStripeTxns.setVisibility(View.GONE);
             rlWalletDeducted.setVisibility(View.GONE);
-            tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(0, currencyCode, currency));
         }
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) tvPaymentMethodVal.getLayoutParams();
         tvPaymentMethodVal.setPaddingRelative(0, 0, 0, 0);
-        tvPaymentMethodVal.setText("");
+        tvPaymentMethodVal.setText(getString(R.string.total));
         tvPaymentMethodVal.setBackgroundResource(R.drawable.background_transparent);
         if (datum1.getPaymentMode() == PaymentOption.PAYTM.getOrdinal()) {
             params.setMargins((int) (ASSL.Xscale() * 10f), 0, 0, 0);

@@ -9,6 +9,7 @@
     >
 
     <View
+        android:id="@+id/shadowTopAddToCart"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_7"
         android:background="@drawable/shadow_up_new"
