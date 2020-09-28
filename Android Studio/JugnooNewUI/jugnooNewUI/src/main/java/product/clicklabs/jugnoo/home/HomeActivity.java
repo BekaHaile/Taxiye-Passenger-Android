@@ -4704,7 +4704,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                             params.addRule(RelativeLayout.BELOW,linearLayoutConfirmOption.getId());
                             params.addRule(RelativeLayout.CENTER_HORIZONTAL,RelativeLayout.TRUE);
                             buttonConfirmRequest.setLayoutParams(params);
-                            if (isNewUiWithDropAtConfirmation()) {
+                            if (Data.autoData.getDropLatLng() != null) {
                                 if(currentLocationMarker != null) {
                                     currentLocationMarker.remove();
                                 }
