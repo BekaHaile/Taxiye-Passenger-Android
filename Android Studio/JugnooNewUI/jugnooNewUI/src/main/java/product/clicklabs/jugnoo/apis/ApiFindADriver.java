@@ -86,6 +86,10 @@ public class ApiFindADriver {
 				params.put("show_phone_no", "1");
 			}
 
+			if(Data.autoData.getPoolSeatsSelected() > 0){
+				params.put(Constants.KEY_NO_OF_POOL_SEATS, String.valueOf(Data.autoData.getPoolSeatsSelected()));
+			}
+
 			new HomeUtil().checkAndFillParamsForIgnoringAppOpen(activity, params);
 
 			Log.i("params in find_a_driver", "=" + params);

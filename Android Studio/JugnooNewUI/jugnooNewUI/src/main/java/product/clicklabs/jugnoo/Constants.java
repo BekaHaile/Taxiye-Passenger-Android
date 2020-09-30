@@ -149,6 +149,7 @@ public interface Constants {
 
     String LINKED_WALLET = "linked_wallet";
     String USER_VERIFIED = "user_verified";
+    String KEY_NO_OF_POOL_SEATS = "no_of_pool_seats";
     String LINKED_WALLET_MESSAGE = "linked_wallet_message";
 
     String SERVER_TIMEOUT = "SERVER_TIMEOUT";

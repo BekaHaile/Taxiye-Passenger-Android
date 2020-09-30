@@ -2562,4 +2562,7 @@
     <string name="select_between_lower_upper">(Select between %d and %d items)</string>
     <string name="select_atmost_upper">(Select upto %d item(s))</string>
     <string name="select_atleast_lower">(Select atleast %d item(s))</string>
+    <string name="how_many_seats">No of seats?</string>
+    <string name="since_you_will_be_sharing_ride_format">Since you\'ll share the ride with\nothers, there\'s a 2-seat limit</string>
+
 </resources>

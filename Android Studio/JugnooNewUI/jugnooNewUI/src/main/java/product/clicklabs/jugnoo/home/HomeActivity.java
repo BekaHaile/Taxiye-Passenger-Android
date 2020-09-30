@@ -31,6 +31,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
@@ -151,6 +153,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Currency;
 import java.util.HashMap;
 import java.util.List;
@@ -208,6 +211,7 @@ import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.adapters.FeedbackReasonsAdapter;
 import product.clicklabs.jugnoo.adapters.RideTypesAdapter;
 import product.clicklabs.jugnoo.adapters.SearchListAdapter;
+import product.clicklabs.jugnoo.adapters.SeatsDropdownAdapter;
 import product.clicklabs.jugnoo.apis.ApiAddHomeWorkAddress;
 import product.clicklabs.jugnoo.apis.ApiCampaignAvailRequest;
 import product.clicklabs.jugnoo.apis.ApiCampaignRequestCancel;
@@ -429,7 +433,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     ImageView imageViewDropCross;
     ProgressWheel progressBarInitialSearch;
     Button initialMyLocationBtn, changeLocalityBtn, buttonChangeLocalityMyLocation, confirmMyLocationBtn;
-    LinearLayout linearLayoutRequestMain;
+    LinearLayout linearLayoutRequestMain,seatSelectionLayout;
     RelativeLayout relativeLayoutInAppCampaignRequest;
     TextView textViewInAppCampaignRequest, textViewTotalFare, textViewTotalFareValue, textViewIncludes;
     Button buttonCancelInAppCampaignRequest;
@@ -756,6 +760,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private CardView cardViewSafetyInfo;
     private ConstraintLayout constraintLayoutSafetyInfo;
     private ImageView ivSafetyInfoPicture, ivSafetyInfoClose, ivSafetyInfoPictureOld, ivSafetyInfoCloseOld;
+    private AppCompatSpinner seatSpinner;
+    private TextView allowedSeatsText,textViewHowManySeats;
 
     @SuppressLint("NewApi")
     @Override
@@ -953,6 +959,34 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         relativeLayoutConfirmBottom = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmBottom);
         relativeLayoutConfirmRequest = (RelativeLayout) findViewById(R.id.relativeLayoutConfirmRequest);
         relativeLayoutConfirmRequest.setVisibility(View.GONE);
+        seatSelectionLayout = findViewById(R.id.seatSelectionLayout);
+        seatSelectionLayout.setVisibility(View.GONE);
+        seatSpinner = (AppCompatSpinner) findViewById(R.id.spinnerSeatCount);
+        allowedSeatsText = findViewById(R.id.textViewSeatsInfo);
+        textViewHowManySeats = findViewById(R.id.textViewHowManySeats);
+        textViewHowManySeats.setTypeface(Fonts.mavenMedium(this));
+        allowedSeatsText.setTypeface(Fonts.mavenMedium(this));
+        List<Integer> seats = new ArrayList<>(Arrays.asList(1,2));
+        SeatsDropdownAdapter seatsDropdownAdapter = new SeatsDropdownAdapter(this,android.R.layout.simple_spinner_dropdown_item, seats);
+        seatsDropdownAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        seatSpinner.setAdapter(seatsDropdownAdapter);
+        seatSpinner.setSelection(Data.autoData.getPoolSeatsSelected()-1);
+        seatSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("seat item selected",position+"");
+                if(position!=-1){
+                    Data.autoData.setPoolSeatsSelected(seats.get(position));
+                    seatSpinner.setSelection(Data.autoData.getPoolSeatsSelected()-1);
+                    fareEstimatBeforeRequestRide();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         relativeLayoutTotalFare = findViewById(R.id.relativeLayoutTotalFare);
 		textViewRupee = findViewById(R.id.textViewRupee);
 		textViewRupee.setTypeface(Fonts.mavenMedium(this));
@@ -4679,6 +4713,11 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.GONE);
 								updateConfirmedStateFare();
                             }
+                           if( slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                               seatSelectionLayout.setVisibility(View.VISIBLE);
+                           }else{
+                               seatSelectionLayout.setVisibility(View.GONE);
+                           }
                             if (slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getCustomerNotesEnabled() == 1 ||
                                 getResources().getBoolean(R.bool.show_add_notes)) {
                                 rlNotes.setVisibility(View.VISIBLE);
@@ -9897,6 +9936,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                     }
                                 }
 
+                                //pool seats count selected
+                                if (regionSelected.getRideType() == ServiceTypeValue.POOL.getType()
+                                        && Data.autoData.getPoolSeatsSelected() > 0) {
+                                    nameValuePairs.put(Constants.KEY_NO_OF_POOL_SEATS, String.valueOf(Data.autoData.getPoolSeatsSelected()));
+                                }
+
                                 if(Data.autoData.getPickupPaymentOption()==PaymentOption.STRIPE_CARDS.getOrdinal()) {
                                     String cardId = Prefs.with(HomeActivity.this).getString(Constants.STRIPE_SELECTED_POS, "0");
                                     if(!cardId.equalsIgnoreCase("0")) {
@@ -10326,7 +10371,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 
             slidingBottomPanel.getRequestRideOptionsFragment().setSelectedCoupon(null);
 
-
+            Data.autoData.setSelectedPackage(null);
+            Data.autoData.setPoolSeatsSelected(1);
             Data.autoData.setLastRefreshLatLng(null);
             Data.autoData.setPickupSearchResult(null);
             Log.w("pickuplogging", "afterRideFeedbackSubmitted"+Data.autoData.getPickupLatLng());
@@ -11893,13 +11939,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                     //to call find a driver again if previous find a driver was called without coupon selected or with different coupon
                     String previousPromoId = "";
                     if(getApiFindADriver().getParams() != null){
-                    	if(!getApiFindADriver().getParams().getOrDefault(KEY_COUPON_TO_APPLY, "").equalsIgnoreCase("")){
-							previousPromoId = getApiFindADriver().getParams().get(KEY_COUPON_TO_APPLY);
-						}
-                    	else if(!getApiFindADriver().getParams().getOrDefault(KEY_PROMO_TO_APPLY, "").equalsIgnoreCase("")){
-							previousPromoId = getApiFindADriver().getParams().get(KEY_PROMO_TO_APPLY);
-						}
-					}
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            if(!getApiFindADriver().getParams().getOrDefault(KEY_COUPON_TO_APPLY, "").equalsIgnoreCase("")){
+                                previousPromoId = getApiFindADriver().getParams().get(KEY_COUPON_TO_APPLY);
+                            }
+                            else if(!getApiFindADriver().getParams().getOrDefault(KEY_PROMO_TO_APPLY, "").equalsIgnoreCase("")){
+                                previousPromoId = getApiFindADriver().getParams().get(KEY_PROMO_TO_APPLY);
+                            }
+                        }
+                    }
                     if(!String.valueOf(defaultCoupon.getId()).equalsIgnoreCase(previousPromoId)){
 						callFindADriverAfterCouponSelect();
 					}

@@ -489,7 +489,55 @@
                 android:textSize="@dimen/text_size_26"
                 android:visibility="visible" />
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:id="@+id/seatSelectionLayout">
 
+    <TextView
+        android:id="@+id/textViewHowManySeats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:textColor="@color/text_color"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginEnd="10dp"
+        android:text="@string/how_many_seats"
+        android:layout_gravity="center"
+        />
+    <TextView
+        android:id="@+id/textViewSeatsInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewHowManySeats"
+        android:layout_marginEnd="5dp"
+        android:text="@string/since_you_will_be_sharing_ride_format"
+        android:layout_gravity="center"
+        />
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinnerSeatCount"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:layout_gravity="center"
+        android:popupBackground="@drawable/background_white_rounded_bordered"
+        android:theme="@style/GreyHighlight"
+        android:dropDownWidth="50dp"
+        />
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupSeatCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="textViewHowManySeats,textViewSeatsInfo,spinnerSeatCount"
+        />
+
+</LinearLayout>
             <LinearLayout
                 android:id="@+id/relativeLayoutTotalFare"
                 android:layout_width="match_parent"

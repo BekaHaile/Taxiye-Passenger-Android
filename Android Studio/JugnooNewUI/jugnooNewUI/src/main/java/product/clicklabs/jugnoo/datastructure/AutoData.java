@@ -113,6 +113,7 @@ public class AutoData {
 
 	private SafetyInfoData safetyInfoData;
 
+    private int poolSeatsSelected = 1;
 
     public AutoData(String destinationHelpText, String rideSummaryBadText, String cancellationChargesPopupTextLine1, String cancellationChargesPopupTextLine2,
                     String inRideSendInviteTextBold, String inRideSendInviteTextNormal, String confirmScreenFareEstimateEnable,
@@ -1037,5 +1038,14 @@ public class AutoData {
 	public void setSafetyInfoData(SafetyInfoData safetyInfoData) {
 		this.safetyInfoData = safetyInfoData;
 	}
+
+
+    public int getPoolSeatsSelected() {
+        return poolSeatsSelected;
+    }
+
+    public void setPoolSeatsSelected(int poolSeatsSelected) {
+        this.poolSeatsSelected = poolSeatsSelected;
+    }
 
 }

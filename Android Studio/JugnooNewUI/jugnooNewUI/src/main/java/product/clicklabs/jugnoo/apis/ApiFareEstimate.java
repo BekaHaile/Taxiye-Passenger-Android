@@ -33,6 +33,7 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Package;
+import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
@@ -236,6 +237,10 @@ public class ApiFareEstimate {
                 params.put(Constants.KEY_IS_POOLED, "" + isPooled);
                 params.put(Constants.KEY_VEHICLE_TYPE, String.valueOf(region.getVehicleType()));
                 params.put(Constants.KEY_RIDE_TYPE, String.valueOf(region.getRideType()));
+                if(region.getRideType() == ServiceTypeValue.POOL.getType()
+                        && Data.autoData.getPoolSeatsSelected() > 0) {
+                    params.put(Constants.KEY_NO_OF_POOL_SEATS, String.valueOf(Data.autoData.getPoolSeatsSelected()));
+                }
                 params.put(Constants.KEY_REGION_ID, String.valueOf(region.getRegionId()));
                 if(promoCoupon!=null && promoCoupon.getId()!=-1){
                     params.put(promoCoupon instanceof CouponInfo?Constants.KEY_COUPON_ID:Constants.KEY_PROMO_ID, String.valueOf(promoCoupon.getId()));
