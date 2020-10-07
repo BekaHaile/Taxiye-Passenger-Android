@@ -75,7 +75,7 @@
 
     <string name="pictures_path">Taxiye/Taxiye Pictures</string>
     <bool name="force_inhouse_login">true</bool>
-    <bool name="force_mpesa_payment">false</bool>
+    <bool name="force_mpesa_payment">true</bool>
     <bool name="show_about">true</bool>
     <bool name="show_change_languge">true</bool>
     <!--default support email for SupportMailActivity if not coming from server-->

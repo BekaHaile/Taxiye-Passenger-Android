@@ -2525,7 +2525,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             public void onClick(View v) {
                 try {
                     if (Data.autoData.getEndRideData() != null) {
-                        if (Prefs.with(HomeActivity.this).getInt(KEY_FORCE_MPESA_PAYMENT, 0) == 1
+                        if ((Prefs.with(HomeActivity.this).getInt(KEY_FORCE_MPESA_PAYMENT, 1) == 1)
                                 && Data.autoData.getEndRideData().toPay > 0
                                 && Data.autoData.getEndRideData().getShowPaymentOptions() == 1) {
                             initiateRideEndPaymentAPI(Data.autoData.getEndRideData().engagementId, PaymentOption.MPESA.getOrdinal());
