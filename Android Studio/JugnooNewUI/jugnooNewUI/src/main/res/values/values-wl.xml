@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+    <integer name="center">5</integer>
+    <integer name="center_crop">6</integer>
+    <integer name="center_inside">7</integer>
+    <integer name="fit_center">3</integer>
+    <integer name="fit_end">4</integer>
+    <integer name="fit_start">2</integer>
+    <integer name="fit_xy">1</integer>
+    <integer name="matrix">0</integer>
+
+    <!--hardcode/default values-->
+    <string name="police_number">100</string>
+    <string name="facebook_page_id"></string>
+    <string name="facebook_page_url">https://www.facebook.com/jugnoose</string>
+    <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
+    <string name="web_landing_page">https://jugnoo.in</string>
+    <string name="default_support_email">support@jugnoo.in</string>
+    <string name="default_lang">en</string>
+    <bool name="specified_country_search_result_enabled">false</bool>
+    <string name="specified_country_search_result">no</string>
+    <integer name="visibility_faq">@integer/view_gone</integer>
+    <integer name="otp_via_call_enabled">1</integer>
+    <integer name="visibility_take_cash">@integer/view_visible</integer>
+    <integer name="show_amount_on_ride_summary">@integer/view_visible</integer>
+    <integer name="visibility_ride_history_amount">@integer/view_visible</integer>
+    <integer name="visibility_jugnoo_cash_in_wallet">@integer/view_visible</integer>
+    <integer name="visibility_fare_estimate_hover">@integer/view_gone</integer>
+    <bool name="show_choose_other_mode_to_pay">true</bool>
+    <bool name="schedule_ride_enabled">false</bool>
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+
+    <string name="app_name">Jugnoo</string>
+
+    <string name="google_maps_api_key"></string>
+    <string name="google_server_client_id"></string>
+    <string name="fb_app_id"></string>
+    <string name="fb_client_token"></string>
+    <string name="ak_login_protocol_scheme"></string>
+    <string name="branch_key"></string>
+
+
+
+
+    <string name="operator_token"></string>
+
+
+
+
+    <!--splash ui config-->
+    <dimen name="splash_logo_width">81dp</dimen>
+    <dimen name="splash_logo_height">81dp</dimen>
+    <dimen name="splash_logo_top_margin">100dp</dimen>
+    <drawable name="splash_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <drawable name="login_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <drawable name="splash_background_drawable">@color/transparent</drawable>
+    <integer name="show_splash_logo_text_login">@integer/view_visible</integer>
+    <drawable name="login_background_drawable">@color/transparent</drawable>
+    <integer name="show_splash_logo_text">@integer/view_visible</integer>
+    <integer name="show_splash_top_bg">@integer/view_visible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_visible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_visible</integer>
+    <integer name="show_login_top_bg">@integer/view_visible</integer>
+    <dimen name="splash_top_bottom_bg_margin">0dp</dimen>
+    <integer name="splash_bg_strip_scaleType">@integer/fit_xy</integer>
+
+    <integer name="show_splash_bg">@integer/view_invisible</integer>
+    <color name="splash_logo_color">@color/text_color</color>
+    <drawable name="cursor">@drawable/cursor_black</drawable>
+
+
+    <string name="file_provider_name">com.jugnoo.white.fileprovider</string>
+    <string name="db_name">jugnoo_database</string>
+    <string name="app_scheme">jungooautos</string>
+    <string name="app_domain">jugnoo.in</string>
+    <string name="app_host_name">www.jugnoo.in</string>
+    <string name="branch_domain">share.jugnoo.in</string>
+    <string name="pictures_path">Jugnoo/Jugnoo Pictures</string>
+
+    <string-array name="languages_to_show">
+        <item>en</item>
+        <item>ar</item>
+        <item>fr</item>
+        <item>de</item>
+        <item>es</item>
+    </string-array>
+
+
+
+
+
+
+    <bool name="wallet_amount_sidemenu">false</bool>
+    <string name="profile_saved_location_text">@string/address_book</string>
+    <bool name="show_jugnoo_promo_icon">false</bool>
+    <integer name="apply_default_country_code">0</integer>
+    <string name="default_country_code">+91</string>
+    <string name="default_country_iso">IN</string>
+
+    <color name="side_menu_color">#0000</color>
+    <color name="side_menu_text_color">@color/text_color_white_theme_selector</color>
+    <color name="side_menu_text_color_highlight">@color/theme_color</color>
+
+    <!--for bottom sliding panel-->
+    <bool name="show_sliding_bottom_fragment">true</bool>
+    <integer name="show_sliding_panel_fare_offer_tab">@integer/view_visible</integer>
+
+    <!--show cahs on ride summary-->
+    <bool name="is_card_mandatory_for_driver_tip">false</bool>
+    <integer name="cash_above_all">0</integer>
+    <bool name="force_mpesa_payment">false</bool>
+
+    <!--String keys for nickel-->
+    <string name="ride_summary_view_invoice_text">@string/view_invoice</string>
+    <string name="default_currency">INR</string>
+
+    <!--Referal icon scale type-->
+    <integer name="referral_icon_scale_type">@integer/center_inside</integer>
+
+    <bool name="force_open_autos">true</bool>
+    <string name="geocode_address_format">establishment,point_of_interest,premise,street_number,neighborhood,sublocality,locality,administrative_area</string>
+    <integer name="customer_fetch_inride_path_interval">30000</integer>
+    <integer name="customer_fetch_driver_location_interval">30000</integer>
+    <bool name="hit_place_details_after_geocode">false</bool>
+    <integer name="customer_cancel_ride_enabled">1</integer>
+
+
+    <integer name="customer_play_sound_ride_accept">0</integer>
+    <integer name="customer_play_sound_ride_arrived">0</integer>
+    <integer name="customer_play_sound_ride_start">0</integer>
+    <integer name="customer_play_sound_ride_end">0</integer>
+
+    <integer name="pickup_drop_like_enabled">0</integer>
+    <integer name="google_apis_logging">0</integer>
+
+    <integer name="customer_geocode_limit_enabled">0</integer>
+    <integer name="customer_geocode_time_limit">86400000</integer>
+    <integer name="customer_geocode_hit_limit">30</integer>
+
+    <integer name="customer_show_include_toll_in_summary">0</integer>
+    <integer name="customer_hit_settle_debt_after_add_card">0</integer>
+    <integer name="customer_directions_for_driver_enroute">0</integer>
+    <integer name="customer_hit_geocode_free_roam">1</integer>
+    <integer name="customer_pickup_free_roam_allowed">1</integer>
+    <integer name="customer_show_add_saved_place">1</integer>
+
+    <string name="customer_hippo_support_faq_name">Customer</string>
+    <string name="customer_tip_values">10,20,30</string>
+    <integer name="customer_show_surge_icon">1</integer>
+    <string name="customer_priority_tip_title">@string/priority_tip</string>
+    <string name="customer_priority_tip_description">@string/priority_tip_message</string>
+
+    <integer name="customer_currency_code_with_fare_estimate">0</integer>
+    <string name="label_add_store_text"><b>Suggest a missing store</b></string>
+
+    <integer name="customer_show_wallet_transactions">1</integer>
+    <integer name="customer_show_wallet_cash">1</integer>
+    <integer name="customer_google_traffic_enabled">0</integer>
+
+    <string name="label_show_fare_estimate">Fare Estimate</string>
+    <integer name="customer_request_ride_fast_interval">0</integer>
+    <integer name="customer_arrived_beep_enabled">0</integer>
+    <string name="customer_partner_url">https://www.jugnoo.in/franchise/</string>
+    <integer name="customer_open_partner_dialog">0</integer>
+    <integer name="customer_partner_dialog_view_count">5</integer>
+
+    <string name="customer_partner_dialog_title">Service unavailable in this area</string>
+    <string name="customer_partner_dialog_message">Become a Jugnoo partner to bring Jugnoo to your city</string>
+
+    <integer name="customer_show_convenience_charge_fare_estimate">1</integer>
+    <integer name="customer_reg_as_driver_phone_edit_alert">1</integer>
+    <integer name="resend_email_invoice_enabled">0</integer>
+    <bool name="show_add_notes">false</bool>
+    <integer name="customer_google_caching_enabled">0</integer>
+    <integer name="customer_gps_lock_status_polling_interval">5000</integer>
+
+    <!--Save location -->
+    <bool name="show_save_location_dialog">false</bool>
+
+    <!--marker animation-->
+    <bool name="show_bouncing_marker">false</bool>
+
+<!--    UI changes-->
+    <integer name="remove_pickup_address_hit">0</integer>
+
+    <!--Confirm pop before request ride-->
+    <integer name="show_confirm_popup_before_ride_request">0</integer>
+    <string name="youtube_api_key"></string>
+
+    <!--set preferences Inbox-->
+    <bool name="show_inbox_preferences">false</bool>
+
+    <string name="delivery_new_name">@string/delivery</string>
+    <string name="no_delivery_available_your_location">@string/text_no_delivery_available</string>
+    <string name="text_for_pickup_anywhre">@string/select_pickup_address</string>
+    <string name="fatafat_text">Delivery</string>
+
+<!--    Tip-->
+    <integer name="show_tip_on_confirm_ride">0</integer>
+    <integer name="show_tip_on_confirm_ride_level_1">0</integer>
+    <integer name="show_tip_on_confirm_ride_level_2">0</integer>
+
+
+    <integer name="customer_dob_input">1</integer>
+    <integer name="customer_gender_filter">1</integer>
+
+    <drawable name="autos_ride_txn_icon">@drawable/ic_car_white</drawable>
+    <drawable name="delivery_order_txn_icon">@drawable/ic_delivery_customer_bike</drawable>
+    <drawable name="anywhere_fab_icon">@drawable/ic_delivery_customer_bike</drawable>
+    <color name="anywhere_fab_color_normal">@color/theme_color</color>
+    <color name="anywhere_fab_color_pressed">@color/theme_color_alpha</color>
+    <bool name="autos_map_traffic_default_enabled">true</bool>
+    <bool name="currency_precision_from_server">false</bool>
+
+    <integer name="hippo_ticket_for_ride_issues">0</integer>
+    <string name="hippo_ticket_ride_faq_name">Rides</string>
+
+    <integer name="hippo_call_enabled">0</integer>
+    <bool name="vehicle_list_menus">true</bool>
+    <integer name="hide_regions_with_no_drivers">0</integer>
+    <integer name="pay_via_upi_enabled">0</integer>
+    <string name="jungle_map_fm_token"></string>
+    <integer name="show_customer_verification">0</integer>
+    <bool name="show_path_anim">false</bool>
+    <drawable name="banners_placeholder">@drawable/ic_banner_placeholder</drawable>
+
+</resources>
