@@ -59,8 +59,8 @@ android {
         buildConfigField "String", "STRIPE_KEY_DEV", "\"pk_test_0NxinGYy5mvTB1fF7GmYh6qx\""
         buildConfigField "String", "STRIPE_KEY_LIVE", "\"pk_test_0NxinGYy5mvTB1fF7GmYh6qx\""
         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-        buildConfigField "String", "MENUS_DEV_SERVER_URL", "\"https://test-menus.jugnoo.in:8110\""
-        buildConfigField "String", "MENUS_LIVE_SERVER_URL", "\"https://prod-fresh-api.jugnoo.in:4040\""
+        buildConfigField "String", "MENUS_DEV_SERVER_URL", "\"https://prod.taxiye.com:8110\""
+        buildConfigField "String", "MENUS_LIVE_SERVER_URL", "\"https://prod.taxiye.com:4040\""
         buildConfigField "String", "MAPS_CACHING_SERVER_URL", "\"https://maps-api.tookanapp.com\""
 
 
@@ -72,29 +72,6 @@ android {
 
     productFlavors {
         flavorDimensions "default"
-        jugnoo {
-            minSdkVersion 19
-            applicationId "product.clicklabs.jugnoo"
-            buildConfigField "String", "APP_DB_ID", "\"\""
-            buildConfigField "String", "LIVE_URL", "\"\""
-            resValue "color", 'colorPrimary', "#ff8162"
-            resValue "color", 'colorPrimaryDark', "#f8b542"
-            resValue "color", 'theme_color', "#FD7945"
-            resValue "color", 'gradient_normal_start', "#e85d7b"
-            resValue "color", 'gradient_normal_end', "#efa645"
-            resValue "color", 'gradient_pressed_start', "#c1556c"
-            resValue "color", 'gradient_pressed_end', "#c58f3f"
-            resValue "color", 'theme_color_alpha', "#99FD7945"
-            resValue "color", 'layout_login_signup_text_color', "#595968"
-            resValue "color", 'text_color_hint', "#BCBCBC"
-            buildConfigField "String", "MAPS_CLIENT", "\"\""
-            buildConfigField "String", "MAPS_PRIVATE_KEY", "\"\""
-            buildConfigField "boolean", "MAPS_APIS_SIGN", "false"
-            buildConfigField "String", "MAPS_BROWSER_KEY", "\"\""
-            buildConfigField "String", "STRIPE_KEY_LIVE", "\"\""
-            buildConfigField "String", "MAPS_CACHING_SERVER_URL", "\"\""
-        }
-
         //change base flavour's name to jugnoo for whitelabel or custom apps
         //it is mainly to resolve jugnooImplementation of HippoCall SDK
         //also uncomment HippoCallStub class, as it would give class not found error otherwise
@@ -106,7 +83,7 @@ android {
             minSdkVersion 19
             applicationId "com.taxiye"
             buildConfigField "String", "APP_DB_ID", "\"taxiye\""
-            buildConfigField "String", "LIVE_URL", "\"\""
+            buildConfigField "String", "LIVE_URL", "\"https://prod.taxiye.com:4012\""
             resValue "color", 'colorPrimary', "#1c1c1c"
             resValue "color", 'colorPrimaryDark', "#000000"
             resValue "color", 'theme_color', "#93009D"
@@ -229,7 +206,7 @@ dependencies {
 
     //hippo
     implementation 'com.hippochatx:hippo:2.0.0.8'
-    jugnooImplementation 'com.hippochatx:hippocall:2.0.0.8'
+    taxiyeImplementation 'com.hippochatx:hippocall:2.0.0.8'
     implementation 'org.jsoup:jsoup:1.11.3'
     implementation 'me.relex:circleindicator:1.2.1@aar'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
