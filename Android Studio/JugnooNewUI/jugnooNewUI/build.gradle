@@ -47,7 +47,7 @@ android {
     defaultConfig {
         versionCode 6007
         versionName "60.0.7"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -80,7 +80,7 @@ android {
 
 
         taxiye {
-            minSdkVersion 19
+            minSdkVersion 21
             applicationId "com.taxiye"
             buildConfigField "String", "APP_DB_ID", "\"taxiye\""
             buildConfigField "String", "LIVE_URL", "\"https://prod.taxiye.com:4012\""
@@ -111,6 +111,7 @@ android {
             resValue "string", 'razorpay_key', "rzp_test_e1thfzLNXQYGWK"
         }
         release {
+            debuggable false
             minifyEnabled true
             zipAlignEnabled true
             resValue "string", 'razorpay_key', "rzp_live_fsWpMDBnrFvyiW"
@@ -160,6 +161,12 @@ dependencies {
 //    room library-DB
     implementation 'androidx.room:room-runtime:2.2.2'
     kapt 'androidx.room:room-compiler:2.2.2'
+
+    // androidx security dependency
+    implementation 'androidx.security:security-crypto:1.1.0-alpha03'
+
+    // root checker library
+    implementation 'com.scottyab:rootbeer-lib:0.0.8'
 
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     implementation 'com.facebook.android:facebook-login:5.12.0'

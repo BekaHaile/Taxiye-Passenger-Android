@@ -13,12 +13,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -74,12 +76,19 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.home.FreshActivity;
+import com.scottyab.rootbeer.RootBeer;
 import com.squareup.picasso.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.GeneralSecurityException;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -90,6 +99,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.ActivityCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
+
 import io.branch.referral.Branch;
 import io.branch.referral.BranchError;
 import product.clicklabs.jugnoo.adapters.GenderDropdownAdapter;
@@ -348,6 +360,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	public static boolean openHomeSwitcher = false;
 
+	private static final String SHA_VALUE = "shaValue";
+
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -466,6 +480,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	protected void onCreate(Bundle savedInstanceState) {
 		setTheme(R.style.AppTheme);
 		super.onCreate(savedInstanceState);
+
+		if(!BuildConfig.DEBUG)
+			checkSecurityMeasures();
 
 		try {
 			MyApplication.getInstance().setmActivity(this);
@@ -1563,6 +1580,107 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		etDOB.setOnClickListener(view -> openDatePicker());
 
 	}
+
+	private void checkSecurityMeasures() {
+		if (isEmulator()) {
+			Toast.makeText(this, "Taxiye won't run on emulator.", Toast.LENGTH_SHORT).show();
+			finish();
+			System.exit(0);
+		} else if (isRooted()) {
+			Toast.makeText(this, "Rooted device is detected!", Toast.LENGTH_SHORT).show();
+			finish();
+			System.exit(0);
+		}
+	}
+
+	private boolean isCodeModified(String serverSha1) {
+		String apkPath = getPackageCodePath();
+		MessageDigest msgDigest;
+
+		// if serverSha1 is present store for later use
+		// if serverSha1 isn't present then fetch from stored
+		if (serverSha1 != null) {
+			SharedPreferences.Editor editor = getShaCacheSharedPreference().edit();
+			editor.putString(SHA_VALUE, serverSha1);
+			editor.apply();
+		} else {
+			serverSha1 = getShaCacheSharedPreference().getString(SHA_VALUE, null);
+		}
+
+		// if serverSha1 is null... checking securityMeasures for first time and no Cache found
+		// At this time we must return true and wait for next procedures to fetch sha-1 value from server
+		if(serverSha1 == null) return true;
+
+		// calculate the current sha-1 value
+		// and compare with server sha-1 value
+		try {
+			msgDigest = MessageDigest.getInstance("SHA-1");
+
+			byte[] bytes = new byte[1024];
+			int byteCount;
+
+			try (FileInputStream fis = new FileInputStream(new File(apkPath))) {
+				while ((byteCount = fis.read(bytes)) > 0) {
+					msgDigest.update(bytes, 0, byteCount);
+				}
+
+				BigInteger bi = new BigInteger(1, msgDigest.digest());
+				String sha = bi.toString(16);
+
+				//Here we add a hash value from the server and then compare it.
+				if(sha.equals(serverSha1)){
+					return true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Toast.makeText(this, "This isn't original Taxiye application!", Toast.LENGTH_SHORT).show();
+		return false;
+	}
+
+	private SharedPreferences getShaCacheSharedPreference() {
+		try {
+			MasterKey masterKey = new MasterKey.Builder(this)
+					.setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+					.build();
+
+			return EncryptedSharedPreferences.create(
+					this,
+					"sha_cache",
+					masterKey,
+					EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+					EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
+		} catch (GeneralSecurityException | IOException ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	private boolean isEmulator() {
+		return (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
+				|| Build.FINGERPRINT.startsWith("generic")
+				|| Build.FINGERPRINT.startsWith("unknown")
+				|| Build.HARDWARE.contains("goldfish")
+				|| Build.HARDWARE.contains("ranchu")
+				|| Build.MODEL.contains("google_sdk")
+				|| Build.MODEL.contains("Emulator")
+				|| Build.MODEL.contains("Android SDK built for x86")
+				|| Build.MANUFACTURER.contains("Genymotion")
+				|| Build.PRODUCT.contains("sdk_google")
+				|| Build.PRODUCT.contains("google_sdk")
+				|| Build.PRODUCT.contains("sdk")
+				|| Build.PRODUCT.contains("sdk_x86")
+				|| Build.PRODUCT.contains("vbox86p")
+				|| Build.PRODUCT.contains("emulator")
+				|| Build.PRODUCT.contains("simulator");
+	}
+
+	private boolean isRooted() {
+		RootBeer rootBeer = new RootBeer(this);
+		return Utils.isDeviceRooted() && rootBeer.isRooted();
+	}
+
 	private int selectedGenderPosition = 0;
 	private Calendar calendar = Calendar.getInstance();
 
@@ -2410,6 +2528,12 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						int showFreecharge = jObj.optJSONObject("signup").optInt("FREECHARGE");
 						linkedWallet = jObj.optJSONObject("signup").optInt("DEFAULT");
 						JSONArray jWalletOrder = jObj.optJSONArray(KEY_WALLET_ORDER);
+
+						if (jObj != null && jObj.has(SHA_VALUE) && isCodeModified(jObj.getString(SHA_VALUE))) {
+							finish();
+							System.exit(0);
+						}
+
 						if(jWalletOrder != null){
 							linearLayoutWalletContainerInner.removeAllViews();
 							for(int i=0; i<jWalletOrder.length(); i++){
