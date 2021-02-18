@@ -4,4 +4,5 @@
         <domain includeSubdomains="true">nominatim-api-live.jungleworks.com</domain>
         <domain includeSubdomains="true">maps-beta.jungleworks.com</domain>
     </domain-config>
+    <base-config cleartextTrafficPermitted="true" />
 </network-security-config>

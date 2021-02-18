@@ -356,6 +356,10 @@ public class DebugOptionsActivity extends BaseActivity {
 				MyApplication.getInstance().initializeServerURL(this);
 				performBackPressed();
 			}
+
+			Intent homeIntent = new Intent(this, SplashNewActivity.class);
+			homeIntent.setFlags(homeIntent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+			startActivity(homeIntent);
 		});
 
         buttonSaveTop.setOnClickListener(v -> buttonSave.performClick());
