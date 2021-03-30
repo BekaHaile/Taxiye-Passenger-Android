@@ -2225,5 +2225,6 @@
     <string name="please_select_appropriate_pickup_and_drop_location_to_continue">Seleccione la ubicación de recogida y entrega adecuada para continuar.</string>
 
     <string name="offers_and_coupons_applied_colon">Ofertas aplicadas: \n<b>%s</b></string>
+    <string name="delete_favourite_driver">Are you sure you want delete your favourite driver</string>
 
 </resources>

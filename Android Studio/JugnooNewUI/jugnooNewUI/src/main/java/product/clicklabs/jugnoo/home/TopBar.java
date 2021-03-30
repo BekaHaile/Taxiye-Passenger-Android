@@ -1,8 +1,6 @@
 package product.clicklabs.jugnoo.home;
 
 import android.app.Activity;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,12 +11,13 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.retrofit.model.ServiceType;
-import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -151,9 +150,9 @@ public class TopBar implements GACategory, GAAction {
         imageViewBack.setVisibility(View.VISIBLE);
         imageViewMenu.setVisibility(View.GONE);
         tvScheduleRidePopup.setVisibility(View.GONE);
-        if (serviceType != null && serviceType.getSupportedRideTypes() != null && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.RENTAL.getType())) {
+        if (serviceType != null && serviceType.getSupportedRideTypes() != null && serviceType.isRental()) {
             textViewTitle.setText(activity.getString(R.string.rentals));
-        } else if (serviceType != null && serviceType.getSupportedRideTypes() != null && serviceType.getSupportedRideTypes().contains(ServiceTypeValue.OUTSTATION.getType())) {
+        } else if (serviceType != null && serviceType.getSupportedRideTypes() != null && serviceType.isOutStation()) {
             textViewTitle.setText(activity.getString(R.string.out_station));
         } else {
             textViewTitle.setText(activity.getString(R.string.schedule_a_ride));

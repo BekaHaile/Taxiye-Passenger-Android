@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -55,10 +56,12 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.CountryCodePhoneNo;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.utils.UtilsKt;
 import product.clicklabs.jugnoo.widgets.ContactsCompletionView;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -387,7 +390,6 @@ public class AddEmergencyContactsFragment extends Fragment {
             RelativeLayout rlPhone = (RelativeLayout) dialog.findViewById(R.id.rlPhone);
             LinearLayout llCountryCode = (LinearLayout) dialog.findViewById(R.id.llCountryCode);
             final TextView tvCountryCode = (TextView) dialog.findViewById(R.id.tvCountryCode);
-            tvCountryCode.setTypeface(Fonts.mavenRegular(activity));
 
             final EditText editTextPhoneNumber = (EditText) dialog.findViewById(R.id.editTextPhoneNumber);
             final CountryPicker countryPicker =
@@ -413,7 +415,13 @@ public class AddEmergencyContactsFragment extends Fragment {
                     countryPicker.showDialog(activity.getSupportFragmentManager());
                 }
             });
-            editTextPhoneNumber.setText(contactBean.getPhoneNo().replaceFirst("^0+(?!$)", ""));
+
+			String phoneNo = contactBean.getPhoneNo();
+			CountryCodePhoneNo ccpn = UtilsKt.splitCountryCodeAndPhoneNumber(requireContext(), phoneNo);
+
+			tvCountryCode.setText(!TextUtils.isEmpty(ccpn.getCountryCode()) ? ccpn.getCountryCode() : Utils.getCountryCode(activity));
+			editTextPhoneNumber.setText(ccpn.getPhoneNo());
+
             editTextPhoneNumber.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -443,13 +451,13 @@ public class AddEmergencyContactsFragment extends Fragment {
 
             textHead.setText(title);
             textMessage.setText(message);
-            if(contactBean.getPhoneNo().contains("+")){
-                llCountryCode.setVisibility(View.GONE);
-//                contactBean.setPhoneNo( editTextPhoneNumber.getText().toString());
-            }else {
-                llCountryCode.setVisibility(View.VISIBLE);
-//                contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
-            }
+//            if(contactBean.getPhoneNo().contains("+")){
+//                llCountryCode.setVisibility(View.GONE);
+////                contactBean.setPhoneNo( editTextPhoneNumber.getText().toString());
+//            }else {
+//                llCountryCode.setVisibility(View.VISIBLE);
+////                contactBean.setPhoneNo(tvCountryCode.getText().toString() + editTextPhoneNumber.getText().toString());
+//            }
             Button btnOk = (Button) dialog.findViewById(R.id.btnOk);
             btnOk.setTypeface(Fonts.mavenRegular(activity));
             ImageView btnClose = (ImageView) dialog.findViewById(R.id.close);

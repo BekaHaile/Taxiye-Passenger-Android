@@ -15,9 +15,9 @@
 
 
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/sv_anywhere"
+        android:id="@+id/nsv_anywhere"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -199,15 +199,47 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 app:typekitFont="@string/maven_r" />
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_pickup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/dp_50"
+                android:layout_marginBottom="15dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="5dp"
+                app:cardBackgroundColor="@color/menu_item_selector_color_F7"
+                app:cardCornerRadius="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/etPickupName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:hint="@string/name"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/sp_16"
+                    android:inputType="textPersonName"/>
+
+                    <EditText
+                        android:id="@+id/etPickupPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:hint="@string/phone_number"
+                        android:inputType="number|phone"
+                        android:textColor="@color/text_color"
+                        android:textSize="@dimen/sp_16" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_pickup_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="5dp"
                 app:cardBackgroundColor="@android:color/white"
                 app:cardCornerRadius="2dp">
 
@@ -255,6 +287,8 @@
 
 
             </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -265,6 +299,14 @@
                 android:textAllCaps="true"
                 android:textColor="@color/text_color"
                 app:typekitFont="@string/maven_r" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDeliveries"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                tools:listitem="@layout/list_item_delivery"
+                tools:itemCount="3"/>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cv_delivery_address"
@@ -304,7 +346,6 @@
                         android:drawableEnd="@drawable/ic_arrow_grey"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:gravity="top"
                         android:text="@string/add_delivery_address"
                         android:textColor="@color/text_color"
@@ -318,6 +359,7 @@
 
 
             </androidx.cardview.widget.CardView>
+
 
 
 
@@ -593,7 +635,7 @@ android:layout_marginBottom="@dimen/dp_6"                android:textColor="@col
         </LinearLayout>
 
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <View
         android:layout_width="match_parent"

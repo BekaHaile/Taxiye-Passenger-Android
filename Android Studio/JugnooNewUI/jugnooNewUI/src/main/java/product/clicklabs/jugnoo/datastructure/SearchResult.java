@@ -16,6 +16,12 @@ public class SearchResult {
 	@SerializedName("name")
 	@Expose
 	private String name;
+	@SerializedName("phone")
+	@Expose
+	private String phone;
+	@SerializedName("personName")
+	@Expose
+	private String personName;
 	@SerializedName("address")
 	@Expose
 	private String address;
@@ -52,6 +58,18 @@ public class SearchResult {
 		this.placeId = placeId;
 		this.latitude = latitude;
 		this.longitude = longitude;
+
+		thirdPartyAttributions = null;
+		time = System.currentTimeMillis();
+	}
+	public SearchResult(String name, String address, String placeId, double latitude, double longitude,String personName, String phone){
+		this.name = name;
+		this.address = address;
+		this.placeId = placeId;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.personName = personName;
+		this.phone = phone;
 
 		thirdPartyAttributions = null;
 		time = System.currentTimeMillis();
@@ -105,6 +123,22 @@ public class SearchResult {
 		} else {
 			return address;
 		}
+	}
+
+	public String getPhone() {
+		return phone;
+	}
+
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
+	public String getPersonName() {
+		return personName;
+	}
+
+	public void setPersonName(String personName) {
+		this.personName = personName;
 	}
 
 	public void setName(String name) {

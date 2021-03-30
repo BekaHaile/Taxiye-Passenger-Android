@@ -81,11 +81,18 @@
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@taxiye.com</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
-    <integer name="apply_default_country_code">0</integer>
+    <integer name="apply_default_country_code">1</integer>
     <string name="default_country_code">+251</string>
     <string name="default_country_iso">ETH</string>
     <string name="default_currency">ETB</string>
     <string name="pay_later">Cash</string>
     <string name="your_trips">History</string>
     <bool name="force_open_autos">false</bool>
+
+    <string name="rupee">ETB</string>
+
+    <string name="rupee_0">ETB 0</string>
+    <string name="rupees_value_format">ETB %s</string>
+    <string name="minimum_order_rupee_format">Min Order ETB %s</string>
+    <string name="minimum_order_rupee_short_format"> \u2022 Min ETB %s</string>
 </resources>

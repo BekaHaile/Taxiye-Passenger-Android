@@ -1,17 +1,33 @@
 package product.clicklabs.jugnoo.wallet;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.sabkuchfresh.feed.ui.api.APICommonCallback;
 import com.sabkuchfresh.feed.ui.api.ApiCommon;
 import com.sabkuchfresh.feed.ui.api.ApiName;
+import com.sabkuchfresh.feed.ui.fragments.FeedHomeFragment;
+import com.sabkuchfresh.fragments.FreshCheckoutMergedFragment;
+import com.sabkuchfresh.fragments.MealFragment;
+import com.sabkuchfresh.fragments.MenusFragment;
+import com.sabkuchfresh.home.FreshActivity;
+import com.sabkuchfresh.home.OrderStatus;
+import com.sabkuchfresh.pros.ui.fragments.ProsHomeFragment;
+import com.sabkuchfresh.pros.ui.fragments.ProsProductsFragment;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,10 +35,14 @@ import java.util.HashMap;
 import product.clicklabs.jugnoo.BaseFragmentActivity;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
+import product.clicklabs.jugnoo.JSONParser;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
+import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
 import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
@@ -81,7 +101,15 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
                         .commitAllowingStateLoss();
             }
 
-        } else if (PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal() == paymentActivityPathInt) {
+        } else if(PaymentActivityPath.WALLET.getOrdinal() == paymentActivityPathInt&&getIntent().getIntExtra(Constants.KEY_WALLET_TYPE, PaymentOption.MPESA.getOrdinal())==PaymentOption.MPESA.getOrdinal()){
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                    .add(R.id.fragLayout, WalletRechargeFragment.newInstance(PaymentOption.MPESA.getOrdinal()), WalletRechargeFragment.class.getName())
+                    .addToBackStack(WalletRechargeFragment.class.getName())
+                    .hide(getSupportFragmentManager().findFragmentByTag(getSupportFragmentManager()
+                            .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+                    .commit();
+        }else if (PaymentActivityPath.WALLET_ADD_MONEY.getOrdinal() == paymentActivityPathInt) {
             if (getIntent().hasExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE)) {
                 amountToPreFill = getIntent().getStringExtra(Constants.KEY_PAYMENT_RECHARGE_VALUE);
             }
@@ -110,10 +138,26 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
             }
 
         }
+        try {
+            LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
+                    new IntentFilter(Data.LOCAL_BROADCAST));
+        } catch (Exception e) {
 
+        }
         setWalletAddMoneyState(WalletAddMoneyState.INIT);
     }
 
+
+    @Override
+    protected void onDestroy() {
+        try{
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        super.onDestroy();
+    }
 
     @Override
     public void onBackPressed() {
@@ -389,6 +433,39 @@ public class PaymentActivity extends BaseFragmentActivity implements StripeCards
     public interface UpdateCardsCallback{
         void onNewCardAdded();
     }
+
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, final Intent intent) {
+            // Get extra data included in the Intent
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        switch (intent.getAction()) {
+                            case Data.LOCAL_BROADCAST:
+                                int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
+                                if (PushFlags.MPESA_PAYMENT_SUCCESS.getOrdinal() == flag) {
+                                    DialogPopup.dismissLoadingDialog();
+                                    DialogPopup.alertPopup(PaymentActivity.this, "", intent.getStringExtra("message"));
+                                    getBalance(WalletRechargeFragment.class.getName(), PaymentOption.CASH.getOrdinal());
+
+                                    } else if (PushFlags.MPESA_PAYMENT_FAILURE.getOrdinal() == flag) {
+                                    DialogPopup.dismissLoadingDialog();
+                                        DialogPopup.alertPopup(PaymentActivity.this, "", intent.getStringExtra("message"));
+                                    }
+                                break;
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
 
 }
 

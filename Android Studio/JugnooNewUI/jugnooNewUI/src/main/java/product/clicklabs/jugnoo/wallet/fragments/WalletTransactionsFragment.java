@@ -261,6 +261,9 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 									for (int i = 0; i < jTransactions.length(); i++) {
 										JSONObject jTransactionI = jTransactions.getJSONObject(i);
 
+										String otherPartyName = jTransactionI.optString(Constants.KEY_OTHER_USER_NAME,"");
+										String otherPartyPhoneNo = jTransactionI.optString(Constants.KEY_OTHER_USER_PHONE_NO,"");
+
 										int paytm = jTransactionI.optInt(Constants.KEY_PAYTM, 0);
 										int mobikwik = jTransactionI.optInt(Constants.KEY_MOBIKWIK, 0);
 										int freecharge = jTransactionI.optInt(Constants.KEY_FREECHARGE, 0);
@@ -274,16 +277,16 @@ public class WalletTransactionsFragment extends Fragment implements GAAction {
 													"", "", jTransactionI.optDouble("amount"),
 													paytm, mobikwik, freecharge,mpesa, pay, jTransactionI.optInt("status", 0),
 													jTransactionI.optString("name", ""),
-													jTransactionI.optString(Constants.KEY_CURRENCY)));
+													jTransactionI.optString(Constants.KEY_CURRENCY),otherPartyName,otherPartyPhoneNo));
 										} else {
 											transactionInfoList.add(new TransactionInfo(jTransactionI.getInt("txn_id"),
 													jTransactionI.getInt("txn_type"),
-													jTransactionI.getString("txn_time"),
+													DateOperations.getAmPmFromServerDateFormat(jTransactionI.getString("logged_on")),
 													jTransactionI.getString("txn_date"),
 													jTransactionI.getString("txn_text"),
 													jTransactionI.getDouble("amount"),
 													paytm, mobikwik, freecharge,mpesa, pay, 0, "",
-													jTransactionI.optString(Constants.KEY_CURRENCY)));
+													jTransactionI.optString(Constants.KEY_CURRENCY),otherPartyName,otherPartyPhoneNo));
 										}
 									}
 

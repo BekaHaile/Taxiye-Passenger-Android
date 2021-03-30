@@ -112,7 +112,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
 
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
             builder.setSmallIcon(R.mipmap.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= 16){
@@ -206,7 +206,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
 
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 
             builder.setSmallIcon(R.mipmap.notification_icon);
             builder.setContentIntent(intent);
@@ -314,7 +314,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 				Drawable drawable = context.getResources().getDrawable(R.drawable.circle_theme_size);
 				builder.setLargeIcon(drawableToBitmapPlusText(context, drawable, eta, 16));
 			} else{
-				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
+				builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 			}
 
 //			builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.jugnoo_icon));
@@ -374,7 +374,7 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			builder.setChannelId(Constants.NOTIF_CHANNEL_DEFAULT);
 			setPlaySound(builder, playSound);
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
+            builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
             builder.setSmallIcon(R.mipmap.notification_icon);
             builder.setContentIntent(intent);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN){
@@ -416,9 +416,9 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 			if (fuguNotificationConfig.isHippoNotification(remoteMessage.getData())) {
 				if (fuguNotificationConfig.isHippoCallNotification(this, remoteMessage.getData())) {
 					JSONObject messageJson = new JSONObject(remoteMessage.getData().get("message"));
-					HippoCallStub.onNotificationReceived(getApplicationContext(), messageJson);
+//					HippoCallStub.onNotificationReceived(getApplicationContext(), messageJson);
 				} else {
-					fuguNotificationConfig.setLargeIcon(R.mipmap.notification_icon);
+					fuguNotificationConfig.setLargeIcon(R.mipmap.ic_launcher);
 					fuguNotificationConfig.setSmallIcon(R.mipmap.notification_icon);
 
 
@@ -954,13 +954,13 @@ public class GCMIntentService extends FirebaseMessagingService implements Consta
 						Intent intent = new Intent(Data.LOCAL_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
 						intent.putExtra(Constants.KEY_MESSAGE, jObj.getString(KEY_MESSAGE));
-						intent.putExtra(Constants.TO_PAY, jObj.getString(Constants.TO_PAY));
+						intent.putExtra(Constants.TO_PAY, jObj.optString(Constants.TO_PAY));
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 					}
 					else if(PushFlags.MPESA_PAYMENT_FAILURE.getOrdinal()==flag){
 						Intent intent = new Intent(Data.LOCAL_BROADCAST);
 						intent.putExtra(Constants.KEY_FLAG, flag);
-						intent.putExtra(Constants.KEY_MESSAGE, message);
+						intent.putExtra(Constants.KEY_MESSAGE, jObj.getString(KEY_MESSAGE));
 						LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
 					} else if(PushFlags.NO_DRIVER_FOUND_HELP.getOrdinal() == flag) {

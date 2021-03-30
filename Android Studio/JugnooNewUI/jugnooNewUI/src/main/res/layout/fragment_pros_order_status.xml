@@ -290,6 +290,11 @@
                             android:textColor="@color/text_color"
                             android:textSize="@dimen/sp_14"
                             app:typekitFont="@string/maven"/>
+                        <LinearLayout
+                            android:id="@+id/llMultipleDelivery"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"/>
 
                     </LinearLayout>
                 </LinearLayout>

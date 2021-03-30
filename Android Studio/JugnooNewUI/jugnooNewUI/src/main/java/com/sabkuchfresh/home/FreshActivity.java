@@ -4,6 +4,7 @@ import android.animation.LayoutTransition;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import product.clicklabs.jugnoo.SplashNewActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -193,6 +194,7 @@ import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
 import product.clicklabs.jugnoo.apis.ApiLoginUsingAccessToken;
 import product.clicklabs.jugnoo.apis.GoogleJungleCaching;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -215,6 +217,8 @@ import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.SafetyInfoDialog;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.retrofit.OfferingsVisibilityResponse;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemFragment;
 import product.clicklabs.jugnoo.support.fragments.SupportFAQItemsListFragment;
@@ -228,6 +232,10 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.MapUtils;
 import product.clicklabs.jugnoo.utils.Prefs;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.mime.TypedByteArray;
 
 
 /**
@@ -253,6 +261,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private UserCheckoutResponse userCheckoutResponse;
 
     private String selectedAddress = "";
+    private String selectedAddressPersonName = "";
+    private String selectedAddressPersonPhone = "";
     private LatLng selectedLatLng;
 
     private int selectedAddressId = 0;
@@ -272,6 +282,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     /**
      * this holds the reference for the Otto Bus which we declared in LavocalApplication
      */
+    public static boolean isActivityActive = false;
     protected Bus mBus;
     private double totalPrice = 0;
     private int totalQuantity = 0;
@@ -312,6 +323,9 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private boolean menusIsOpenMerchantInfo = true; // keep default value as true ( to account for deepIndex cases )
     private VendorDirectSearch vendorDirectSearch;
     private String currencyCode, currency;
+
+    int completedOrderId,completedOrderProductType;
+    String completedOrderClientId;
 
 
     public View getFeedHomeAddPostView() {
@@ -778,7 +792,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
             } else if (lastClientId.equalsIgnoreCase(Config.getProsClientId())) {
                 addProsHomeFragment();
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.PROS);
-            } else {
+            } else if (lastClientId.equalsIgnoreCase(Config.getFreshClientId())) {
                 Prefs.with(this).save(Constants.APP_TYPE, AppConstant.ApplicationType.FRESH);
 
                 openCart();
@@ -824,7 +838,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
         } catch (Exception e) {
             e.printStackTrace();
-            addFreshHomeFragment(fromOncreate);
+//            addFreshHomeFragment(fromOncreate);
         }
     }
 
@@ -992,6 +1006,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                 @Override
                 public void run() {
                     try {
+
                         switch (intent.getAction()) {
                             case Data.LOCAL_BROADCAST:
                                 int flag = intent.getIntExtra(Constants.KEY_FLAG, -1);
@@ -1086,6 +1101,16 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                                 ((MenusFragment) fragment).getAllMenus(true, getSelectedLatLng(), false, null, MenusFragment.TYPE_API_MENUS_ADDRESS_CHANGE);
                                             }
                                         }
+
+                                        if((intent.getIntExtra("order_status", 0)==OrderStatus.ORDER_COMPLETED.getOrdinal()||intent.getIntExtra("order_status", 0)==OrderStatus.RETURN.getOrdinal())&&isActivityActive){
+
+                                            completedOrderId=intent.getIntExtra("order_id", 0);
+                                            completedOrderProductType=intent.getIntExtra("product_type", 0);
+                                            completedOrderClientId =intent.getStringExtra(Constants.KEY_CLIENT_ID);
+                                            getOrderData(completedOrderId,completedOrderProductType,completedOrderClientId);
+//                                            openFeedback(intent.getStringExtra(Constants.KEY_CLIENT_ID));
+                                        }
+
                                             Intent intent1 = new Intent(Constants.INTENT_ACTION_ORDER_STATUS_UPDATE);
                                             intent1.putExtra(Constants.KEY_FLAG, flag);
                                             intent1.putExtra(Constants.KEY_ORDER_ID, intent.getIntExtra(Constants.KEY_ORDER_ID, -1));
@@ -1100,6 +1125,17 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                         if(!Config.getLastOpenedClientId(FreshActivity.this).equalsIgnoreCase(clientId)){
                                             switchOfferingViaClientId(clientId);
                                         }
+                                    }
+                                    else if (PushFlags.MPESA_PAYMENT_SUCCESS.getOrdinal() == flag) {
+                                        if (getFeedbackFragment() != null && !getFeedbackFragment().isUpbuttonClicked) {
+                                            getFeedbackFragment().ratingBarMenuFeedback.setVisibility(View.VISIBLE);
+                                            getFeedbackFragment().rlHowWasExp.setVisibility(View.VISIBLE);
+                                            getFeedbackFragment().btPayOnline.setVisibility(View.GONE);
+                                            getFeedbackFragment().feedbackData.setShowPaymentOption(0);
+                                        }
+                                        DialogPopup.alertPopup(FreshActivity.this, "", intent.getStringExtra("message"));
+                                    } else if (PushFlags.MPESA_PAYMENT_FAILURE.getOrdinal() == flag) {
+                                        DialogPopup.alertPopup(FreshActivity.this, "", intent.getStringExtra("message"));
                                     }
                                 }
                                 break;
@@ -1158,6 +1194,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     protected void onResume() {
         super.onResume();
         try {
+            isActivityActive=true;
             Data.setLastActivityOnForeground(FreshActivity.this);
             isLocationChangeCheckedAfterResume = false;
             isTimeAutomatic();
@@ -1203,7 +1240,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                             fabViewTest.setRelativeLayoutFABTestVisibility(View.VISIBLE);
                             fabViewTest.setFABButtons(false);
                         }
-
                     }
                 } else {
                     if(!fabViewTest.isFabtoggleModeOn()){
@@ -3553,6 +3589,22 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
 
+    public String getSelectedAddressPersonName() {
+        return selectedAddressPersonName;
+    }
+
+    public void setSelectedAddressPersonName(String selectedAddressPersonName) {
+        this.selectedAddressPersonName = selectedAddressPersonName;
+    }
+
+    public String getSelectedAddressPersonPhone() {
+        return selectedAddressPersonPhone;
+    }
+
+    public void setSelectedAddressPersonPhone(String selectedAddressPersonPhone) {
+        this.selectedAddressPersonPhone = selectedAddressPersonPhone;
+    }
+
     public String getSelectedAddress() {
         return selectedAddress;
     }
@@ -4091,7 +4143,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         try {
             Gson gson = new Gson();
             SearchResult searchResultLocality = new SearchResult(getSelectedAddressType(), getSelectedAddress(), "",
-                    getSelectedLatLng().latitude, getSelectedLatLng().longitude);
+                    getSelectedLatLng().latitude, getSelectedLatLng().longitude,getSelectedAddressPersonName(),getSelectedAddressPersonPhone());
             searchResultLocality.setId(getSelectedAddressId());
             searchResultLocality.setIsConfirmed(1);
             if(appType == AppConstant.ApplicationType.FEED){
@@ -6116,6 +6168,124 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 	public AutoData getAutoData() {
 		return Data.autoData;
 	}
+
+    public void getOrderData(int completedOrderId,int completedOrderProductType,String completedOrderClientId) {
+
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+
+                DialogPopup.showLoadingDialog(this, getString(R.string.loading));
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_ORDER_ID, "" + completedOrderId);
+                params.put(Constants.KEY_PRODUCT_TYPE, "" + completedOrderProductType);
+                params.put(Constants.KEY_CLIENT_ID,completedOrderClientId);
+                params.put(Constants.INTERATED, "1");
+
+                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
+                    @Override
+                    public void success(HistoryResponse historyResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i("Server response", "response = " + responseStr);
+                        try {
+                            JSONObject responseOrderDataApi = new JSONObject(responseStr);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(FreshActivity.this, responseOrderDataApi)) {
+                                int flag = responseOrderDataApi.getInt("flag");
+                                String message = JSONParser.getServerMessage(responseOrderDataApi);
+
+                                if (completedOrderProductType == ProductType.MENUS.getOrdinal()
+                                        || completedOrderProductType == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
+                                    if (ApiResponseFlags.RECENT_RIDES.getOrdinal() == flag) {
+                                        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,completedOrderClientId, getFeedBackData(historyResponse.getData().get(0)), true);
+                                    }
+                                } else if(completedOrderProductType == ProductType.FEED.getOrdinal()){
+                                    if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,completedOrderClientId, getFeedBackData(historyResponse.getData().get(0)), true);
+                                    }
+                                }
+
+                            }else{
+
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+//                            retryDialogOrderData("", DialogErrorType.SERVER_ERROR);
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
+                        DialogPopup.dismissLoadingDialog();
+//                        retryDialogOrderData("", DialogErrorType.CONNECTION_LOST);
+                    }
+                };
+
+                new HomeUtil().putDefaultParams(params);
+                if (completedOrderProductType == ProductType.MENUS.getOrdinal()
+                        || completedOrderProductType == ProductType.DELIVERY_CUSTOMER.getOrdinal()) {
+                    RestClient.getMenusApiService().orderHistory(params, callback);
+                } else if(completedOrderProductType == ProductType.FEED.getOrdinal()){
+                    RestClient.getFatafatApiService().getCustomOrderHistory(params, callback);
+                }
+            } else {
+//                retryDialogOrderData("", DialogErrorType.NO_NET);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void retryDialogOrderData(String message, DialogErrorType dialogErrorType) {
+        if (TextUtils.isEmpty(message)) {
+            DialogPopup.dialogNoInternet(this,
+                    dialogErrorType,
+                    new product.clicklabs.jugnoo.utils.Utils.AlertCallBackWithButtonsInterface() {
+                        @Override
+                        public void positiveClick(View view) {
+                            getOrderData(completedOrderId,completedOrderProductType,completedOrderClientId);
+                        }
+
+                        @Override
+                        public void neutralClick(View view) {
+
+                        }
+
+                        @Override
+                        public void negativeClick(View view) {
+                        }
+                    });
+        } else {
+            DialogPopup.alertPopupTwoButtonsWithListeners(this, "", message,
+                    getString(R.string.retry), getString(R.string.cancel),
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            getOrderData(completedOrderId,completedOrderProductType,completedOrderClientId);
+                        }
+                    },
+                    new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    }, false, false);
+        }
+    }
+
+    private LoginResponse.FeedbackData getFeedBackData(HistoryResponse.Datum datum1) {
+        LoginResponse.FeedbackData feedbackData = datum1.getFeedBackData();
+        if (feedbackData == null) return null;
+
+        feedbackData.setRestaurantName(datum1.getRestaurantName());
+        feedbackData.setDriverName(datum1.getDriveName());
+        feedbackData.setOrderId(String.valueOf(datum1.getOrderId()));
+        feedbackData.setAmount(datum1.getDiscountedAmount() == 0 ? datum1.getAmount() : datum1.getDiscountedAmount());
+        feedbackData.setFeedbackCurrencyCode(currencyCode);
+        feedbackData.setFeedbackCurrency(currency);
+        return feedbackData;
+    }
 
     public void openAddressFragemnt() {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

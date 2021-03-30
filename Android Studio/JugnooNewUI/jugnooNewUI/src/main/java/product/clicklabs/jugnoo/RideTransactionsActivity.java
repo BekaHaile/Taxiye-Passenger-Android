@@ -139,7 +139,7 @@ public class  RideTransactionsActivity extends BaseAppCompatActivity implements 
 		ivProsRadio = (ImageView) findViewById(R.id.ivProsRadio);
 		ivFeedRadio = (ImageView) findViewById(R.id.ivFeedRadio);
 		tvFeed = (TextView) findViewById(R.id.tvFeed);
-		tvFeed.setText(Data.getFeedName(this));
+		tvFeed.setText(getString(R.string.delivery_new_name));
 
 		rlFilter = (RelativeLayout) findViewById(R.id.rlFilter);
 		ivFilterApplied = (ImageView) findViewById(R.id.ivFilterApplied);

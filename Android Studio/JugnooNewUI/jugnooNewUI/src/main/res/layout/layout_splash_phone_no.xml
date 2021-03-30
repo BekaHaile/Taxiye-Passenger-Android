@@ -21,12 +21,12 @@
 
     <ImageView
         android:id="@+id/ivLogoP"
-        android:layout_width="@dimen/splash_logo_width"
-        android:layout_height="@dimen/splash_logo_height"
+        android:layout_width="@dimen/login_logo_width"
+        android:layout_height="@dimen/login_logo_height"
         android:src="@drawable/login_logo_icon_drawable"
         android:tag="@string/dont_touch_me"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/splash_logo_top_margin"/>
+        android:layout_marginTop="@dimen/splash_phone_logo_top_margin"/>
 
     <TextView
         android:id="@+id/tvJugnooTaxiP"

@@ -127,7 +127,7 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
 import product.clicklabs.jugnoo.utils.LocationInit;
 import product.clicklabs.jugnoo.utils.Log;
-import product.clicklabs.jugnoo.utils.OwnerInfo;
+//import product.clicklabs.jugnoo.utils.OwnerInfo;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.SHA256Convertor;
 import product.clicklabs.jugnoo.utils.UniqueIMEIID;
@@ -304,7 +304,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	private RelativeLayout rlClaimGift, rlPromo,rlSignupOnboarding;
 	private ImageView ivUser;
-	private TextView tvGiftFrom, tvGiftDetail, tvReferralTitle, tvSkip;
+	private TextView tvGiftFrom, tvGiftDetail, tvReferralTitle, tvSkip,tvChangeLanguage;
 	private Button btnClaimGift, bPromoSubmit, btnPhoneLogin;
 	private String refreeUserId = "";
 	public static String loginResponseStr;
@@ -359,13 +359,20 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	public void onStart() {
 		super.onStart();
 
-		try {
-			Branch branch = Branch.getInstance(this);
-			holdForBranch = true;
-			branch.initSession(new Branch.BranchReferralInitListener() {
+		holdForBranch = true;
+		Branch.sessionBuilder(this).withCallback(branchReferralInitListener).withData(getIntent() != null ? getIntent().getData() : null).init();
+
+		Log.e("Deeplink =", "getIntent().getData()=" + getIntent().getData());
+		Log.e("Deeplink =", "getIntent().getExtras()=" + getIntent().getExtras());
+
+		firstTimeEvents();
+	}
+
+			Branch.BranchReferralInitListener branchReferralInitListener = new Branch.BranchReferralInitListener() {
 
 				@Override
 				public void onInitFinished(JSONObject referringParams, BranchError error) {
+					Log.e("BranchConfigTest", "error: " + error);
 					holdForBranch = false;
 					if (error == null) {
 						// params are the deep linked params associated with the link that the user clicked before showing up
@@ -420,21 +427,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					}
 					fetchPhoneNoOtpFromBranchParams(referringParams);
 				}
-			}, this.getIntent().getData(), this);
-
-			Log.e("Deeplink =", "getIntent().getData()=" + getIntent().getData());
-			Log.e("Deeplink =", "getIntent().getExtras()=" + getIntent().getExtras());
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-//		FlurryAgent.init(this, Config.getFlurryKey());
-//		FlurryAgent.onStartSession(this, Config.getFlurryKey());
-//		FlurryAgent.onEvent("Splash started");
-
-		firstTimeEvents();
-	}
+			};
 
 
 	private void fetchPhoneNoOtpFromBranchParams(JSONObject referringParams){
@@ -464,7 +457,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		setTheme(R.style.AppTheme);
 		super.onCreate(savedInstanceState);
 
 		try {
@@ -728,6 +720,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			svSignupOnboarding = (ScrollView) findViewById(R.id.svSignupOnboarding);
 			llSignupOnboarding = (LinearLayout) findViewById(R.id.llSignupOnboarding);
 			tvSkip = (TextView) findViewById(R.id.tvSkip);
+			tvChangeLanguage = (TextView) findViewById(R.id.tvChangeLanguage);
 			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
 			rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
 			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
@@ -850,6 +843,18 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 				}
 			});
 
+			tvChangeLanguage.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						startActivity(new Intent(SplashNewActivity.this, ChangeLanguageActivity.class));
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+						GAUtils.event(SIDE_MENU, USER + PROFILE, GAAction.CHANGE_LANGUAGE);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			});
 			tvSkip.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -2186,6 +2191,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	@Override
 	public void onNewIntent(Intent intent) {
 		this.setIntent(intent);
+		holdForBranch = true;
+		Branch.sessionBuilder(this).withCallback(branchReferralInitListener).reInit();
 	}
 
 	private BroadcastReceiver broadcastReceiverDeviceToken = new BroadcastReceiver() {
@@ -3147,9 +3154,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
 			if (ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))) {
 				userEmail = ownerEmail;
-				if (new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
-					userName = Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail));
-				}
+//				if (new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
+//					userName = Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail));
+//				}
 			}
 		} catch(Exception e){
 				e.printStackTrace();
@@ -3739,9 +3746,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 						String ownerEmail = UserEmailFetcher.getEmail(SplashNewActivity.this);
 						if(ownerEmail != null && (!ownerEmail.equalsIgnoreCase(""))){
 							editTextSEmail.setText(ownerEmail);
-							if(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
-								editTextSName.setText(Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail)));
-							}
+//							if(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail) != null) {
+//								editTextSName.setText(Utils.firstCharCapital(new OwnerInfo().OwnerInfo(SplashNewActivity.this, ownerEmail)));
+//							}
 							phoneFetchedName = editTextSName.getText().toString();
 							phoneFetchedEmail = editTextSEmail.getText().toString();
 						} else{
@@ -4610,7 +4617,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		if(Prefs.with(SplashNewActivity.this).getInt(Constants.KEY_LOGIN_CHANNEL, 0) == 1){
 			phoneNoToFillInInHouseLogin = previousLoginPhone;
 			if(phoneNoToFillInInHouseLogin==null || phoneNoToFillInInHouseLogin.trim().length()==0){
- 				phoneNoToFillInInHouseLogin = 	OwnerInfo.OwnerPhone(this);
+// 				phoneNoToFillInInHouseLogin = 	OwnerInfo.OwnerPhone(this);
  				if(phoneNoToFillInInHouseLogin != null && !phoneNoToFillInInHouseLogin.startsWith("+")){
 					phoneNoToFillInInHouseLogin = "+"+phoneNoToFillInInHouseLogin;
 				}

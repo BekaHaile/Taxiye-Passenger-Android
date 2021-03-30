@@ -66,7 +66,7 @@ public class NotificationSettingAdapter extends RecyclerView.Adapter<Notificatio
             holder.imageViewStatus.setImageResource(R.drawable.jugnoo_sticky_on);
         }
 
-        if(notificationSetting.getIsEditable() == 0) {
+        if(notificationSetting.getIsEditable() == 0 || notificationSetting.getIsEditable() == -1) {
             holder.imageViewStatus.setAlpha(0.3f);
         } else{
             holder.imageViewStatus.setAlpha(1.0f);

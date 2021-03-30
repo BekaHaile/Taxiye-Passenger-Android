@@ -661,7 +661,6 @@
     <string name="be_first_one_to_add_a_post">ልጥፍ ለማስገባት የመጀመሪያው ይሁኑ</string>"
     <string name="items_summary">የዕቃዎች ማጠቃለያ</string>
     <string name="bill_summary">ቢል ማጠቃለያ</string>
-    <string name="dont_touch_me">ዶንቶክሜይ</string>
     <string name="payment_summary">የክፍያ መጠየቂያ ማጠቃለያ</string>
     <string name="comments">አስተያየቶች ...</string>
     <string name="likes">የተወደዱ</string>
@@ -878,7 +877,7 @@
     <string name="fugu_support_title">መወያየት</string>
     <string name="error_no_rating">እባክዎ ደረጃ ይምረጡ</string>
     <string name="all">ሁሉም</string>
-    <string name="can_be_used_format"> %S ጊዜ ጥቅም ላይ ሊውል ይችላል</string>
+    <string name="can_be_used_format"> %s ጊዜ ጥቅም ላይ ሊውል ይችላል</string>
     <string name="applied_on_all_offerings">በሁሉም አቅርቦቶች ላይ የሚተገበር</string>
     <string name="no_coupons_available">ምንም ኩፖኖች አይገኙም</string>
     <string name="how_was_your_experience">የእርስዎ ተሞክሮ እንዴት ነበር?</string>
@@ -1939,4 +1938,39 @@
     <string name="referred_on">የተጠቀሰው በ</string>
     <string name="pay_later">በኋላ ይክፈሉ</string>
     <string name="your_trips">ጉዞዎችዎ</string>
+
+    <string name="label_show_fare_estimate">ኣትኵሮ ግበሩ</string>
+
+    <string name="customer_credits">የደንበኞች ምስጋናዎች</string>
+    <string name="credits">ክሬዲቶች</string>
+    <string name="phone_number_full">ቁጽሪ ስልኪ</string>
+
+    <string name="customer">ደንበኛ</string>
+    <string name="transfer_to">ያስተላልፉ ወደ</string>
+    <string name="select_transfer_to">ማስተላለፍን ይምረጡ</string>
+
+    <string name = "favourite_driver">ተወዳጅ አሽከርካሪ</string>
+
+    <string name="driver_name_f">የአሽከርካሪ ስም</string>
+    <string name="vehicle_type">የተሽከርካሪ ዓይነት</string>
+    <string name="rating">ደረጃ መስጠት</string>
+    <string name= "no_blocked_drivers">የታገዱ አሽከርካሪዎች የሉም</string>
+    <string name="no_fav_divers">ተወዳጅ አሽከርካሪዎች የሉም</string>
+    <string name = "Do_you_want_add_driver_as_a_favourote">ሾፌርን ማከል ይፈልጋሉ \n እንደ ፋውቫውት?</string>
+    <string name="ride_with_favourite_driver">ከ \n ጤናማ ፍላጎት ነጂዎ ጋር ማሽከርከር ይፈልጋሉ?</string>
+
+    <string name="privacy_preferences">የግላዊነት ምርጫዎች</string>
+    <string name="delete_favourite_driver">እርግጠኛ ነዎት የሚወዱትን ሾፌር መሰረዝ ይፈልጋሉ</string>
+    <string name="rating_summary">ደረጃ መስጠት</string>
+
+    <string name="ride_scheduled_status">ጉዞ መርሐግብር ተይዞለታል</string>
+    <string name="in_progress_status">በሂደት ላይ</string>
+    <string name="processed_status">ተሰራ</string>
+    <string name="cancelled_status">ተሰር .ል</string>
+
+    <string name="select_gender">ፆታን ይምረጡ</string>
+    <string name="male">ወንድ</string>
+    <string name="female">ሴት</string>
+    <string name="please_select_gender">እባክዎ ጾታን ይምረጡ</string>
+    <string name="please_enter_date_of_birth">እባክዎ የትውልድ ቀን ያስገቡ</string>
 </resources>

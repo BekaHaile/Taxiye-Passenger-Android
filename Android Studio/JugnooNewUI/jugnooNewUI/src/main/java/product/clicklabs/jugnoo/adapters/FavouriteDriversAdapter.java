@@ -187,7 +187,7 @@ public class FavouriteDriversAdapter extends RecyclerView.Adapter<FavouriteDrive
 
     private void warningDailog(int driverId, int pos) {
 
-        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", "Are you sure you want delete your favourite driver",
+        DialogPopup.alertPopupTwoButtonsWithListeners(activity, "", activity.getString(R.string.delete_favourite_driver),
                 activity.getString(R.string.yes), activity.getString(R.string.no),
                 new View.OnClickListener() {
                     @Override

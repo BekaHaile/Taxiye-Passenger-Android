@@ -218,8 +218,10 @@ public class SlidingBottomCashFragment extends Fragment implements View.OnClickL
 			ArrayList<Region> regions = Data.autoData.getRegions();
             Region region = (regions.size() > 1) ? activity.slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     : (regions.size() > 0 ? regions.get(0) : null);
-            if (region != null && region.getRestrictedPaymentModes().size() > 0) {
+            if (region != null &&  (region.getRestrictedPaymentModes().size() > 0|| region.getRestrictedCorporates().size() > 0)) {
                 if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
+                    Data.autoData.setPickupPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(selectedPaymentOption, activity));
+                } else if(selectedPaymentOption== PaymentOption.CORPORATE.getOrdinal()&&region.getRestrictedCorporates().contains(CorporatesAdapter.Companion.getSelectedCorporateBusinessId())){
                     Data.autoData.setPickupPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(selectedPaymentOption, activity));
                 } else {
 					Data.autoData.setPickupPaymentOption(selectedPaymentOption);

@@ -85,6 +85,12 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
                 holder.textViewTransactionAmount.setText(Utils.formatCurrencyValue(transactionInfo.getCurrency(), transactionInfo.amount));
                 holder.textViewTransactionTime.setText(transactionInfo.time);
                 holder.textViewTransactionType.setText(transactionInfo.transactionText);
+                if(transactionInfo.transactionType == 1 && !transactionInfo.otherPartyName.equalsIgnoreCase("")){
+                    holder.tvAmountDescription.setText(String.format(context.getResources().getString(R.string.credit_amount_description),transactionInfo.otherPartyName,transactionInfo.otherPartyPhoneNo));
+                }
+                if(transactionInfo.transactionType == 2 && !transactionInfo.otherPartyName.equalsIgnoreCase("")){
+                    holder.tvAmountDescription.setText(String.format(context.getResources().getString(R.string.debit_amount_description),transactionInfo.otherPartyName,transactionInfo.otherPartyPhoneNo));
+                }
 
                 if(TransactionType.CREDIT.getOrdinal() == transactionInfo.transactionType){
                     holder.textViewTransactionType.setTextColor(context.getResources().getColor(R.color.green_transaction_type));
@@ -195,7 +201,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTransactionDate, textViewTransactionAmount, textViewTransactionTime,
-                textViewTransactionType, textViewTransactionMode, tvStatusPay;
+                textViewTransactionType, textViewTransactionMode, tvStatusPay, tvAmountDescription;
         public LinearLayout relative;
         public ViewHolder(View convertView, Context context) {
             super(convertView);
@@ -203,6 +209,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<RecyclerView
             textViewTransactionAmount = (TextView) convertView.findViewById(R.id.textViewTransactionAmount); textViewTransactionAmount.setTypeface(Fonts.mavenRegular(context), Typeface.BOLD);
             textViewTransactionTime = (TextView) convertView.findViewById(R.id.textViewTransactionTime); textViewTransactionTime.setTypeface(Fonts.mavenMedium(context));
             textViewTransactionType = (TextView) convertView.findViewById(R.id.textViewTransactionType); textViewTransactionType.setTypeface(Fonts.mavenMedium(context));
+            tvAmountDescription = (TextView) convertView.findViewById(R.id.tvAmountDescription); tvAmountDescription.setTypeface(Fonts.mavenMedium(context));
             textViewTransactionMode = (TextView) convertView.findViewById(R.id.textViewTransactionMode); textViewTransactionMode.setTypeface(Fonts.mavenMedium(context));
             tvStatusPay = (TextView) convertView.findViewById(R.id.tvStatusPay); tvStatusPay.setTypeface(Fonts.mavenMedium(context));
             relative = (LinearLayout) convertView.findViewById(R.id.relative);

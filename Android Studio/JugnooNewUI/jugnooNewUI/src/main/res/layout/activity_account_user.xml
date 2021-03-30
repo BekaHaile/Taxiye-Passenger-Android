@@ -569,6 +569,49 @@
                             android:layout_marginEnd="@dimen/dp_17"/>
 
                     </RelativeLayout>
+
+
+
+                    <RelativeLayout
+                        android:id="@+id/rlPrivacyPreferences"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:theme="@style/GreyHighlight"
+                        android:background="?attr/selectableItemBackground">
+
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.5dp"
+                            android:layout_marginStart="@dimen/dp_12"
+                            android:layout_marginEnd="@dimen/dp_12"
+                            android:background="@color/nl_white_dark"/>
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/ivPreferences"
+                            app:srcCompat="@drawable/ic_settings"
+                            android:layout_width="20dp"
+                            android:tint="@color/theme_color"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/dp_17"
+                            android:visibility="gone"
+                            android:layout_height="20dp"/>
+
+                        <TextView
+                            android:id="@+id/tvPreferences"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginBottom="@dimen/dp_17"
+                            android:layout_marginStart="@dimen/dp_17"
+                            android:layout_marginTop="@dimen/dp_17"
+                            android:gravity="center"
+                            android:text="@string/privacy_preferences"
+                            android:textColor="@color/text_color"
+                            android:textSize="@dimen/sp_14"/>
+
+                    </RelativeLayout>
+
                 </LinearLayout>
 
 

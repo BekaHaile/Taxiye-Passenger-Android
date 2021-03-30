@@ -218,7 +218,7 @@
                         android:visibility="visible" />
 
                     <ImageView
-                        android:id="@+id/imageViewDropAddNew"
+                        android:id="@+id/imageViewDropAddNewConfirm"
                         android:layout_width="70px"
                         android:layout_height="70px"
                         android:layout_marginEnd="5px"
@@ -492,6 +492,7 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="50dp"
+    android:visibility="gone"
     android:id="@+id/seatSelectionLayout">
 
     <TextView

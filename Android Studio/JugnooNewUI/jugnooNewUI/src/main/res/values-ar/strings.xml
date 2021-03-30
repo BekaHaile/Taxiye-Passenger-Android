@@ -2159,4 +2159,5 @@
     <string name = "south_africa_"> جنوب إفريقيا </string>
     <string name = "zambia"> زامبيا </string>
     <string name = "zimbabwe"> زيمبابوي </string>
+    <string name="delete_favourite_driver">Are you sure you want delete your favourite driver</string>
 </resources>

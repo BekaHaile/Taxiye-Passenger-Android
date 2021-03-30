@@ -84,6 +84,7 @@
 
 
                 <RelativeLayout
+                    android:id="@+id/rlCurrentBalance"
                     android:layout_width="@dimen/screen_width"
                     android:layout_height="109px"
                     android:background="@color/white">

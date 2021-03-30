@@ -343,13 +343,20 @@ public final class PermissionCommon {
             }
         }
         if(permissionsToAsk.contains(Manifest.permission.READ_CONTACTS)){
-            DialogPopup.alertPopupWithListener(activity, activity.getString(R.string.perm_contacts,activity.getString(R.string.app_name)), activity.getString(R.string.perm_contacts_rational),activity.getString(R.string.ok), new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    requestPermissions(permissionsToAsk.toArray(new String[permissionsToAsk.size()]), REQUEST_CODE);
-                }
-            },false,true,false);
+			DialogPopup.alertPopupTwoButtonsWithListeners(activity,
+					activity.getString(R.string.app_requires_read_contacts_permission_title),
+					activity.getString(R.string.app_requires_read_contacts_permission_message),
+					activity.getString(R.string.ok),
+					activity.getString(R.string.cancel),
+					v->{requestPermissions(permissionsToAsk.toArray(new String[permissionsToAsk.size()]), REQUEST_CODE);},
+					v->{}, false, true);
         }
+		else if(permissionsToAsk.contains(Manifest.permission.ACCESS_BACKGROUND_LOCATION)||permissionsToAsk.contains(Manifest.permission.ACCESS_COARSE_LOCATION)||permissionsToAsk.contains(Manifest.permission.ACCESS_FINE_LOCATION)){
+			DialogPopup.alertPopupWithListener(activity,
+					activity.getString(R.string.perm_location,activity.getString(R.string.app_name)),
+					activity.getString(R.string.perm_location_rational),
+					v->{requestPermissions(permissionsToAsk.toArray(new String[permissionsToAsk.size()]), REQUEST_CODE);});
+		}
 
         //At activity point if shouldAsk is true there is no rational Permission that exists and  No explanation needed, we can request for the permissions.
         else

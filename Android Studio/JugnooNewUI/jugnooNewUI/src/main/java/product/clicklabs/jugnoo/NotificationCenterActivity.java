@@ -1,9 +1,6 @@
 package product.clicklabs.jugnoo;
 
 import android.os.Bundle;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +14,9 @@ import com.sabkuchfresh.analytics.GAUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import product.clicklabs.jugnoo.adapters.NotificationAdapter;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
@@ -295,7 +295,7 @@ public class NotificationCenterActivity extends BaseFragmentActivity implements 
                 getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
                         .add(getContainer().getId(),
-                                new NotificationSettingFragment(),
+                                NotificationSettingFragment.newInstance(false),
                                 NotificationSettingFragment.class.getName())
                         .addToBackStack(NotificationSettingFragment.class.getName())
                         .commitAllowingStateLoss();

@@ -6,7 +6,8 @@ package com.sabkuchfresh.home;
 
 public enum OrderStatus {
     ORDER_COMPLETED(2),
-    CASH_RECEIVED(6)
+    CASH_RECEIVED(6),
+    RETURN(7)
     ;
 
     private int ordinal;

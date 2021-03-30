@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
+    android:tag="@string/dont_touch_me"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -8,10 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="20px"
-        android:layout_marginStart="30px"
-        android:layout_marginEnd="50px"
-        android:layout_marginTop="20px"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="10dp"
         android:layout_toStartOf="@+id/imageViewStatus"
         android:orientation="vertical">
 
@@ -19,32 +20,28 @@
             android:id="@+id/textViewNotiTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="@string/no_current_notifications"
-            android:textColor="@color/stroke_color_dark"
-            android:textSize="@dimen/text_size_26" />
+            android:textColor="@color/text_color"
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/textViewNotiText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:lineSpacingExtra="5px"
+            android:lineSpacingExtra="2dp"
             android:text="@string/no_current_notifications"
-            android:textColor="@color/text_color"
-            android:textSize="@dimen/text_size_28" />
+            android:textColor="@color/stroke_color_dark"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
-    <ImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageViewStatus"
-        android:layout_width="77px"
-        android:layout_height="50px"
+        android:layout_width="38dp"
+        android:layout_height="25dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="10px"
-        android:src="@drawable/jugnoo_sticky_off"
-        android:tag="mwar" />
-
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/jugnoo_sticky_off" />
 
 </RelativeLayout>

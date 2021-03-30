@@ -106,6 +106,7 @@
                 android:gravity="start"
                 android:hint="@string/please_specify_the_reason"
                 android:maxLength="250"
+                android:textColor="@color/text_color"
                 android:minHeight="160px"
                 android:padding="20px"
                 android:textSize="30px"

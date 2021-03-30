@@ -128,7 +128,6 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             tvPickup.typeface = Fonts.mavenRegular(activity)
             tvScheduleMessage.typeface = Fonts.mavenRegular(activity)
             tvDestination.typeface = Fonts.mavenRegular(activity)
-            tvScheduleDest.typeface = Fonts.mavenRegular(activity)
             tvPickupDateTime.setTypeface(Fonts.mavenMedium(activity), BOLD)
             tvSelectDateTime.typeface = Fonts.mavenMedium(activity)
             tvOneWay.typeface = Fonts.mavenMedium(activity)
@@ -147,7 +146,6 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
             tvPickup.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.PICKUP) }
             tvDestination.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP) }
-            tvScheduleDest.setOnClickListener { (getActivity() as HomeActivity).openPickupDropSearchUI(PlaceSearchListFragment.PlaceSearchMode.DROP) }
             tvSelectDateTime.setOnClickListener {
                 try {
                     getDatePickerFragment().show(childFragmentManager, "datePicker", onDateSetListener)
@@ -192,11 +190,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     if (TextUtils.isEmpty(tvPickup.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_pickup))
                         throw Exception()
-                    } else if(Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)
-                            && TextUtils.isEmpty(tvScheduleDest.text.toString())) {
-                        Utils.showToast(activity, activity!!.getString(R.string.enter_destination))
-                        throw Exception()
-                    } else if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)
+                    } else if (!Data.autoData.getServiceTypeSelected().isRental()
                             && TextUtils.isEmpty(tvDestination.text.toString())) {
                         Utils.showToast(activity, activity!!.getString(R.string.enter_destination))
                         throw Exception()
@@ -264,26 +258,24 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             setScheduleRideVehicleListAdapter()
             setPickupAndDropAddress()
 
+            tvFareEstimate.visibility = View.GONE
+            viewInnerDrop.visibility = View.GONE
+
             val visibilityNotRental = if (openSchedule) View.VISIBLE else View.GONE
-            tvDestination.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
-                    || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)) View.GONE else View.VISIBLE
-            tvScheduleDest.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)
-                    || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)) View.GONE else View.VISIBLE
-            llDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
-                    || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)) View.GONE else View.VISIBLE
-            tvDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
-                    || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type)) View.GONE else View.VISIBLE
+            tvDestination.visibility = if (Data.autoData.getServiceTypeSelected().isRental()) View.GONE else View.VISIBLE
+            llDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().isRental()) View.GONE else View.VISIBLE
+            tvDropLocation.visibility = if (Data.autoData.getServiceTypeSelected().isRental()) View.GONE else View.VISIBLE
             tvPickupDateTime.visibility = visibilityNotRental
             tvSelectDateTime.visibility = visibilityNotRental
-//            tvFareEstimate.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
-//            rvVehiclesList.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.GONE else View.VISIBLE
-//            tvSelectVehicleType.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.GONE else View.VISIBLE
-            tvSelectRoute.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
-            tvOneWay.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
-            isOneWay = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) 1 else -1
-            tvRoundTrip.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) View.VISIBLE else View.GONE
-            tvSelectPackage.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type) || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
-            rvPackages.visibility = if (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.NORMAL.type) || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.POOL.type)) View.GONE else View.VISIBLE
+//            tvFareEstimate.visibility = if (Data.autoData.getServiceTypeSelected().isOutstation()) View.VISIBLE else View.GONE
+//            rvVehiclesList.visibility = if (Data.autoData.getServiceTypeSelected().isOutstation()) View.GONE else View.VISIBLE
+//            tvSelectVehicleType.visibility = if (Data.autoData.getServiceTypeSelected().isOutstation()) View.GONE else View.VISIBLE
+            tvSelectRoute.visibility = if (Data.autoData.getServiceTypeSelected().isOutStation()) View.VISIBLE else View.GONE
+            tvOneWay.visibility = if (Data.autoData.getServiceTypeSelected().isOutStation()) View.VISIBLE else View.GONE
+            isOneWay = if (Data.autoData.getServiceTypeSelected().isOutStation()) 1 else -1
+            tvRoundTrip.visibility = if (Data.autoData.getServiceTypeSelected().isOutStation()) View.VISIBLE else View.GONE
+            tvSelectPackage.visibility = if (Data.autoData.getServiceTypeSelected().isOnDemand()) View.GONE else View.VISIBLE
+            rvPackages.visibility = if (Data.autoData.getServiceTypeSelected().isOnDemand()) View.GONE else View.VISIBLE
             updatePackagesAccRegionSelected(null)
             btSchedule.setText(if (!openSchedule) R.string.book else R.string.schedule)
             tvScheduleMessage.text = if (serviceType != null) Utils.trimHTML(Utils.fromHtml(serviceType!!.info)) else requireActivity().getString(R.string.schedule_ride_alert)
@@ -303,12 +295,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         var region = if (regionS == null) (requireActivity() as HomeActivity).getSlidingBottomPanel().requestRideOptionsFragment.regionSelected else regionS
         if (region!!.packages != null
                 && region.packages.size > 0) {
-            for (pc in region.packages) {
-                pc.selected = false
-            }
             if((Data.autoData == null || Data.autoData.serviceTypeSelected == null
-                    || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))) {
-                region.packages[0].selected = true
+                    || !Data.autoData.serviceTypeSelected.isOutStation())) {
                 this@ScheduleRideFragment.selectedPackage = region.packages[0]
             }
         }
@@ -322,6 +310,10 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                             this@ScheduleRideFragment.selectedPackage = selectedPackage
                             scheduleRideVehicleListAdapter.notifyDataSetChanged()
                             getFareEstimate()
+                        }
+
+                        override fun getSelectedRentalPackage(): Package? {
+                            return this@ScheduleRideFragment.selectedPackage
                         }
                     })
             rvPackages.adapter = packagesAdapter
@@ -431,7 +423,6 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
             searchResultPickup = searchResult
         } else {
             tvDestination.text = searchResult.getNameForText(activity)
-            tvScheduleDest.text = searchResult.getNameForText(activity)
             searchResultDestination = searchResult
         }
 //        getFareEstimate()
@@ -486,23 +477,23 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     }
 
                     override fun onNoRetry() {
-                        tvFareEstimate.visibility = View.GONE
-                        viewInnerDrop.visibility = View.VISIBLE
+                        tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onRetry() {
-                        tvFareEstimate.visibility = View.GONE
-                        viewInnerDrop.visibility = View.VISIBLE
+                        tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onFareEstimateFailure() {
-                        tvFareEstimate.visibility = View.GONE
-                        viewInnerDrop.visibility = View.VISIBLE
+                        tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
 
                     override fun onDirectionsFailure() {
-                        tvFareEstimate.visibility = View.GONE
-                        viewInnerDrop.visibility = View.VISIBLE
+                        tvFareEstimate?.visibility = View.GONE
+                        viewInnerDrop?.visibility = View.VISIBLE
                     }
                 })
             }
@@ -515,7 +506,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
 
     }
     private fun getFareEstimate() {
-        if(searchResultPickup != null && searchResultDestination != null && Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type)) {
+        if(searchResultPickup != null && searchResultDestination != null && selectedPackage != null && Data.autoData.getServiceTypeSelected().isOutStation()) {
 //            tvFareEstimate.visibility = View.VISIBLE
 //            viewInnerDrop.visibility = View.VISIBLE
             getDirectionsAndComputeFare(searchResultPickup!!.latLng, searchResultPickup!!.address, searchResultDestination!!.latLng, searchResultDestination!!.address)
@@ -540,7 +531,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         if (searchResultPickup == null) {
             product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_pickup_location))
             return
-        } else if ((!Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type) && searchResultDestination == null)) {
+        } else if ((!Data.autoData.getServiceTypeSelected().isRental() && searchResultDestination == null)) {
             product.clicklabs.jugnoo.utils.Utils.showToast(activity, getString(R.string.set_your_destination_location))
             return
         }
@@ -550,9 +541,8 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
                     searchResultPickup!!, null, null)
             return
         }
-//        if (serviceType == null && (Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type) || Data.autoData.getServiceTypeSelected().supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type))) {
-        if (openSchedule && (Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.RENTAL.type)
-                        || Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))) {
+//        if (serviceType == null && (Data.autoData.getServiceTypeSelected().isOutstation() || Data.autoData.getServiceTypeSelected().isRental())) {
+        if (openSchedule && (Data.autoData.serviceTypeSelected.isRentalOrOutstation())) {
 
             scheduleRide((activity as HomeActivity).selectedRegionForScheduleRide)
 
@@ -576,7 +566,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
     }
 
     private fun serviceTypeNotRental() =
-//            (serviceType == null || serviceType!!.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))
+//            (serviceType == null || serviceType!!.isOutstation())
             (serviceType == null)
 
     companion object {
@@ -645,6 +635,11 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         if (view != null) {
             setSelectedRegionData(false)
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
+
+            this@ScheduleRideFragment.selectedPackage = null
+
+            tvFareEstimate.visibility = View.GONE
+            viewInnerDrop.visibility = View.GONE
         }
     }
 
@@ -805,8 +800,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         }
         if(oneWayPackages.size > 0
                 && (Data.autoData == null || Data.autoData.serviceTypeSelected == null
-                        || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))){
-            oneWayPackages[0].selected = true
+                        || !Data.autoData.serviceTypeSelected.isOutStation())){
             selectedPackage = oneWayPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
         } else {
@@ -851,8 +845,7 @@ class ScheduleRideFragment : Fragment(), Constants, ScheduleRideVehicleListAdapt
         }
         if(roundTripPackages.size > 0
                 && (Data.autoData == null || Data.autoData.serviceTypeSelected == null
-                        || !Data.autoData.serviceTypeSelected.supportedRideTypes!!.contains(ServiceTypeValue.OUTSTATION.type))){
-            roundTripPackages[0].selected = true
+                        || !Data.autoData.serviceTypeSelected.isOutStation())){
             selectedPackage = roundTripPackages[0]
             scheduleRideVehicleListAdapter.notifyDataSetChanged()
         } else {

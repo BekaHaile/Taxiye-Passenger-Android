@@ -330,7 +330,27 @@
     <color name="otp_text_color">@color/text_color</color>
     <color name="background_no_net">@null</color>
     <color name="grey_f0">#f0f0f0</color>
+    <color name="bgColor">#f2f2f2</color>
 
     <color name="grey_alpha_66">#44666666</color>
+
+    <color name="white_light_dark">#EEEEEE</color>
+    <color name="white_more_translucent">#66FFFFFF</color>
+    <color name="grey_dark_button_alpha">#BB54585D</color>
+    <color name="grey_dark_button">#54585D</color>
+    <color name="purple_light">#f2efff</color>
+    <color name="ride_details">#f8f8f8</color>
+    <color name="ride_list_date">#919191</color>
+    <color name="ride_list_address">#515151</color>
+    <color name="ride_star">#f7d16d</color>
+
+
+    <color name="test_col">#8b9fd4</color>
+    <color name="promo_btn">#525252</color>
+    <color name="invite_earn_text">#515151</color>
+
+    <color name="grey_new">#f2f4f5</color>
+    <color name="otp_progress_bar">#ff3f3f</color>
+    <color name="referral_text_color">#404040</color>
 
 </resources>

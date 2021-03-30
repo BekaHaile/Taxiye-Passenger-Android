@@ -813,8 +813,8 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 currentVehicleTypePos = 0;
             }
         }
-        vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
         if(vehicleInfoList != null && !vehicleInfoList.isEmpty()){
+			vehicleType = vehicleInfoList.get(currentVehicleTypePos).getType();
             if (vehicleTypeAdapterMenus == null) {
 
                 vehicleTypeAdapterMenus = new VehicleTypeAdapterMenus((FreshActivity) activity, vehicleInfoList, currentVehicleTypePos, new VehicleTypeAdapterMenus.OnItemSelectedListener() {
@@ -849,6 +849,12 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                 rvVehicles.setVisibility(GONE);
                 textViewChooseVehicle.setVisibility(View.GONE);
             }
+			rvVehicles.post(new Runnable() {
+				@Override
+				public void run() {
+					rvVehicles.smoothScrollToPosition(currentVehicleTypePos);
+				}
+			});
 
         }
         else {
@@ -857,12 +863,6 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
             rvVehicles.setVisibility(View.GONE);
         }
 
-        rvVehicles.post(new Runnable() {
-            @Override
-            public void run() {
-                rvVehicles.smoothScrollToPosition(currentVehicleTypePos);
-            }
-        });
     }
 
     private void setSliderCompleteState() {
@@ -1844,7 +1844,7 @@ public class FreshCheckoutMergedFragment extends Fragment implements GAAction, D
                                                     activity.updateMenu();
                                                 }
 
-                                            }).showUserDebtDialog(userDebt, message1);
+                                            }).showUserDebtDialog(userDebt, message1,activity.getPaymentOption().getOrdinal());
                                 } else if (ApiResponseFlags.INSUFFICIENT_BALANCE.getOrdinal() == flag) {
                                     DialogPopup.alertPopupWithListener(activity, "", message, new View.OnClickListener() {
                                         @Override

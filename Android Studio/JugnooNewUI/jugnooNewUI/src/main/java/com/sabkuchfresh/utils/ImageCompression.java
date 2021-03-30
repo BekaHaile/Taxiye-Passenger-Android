@@ -1,4 +1,5 @@
 package com.sabkuchfresh.utils;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,13 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
+import android.os.AsyncTask;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import io.fabric.sdk.android.services.concurrency.AsyncTask;
 /**
  * Created by Parminder Singh on 29/09/16.
  */

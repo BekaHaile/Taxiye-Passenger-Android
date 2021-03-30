@@ -47,9 +47,15 @@ public class TransactionInfo {
     @SerializedName("currency")
     @Expose
     private String currency;
+    @SerializedName("other_party_name")
+    @Expose
+    public String otherPartyName;
+    @SerializedName("other_party_phone_no")
+    @Expose
+    public String otherPartyPhoneNo;
 
     public TransactionInfo(int transactionId, int transactionType, String time, String date, String transactionText,
-                           double amount, int paytm, int mobikwik, int freecharge, int mpesa, int pay, int status, String name, String currency) {
+                           double amount, int paytm, int mobikwik, int freecharge, int mpesa, int pay, int status, String name, String currency, String otherPartyName, String otherPartyPhoneNo) {
         this.transactionId = transactionId;
         this.transactionType = transactionType;
         this.time = time;
@@ -64,6 +70,8 @@ public class TransactionInfo {
         this.status = status;
         this.name = name;
         this.currency = currency;
+        this.otherPartyName = otherPartyName;
+        this.otherPartyPhoneNo = otherPartyPhoneNo;
     }
 
     @Override

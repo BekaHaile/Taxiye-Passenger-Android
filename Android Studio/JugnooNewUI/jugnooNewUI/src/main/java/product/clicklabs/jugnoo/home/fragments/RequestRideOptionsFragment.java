@@ -4,10 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +20,19 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
@@ -319,10 +321,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                     .getPaymentOptionAccAvailability(Data.autoData.getPickupPaymentOption());
             Region region = (regions.size() > 1) ? activity.slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                     : (regions.size() > 0 ? regions.get(0) : null);
-            if (region != null && region.getRestrictedPaymentModes().size() > 0) {
+            if (region != null && (region.getRestrictedPaymentModes().size() > 0|| region.getRestrictedCorporates().size() > 0)) {
                 if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
                     Data.autoData.setPickupPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(selectedPaymentOption, activity));
-                } else {
+                } else if(selectedPaymentOption== PaymentOption.CORPORATE.getOrdinal()&&region.getRestrictedCorporates().contains(CorporatesAdapter.Companion.getSelectedCorporateBusinessId())){
+                    Data.autoData.setPickupPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(selectedPaymentOption, activity));
+                }else {
 					Data.autoData.setPickupPaymentOption(selectedPaymentOption);
 				}
             } else {
@@ -387,7 +391,12 @@ public class RequestRideOptionsFragment extends Fragment implements Constants, G
                 regionSelected = regions.get(0);
                 updateSupplyUI(regions.size());
             } else{
-                activity.forceFarAwayCity();
+            	if(Data.autoData.getServiceTypeSelected() != null
+						&& Data.autoData.getServiceTypeSelected().isRentalOrOutstation()){
+					activity.setServiceAvailablityUI(Data.autoData.getFarAwayCity());
+				} else {
+					activity.forceFarAwayCity();
+				}
             }
 
             activity.updateFareEstimateHoverButton();

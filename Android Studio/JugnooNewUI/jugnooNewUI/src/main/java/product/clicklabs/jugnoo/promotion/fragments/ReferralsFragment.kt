@@ -210,7 +210,8 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
                 }
                 if(reinviteUsersEnabled == 1){
                     relativeLayoutMultipleTab.visibility = View.VISIBLE
-                    rlReinvite.visibility = View.VISIBLE
+//                    rlReinvite.visibility = View.VISIBLE
+                    rlReinvite.visibility = View.GONE
                 }
                 if(Data.userData.getcToDReferralEnabled() == 1){
                     relativeLayoutMultipleTab.visibility = View.VISIBLE

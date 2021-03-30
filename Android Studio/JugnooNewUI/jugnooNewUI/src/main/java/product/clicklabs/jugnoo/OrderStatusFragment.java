@@ -74,6 +74,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.BillSummaryModel;
+import product.clicklabs.jugnoo.retrofit.model.Deliveries;
 import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -157,6 +158,8 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
     LinearLayout llDeliveryPlaceFeed;
     @BindView(R.id.tvDeliveryToValFeed)
     TextView tvDeliveryToValFeed;
+    @BindView(R.id.llMultipleDelivery)
+    LinearLayout llMultipleDelivery;
     @BindView(R.id.tvAmountValue)
     TextView tvAmountValue;
     @BindView(R.id.ivPaidVia)
@@ -549,11 +552,16 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
 
                                     setFeedOrderData(datum1, activity);
                                     if(datum1.getIsPaid()==1){
+                                        cvPaymentMethod.setVisibility(View.VISIBLE);
                                         setPaymentModes(datum1);
                                     } else {
+                                        cvPaymentMethod.setVisibility(View.GONE);
                                         tvAmountPayableVal.setText(com.sabkuchfresh.utils.Utils.formatCurrencyAmount(0, currencyCode, currency));
                                     }
                                     openTrackOrderFragment();
+                                    if(datum1.isPendingFeedback()||(datum1.getFeedBackData()!=null&&datum1.getFeedBackData().getShowPaymentOption()==1)){
+                                        openFeedBackFragment();
+                                    }
                                 } else {
                                     retryDialogCancelOrderOrOrderStatusFeed(message, DialogErrorType.SERVER_ERROR);
                                 }
@@ -675,6 +683,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             llDeliveryPlaceFeed.setVisibility(View.GONE);
             tvDeliveryToValFeed.setText(datum.getToAddress());
         }
+        setMultipleDeliveryUi(datum.getDeliveries());
         tvTaskDetails.setText(datum.getDetails());
 
 
@@ -765,7 +774,26 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
             }
         }
     }
-
+    private void setMultipleDeliveryUi(ArrayList<Deliveries> deliveryList){
+        if(deliveryList!=null && deliveryList.size()>1){
+            llDeliveryPlaceFeed.setVisibility(View.GONE);
+            tvDeliveryPlace.setVisibility(View.GONE);
+            tvDeliveryToValFeed.setVisibility(View.GONE);
+            llMultipleDelivery.removeAllViews();
+            for(Deliveries delivery:deliveryList){
+                View view=LayoutInflater.from(activity).inflate(R.layout.list_item_feed_restaurant_suggestion,null);
+                SearchResult searchResultTo = homeUtil.getNearBySavedAddress(activity,
+                        new LatLng(delivery.getLatitude(), delivery.getLongitude()),
+                        false);
+                if(searchResultTo!=null){
+                    ((TextView)view.findViewById(R.id.tvRestAddress)).setText(searchResultTo.getAddress());
+                    ((TextView)view.findViewById(R.id.tvRestName)).setText(searchResultTo.getNameForText(activity));
+                }else
+                    ((TextView)view.findViewById(R.id.tvRestAddress)).setText(delivery.getAddress());
+                llMultipleDelivery.addView(view);
+            }
+        }
+    }
     private void setStripeData(HistoryResponse.Datum datum, Activity activity) {
         ArrayList<DiscountType> stripeCardEntries = datum.getStripeCardsAmount();
         if(stripeCardEntries.size() > 0){
@@ -976,6 +1004,9 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
                                     tvItemsQuantityVal.setText(String.valueOf(subItemsOrders.size()));
                                     setStatusResponse(historyResponse);
                                     openTrackOrderFragment();
+                                    if(datum1.isPendingFeedback()||(datum1.getFeedBackData()!=null&&datum1.getFeedBackData().getShowPaymentOption()==1)){
+                                        openFeedBackFragment();
+                                    }
                                 } else {
                                     retryDialogOrderData(message, DialogErrorType.SERVER_ERROR);
                                 }

@@ -23,11 +23,28 @@
             android:visibility="@integer/show_splash_bg"
             android:tag="mwar" />
         <ImageView
+            android:id="@+id/ivTopBG"
             android:layout_width="match_parent"
             android:layout_height="@dimen/px_160"
             android:src="@drawable/splash_top_bg"
             android:visibility="@integer/show_login_top_bg"
             android:tag="mwar" />
+
+        <TextView
+            android:id="@+id/tvChangeLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_language"
+            android:textSize="@dimen/text_size_32"
+            android:layout_marginEnd="40px"
+            android:padding="10px"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/background_white_theme_color_rounded_bordered"
+            android:layout_below="@+id/ivTopBG"
+            android:textColor="@color/layout_login_signup_text_color"
+            android:layout_marginTop="@dimen/px_40"
+            android:layout_gravity="center_horizontal"
+            app:typekitFont="maven"/>
 
 
         <LinearLayout
@@ -45,7 +62,7 @@
                 <ImageView
                     android:id="@+id/imageViewJugnooLogo"
                     android:layout_width="@dimen/login_logo_width"
-                    android:layout_height="@dimen/splash_logo_height"
+                    android:layout_height="@dimen/login_logo_height"
                     android:layout_centerHorizontal="true"
                     android:src="@drawable/login_logo_icon_drawable"
                     android:focusable="true"
