@@ -90,7 +90,7 @@ import product.clicklabs.jugnoo.BuildConfig;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.GCMIntentService;
-import product.clicklabs.jugnoo.HippoCallStub;
+//import product.clicklabs.jugnoo.HippoCallStub;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
@@ -651,7 +651,7 @@ public class Utils implements GAAction, GACategory{
 //            }
 
             builder.setWhen(when);
-            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.notification_icon));
+            builder.setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.ic_launcher));
             builder.setSmallIcon(R.mipmap.notification_icon);
             builder.setContentIntent(intent);
 
@@ -926,7 +926,7 @@ public class Utils implements GAAction, GACategory{
 								ArrayList<String> userUniqueKeys = new ArrayList<>();
 								userUniqueKeys.add(Data.autoData.getAssignedDriverInfo().getUserIdentifier());
 
-								HippoCallStub.init();
+//								HippoCallStub.init();
 
 								HippoConfig.getInstance().startCall(activity, callType,
 										Data.autoData.getcEngagementId(),
@@ -1121,6 +1121,9 @@ public class Utils implements GAAction, GACategory{
 			currencyCode = MyApplication.getInstance().getString(R.string.default_currency);
 		} else if(currencyCode.equalsIgnoreCase("BMD") || currencyCode.equalsIgnoreCase("TTD") || currencyCode.equalsIgnoreCase("USD")){
 			return "$";
+		}
+		else if(currencyCode.equalsIgnoreCase("ETB")){
+			return "ETB";
 		}
 		Currency currency = Currency.getInstance(currencyCode);
 		return currency.getSymbol();

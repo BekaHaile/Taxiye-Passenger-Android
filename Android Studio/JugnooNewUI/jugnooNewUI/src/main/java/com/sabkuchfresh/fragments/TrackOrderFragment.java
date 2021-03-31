@@ -33,7 +33,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.gson.Gson;
 import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
@@ -49,7 +48,6 @@ import java.util.TimerTask;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import product.clicklabs.jugnoo.ChatActivity;
 import product.clicklabs.jugnoo.Constants;
@@ -57,14 +55,13 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
-import product.clicklabs.jugnoo.apis.ApiGoogleDirectionWaypoints;
 import product.clicklabs.jugnoo.base.BaseFragment;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
+import product.clicklabs.jugnoo.datastructure.MapsApiSources;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.directions.JungleApisImpl;
 import product.clicklabs.jugnoo.retrofit.RestClient;
-import product.clicklabs.jugnoo.retrofit.model.GoogleDirectionWayPointsResponse;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.CustomMapMarkerCreator;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -481,17 +478,16 @@ openChatScreen();
 							final int status = jObj.optInt(Constants.KEY_STATUS, EngagementStatus.STARTED.getOrdinal());
 							final String message = jObj.optString(Constants.KEY_MESSAGE, getString(R.string.some_error_occured_try_again));
 							final LatLng latLngDriver = new LatLng(latitude, longitude);
-							if(latLngCurr == null){
-								latLngCurr = latLngDriver;
-							}
 
 							ArrayList<LatLng> latLngsWayPoints = new ArrayList<>();
-							latLngsWayPoints.add(latLngCurr);
+							if(latLngCurr == null){
+								latLngCurr = latLngDriver;
+							} else {
+								latLngsWayPoints.add(latLngCurr);
+							}
 							latLngsWayPoints.add(latLngDriver);
-//							latLngsWayPoints.add(deliveryLatLng);
-							Pair<List<LatLng>, String> pair = apiGoogleDirectionWaypoints.setData(latLngsWayPoints, false).syncHit();
-							final List<LatLng> list = pair.first;
-							final String result = pair.second;
+							JungleApisImpl.DirectionsResult directionsResult = JungleApisImpl.INSTANCE.getDirectionsWaypointsPathSync(pickupLatLng, deliveryLatLng, latLngsWayPoints, MapsApiSources.CUSTOMER_TRACK_ORDER, false, false);
+							final List<LatLng> list = directionsResult.getLatLngs();
 							activity.runOnUiThread(new Runnable() {
 
 								@Override
@@ -568,7 +564,7 @@ openChatScreen();
 											}
 
 											//hard coding
-											positionNearCurr = 0; positionNearNew = list.size()-1;
+//											positionNearCurr = 0; positionNearNew = list.size()-1;
 
 											polylineOptions1.add(pickupLatLng);
 											for (int j = 0; j <= positionNearCurr; j++) {
@@ -581,7 +577,7 @@ openChatScreen();
 											polylineOptions2.add(deliveryLatLng);
 
 											// show delivery route fixed to 0 for not showing any path
-											showDeliveryRoute = 0;
+//											showDeliveryRoute = 0;
 
 											//to animate driver between curr and new points
 											if (positionNearNew > positionNearCurr) {
@@ -615,17 +611,12 @@ openChatScreen();
 													pathColor = Color.TRANSPARENT;
 													untrackedPathColor = Color.TRANSPARENT;
 												}
-												boolean animateRoute = false;
-												if(!animateRoute) {
-													PolylineOptions polylineOptionsUntracked = new PolylineOptions().color(untrackedPathColor).width(pathWidth).geodesic(true);
-													for (LatLng latLng : latLngsAnimateDriver) {
-														polylineOptionsUntracked.add(latLng);
-													}
-													polylineUntracked = googleMap.addPolyline(polylineOptionsUntracked);
+												for (LatLng latLng : latLngsAnimateDriver) {
+													polylineOptions1.add(latLng);
 												}
 
 												MarkerAnimation.animateMarkerOnList(markerDriver, latLngsAnimateDriver,
-														new LatLngInterpolator.LinearFixed(), animateRoute, googleMap,
+														new LatLngInterpolator.LinearFixed(), false, googleMap,
 														pathColor,
 														untrackedPathColor,
 														pathWidth, callbackAnim, fastDuration, 9000);
@@ -653,23 +644,12 @@ openChatScreen();
 
 							try {
 								if (TextUtils.isEmpty(eta)) {
-									JungleApisImpl.DistanceMatrixResult distanceMatrixResult = JungleApisImpl.INSTANCE.getDistanceMatrix(latLngDriver, deliveryLatLng);
+									double distance = MapUtils.distance(latLngDriver, deliveryLatLng) * 1.5D;
+									double timeInMin = (distance / 1000.0D) * 2;
 
-									setEtaText(String.valueOf((int)(distanceMatrixResult.getTimeValue()/60)),getString(R.string.min));
-
-
-
-//									GoogleDirectionWayPointsResponse googleDirectionWayPointsResponse = gson.fromJson(result, GoogleDirectionWayPointsResponse.class);
-//									Log.i("googleDirectionWayPointsResponse", "=" + googleDirectionWayPointsResponse);
-//									setEtaText(getEtaFromResponse(latLngDriver, googleDirectionWayPointsResponse));
+									setEtaText(String.valueOf((int)(timeInMin)),getString(R.string.min));
 								} else {
-								/*	long etaLong = 10;
-									try {
-										etaLong = Long.getLong(eta);
-									} catch (Exception e) {
-										e.printStackTrace();
-									}*/
-									setEtaText(null,null);
+									setEtaText(eta,getString(R.string.min));
 								}
 							} catch (Exception e) {
 								e.printStackTrace();
@@ -685,7 +665,6 @@ openChatScreen();
 		return timerTask;
 	}
 
-	private Polyline polylineUntracked;
 	private MarkerAnimation.CallbackAnim callbackAnim = new MarkerAnimation.CallbackAnim() {
 		@Override
 		public void onPathFound(List<LatLng> latLngs) {
@@ -702,16 +681,10 @@ openChatScreen();
 
 		@Override
 		public void onAnimComplete() {
-			if(polylineUntracked != null){
-				polylineUntracked.remove();
-			}
 		}
 
 		@Override
 		public void onAnimNotDone() {
-			if(polylineUntracked != null){
-				polylineUntracked.remove();
-			}
 		}
 	};
 
@@ -785,35 +758,12 @@ openChatScreen();
         }
 	}
 
-	private Handler handler = new Handler();
 
 	private LatLngBounds getMapLatLngBounds(LatLngBounds.Builder builder){
 		return MapLatLngBoundsCreator.createBoundsWithMinDiagonal(builder, 100);
 	}
 
 
-	private ApiGoogleDirectionWaypoints apiGoogleDirectionWaypoints = new ApiGoogleDirectionWaypoints();
-	private Gson gson = new Gson();
-
-	private long getEtaFromResponse(LatLng latLng, GoogleDirectionWayPointsResponse pointsResponse){
-		long eta = 0L;
-		try {
-			eta = (long) pointsResponse.getRoutes().get(0).getLegs().get(0).getDuration().getValue();
-			double distance = Double.MAX_VALUE;
-			for(GoogleDirectionWayPointsResponse.Step step : pointsResponse.getRoutes().get(0).getLegs().get(0).getSteps()){
-				double distI = MapUtils.distance(latLng, step.getStartLocation().getLatLng());
-				if(distI < distance){
-					eta = eta - (long)step.getDuration().getValue();
-					distance = distI;
-				} else {
-					break;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return eta / 60L;
-	}
 
 	public void setPaddingZero(){
 		if(googleMap != null) {

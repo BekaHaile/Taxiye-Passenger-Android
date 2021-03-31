@@ -27,6 +27,7 @@ import product.clicklabs.jugnoo.retrofit.model.HistoryResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardActivityResponse;
 import product.clicklabs.jugnoo.retrofit.model.LeaderboardResponse;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.NegativeWalletBalanceResponse;
 import product.clicklabs.jugnoo.retrofit.model.NotificationInboxResponse;
 import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.ReferralClaimGift;
@@ -723,7 +724,9 @@ public interface ApiService {
     @POST("/customer/delete_user_driver_mapping")
     void deleteUserDriverMapping(@FieldMap Map<String, String> params, Callback<JsonObject> callback);
 
-
+    @FormUrlEncoded
+    @POST("/driver/send_credits")
+    Response shareCredits(@FieldMap Map<String, String> params);
 
     @POST("/customer/upload_document")
     void uploadVerificationDocuments(@Body MultipartTypedOutput params,
@@ -736,4 +739,20 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/customer/delete_document")
     void deleteDocument(@FieldMap Map<String,String> params, Callback<UploadDocumentResponse> callback);
+	@FormUrlEncoded
+	@POST("/deactivate_account")
+	void deleteAccount(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/request_delete_account")
+	void requestDeleteAccount(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+	@FormUrlEncoded
+	@POST("/remove_delete_account_request")
+	void cancelDeleteAccountRequest(@FieldMap Map<String, String> params, Callback<FeedCommonResponse> callback);
+
+	@FormUrlEncoded
+    @POST("/settle_negative_wallet_balance")
+    void settleNegativeWalletBalance(@FieldMap Map<String, String> params, Callback<NegativeWalletBalanceResponse> callback);
+
 }

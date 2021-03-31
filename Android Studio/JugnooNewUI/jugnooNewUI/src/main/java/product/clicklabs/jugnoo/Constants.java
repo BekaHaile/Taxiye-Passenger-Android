@@ -1131,6 +1131,7 @@ public interface Constants {
 	String KEY_JUNGLE_LNG = "lng";
     String KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER = "jungle_fm_api_key_android_customer";
     String KEY_WAYPOINTS = "waypoints";
+	String KEY_JUNGLE_WAYPOINTS = "waypoints";
 
 	String JUNGLE_JSON_OBJECT = "{\""+KEY_JUNGLE_OPTIONS+"\":0}";
     String KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT = "customer_remove_pickup_address_hit";
@@ -1142,7 +1143,7 @@ public interface Constants {
 	String KEY_C_2_D_REFERRAL_INFO = "c2d_referral_info";
 	String KEY_C_2_D_REFERRAL_DETAILS = "c2d_referral_details";
     String KEY_DELIVERIES = "deliveries";
-    String KEY_NOTES = "key_notes";
+    String KEY_NOTES = "notes";
     String KEY_IS_ONE_WAY = "is_oneway";
     String KEY_IS_CORPORATE = "is_corporate";
     String KEY_DETAILS = "details";
@@ -1235,4 +1236,25 @@ public interface Constants {
 	String KEY_IMAGE_URL_SMALL = "image_url_small";
 	String KEY_IMAGE_URL_STRIP = "image_url_strip";
 	String KEY_LIST = "list";
+	String KEY_OTHER_USER_NAME = "other_user_name";
+	String KEY_OTHER_USER_PHONE_NO = "other_user_phone_no";
+
+	String KEY_USER_UNIQUE_KEY = "user_unique_key";
+	String KEY_PAYMENT_OPTION = "payment_option";
+	String KEY_REGION_NAME = "region_name";
+
+	String MARKER_TITLE_DROP_LOCATION = "marker_title_drop_location";
+	String MARKER_TITLE_PICKUP_LOCATION = "marker_title_pickup_location";
+	String KEY_FEEDBACK = "feedback";
+	String KEY_IMAGE_BADGE_IDS = "image_badge_ids";
+	String KEY_TEXT_BADGE_IDS = "text_badge_ids";
+	String KEY_FEEDBACK_REASONS = "feedback_reasons";
+
+	String KEY_SCREEN_MODE = "screen_mode";
+    String KEY_DROP_LOCATION_CHANGED_BY_DRIVER = "drop_location_changed_by_driver";
+    String KEY_IS_FOR_C2D = "isForC2D";
+    String KEY_SHOW_PROMOTIONAL_MESSAGE_PREFERENCES = "show_promotional_message_preferences";
+    String KEY_REASON = "reason";
+    String KEY_DEACTIVATE_ACCOUNT_ENABLED = "deactivate_account_enabled";
+    String KEY_REQUESTED_FOR_ACCOUNT_DELETION = "requested_for_account_deletion";
 }

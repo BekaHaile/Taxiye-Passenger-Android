@@ -9,11 +9,13 @@ import android.text.TextUtils;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.maps.model.LatLng;
+import product.clicklabs.jugnoo.BuildConfig;
 import com.hippo.CaptureUserData;
 import com.hippo.HippoColorConfig;
 import com.hippo.HippoConfig;
 import com.hippo.HippoConfigAttributes;
 import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
+import com.sabkuchfresh.utils.AppConstant;
 
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -106,7 +108,7 @@ public class Data {
 
 
     public static int TRANSFER_FROM_JEANIE = 0;
-    public static int AppType = 1;
+    public static int AppType = AppConstant.ApplicationType.DELIVERY_CUSTOMER;
     public static boolean isOrderCancelled = false;
     public static boolean isSupportRideIssueUpdated = false;
     public static String currentActivity = null;
@@ -217,7 +219,6 @@ public class Data {
 
             Prefs.with(context).remove(Constants.SP_ANALYTICS_LAST_MESSAGE_READ_TIME);
             Prefs.with(context).remove(Constants.SP_EMERGENCY_MODE_ENABLED);
-            Prefs.with(context).remove(Constants.SP_USER_ID);
 
             Prefs.with(context).remove(SPLabels.UPLOAD_CONTACT_NO_THANKS);
             Prefs.with(context).remove(SPLabels.APP_MONITORING_TRIGGER_TIME);
@@ -589,7 +590,7 @@ public class Data {
                     .build();
             HippoConfig.initHippoConfig(context, configAttributes);
         }
-		HippoCallStub.init();
+//		HippoCallStub.init();
     }
 
     private static HippoColorConfig getHippoColorConfig(){

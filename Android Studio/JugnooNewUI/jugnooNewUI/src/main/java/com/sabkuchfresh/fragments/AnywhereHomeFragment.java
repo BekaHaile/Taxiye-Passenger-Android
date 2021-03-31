@@ -32,6 +32,7 @@ import android.widget.TimePicker;
 import com.hippo.HippoConfig;
 import com.picker.image.model.ImageEntry;
 import com.picker.image.util.Picker;
+import com.sabkuchfresh.adapters.DeliveriesAdapter;
 import com.sabkuchfresh.adapters.FatafatImageAdapter;
 import com.sabkuchfresh.adapters.VehicleTypeAdapterFeed;
 import com.sabkuchfresh.analytics.GAAction;
@@ -46,6 +47,7 @@ import com.sabkuchfresh.home.CallbackPaymentOptionSelector;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.utils.DatePickerFragment;
 import com.sabkuchfresh.pros.utils.TimePickerFragment;
+import com.sabkuchfresh.retrofit.model.DeliveryAddress;
 import com.sabkuchfresh.retrofit.model.feed.DynamicDeliveryResponse;
 import com.sabkuchfresh.retrofit.model.feed.NearbyDriversResponse;
 import com.sabkuchfresh.retrofit.model.feed.OrderAnywhereResponse;
@@ -64,10 +66,16 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -78,12 +86,16 @@ import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.apis.ApiFetchWalletBalance;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
+import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.PromoCoupon;
 import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
+import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.PaymentOptionDialog;
 import product.clicklabs.jugnoo.home.dialogs.PromoCouponDialog;
@@ -95,6 +107,7 @@ import product.clicklabs.jugnoo.utils.KeyboardLayoutListener;
 import product.clicklabs.jugnoo.utils.LinearLayoutManagerForResizableRecyclerView;
 import product.clicklabs.jugnoo.utils.Log;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.wallet.UserDebtDialog;
 import product.clicklabs.jugnoo.wallet.WalletCore;
 import product.clicklabs.jugnoo.widgets.slider.PaySlider;
 import retrofit.mime.MultipartTypedOutput;
@@ -103,6 +116,7 @@ import retrofit.mime.TypedString;
 
 import static android.app.Activity.RESULT_OK;
 import static android.view.View.GONE;
+import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
 
 /**
  * Created by Parminder Saini on 09/10/17.
@@ -130,6 +144,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     EditText edtTaskDescription;
     @BindView(R.id.tv_pickup_address)
     TextView tvPickupAddress;
+    @BindView(R.id.etPickupPhone)
+    EditText etPickupPhone;
+    @BindView(R.id.etPickupName)
+    EditText etPickupName;
     @BindView(R.id.tv_delivery_address)
     TextView tvDeliveryAddress;
     @BindView(R.id.rb_asap)
@@ -140,6 +158,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     CardView cvPickupAddress;
     @BindView(R.id.cv_delivery_address)
     CardView cvDeliveryAddress;
+    @BindView(R.id.rvDeliveries)
+    RecyclerView rvDeliveries;
     @BindView(R.id.rlDeliveryCharge)
     RelativeLayout rlDeliveryCharge;
     AnywhereDeliveryChargesDialog anywhereDeliveryChargesDialog;
@@ -153,8 +173,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     TextView tvPromoError;
     @BindView(R.id.rvPromo)
     RelativeLayout relativeLayout;
-    @BindView(R.id.sv_anywhere)
-    ScrollView svAnywhere;
+    @BindView(R.id.nsv_anywhere)
+    NestedScrollView nsvAnywhere;
     @BindView(R.id.cvUploadImages)
     CardView cvUploadImages;
     @BindView(R.id.cvImages)
@@ -180,6 +200,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
     private SearchResult pickUpAddress;
     private SearchResult deliveryAddress;
+    public ArrayList<SearchResult> deliveries= new ArrayList<>();
     private ArrayList<PromoCoupon> promoCoupons;
     private boolean isAsapSelected;
     private Runnable enableStRbRunnable = new Runnable() {
@@ -195,6 +216,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
     private FatafatTutorialDialog mFatafatTutorialDialog;
     private DynamicDeliveryResponse.ReferalCode currentPromoApplied;
     private VehicleTypeAdapterFeed vehicleTypeAdapterFeed;
+    private DeliveriesAdapter deliveriesAdapter;
     private int currentVehicleTypePos = -1;
     private boolean isPickUpSet = false;
     private int vehicleType = -1;
@@ -291,6 +313,15 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         textColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color));
         textHintColorSpan = new ForegroundColorSpan(ContextCompat.getColor(activity, R.color.text_color_hint));
         isAsapSelected = true;
+
+        rvDeliveries.setLayoutManager(new LinearLayoutManagerForResizableRecyclerView(activity,
+                LinearLayoutManager.VERTICAL, false));
+        rvDeliveries.setItemAnimator(new DefaultItemAnimator());
+        rvDeliveries.setNestedScrollingEnabled(false);
+        if (deliveriesAdapter == null) {
+            deliveriesAdapter = new DeliveriesAdapter((FreshActivity) activity, deliveries);
+        }
+        rvDeliveries.setAdapter(deliveriesAdapter);
         setCurrentSelectedAddressToDelivery();
         defaultCurrencyFromResponse = activity.getString(R.string.default_currency);
         paySlider = new PaySlider(activity.llPayViewContainer) {
@@ -302,7 +333,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                         Utils.showToast(activity, activity.getString(R.string.please_enter_some_desc));
                         throw new Exception();
                     }
-                    if (deliveryAddress == null) {
+                    if (deliveries == null||deliveries.size()<1) {
                         Utils.showToast(activity, activity.getString(R.string.please_select_a_delivery_address));
                         throw new Exception();
                     }
@@ -388,6 +419,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         rvVehicles.setItemAnimator(new DefaultItemAnimator());
 
 
+
+
         mKeyBoardStateHandler = new KeyboardLayoutListener.KeyBoardStateHandler() {
 
             @Override
@@ -398,7 +431,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                 }
                 if (getView() != null && edtPromo.hasFocus()) {
-                    svAnywhere.fullScroll(ScrollView.FOCUS_DOWN);
+                    nsvAnywhere.fullScroll(ScrollView.FOCUS_DOWN);
                 }
             }
 
@@ -516,9 +549,41 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             }
         });
 
+        final String pendingFeedbackClientId = pendingFeedbackClientId();
+        if (pendingFeedbackClientId!=null) {
+
+            activity.getHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    activity.openFeedback(pendingFeedbackClientId);
+                }
+            }, 300);
+        }
+
         return rootView;
     }
+    @Nullable
+    private String pendingFeedbackClientId() {
 
+
+            if(Data.getDeliveryCustomerData()!=null && Data.getDeliveryCustomerData().getPendingFeedback()==1){
+                return Config.getDeliveryCustomerClientId();
+            }
+
+            if(Data.getFeedData()!=null && Data.getFeedData().getPendingFeedback()==1){
+                return Config.getFeedClientId();
+            }
+
+            if(Data.getMealsData()!=null && Data.getMealsData().getPendingFeedback()==1){
+                return Config.getMealsClientId();
+            }
+
+            if(Data.getFreshData()!=null && Data.getFreshData().getPendingFeedback()==1){
+                return Config.getFreshClientId();
+            }
+        return null;
+    }
     private void setCurrentSelectedAddressToDelivery() {
         SearchResult searchResult = HomeUtil.getNearBySavedAddress(activity, activity.getSelectedLatLng(), true);
         setAddress(true, searchResult);
@@ -573,10 +638,18 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
         TextView textViewToSet;
         ImageView imageViewToSet;
+        rvDeliveries.setVisibility(GONE);
         if (isDeliveryAddress) {
             textViewToSet = tvDeliveryAddress;
             imageViewToSet = ivDelAddressType;
-            deliveryAddress = searchResult;
+            setDeliveryAddress(searchResult);
+
+            if(searchResult!=null) {
+                if(deliveries.size()==Data.getFeedData().getMaxDeliveries())
+                    deliveries.remove(deliveries.size()-1);
+                deliveries.add(searchResult);
+                deliveriesAdapter.updateList(deliveries);
+            }
 
         } else {
             textViewToSet = tvPickupAddress;
@@ -589,7 +662,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
 
 
-        if (searchResult != null && searchResult.getName() != null) {
+        if (searchResult != null && searchResult.getName() != null&&(!isDeliveryAddress|| Data.getFeedData().getMaxDeliveries()==1)) {
             textViewToSet.setVisibility(View.VISIBLE);
 //          tvNoAddressAlert.setVisibility(View.GONE);
             String addressType;
@@ -615,12 +688,15 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         } else {
             imageViewToSet.setImageResource(R.drawable.ic_loc_other);
             if (isDeliveryAddress) {
-                deliveryAddress = null;
+                if(deliveries.isEmpty())
+                    setDeliveryAddress(null);
+                else
+                    setDeliveryAddress(deliveries.get(deliveries.size()-1));
                 textViewToSet.setText(activity.getResources().getString(R.string.add_delivery_address));
-
+                rvDeliveries.setVisibility(View.VISIBLE);
             } else {
                 pickUpAddress = null;
-                textViewToSet.setText(activity.getResources().getString(R.string.label_anywhere));
+                textViewToSet.setText(activity.getResources().getString(R.string.select_pickup_address));
 
             }
 
@@ -628,6 +704,10 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
 
 
+    }
+
+    public void setDeliveryAddress(SearchResult deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 
     @OnClick({R.id.cv_pickup_address, R.id.cv_delivery_address, R.id.rb_asap, R.id.rb_st, R.id.rlDeliveryCharge, R.id.tv_apply,
@@ -879,6 +959,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             params.addPart(Constants.KEY_FROM_LATITUDE, new TypedString("0"));
             params.addPart(Constants.KEY_FROM_LONGITUDE, new TypedString("0"));
         }
+        params.addPart(Constants.KEY_NAME, new TypedString(etPickupName.getText().toString()));
+        params.addPart(Constants.KEY_PHONE_NO, new TypedString(etPickupPhone.getText().toString()));
         if (isOrderViaCheckoutFragment || isOrderViaRestaurantDetail) {
             params.addPart(Constants.CATEGORY, new TypedString("1"));
             if (orderViaChatData != null)
@@ -891,9 +973,12 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         }
 
         params.addPart(Constants.KEY_PAYMENT_MODE,new TypedString(String.valueOf(paymentMethod)));
-        params.addPart(Constants.KEY_TO_ADDRESS, new TypedString(deliveryAddress.getAddress()));
-        params.addPart(Constants.KEY_TO_LATITUDE, new TypedString(String.valueOf(deliveryAddress.getLatitude())));
-        params.addPart(Constants.KEY_TO_LONGITUDE, new TypedString(String.valueOf(deliveryAddress.getLongitude())));
+
+
+//        params.addPart(Constants.KEY_TO_ADDRESS, new TypedString(deliveryAddress.getAddress()));
+//        params.addPart(Constants.KEY_TO_LATITUDE, new TypedString(String.valueOf(deliveryAddress.getLatitude())));
+//        params.addPart(Constants.KEY_TO_LONGITUDE, new TypedString(String.valueOf(deliveryAddress.getLongitude())));
+        params.addPart(Constants.KEY_DELIVERIES, new TypedString(getDeliveryAddressString()));
         params.addPart(Constants.KEY_IS_IMMEDIATE, new TypedString(isAsapSelected ? "1" : "0"));
         params.addPart(Constants.KEY_USER_IDENTIFIER, new TypedString(String.valueOf(Data.userData.userIdentifier)));
         if (currentPromoApplied != null) {
@@ -954,7 +1039,8 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                                     pickupAddress + "\n" +
                                     "\n" +
                                     getString(R.string.to_colon) + "\n" +
-                                    deliveryAddress.getAddress() + "\n" +
+//                                    deliveryAddress.getAddress() + "\n" +
+                                    (deliveries.size()>0?deliveries.get(0).getAddress():"") + "\n" +
                                     "\n" +
                                     getString(R.string.when_colon) + "\n" +
                                     deliveryTime;
@@ -1016,7 +1102,29 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 
                     @Override
                     public boolean onError(OrderAnywhereResponse feedCommonResponse, String message, int flag) {
-                        Utils.showToast(activity, message);
+                        if (ApiResponseFlags.USER_IN_DEBT.getOrdinal() == flag) {
+//                            final String message = jObj.optString(KEY_MESSAGE, "");
+//                            final double userDebt = jObj.optDouble(KEY_USER_DEBT, 0);
+                            Log.e("USER_IN_DEBT message", "=" + message);
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                            new UserDebtDialog(activity, Data.userData,
+                                                    new UserDebtDialog.Callback() {
+                                                        @Override
+                                                        public void successFullyDeducted(double userDebt) {
+//                                                            MyApplication.getInstance().getWalletCore().setDefaultPaymentOption(null);
+//                                                            setUserData();
+                                                        }
+                                                    }).showUserDebtDialog(feedCommonResponse.getUserDebt(), message,paymentMethod);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                        }
+//                        Utils.showToast(activity, message);
                         paySlider.setSlideInitial();
                         return true;
                     }
@@ -1036,7 +1144,36 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                     }
                 });
     }
+    public void addressDeleted(int pos){
+        activity.getAnywhereHomeFragment().deliveries.remove(pos);
+        if(deliveries.isEmpty())
+            setDeliveryAddress(null);
+        else
+            setDeliveryAddress(deliveries.get(activity.getAnywhereHomeFragment().deliveries.size()-1));
+        fetchDynamicDeliveryCharges(false, false, false);
+        deliveriesAdapter.notifyDataSetChanged();
+    }
+    private String getDeliveryAddressString() {
+        JSONArray deliveriesJson = new JSONArray();
 
+            for (SearchResult searchResult : deliveries) {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put(Constants.KEY_LATITUDE, String.valueOf(searchResult.getLatLng().latitude));
+                    jsonObject.put(Constants.KEY_LONGITUDE, String.valueOf(searchResult.getLatLng().longitude));
+                    jsonObject.put(Constants.KEY_ADDRESS, searchResult.getAddress());
+                    jsonObject.put(Constants.KEY_NAME, searchResult.getPersonName());
+                    jsonObject.put(Constants.KEY_PHONE_NO, searchResult.getPhone());
+
+                    deliveriesJson.put(jsonObject);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        return deliveriesJson.toString();
+    }
 
     private void onPromoSelected(final int position) {
         PromoCoupon promoCoupon;
@@ -1098,7 +1235,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
         FatafatUploadImageInfo fatafatUploadImageInfo = Data.getFeedData().getFatafatUploadImageInfo();
         maxNoImages = fatafatUploadImageInfo.getImageLimit();
         imageObjectList = new ArrayList<>();
-        setAddress(true,null);
+        setAddress(false,null);
         resetDeliveryViews();
 
     }
@@ -1128,6 +1265,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
                 params.put(Constants.KEY_FROM_LATITUDE, "0");
                 params.put(Constants.KEY_FROM_LONGITUDE, "0");
             }
+            params.put(Constants.KEY_DELIVERIES, getDeliveryAddressString());
 
             params.put(Constants.KEY_TO_LATITUDE, String.valueOf(deliveryAddress.getLatitude()));
             params.put(Constants.KEY_TO_LONGITUDE, String.valueOf(deliveryAddress.getLongitude()));

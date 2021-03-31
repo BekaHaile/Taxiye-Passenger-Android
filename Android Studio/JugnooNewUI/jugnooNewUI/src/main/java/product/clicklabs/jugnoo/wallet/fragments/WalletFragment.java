@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
 
+import androidx.fragment.app.Fragment;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
@@ -50,7 +50,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 	LinearLayout linearLayoutWalletContainer;
 	RelativeLayout relativeLayoutJugnooCash;
 	TextView textViewJugnooCashBalanceValue;
-	RelativeLayout relativeLayoutPaytm;
+	RelativeLayout relativeLayoutPaytm,relativeLayoutAddJcFromMpesa;
 	TextView textViewPaytmBalance, textViewPaytmBalanceValue;
 	RelativeLayout relativeLayoutMobikwik;
 	TextView textViewMobiKwik, textViewMobiKwikBalanceValue;
@@ -139,6 +139,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		textViewJugnooCashBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
 		relativeLayoutPaytm = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutPaytm);
+		relativeLayoutAddJcFromMpesa = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutAddJcFromMpesa);
 		textViewPaytmBalance = (TextView)rootView.findViewById(R.id.textViewPaytmBalance); textViewPaytmBalance.setTypeface(Fonts.mavenRegular(paymentActivity));
 		textViewPaytmBalanceValue = (TextView) rootView.findViewById(R.id.textViewPaytmBalanceValue); textViewPaytmBalanceValue.setTypeface(Fonts.mavenRegular(paymentActivity));
 
@@ -207,6 +208,13 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 			public void onClick(View v) {
 				walletOnClick(PaymentOption.PAYTM.getOrdinal());
 				GAUtils.event(SIDE_MENU, GAAction.WALLET+GAAction.WALLET+SELECTED, GAAction.PAYTM);
+			}
+		});
+		relativeLayoutAddJcFromMpesa.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				walletOnClick(PaymentOption.MPESA.getOrdinal());
 			}
 		});
 
@@ -332,6 +340,18 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		try {
 			if(!HomeActivity.checkIfUserDataNull(paymentActivity)) {
 
+				if(paymentOption == PaymentOption.MPESA.getOrdinal()){
+
+					paymentActivity.getSupportFragmentManager().beginTransaction()
+							.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+							.add(R.id.fragLayout, WalletRechargeFragment.newInstance(paymentOption), WalletRechargeFragment.class.getName())
+							.addToBackStack(WalletRechargeFragment.class.getName())
+							.hide(paymentActivity.getSupportFragmentManager().findFragmentByTag(paymentActivity.getSupportFragmentManager()
+									.getBackStackEntryAt(paymentActivity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()))
+							.commit();
+					return;
+				}
+
 				boolean walletAdded = false;
 				if((paymentOption == PaymentOption.PAYTM.getOrdinal() && Data.userData.getPaytmEnabled() == 1)
 						|| (paymentOption == PaymentOption.MOBIKWIK.getOrdinal() && Data.userData.getMobikwikEnabled() == 1)
@@ -383,7 +403,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		try{
 			orderPaymentModes();
 			if(Data.userData != null){
-				textViewJugnooCashBalanceValue.setText(!getResources().getBoolean(R.bool.wallet_amount_sidemenu)?Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()):String.format(getResources().getString(R.string.rupees_value_format), Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance())));
+				textViewJugnooCashBalanceValue.setText(!getResources().getBoolean(R.bool.wallet_amount_sidemenu)?Utils.getMoneyDecimalFormat().format(Data.userData.getJugnooBalance()):Utils.formatCurrencyValue(Data.autoData.getCurrency(), Data.userData.getJugnooBalance()));
 				textViewJugnooCashBalanceValue.setTextColor(Data.userData.getJugnooBalanceColor(paymentActivity));
 
 				if(Data.userData.getPaytmEnabled() == 1){
@@ -450,6 +470,8 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 					if(paymentModeConfigData.getEnabled() == 1) {
 						if (paymentModeConfigData.getPaymentOption() == PaymentOption.PAYTM.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutPaytm);
+						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MPESA.getOrdinal()) {
+							linearLayoutWalletContainer.addView(relativeLayoutAddJcFromMpesa);
 						} else if (paymentModeConfigData.getPaymentOption() == PaymentOption.MOBIKWIK.getOrdinal()) {
 							linearLayoutWalletContainer.addView(relativeLayoutMobikwik);
 						} else if(paymentModeConfigData.getPaymentOption() == PaymentOption.FREECHARGE.getOrdinal()) {

@@ -111,6 +111,9 @@ public class Region {
     @SerializedName("restricted_payment_modes")
     @Expose
 	private ArrayList<Integer> restrictedPaymentModes;
+    @SerializedName("restricted_corporates")
+    @Expose
+	private ArrayList<Integer> restrictedCorporates;
     @SerializedName("disclaimer_text")
     @Expose
 	private String disclaimerText;
@@ -135,6 +138,7 @@ public class Region {
 		this.priorityTipCategory = 0;
 		this.isDefault = true;
 		this.restrictedPaymentModes = new ArrayList<>();
+		this.restrictedCorporates = new ArrayList<>();
 //		availablePaymentModes.add(PaymentOption.CASH.getOrdinal());
 //		availablePaymentModes.add(PaymentOption.STRIPE_CARDS.getOrdinal());
 	}
@@ -194,6 +198,19 @@ public class Region {
     public void setRestrictedPaymentModes(ArrayList<Integer> restrictedPaymentModes) {
         this.restrictedPaymentModes = restrictedPaymentModes;
     }
+
+    public ArrayList<Integer> getRestrictedCorporates() {
+	    if(restrictedCorporates == null) {
+			restrictedCorporates = new ArrayList<>();
+        }
+        return restrictedCorporates;
+    }
+
+    public void setRestrictedCorporates(ArrayList<Integer> restrictedCorporates) {
+        this.restrictedCorporates = restrictedCorporates;
+    }
+
+
 
     public void setPackages(ArrayList<Package> packages) {
 		this.packages = packages;

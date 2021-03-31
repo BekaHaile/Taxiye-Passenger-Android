@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/dividerBelowAddCard"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/bgColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/labelAddCash"
+        style="@style/TextLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="start"
+        android:text="@string/add_cash"
+        android:textAllCaps="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dividerBelowAddCard" />
+
+
+    <View
+        android:id="@+id/currentBalanceDividerEnd"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="@color/bgColor"
+        app:layout_constraintBottom_toBottomOf="@id/labelAddCash"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/labelAddCash"
+        app:layout_constraintTop_toTopOf="@id/labelAddCash" />
+
+    <View
+        android:id="@+id/currentBalanceDividerStart"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/bgColor"
+        app:layout_constraintBottom_toBottomOf="@id/labelAddCash"
+        app:layout_constraintEnd_toStartOf="@+id/labelAddCash"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/labelAddCash" />
+
+    <FrameLayout
+        android:id="@+id/layoutQuickAmountTwo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:background="@drawable/button_white_grey_border"
+        app:layout_constraintEnd_toStartOf="@+id/layoutQuickAmountThree"
+        app:layout_constraintStart_toEndOf="@+id/layoutQuickAmountOne"
+        app:layout_constraintTop_toBottomOf="@id/labelAddCash">
+
+
+        <TextView
+            android:id="@+id/tvQuickAmtTwo"
+            style="@style/TextNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="10dp"
+            tools:text="400" />
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/layoutQuickAmountOne"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_white_grey_border"
+        app:layout_constraintEnd_toStartOf="@id/layoutQuickAmountTwo"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="@id/currentBalanceDividerStart"
+        app:layout_constraintTop_toTopOf="@id/layoutQuickAmountTwo">
+
+        <TextView
+            android:id="@+id/tvQuickAmtOne"
+            style="@style/TextNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="10dp"
+            tools:text="100" />
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/layoutQuickAmountThree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_white_grey_border"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="@id/currentBalanceDividerEnd"
+        app:layout_constraintStart_toEndOf="@id/layoutQuickAmountTwo"
+        app:layout_constraintTop_toTopOf="@id/layoutQuickAmountTwo">
+
+
+        <TextView
+            android:id="@+id/tvQuickAmtThree"
+            style="@style/TextNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:clickable="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="5dp"
+            android:paddingBottom="10dp"
+            tools:text="500" />
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/layoutAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/edittext_background"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toEndOf="@id/currentBalanceDividerEnd"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@id/currentBalanceDividerStart"
+        app:layout_constraintTop_toBottomOf="@+id/layoutQuickAmountTwo">
+
+        <TextView
+            android:id="@+id/edtAmount"
+            style="@style/TextNormal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:gravity="center"
+            android:hint="@string/enter_amount"
+            android:inputType="numberDecimal"
+            android:maxLength="8"
+            android:padding="10dp"
+            android:textAllCaps="true" />
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/btnAddCash"
+        style="@style/ButtonTheme"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/add_cash"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/currentBalanceDividerEnd"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/currentBalanceDividerStart"
+        app:layout_constraintTop_toBottomOf="@id/layoutAmount"
+        app:layout_constraintVertical_bias="0.015" />
+
+
+</android.support.constraint.ConstraintLayout>

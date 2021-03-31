@@ -189,6 +189,7 @@
     <string name="nl_splash_terms">By Signing up you agree to our <u>Terms of Use</u></string>
     <string name="paytm_wallet">Paytm Wallet</string>
     <string name="mpesa_wallet">mPesa Wallet</string>
+    <string name="add_jc_from_mpesa">Add money via MPESA</string>
     <string name="nl_add_paytm_wallet">Add Paytm Wallet</string>
     <string name="nl_splash_required">Required</string>
     <string name="nl_splash_optional">optional</string>
@@ -431,7 +432,7 @@
         <item>+46,SE</item>
         <item>+41,CH</item>
         <item>+963,SY</item>
-        <item>+1,TT</item>
+        <item>+1868,TT</item>
         <item>+886,TW</item>
         <item>+992,TJ</item>
         <item>+255,TZ</item>
@@ -1187,12 +1188,12 @@
     <string name="enter_location">Enter location</string>
     <string name="checkout_bracket_item"><b>CHECKOUT</b> (%s ITEM)</string>
     <string name="checkout_bracket_items"><b>CHECKOUT</b> (%s ITEMS)</string>
-    <string name="do_you_have_a_referral_code">Do you have a Promocode?</string>
+    <string name="do_you_have_a_referral_code">Do you have a Referral Code?</string>
     <string name="please_enter_your_personal_info">Please enter your personal information</string>
     <string name="skip_this_step"><u>Skip this step</u></string>
     <string name="your_full_name">Your Full Name</string>
     <string name="email_address">E-mail Address</string>
-    <string name="enter_promocode_optional">Enter promocode (optional)</string>
+    <string name="enter_promocode_optional">Enter referral code (optional)</string>
     <string name="label_anonymous">anonymous</string>
 
     <string name="order_quantity_limited">Order quantity for this item is limited to 50</string>
@@ -1270,7 +1271,7 @@
     <string name="service_date_colon_format">Service Date: %s</string>
     <string name="upon_inspection">Upon Inspection</string>
     <string name="please_select_appropriate_time">Please select an appropriate future date and time.</string>
-    <string name="incorrect_schedule_time">Rides can only be scheduled from %1d minutes after current time up to next %2d day(s).</string>
+    <string name="incorrect_schedule_time">Rides can only be scheduled from %1$d minutes after current time up to next %2$d day(s).</string>
     <string name="booking_cancelled_successfully">Your booking is cancelled successfully.</string>
     <string name="cancel_booking">Cancel Booking</string>
     <string name="service_hash_format">Service #%s</string>
@@ -1335,7 +1336,7 @@
     <string name="locate">Locate</string>
     <string name="please_enter_some_desc">Please tell us what you need.</string>
     <string name="label_anywhere">Anywhere</string>
-    <string name="add_delivery_address">Select Delivery Address</string>
+    <string name="add_delivery_address">Add Delivery Address</string>
     <string name="avenir">avenir</string>
     <string name="avenir_book">avenir_book</string>
     <string name="created_at_colon">Created at:</string>
@@ -2480,6 +2481,9 @@
     <string name="earnings_today">Earnings Today</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="referred_on">Referred on</string>
+    <string name="customer_credits">Customer Credits</string>
+    <string name="credits">Credits</string>
+    <string name="phone_number_full">Phone Number</string>
     <string name="no_vehicles_available">Sorry!! No vehicle available in this area</string>
 
     <string name="select_gender">Select Gender</string>
@@ -2565,4 +2569,87 @@
     <string name="how_many_seats">No of seats?</string>
     <string name="since_you_will_be_sharing_ride_format">Since you\'ll share the ride with\nothers, there\'s a 2-seat limit</string>
 
+    <string name="credit_amount_description">Received from %s with Phone no %s</string>
+    <string name="debit_amount_description">Sent to %s with Phone no %s</string>
+
+    <string name="app_requires_read_contacts_permission_title">App requires Read Contacts Permission</string>
+    <string name="app_requires_read_contacts_permission_message">This will enable you to add your selected contacts to emergency contacts.\nYou can inform these contacts about your current location every time you take ride, or in case of any emergency.\nHowever, do note that these selected contacts will be uploaded to our server for a seamless experience.</string>
+    <string name="modify">Modify</string>
+    <string name="payment_by">Payment By:</string>
+    <string name="feeling_unsafe">Feeling Unsafe?</string>
+    <string name="share_live_ride">Share Live Ride</string>
+    <string name="ride_id">Ride ID:</string>
+    <string name="booking_confirmed">Booking Confirmed</string>
+    <string name="arrived">Arrived</string>
+    <string name="arriving_in">Arriving in</string>
+    <string name="drop_off_in">Drop-off in</string>
+    <string name="finding_your_app_driver">Finding your %s Driver..</string>
+    <string name="current_location">Current Location</string>
+    <string name="payment_options">Payment Options</string>
+    <string name="offers_and_discounts"><![CDATA[Offers & Discounts]]></string>
+    <string name="estimated_fare">Estimated Fare</string>
+    <string name="where_do_you_want_to_go">Where do you want to go?</string>
+    <string name="hi_user_welcome_message_format">Hi %s, Chale Jugnoo Se?</string>
+    <string name="hi_user_welcome_message">Hi, Chale Jugnoo Se?</string>
+    <string name="choose_a_ride_or_swipe_up">Choose a ride, or swipe up for more</string>
+    <string name="arrive_in">Arrive in</string>
+    <string name="choose_a_ride">Choose a ride</string>
+    <string name="give_a_compliment">Give a compliment</string>
+    <string name="write_a_thank_you_note">Write a thank you note</string>
+    <string name="to_pay">To Pay</string>
+    <string name="two_way">Two Way</string>
+    <string name="per_min_after">/min after</string>
+    <string name="cancelling_ride_request">Cancelling Ride Request?</string>
+    <string name="id">ID</string>
+    <string name="please_mention_your_reason_for_ride_cancellation">Please mention your reason for ride  cancellation</string>
+    <string name="please_enter_some_reason">Please enter some reason</string>
+    <string name="share_your_ride_with_emergency_contacts">Share your ride with emergency contacts</string>
+    <string name="sos">SOS</string>
+    <string name="disable_sos">Disable SOS</string>
+    <string name="continue_wo_drop">Continue without destination</string>
+    <string name="please_select_pickup_first">Please select pickup first</string>
+    <string name="see_more">See More</string>
+    <string name="invite_amp_earn"><![CDATA[Invite & Earn]]></string>
+    <string name="dc_referral">Driver to Customer Referral</string>
+    <string name="dd_referral">Driver to Driver Referral</string>
+    <string name="cc_referral">Customer to Customer Referral</string>
+    <string name="cd_referral">Customer to Driver Referral</string>
+    <string name="title_offer">Offer</string>
+    <string name="title_updates">Updates</string>
+    <string name="offer_and_updates"><![CDATA[Offer & Updates]]></string>
+    <string name="personal_info">Personal Info</string>
+    <string name="label_phone">Phone</string>
+    <string name="label_gender">Gender</string>
+    <string name="your_rating">Your rating</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="resend_OTP">Resend OTP</string>
+    <string name="text_request_otp_via_call">Request OTP via call</string>
+    <string name="didnt_receive_the_text">Didn\'t Receive the text?</string>
+    <string name="registration">Registration</string>
+    <string name="start_ride_with_jugnoo">Start Ride with Jugnoo!</string>
+    <string name="login_or_signup">"Login / Signup "</string>
+    <string name="confirm_your_mobile_number">Confirm Your Mobile Number</string>
+    <string name="continue_with_mobile_number">Continue with Mobile Number</string>
+    <string name="privacy_preferences">Privacy Preferences</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="are_you_sure_you_want_to_delete_your_account">Are you sure you want to delete your Account?</string>
+    <string name="cancel_delete_account_request">Cancel Delete Account Request</string>
+    <string name="do_you_want_to_cancel_delete_account_request">Do you really want to cancel your delete account request?</string>
+    <string name="s_we_re_sorry_to_see_you_go">%s, we\'re sorry to see you go</string>
+    <string name="you_re_about_to_delete_your_account">You\'re about to delete your account</string>
+    <string name="all_data_associated_with_it">All the data associated with it (including your profile, photos, reviews and subscriptions) will be permanently deleted in 30 days. This information can\'t be recovered once the account is deleted.</string>
+    <string name="i_don_t_want_to_use_s_anymore">I don\'t want to use %s anymore</string>
+    <string name="do_you_have_any_feedback_for_us_we_would_love_to_hear_from_you_optional">Do you have any feedback for us? We would love to hear from you! (Optional)</string>
+    <string name="delete_my_account">Delete my account</string>
+    <string name="lost_item">Lost Item?</string>
+    <string name="silent_driver_note">Silent Driver Requested for this ride. Please accept if you agree with the terms.</string>
+    <string name="silent_driver_note_not_selected">Silent Driver not Requested for this ride</string>
+    <string name="silent_driver">Silent Driver</string>
+    <string name="request_silent_driver">Request a Silent Driver</string>
+    <string name="label_show_fare_estimate">Fare Estimate</string>
+
+
+    <string name="perm_location">%s would need to access your device location</string>
+    <string name="perm_location_rational">The application needs to access your location to correctly track the ride, check users location, calculate the ride fare when app is running in background as well.</string>
+    <string name="delete_favourite_driver">Are you sure you want delete your favourite driver</string>
 </resources>

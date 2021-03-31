@@ -8,13 +8,12 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 
 import com.hippo.HippoConfig;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.JugnooExceptionHandler;
@@ -25,7 +24,7 @@ import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 /**
  * Created by clicklabs on 7/3/15.
  */
-public class BaseFragmentActivity extends FragmentActivity {
+public class BaseFragmentActivity extends AppCompatActivity {
 
     @Override
     public void startActivity(Intent intent) {

@@ -82,8 +82,8 @@
 
         <ImageView
             android:id="@+id/imageViewJugnooLogo"
-            android:layout_width="@dimen/splash_logo_width"
-            android:layout_height="@dimen/splash_logo_height"
+            android:layout_width="@dimen/login_logo_width"
+            android:layout_height="@dimen/login_logo_height"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/login_logo_icon_drawable"

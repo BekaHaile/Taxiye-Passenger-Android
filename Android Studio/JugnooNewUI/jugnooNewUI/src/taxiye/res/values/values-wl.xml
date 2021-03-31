@@ -23,7 +23,7 @@
 
     <string name="app_name">Taxiye</string>
 
-    <string name="google_maps_api_key">AIzaSyDtxq1wWwO3NLmMKmMXZnf3vxicTP8EWKU</string>
+    <string name="google_maps_api_key">AIzaSyDRlxbwMF-rjd0m2jitT5Czg_pjQP4kqRk</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
     <string name="fb_app_id">478771686406613</string>
     <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
@@ -81,11 +81,18 @@
     <!--default support email for SupportMailActivity if not coming from server-->
     <string name="default_support_email">support@taxiye.com</string>
     <integer name="send_invites_visibility">@integer/view_gone</integer>
-    <integer name="apply_default_country_code">0</integer>
+    <integer name="apply_default_country_code">1</integer>
     <string name="default_country_code">+251</string>
     <string name="default_country_iso">ETH</string>
     <string name="default_currency">ETB</string>
     <string name="pay_later">Cash</string>
     <string name="your_trips">History</string>
     <bool name="force_open_autos">false</bool>
+
+    <string name="rupee">ETB</string>
+
+    <string name="rupee_0">ETB 0</string>
+    <string name="rupees_value_format">ETB %s</string>
+    <string name="minimum_order_rupee_format">Min Order ETB %s</string>
+    <string name="minimum_order_rupee_short_format"> \u2022 Min ETB %s</string>
 </resources>

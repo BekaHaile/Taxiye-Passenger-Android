@@ -54,7 +54,7 @@
     <item>
         <layer-list>
 
-          <!--  <item>
+            <item>
                 <shape android:shape="oval">
                     <padding android:top="1.2dp" android:right="1.2dp" android:bottom="1.2dp" android:left="1.2dp" />
                     <solid android:color="#02AAAAAA" />
@@ -91,7 +91,7 @@
                 <shape android:shape="oval">
                     <solid android:color="#ffffff" />
                 </shape>
-            </item>-->
+            </item>
 
             <item
                 android:drawable="@drawable/ic_menu_home_new"

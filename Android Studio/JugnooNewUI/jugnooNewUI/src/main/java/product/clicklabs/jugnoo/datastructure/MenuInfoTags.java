@@ -37,6 +37,7 @@ public enum MenuInfoTags {
     TICKET_SUPPORT("ticket_support"),
     FARE_DETAILS("fare_details"),
     FREE_RIDES_NEW("free_rides_new"),
+    CUSTOMER_TO_CUSTOMER("customer_to_customer_wallet"),
     ;
 
     private String tag;

@@ -13,6 +13,7 @@ import android.net.NetworkInfo;
 import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -129,18 +130,12 @@ public class MyApplication extends MultiDexApplication {
 
 
         try {
-            if (!this.isTestModeEnabled()) {
-                Branch.getInstance(this);
-            } else {
-                Branch.getTestInstance(this);
-            }
-            Branch.getAutoInstance(this);
+        	if(BuildConfig.DEBUG){
+				// Branch logging for debugging
+				Branch.enableLogging();
+			}
 
-            if (!this.isTestModeEnabled()) {
-                branch = Branch.getInstance(this);
-            } else {
-                branch = Branch.getTestInstance(this);
-            }
+			branch = Branch.getAutoInstance(this);
 
 
             mInstance = this;

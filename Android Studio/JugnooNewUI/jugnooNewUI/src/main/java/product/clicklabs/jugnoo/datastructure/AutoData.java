@@ -157,11 +157,27 @@ public class AutoData {
 	public void defaultServiceType() {
 		ArrayList<Integer> rideTypes = new ArrayList<>();
 		ArrayList<Integer> regionIds = new ArrayList<>();
+        regionIds.add(-1);
 		rideTypes.add(ServiceTypeValue.NORMAL.getType());
 		rideTypes.add(ServiceTypeValue.POOL.getType());
 		rideTypes.add(ServiceTypeValue.BIKE_RENTAL.getType());
 		int scheduleRideEnabled = Prefs.with(MyApplication.getInstance()).getBoolean(Constants.SCHEDULE_RIDE_ENABLED, false) ? 1 : 0;
 		serviceTypeSelected = new ServiceType("On Demand", "", "", 1, rideTypes, regionIds, null, "", scheduleRideEnabled, true);
+
+		getServiceTypes().add(serviceTypeSelected);
+
+
+        ArrayList<Integer> rideTypesRental = new ArrayList<>();
+        ArrayList<Integer> regionIdsRental = new ArrayList<>();
+        regionIdsRental.add(-1);
+        rideTypesRental.add(ServiceTypeValue.RENTAL.getType());
+		getServiceTypes().add(new ServiceType("Rental", "", "", 1, rideTypesRental, regionIdsRental, null, "", scheduleRideEnabled, false));
+
+        ArrayList<Integer> rideTypesOutStation = new ArrayList<>();
+        ArrayList<Integer> regionIdsOutStation = new ArrayList<>();
+        regionIdsOutStation.add(-1);
+        rideTypesOutStation.add(ServiceTypeValue.OUTSTATION.getType());
+		getServiceTypes().add(new ServiceType("Out Station", "", "", 1, rideTypesOutStation, regionIdsOutStation, null, "", scheduleRideEnabled, false));
 	}
 
 	public String getDestinationHelpText() {
@@ -804,7 +820,9 @@ public class AutoData {
     }
 
     public void setServiceTypes(ArrayList<ServiceType> serviceTypes) {
-        this.serviceTypes = serviceTypes;
+        if(serviceTypes!=null&&serviceTypes.size()>0) {
+            this.serviceTypes = serviceTypes;
+        }
     }
 
     public ServiceType getServiceTypeSelected() {

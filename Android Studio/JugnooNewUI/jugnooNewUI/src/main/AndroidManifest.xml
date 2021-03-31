@@ -62,7 +62,7 @@
         <activity
             android:name=".MultiStopsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/TransparentTheme" />
 
         <meta-data
             android:name="payu_merchant_id"
@@ -72,7 +72,7 @@
             android:name=".wallet.PaymentActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
 
         <service
             android:name=".GCMIntentService"
@@ -86,7 +86,7 @@
             android:name=".SplashNewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/TransparentTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -113,18 +113,18 @@
             android:configChanges="keyboard|orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:theme="@style/TransparentTheme"
             android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ForgotPasswordScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".OTPConfirmScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+            android:theme="@style/TransparentTheme">
 
             <!-- jugnooautos-verify://app?otp=1234 -->
             <intent-filter android:label="@string/app_name">
@@ -143,17 +143,17 @@
             android:name=".promotion.ShareActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".promotion.PromotionActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".HelpParticularActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".AddPlaceActivity"
             android:label="@string/app_name"
@@ -183,27 +183,27 @@
             android:name=".WebActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".AboutActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".ChangeLanguageActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".AccountActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".PhoneNoOTPConfirmScreen"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".RideTransactionsActivity"
             android:label="@string/app_name"
@@ -213,22 +213,22 @@
             android:name=".RideCancellationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".MultipleAccountsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".RequestDuplicateRegistrationActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".ChangePhoneBeforeOTPActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".DebugOptionsActivity"
             android:label="@string/app_name"
@@ -240,6 +240,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".FareEstimateActivity"
             android:label="@string/app_name"
@@ -249,7 +250,7 @@
             android:name=".ReferDriverActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".NotificationCenterActivity"
             android:label="@string/app_name"
@@ -259,17 +260,17 @@
             android:name=".emergency.EmergencyActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".t20.T20Activity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".wallet.WalletRechargeWebViewActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".utils.CallActivity"
             android:label="@string/app_name"
@@ -437,7 +438,7 @@
             android:name=".home.trackinglog.TrackingLogActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
         <activity
             android:name=".HomeSwitcherActivity"
             android:label="@string/app_name"
@@ -485,13 +486,13 @@
         <activity
             android:name=".FareDetailsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"
+            android:theme="@style/TransparentTheme"
             />
 
         <activity
             android:name=".home.schedulerides.UpcomingRidesActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseAppCompatTheme"
+            android:theme="@style/TransparentTheme"
             />
         <!-- <activity -->
         <!-- android:name="com.sabkuchfresh.home.TrackOrderActivity" -->
@@ -568,19 +569,19 @@
         <activity android:name=".rentals.qrscanner.ScannerActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
 
         <activity android:name=".rentals.damagereport.DamageReportActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
+            android:theme="@style/TransparentTheme"
             />
 
         <activity
             android:name=".newui.activity.RewardsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
 
         <activity
             android:name=".promotion.VideoActivity"
@@ -589,6 +590,12 @@
 
         <activity
             android:name="product.clicklabs.jugnoo.youtube.YoutubeVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".credits.SendCreditsToCustomer"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden"
             android:theme="@style/AppTheme" />
@@ -602,7 +609,12 @@
             android:name=".tutorials.newtutorials.activities.TutorialActivites"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"/>
+            android:theme="@style/TransparentTheme"/>
+        <activity
+            android:name=".home.DeleteMyAccountActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme"/>
     </application>
 
 </manifest>

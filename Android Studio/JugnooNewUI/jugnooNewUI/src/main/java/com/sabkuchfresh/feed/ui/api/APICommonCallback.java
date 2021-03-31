@@ -30,4 +30,10 @@ public abstract class APICommonCallback<T extends FeedCommonResponse> {
 
 
     public void onFinish() {}
+
+    public boolean isRawResponseNeeded() {
+    	return false;
+    }
+    public void rawResponse(String rawResponse) {}
+
 }

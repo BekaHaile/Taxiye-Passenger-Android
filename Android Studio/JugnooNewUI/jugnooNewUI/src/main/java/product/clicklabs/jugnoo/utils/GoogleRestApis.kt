@@ -164,7 +164,7 @@ object GoogleRestApis {
     }
 
 
-    fun getDirectionsWaypoints(strOrigin: String, strDestination: String, strWaypoints: String): Response {
+    fun getDirectionsWaypoints(strOrigin: String, strDestination: String, strWaypoints: String, source:String): Response {
 
         Log.i(GoogleRestApis::class.java.simpleName, "getDirectionsWaypoints")
         val response:Response
@@ -189,7 +189,7 @@ object GoogleRestApis {
                     strWaypoints, MAPS_BROWSER_KEY())
         }
         if(strOrigin.contains(",")) {
-            logGoogleRestAPI(strOrigin.split(",")[0], strOrigin.split(",")[1], API_NAME_DIRECTIONS)
+            logGoogleRestAPI(strOrigin.split(",")[0], strOrigin.split(",")[1], API_NAME_DIRECTIONS+"wp_"+source)
         }
         return response
     }

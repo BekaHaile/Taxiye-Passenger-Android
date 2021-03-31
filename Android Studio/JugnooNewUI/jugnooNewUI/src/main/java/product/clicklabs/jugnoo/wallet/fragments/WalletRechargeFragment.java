@@ -21,6 +21,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
+
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -37,6 +41,7 @@ import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.NegativeWalletBalanceResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
 import product.clicklabs.jugnoo.utils.DialogPopup;
@@ -63,6 +68,7 @@ public class WalletRechargeFragment extends Fragment {
 	ImageView imageViewBack;
 	TextView textViewTitle, textViewTitleEdit;
 	TextView textViewAddCashHelp;
+	RelativeLayout rlCurrentBalance;
 
 	ImageView imageViewWalletIcon;
 	TextView textViewCurrentBalance, textViewCurrentBalanceValue;
@@ -79,7 +85,7 @@ public class WalletRechargeFragment extends Fragment {
 	LinearLayout linearLayoutMain, linearLayoutInner;
 	boolean scrolled = false;
 
-	String amount1 = "500", amount2 = "1000", amount3 = "2000";
+	String amount1 = "50", amount2 = "100", amount3 = "300";
 	private int openWalletType;
 
 	public static WalletRechargeFragment newInstance(int openWalletType){
@@ -124,6 +130,7 @@ public class WalletRechargeFragment extends Fragment {
 
 		new ASSL(paymentActivity, relative, 1134, 720, false);
 
+		rlCurrentBalance = (RelativeLayout) rootView.findViewById(R.id.rlCurrentBalance);
 		imageViewBack = (ImageView) rootView.findViewById(R.id.imageViewBack);
 		textViewTitle = (TextView) rootView.findViewById(R.id.textViewTitle); textViewTitle.setTypeface(Fonts.avenirNext(paymentActivity));
 		textViewTitleEdit = (TextView) rootView.findViewById(R.id.textViewTitleEdit); textViewTitleEdit.setTypeface(Fonts.mavenRegular(paymentActivity));
@@ -170,6 +177,10 @@ public class WalletRechargeFragment extends Fragment {
             textViewTitle.setText(paymentActivity.getResources().getString(R.string.freecharge_wallet));
             imageViewWalletIcon.setImageResource(R.drawable.ic_freecharge_big);
             buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_freecharge_cash));
+        } else if(openWalletType == PaymentOption.MPESA.getOrdinal()) {
+            textViewTitle.setText(paymentActivity.getResources().getString(R.string.add_jc_from_mpesa));
+            imageViewWalletIcon.setImageResource(R.drawable.ic_mpesa_small);
+            buttonAddMoney.setText(paymentActivity.getResources().getString(R.string.add_cash));
         }
 
 		//textViewTitle.getPaint().setShader(FeedUtils.textColorGradient(paymentActivity, textViewTitle));
@@ -344,6 +355,11 @@ public class WalletRechargeFragment extends Fragment {
 		}
 		buttonRemoveWallet.setVisibility(View.GONE);
 
+		if(openWalletType == PaymentOption.MPESA.getOrdinal()) {
+			rlCurrentBalance.setVisibility(View.GONE);
+			textViewTitleEdit.setVisibility(View.GONE);
+			textViewAddCashHelp.setVisibility(View.GONE);
+		}
 
 		return rootView;
 	}
@@ -449,7 +465,11 @@ public class WalletRechargeFragment extends Fragment {
 							DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
 						}
 					});
-				} else {
+				}
+				else if(openWalletType == PaymentOption.MPESA.getOrdinal()){
+					addMpesaToJcMoney(PaymentOption.MPESA.getOrdinal(),amount);
+				}
+				else {
 					Callback<SettleUserDebt> callback = new Callback<SettleUserDebt>() {
 						@Override
 						public void success(SettleUserDebt settleUserDebt, Response response) {
@@ -656,5 +676,39 @@ public class WalletRechargeFragment extends Fragment {
 				e.printStackTrace();
 			}
 		}
+	}
+	private void addMpesaToJcMoney(int paymentMode,String amount) {
+		HashMap<String, String> params = new HashMap<>();
+		params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+		params.put(Constants.KEY_PAYMENT_MODE, String.valueOf(paymentMode));
+		params.put(Constants.KEY_AMOUNT, amount);
+		params.put(Constants.KEY_LOGIN_TYPE, String.valueOf(0));
+
+		new HomeUtil().putDefaultParams(params);
+
+		new ApiCommon<NegativeWalletBalanceResponse>(paymentActivity).showLoader(true).execute(params, ApiName.SETTLE_NEGATIVE_WALLET_BALANCE, new APICommonCallback<NegativeWalletBalanceResponse>() {
+			@Override
+			public void onSuccess(NegativeWalletBalanceResponse negativeWalletBalanceResponse, final String message, final int flag) {
+				try {
+//					if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()){
+//						openWebView(null, negativeWalletBalanceResponse.getPaymentData().getCheckoutForm(), null, openWalletType);
+//					} else{
+					DialogPopup.showLoadingDialog(paymentActivity,message);
+//					}
+				} catch (Exception e) {
+					DialogPopup.dismissLoadingDialog();
+					e.printStackTrace();
+					DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
+				}
+			}
+
+			@Override
+			public boolean onError(NegativeWalletBalanceResponse sslCommerzResponse, final String message, final int flag) {
+				Log.e(TAG, openWalletType+"AddMoney error=" + message);
+				DialogPopup.dismissLoadingDialog();
+				DialogPopup.alertPopup(paymentActivity, "", getString(R.string.connection_lost_please_try_again));
+				return true;
+			}
+		});
 	}
 }

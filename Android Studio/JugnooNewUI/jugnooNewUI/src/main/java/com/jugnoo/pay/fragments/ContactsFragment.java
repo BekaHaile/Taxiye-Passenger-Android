@@ -3,14 +3,8 @@ package com.jugnoo.pay.fragments;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +29,10 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
@@ -75,7 +73,7 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
             adapter = new ContactsListAdapter(getActivity(), selectUsers, this);
             contactsRecycler.setAdapter(adapter);
         } else {
-            phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+//            phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
             LoadContact loadContact = new LoadContact();
             loadContact.execute();
         }
@@ -100,7 +98,7 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
     }
 
     private void fetchUserContacts(){
-        phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
+//        phones = getActivity().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC");
         LoadContact loadContact = new LoadContact();
         loadContact.execute();
     }
@@ -170,35 +168,35 @@ public class ContactsFragment extends Fragment implements RecyclerViewClickListe
 
             try {
                 if (phones != null) {
-					Log.e("count", "" + phones.getCount());
+//					Log.e("count", "" + phones.getCount());
 					if (phones.getCount() == 0) {
 	//                    Toast.makeText(SelectContactActivity.this, "No contacts in your contact list.", Toast.LENGTH_LONG).show();
 					} else {
-						while (phones.moveToNext()) {
-							Bitmap bit_thumb = null;
-							String id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
-							String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-							String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-							String EmailAddr = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA2));
-							String image_thumb = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
-							/*try {
-								if (image_thumb != null) {
-									bit_thumb = MediaStore.Images.Media.getBitmap(resolver, Uri.parse(image_thumb));
-								} else {
-									Log.e("No Image Thumb", "--------------");
-								}
-							} catch (IOException e) {
-								e.printStackTrace();
-							}*/
-
-							SelectUser selectUser = new SelectUser();
-							selectUser.setThumb(image_thumb);
-							selectUser.setName(name);
-							selectUser.setPhone(phoneNumber.replace(" ", "").trim());
-							selectUser.setEmail(id);
-							selectUser.setCheckedBox(false);
-							selectUsers.add(selectUser);
-						}
+//						while (phones.moveToNext()) {
+//							Bitmap bit_thumb = null;
+//							String id = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
+//							String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+//							String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//							String EmailAddr = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA2));
+//							String image_thumb = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI));
+//							/*try {
+//								if (image_thumb != null) {
+//									bit_thumb = MediaStore.Images.Media.getBitmap(resolver, Uri.parse(image_thumb));
+//								} else {
+//									Log.e("No Image Thumb", "--------------");
+//								}
+//							} catch (IOException e) {
+//								e.printStackTrace();
+//							}*/
+//
+//							SelectUser selectUser = new SelectUser();
+//							selectUser.setThumb(image_thumb);
+//							selectUser.setName(name);
+//							selectUser.setPhone(phoneNumber.replace(" ", "").trim());
+//							selectUser.setEmail(id);
+//							selectUser.setCheckedBox(false);
+//							selectUsers.add(selectUser);
+//						}
 						Set set = new TreeSet(new Comparator<SelectUser>() {
 							@Override
 							public int compare(SelectUser o1, SelectUser o2) {

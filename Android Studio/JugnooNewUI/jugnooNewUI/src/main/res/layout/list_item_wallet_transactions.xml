@@ -97,6 +97,15 @@
                     android:textColor="@color/text_color_light"
                     android:textSize="@dimen/text_size_26" />
             </RelativeLayout>
+            <TextView
+                android:id="@+id/tvAmountDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_2"
+                android:paddingTop="@dimen/dp_2"
+                android:layout_marginStart="46px"
+                android:layout_below="@+id/textViewTransactionType"
+                android:textSize="18px"/>
         </LinearLayout>
 
         <ImageView

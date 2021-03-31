@@ -36,9 +36,11 @@ import product.clicklabs.jugnoo.GCMIntentService;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.SplashNewActivity;
+import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.PassengerScreenMode;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
@@ -507,27 +509,37 @@ public class HomeUtil {
 	}
 
 
-	public static int chooseNextEligiblePaymentOption(int paymentOption, HomeActivity activity) {
-		ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
-		if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
-			List<Integer> restrictedPaymentMode = new ArrayList<>();
-			ArrayList<Region> regions = Data.autoData.getRegions();
-			if (regions.size() > 1) {
-				restrictedPaymentMode = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
-			} else if (regions.size() > 0) {
-				restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
-			}
-			for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
-				if (paymentModeConfigData.getEnabled() == 1) {
-					if ((restrictedPaymentMode.size() > 0 && !restrictedPaymentMode.contains(paymentModeConfigData.getPaymentOption())) || restrictedPaymentMode.size() == 0) {
-						paymentOption = paymentModeConfigData.getPaymentOption();
-						break;
-					}
-				}
-			}
-		}
-		return paymentOption;
-	}
+    public static int chooseNextEligiblePaymentOption(int paymentOption, HomeActivity activity) {
+        ArrayList<PaymentModeConfigData> paymentModeConfigDatas = MyApplication.getInstance().getWalletCore().getPaymentModeConfigDatas();
+        if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
+            List<Integer> restrictedPaymentMode = new ArrayList<>();
+            List<Integer> restrictedCorporates = new ArrayList<>();
+            ArrayList<Region> regions = Data.autoData.getRegions();
+            if (regions.size() > 1) {
+                restrictedPaymentMode = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
+            } else if (regions.size() > 0) {
+                restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
+            }
+            if (regions.size() > 1) {
+                restrictedCorporates = activity.getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedCorporates();
+            } else if (regions.size() > 0) {
+                restrictedCorporates = regions.get(0).getRestrictedCorporates();
+            }
+            for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
+                if (paymentModeConfigData.getEnabled() == 1) {
+                    if ((restrictedPaymentMode.size() > 0 && !restrictedPaymentMode.contains(paymentModeConfigData.getPaymentOption())) || restrictedPaymentMode.size() == 0) {
+						if(paymentModeConfigData.getPaymentOption() != PaymentOption.CORPORATE.getOrdinal() || restrictedCorporates.size() == 0
+								|| !restrictedCorporates.contains(CorporatesAdapter.Companion.getSelectedCorporateBusinessId())){
+							paymentOption = paymentModeConfigData.getPaymentOption();
+							break;
+						}
+                    }
+                }
+            }
+
+        }
+        return paymentOption;
+    }
 
 
 	public static void openHippoTicketSupport(Context context){

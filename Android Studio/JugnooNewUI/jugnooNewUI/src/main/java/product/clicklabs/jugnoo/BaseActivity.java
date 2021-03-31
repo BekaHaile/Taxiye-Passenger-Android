@@ -1,6 +1,5 @@
 package product.clicklabs.jugnoo;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -9,11 +8,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.location.Location;
-import androidx.annotation.NonNull;
+import android.os.Bundle;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.utils.LocaleHelper;
@@ -22,7 +21,7 @@ import product.clicklabs.jugnoo.utils.typekit.TypekitContextWrapper;
 /**
  * Created by clicklabs on 7/3/15.
  */
-public class BaseActivity extends Activity implements LocationUpdate {
+public class BaseActivity extends AppCompatActivity implements LocationUpdate {
 	public static final int REQUEST_CODE_PERMISSION_LOCATION = 1011;
 	private static final int REQUEST_CODE_PERMISSION_RECEIVE_SMS = 1012;
 

@@ -535,7 +535,7 @@ public class LoginResponse {
 			return vehicleTypes;
 		}
 
-		public int getMax_deliveries() {
+		public int getMaxDeliveries() {
 			return max_deliveries;
 		}
 
@@ -1497,8 +1497,41 @@ public class LoginResponse {
 		@SerializedName("driver_tip_allowed")
 		private int driverTipAllowed = 0;
 
+		@SerializedName("show_payment_options")
+		private int showPaymentOption = 0;
+
+		@SerializedName("to_pay")
+		private double toPay = 0;
+
+		@SerializedName("payment_option")
+		private int paymentOption = 0;
+
 		@SerializedName("driver_name")
 		private String driverName;
+
+		public int getShowPaymentOption() {
+			return showPaymentOption;
+		}
+
+		public void setShowPaymentOption(int showPaymentOption) {
+			this.showPaymentOption = showPaymentOption;
+		}
+
+		public double getToPay() {
+			return toPay;
+		}
+
+		public void setToPay(double toPay) {
+			this.toPay = toPay;
+		}
+
+		public int getPaymentOption() {
+			return paymentOption;
+		}
+
+		public void setPaymentOption(int paymentOption) {
+			this.paymentOption = paymentOption;
+		}
 
 		public Integer getFeedbackViewType() {
 			return feedbackViewType==null? RideEndGoodFeedbackViewType.RIDE_END_IMAGE_1.getOrdinal():feedbackViewType;

@@ -76,7 +76,7 @@ public class AddToAddressBookFragment extends Fragment {
     TextView textViewTypeHome, textViewTypeWork, textViewTypeOther;
 
     private TextView textViewAddress;
-    private EditText editTextLabel, editTextFlatNumber, editTextLandmark;
+    private EditText editTextName,editTextPhone,editTextLabel, editTextFlatNumber, editTextLandmark;
     private Button bConfirm;
     private RelativeLayout rlAddressLabels;
     private boolean showAddressLabels;
@@ -189,6 +189,8 @@ public class AddToAddressBookFragment extends Fragment {
 
 
     private void initComponents() {
+        editTextName = (EditText) rootView.findViewById(R.id.editTextName);
+        editTextPhone = (EditText) rootView.findViewById(R.id.editTextPhone);
         editTextLabel = (EditText) rootView.findViewById(R.id.editTextLabel);
         rlAddressLabels = (RelativeLayout) rootView.findViewById(R.id.rlAddressLabels);
         textViewAddress = (TextView) rootView.findViewById(R.id.textViewAddress);
@@ -591,6 +593,8 @@ public class AddToAddressBookFragment extends Fragment {
 
                 if (showAddressLabels) {
                     ((FreshActivity) activity).setSelectedAddress(localAddress);
+                    ((FreshActivity) activity).setSelectedAddressPersonName(editTextName.getText().toString());
+                    ((FreshActivity) activity).setSelectedAddressPersonPhone(editTextPhone.getText().toString());
                     ((FreshActivity)activity).setSelectedLatLng(new LatLng(current_latitude, current_longitude));
                     ((FreshActivity)activity).setSelectedAddressId(0);
                     ((FreshActivity)activity).setSelectedAddressType("");
@@ -672,7 +676,7 @@ public class AddToAddressBookFragment extends Fragment {
                 }
             }
 
-            SearchResult searchResult = new SearchResult(label, localAddress, placeId, current_latitude, current_longitude);
+            SearchResult searchResult = new SearchResult(label, localAddress, placeId, current_latitude, current_longitude,editTextName.getText().toString(),editTextPhone.getText().toString());
             searchResult.setId(searchResultId);
 
             if(activity instanceof FreshActivity){

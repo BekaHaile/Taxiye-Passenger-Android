@@ -13,14 +13,11 @@ import product.clicklabs.jugnoo.retrofit.model.Package
 
 class RentalPackagesAdapter(private var context:Context, private var packages: ArrayList<Package>?,
                             private var currency:String?, private var distanceUnit:String?,
-                            val recyclerView: androidx.recyclerview.widget.RecyclerView
+                            val recyclerView: RecyclerView
                             , private val typeface: Typeface?, private  val onSelectedCallback: OnSelectedCallback) :
-        androidx.recyclerview.widget.RecyclerView.Adapter<RentalPackagesAdapter.ViewHolderCorporate>(),ItemListener {
+        RecyclerView.Adapter<RentalPackagesAdapter.ViewHolderCorporate>(),ItemListener {
 
 
-    companion object {
-        var selectedPackageId :Int? = -1
-    }
     fun setList(packages: ArrayList<Package>, currency:String?, distanceUnit:String?){
         this.packages = packages
         this.currency = currency
@@ -30,12 +27,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
 
     override fun onClickItem(viewClicked: View?, parentView: View?) {
         val pos = recyclerView.getChildLayoutPosition(parentView!!)
-        if(pos != androidx.recyclerview.widget.RecyclerView.NO_POSITION){
-            for(corp in packages!!){
-                corp.selected = false
-            }
-            packages!![pos].selected = true
-            selectedPackageId = packages!![pos].packageId
+        if(pos != RecyclerView.NO_POSITION){
             onSelectedCallback.onItemSelected(packages!![pos])
             notifyDataSetChanged()
 
@@ -45,7 +37,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RentalPackagesAdapter.ViewHolderCorporate {
         val dp5 = context.resources.getDimensionPixelSize(R.dimen.dp_5)
         val view:View = LayoutInflater.from(parent.context).inflate(R.layout.list_item_rental_package, parent, false);
-        val params: androidx.recyclerview.widget.RecyclerView.LayoutParams = view.layoutParams as androidx.recyclerview.widget.RecyclerView.LayoutParams
+        val params: RecyclerView.LayoutParams = view.layoutParams as RecyclerView.LayoutParams
         params.setMargins(0, dp5, 0, dp5)
         view.layoutParams = params
         return ViewHolderCorporate(view, this)
@@ -56,10 +48,12 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
     }
 
     override fun onBindViewHolder(holder: RentalPackagesAdapter.ViewHolderCorporate, position: Int) {
-        holder.bind(packages!![position].getPackageName(distanceUnit), packages!![position].selected, position)
+        val selectedPackage = onSelectedCallback.getSelectedRentalPackage()
+        val selected = selectedPackage?.packageId == packages!![position].packageId
+        holder.bind(packages!![position].getPackageName(distanceUnit), selected)
     }
 
-    inner class ViewHolderCorporate(view : View, listener:ItemListener) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view){
+    inner class ViewHolderCorporate(view : View, listener:ItemListener) : RecyclerView.ViewHolder(view){
         init{
             if(typeface != null) {
                 itemView.tvPackageName.typeface = typeface
@@ -68,7 +62,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
                 listener.onClickItem(it, itemView)
             }
         }
-        fun bind(businessName : String, selected:Boolean, position: Int){
+        fun bind(businessName: String, selected: Boolean){
             itemView.tvPackageName.text = businessName
             itemView.tvPackageName.setCompoundDrawablesRelativeWithIntrinsicBounds(
                     if (selected) R.drawable.ic_radio_button_checked else R.drawable.ic_radio_button_unchecked,
@@ -78,6 +72,7 @@ class RentalPackagesAdapter(private var context:Context, private var packages: A
 
     interface OnSelectedCallback{
         fun onItemSelected(selectedPackage: Package)
+        fun getSelectedRentalPackage() : Package?
     }
 
 }
