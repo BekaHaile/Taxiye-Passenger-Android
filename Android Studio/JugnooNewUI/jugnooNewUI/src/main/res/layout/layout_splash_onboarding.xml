@@ -340,6 +340,16 @@
                 </RelativeLayout>
 
 
+                <TextView
+                    android:id="@+id/tvSTerms"
+                    android:layout_width="269dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/px_70"
+                    android:text="@string/nl_splash_terms"
+                    android:textColor="@color/document_layout_bordor_color"
+                    android:textSize="@dimen/text_size_24" />
+
                 <Button
                     android:id="@+id/bPromoSubmit"
                     android:layout_width="@dimen/splash_button_width"

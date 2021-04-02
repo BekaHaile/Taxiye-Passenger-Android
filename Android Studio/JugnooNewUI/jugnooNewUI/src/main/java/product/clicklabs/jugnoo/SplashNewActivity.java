@@ -681,8 +681,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			buttonGoogleSignup = (RelativeLayout) findViewById(R.id.buttonGoogleSignup);
 			textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
 			textViewSTerms.setTypeface(Fonts.mavenMedium(this));
-			tvSTerms = (TextView) findViewById(R.id.tvSTerms);
-			tvSTerms.setTypeface(Fonts.mavenMedium(this));
+
 
 			linearLayoutWalletContainer = (LinearLayout) findViewById(R.id.linearLayoutWalletContainer);
 			linearLayoutWalletContainerInner = (LinearLayout) findViewById(R.id.linearLayoutWalletContainerInner);
@@ -741,6 +740,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
 			rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
 			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
+			tvSTerms = (TextView) findViewById(R.id.tvSTerms);
+			tvSTerms.setTypeface(Fonts.mavenMedium(this));
 
 			((TextView)findViewById(R.id.tvJugnooTaxiS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			((TextView)findViewById(R.id.tvJugnooTaxiLS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
