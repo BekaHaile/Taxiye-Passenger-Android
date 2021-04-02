@@ -41,7 +41,7 @@ public class Config {
 
 
 
-    private static final String DEV_SERVER_URL = "https://prod.taxiye.com:8012";
+    private static final String DEV_SERVER_URL = BuildConfig.LIVE_URL;
     private static final String LIVE_SERVER_URL = BuildConfig.LIVE_URL;
 
     private static final String LEGACY_SERVER_URL = "https://prod.taxiye.com:4012";
@@ -72,26 +72,26 @@ public class Config {
     private static int MIN_AMOUNT = 100;
 
 
-    private static final String FRESH_DEV_SERVER_URL = "https://prod.taxiye.com:8060";
-    private static final String FRESH_LIVE_SERVER_URL = "https://prod.taxiye.com:4040";
+    private static final String FRESH_DEV_SERVER_URL = BuildConfig.FRESH_DEV_SERVER_URL;
+    private static final String FRESH_LIVE_SERVER_URL = BuildConfig.FRESH_LIVE_SERVER_URL;
 
-    private static final String CHAT_DEV_SERVER_URL = "https://prod.taxiye.com:8095";
-    private static final String CHAT_LIVE_SERVER_URL = "https://prod.taxiye.com:4010";
+    private static final String CHAT_DEV_SERVER_URL = BuildConfig.CHAT_DEV_SERVER_URL;
+    private static final String CHAT_LIVE_SERVER_URL = BuildConfig.CHAT_LIVE_SERVER_URL;
 
     private static final String MENUS_DEV_SERVER_URL = BuildConfig.MENUS_DEV_SERVER_URL;
     private static final String MENUS_LIVE_SERVER_URL = BuildConfig.MENUS_LIVE_SERVER_URL;
 
-    private static final String FATAFAT_DEV_SERVER_URL = "https://prod.taxiye.com:8100";
-    private static final String FATAFAT_LIVE_SERVER_URL = "https://prod.taxiye.com:4030";
+    private static final String FATAFAT_DEV_SERVER_URL = BuildConfig.FATAFAT_DEV_SERVER_URL;
+    private static final String FATAFAT_LIVE_SERVER_URL = BuildConfig.FATAFAT_LIVE_SERVER_URL;
 
-    private static final String PAY_DEV_SERVER_URL = "https://prod.taxiye.com:8099/pay/v1";
-    private static final String PAY_LIVE_SERVER_URL = "https://prod.taxiye.com:4099/pay/v1";
+    private static final String PAY_DEV_SERVER_URL = BuildConfig.PAY_DEV_SERVER_URL;
+    private static final String PAY_LIVE_SERVER_URL = BuildConfig.PAY_LIVE_SERVER_URL;
 
-    private static final String FEED_DEV_SERVER_URL = "https://prod.taxiye.com:8094";
-    private static final String FEED_LIVE_SERVER_URL = "https://prod.taxiye.com:8094";
+    private static final String FEED_DEV_SERVER_URL = BuildConfig.FEED_DEV_SERVER_URL;
+    private static final String FEED_LIVE_SERVER_URL = BuildConfig.FEED_LIVE_SERVER_URL;
 
-    private static final String PROS_DEV_SERVER_URL = "https://prod.taxiye.com:8061";
-    private static final String PROS_LIVE_SERVER_URL = "https://prod.taxiye.com:4034";
+    private static final String PROS_DEV_SERVER_URL = BuildConfig.PROS_DEV_SERVER_URL;
+    private static final String PROS_LIVE_SERVER_URL = BuildConfig.PROS_LIVE_SERVER_URL;
     /**
      * Initialize all the variable in this method
      *
