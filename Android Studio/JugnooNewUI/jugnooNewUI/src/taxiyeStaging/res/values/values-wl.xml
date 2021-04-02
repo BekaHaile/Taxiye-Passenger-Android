@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <integer name="view_visible">0</integer>
+    <integer name="view_invisible">1</integer>
+    <integer name="view_gone">2</integer>
+
+
+    <!--Other things to change
+        1. google-services.json
+        2. Doc entity in strings.xml
+        3. application_id in build.gradle
+    -->
+
+
+    <!--
+        Icons to change:
+            ic_taxi_logo => ic_splash_logo
+            ic_launcher
+            notification_icon
+    -->
+
+    <string name="app_name">Taxiye</string>
+
+    <string name="google_maps_api_key">AIzaSyDRlxbwMF-rjd0m2jitT5Czg_pjQP4kqRk</string>
+    <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
+    <string name="fb_app_id">478771686406613</string>
+    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="ak_login_protocol_scheme">ak478771686406613</string>
+    <string name="branch_key">key_live_piQJFqbj99uCtGmr46UZkjhhqCcayBv9</string>
+
+
+
+
+
+    <string name="operator_token">8fa23305501d87e9b87ecac6a87d381b</string>
+    <string name="support_number">+251970464646</string>
+    <string name="police_number">911</string>
+    <string name="facebook_page_id">256281040558</string>
+    <string name="facebook_page_url">https://www.facebook.com/taxiyee</string>
+
+
+    <integer name="is_autos_offers_enabled">@integer/view_gone</integer>
+    <integer name="show_referal_on_end_ride">@integer/view_gone</integer>
+
+
+
+    <dimen name="splash_logo_width">150dp</dimen>
+    <dimen name="login_logo_width">150dp</dimen>
+    <dimen name="splash_logo_height">150dp</dimen>
+    <dimen name="splash_logo_top_margin">100dp</dimen>
+    <integer name="show_splash_top_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_bottom_bg">@integer/view_invisible</integer>
+    <integer name="show_login_top_bg">@integer/view_invisible</integer>
+    <integer name="show_splash_bg">@integer/view_visible</integer>
+    <drawable name="splash_logo_icon_drawable">#00FFFFFF</drawable>
+    <drawable name="login_logo_icon_drawable">@drawable/ic_splash_logo</drawable>
+    <drawable name="splash_background_drawable">@drawable/pass_splash</drawable>
+    <drawable name="login_background_drawable">@color/white</drawable>
+    <integer name="show_social_login">@integer/view_invisible</integer>
+    <integer name="show_splash_logo_text">@integer/view_invisible</integer>
+    <integer name="show_splash_logo_text_login">@integer/view_invisible</integer>
+
+    <string name="file_provider_name">com.taxiye.fileprovider</string>
+    <string name="web_landing_page">www.taxiye.com</string>
+    <string name="smart_url">http://smarturl.it/taxiye</string>
+    <string name="db_name">taxiye</string>
+    <string name="terms_of_use_url">https://www.taxiye.com/termsconditions.html</string>
+    <string name="app_domain">taxiye.com</string>
+    <string name="app_host_name">www.taxiye.com</string>
+    <string name="branch_domain">taxiye.app.link</string>
+    <string name="app_scheme">taxiye://</string>
+
+    <string name="pictures_path">Taxiye/Taxiye Pictures</string>
+    <bool name="force_inhouse_login">true</bool>
+    <bool name="force_mpesa_payment">true</bool>
+    <bool name="show_about">true</bool>
+    <bool name="show_change_languge">true</bool>
+    <!--default support email for SupportMailActivity if not coming from server-->
+    <string name="default_support_email">support@taxiye.com</string>
+    <integer name="send_invites_visibility">@integer/view_gone</integer>
+    <integer name="apply_default_country_code">1</integer>
+    <string name="default_country_code">+251</string>
+    <string name="default_country_iso">ETH</string>
+    <string name="default_currency">ETB</string>
+    <string name="pay_later">Cash</string>
+    <string name="your_trips">History</string>
+    <bool name="force_open_autos">false</bool>
+
+    <string name="rupee">ETB</string>
+
+    <string name="rupee_0">ETB 0</string>
+    <string name="rupees_value_format">ETB %s</string>
+    <string name="minimum_order_rupee_format">Min Order ETB %s</string>
+    <string name="minimum_order_rupee_short_format"> \u2022 Min ETB %s</string>
+</resources>
