@@ -552,7 +552,7 @@ public class JSONParser implements Constants {
             	Data.userData.getReferralMessages().setMultiLevelReferralEnabled(autosData.getMultiLevelReferralEnabled());
             	Data.userData.getReferralMessages().setReferralImages(autosData.getReferralImages());
 
-				//  reorderMenu(context);
+				reorderMenu(context);
 			}
         } catch (Exception e) {
             e.printStackTrace();
@@ -697,7 +697,7 @@ public class JSONParser implements Constants {
 		Prefs.with(context).save(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_REGION_FARE_CHECK_ENABLED, 0));
 		Prefs.with(context).save(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, autoData.optInt(KEY_CUSTOMER_PICKUP_ADDRESS_EMPTY_CHECK_ENABLED, 0));
 		Prefs.with(context).save(KEY_CUSTOMER_DIRECTIONS_CACHING, autoData.optInt(KEY_CUSTOMER_DIRECTIONS_CACHING,
-				1));
+				context.getResources().getInteger(R.integer.customer_directions_caching)));
 		Prefs.with(context).save(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT, autoData.optInt(KEY_CUSTOMER_REMOVE_PICKUP_ADDRESS_HIT,
 				context.getResources().getInteger(R.integer.remove_pickup_address_hit)));
 		Prefs.with(context).save(KEY_CUSTOMER_REQUEST_RIDE_POPUP, autoData.optInt(KEY_CUSTOMER_REQUEST_RIDE_POPUP,
@@ -731,6 +731,9 @@ public class JSONParser implements Constants {
 				context.getResources().getInteger(R.integer.pay_via_upi_enabled)));
 		Prefs.with(context).save(SHOW_CUSTOMER_VERIFICATION, autoData.optInt(SHOW_CUSTOMER_VERIFICATION,
 				context.getResources().getInteger(R.integer.show_customer_verification)));
+		Prefs.with(context).save(KEY_DEACTIVATE_ACCOUNT_ENABLED, autoData.optInt(KEY_DEACTIVATE_ACCOUNT_ENABLED,
+				context.getResources().getInteger(R.integer.deactivate_account_enabled)));
+		Prefs.with(context).save(KEY_REQUESTED_FOR_ACCOUNT_DELETION, autoData.optInt(KEY_REQUESTED_FOR_ACCOUNT_DELETION, 0));
 
 		parseCityConfigVariables(context, autoData, String.valueOf(Data.userData != null ? Data.userData.getCityId() : 0));
 
@@ -796,7 +799,8 @@ public class JSONParser implements Constants {
 				return;
 			}
 
-			Prefs.with(context).save(KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER, context.getString(R.string.jungle_map_fm_token));
+			String fmToken = userData.optString(KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER, "");
+			Prefs.with(context).save(KEY_JUNGLE_FM_API_KEY_ANDROID_CUSTOMER, fmToken);
 
 			String jungleObjStr = BuildConfig.DEBUG ? JUNGLE_JSON_OBJECT : EMPTY_JSON_OBJECT;
 			JSONObject jungleObj = userData.optJSONObject(KEY_JUNGLE_DIRECTIONS_OBJ);

@@ -24,11 +24,15 @@ import com.sabkuchfresh.analytics.GAAction;
 import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 import com.sabkuchfresh.commoncalls.SendFeedbackQuery;
+import com.sabkuchfresh.feed.ui.api.APICommonCallback;
+import com.sabkuchfresh.feed.ui.api.ApiCommon;
+import com.sabkuchfresh.feed.ui.api.ApiName;
 import com.sabkuchfresh.home.FreshActivity;
 import com.sabkuchfresh.pros.api.ApiProsOrderStatus;
 import com.sabkuchfresh.pros.models.ProsOrderStatus;
 import com.sabkuchfresh.pros.models.ProsOrderStatusResponse;
 import com.sabkuchfresh.retrofit.model.OrderHistoryResponse;
+import com.sabkuchfresh.retrofit.model.PlaceOrderResponse;
 import com.sabkuchfresh.utils.RatingBarMenuFeedback;
 import com.sabkuchfresh.utils.Utils;
 
@@ -51,6 +55,7 @@ import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
+import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.datastructure.ProductType;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
@@ -58,6 +63,7 @@ import product.clicklabs.jugnoo.home.models.RateAppDialogContent;
 import product.clicklabs.jugnoo.home.models.RideEndGoodFeedbackViewType;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
+import product.clicklabs.jugnoo.retrofit.model.PaymentResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.support.TransactionUtils;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -88,7 +94,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             ivOffering;
     private FragmentActivity activity;
     private LinearLayout linearLayoutRideSummary, linearLayoutRSViewInvoice, linearLayoutRideSummaryContainer, llBadReason;
-    private RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage;
+    public RelativeLayout mainLayout, relativeLayoutGreat, relativeLayoutRideEndWithImage,rlHowWasExp;
     private TextView textViewThanks, textViewRSTotalFare, textViewRSData, textViewRSCashPaid, textViewRSCashPaidValue, tvItems,
             textViewRSInvoice, textViewRSRateYourRide, textViewThumbsDown, textViewThumbsUp, textViewRideEndWithImage;
     private Button buttonEndRideSkip, buttonEndRideInviteFriends;
@@ -110,15 +116,16 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
     private Button buttonRSSubmitFeedback;
     private EditText editTextRSFeedback;
     private LinearLayout llThumbsRating;
-    private RatingBarMenuFeedback ratingBarMenuFeedback;
+    public RatingBarMenuFeedback ratingBarMenuFeedback;
     private ArrayList<FeedbackReason> negativeReasons = new ArrayList<>();
     private TextView textViewRSWhatImprove;
+    public Button btPayOnline;
     private ArrayList<FeedbackReason> positiveReasons;
 
     private int jobId = 0;
     private String feedbackClientId = "";
     private int merchantCategoryId;
-    private LoginResponse.FeedbackData feedbackData;
+    public LoginResponse.FeedbackData feedbackData;
     private KeyboardLayoutListener.KeyBoardStateHandler mKeyBoardStateHandler;
 
     private Button buttonRSSkipFeedback;
@@ -201,12 +208,16 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
                 } else if (feedbackClientId.equals(Config.getMenusClientId())) {
 
                     productType = ProductType.MENUS;
-                    if (!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())) {
-                        setTitle(Data.getMenusData().getRestaurantName());
-                    } else {
+                    try {
+                        if (!TextUtils.isEmpty(Data.getMenusData().getRestaurantName())) {
+                            setTitle(Data.getMenusData().getRestaurantName());
+                        } else {
+                            setTitle(activity.getString(R.string.menus));
+                        }
+                    }
+                    catch (Exception e){
                         setTitle(activity.getString(R.string.menus));
                     }
-
                     initFeedbackVariables(feedbackData);
 
 
@@ -297,7 +308,6 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
             }
         }
 
-
     }
 
 
@@ -312,6 +322,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         relativeLayoutGreat = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutGreat);
         relativeLayoutGreat.setVisibility(View.GONE);
         relativeLayoutRideEndWithImage = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutRideEndWithImage);
+        rlHowWasExp = (RelativeLayout) rootView.findViewById(R.id.rlHowWasExp);
         relativeLayoutRideEndWithImage.setVisibility(View.GONE);
 
         textViewThanks = (TextView) rootView.findViewById(R.id.textViewThanks);
@@ -370,6 +381,9 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         buttonEndRideInviteFriends = (Button) rootView.findViewById(R.id.buttonEndRideInviteFriends);
         textViewRSWhatImprove = ((TextView) rootView.findViewById(R.id.textViewRSWhatImprove));
         textViewRSWhatImprove.setTypeface(Fonts.mavenMedium(activity));
+
+        btPayOnline = ((Button) rootView.findViewById(R.id.btPayOnline));
+        btPayOnline.setTypeface(Fonts.mavenMedium(activity));
         buttonRSSubmitFeedback = (Button) rootView.findViewById(R.id.buttonRSSubmitFeedback);
         buttonRSSubmitFeedback.setTypeface(Fonts.mavenRegular(activity));
 
@@ -408,7 +422,14 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
 
 
             llThumbsRating.setVisibility(View.GONE);
-            ratingBarMenuFeedback.setVisibility(View.VISIBLE);
+            if(feedbackData.getShowPaymentOption()==0) {
+                ratingBarMenuFeedback.setVisibility(View.VISIBLE);
+                rlHowWasExp.setVisibility(View.VISIBLE);
+            }
+            else {
+                ratingBarMenuFeedback.setVisibility(View.GONE);
+                rlHowWasExp.setVisibility(View.GONE);
+            }
             editTextRSFeedback.setHint(R.string.comments);
             textViewRSWhatImprove.setTag(null);
             ratingBarMenuFeedback.setOnScoreChanged(new RatingBarMenuFeedback.IRatingBarCallbacks() {
@@ -487,6 +508,13 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        btPayOnline.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    makeFatafatPaymentViaMPESA();
+            }
+        });
 
         buttonRSSkipFeedback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -618,6 +646,13 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         };
         // register for keyboard event
         activityCallbacks.registerForKeyBoardEvent(mKeyBoardStateHandler);
+        if(feedbackData.getShowPaymentOption()==1){
+            btPayOnline.setVisibility(View.VISIBLE);
+                btPayOnline.setText(getString(R.string.pay_via)+" "+getString(R.string.mpesa));
+        }
+        else {
+            btPayOnline.setVisibility(View.GONE);
+        }
 
     }
 
@@ -1174,6 +1209,69 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         void registerForKeyBoardEvent(final KeyboardLayoutListener.KeyBoardStateHandler keyboardListener);
 
         void unRegisterKeyBoardListener();
+    }
+
+    public void makeFatafatPaymentViaMPESA(){
+
+        HashMap<String,String> params = new HashMap<>();
+        params.put(Constants.KEY_ACCESS_TOKEN,Data.userData.accessToken);
+        params.put(Constants.KEY_ORDER_ID,String.valueOf(orderId));
+        params.put(Constants.KEY_PAYMENT_MODE,String.valueOf(PaymentOption.MPESA.getOrdinal()));
+        params.put(Constants.KEY_AMOUNT,String.valueOf(feedbackData.getAmount()));
+
+
+        new ApiCommon<PaymentResponse>(activity).showLoader(true).execute(params, ApiName.FEED_PAY_FOR_ORDER,
+                new APICommonCallback<PaymentResponse>() {
+                    @Override
+                    public boolean onNotConnected() {
+//                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onException(final Exception e) {
+//                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public void onSuccess(final PaymentResponse response, final String message, final int flag) {
+
+                        try {
+                            if(flag == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+                                DialogPopup.showLoadingDialog(activity,message);
+                                DialogPopup.alertPopup(activity, "", message);
+                            } else {
+                                DialogPopup.alertPopup(activity, "", message);
+//                                slideInitialDelay();
+                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            DialogPopup.alertPopup(activity, "", activity.getString(R.string.connection_lost_please_try_again));
+//                            slideInitialDelay();
+                        }
+                    }
+
+                    @Override
+                    public boolean onError(final PaymentResponse paymentResponse, final String message, final int flag) {
+//                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onFailure(final Exception error) {
+//                        slideInitialDelay();
+                        return false;
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+//                        slideInitialDelay();
+
+                    }
+                });
+
     }
 
 }

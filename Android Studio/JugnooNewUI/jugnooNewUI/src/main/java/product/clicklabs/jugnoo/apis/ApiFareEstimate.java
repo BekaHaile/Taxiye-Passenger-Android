@@ -2,7 +2,6 @@ package product.clicklabs.jugnoo.apis;
 
 import android.app.Activity;
 import android.content.Context;
-import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.JSONParser;
@@ -33,7 +33,6 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.Region;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.Package;
-import product.clicklabs.jugnoo.retrofit.model.ServiceTypeValue;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Log;
@@ -127,58 +126,54 @@ public class ApiFareEstimate {
                                             final boolean callFareEstimate, final Region region, final PromoCoupon promoCoupon,
                                             final Package selectedPackage, final String source){
         if (multiDestLatLngs != null) {
-            ArrayList<LatLng> waypoints = new ArrayList<>();
-            waypoints.add(sourceLatLng);
-            waypoints.addAll(multiDestLatLngs);
-            waypoints.add(destLatLng);
-            new ApiGoogleDirectionWaypoints(waypoints, false, new ApiGoogleDirectionWaypoints.Callback() {
-                @Override
-                public void onPre() {
 
-                }
+			JungleApisImpl.INSTANCE.getDirectionsWaypointsPath(sourceLatLng, destLatLng, multiDestLatLngs,
+					source, true, true, new JungleApisImpl.Callback() {
+						@Override
+						public void onSuccess(@NotNull List<LatLng> latLngs, @NotNull Path path) {
+							try {
+								list = latLngs;
+								if (latLngs.size() > 0) {
+									ApiFareEstimate.this.sourceLatLng = sourceLatLng;
+									ApiFareEstimate.this.destLatLng = destLatLng;
 
-                @Override
-                public void onFinish(List<LatLng> list, String result) {
-                    try {
+									distanceText = path.getDistanceText();
+									timeText = path.getTimeText();
 
-                        Log.i("result", "=" + result);
-                        JSONObject jObj = new JSONObject(result);
-
-                        if (jObj.getString("status").equalsIgnoreCase("OK") && list.size() > 0) {
-
-//                            startAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address");
-//                            endAddress = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address");
-
-                            distanceText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("text");
-                            timeText = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text");
-
-                            distanceValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getDouble("value");
-                            timeValue = jObj.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getDouble("value");
-                            callback.onSuccess(list, distanceText, timeText,
-                                    distanceValue, timeValue, promoCoupon);
-                            if (callFareEstimate) {
-                                getFareEstimate((Activity) context, sourceLatLng, destLatLng,
-                                        distanceValue / 1000d, timeValue / 60d, isPooled, region, promoCoupon,
-                                        list,selectedPackage);
-                            }
-                        } else {
-                            DialogPopup.dismissLoadingDialog();
+									distanceValue = path.getDistance();
+									timeValue = path.getTime();
+									callback.onSuccess(latLngs, distanceText, timeText,
+											distanceValue, timeValue, promoCoupon);
+									if (callFareEstimate) {
+										getFareEstimate((Activity) context, sourceLatLng, destLatLng,
+												distanceValue / 1000d, timeValue / 60d, isPooled, region, promoCoupon,
+												latLngs,selectedPackage);
+									} else {
+										DialogPopup.dismissLoadingDialog();
+									}
+								} else {
+									DialogPopup.dismissLoadingDialog();
 //                            retryDialogDirections(context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop), null,null,sourceLatLng, multiDestLatLngs, destLatLng, isPooled, callFareEstimate, region,selectedPackage, promoCoupon);
-                            DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop));
+									DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop));
 
-                            callback.onDirectionsFailure();
-                        }
+									callback.onDirectionsFailure();
+								}
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        DialogPopup.dismissLoadingDialog();
+							} catch (Exception e) {
+								e.printStackTrace();
+								DialogPopup.dismissLoadingDialog();
 //                        retryDialogDirections(context.getString(R.string.connection_lost_please_try_again), sourceLatLng, multiDestLatLngs, destLatLng, isPooled, callFareEstimate, region, promoCoupon);
-                        DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop));
+								DialogPopup.alertPopup((Activity) context, "", context.getString(R.string.fare_could_not_be_estimated_between_pickup_drop));
 
-                        callback.onDirectionsFailure();
-                    }
-                }
-            }).execute();
+								callback.onDirectionsFailure();
+							}
+						}
+
+						@Override
+						public void onFailure() {
+
+						}
+					});
         }
     }
 
@@ -237,10 +232,6 @@ public class ApiFareEstimate {
                 params.put(Constants.KEY_IS_POOLED, "" + isPooled);
                 params.put(Constants.KEY_VEHICLE_TYPE, String.valueOf(region.getVehicleType()));
                 params.put(Constants.KEY_RIDE_TYPE, String.valueOf(region.getRideType()));
-                if(region.getRideType() == ServiceTypeValue.POOL.getType()
-                        && Data.autoData.getPoolSeatsSelected() > 0) {
-                    params.put(Constants.KEY_NO_OF_POOL_SEATS, String.valueOf(Data.autoData.getPoolSeatsSelected()));
-                }
                 params.put(Constants.KEY_REGION_ID, String.valueOf(region.getRegionId()));
                 if(promoCoupon!=null && promoCoupon.getId()!=-1){
                     params.put(promoCoupon instanceof CouponInfo?Constants.KEY_COUPON_ID:Constants.KEY_PROMO_ID, String.valueOf(promoCoupon.getId()));

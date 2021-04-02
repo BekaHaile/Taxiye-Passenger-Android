@@ -171,6 +171,46 @@
 
                     <EditText
 
+                        android:id="@+id/editTextName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/px_48"
+                        android:layout_marginEnd="@dimen/px_48"
+                        android:background="@drawable/bottom_border_grey"
+                        android:hint="@string/name"
+                        android:inputType="text|textFilter|textCapSentences"
+                        android:maxLines="1"
+                        android:paddingBottom="@dimen/px_26"
+                        android:paddingTop="@dimen/px_26"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textSize="@dimen/px_26"
+                        android:visibility="gone"
+                        app:typekitFont="@string/maven_r"
+                        />
+                    <EditText
+
+                        android:id="@+id/editTextPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/px_48"
+                        android:layout_marginEnd="@dimen/px_48"
+                        android:background="@drawable/bottom_border_grey"
+                        android:hint="@string/phone"
+                        android:inputType="phone"
+                        android:maxLines="1"
+                        android:paddingBottom="@dimen/px_26"
+                        android:paddingTop="@dimen/px_26"
+                        android:textColor="@color/text_color"
+                        android:textColorHint="@color/text_color_hint"
+                        android:textCursorDrawable="@drawable/cursor_black"
+                        android:textSize="@dimen/px_26"
+                        android:visibility="gone"
+                        app:typekitFont="@string/maven_r"
+                        />
+                    <EditText
+
                         android:id="@+id/editTextLabel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

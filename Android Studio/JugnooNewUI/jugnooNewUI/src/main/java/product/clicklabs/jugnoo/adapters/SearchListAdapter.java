@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
-import androidx.core.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -28,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import androidx.core.content.ContextCompat;
 import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.MyApplication;
@@ -86,14 +86,14 @@ public class SearchListAdapter extends BaseAdapter{
         public void afterTextChanged(Editable s) {
             try {
                 SearchListAdapter.this.searchListActionsHandler.onTextChange(s.toString().trim());
-                if (s.toString().trim().length() == 1) {
+                if (s.toString().trim().length() > 1 && s.toString().trim().length() <= 4) {
 
 					searchResultsForSearch.clear();
 					addFavoriteLocations(s.toString().trim(),input_finish_checker.editText);
 					setSearchResultsToList(input_finish_checker.editText);
 
                 }
-                else if (s.toString().trim().length() > 1) {
+                else if (s.toString().trim().length() > 4) {
 
 					last_text_edit = System.currentTimeMillis();
 					handler.removeCallbacks(input_finish_checker);
@@ -617,7 +617,7 @@ public class SearchListAdapter extends BaseAdapter{
 
 		@Override
 		public void run() {
-			if (System.currentTimeMillis() > (last_text_edit + delay - 200) && textToSearch.length() > 1) {
+			if (System.currentTimeMillis() > (last_text_edit + delay - 200) && textToSearch.length() > 2) {
 				getSearchResults(textToSearch, SearchListAdapter.this.defaultSearchPivotLatLng,editText);
 			}
 		}

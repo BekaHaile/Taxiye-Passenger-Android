@@ -83,11 +83,12 @@ public class AnywhereDeliveryChargesDialog {
             LinearLayout linearLayout = (LinearLayout) inflater.inflate(R.layout.layout_details_anywhere_delivery_dialog, null, false);
             ((TextView)linearLayout.findViewById(R.id.tv_label)).setText(label);
 			String mapValFare = product.clicklabs.jugnoo.utils.Utils.formatCurrencyValue(currencyCode, value, false);
-			if(mapValFare.contains(currencyCode)){
-				((TextView)linearLayout.findViewById(R.id.tv_value)).setText(String.format("%s%s", currency, product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(value)));
-			} else {
-				((TextView)linearLayout.findViewById(R.id.tv_value)).setText(deliveryFare);
-			}
+//			if(mapValFare.contains(currencyCode)){
+//				((TextView)linearLayout.findViewById(R.id.tv_value)).setText(String.format("%s%s", currency, product.clicklabs.jugnoo.utils.Utils.getMoneyDecimalFormat().format(value)));
+				((TextView)linearLayout.findViewById(R.id.tv_value)).setText(mapValFare);
+//			} else {
+//				((TextView)linearLayout.findViewById(R.id.tv_value)).setText(deliveryFare);
+//			}
             ((View)linearLayout.findViewById(R.id.view_dotted)).setLayerType(View.LAYER_TYPE_SOFTWARE, null) ;
 			linearLayoutInner.addView(linearLayout,linearLayoutInner.getChildCount()-1);
 

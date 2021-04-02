@@ -78,7 +78,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 	@Override
 	protected String doInBackground(String... params) {
 		try {
-			Response response = GoogleRestApis.INSTANCE.getDirectionsWaypoints(strOrigin, strDestination, strWaypoints);
+			Response response = GoogleRestApis.INSTANCE.getDirectionsWaypoints(strOrigin, strDestination, strWaypoints,"");
 			return new String(((TypedByteArray)response.getBody()).getBytes());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,7 +102,7 @@ public class ApiGoogleDirectionWaypoints extends AsyncTask<String, Integer, Stri
 		List<LatLng> list = new ArrayList<>();
 		String s = null;
 		try {
-			Response response = GoogleRestApis.INSTANCE.getDirectionsWaypoints(strOrigin, strDestination, strWaypoints);
+			Response response = GoogleRestApis.INSTANCE.getDirectionsWaypoints(strOrigin, strDestination, strWaypoints,"");
 			s = new String(((TypedByteArray)response.getBody()).getBytes());
 			list = MapUtils.getLatLngListFromPath(s);
 		} catch (Exception e) {

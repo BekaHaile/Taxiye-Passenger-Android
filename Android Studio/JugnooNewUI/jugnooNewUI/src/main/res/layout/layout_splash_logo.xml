@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/splash_background_drawable"
-        android:visibility="@integer/show_splash_bg" />
+        android:visibility="@integer/show_splash_bg"
+        android:tag="mwar" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

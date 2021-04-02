@@ -1,5 +1,6 @@
 package com.sabkuchfresh.feed.models;
 
+import com.google.gson.JsonParseException;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,6 +15,9 @@ public class FeedCommonResponse {
     @SerializedName("flag")
     @Expose
     public int flag;
+    @SerializedName("user_debt")
+    @Expose
+    public double userDebt;
     @SerializedName("message")
     @Expose
     public String message;
@@ -43,5 +47,13 @@ public class FeedCommonResponse {
 
     public void setError(String error) {
         this.error = error;
+    }
+
+    public double getUserDebt() {
+        return userDebt;
+    }
+
+    public void setUserDebt(double userDebt) {
+        this.userDebt = userDebt;
     }
 }

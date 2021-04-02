@@ -5,10 +5,10 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
-import androidx.core.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import androidx.core.app.ActivityCompat;
 import product.clicklabs.jugnoo.BuildConfig;
 
 public class UniqueIMEIID {
@@ -43,10 +43,10 @@ public class UniqueIMEIID {
 		String suffix = BuildConfig.DEBUG ? BuildConfig.FLAVOR:"";
 
 		androidSecureId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-		if(!TextUtils.isEmpty(imei))return imei;
-		if(!TextUtils.isEmpty(serial))return serial;
+		if(!TextUtils.isEmpty(imei))return imei+suffix;
+		if(!TextUtils.isEmpty(serial))return serial+suffix;
 
-		return androidSecureId;
+		return androidSecureId+suffix;
 
 
 

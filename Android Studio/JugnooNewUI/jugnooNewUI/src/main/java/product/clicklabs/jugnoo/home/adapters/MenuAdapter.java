@@ -47,6 +47,8 @@ import product.clicklabs.jugnoo.ReferDriverActivity;
 import product.clicklabs.jugnoo.RideTransactionsActivity;
 import product.clicklabs.jugnoo.adapters.BlockedDriversAdapter;
 import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.credits.SendCreditsToCustomer;
 import product.clicklabs.jugnoo.datastructure.MenuInfoTags;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
 import product.clicklabs.jugnoo.home.HomeActivity;
@@ -127,8 +129,6 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     params.bottomMargin = 0;
                     ((ViewHolder) viewholder).relative.setLayoutParams(params);
                 }
-
-
 
                 MenuInfo menuInfo = menuList.get(position);
                 ViewHolder holder = (ViewHolder) viewholder;
@@ -289,7 +289,11 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                 }else if(MenuInfoTags.BLOCKED_DRIVERS.getTag().equalsIgnoreCase(menuInfo.getTag())){
 
                 }
-
+                else if(MenuInfoTags.CUSTOMER_TO_CUSTOMER.getTag().equalsIgnoreCase(menuInfo.getTag())) {
+                    holder.imageViewMenuIcon.setImageResource(R.drawable.ic_fare_details_grey_theme_selector);
+                    int padding = activity.getResources().getDimensionPixelSize(R.dimen.dp_4);
+                    holder.imageViewMenuIcon.setPadding(padding, padding, padding, padding);
+                }
                 else{
                     hideLayout(holder.relative);
                 }
@@ -700,9 +704,18 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
             else if(MenuInfoTags.BLOCKED_DRIVERS.getTag().equalsIgnoreCase(tag)){
                 activity.startActivity(new Intent(activity, BlockedDriversActivity.class));
             }
+            else if(MenuInfoTags.CUSTOMER_TO_CUSTOMER.getTag().equalsIgnoreCase(tag)){
+                openCustomerToCustomerWallet(Config.getProsClientId(), activity,latLng);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private static void openCustomerToCustomerWallet(final String clientId, final Activity activity, final LatLng latLng) {
+        Intent intent = new Intent(activity, SendCreditsToCustomer.class);
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
     }
 
     private Handler handler;

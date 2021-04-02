@@ -24,6 +24,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.MultipartTypedOutput;
 import retrofit.mime.TypedFile;
+import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedString;
 import retrofit2.Call;
 
@@ -48,6 +49,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
     private boolean isCancelled;
     private boolean isErrorCancellable = true;
     private TypedFile typedFile;
+    private int successFlag = ApiResponseFlags.ACTION_COMPLETE.getOrdinal();
 
     public boolean isInProgress() {
         return isInProgress;
@@ -71,6 +73,11 @@ public class ApiCommon<T extends FeedCommonResponse> {
 
     public ApiCommon<T> showLoader(boolean showLoader) {
         this.showLoader = showLoader;
+        return this;
+    }
+
+    public ApiCommon<T> successFlag(int successFlag) {
+        this.successFlag = successFlag;
         return this;
     }
 
@@ -140,6 +147,15 @@ public class ApiCommon<T extends FeedCommonResponse> {
                 @Override
                 public void success(T feedCommonResponse, Response response) {
 					handleSuccess(feedCommonResponse);
+
+					if(apiCommonCallback.isRawResponseNeeded()) {
+						try {
+							String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+							apiCommonCallback.rawResponse(responseStr);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 				}
 
                 @Override
@@ -154,6 +170,17 @@ public class ApiCommon<T extends FeedCommonResponse> {
 				@Override
 				public void onResponse(Call<T> call, retrofit2.Response<T> response) {
 					handleSuccess(response.body());
+
+
+					if(apiCommonCallback.isRawResponseNeeded()) {
+						try {
+							okhttp3.Response responseRaw = response.raw();
+							String responseStr = new String(responseRaw.body().bytes());
+							apiCommonCallback.rawResponse(responseStr);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 				}
 
 				@Override
@@ -170,7 +197,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
         }
 
 
-        if (putAccessToken) {
+        if (putAccessToken && Data.userData != null) {
             if (isMultiPartRequest) {
                 multipartTypedOutput.addPart(Constants.KEY_ACCESS_TOKEN, new TypedString(Data.userData.accessToken));
             } else {
@@ -329,8 +356,32 @@ public class ApiCommon<T extends FeedCommonResponse> {
 			case REINVITE_USERS:
                 RestClient2.getApiService().reinviteUsers(params).enqueue(callback2);
                 break;
+			case ADD_DROP_LOCATION:
+                RestClient.getApiService().addDropLocation(params, callback);
+                break;
 			case UPDATE_PAYMENT_TO_UPI:
                 RestClient2.getApiService().updatePaymentModeToUpi(params).enqueue(callback2);
+                break;
+			case RATE_THE_DRIVER:
+                RestClient.getApiService().rateTheDriver(params, callback);
+                break;
+			case CANCEL_RIDE_BY_CUSTOMER:
+                RestClient.getApiService().cancelRideByCustomer(params, callback);
+                break;
+			case SEND_OTP_VIA_CALL:
+                RestClient.getApiService().sendOtpViaCall(params, callback);
+                break;
+			case CLAIM_GIFT:
+                RestClient.getApiService().claimGift(params, callback);
+                break;
+            case REQUEST_DELETE_ACCOUNT:
+                RestClient.getApiService().requestDeleteAccount(params, callback);
+                break;
+            case CANCEL_DELETE_ACCOUNT_REQUEST:
+                RestClient.getApiService().cancelDeleteAccountRequest(params, callback);
+                break;
+            case SETTLE_NEGATIVE_WALLET_BALANCE:
+                RestClient.getApiService().settleNegativeWalletBalance(params, callback);
                 break;
             default:
                 throw new IllegalArgumentException("API Type not declared");
@@ -365,7 +416,7 @@ public class ApiCommon<T extends FeedCommonResponse> {
 			return;
 
 		try {
-			if (feedCommonResponse.getFlag() == ApiResponseFlags.ACTION_COMPLETE.getOrdinal()) {
+			if (feedCommonResponse.getFlag() == successFlag) {
 				apiCommonCallback.onSuccess(feedCommonResponse, feedCommonResponse.getMessage(), feedCommonResponse.getFlag());
 				apiCommonCallback.onFinish();
 

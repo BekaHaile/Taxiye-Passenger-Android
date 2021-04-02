@@ -34,7 +34,7 @@ import retrofit.RetrofitError;
 import retrofit.client.Response;
 import retrofit.mime.TypedByteArray;
 
-public class FavouriteDriversActivity extends Activity {
+public class FavouriteDriversActivity extends BaseAppCompatActivity {
 
 
     private ArrayList<GetFetchUserDriverResponse> fetchUserDriverList;

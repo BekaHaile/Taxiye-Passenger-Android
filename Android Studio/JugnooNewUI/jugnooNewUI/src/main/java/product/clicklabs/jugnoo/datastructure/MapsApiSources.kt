@@ -11,6 +11,10 @@ class MapsApiSources {
         const val CUSTOMER_FARE_ESTIMATE_HOME = "c_fe_home"
         const val CUSTOMER_FARE_ESTIMATE_SCHEDULE = "c_fe_sch"
         const val CUSTOMER_FARE_ESTIMATE_ACTIVITY = "c_fea"
+        const val CUSTOMER_FARE_ESTIMATE_RENTAL_OUTSTATION = "c_fero"
+        const val CUSTOMER_RIDE_DETAILS = "c_ride_details"
+        const val CUSTOMER_PERFECT_RIDE = "c_perfect_ride"
+        const val CUSTOMER_TRACK_ORDER= "c_track_order"
 
 
     }

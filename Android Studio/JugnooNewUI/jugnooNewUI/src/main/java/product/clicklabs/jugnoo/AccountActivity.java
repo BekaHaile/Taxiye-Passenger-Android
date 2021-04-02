@@ -6,12 +6,6 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -55,6 +49,12 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import product.clicklabs.jugnoo.adapters.AccountMenuItemsAdapter;
 import product.clicklabs.jugnoo.adapters.GenderDropdownAdapter;
 import product.clicklabs.jugnoo.adapters.SavedPlacesAdapter;
@@ -67,6 +67,7 @@ import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.emergency.EmergencyActivity;
 import product.clicklabs.jugnoo.fragments.AddressBookFragment;
 import product.clicklabs.jugnoo.fragments.DocumentUploadFragment;
+import product.clicklabs.jugnoo.fragments.NotificationSettingFragment;
 import product.clicklabs.jugnoo.fragments.ProfileVerificationFragment;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
@@ -137,10 +138,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     LinearLayout relativeLayoutPokemon, relativeLayoutFAB;
 	TextView textViewAddHome, textViewAddHomeValue, textViewAddWork, textViewAddWorkValue, textViewJugnooJeanie, textViewPokemon, textViewFAB;
     private LinearLayout linearLayoutPasswordSave;
-
+    TextView  tvPreferences;
     RelativeLayout relativeLayoutAddressBook, relativeLayoutContainer;
     NonScrollListView listViewSavedLocations;
-    RelativeLayout relativeLayoutAddNewAddress;
+    RelativeLayout relativeLayoutAddNewAddress, rlPrivacyPreferences;
     View viewStarIcon;
     SavedPlacesAdapter savedPlacesAdapter;
     private RecyclerView rvMenuItems;
@@ -161,6 +162,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     private AppCompatSpinner spinnerGender;
     private EditText etDOB;
+    private boolean isEditModeOn = false;
 
     private RelativeLayout relativeLayoutProfileVerification;
     private TextView textViewProfileVerification;
@@ -331,8 +333,12 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         ((TextView) findViewById(R.id.textViewAddNewAddress)).setTypeface(Fonts.mavenMedium(this));
 
         relativeLayoutAddressBook = (RelativeLayout) findViewById(R.id.relativeLayoutAddressBook);
+        rlPrivacyPreferences = findViewById(R.id.rlPrivacyPreferences);
         textViewAddressBook =  ((TextView)findViewById(R.id.textViewAddressBook));
         textViewAddressBook.setTypeface(Fonts.mavenMedium(this));
+
+        tvPreferences = findViewById(R.id.tvPreferences);
+        tvPreferences.setTypeface(Fonts.mavenMedium(this));
 
 //        rlJugnooStar = (RelativeLayout) findViewById(R.id.rlJugnooStar);
       //  ((TextView)findViewById(R.id.tvJugnooStar)).setTypeface(Fonts.mavenMedium(this));
@@ -390,6 +396,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
         setUserData();
         setSavePlaces();
+        if(Data.userData != null && Data.userData.getNotificationSettingEnabled() == 1) {
+            rlPrivacyPreferences.setVisibility(View.VISIBLE);
+        } else {
+            rlPrivacyPreferences.setVisibility(View.GONE);
+        }
 
 		imageViewBack.setOnClickListener(new View.OnClickListener() {
 
@@ -477,7 +488,11 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         imageViewEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                imageViewEditProfileSave.performClick();
+                if(isEditModeOn) {
+                    performBackPressed();
+                } else {
+                    imageViewEditProfileSave.performClick();
+                }
             }
         });
 
@@ -569,10 +584,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         editTextUserName.setBackgroundResource(R.drawable.bg_white_orange_bb);
                         editTextEmail.setEnabled(true);
                         editTextEmail.setBackgroundResource(R.drawable.bg_white_orange_bb);
-                        if(Data.userData.getGender() == 0) {
+//                        if(Data.userData.getGender() == 0) {
                             spinnerGender.setEnabled(true);
                             spinnerGender.setBackgroundResource(R.drawable.bg_white_orange_bb);
-                        }
+//                        }
                         if(TextUtils.isEmpty(Data.userData.getDateOfBirth())) {
                             etDOB.setEnabled(true);
                             etDOB.setBackgroundResource(R.drawable.bg_white_orange_bb);
@@ -585,6 +600,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         }
                         //buttonEditProfile.setText(getResources().getString(R.string.save_changes));
                         imageViewEditProfile.setVisibility(View.GONE);
+                        isEditModeOn = true;
                         imageViewEditProfileSave.setVisibility(View.VISIBLE);
                         Utils.showSoftKeyboard(AccountActivity.this, editTextUserName);
                         GAUtils.event(SIDE_MENU, USER+PROFILE, GAAction.EDIT);
@@ -833,6 +849,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             }
         });
 
+        rlPrivacyPreferences.setOnClickListener(v -> {
+            if (!isEditModeOn) {
+                openPrivacyPreferencesFragment(AccountActivity.this, relativeLayoutContainer, true);
+                GAUtils.event(GACategory.SIDE_MENU, USER + PROFILE, PRIVACY_PREFERENCES);
+            }
+        });
+
        /* rlJugnooStar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -1019,6 +1042,64 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         setPasswordVisibility((EditText)((ViewGroup)view.getParent()).getChildAt(0), (ImageView)view);
     }
 
+    private void openPrivacyPreferencesFragment(FragmentActivity activity, View container, boolean addFrag) {
+        if (addFrag) {
+            if (transactionUtils.checkIfFragmentAdded(activity, NotificationSettingFragment.class.getName())) {
+                activity.getSupportFragmentManager().popBackStack();
+            }
+            if (!transactionUtils.checkIfFragmentAdded(activity, NotificationSettingFragment.class.getName())) {
+                FragmentTransaction transaction = activity.getSupportFragmentManager().beginTransaction();
+                transaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                        .add(container.getId(), NotificationSettingFragment.newInstance(true),
+                                NotificationSettingFragment.class.getName())
+                        .addToBackStack(NotificationSettingFragment.class.getName());
+                if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+                    transaction.hide(activity.getSupportFragmentManager().findFragmentByTag(activity.getSupportFragmentManager()
+                            .getBackStackEntryAt(activity.getSupportFragmentManager().getBackStackEntryCount() - 1).getName()));
+                }
+                transaction.commitAllowingStateLoss();
+
+                textViewTitle.setText(R.string.verification_status);
+                rlMain.setVisibility(View.GONE);
+                tvAbout.setVisibility(View.GONE);
+            }
+        } else {
+            super.onBackPressed();
+            textViewTitle.setText(R.string.title_my_profile);
+            rlMain.setVisibility(View.VISIBLE);
+            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
+        }
+
+//        NotificationSettingFragment fragmentPreferences = getPrivacyPreferencesFragment();
+//        if(fragmentPreferences == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .setCustomAnimations(R.anim.fade_in, R.anim.hold, R.anim.hold, R.anim.fade_out)
+//                    .add(relativeLayoutContainer.getId(),
+//                            NotificationSettingFragment.newInstance(true),
+//                            NotificationSettingFragment.class.getName())
+//                    .commitAllowingStateLoss();
+//        }
+//        textViewTitle.setText(R.string.privacy_preferences);
+//        rlMain.setVisibility(View.GONE);
+//        tvAbout.setVisibility(View.GONE);
+    }
+
+    public NotificationSettingFragment getPrivacyPreferencesFragment(){
+        return (NotificationSettingFragment) getSupportFragmentManager().findFragmentByTag(NotificationSettingFragment.class.getName());
+    }
+
+    private void removePrivacyPreferencesFragment() {
+        NotificationSettingFragment fragmentPrivacyPref = getPrivacyPreferencesFragment();
+        if (fragmentPrivacyPref != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragmentPrivacyPref)
+                    .commitAllowingStateLoss();
+
+            textViewTitle.setText(R.string.title_my_profile);
+            rlMain.setVisibility(View.VISIBLE);
+            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
+        }
+    }
 
     public void setUserData(){
 		try {
@@ -1084,21 +1165,33 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
 
     public void performBackPressed(){
-        if(getSupportFragmentManager().getBackStackEntryCount() > 0){
-            if(getSupportFragmentManager()
-                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(AddressBookFragment.class.getName())) {
-                openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
-            } else if(getSupportFragmentManager()
-                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(ProfileVerificationFragment.class.getName())){
-                openProfileVerificationFragment(AccountActivity.this,relativeLayoutContainer,false);
-            } else if(getSupportFragmentManager()
-                    .getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(DocumentUploadFragment.class.getName())){
-                textViewTitle.setText(R.string.verification_status);
-                getSupportFragmentManager().popBackStack();
-            } else {
-                getSupportFragmentManager().popBackStack();
-            }
-        }
+//		AddressBookFragment fragmentAB = getAddressBookFragment();
+//		NotificationSettingFragment fragmentPrivacyPref = getPrivacyPreferencesFragment();
+//		if (fragmentAB != null) {
+//            removeAddressBookFragment();
+//        }
+//		else if (fragmentPrivacyPref != null) {
+//		    removePrivacyPreferencesFragment();
+//        }
+//		else
+		    if(getSupportFragmentManager().getBackStackEntryCount() > 0){
+			if(getSupportFragmentManager()
+					.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(AddressBookFragment.class.getName())) {
+				openAddressBookFragment(AccountActivity.this, relativeLayoutContainer, false);
+			} else if(getSupportFragmentManager()
+					.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(ProfileVerificationFragment.class.getName())){
+				openProfileVerificationFragment(AccountActivity.this,relativeLayoutContainer,false);
+			}else if(getSupportFragmentManager()
+					.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(NotificationSettingFragment.class.getName())){
+                openPrivacyPreferencesFragment(AccountActivity.this,relativeLayoutContainer,false);
+			} else if(getSupportFragmentManager()
+					.getBackStackEntryAt(getSupportFragmentManager().getBackStackEntryCount()-1).getName().equals(DocumentUploadFragment.class.getName())){
+				textViewTitle.setText(R.string.verification_status);
+				getSupportFragmentManager().popBackStack();
+			} else {
+				getSupportFragmentManager().popBackStack();
+			}
+		}
         else if (editTextUserName.isEnabled() || linearLayoutPasswordChange.getVisibility() == View.VISIBLE) {
             if(linearLayoutPasswordChange.getVisibility() == View.VISIBLE){
                 relativeLayoutChangePassword.performClick();
@@ -1141,7 +1234,9 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                 rlJugnooStar.setVisibility(View.GONE);*/
 
             try {
-                reloadProfileAPI(this);
+                if(!isEditModeOn) {
+                    reloadProfileAPI(this);
+                }
                 textViewEmergencyContact.setText(getResources()
                         .getString(Data.userData.getEmergencyContactsList() != null && Data.userData.getEmergencyContactsList().size() > 0 ?
                                 R.string.emergency_contacts : R.string.add_emergency_contacts));
@@ -1151,7 +1246,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
             scrollView.scrollTo(0, 0);
             if (!getIntent().hasExtra(ProfileVerificationFragment.class.getSimpleName())) {
-                textViewTitle.setText(getAddressBookFragment() == null ? R.string.title_my_profile : R.string.profile_saved_location_text);
+                textViewTitle.setText(getAddressBookFragment() == null ? getPrivacyPreferencesFragment() == null
+                    ? R.string.title_my_profile : R.string.privacy_preferences : R.string.profile_saved_location_text);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1211,7 +1307,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             params.put(Constants.KEY_UPDATED_PHONE_NO, updatedPhone);
             params.put(Constants.KEY_UPDATED_COUNTRY_CODE, countryCode);
 
-            if(Data.userData.getGender() == 0 && selectedGenderPosition != Data.userData.getGender()){
+            if(selectedGenderPosition != Data.userData.getGender()){
                 params.put(Constants.KEY_GENDER, String.valueOf(selectedGenderPosition));
             }
             if(TextUtils.isEmpty(Data.userData.getDateOfBirth()) && !etDOB.getText().toString().equalsIgnoreCase(Data.userData.getDateOfBirth())){
@@ -1244,11 +1340,13 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                                                 Prefs.with(activity).getInt(Constants.SP_OTP_VIA_CALL_ENABLED, 0)));
                                 imageViewEditProfileSave.setVisibility(View.GONE);
                                 imageViewEditProfile.setVisibility(View.VISIBLE);
+                                isEditModeOn = false;
                                 toggleProfileOptions(true);
                                 String message = jObj.getString("message");
                                 updateSubscriptionMessage(updatedName);
                                 Data.userData.userName = updatedName;
                                 Data.userData.userEmail = updatedEmail;
+                                Data.userData.setGender(selectedGenderPosition);
                                 if(Data.userData.getGender() == 0){
                                     Data.userData.setGender(selectedGenderPosition);
                                 }
@@ -1364,6 +1462,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
                                     imageViewEditProfile.setVisibility(View.VISIBLE);
                                     imageViewEditProfileSave.setVisibility(View.GONE);
+                                    isEditModeOn = false;
                                 }
                             }
                         } catch (Exception exception) {
@@ -1650,6 +1749,20 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         }
     }
 
+    private void removeAddressBookFragment() {
+        AddressBookFragment fragmentAB = getAddressBookFragment();
+        if (fragmentAB != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(fragmentAB)
+                    .commitAllowingStateLoss();
+
+            textViewTitle.setText(R.string.title_my_profile);
+            rlMain.setVisibility(View.VISIBLE);
+            tvAbout.setVisibility(Prefs.with(this).getInt(Constants.KEY_SHOW_ABOUT, 1) == 1 ? View.VISIBLE : View.GONE);
+        }
+    }
+
+
     public AddressBookFragment getAddressBookFragment() {
         return (AddressBookFragment) getSupportFragmentManager().findFragmentByTag(AddressBookFragment.class.getName());
     }
@@ -1832,6 +1945,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
     public void toggleProfileOptions(boolean isEnable){
         textViewAddressBook.setEnabled(isEnable);
+        tvPreferences.setEnabled(isEnable);
         textViewEmergencyContact.setEnabled(isEnable);
         if(accountMenuItemsAdapter!=null){
             accountMenuItemsAdapter.toggleMenuItems(isEnable);

@@ -53,7 +53,6 @@ class Package {
     var cityId: Int? = null
     @SerializedName("return_trip")
     var returnTrip: Int? = null
-    var selected: Boolean = false
     var isRoundTrip : Int = 0
 
     //NOTE: remember to initialize any new member variables in ScheduleRideFragment one way and round trip functions also

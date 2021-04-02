@@ -84,7 +84,7 @@ public class VehicleTypeAdapterFeed extends RecyclerView.Adapter<VehicleTypeAdap
                 holder.imageViewSelected.setBackgroundColor(activity.getResources().getColor(R.color.theme_color));
             }
             else
-            {
+            { if(mVehiclesList.get(pos).getImages().getTabNormal()!=null && !mVehiclesList.get(pos).getImages().getTabNormal().isEmpty())
                 Picasso.with(activity)
                         .load(mVehiclesList.get(pos).getImages().getTabNormal())
                         .placeholder(R.drawable.ic_auto_pool_tab_normal)

@@ -81,7 +81,13 @@ public class ChangeLanguageActivity extends BaseActivity {
             @Override
             public void onLanguageClick(FetchActiveLocaleResponse.Locale locale) {
                 if (!LocaleHelper.getLanguage(ChangeLanguageActivity.this).equalsIgnoreCase(locale.getLocale())) {
-                    updateLocaleApi(locale.getLocale());
+                    if(Data.userData==null||Data.userData.accessToken==null||Data.userData.accessToken.isEmpty()){
+                        updateViews(locale.getLocale());
+                    }
+                    else {
+                        updateLocaleApi(locale.getLocale());
+                    }
+
                 }
             }
         });

@@ -665,7 +665,6 @@
     <string name="be_first_one_to_add_a_post">Maxxansuuf nama duraa ta\'i…</string>
     <string name="items_summary">Cuunfaa mi\'aa(ootaa)</string>
     <string name="bill_summary">Cuunfaa nagahee kaffaltii</string>
-    <string name="dont_touch_me">Natti hin bu\'in</string>
     <string name="payment_summary">Cuunfaa kaffaltii</string>
     <string name="comments">Yaada…</string>
     <string name="likes">Jaalladhu</string>
@@ -1948,4 +1947,39 @@
     <string name="referred_on">Kan caqasame</string>
     <string name="pay_later">Booda kaffali</string>
     <string name="your_trips">Imala kee</string>
+
+    <string name="label_show_fare_estimate">ኣትኵሮ ግበሩ</string>
+
+    <string name="customer_credits">Customer Credits</string>
+    <string name="credits">Credits</string>
+    <string name="phone_number_full">ቁጽሪ ስልኪ</string>
+
+    <string name="customer">ዓሚል</string>
+    <string name="transfer_to">ምስግጋር</string>
+    <string name="select_transfer_to">ትራንስፈር ምረጽ</string>
+
+    <string name = "favourite_driver">Favourite Driver</string>
+
+    <string name="driver_name_f">Driver Name:</string>
+    <string name="vehicle_type">Vehicle Type: </string>
+    <string name="rating">Rating :</string>
+    <string name= "no_blocked_drivers">No Blocked Drivers</string>
+    <string name="no_fav_divers">No Favourite Drivers</string>
+    <string name = "Do_you_want_add_driver_as_a_favourote">Do you want add driver \n as a favourote ?</string>
+    <string name="ride_with_favourite_driver">Do you want ride with your\nfavourite driver ?</string>
+
+    <string name="privacy_preferences">Privacy Preferences</string>
+    <string name="delete_favourite_driver">Are you sure you want delete your favourite driver</string>
+    <string name="rating_summary">Rating</string>
+
+    <string name="ride_scheduled_status">Ride Scheduled</string>
+    <string name="in_progress_status">In Progress</string>
+    <string name="processed_status">Processed</string>
+    <string name="cancelled_status">Cancelled</string>
+
+    <string name="select_gender">Select Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="please_select_gender">Please select gender</string>
+    <string name="please_enter_date_of_birth">Please enter date of birth</string>
 </resources>

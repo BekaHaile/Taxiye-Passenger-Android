@@ -290,10 +290,13 @@ public class PaymentOptionDialog implements View.OnClickListener {
 				ArrayList<Region> regions = Data.autoData.getRegions();
                 Region region = (regions.size() > 1) ? ((HomeActivity) activity).slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected()
                         : (regions.size() > 0 ? regions.get(0) : null);
-                if (region != null && region.getRestrictedPaymentModes().size() > 0) {
+                if (region != null &&(region.getRestrictedPaymentModes().size() > 0||region.getRestrictedCorporates().size() > 0)) {
                     if (region.getRestrictedPaymentModes().contains(selectedPaymentOption)) {
                         callbackPaymentOptionSelector.setSelectedPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(callbackPaymentOptionSelector.getSelectedPaymentOption(), (HomeActivity) activity));
-                    } else {
+                    }else if(selectedPaymentOption==PaymentOption.CORPORATE.getOrdinal()&&region.getRestrictedCorporates().contains(CorporatesAdapter.Companion.getSelectedCorporateBusinessId())){
+                        callbackPaymentOptionSelector.setSelectedPaymentOption(HomeUtil.chooseNextEligiblePaymentOption(callbackPaymentOptionSelector.getSelectedPaymentOption(), (HomeActivity) activity));
+                    }
+                    else {
                         callbackPaymentOptionSelector.setSelectedPaymentOption(selectedPaymentOption);
                     }
                 } else {
@@ -436,6 +439,7 @@ public class PaymentOptionDialog implements View.OnClickListener {
             if (paymentModeConfigDatas != null && paymentModeConfigDatas.size() > 0) {
                 linearLayoutWalletContainer.removeAllViews();
                 List<Integer> restrictedPaymentMode = new ArrayList<>();
+                List<Integer> restrictedCorporates = new ArrayList<>();
 
                 if(activity instanceof HomeActivity) {
 					ArrayList<Region> regions = Data.autoData.getRegions();
@@ -443,6 +447,12 @@ public class PaymentOptionDialog implements View.OnClickListener {
                         restrictedPaymentMode = ((HomeActivity) activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedPaymentModes();
                     } else if (regions.size() > 0) {
                         restrictedPaymentMode = regions.get(0).getRestrictedPaymentModes();
+                    }
+
+                    if (regions.size() > 1) {
+                        restrictedCorporates = ((HomeActivity) activity).getSlidingBottomPanel().getRequestRideOptionsFragment().getRegionSelected().getRestrictedCorporates();
+                    } else if (regions.size() > 0) {
+                        restrictedCorporates = regions.get(0).getRestrictedCorporates();
                     }
                 }
                 for (PaymentModeConfigData paymentModeConfigData : paymentModeConfigDatas) {
@@ -468,23 +478,42 @@ public class PaymentOptionDialog implements View.OnClickListener {
                             } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.POS.getOrdinal()) {
                                 linearLayoutWalletContainer.addView(llPos);
                             } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.CORPORATE.getOrdinal()) {
-                                linearLayoutWalletContainer.addView(llCorporate);
-                                linearLayoutWalletContainer.addView(rvCorporates);
 
-                                if (corporatesAdapter == null && paymentModeConfigData.getCorporates() != null) {
-                                    corporatesAdapter = new CorporatesAdapter(paymentModeConfigData.getCorporates(),
-                                            rvCorporates, Fonts.mavenLight(activity), new CorporatesAdapter.OnSelectedCallback() {
-                                        @Override
-                                        public void onItemSelected(@NotNull Corporate corporate) {
-                                            if (Data.autoData.getPickupPaymentOption() != PaymentOption.CORPORATE.getOrdinal()) {
-                                                onClick(llCorporate);
-                                            } else {
-                                                dismiss();
-                                            }
+
+
+                                if ( paymentModeConfigData.getCorporates() != null) {
+                                    ArrayList<Corporate> allowedCorporates = new ArrayList<>();
+
+                                    for (int i = 0; i <paymentModeConfigData.getCorporates().size() ; i++) {
+                                        if(!restrictedCorporates.contains(paymentModeConfigData.getCorporates().get(i).getBusinessId())){
+                                            allowedCorporates.add(paymentModeConfigData.getCorporates().get(i));
                                         }
-                                    });
+                                    }
+
+                                    if(allowedCorporates.size()>0) {
+                                        linearLayoutWalletContainer.addView(llCorporate);
+                                        linearLayoutWalletContainer.addView(rvCorporates);
+//                                        if(corporatesAdapter == null) {
+                                            corporatesAdapter = new CorporatesAdapter(allowedCorporates,
+                                                    rvCorporates, Fonts.mavenLight(activity), new CorporatesAdapter.OnSelectedCallback() {
+                                                @Override
+                                                public void onItemSelected(@NotNull Corporate corporate) {
+                                                    if (Data.autoData.getPickupPaymentOption() != PaymentOption.CORPORATE.getOrdinal()) {
+                                                        onClick(llCorporate);
+                                                    } else {
+                                                        dismiss();
+                                                    }
+                                                }
+                                            });
+                                            rvCorporates.setAdapter(corporatesAdapter);
+//                                        }
+//                                        else {
+//                                            corporatesAdapter.setList(allowedCorporates);
+//                                        }
+
+                                    }
                                 }
-                                rvCorporates.setAdapter(corporatesAdapter);
+
 
                             } else if (paymentModeConfigData.getPaymentOption() == PaymentOption.RAZOR_PAY.getOrdinal()
                                     && callbackPaymentOptionSelector.isRazorpayEnabled()) {

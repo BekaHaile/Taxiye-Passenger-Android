@@ -297,7 +297,7 @@ public class RideTransactionsFragment extends Fragment implements Constants, Swi
 									totalRides = jObj.getInt("history_size");
 									rideInfosList.addAll(historyResponse.getData());
 
-									updateListData(getString(R.string.you_havent_tried_app_yet, "Taxiye"), false);
+									updateListData(getString(R.string.you_havent_tried_app_yet, getString(R.string.app_name)), false);
 
 								} else {
 									updateListData(getString(R.string.some_error_occured_tap_to_retry), true);

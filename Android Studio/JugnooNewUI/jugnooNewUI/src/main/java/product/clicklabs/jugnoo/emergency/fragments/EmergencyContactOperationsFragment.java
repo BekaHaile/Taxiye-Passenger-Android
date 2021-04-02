@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -54,9 +55,11 @@ import product.clicklabs.jugnoo.emergency.models.ContactBean;
 import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.CountryCodePhoneNo;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Utils;
+import product.clicklabs.jugnoo.utils.UtilsKt;
 
 
 /**
@@ -643,7 +646,6 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
             RelativeLayout rlPhone = (RelativeLayout) dialog.findViewById(R.id.rlPhone);
             LinearLayout llCountryCode = (LinearLayout) dialog.findViewById(R.id.llCountryCode);
             final TextView tvCountryCode = (TextView) dialog.findViewById(R.id.tvCountryCode);
-            tvCountryCode.setTypeface(Fonts.mavenRegular(activity));
 
             final EditText editTextPhoneNumber = (EditText) dialog.findViewById(R.id.editTextPhoneNumber);
             final CountryPicker countryPicker =
@@ -669,7 +671,13 @@ public class EmergencyContactOperationsFragment extends Fragment implements GAAc
                     countryPicker.showDialog(activity.getSupportFragmentManager());
                 }
             });
-            editTextPhoneNumber.setText(contactBean.getPhoneNo().replaceFirst("^0+(?!$)", ""));
+
+            String phoneNo = contactBean.getPhoneNo();
+			CountryCodePhoneNo ccpn = UtilsKt.splitCountryCodeAndPhoneNumber(requireContext(), phoneNo);
+
+			tvCountryCode.setText(!TextUtils.isEmpty(ccpn.getCountryCode()) ? ccpn.getCountryCode() : Utils.getCountryCode(activity));
+            editTextPhoneNumber.setText(ccpn.getPhoneNo());
+
             editTextPhoneNumber.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -194,7 +194,26 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/btPayOnline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_50"
+                android:paddingStart="@dimen/dp_20"
+                android:paddingEnd="@dimen/dp_20"
+                android:background="@drawable/button_white_grey_theme_capsule_border_selector"
+                android:text="@string/pay_online"
+                android:textAllCaps="true"
+                android:tag="@string/dont_touch_me"
+                android:layout_gravity="center"
+                android:textColor="@color/text_color_theme_selector"
+                android:textSize="@dimen/sp_16"
+                app:typekitFont="@string/maven"
+                />
+
+
             <RelativeLayout
+                android:id="@+id/rlHowWasExp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="70px"
@@ -258,7 +277,6 @@
                 app:onlyForDisplay="false"
                 app:starOff="@drawable/ic_menu_feedback_star_off"
                 app:starOn="@drawable/ic_menu_feedback_star_on" />
-
 
             <LinearLayout
                 android:id="@+id/ll_thumbs_rating"

@@ -558,7 +558,7 @@
 <string name="payment_to">Kan kaffalameef</string>
 <string name="payment_from">Kan kaffale</string>
 <string name="credit_to">Eenyuuf?</string>
-<string name="wallet_transactions">Bittaaf gurgurtaa borsaa maallaqaa</string>
+<string name="wallet_transactions">KU DHAQANKA</string>
 <string name="payment_transactions">Kaffaltii bittaaf gurgurtaa</string>
 <string name="amount_range_error">Hangi \\u20B9 1 hamma 1,00,000 ta\'uu qaba</string>
 <string name="fill_your_amount">Hanga guuti</string>
@@ -666,7 +666,6 @@
 <string name="be_first_one_to_add_a_post">Maxxansuuf nama duraa ta\'i…</string>
 <string name="items_summary">Cuunfaa mi\'aa(ootaa)</string>
 <string name="bill_summary">Cuunfaa nagahee kaffaltii</string>
-<string name="dont_touch_me">Natti hin bu\'in</string>
 <string name="payment_summary">Cuunfaa kaffaltii</string>
 <string name="comments">Yaada…</string>
 <string name="likes">Jaalladhu</string>
@@ -1951,4 +1950,40 @@
 <string name="referred_on">Kan caqasame</string>
 <string name="pay_later">Booda kaffali</string>
 <string name="your_trips">Imala kee</string>
+
+
+    <string name="label_show_fare_estimate">ኣትኵሮ ግበሩ</string>
+
+    <string name="customer_credits">Dhibcaha Macaamiisha</string>
+    <string name="credits">Heerarka</string>
+    <string name="phone_number_full">Lambarka taleefanka</string>
+
+    <string name="customer">Macaamiil</string>
+    <string name="transfer_to">Macaamiil</string>
+    <string name="select_transfer_to">Xulo Ku wareeji</string>
+
+    <string name = "favourite_driver">Darawalka aad jeceshahay</string>
+
+    <string name="driver_name_f">Magaca Darawalka:</string>
+    <string name="vehicle_type">Nooca Gawaarida:</string>
+    <string name="rating">Qiimeynta:</string>
+    <string name= "no_blocked_drivers">Ma jiro Darawalo Xaniban</string>
+    <string name="no_fav_divers">Ma Leh Wadayaasha Loogu Jecel Yahay</string>
+    <string name = "Do_you_want_add_driver_as_a_favourote">Ma rabtaa inaad ku darto darawal ahaan favourote?</string>
+    <string name="ride_with_favourite_driver">Ma rabtaa inaad raacdo darawalka aad jeceshahay?</string>
+
+    <string name="privacy_preferences">Xulashada Asturnaanta</string>
+    <string name="delete_favourite_driver">Ma hubtaa inaad rabto inaad tirtirto darawalka aad jeceshahay</string>
+    <string name="rating_summary">Qiimeynta</string>
+
+    <string name="ride_scheduled_status">Jadwalka Jadwalka</string>
+    <string name="in_progress_status">Ku Socda</string>
+    <string name="processed_status">Lagu shaqeeyay</string>
+    <string name="cancelled_status">La joojiyay</string>
+
+    <string name="select_gender">Xullo Jinsiga</string>
+    <string name="male">Lab</string>
+    <string name="female">Dheddig</string>
+    <string name="please_select_gender">Fadlan dooro jinsi</string>
+    <string name="please_enter_date_of_birth">Fadlan qor taariikhda dhalashada</string>
 </resources>

@@ -251,7 +251,7 @@ public class LocationUpdateService extends Service {
 		builder.setContentText(getString(strRes));
 		builder.setTicker(getString(R.string.app_name));
 		builder.setWhen(when);
-		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.notification_icon));
+		builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher));
 		builder.setSmallIcon(R.mipmap.notification_icon);
 		builder.setChannelId(Constants.NOTIF_CHANNEL_SILENT);
 		builder.setContentIntent(intent);

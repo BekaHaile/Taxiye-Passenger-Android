@@ -666,7 +666,6 @@
     <string name="be_first_one_to_add_a_post">ንምንባር ቐዳማይ ይኩኑ</string>
     <string name="items_summary">መጠቓለሊ ዝርዝራት</string>
     <string name="bill_summary">ናይ ክፍሊት መጠየቒ መጠቓለሊ</string>
-    <string name="dont_touch_me">አይትንኩዑኒ</string>
     <string name="payment_summary">ናይ ክፍሊት መጠቓለሊ</string>
     <string name="comments">ርኢቶታት..</string>
     <string name="likes">ምፍታው</string>
@@ -684,7 +683,7 @@
     <string name="view_more">ተወሳኺ ንምርአይ</string>
     <string name="view_less">ዝተወሰነ ንምርአይ</string>
     <string name="or_login_with">ወይድማ እቶ ብ</string>
-    <string name="welcome_to_jugnoo">ን%S እንኳዕ ዳሕና መፂእኹም</string>
+    <string name="welcome_to_jugnoo">ን%s እንኳዕ ዳሕና መፂእኹም</string>
     <string name="or_signup_with">ወይድማ ብ ይመዝገቡ</string>
     <string name="enter_otp_recieved_on">ዝተልአኸሎም ኦቲፒ አእትዩ አብ:</string>
     <string name="autodetecting_otp_sent_to">ዝተአለየ ኦቲፒ ተልኢኹ ን</string>
@@ -868,8 +867,8 @@
     <string name="label_relevant_categories">ጠቓሚ አማራፅታት</string>
     <string name="service_date">መዓልቲ ግልጋሎት</string>
     <string name="service_charges">ክፍሊት ግልጋሎት</string>
-    <string name="resend_code_in">ኮድ ደጊምካ ለግኽ ብ %5</string>
-    <string name="call_me_in">ደውለለይ ብ %5</string>
+    <string name="resend_code_in">ኮድ ደጊምካ ለግኽ ብ %s</string>
+    <string name="call_me_in">ደውለለይ ብ %s</string>
     <string name="resend_code">ኮድ ደጊዎካ ለአኽ</string>
     <string name="call_me">ደውለለይ</string>
     <string name="action_repeat_order">ትእዛዝ ድገም</string>
@@ -885,7 +884,7 @@
     <string name="fugu_support_title">ኣዋግዕ</string>
     <string name="error_no_rating">በጃኹም ናሕሪ ምረፁ</string>
     <string name="all">ኹሉ፣ ኹሎም</string>
-    <string name="can_be_used_format">% ጊዜ ምጥቃት ይካአል እዩ</string>
+    <string name="can_be_used_format">%s ጊዜ ምጥቃት ይካአል እዩ</string>
     <string name="applied_on_all_offerings">አብ ኩሎም ውህብቶታት ተግባራዊ ዝኸውን</string>
     <string name="no_coupons_available">ምንም ኩፖን የለን</string>
     <string name="how_was_your_experience">ተሞኩሮኹም ከመይ ነይሩ</string>
@@ -1119,8 +1118,8 @@
     <string name="i_need_colon">የድልየኒ:</string>
     <string name="when_colon">መዓዝ:</string>
     <string name="required_field">አገዳሲ</string>
-    <string name="discount_valid_till_format">ቅናሽ ተግባራዊ ክኸውን ክሳብ %5</string>
-    <string name="discount_valid_for_next_format">ቅናሽ ተግባራዊ ክኸውን ክሳብ ቀፃሊ %5</string>
+    <string name="discount_valid_till_format">ቅናሽ ተግባራዊ ክኸውን ክሳብ %s</string>
+    <string name="discount_valid_for_next_format">ቅናሽ ተግባራዊ ክኸውን ክሳብ ቀፃሊ %s</string>
     <string name="discount_valid_for_less_than_1_min">ቅናሽ ተግባራዊ ክኸውን ን ትሕቲ 1 ደቒቓ</string>
     <string name="here_my_experience_of">ተሞኩሮይ አብዚ እንዮ</string>
     <string name="have_a_look_at_this_experience">ንተሞክሮይ ይርአይዎ</string>
@@ -1453,7 +1452,7 @@
     <string name="hint_cvv">ሲቪቪ</string>
     <string name="add_card_title">ካርዲ ወስኽ</string>
     <string name="edit_card_title">ካርዲ አስተኻኽል</string>
-    <string name="stripe_delete_card">ርግፀኛ ዲኻብ %5 ዝውድእ ካርዲ ምጥፍእ ከምትዲሊ</string>
+    <string name="stripe_delete_card">ርግፀኛ ዲኻብ %s ዝውድእ ካርዲ ምጥፍእ ከምትዲሊ</string>
     <string name="stripe_add_card_error">% ትክክለኛ አይኮነን</string>
     <string name="card_name_not_valid">በጃኹም ትክክለኛ ስም ካርዲ አእትዉ</string>
     <string name="card_number">ቁፅሪ ካርዲ</string>
@@ -1552,8 +1551,8 @@
     <string name="book">ቡክ</string>
     <string name="note">መዘካኸሪ:</string>
     <string name="additional_per_min">ተወሳኺ ክፍሊት ብደቒቃ</string>
-    <string name="additional_per_km_fare">ተወሳኺ ክፍሊት ብ %5</string>
-    <string name="package_rate_format">ቑፅሪ ፓኬጅ %5</string>
+    <string name="additional_per_km_fare">ተወሳኺ ክፍሊት ብ %s</string>
+    <string name="package_rate_format">ቑፅሪ ፓኬጅ %s</string>
     <string name="select_route">መንገዲ ምረፅ</string>
     <string name="one_way">በዓል ሓንቲ መንገዲ</string>
     <string name="round_trip">ዙሪያ ምላሽ ጉዕዞ</string>
@@ -1926,7 +1925,7 @@
     <string name="hint_tip_amount">መጠን መቑሽሽ</string>
     <string name="text_want_to_prioritize_your_request">ሐዚ ሽፈራት ሕቶኦም እናተቐበሉ አይኾነን</string>
     <string name="text_you_can_add_a_tip_to">ናብትናይ ሐዚ ክፍሊት መቐሽሽ ክውስኹ ይኽእሉ እዮም</string>
-    <string name="text_help_me_to_book_a_ride">ካብ %5 ታክሲ ቡክ ምግባር አይከአልን፡፡ በጃኹም ታክሲ ቡክ ንምግባር ሓግዙኒ</string>
+    <string name="text_help_me_to_book_a_ride">ካብ %s ታክሲ ቡክ ምግባር አይከአልን፡፡ በጃኹም ታክሲ ቡክ ንምግባር ሓግዙኒ</string>
     <string name="unable_to_book_a_ride">ጉዕዞ ቡክ ምግባር አይተኽአለን?</string>
     <string name="choose_vehicle_type">ናይ ተሽከርካሪ አይነት ይምረፁ</string>
     <string name="msg_adding_tip_can_increase_the_chances_of_booking">ንሽፈር መቑሸሽ ምሓብ ናይ ቡክ ምግባር ዕድሎም የብዝሖ እዩ።</string>
@@ -1947,4 +1946,38 @@
     <string name="pay_later">ፀኒሒም ይኽፈሉ</string>
     <string name="your_trips">ጉዕዞታትካ</string>
 
+    <string name="label_show_fare_estimate">ኣትኵሮ ግበሩ</string>
+
+    <string name="customer_credits">ናይ ዓሚ ልቃሕ</string>
+    <string name="credits">ምስጋናታት</string>
+    <string name="phone_number_full">ቁጽሪ ስልኪ</string>
+
+    <string name="customer">ዓሚል</string>
+    <string name="transfer_to">ምስግጋር</string>
+    <string name="select_transfer_to">ትራንስፈር ምረጽ</string>
+
+    <string name = "favourite_driver">ትፈቱ ወሃቢ</string>
+
+    <string name="driver_name_f">ስም መራሕ ማኪና ፦</string>
+    <string name="vehicle_type">ዓይነት መኪና: -</string>
+    <string name="rating">ደረጃ ምሃብ</string>
+    <string name= "no_blocked_drivers">ዓይነ ስዉራን ንድኻታት ኣይርከቡን</string>
+    <string name="no_fav_divers">ትፈትዎም ወሃብቲ ድምጺ</string>
+    <string name = "Do_you_want_add_driver_as_a_favourote">ንመራሒ መኪና ከም ትፈትዎ ዓይነት ወሲኽካ ትኸይድ ዲኻ ?</string>
+    <string name="ride_with_favourite_driver">ምስ ትፈትዎ ዘዋሪ መኪና ኽትውጣሕ ትደሊ ዲኻ ?</string>
+
+    <string name="privacy_preferences">ናይ ብሕትውና ምድላው</string>
+    <string name="delete_favourite_driver">ትፈትዎ ዘዋሪ ክትሰርዞ ከም እትደሊ ርግጸኛ ዲኻ</string>
+    <string name="rating_summary">ደረጃ ምሃብ</string>
+
+    <string name="ride_scheduled_status">መደብ ተወጥሐ</string>
+    <string name="in_progress_status">ዕቤት</string>
+    <string name="processed_status">ተሰርሐ</string>
+    <string name="cancelled_status">Done .ል</string>
+
+    <string name="select_gender">ጀንደር ምረጽ</string>
+    <string name="male">ወዲ</string>
+    <string name="female">ሰበይቲ</string>
+    <string name="please_select_gender">ጾታ ምረጽ</string>
+    <string name="please_enter_date_of_birth">ኣብ ዕለተ ልደትካ እቶ</string>
 </resources>
