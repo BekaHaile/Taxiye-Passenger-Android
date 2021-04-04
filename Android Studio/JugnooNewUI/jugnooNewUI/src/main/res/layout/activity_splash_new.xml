@@ -21,14 +21,13 @@
             android:id="@+id/llContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:visibility="visible">
+            android:orientation="horizontal">
 
             <!-- splash with logo-->
-            <include layout="@layout/layout_splash_logo"/>
+            <include layout="@layout/layout_splash_logo" />
 
             <!-- splash with logo-->
-            <include layout="@layout/layout_splash_free_gift"/>
+            <include layout="@layout/layout_splash_free_gift" />
 
             <!-- splash buttons -->
             <include layout="@layout/layout_splash_ls" />
@@ -40,13 +39,13 @@
             <include layout="@layout/layout_splash_signup" />
 
             <!-- Login And Signup New-->
-            <include layout="@layout/layout_splash_login_signup_new"/>
+            <include layout="@layout/layout_splash_login_signup_new" />
 
             <!-- SignUp Onboarding -->
-            <include layout="@layout/layout_splash_onboarding"/>
+            <include layout="@layout/layout_splash_onboarding" />
 
             <!-- Login with phone no-->
-            <include layout="@layout/layout_splash_phone_no"/>
+            <include layout="@layout/layout_splash_phone_no" />
 
         </LinearLayout>
 
