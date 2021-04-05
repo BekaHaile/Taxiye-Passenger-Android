@@ -266,16 +266,6 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvSTerms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/px_70"
-                android:text="@string/nl_splash_terms"
-                android:textColor="@color/document_layout_bordor_color"
-                android:textSize="@dimen/text_size_24" />
-
-            <TextView
                 android:id="@+id/textViewForgotPassword"
                 android:layout_width="400px"
                 android:layout_height="70px"

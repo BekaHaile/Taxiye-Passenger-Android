@@ -46,6 +46,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -278,6 +280,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 	TextView textViewSNameRequired1, textViewSLastNameRequired1, textViewSEmailRequired1, textViewSPhoneRequired, textViewSPasswordRequired;
 	Button buttonEmailSignup;
 	TextView textViewSTerms, tvSTerms;
+	CheckBox cbTnC;
 	RelativeLayout buttonFacebookSignup, buttonGoogleSignup;
 
 	LinearLayout linearLayoutWalletContainer, linearLayoutWalletContainerInner,
@@ -614,7 +617,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			buttonRegister = (Button) findViewById(R.id.buttonRegister);
 			buttonRegister.setTypeface(Fonts.mavenRegular(this));
 
-			rlSplashLogo = (RelativeLayout) findViewById(R.id.rlSplashLogo); rlSplashLogo.setVisibility(View.VISIBLE);
+			rlSplashLogo = (RelativeLayout) findViewById(R.id.rlSplashLogo);
+			rlSplashLogo.setVisibility(View.VISIBLE);
 			linearLayoutNoNet = (LinearLayout) findViewById(R.id.linearLayoutNoNet);
 			textViewNoNet = (TextView) findViewById(R.id.textViewNoNet);
 			textViewNoNet.setTypeface(Fonts.mavenMedium(this));
@@ -681,8 +685,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			buttonGoogleSignup = (RelativeLayout) findViewById(R.id.buttonGoogleSignup);
 			textViewSTerms = (TextView) findViewById(R.id.textViewSTerms);
 			textViewSTerms.setTypeface(Fonts.mavenMedium(this));
-			tvSTerms = (TextView) findViewById(R.id.tvSTerms);
-			tvSTerms.setTypeface(Fonts.mavenMedium(this));
+
 
 			linearLayoutWalletContainer = (LinearLayout) findViewById(R.id.linearLayoutWalletContainer);
 			linearLayoutWalletContainerInner = (LinearLayout) findViewById(R.id.linearLayoutWalletContainerInner);
@@ -734,6 +737,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			etReferralCode = (EditText) findViewById(R.id.etReferralCode);
 			bPromoSubmit = (Button) findViewById(R.id.bPromoSubmit);
+			bPromoSubmit.setEnabled(false);
 			svSignupOnboarding = (ScrollView) findViewById(R.id.svSignupOnboarding);
 			llSignupOnboarding = (LinearLayout) findViewById(R.id.llSignupOnboarding);
 			tvSkip = (TextView) findViewById(R.id.tvSkip);
@@ -741,6 +745,10 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			rlPhoneLogin = (RelativeLayout) findViewById(R.id.rlPhoneLogin);
 			rlSignupOnboarding = (RelativeLayout) findViewById(R.id.rlSignupOnboarding);
 			btnPhoneLogin = (Button) findViewById(R.id.btnPhoneLogin);
+			tvSTerms = (TextView) findViewById(R.id.tvSTerms);
+			tvSTerms.setTypeface(Fonts.mavenMedium(this));
+			cbTnC = (CheckBox) findViewById(R.id.cbTnC);
+			cbTnC.setTypeface(Fonts.mavenRegular(this));
 
 			((TextView)findViewById(R.id.tvJugnooTaxiS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
 			((TextView)findViewById(R.id.tvJugnooTaxiLS)).setTypeface(Fonts.mavenMedium(this), Typeface.BOLD);
@@ -777,6 +785,8 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 
 			relativeLayoutJugnooLogo.setOnClickListener(onClickListenerKeybordHide);
 			fbAccountKit = new FBAccountKit(SplashNewActivity.this);
+
+			linearLayoutLogin.setVisibility(View.GONE);
 
 			try {
 				if (getIntent().hasExtra(KEY_PREVIOUS_LOGIN_EMAIL)) {
@@ -1438,6 +1448,20 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					}
 				}
 			});
+
+
+            cbTnC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+				@Override
+				public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+					if(isChecked) {
+						bPromoSubmit.setEnabled(true);
+					}
+					else {
+						bPromoSubmit.setEnabled(false);
+					}
+				}
+			});
+
 
 			initiateDeviceInfoVariables();
 			startService(new Intent(this, PushPendingCallsService.class));
