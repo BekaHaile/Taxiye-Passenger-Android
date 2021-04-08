@@ -132,6 +132,7 @@ public interface Constants {
     String KEY_BRANCH_REFERRING_USER_NAME = "referring_user_name";
 
 
+    String OTP_SIGNATURE_TOKEN = "otp_signature_token";
 
     String KEY_BRANCH_DESKTOP_URL = "branch_desktop_url";
     String KEY_BRANCH_ANDROID_URL = "branch_android_url";

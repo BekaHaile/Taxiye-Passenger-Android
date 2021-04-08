@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import product.clicklabs.jugnoo.config.Config;
@@ -48,6 +49,7 @@ import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.retrofit.model.LoginResponse;
 import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.ASSL;
+import product.clicklabs.jugnoo.utils.AppSignatureHelper;
 import product.clicklabs.jugnoo.utils.DialogPopup;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Log;
@@ -611,6 +613,11 @@ public class OTPConfirmScreen extends BaseActivity implements Constants {
             params.put("longitude", "" + Data.loginLongitude);
             params.put("client_id", Config.getAutosClientId());
             params.put("login_type", "0");
+
+            ArrayList signature = AppSignatureHelper.Companion.getAppSignatures(this);
+            if (signature.size() > 0)
+                params.put(Constants.OTP_SIGNATURE_TOKEN, (String) signature.get(0));
+
             if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
                 params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
             }

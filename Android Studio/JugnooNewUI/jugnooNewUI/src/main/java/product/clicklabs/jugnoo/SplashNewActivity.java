@@ -88,6 +88,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
@@ -3200,6 +3201,11 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 			params.put("longitude", "" + Data.loginLongitude);
 			params.put("client_id", Config.getAutosClientId());
 			params.put("login_type", "0");
+
+			ArrayList signature = AppSignatureHelper.Companion.getAppSignatures(this);
+				if (signature.size() > 0)
+					params.put(Constants.OTP_SIGNATURE_TOKEN, (String) signature.get(0));
+
 			if (!"".equalsIgnoreCase(Data.deepLinkReferralCode)) {
 				params.put(Constants.KEY_REFERRAL_CODE, Data.deepLinkReferralCode);
 			}
