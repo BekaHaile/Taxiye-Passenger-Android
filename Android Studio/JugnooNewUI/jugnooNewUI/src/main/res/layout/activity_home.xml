@@ -17,14 +17,14 @@
             android:layout_height="match_parent"
             android:splitMotionEvents="false">
 
-            <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+            <com.sothree.slidinguppanel.SlidingUpPanelLayout
                 android:id="@+id/slidingLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="bottom"
-                sothree:umanoFadeColor="@color/transparent"
-                sothree:umanoPanelHeight="110px"
-                sothree:umanoShadowHeight="6px">
+                app:umanoFadeColor="@color/transparent"
+                app:umanoPanelHeight="110px"
+                app:umanoShadowHeight="6px">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -71,7 +71,9 @@
 
                     <include
                         android:id="@+id/fabViewIntial"
-                        layout="@layout/layout_home_activity_fab_test" />
+                        layout="@layout/layout_home_activity_fab_test"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dp_250" />
 
                     <!-- Extra view for sliding panel -->
                     <ImageView
@@ -172,7 +174,9 @@
 
             <include
                 android:id="@+id/fabViewFinal"
-                layout="@layout/layout_home_activity_fab_test" />
+                layout="@layout/layout_home_activity_fab_test"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_250" />
 
 
             <!-- search layout -->
