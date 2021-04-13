@@ -94,12 +94,19 @@ class ReferralsFragment : Fragment(), GACategory, GAAction {
 
 
         llWhatsappShare!!.setOnClickListener {
-            if (Utils.appInstalledOrNot(activity!!, "com.whatsapp")) {
-                ReferralActions.shareToWhatsapp(activity)
+            if (MyApplication.getInstance().isOnline) {
+                ReferralActions.openGenericShareIntent(activity, activity!!.callbackManager)
+
+                GAUtils.event(GACategory.SIDE_MENU, GAAction.FREE_GIFT, GAAction.MORE_SHARING_OPTIONS + GAAction.CLICKED)
             } else {
-                ReferralActions.openGenericShareIntent(activity, null)
+                DialogPopup.alertPopup(activity, "", activity!!.getString(R.string.connection_lost_desc))
             }
-            GAUtils.event(GACategory.SIDE_MENU, GAAction.FREE_GIFT, GAAction.WHATSAPP + GAAction.INVITE + GAAction.CLICKED)
+//            if (Utils.appInstalledOrNot(activity!!, "com.whatsapp")) {
+//                ReferralActions.shareToWhatsapp(activity)
+//            } else {
+//                ReferralActions.openGenericShareIntent(activity, null)
+//            }
+//            GAUtils.event(GACategory.SIDE_MENU, GAAction.FREE_GIFT, GAAction.WHATSAPP + GAAction.INVITE + GAAction.CLICKED)
         }
 
         llReferralCode!!.setOnClickListener {
