@@ -114,82 +114,83 @@
         <RelativeLayout
             android:id="@+id/relativeLayoutSearchContainerNew"
             android:layout_width="wrap_content"
-            android:visibility="visible"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/recyclerViewVehiclesConfirmRide"
-            android:layout_height="wrap_content">
-            
+            android:visibility="visible">
+
             <LinearLayout
                 android:id="@+id/rlMark"
                 android:layout_width="40px"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20px"
                 android:layout_marginTop="35px"
-                android:orientation="vertical"
                 android:gravity="center"
-                >
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/iv1"
                     android:layout_width="16px"
                     android:layout_height="16px"
-                    android:tag="mwar"
-                    android:src="@drawable/circle_green"/>
+                    android:src="@drawable/circle_green"
+                    android:tag="mwar" />
+
                 <ImageView
                     android:id="@+id/iv2NewUIDropDashedLine"
                     android:layout_width="40px"
                     android:layout_height="55px"
                     android:orientation="vertical"
                     android:rotation="0"
-                    android:visibility="visible"
-                    android:src="@drawable/dotted_vertical_line"/>
+                    android:src="@drawable/dotted_vertical_line"
+                    android:visibility="visible" />
+
                 <ImageView
                     android:id="@+id/iv3NewUIDropMark"
                     android:layout_width="16px"
                     android:layout_height="16px"
-                    android:visibility="visible"
+                    android:src="@drawable/circle_red"
                     android:tag="mwar"
-                    android:src="@drawable/circle_red"/>
-                
+                    android:visibility="visible" />
+
             </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutDestSearchBarNew"
                 android:layout_width="match_parent"
                 android:layout_height="70px"
+                android:layout_below="@+id/relativeLayoutInitialSearchBarNew"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginEnd="20px"
                 android:layout_marginBottom="5px"
                 android:layout_toEndOf="@id/rlMark"
-                android:layout_below="@+id/relativeLayoutInitialSearchBarNew"
                 android:background="@color/menu_item_selector_color_F7"
                 android:splitMotionEvents="false"
-                android:visibility="visible"
-                >
+                android:visibility="visible">
 
 
-                <TextView android:id="@+id/tvStopsBesidesDropNewUi"
+                <TextView
+                    android:id="@+id/tvStopsBesidesDropNewUi"
                     android:layout_width="40dp"
                     android:layout_height="17dp"
-                    android:singleLine="true"
                     android:layout_centerVertical="true"
-                    android:gravity="center"
-                    android:padding="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginEnd="-8dp"
                     android:background="@drawable/background_grey_rounded_bordered"
-                    android:textSize="7sp"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/maven_pro_medium"
-                    android:visibility="gone"
-                    />
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="7sp"
+                    android:visibility="gone" />
+
                 <TextView
-                    android:layout_toEndOf="@id/tvStopsBesidesDropNewUi"
                     android:id="@+id/textViewDestSearchNew"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="37px"
                     android:layout_toStartOf="@+id/layout_edit_destinationNew"
+                    android:layout_toEndOf="@id/tvStopsBesidesDropNewUi"
                     android:background="@color/transparent"
                     android:gravity="center_vertical"
                     android:hint="@string/text_where_to_go"
@@ -201,12 +202,13 @@
 
                 <LinearLayout
                     android:id="@+id/layout_edit_destinationNew"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentEnd="true"
-                    android:orientation="horizontal"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:gravity="center_vertical"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal">
+
                     <ImageView
                         android:id="@+id/imageViewDropCrossNew"
                         android:layout_width="70px"
@@ -230,8 +232,6 @@
                 </LinearLayout>
 
 
-
-
             </RelativeLayout>
 
             <RelativeLayout
@@ -239,26 +239,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="70px"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="20px"
                 android:layout_marginTop="5px"
+                android:layout_marginEnd="20px"
                 android:layout_marginBottom="5px"
                 android:layout_toEndOf="@id/rlMark"
                 android:background="@color/menu_item_selector_color_F7"
                 android:splitMotionEvents="false">
-                
+
                 <TextView
                     android:id="@+id/textViewInitialSearchNew"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="37px"
+                    android:layout_toStartOf="@+id/ivLikePickup"
                     android:background="@color/transparent"
                     android:gravity="center_vertical|start"
                     android:hint="@string/set_pickup_location"
                     android:paddingEnd="20px"
                     android:singleLine="true"
                     android:textColor="@color/text_color"
-                    android:layout_toStartOf="@+id/ivLikePickup"
                     android:textSize="30px" />
 
             </RelativeLayout>
@@ -489,56 +489,57 @@
                 android:textSize="@dimen/text_size_26"
                 android:visibility="visible" />
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:visibility="gone"
-    android:id="@+id/seatSelectionLayout">
+            <LinearLayout
+                android:id="@+id/seatSelectionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="30dp">
 
-    <TextView
-        android:id="@+id/textViewHowManySeats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:textColor="@color/text_color"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:layout_marginEnd="10dp"
-        android:text="@string/how_many_seats"
-        android:layout_gravity="center"
-        />
-    <TextView
-        android:id="@+id/textViewSeatsInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:textColor="@color/text_color"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewHowManySeats"
-        android:layout_marginEnd="5dp"
-        android:text="@string/since_you_will_be_sharing_ride_format"
-        android:layout_gravity="center"
-        />
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/spinnerSeatCount"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:layout_gravity="center"
-        android:popupBackground="@drawable/background_white_rounded_bordered"
-        android:theme="@style/GreyHighlight"
-        android:dropDownWidth="50dp"
-        />
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/groupSeatCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:constraint_referenced_ids="textViewHowManySeats,textViewSeatsInfo,spinnerSeatCount"
-        />
+                <TextView
+                    android:id="@+id/textViewHowManySeats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/how_many_seats"
+                    android:textColor="@color/text_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-</LinearLayout>
+                <TextView
+                    android:id="@+id/textViewSeatsInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/since_you_will_be_sharing_ride_format"
+                    android:textColor="@color/text_color"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewHowManySeats" />
+
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:id="@+id/spinnerSeatCount"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:dropDownWidth="50dp"
+                    android:gravity="center_vertical"
+                    android:popupBackground="@drawable/background_white_rounded_bordered"
+                    android:theme="@style/GreyHighlight" />
+
+                <androidx.constraintlayout.widget.Group
+                    android:id="@+id/groupSeatCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    app:constraint_referenced_ids="textViewHowManySeats,textViewSeatsInfo,spinnerSeatCount" />
+
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/relativeLayoutTotalFare"
                 android:layout_width="match_parent"
