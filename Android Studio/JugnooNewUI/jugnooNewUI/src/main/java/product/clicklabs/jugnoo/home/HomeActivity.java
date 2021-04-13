@@ -11999,6 +11999,12 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             findViewById(R.id.ivNotes).setVisibility(View.GONE);
         }
 
+        if( slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+            seatSelectionLayout.setVisibility(View.VISIBLE);
+        }else{
+            seatSelectionLayout.setVisibility(View.GONE);
+        }
+
         return changed;
     }
 
