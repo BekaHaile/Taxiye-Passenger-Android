@@ -25,8 +25,9 @@
 
     <string name="google_maps_api_key">AIzaSyDRlxbwMF-rjd0m2jitT5Czg_pjQP4kqRk</string>
     <string name="google_server_client_id">598314612987-5tn48egh6pu6lknh0v2mos0j2c5u05lo.apps.googleusercontent.com</string>
-    <string name="fb_app_id">478771686406613</string>
-    <string name="fb_client_token">1ca38889c3c0a8be86a8a8aef0523987</string>
+    <string name="fb_app_id">1717173421766915</string>
+    <string name="fb_login_protocol_scheme">fb1717173421766915</string>
+    <string name="fb_client_token">25d54fc383e4863c3000f6b60779d17c</string>
     <string name="ak_login_protocol_scheme">ak478771686406613</string>
     <string name="branch_key">key_live_piQJFqbj99uCtGmr46UZkjhhqCcayBv9</string>
 
