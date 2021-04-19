@@ -116,6 +116,7 @@ import product.clicklabs.jugnoo.datastructure.ApiResponseFlags;
 import product.clicklabs.jugnoo.datastructure.EmailRegisterData;
 import product.clicklabs.jugnoo.datastructure.FacebookRegisterData;
 import product.clicklabs.jugnoo.datastructure.GoogleRegisterData;
+import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.LinkedWalletStatus;
 import product.clicklabs.jugnoo.datastructure.LoginVia;
 import product.clicklabs.jugnoo.datastructure.PreviousAccountInfo;
@@ -1426,25 +1427,26 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 					return true;
 				}
 			});
-			textViewSTerms.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					try {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_use_url)));
-						startActivity(browserIntent);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				}
-			});
+//			textViewSTerms.setOnClickListener(new View.OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					try {
+//						HelpParticularActivity.helpSection = HelpSection.TERMS;
+//						startActivity(new Intent(SplashNewActivity.this, HelpParticularActivity.class));
+//						overridePendingTransition(R.anim.right_in, R.anim.right_out);
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			});
 
 			tvSTerms.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					try {
-						Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-								Uri.parse(Prefs.with(SplashNewActivity.this).getString(Constants.KEY_TERMS_OF_USE_URL, getString(R.string.terms_of_use_url))));
-						startActivity(browserIntent);
+						HelpParticularActivity.helpSection = HelpSection.TERMS;
+						startActivity(new Intent(SplashNewActivity.this, HelpParticularActivity.class));
+						overridePendingTransition(R.anim.right_in, R.anim.right_out);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

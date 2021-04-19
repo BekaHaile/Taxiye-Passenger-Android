@@ -278,7 +278,7 @@ public class HelpParticularActivity extends BaseActivity implements Constants {
                     Log.e("helpSection", "=" + helpSection.getOrdinal() + " " + helpSection.getName());
 
                     HashMap<String, String> params = new HashMap<>();
-                    params.put("access_token", Data.userData.accessToken);
+//                    params.put("access_token", Data.userData.accessToken);
                     params.put("section", "" + helpSection.getOrdinal());
 
                     if (HelpSection.FARE_DETAILS.getOrdinal() == helpSection.getOrdinal()) {
