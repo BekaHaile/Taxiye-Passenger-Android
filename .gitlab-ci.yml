@@ -1,0 +1,22 @@
+
+
+stages:
+  - build
+
+build_debug_release:
+  stage: build
+  image: mingc/android-build-box
+
+  script:
+    - cd "Android Studio/JugnooNewUI"
+    - ./gradlew assembleTaxiyeStagingDebug assembleTaxiyeStagingRelease
+    - mkdir build-files
+    - mv jugnooNewUI/build/outputs/apk/taxiyeStaging/release/taxiyeStaging_customer_release6007.apk build-files/taxiye-customer-staging-release.apk
+    - mv jugnooNewUI/build/outputs/apk/taxiyeStaging/debug/taxiyeStaging_customer_debug6007.apk build-files/taxiye-customer-staging-debug.apk
+
+  artifacts:
+    paths:
+      - "Android Studio/JugnooNewUI/jugnooNewUI/build-files"
+
+  only:
+    - develop
