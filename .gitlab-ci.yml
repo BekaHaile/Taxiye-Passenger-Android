@@ -10,13 +10,14 @@ build_debug_release:
   script:
     - cd "Android Studio/JugnooNewUI"
     - ./gradlew assembleTaxiyeStagingDebug assembleTaxiyeStagingRelease
+    - cd ../../
     - mkdir build-files
-    - mv jugnooNewUI/build/outputs/apk/taxiyeStaging/release/taxiyeStaging_customer_release6007.apk build-files/taxiye-customer-staging-release.apk
-    - mv jugnooNewUI/build/outputs/apk/taxiyeStaging/debug/taxiyeStaging_customer_debug6007.apk build-files/taxiye-customer-staging-debug.apk
+    - mv "Android Studio/JugnooNewUI/jugnooNewUI/build/outputs/apk/taxiyeStaging/release/taxiyeStaging_customer_release6007.apk" build-files/taxiye-customer-staging-release.apk
+    - mv "Android Studio/JugnooNewUI/jugnooNewUI/build/outputs/apk/taxiyeStaging/debug/taxiyeStaging_customer_debug6007.apk" build-files/taxiye-customer-staging-debug.apk
 
   artifacts:
     paths:
-      - "Android Studio/JugnooNewUI/jugnooNewUI/build-files"
+      - build-files
 
   only:
     - develop
