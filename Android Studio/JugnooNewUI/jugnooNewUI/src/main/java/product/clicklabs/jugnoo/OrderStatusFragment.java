@@ -1872,6 +1872,7 @@ public class OrderStatusFragment extends Fragment implements GAAction, View.OnCl
         feedbackData.setAmount(datum1.getDiscountedAmount() == 0 ? datum1.getAmount() : datum1.getDiscountedAmount());
         feedbackData.setFeedbackCurrencyCode(currencyCode);
         feedbackData.setFeedbackCurrency(currency);
+        feedbackData.setPaymentOption(datum1.getPaymentMode());
         return feedbackData;
     }
 

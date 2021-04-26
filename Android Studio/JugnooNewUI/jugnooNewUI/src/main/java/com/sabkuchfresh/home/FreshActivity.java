@@ -327,6 +327,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     int completedOrderId,completedOrderProductType;
     String completedOrderClientId;
 
+    private HistoryResponse.Datum datum1;
+
 
     public View getFeedHomeAddPostView() {
         return feedHomeAddPostView;
@@ -2673,9 +2675,24 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } else if (clientId.equals(Config.getDeliveryCustomerClientId())) {
             feedbackData = Data.getDeliveryCustomerData();
         } else if (clientId.equals(Config.getFeedClientId())) {
+//            datum1.getPaymentMode();
             feedbackData = Data.getFeedData();
         }
         getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,clientId, feedbackData, true);
+    }
+
+    private LoginResponse.FeedbackData getFeedBackData() {
+        LoginResponse.FeedbackData feedbackData = datum1.getFeedBackData();
+        if (feedbackData == null) return null;
+
+        feedbackData.setRestaurantName(datum1.getRestaurantName());
+        feedbackData.setDriverName(datum1.getDriveName());
+        feedbackData.setOrderId(String.valueOf(datum1.getOrderId()));
+        feedbackData.setAmount(datum1.getDiscountedAmount() == 0 ? datum1.getAmount() : datum1.getDiscountedAmount());
+        feedbackData.setFeedbackCurrencyCode(currencyCode);
+        feedbackData.setFeedbackCurrency(currency);
+        feedbackData.setPaymentOption(datum1.getPaymentMode());
+        return feedbackData;
     }
 
     public void openAddToAddressBook(Bundle bundle) {
