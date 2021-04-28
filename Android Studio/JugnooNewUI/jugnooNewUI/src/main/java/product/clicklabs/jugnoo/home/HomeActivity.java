@@ -761,6 +761,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     private ImageView ivSafetyInfoPicture, ivSafetyInfoClose, ivSafetyInfoPictureOld, ivSafetyInfoCloseOld;
     private AppCompatSpinner seatSpinner;
     private TextView allowedSeatsText,textViewHowManySeats;
+    private List<Integer> seats;
 
     @SuppressLint("NewApi")
     @Override
@@ -964,7 +965,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         textViewHowManySeats = findViewById(R.id.textViewHowManySeats);
         textViewHowManySeats.setTypeface(Fonts.mavenMedium(this));
         allowedSeatsText.setTypeface(Fonts.mavenMedium(this));
-        List<Integer> seats = new ArrayList<>(Arrays.asList(1,2));
+        seats = new ArrayList<>(Arrays.asList(1,2));
         SeatsDropdownAdapter seatsDropdownAdapter = new SeatsDropdownAdapter(this,android.R.layout.simple_spinner_dropdown_item, seats);
         seatsDropdownAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         seatSpinner.setAdapter(seatsDropdownAdapter);
@@ -12001,7 +12002,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
         if( slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
-            setNoOfSeats(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getMaxPeople());
+            if(changed)
+                setNoOfSeats(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getMaxPeople());
             seatSelectionLayout.setVisibility(View.VISIBLE);
         }else{
             seatSelectionLayout.setVisibility(View.GONE);
@@ -12011,7 +12013,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
     }
 
     public void setNoOfSeats(int max){
-        List<Integer> seats = new ArrayList<>();
+        seats = new ArrayList<>();
         for(int i=1;i<=max;i++){
             seats.add(i);
         }
