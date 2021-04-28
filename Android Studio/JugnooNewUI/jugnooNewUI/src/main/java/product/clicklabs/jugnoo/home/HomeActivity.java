@@ -4721,7 +4721,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
                                 recyclerViewVehiclesConfirmRide.setVisibility(View.GONE);
 								updateConfirmedStateFare();
                             }
-                           if( slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                           if(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+                               setNoOfSeats(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getMaxPeople());
                                seatSelectionLayout.setVisibility(View.VISIBLE);
                            }else{
                                seatSelectionLayout.setVisibility(View.GONE);
@@ -12000,6 +12001,7 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         }
 
         if( slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getRideType() == RideTypeValue.POOL.getOrdinal()){
+            setNoOfSeats(slidingBottomPanel.getRequestRideOptionsFragment().getRegionSelected().getMaxPeople());
             seatSelectionLayout.setVisibility(View.VISIBLE);
         }else{
             seatSelectionLayout.setVisibility(View.GONE);
@@ -12008,6 +12010,15 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
         return changed;
     }
 
+    public void setNoOfSeats(int max){
+        List<Integer> seats = new ArrayList<>();
+        for(int i=1;i<=max;i++){
+            seats.add(i);
+        }
+        SeatsDropdownAdapter seatsDropdownAdapter = new SeatsDropdownAdapter(this,android.R.layout.simple_spinner_dropdown_item, seats);
+        seatsDropdownAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        seatSpinner.setAdapter(seatsDropdownAdapter);
+    }
 	public void showReverseBidField(Region region) {
 		linearLayoutBidValue.setVisibility(View.VISIBLE);
 		if(region.getRegionFare() != null && regionIdFareSetInETBid != region.getRegionId()) {
