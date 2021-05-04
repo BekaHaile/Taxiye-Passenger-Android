@@ -646,7 +646,7 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         };
         // register for keyboard event
         activityCallbacks.registerForKeyBoardEvent(mKeyBoardStateHandler);
-        if(feedbackData.getPaymentOption() != PaymentOption.MPESA.getOrdinal() ){
+        if(feedbackData.getPaymentOption() == PaymentOption.MPESA.getOrdinal() ){
             btPayOnline.setVisibility(View.VISIBLE);
                 btPayOnline.setText(getString(R.string.pay_via)+" "+getString(R.string.mpesa));
         }
