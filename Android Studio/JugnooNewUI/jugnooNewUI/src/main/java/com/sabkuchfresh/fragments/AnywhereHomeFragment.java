@@ -322,7 +322,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
             deliveriesAdapter = new DeliveriesAdapter((FreshActivity) activity, deliveries);
         }
         rvDeliveries.setAdapter(deliveriesAdapter);
-        setCurrentSelectedAddressToDelivery();
+//        setCurrentSelectedAddressToDelivery();
         defaultCurrencyFromResponse = activity.getString(R.string.default_currency);
         paySlider = new PaySlider(activity.llPayViewContainer) {
             @Override
@@ -1220,7 +1220,7 @@ public class AnywhereHomeFragment extends Fragment implements GACategory, GAActi
 //        rgTimeSlot.check(R.id.rb_asap);
         isAsapSelected = true;
         rbSt.setText(R.string.label_rb_schedule_time);
-        setCurrentSelectedAddressToDelivery();
+//        setCurrentSelectedAddressToDelivery();
         setAddress(false, null);
         timePickerFragment = null;
         cvUploadImages.setVisibility(View.VISIBLE);
