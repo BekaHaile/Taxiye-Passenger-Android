@@ -58,13 +58,13 @@
 
     <TextView
         android:id="@+id/bChatDriver"
+        android:visibility="gone"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:contentDescription="@string/chat_with_driver"
-        android:background="@drawable/chat_driver_selector"
-        android:layout_toStartOf="@id/bCallDriver"
         android:layout_marginEnd="10dp"
-        android:layout_alignTop="@id/bCallDriver" />
+        android:layout_toStartOf="@id/bCallDriver"
+        android:background="@drawable/chat_driver_selector"
+        android:contentDescription="@string/chat_with_driver" />
     <LinearLayout
         android:id="@+id/bCallDriver"
         android:layout_width="@dimen/dp_200"
