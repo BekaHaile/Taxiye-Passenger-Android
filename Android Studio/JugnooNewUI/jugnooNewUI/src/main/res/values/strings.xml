@@ -1118,6 +1118,7 @@
     <string name="complete_your_profile_and_get_free_coupons">Complete your profile and get free coupons!</string>
     <string name="claim_coupon">Claim Coupon</string>
     <string name="enter_referral_code">Enter Referral Code</string>
+    <string name="d2c_share_content">Dear User, As requested use my code {{{referral_code}}} to download the app from</string>
     <string name="complete_your_profile_and_earn_cashback">Complete your profile and earn a 10% Cashback coupon on your next transaction.</string>
     <string name="link_social_account">Link Social Account</string>
     <string name="pro_tip">Pro Tip</string>
