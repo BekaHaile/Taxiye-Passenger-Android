@@ -38,8 +38,6 @@
     <string name="operator_token">8fa23305501d87e9b87ecac6a87d381b</string>
     <string name="support_number">+251970464646</string>
     <string name="police_number">911</string>
-    <string name="facebook_page_id">256281040558</string>
-    <string name="facebook_page_url">https://www.facebook.com/taxiyee</string>
 
 
     <integer name="is_autos_offers_enabled">@integer/view_gone</integer>

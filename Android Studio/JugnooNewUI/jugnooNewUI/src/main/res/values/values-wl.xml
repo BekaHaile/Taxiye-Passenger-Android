@@ -16,8 +16,8 @@
 
     <!--hardcode/default values-->
     <string name="police_number">100</string>
-    <string name="facebook_page_id"></string>
-    <string name="facebook_page_url">https://www.facebook.com/jugnoose</string>
+    <string name="facebook_page_id">2014284462197243</string>
+    <string name="facebook_page_url">https://www.facebook.com/TaxiyeGlobal</string>
     <string name="terms_of_use_url">https://www.jugnoo.in/#/terms</string>
     <string name="web_landing_page">https://jugnoo.in</string>
     <string name="default_support_email">support@jugnoo.in</string>
