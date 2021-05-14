@@ -98,6 +98,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -916,9 +917,9 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_last_name));
 								return;
 							}
-							if(tvSkip.getVisibility() != View.VISIBLE && TextUtils.isEmpty(email)){
-								Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_email));
-								return;
+							if(tvSkip.getVisibility() != View.VISIBLE && TextUtils.isEmpty(email)) {
+								int random = ThreadLocalRandom.current().nextInt(1000, Integer.MAX_VALUE);
+								email = first + last + String.valueOf(random) + "@emptyEmail.com";
 							}
 
 							String name = first + " " + last;

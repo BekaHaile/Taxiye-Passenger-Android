@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.ThreadLocalRandom;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -516,6 +517,10 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                     if (editTextUserName.isEnabled()) {
                         String nameChanged = editTextUserName.getText().toString().trim();
                         String emailChanged = editTextEmail.getText().toString().trim();
+                        if ("".equalsIgnoreCase(emailChanged)) {
+                            int random = ThreadLocalRandom.current().nextInt(1000, Integer.MAX_VALUE);
+                            emailChanged = nameChanged.replace(" ", "") + String.valueOf(random) + "@emptyEmail.com";
+                        }
                         String phoneNoChanged = editTextPhone.getText().toString().trim();
                         String countryCode = tvCountryCode.getText().toString();
                         if(TextUtils.isEmpty(countryCode)){
@@ -530,9 +535,6 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                         if ("".equalsIgnoreCase(nameChanged)) {
                             editTextUserName.requestFocus();
                             editTextUserName.setError(getResources().getString(R.string.username_empty_error));
-                        } else if ("".equalsIgnoreCase(emailChanged)) {
-                            editTextEmail.requestFocus();
-                            editTextEmail.setError(getResources().getString(R.string.email_empty_error));
                         } else if ("".equalsIgnoreCase(phoneNoChanged)) {
                             editTextPhone.requestFocus();
                             editTextPhone.setError(getResources().getString(R.string.phone_empty_error));
@@ -561,13 +563,14 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
                             boolean phoneEdited = !Data.userData.phoneNo.equalsIgnoreCase(countryCode + finalPhoneNoChanged);
                             if(phoneEdited && Data.userData.getRegAs() == 1
                                     && Prefs.with(AccountActivity.this).getInt(Constants.KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT, 0) == 1){
+                                String finalEmailChanged = emailChanged;
                                 DialogPopup.alertPopupTwoButtonsWithListeners(AccountActivity.this,
                                         Prefs.with(AccountActivity.this).getString(Constants.KEY_CUSTOMER_REG_AS_DRIVER_PHONE_EDIT_ALERT_MESSAGE,
                                                 getString(R.string.registered_as_driver_phone_number_will_be_edited)),
                                         new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), emailChanged, countryCode + finalPhoneNoChanged,
+                                                updateUserProfileAPI(AccountActivity.this, Utils.capEachWord(nameChanged), finalEmailChanged, countryCode + finalPhoneNoChanged,
                                                         phoneEdited, countryCode);
                                             }
                                         });
@@ -1128,7 +1131,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
             setUserNameToFields();
             if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
                     && (!Data.userData.userEmail.contains("@app.jugnoo.in"))
-                    && (!Data.userData.userEmail.endsWith("@email.com"))) {
+                    && (!Data.userData.userEmail.endsWith("@email.com")) && (!Data.userData.userEmail.endsWith("@emptyEmail.com"))) {
                 editTextEmail.setText(Data.userData.userEmail);
             } else {
                 editTextEmail.setText("");
@@ -1355,7 +1358,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
                                 setUserNameToFields();
                                 if(!Data.userData.userEmail.contains("@facebook.com") && !Data.userData.userEmail.toLowerCase().startsWith("guest")
-                                        && (!Data.userData.userEmail.contains("@app.jugnoo.in"))) {
+                                        && (!Data.userData.userEmail.contains("@app.jugnoo.in")) && (!Data.userData.userEmail.endsWith("@emptyEmail.com"))) {
                                     editTextEmail.setText(Data.userData.userEmail);
                                 }
                                 if(phoneUpdated) {
