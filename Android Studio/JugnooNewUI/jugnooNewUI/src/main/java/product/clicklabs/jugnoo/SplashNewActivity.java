@@ -1591,6 +1591,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		genders.add(new Gender(0, getString(R.string.select_gender)));
 		genders.add(new Gender(GenderValues.MALE.getType(), getString(R.string.male)));
 		genders.add(new Gender(GenderValues.FEMALE.getType(), getString(R.string.female)));
+		genders.add(new Gender(GenderValues.OTHER.getType(), getString(R.string.others)));
 		ArrayAdapter<Gender> adapter = new GenderDropdownAdapter(this, android.R.layout.simple_spinner_dropdown_item, genders, selectedGenderPosition);
 		spinnerGender.setAdapter(adapter);
 
