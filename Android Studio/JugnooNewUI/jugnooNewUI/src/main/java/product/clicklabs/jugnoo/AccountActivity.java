@@ -101,6 +101,8 @@ import retrofit.mime.TypedByteArray;
 import retrofit.mime.TypedFile;
 import retrofit.mime.TypedString;
 
+import static product.clicklabs.jugnoo.Constants.SP_CURRENT_STATE;
+
 
 public class AccountActivity extends BaseFragmentActivity implements GAAction, GACategory, OnCountryPickerListener {
 
@@ -168,6 +170,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
     private RelativeLayout relativeLayoutProfileVerification;
     private TextView textViewProfileVerification;
     private ImageView ivProfileVerifyStatus;
+    private int status;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -213,6 +216,8 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
         tvCountryCode = (TextView) findViewById(R.id.tvCountryCode); tvCountryCode.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);
         linearLayoutPhone = (LinearLayout) findViewById(R.id.linearLayoutPhone);
         imageViewEditProfile = (ImageView) findViewById(R.id.imageViewEditProfile);
+        status = Prefs.with(this).getInt(SP_CURRENT_STATE, 0);
+        if(status != 0) imageViewEditProfile.setVisibility(View.GONE);
         imageViewEditProfileSave = (ImageView) findViewById(R.id.imageViewEditProfileSave); imageViewEditProfileSave.setVisibility(View.GONE);
         textViewPasswordSave = (TextView) findViewById(R.id.textViewPasswordSave); textViewPasswordSave.setTypeface(Fonts.mavenMedium(this));
         linearLayoutPasswordSave = (LinearLayout) findViewById(R.id.linearLayoutPasswordSave);
@@ -1462,6 +1467,7 @@ public class AccountActivity extends BaseFragmentActivity implements GAAction, G
 
                                     setUserData();
 
+                                    if(status == 0)
                                     imageViewEditProfile.setVisibility(View.VISIBLE);
                                     imageViewEditProfileSave.setVisibility(View.GONE);
                                     isEditModeOn = false;
