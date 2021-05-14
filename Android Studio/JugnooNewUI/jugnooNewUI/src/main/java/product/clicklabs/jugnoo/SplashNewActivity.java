@@ -919,7 +919,7 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 							}
 							if(tvSkip.getVisibility() != View.VISIBLE && TextUtils.isEmpty(email)) {
 								int random = ThreadLocalRandom.current().nextInt(1000, Integer.MAX_VALUE);
-								email = first + last + String.valueOf(random) + "@emptymail.com";
+								email = first + last + String.valueOf(random) + "@emptyEmail.com";
 							}
 
 							String name = first + " " + last;
