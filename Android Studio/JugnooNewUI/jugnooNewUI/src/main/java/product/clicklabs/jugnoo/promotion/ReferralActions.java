@@ -33,7 +33,7 @@ import product.clicklabs.jugnoo.utils.Utils;
 /**
  * Created by socomo20 on 6/19/15.
  */
-public class ReferralActions  {
+public class ReferralActions {
 
     public static FacebookLoginHelper facebookLoginHelper;
     public static void shareToFacebook(final Activity activity, final boolean isMessenger, final CallbackManager callbackManager){
@@ -227,9 +227,13 @@ public class ReferralActions  {
             BranchMetricsUtils.getBranchLinkForChannel(activity, new BranchMetricsUtils.BranchMetricsEventHandler() {
                 @Override
                 public void onBranchLinkCreated(String link) {
+                    String content = activity.getString(R.string.d2c_share_content);
+
+                    String finalContent = content.replace("{{{referral_code}}}", Data.userData.referralCode);
+
                     genericShareDialog(activity, callbackManager,
                             Data.userData.getReferralMessages().referralEmailSubject,
-                            Data.userData.getReferralMessages().referralSharingMessage + " " + link,
+                            finalContent + " " + link,
                             link);
                 }
 
