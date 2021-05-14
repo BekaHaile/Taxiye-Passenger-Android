@@ -916,10 +916,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 								Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_last_name));
 								return;
 							}
-							if(tvSkip.getVisibility() != View.VISIBLE && TextUtils.isEmpty(email)){
-								Utils.showToast(SplashNewActivity.this, getString(R.string.please_enter_email));
-								return;
-							}
 
 							String name = first + " " + last;
 							name = name.trim();
@@ -1595,7 +1591,6 @@ public class SplashNewActivity extends BaseAppCompatActivity implements  Constan
 		genders.add(new Gender(0, getString(R.string.select_gender)));
 		genders.add(new Gender(GenderValues.MALE.getType(), getString(R.string.male)));
 		genders.add(new Gender(GenderValues.FEMALE.getType(), getString(R.string.female)));
-		genders.add(new Gender(GenderValues.OTHER.getType(), getString(R.string.others)));
 		ArrayAdapter<Gender> adapter = new GenderDropdownAdapter(this, android.R.layout.simple_spinner_dropdown_item, genders, selectedGenderPosition);
 		spinnerGender.setAdapter(adapter);
 
