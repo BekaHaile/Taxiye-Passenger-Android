@@ -4,7 +4,6 @@ enum class GenderValues(val type: Int){
     ALL(0),
     MALE(1),
     FEMALE(2),
-    OTHER(3)
 }
 
 class Gender(val type:Int, val name:String){
