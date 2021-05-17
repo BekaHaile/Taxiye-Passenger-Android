@@ -338,7 +338,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         return feedHomeAddPostView;
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -2672,7 +2671,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      */
     public void openFeedback(String clientId) {
 
-
         if (clientId.equals(Config.getFreshClientId())) {
             feedbackData = Data.getFreshData();
         } else if (clientId.equals(Config.getMealsClientId())) {
@@ -2684,11 +2682,13 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } else if (clientId.equals(Config.getDeliveryCustomerClientId())) {
             feedbackData = Data.getDeliveryCustomerData();
         } else if (clientId.equals(Config.getFeedClientId())) {
-//            datum1.getPaymentMode();
-
             feedbackData = getFeedBackData();
         }
-        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,clientId, feedbackData, true);
+        if(feedbackData == null) {
+            return;
+        }
+        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer, clientId, feedbackData, true);
+
     }
 
     public void getFeedOrderData(final Activity activity) {
@@ -2718,6 +2718,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
                                     datum1 = historyResponse.getData().get(0);
                                     currencyCode = datum1.getCurrencyCode();
                                     currency = datum1.getCurrency();
+                                    openFeedback(Config.getFeedClientId());
                                 }
                             }
                         } catch (Exception exception) {
@@ -2765,8 +2766,8 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     }
 
     private LoginResponse.FeedbackData getFeedBackData() {
+        if (datum1 == null) return null;
         LoginResponse.FeedbackData feedbackData = datum1.getFeedBackData();
-        if (feedbackData == null) return null;
 
         feedbackData.setRestaurantName(datum1.getRestaurantName());
         feedbackData.setDriverName(datum1.getDriveName());
