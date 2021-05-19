@@ -3720,6 +3720,7 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
     public AddToAddressBookFragment getAddToAddressBookFragment() {
         FragmentManager fragmentManager = getSupportFragmentManager();
+        if(fragmentManager.getBackStackEntryCount() == 0) return  null;
         String fragmentTag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
         if (fragmentTag.equalsIgnoreCase(AddToAddressBookFragment.class.getName())) {
             return (AddToAddressBookFragment) fragmentManager.findFragmentByTag(fragmentTag);
