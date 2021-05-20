@@ -13,17 +13,19 @@ import product.clicklabs.jugnoo.utils.Fonts
 class GenderDropdownAdapter(context: Context, resource: Int, objects: MutableList<Gender>, val selectedGenderPosition:Int) : ArrayAdapter<Gender>(context, resource, objects) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view: View = super.getView(position, convertView, parent)
-        if (view is TextView) {
-            (view).typeface = Fonts.mavenRegular(context)
-            if(selectedGenderPosition == 0 && position == 0) {
-                view.setTextColor(ContextCompat.getColor(parent.context, R.color.text_color_light))
-            } else {
-                view.setTextColor(ContextCompat.getColor(parent.context, R.color.text_color))
+        return if(position < count) {
+            val view: View = super.getView(position, convertView, parent)
+            if (view is TextView) {
+                (view).typeface = Fonts.mavenRegular(context)
+                if (selectedGenderPosition == 0 && position == 0) {
+                    view.setTextColor(ContextCompat.getColor(parent.context, R.color.text_color_light))
+                } else {
+                    view.setTextColor(ContextCompat.getColor(parent.context, R.color.text_color))
+                }
             }
-        }
 
-        return view
+            view
+        }else View(context)
     }
 
 
