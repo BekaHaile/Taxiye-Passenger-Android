@@ -646,12 +646,16 @@ public class FeedbackFragment extends Fragment implements GAAction, View.OnClick
         };
         // register for keyboard event
         activityCallbacks.registerForKeyBoardEvent(mKeyBoardStateHandler);
-        if(feedbackData.getShowPaymentOption()==1){
+        if(feedbackData.getPaymentOption() == PaymentOption.MPESA.getOrdinal() ){
             btPayOnline.setVisibility(View.VISIBLE);
                 btPayOnline.setText(getString(R.string.pay_via)+" "+getString(R.string.mpesa));
         }
         else {
             btPayOnline.setVisibility(View.GONE);
+            ratingBarMenuFeedback.setVisibility(View.VISIBLE);
+            rlHowWasExp.setVisibility(View.VISIBLE);
+            btPayOnline.setVisibility(View.GONE);
+            feedbackData.setShowPaymentOption(0);
         }
 
     }

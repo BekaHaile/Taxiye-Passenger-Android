@@ -127,6 +127,7 @@ import com.sabkuchfresh.fragments.RestaurantImageFragment;
 import com.sabkuchfresh.fragments.RestaurantReviewsListFragment;
 import com.sabkuchfresh.fragments.SuggestStoreFragment;
 import com.sabkuchfresh.fragments.TabbedSearchFragment;
+import com.sabkuchfresh.fragments.TrackOrderFragment;
 import com.sabkuchfresh.fragments.VendorMenuFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsCheckoutFragment;
 import com.sabkuchfresh.pros.ui.fragments.ProsHomeFragment;
@@ -324,14 +325,18 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
     private VendorDirectSearch vendorDirectSearch;
     private String currencyCode, currency;
 
+    private int orderId, productType;
+    LoginResponse.FeedbackData feedbackData = null;
+
     int completedOrderId,completedOrderProductType;
     String completedOrderClientId;
+
+    private HistoryResponse.Datum datum1;
 
 
     public View getFeedHomeAddPostView() {
         return feedHomeAddPostView;
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -562,6 +567,11 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
 
             openPushDialog();
             deepLinkAction.openDeepLink(FreshActivity.this, getSelectedLatLng());
+
+            feedbackData = Data.getFeedData();
+            orderId = Integer.parseInt(feedbackData.getOrderId());
+            productType = getIntent().getIntExtra(Constants.KEY_PRODUCT_TYPE, ProductType.MEALS.getOrdinal());
+            getFeedOrderData(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2660,7 +2670,6 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
      * Method used to open feedback screen
      */
     public void openFeedback(String clientId) {
-        LoginResponse.FeedbackData feedbackData = null;
 
         if (clientId.equals(Config.getFreshClientId())) {
             feedbackData = Data.getFreshData();
@@ -2673,9 +2682,101 @@ public class FreshActivity extends BaseAppCompatActivity implements PaymentResul
         } else if (clientId.equals(Config.getDeliveryCustomerClientId())) {
             feedbackData = Data.getDeliveryCustomerData();
         } else if (clientId.equals(Config.getFeedClientId())) {
-            feedbackData = Data.getFeedData();
+            feedbackData = getFeedBackData();
         }
-        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer,clientId, feedbackData, true);
+        if(feedbackData == null) {
+            return;
+        }
+        getTransactionUtils().openFeedback(FreshActivity.this, relativeLayoutContainer, clientId, feedbackData, true);
+
+    }
+
+    public void getFeedOrderData(final Activity activity) {
+        try {
+            if (MyApplication.getInstance().isOnline()) {
+
+                DialogPopup.showLoadingDialog(activity, getString(R.string.loading));
+
+                HashMap<String, String> params = new HashMap<>();
+                params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+                params.put(Constants.KEY_ORDER_ID, "" + orderId);
+                params.put(Constants.KEY_PRODUCT_TYPE, "" + productType);
+                params.put(Constants.KEY_CLIENT_ID,  getClientIdByProductType(productType));
+                params.put(Constants.INTERATED, "1");
+
+                Callback<HistoryResponse> callback = new Callback<HistoryResponse>() {
+                    @Override
+                    public void success(HistoryResponse historyResponse, Response response) {
+                        String responseStr = new String(((TypedByteArray) response.getBody()).getBytes());
+                        Log.i("Server response", "response = " + responseStr);
+                        try {
+                            JSONObject jObj = new JSONObject(responseStr);
+                            if (!SplashNewActivity.checkIfTrivialAPIErrors(activity, jObj)) {
+                                int flag = jObj.getInt("flag");
+                                String message = JSONParser.getServerMessage(jObj);
+                                if (ApiResponseFlags.ACTION_COMPLETE.getOrdinal() == flag) {
+                                    datum1 = historyResponse.getData().get(0);
+                                    currencyCode = datum1.getCurrencyCode();
+                                    currency = datum1.getCurrency();
+                                    openFeedback(Config.getFeedClientId());
+                                }
+                            }
+                        } catch (Exception exception) {
+                            exception.printStackTrace();
+                        }
+                        DialogPopup.dismissLoadingDialog();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e("TAG", "getRecentRidesAPI error=" + error.toString());
+                        DialogPopup.dismissLoadingDialog();
+                    }
+                };
+                new HomeUtil().putDefaultParams(params);
+                RestClient.getFatafatApiService().getCustomOrderHistory(params, callback);
+            } else {
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getClientIdByProductType(int productTypeOrdinal){
+
+
+        if(productTypeOrdinal==ProductType.AUTO.getOrdinal()){
+            return Config.getAutosClientId();
+        }else if(productTypeOrdinal==ProductType.DELIVERY_CUSTOMER.getOrdinal()){
+            return Config.getDeliveryCustomerClientId();
+        }else if(productType == ProductType.MENUS.getOrdinal()){
+            return Config.getMenusClientId();
+        }else if(productType==ProductType.FRESH.getOrdinal()){
+            return Config.getFreshClientId();
+        }else if(productType==ProductType.FEED.getOrdinal()){
+            return Config.getFeedClientId();
+        }else if(productType==ProductType.MEALS.getOrdinal()){
+            return Config.getMealsClientId();
+        }else if(productType==ProductType.PAY.getOrdinal()){
+            return Config.getPayClientId();
+        }else  if(productType==ProductType.GROCERY.getOrdinal()){
+            return Config.getGroceryClientId();
+        }
+        return Config.getAutosClientId();
+    }
+
+    private LoginResponse.FeedbackData getFeedBackData() {
+        if (datum1 == null) return null;
+        LoginResponse.FeedbackData feedbackData = datum1.getFeedBackData();
+
+        feedbackData.setRestaurantName(datum1.getRestaurantName());
+        feedbackData.setDriverName(datum1.getDriveName());
+        feedbackData.setOrderId(String.valueOf(datum1.getOrderId()));
+        feedbackData.setAmount(datum1.getDiscountedAmount() == 0 ? datum1.getAmount() : datum1.getDiscountedAmount());
+        feedbackData.setFeedbackCurrencyCode(currencyCode);
+        feedbackData.setFeedbackCurrency(currency);
+        feedbackData.setPaymentOption(datum1.getPaymentMode());
+        return feedbackData;
     }
 
     public void openAddToAddressBook(Bundle bundle) {
