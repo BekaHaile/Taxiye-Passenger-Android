@@ -86,6 +86,7 @@ public class WalletRechargeFragment extends Fragment {
 	boolean scrolled = false;
 
 	String amount1 = "50", amount2 = "100", amount3 = "300";
+	String currency = Data.autoData.getCurrency() + " %s";
 	private int openWalletType;
 
 	public static WalletRechargeFragment newInstance(int openWalletType){
@@ -194,10 +195,9 @@ public class WalletRechargeFragment extends Fragment {
 			}
 		});
 
-
-		buttonAmount1.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount1));
-		buttonAmount2.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount2));
-		buttonAmount3.setText(String.format(paymentActivity.getResources().getString(R.string.rupees_value_format), amount3));
+		buttonAmount1.setText(String.format(currency, amount1));
+		buttonAmount2.setText(String.format(currency, amount2));
+		buttonAmount3.setText(String.format(currency, amount3));
 
 		buttonAmount1.setOnClickListener(new View.OnClickListener() {
 			@Override
