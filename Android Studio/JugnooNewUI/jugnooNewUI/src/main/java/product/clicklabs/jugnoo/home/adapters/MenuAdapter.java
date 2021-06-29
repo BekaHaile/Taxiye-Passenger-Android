@@ -55,6 +55,7 @@ import product.clicklabs.jugnoo.home.HomeActivity;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.home.models.MenuInfo;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRidesActivity;
+import product.clicklabs.jugnoo.offers.OffersActivity;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
 import product.clicklabs.jugnoo.support.SupportActivity;
@@ -594,7 +595,7 @@ public class MenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> i
                     Data.longitude = currLatLng.longitude;
                 }
                 if (MyApplication.getInstance().isOnline()) {
-                    activity.startActivity(new Intent(activity, PromotionActivity.class));
+                    activity.startActivity(new Intent(activity, OffersActivity.class));
                     activity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } else {
                     DialogPopup.dialogNoInternet(activity,
