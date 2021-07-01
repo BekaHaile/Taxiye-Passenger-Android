@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView;
 import product.clicklabs.jugnoo.BaseActivity;
 import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.credits.SendCreditsToCustomer;
 import product.clicklabs.jugnoo.promotion.PromotionActivity;
 import product.clicklabs.jugnoo.utils.Utils;
 
@@ -19,7 +20,7 @@ public class OffersActivity extends BaseActivity {
 
     private TextView balance;
     private ImageView imageViewBack;
-    private CardView buyAirtime, promotions, airtimeHistory;
+    private CardView buyAirtime, promotions, airtimeHistory, transfer;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +53,15 @@ public class OffersActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(OffersActivity.this, PromotionActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
+        transfer = (CardView) findViewById(R.id.transfer);
+        transfer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OffersActivity.this, SendCreditsToCustomer.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });

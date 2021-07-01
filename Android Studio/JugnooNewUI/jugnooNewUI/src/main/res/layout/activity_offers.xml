@@ -106,7 +106,7 @@
                         android:layout_width="160px"
                         android:layout_height="160px"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/add_image"
+                        android:src="@drawable/buy_airtime"
                         android:layout_marginTop="30sp"
                         ></ImageView>
 
@@ -140,7 +140,7 @@
                         android:layout_width="160px"
                         android:layout_height="160px"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/add_image"
+                        android:src="@drawable/ic_history"
                         android:layout_marginTop="30sp"
                         ></ImageView>
 
@@ -168,6 +168,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="350px"
                 android:layout_height="350px"
+                android:id="@+id/transfer"
                 app:cardCornerRadius="7dp"
                 app:cardBackgroundColor="@color/green_card"
                 android:layout_marginHorizontal="10sp"
@@ -183,7 +184,7 @@
                         android:layout_width="160px"
                         android:layout_height="160px"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/add_image"
+                        android:src="@drawable/ic_transfer"
                         android:layout_marginTop="30sp"
                         ></ImageView>
 
@@ -217,7 +218,7 @@
                         android:layout_width="160px"
                         android:layout_height="160px"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/add_image"
+                        android:src="@drawable/ic_promotions"
                         android:layout_marginTop="30sp"
                         ></ImageView>
 
