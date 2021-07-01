@@ -91,7 +91,7 @@
                 android:layout_width="350px"
                 android:layout_height="350px"
                 app:cardCornerRadius="7dp"
-                app:cardBackgroundColor="@color/green_card"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginHorizontal="10sp"
                 android:orientation="vertical">
 
@@ -106,7 +106,7 @@
                         android:layout_width="160px"
                         android:layout_height="160px"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/add_image"
+                        android:src="@drawable/ic_mobile_card_50"
                         android:layout_marginTop="30sp"
                         ></ImageView>
 
@@ -126,7 +126,7 @@
                 android:layout_height="350px"
                 android:id="@+id/buyAirtime2"
                 app:cardCornerRadius="7dp"
-                app:cardBackgroundColor="@color/green_card"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginHorizontal="10sp"
                 android:orientation="vertical">
                 <LinearLayout
@@ -140,7 +140,7 @@
                         android:layout_width="160px"
                         android:layout_height="160px"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/add_image"
+                        android:src="@drawable/ic_mobile_card_100"
                         android:layout_marginTop="30sp"
                         ></ImageView>
 

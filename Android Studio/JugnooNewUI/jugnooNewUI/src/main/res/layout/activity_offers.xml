@@ -91,7 +91,7 @@
                 android:layout_width="350px"
                 android:layout_height="350px"
                 app:cardCornerRadius="7dp"
-                app:cardBackgroundColor="@color/green_card"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginHorizontal="10sp"
                 android:orientation="vertical">
 
@@ -126,7 +126,7 @@
                 android:layout_height="350px"
                 android:id="@+id/airtimeHistory"
                 app:cardCornerRadius="7dp"
-                app:cardBackgroundColor="@color/green_card"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginHorizontal="10sp"
                 android:orientation="vertical">
                 <LinearLayout
@@ -170,7 +170,7 @@
                 android:layout_height="350px"
                 android:id="@+id/transfer"
                 app:cardCornerRadius="7dp"
-                app:cardBackgroundColor="@color/green_card"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginHorizontal="10sp"
                 android:orientation="vertical">
                 <LinearLayout
@@ -204,7 +204,7 @@
                 android:layout_height="350px"
                 android:id="@+id/promotions"
                 app:cardCornerRadius="7dp"
-                app:cardBackgroundColor="@color/green_card"
+                app:cardBackgroundColor="@color/white"
                 android:layout_marginHorizontal="10sp"
                 android:orientation="vertical">
                 <LinearLayout
