@@ -37,7 +37,7 @@
                 android:layout_marginLeft="10sp">
 
                 <TextView
-                    android:id="@+id/tv_delivery_name"
+                    android:id="@+id/voucher_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
@@ -46,7 +46,7 @@
                     android:textSize="13sp"/>
 
                 <TextView
-                    android:id="@+id/tv_delivery_phone"
+                    android:id="@+id/airtime_amount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
@@ -54,7 +54,7 @@
                     android:textColor="@color/text_color"
                     android:textSize="17sp"/>
                 <TextView
-                    android:id="@+id/tv_delivery_alternative_phone"
+                    android:id="@+id/date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
@@ -65,12 +65,12 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/ivDeleteAddress"
+                android:id="@+id/call_button"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="10dp"
                 android:layout_alignParentEnd="true"
-                android:src="@drawable/ic_ride_call_selector"
+                android:src="@drawable/ic_call_ussd"
                 android:layout_marginRight="15sp"
                 android:tag="mwar" />
 
