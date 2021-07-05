@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class BuyAirtime {
     @SerializedName("flag")
-    private String flag;
+    private int flag;
 
     @SerializedName("message")
     private String message;
@@ -12,11 +12,11 @@ public class BuyAirtime {
     @SerializedName("voucher_number")
     private String voucherNumber;
 
-    public String getFlag() {
+    public int getFlag() {
         return flag;
     }
 
-    public void setFlag(String flag) {
+    public void setFlag(int flag) {
         this.flag = flag;
     }
 

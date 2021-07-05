@@ -105,6 +105,12 @@ public class OffersActivity extends BaseActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         setOptions();
     }
 

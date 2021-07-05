@@ -58,8 +58,7 @@ public class BuyAirtimeActivity extends BaseActivity {
         imageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                overridePendingTransition(R.anim.left_in, R.anim.left_out);
+                goBack();
             }
         });
 
@@ -111,12 +110,20 @@ public class BuyAirtimeActivity extends BaseActivity {
                             @Override
                             public void success(BuyAirtime buyAirtime, Response response) {
                                 //call ussd *805*voucher#
+
                                 dismissLoadingDialog();
-                                openDialer("*805*" + buyAirtime.getVoucherNumber() + "#");
+                                if(buyAirtime.getFlag() == 0) {
+                                    Toast.makeText(BuyAirtimeActivity.this, buyAirtime.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    openDialer("*805*" + buyAirtime.getVoucherNumber() + "#");
+                                    goBack();
+                                }
                             }
 
                             @Override
                             public void failure(RetrofitError error) {
+                                dismissLoadingDialog();
                                 Log.e("Error", error.toString());
                             }
                         });
@@ -139,6 +146,11 @@ public class BuyAirtimeActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         dismissLoadingDialog();
+    }
+
+    public void goBack(){
+        finish();
+        overridePendingTransition(R.anim.left_in, R.anim.left_out);
     }
 
     public void openDialer(String ussd){

@@ -1,11 +1,15 @@
 package product.clicklabs.jugnoo.offers;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -21,15 +25,17 @@ import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.offers.model.AirtimeHistory;
 import product.clicklabs.jugnoo.offers.model.OfferTransfer;
 import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.utils.Log;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
 public class TransferOfferActivity extends BaseActivity {
 
-    EditText etCredits, etPhoneNumber;
-    Button btSendCredits;
-    ImageView ivBackButton;
+    private EditText etCredits, etPhoneNumber;
+    private Button btSendCredits;
+    private ImageView ivBackButton;
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +45,31 @@ public class TransferOfferActivity extends BaseActivity {
 
         etCredits = (EditText) findViewById(R.id.etCredits);
         etPhoneNumber = (EditText) findViewById(R.id.etPhoneNumber);
+        etPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String s = editable.toString();
+                if (s.startsWith("0")) {
+                    if (s.length() > 1) {
+                        etPhoneNumber.setText(s.toString().substring(1));
+                    } else {
+                        etPhoneNumber.setText("");
+                    }
+                    Toast.makeText(TransferOfferActivity.this, getApplication().getString(R.string.number_should_not_start_with_zero), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
 
         ivBackButton = (ImageView) findViewById(R.id.ivBackButton);
         ivBackButton.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +84,7 @@ public class TransferOfferActivity extends BaseActivity {
         btSendCredits.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                showLoadingDialog();
                 HashMap<String, String> params = new HashMap<>();
                 params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                 params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -61,20 +93,42 @@ public class TransferOfferActivity extends BaseActivity {
                 new HomeUtil().putDefaultParams(params);
 
                 params.put("amount", String.valueOf(etCredits.getText()));
-                params.put("phone_number", String.valueOf(etPhoneNumber.getText()));
+                params.put("phone_number", String.valueOf("251" + etPhoneNumber.getText()));
 
                 RestClient.getApiService().offerTransfer(params, new Callback<OfferTransfer>() {
                     @Override
                     public void success(OfferTransfer offerTransfer, Response response) {
-
+                        dismissLoadingDialog();
+                        Toast.makeText(TransferOfferActivity.this, offerTransfer.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-
+                        Log.e("Error: ", error.toString());
+                        dismissLoadingDialog();
                     }
                 });
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dismissLoadingDialog();
+    }
+
+    public void showLoadingDialog() {
+        if (progress == null) {
+            progress = new ProgressDialog(this);
+            progress.setMessage(getString(R.string.loading));
+        }
+        progress.show();
+    }
+
+    public void dismissLoadingDialog() {
+        if (progress != null && progress.isShowing()) {
+            progress.dismiss();
+        }
     }
 }

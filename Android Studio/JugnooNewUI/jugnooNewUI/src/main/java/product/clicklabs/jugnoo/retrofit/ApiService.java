@@ -777,7 +777,7 @@ public interface ApiService {
                 Callback<ArrayList<AirtimeHistory>> callback);
 
     @FormUrlEncoded
-    @POST("/taxiye-offers/transaction")
+    @POST("/taxiye-offers/transfer-history")
     void offerTransaction(@FieldMap Map<String, String> params,
                         Callback<ArrayList<OfferTransaction>> callback);
 
