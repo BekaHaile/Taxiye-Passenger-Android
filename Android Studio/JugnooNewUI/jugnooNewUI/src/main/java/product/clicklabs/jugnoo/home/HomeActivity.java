@@ -494,7 +494,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
     private LinearLayout llPayOnline;
-    private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate;
+    private TextView tvPayOnline, tvPayOnlineIn;
+    private ImageView textViewShowFareEstimate;
     private boolean isFromConfirmToOther;
     private CardView cvPayOnline;
 
@@ -1388,8 +1389,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //        layoutParams.height = (int) (ASSL.Yscale() * 200);
 //        editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
-        textViewShowFareEstimate = (TextView)findViewById(R.id.tvShowFareEstimate);
-        textViewShowFareEstimate.setTypeface(Fonts.mavenRegular(this));
+        textViewShowFareEstimate = (ImageView) findViewById(R.id.tvShowFareEstimate);
+//        textViewShowFareEstimate.setTypeface(Fonts.mavenRegular(this));
         textViewShowFareEstimate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

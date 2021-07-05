@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,25 +24,26 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.home.HomeUtil;
 import product.clicklabs.jugnoo.offers.historyadapter.HistoryRecyclerViewAdapter;
+import product.clicklabs.jugnoo.offers.historyadapter.OfferTransactionRecyclerViewAdapter;
 import product.clicklabs.jugnoo.offers.model.AirtimeHistory;
-import product.clicklabs.jugnoo.retrofit.ApiService;
+import product.clicklabs.jugnoo.offers.model.OfferTransaction;
 import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.utils.Log;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class AirtimeHistoryActivity  extends BaseActivity {
+public class OfferTransactionActivity extends BaseActivity {
 
     private ImageView imageViewBack;
-    HistoryRecyclerViewAdapter historyRecyclerViewAdapter;
+    OfferTransactionRecyclerViewAdapter offerTransactionRecyclerViewAdapter;
     RecyclerView historyRecyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_airtime_history);
+        setContentView(R.layout.activity_offer_transaction);
 
         imageViewBack = (ImageView) findViewById(R.id.imageViewBack);
         imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -70,25 +70,13 @@ public class AirtimeHistoryActivity  extends BaseActivity {
         params.put("integrated", "1");
         new HomeUtil().putDefaultParams(params);
 
-        RestClient.getApiService().airtimeHistory(params, new Callback<ArrayList<AirtimeHistory>>() {
+        RestClient.getApiService().offerTransaction(params, new Callback<ArrayList<OfferTransaction>>() {
             @Override
-            public void success(ArrayList<AirtimeHistory> deliveryItems, Response response) {
-//                AirtimeHistory airtimeHistory =  new AirtimeHistory();
-//                airtimeHistory.setVoucherNumber("43433343467");
-//                airtimeHistory.setAmount(50);
-//                airtimeHistory.setDate("09-3290-940 23:32:22");
-//                deliveryItems.add(airtimeHistory);
+            public void success(ArrayList<OfferTransaction> deliveryItems, Response response) {
 
-                historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(deliveryItems);
-                historyRecyclerViewAdapter.setActions(new HistoryRecyclerViewAdapter.Actions() {
-                    @Override
-                    public void onCall(AirtimeHistory airtimeHistory) {
-                        //call the ussd
-                        openDialer("*805*" + airtimeHistory.getVoucherNumber() + "#");
-                    }
-                });
-                historyRecyclerView.setAdapter(historyRecyclerViewAdapter);
-                historyRecyclerViewAdapter.notifyDataSetChanged();
+                offerTransactionRecyclerViewAdapter = new OfferTransactionRecyclerViewAdapter(deliveryItems);
+                historyRecyclerView.setAdapter(offerTransactionRecyclerViewAdapter);
+                offerTransactionRecyclerViewAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -98,10 +86,23 @@ public class AirtimeHistoryActivity  extends BaseActivity {
         });
     }
 
-    public void openDialer(String ussd){
-        String ussdCode = "tel:" + ussd;
-        Intent intent = new Intent(Intent.ACTION_DIAL);
+    public void runUssd(String ussd){
+        String ussdCode = "tel:" + ussd + Uri.encode("#");
+        Intent intent = new Intent(Intent.ACTION_CALL);
         intent.setData(Uri.parse(ussdCode));
-        startActivity(intent);
+        try{
+            int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
+
+            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{Manifest.permission.CALL_PHONE},
+                        Integer.parseInt("123"));
+            } else {
+                startActivity(intent);
+            }
+        } catch (SecurityException e){
+            e.printStackTrace();
+        }
     }
 }

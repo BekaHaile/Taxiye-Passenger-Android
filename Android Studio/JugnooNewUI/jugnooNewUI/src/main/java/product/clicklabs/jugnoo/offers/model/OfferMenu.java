@@ -14,7 +14,7 @@ public class OfferMenu {
     private Boolean promotions;
 
     @SerializedName("wallet_balance")
-    private double walletBalance;
+    private int walletBalance;
 
     public Boolean getAirtime() {
         return airtime;
@@ -40,11 +40,11 @@ public class OfferMenu {
         this.promotions = promotions;
     }
 
-    public double getWalletBalance() {
+    public int getWalletBalance() {
         return walletBalance;
     }
 
-    public void setWalletBalance(double walletBalance) {
+    public void setWalletBalance(int walletBalance) {
         this.walletBalance = walletBalance;
     }
 }

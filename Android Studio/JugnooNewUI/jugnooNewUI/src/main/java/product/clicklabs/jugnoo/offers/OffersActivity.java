@@ -34,7 +34,7 @@ public class OffersActivity extends BaseActivity {
 
     private TextView balance;
     private ImageView imageViewBack;
-    private CardView buyAirtime, promotions, airtimeHistory, transfer;
+    private CardView buyAirtime, promotions, airtimeHistory, transfer, transactionHistory;
     private double balanceValue;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +88,15 @@ public class OffersActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(OffersActivity.this, AirtimeHistoryActivity.class));
+                overridePendingTransition(R.anim.right_in, R.anim.right_out);
+            }
+        });
+
+        transactionHistory = (CardView) findViewById(R.id.transactionHistory);
+        transactionHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(OffersActivity.this, OfferTransactionActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });

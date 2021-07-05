@@ -47,7 +47,7 @@ public class BuyAirtimeActivity extends BaseActivity {
 
         setContentView(R.layout.activity_buy_airtime);
 
-        balanceValue = getIntent().getDoubleExtra("wallet_balance",0);
+        balanceValue = getIntent().getIntExtra("wallet_balance",0);
         balance = (TextView) findViewById(R.id.balance);
         balance.setText(String.valueOf(balanceValue));
 
@@ -105,7 +105,7 @@ public class BuyAirtimeActivity extends BaseActivity {
                             @Override
                             public void success(BuyAirtime buyAirtime, Response response) {
                                 //call ussd *805*voucher#
-                                runUssd("*805*" + buyAirtime.getVoucherNumber());
+                                openDialer("*805*" + buyAirtime.getVoucherNumber() + "#");
                             }
 
                             @Override
@@ -128,24 +128,11 @@ public class BuyAirtimeActivity extends BaseActivity {
         alert11.show();
     }
 
-    public void runUssd(String ussd){
-        String ussdCode = "tel:" + ussd + Uri.encode("#");
-        Intent intent = new Intent(Intent.ACTION_CALL);
+    public void openDialer(String ussd){
+        String ussdCode = "tel:" + ussd;
+        Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(ussdCode));
-        try{
-            int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
-
-            if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                        this,
-                        new String[]{Manifest.permission.CALL_PHONE},
-                        Integer.parseInt("123"));
-            } else {
-                startActivity(intent);
-            }
-        } catch (SecurityException e){
-            e.printStackTrace();
-        }
+        startActivity(intent);
     }
 
 }
