@@ -807,6 +807,7 @@
     <string name="airtime_hist">Airtime Hist.</string>
     <string name="transfer">Transfer</string>
     <string name="transaction">Transaction</string>
+    <string name="transfer_coins">Transfer coins</string>
     <string name="low_balance">You don\'t have enough balance to make this purchase</string>
     <string name="are_you_sure_you_want_to_buy_airtime">Are you sure you want to buy %s airtime?</string>
     <string name="add_new_address">Add new address</string>

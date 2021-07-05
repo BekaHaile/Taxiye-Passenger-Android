@@ -15,6 +15,7 @@ import product.clicklabs.jugnoo.offers.model.AirtimeHistory;
 import product.clicklabs.jugnoo.offers.model.BuyAirtime;
 import product.clicklabs.jugnoo.offers.model.OfferMenu;
 import product.clicklabs.jugnoo.offers.model.OfferTransaction;
+import product.clicklabs.jugnoo.offers.model.OfferTransfer;
 import product.clicklabs.jugnoo.promotion.models.ReferralTxnResponse;
 import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
@@ -779,5 +780,10 @@ public interface ApiService {
     @POST("/taxiye-offers/transaction")
     void offerTransaction(@FieldMap Map<String, String> params,
                         Callback<ArrayList<OfferTransaction>> callback);
+
+    @FormUrlEncoded
+    @POST("/taxiye-offers/transfer")
+    void offerTransfer(@FieldMap Map<String, String> params,
+                          Callback<OfferTransfer> callback);
 
 }

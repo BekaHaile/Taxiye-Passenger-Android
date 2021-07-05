@@ -633,6 +633,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme">
         </activity>
+        <activity android:name=".offers.OfferTransactionActivity"
+            android:label="OfferTransactionHistory"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme">
+        </activity>
+        <activity android:name=".offers.TransferOfferActivity"
+            android:label="TransferOffer"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme">
+        </activity>
     </application>
 
 </manifest>

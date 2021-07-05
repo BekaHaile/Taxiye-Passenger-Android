@@ -73,11 +73,6 @@ public class AirtimeHistoryActivity  extends BaseActivity {
         RestClient.getApiService().airtimeHistory(params, new Callback<ArrayList<AirtimeHistory>>() {
             @Override
             public void success(ArrayList<AirtimeHistory> deliveryItems, Response response) {
-//                AirtimeHistory airtimeHistory =  new AirtimeHistory();
-//                airtimeHistory.setVoucherNumber("43433343467");
-//                airtimeHistory.setAmount(50);
-//                airtimeHistory.setDate("09-3290-940 23:32:22");
-//                deliveryItems.add(airtimeHistory);
 
                 historyRecyclerViewAdapter = new HistoryRecyclerViewAdapter(deliveryItems);
                 historyRecyclerViewAdapter.setActions(new HistoryRecyclerViewAdapter.Actions() {

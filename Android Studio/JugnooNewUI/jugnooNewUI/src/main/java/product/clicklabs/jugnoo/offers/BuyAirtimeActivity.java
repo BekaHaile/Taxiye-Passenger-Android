@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.offers;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -39,7 +40,9 @@ public class BuyAirtimeActivity extends BaseActivity {
     private ImageView imageViewBack;
     private CardView buyAirtime1, buyAirtime2;
     private TextView balance;
-    private double balanceValue;
+    private int balanceValue;
+
+    private ProgressDialog progress;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class BuyAirtimeActivity extends BaseActivity {
 
     public void buyAirtime(String amount){
         AlertDialog.Builder builder1 = new AlertDialog.Builder(BuyAirtimeActivity.this);
+        builder1.setTitle(getString(R.string.confirm));
         builder1.setMessage(getString(R.string.are_you_sure_you_want_to_buy_airtime, amount));
         builder1.setCancelable(true);
 
@@ -92,6 +96,8 @@ public class BuyAirtimeActivity extends BaseActivity {
                 R.string.yes,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        showLoadingDialog();
+
                         HashMap<String, String> params = new HashMap<>();params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
                         params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
                         params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
@@ -105,6 +111,7 @@ public class BuyAirtimeActivity extends BaseActivity {
                             @Override
                             public void success(BuyAirtime buyAirtime, Response response) {
                                 //call ussd *805*voucher#
+                                dismissLoadingDialog();
                                 openDialer("*805*" + buyAirtime.getVoucherNumber() + "#");
                             }
 
@@ -128,11 +135,31 @@ public class BuyAirtimeActivity extends BaseActivity {
         alert11.show();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dismissLoadingDialog();
+    }
+
     public void openDialer(String ussd){
         String ussdCode = "tel:" + ussd;
         Intent intent = new Intent(Intent.ACTION_DIAL);
         intent.setData(Uri.parse(ussdCode));
         startActivity(intent);
+    }
+
+    public void showLoadingDialog() {
+        if (progress == null) {
+            progress = new ProgressDialog(this);
+            progress.setMessage(getString(R.string.loading));
+        }
+        progress.show();
+    }
+
+    public void dismissLoadingDialog() {
+        if (progress != null && progress.isShowing()) {
+            progress.dismiss();
+        }
     }
 
 }

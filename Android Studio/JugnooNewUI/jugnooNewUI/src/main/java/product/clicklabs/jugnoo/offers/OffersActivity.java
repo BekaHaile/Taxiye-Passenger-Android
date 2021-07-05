@@ -1,5 +1,6 @@
 package product.clicklabs.jugnoo.offers;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -35,7 +36,10 @@ public class OffersActivity extends BaseActivity {
     private TextView balance;
     private ImageView imageViewBack;
     private CardView buyAirtime, promotions, airtimeHistory, transfer, transactionHistory;
-    private double balanceValue;
+    private int balanceValue;
+
+    private ProgressDialog progress;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +82,7 @@ public class OffersActivity extends BaseActivity {
         transfer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(OffersActivity.this, SendCreditsToCustomer.class));
+                startActivity(new Intent(OffersActivity.this, TransferOfferActivity.class));
                 overridePendingTransition(R.anim.right_in, R.anim.right_out);
             }
         });
@@ -105,6 +109,8 @@ public class OffersActivity extends BaseActivity {
     }
 
     public void setOptions(){
+        showLoadingDialog();
+
         HashMap<String, String> params = new HashMap<>();
         params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
         params.put(Constants.KEY_CLIENT_ID, Config.getAutosClientId());
@@ -119,12 +125,15 @@ public class OffersActivity extends BaseActivity {
                 if(!offerMenu.getAirtime()){
                     buyAirtime.setVisibility(View.GONE);
                     airtimeHistory.setVisibility(View.GONE);
+                    transactionHistory.setVisibility(View.GONE);
                 }
                 if(!offerMenu.getTransfer()) transfer.setVisibility(View.GONE);
                 if(!offerMenu.getPromotions()) promotions.setVisibility(View.GONE);
 
                 balanceValue = offerMenu.getWalletBalance();
-                balance.setText(String.valueOf(offerMenu.getWalletBalance()));
+                balance.setText(String.valueOf(balanceValue));
+
+                dismissLoadingDialog();
             }
 
             @Override
@@ -132,5 +141,19 @@ public class OffersActivity extends BaseActivity {
                 Log.e("Error", error.toString());
             }
         });
+    }
+
+    public void showLoadingDialog() {
+        if (progress == null) {
+            progress = new ProgressDialog(this);
+            progress.setMessage(getString(R.string.loading));
+        }
+        progress.show();
+    }
+
+    public void dismissLoadingDialog() {
+        if (progress != null && progress.isShowing()) {
+            progress.dismiss();
+        }
     }
 }
