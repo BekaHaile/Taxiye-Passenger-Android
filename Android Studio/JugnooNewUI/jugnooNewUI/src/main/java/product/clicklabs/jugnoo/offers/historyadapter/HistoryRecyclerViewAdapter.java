@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.offers.model.AirtimeHistory;
+import product.clicklabs.jugnoo.utils.DateOperations;
 
 public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecyclerViewAdapter.ViewHolder>{
 
@@ -76,7 +77,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         TextView textViewPhone = holder.airtimeAmount;
         textViewPhone.setText(String.valueOf(airtimeHistory.getAmount()));
         TextView textViewSecondaryPhone = holder.date;
-        textViewSecondaryPhone.setText(airtimeHistory.getDate());
+        textViewSecondaryPhone.setText(String.valueOf(DateOperations.getDateFromString(airtimeHistory.getDate())));
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override

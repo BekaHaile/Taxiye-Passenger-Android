@@ -13,13 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
+import product.clicklabs.jugnoo.Constants;
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.offers.model.AirtimeHistory;
 import product.clicklabs.jugnoo.offers.model.OfferTransaction;
 import product.clicklabs.jugnoo.offers.model.Transaction;
+import product.clicklabs.jugnoo.utils.DateOperations;
 
 public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<OfferTransactionRecyclerViewAdapter.ViewHolder>{
 
@@ -81,10 +85,7 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
         TextView textViewPhone = holder.points;
         textViewPhone.setText(String.valueOf(offerTransaction.getPoints()));
         TextView textViewSecondaryPhone = holder.time;
-        String date = offerTransaction.getTime();
-        date = date.replaceAll("T", " ");
-        date = date.replaceAll(".000Z", " ");
-        textViewSecondaryPhone.setText(date);
+        textViewSecondaryPhone.setText(String.valueOf(DateOperations.getDateFromString(offerTransaction.getTime())));
     }
 
     @Override
