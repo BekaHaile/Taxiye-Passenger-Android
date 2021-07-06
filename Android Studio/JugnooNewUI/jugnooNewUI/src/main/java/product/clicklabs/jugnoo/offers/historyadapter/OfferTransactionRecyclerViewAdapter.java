@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.offers.historyadapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +10,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.offers.model.AirtimeHistory;
 import product.clicklabs.jugnoo.offers.model.OfferTransaction;
+import product.clicklabs.jugnoo.offers.model.Transaction;
 
 public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<OfferTransactionRecyclerViewAdapter.ViewHolder>{
 
@@ -23,12 +27,13 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
         void onCall(AirtimeHistory item);
     }
 
-    private ArrayList<OfferTransaction> offerTransactions;
+    private ArrayList<Transaction> offerTransactions;
     private boolean isSummary;
     private Actions actions;
+    private Context context;
 
     // Pass in the deliveryItems array into the constructor
-    public OfferTransactionRecyclerViewAdapter(ArrayList<OfferTransaction> offerTransactions) {
+    public OfferTransactionRecyclerViewAdapter(ArrayList<Transaction> offerTransactions) {
         this.offerTransactions = offerTransactions;
     }
 
@@ -37,23 +42,23 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView voucherNumber;
-        public TextView airtimeAmount;
-        public TextView date;
+        public ImageView imageView;
+        public TextView points;
+        public TextView time;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            voucherNumber = (TextView) itemView.findViewById(R.id.voucher_number);
-            airtimeAmount = (TextView) itemView.findViewById(R.id.airtime_amount);
-            date = (TextView) itemView.findViewById(R.id.date);
+            imageView = (ImageView) itemView.findViewById(R.id.type);
+            points = (TextView) itemView.findViewById(R.id.points);
+            time = (TextView) itemView.findViewById(R.id.time);
         }
     }
 
     @NonNull
     @Override
     public OfferTransactionRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Context context = parent.getContext();
+        context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
@@ -68,14 +73,15 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
     @Override
     public void onBindViewHolder(@NonNull OfferTransactionRecyclerViewAdapter.ViewHolder holder, int position) {
         // Get the data model based on position
-        OfferTransaction offerTransaction = offerTransactions.get(position);
+        Transaction offerTransaction = offerTransactions.get(position);
 
-        TextView textView = holder.voucherNumber;
-        textView.setText(offerTransaction.getVoucherNumber());
-        TextView textViewPhone = holder.airtimeAmount;
-        textViewPhone.setText(String.valueOf(offerTransaction.getAmount()));
-        TextView textViewSecondaryPhone = holder.date;
-        textViewSecondaryPhone.setText(offerTransaction.getDate());
+        ImageView typeView = holder.imageView;
+        if(offerTransaction.getType() == "received") typeView.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_received));
+        else typeView.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sent));
+        TextView textViewPhone = holder.points;
+        textViewPhone.setText(String.valueOf(offerTransaction.getPoints()));
+        TextView textViewSecondaryPhone = holder.time;
+        textViewSecondaryPhone.setText(offerTransaction.getTime());
     }
 
     @Override

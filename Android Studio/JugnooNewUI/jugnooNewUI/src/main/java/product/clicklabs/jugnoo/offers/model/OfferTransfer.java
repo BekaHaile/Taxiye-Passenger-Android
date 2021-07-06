@@ -4,16 +4,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class OfferTransfer {
     @SerializedName("flag")
-    private String flag;
+    private int flag;
 
     @SerializedName("message")
     private String message;
 
-    public String getFlag() {
+    public int getFlag() {
         return flag;
     }
 
-    public void setFlag(String flag) {
+    public void setFlag(int flag) {
         this.flag = flag;
     }
 

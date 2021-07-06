@@ -1,6 +1,8 @@
 package product.clicklabs.jugnoo.offers;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -93,13 +95,16 @@ public class TransferOfferActivity extends BaseActivity {
                 new HomeUtil().putDefaultParams(params);
 
                 params.put("amount", String.valueOf(etCredits.getText()));
-                params.put("phone_number", String.valueOf("251" + etPhoneNumber.getText()));
+                params.put("phone_number", String.valueOf("+251" + etPhoneNumber.getText()));
 
                 RestClient.getApiService().offerTransfer(params, new Callback<OfferTransfer>() {
                     @Override
                     public void success(OfferTransfer offerTransfer, Response response) {
                         dismissLoadingDialog();
-                        Toast.makeText(TransferOfferActivity.this, offerTransfer.getMessage(), Toast.LENGTH_SHORT).show();
+                        if(offerTransfer.getFlag() == 1) {
+                            successMessage();
+                        }
+                        else Toast.makeText(TransferOfferActivity.this, offerTransfer.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -130,5 +135,25 @@ public class TransferOfferActivity extends BaseActivity {
         if (progress != null && progress.isShowing()) {
             progress.dismiss();
         }
+    }
+
+    public void successMessage() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(TransferOfferActivity.this);
+        builder1.setTitle(getString(R.string.successful));
+        builder1.setMessage(getString(R.string.points_transferred));
+        builder1.setCancelable(true);
+
+        builder1.setNegativeButton(
+                R.string.close,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        etCredits.setText("");
+                        etPhoneNumber.setText("");
+                        dialog.cancel();
+                    }
+                });
+
+        AlertDialog alert11 = builder1.create();
+        alert11.show();
     }
 }

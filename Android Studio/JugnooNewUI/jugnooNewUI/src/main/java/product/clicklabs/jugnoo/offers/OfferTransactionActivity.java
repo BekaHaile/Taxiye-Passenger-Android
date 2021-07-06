@@ -70,11 +70,10 @@ public class OfferTransactionActivity extends BaseActivity {
         params.put("integrated", "1");
         new HomeUtil().putDefaultParams(params);
 
-        RestClient.getApiService().offerTransaction(params, new Callback<ArrayList<OfferTransaction>>() {
+        RestClient.getApiService().offerTransaction(params, new Callback<OfferTransaction>() {
             @Override
-            public void success(ArrayList<OfferTransaction> deliveryItems, Response response) {
-
-                offerTransactionRecyclerViewAdapter = new OfferTransactionRecyclerViewAdapter(deliveryItems);
+            public void success(OfferTransaction offerTransaction, Response response) {
+                offerTransactionRecyclerViewAdapter = new OfferTransactionRecyclerViewAdapter(offerTransaction.getMessage());
                 historyRecyclerView.setAdapter(offerTransactionRecyclerViewAdapter);
                 offerTransactionRecyclerViewAdapter.notifyDataSetChanged();
             }

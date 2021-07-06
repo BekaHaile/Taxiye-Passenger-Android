@@ -2,37 +2,29 @@ package product.clicklabs.jugnoo.offers.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class OfferTransaction {
-    @SerializedName("voucher_number")
-    private String voucherNumber;
+    @SerializedName("flag")
+    private int flag;
 
-    @SerializedName("amount")
-    private int amount;
+    @SerializedName("message")
+    private ArrayList<Transaction> message;
 
-    @SerializedName("date")
-    private String date;
-
-    public String getVoucherNumber() {
-        return voucherNumber;
+    public int getFlag() {
+        return flag;
     }
 
-    public void setVoucherNumber(String voucherNumber) {
-        this.voucherNumber = voucherNumber;
+    public void setFlag(int flag) {
+        this.flag = flag;
     }
 
-    public int getAmount() {
-        return amount;
+    public ArrayList<Transaction> getMessage() {
+        return message;
     }
 
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
+    public void setMessage(ArrayList<Transaction> message) {
+        this.message = message;
     }
 }
+

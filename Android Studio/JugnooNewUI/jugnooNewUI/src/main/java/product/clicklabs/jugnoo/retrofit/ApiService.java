@@ -779,7 +779,7 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/taxiye-offers/transfer-history")
     void offerTransaction(@FieldMap Map<String, String> params,
-                        Callback<ArrayList<OfferTransaction>> callback);
+                        Callback<OfferTransaction> callback);
 
     @FormUrlEncoded
     @POST("/taxiye-offers/transfer")

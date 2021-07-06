@@ -32,29 +32,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toStartOf="@+id/ivDeleteAddress"
                 android:orientation="vertical"
                 android:layout_marginLeft="10sp">
 
-                <TextView
-                    android:id="@+id/voucher_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                <ImageView
+                    android:id="@+id/type"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:gravity="top"
-                    android:text="******************"
-                    android:textColor="@color/text_color"
-                    android:textSize="13sp"/>
-
-                <TextView
-                    android:id="@+id/airtime_amount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:text="ETB 50"
+                    android:text="type"
+                    android:src="@drawable/ic_sent"
                     android:textColor="@color/text_color"
                     android:textSize="17sp"/>
+
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="top"
@@ -64,9 +56,20 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/points"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="15sp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/text_color"
+                android:textSize="17sp"
+                android:text="50"
+                android:tag="mwar" />
+
         </RelativeLayout>
-
-
 
 
 
