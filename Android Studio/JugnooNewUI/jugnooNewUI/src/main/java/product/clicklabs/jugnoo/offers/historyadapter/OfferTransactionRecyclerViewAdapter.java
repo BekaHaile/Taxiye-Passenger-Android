@@ -81,7 +81,10 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
         TextView textViewPhone = holder.points;
         textViewPhone.setText(String.valueOf(offerTransaction.getPoints()));
         TextView textViewSecondaryPhone = holder.time;
-        textViewSecondaryPhone.setText(offerTransaction.getTime());
+        String date = offerTransaction.getTime();
+        date = date.replaceAll("T", " ");
+        date = date.replaceAll(".000Z", " ");
+        textViewSecondaryPhone.setText(date);
     }
 
     @Override
