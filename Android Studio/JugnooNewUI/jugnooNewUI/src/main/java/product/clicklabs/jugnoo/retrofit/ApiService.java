@@ -4,12 +4,18 @@ import com.google.gson.JsonObject;
 import com.sabkuchfresh.feed.models.FeedCommonResponse;
 import com.sabkuchfresh.retrofit.model.PurchaseSubscriptionResponse;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import product.clicklabs.jugnoo.datastructure.NotificationSettingResponseModel;
 import product.clicklabs.jugnoo.datastructure.PromCouponResponse;
 import product.clicklabs.jugnoo.home.schedulerides.UpcomingRideResponse;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogReponse;
+import product.clicklabs.jugnoo.offers.model.AirtimeHistory;
+import product.clicklabs.jugnoo.offers.model.BuyAirtime;
+import product.clicklabs.jugnoo.offers.model.OfferMenu;
+import product.clicklabs.jugnoo.offers.model.OfferTransaction;
+import product.clicklabs.jugnoo.offers.model.OfferTransfer;
 import product.clicklabs.jugnoo.promotion.models.ReferralTxnResponse;
 import product.clicklabs.jugnoo.rentals.models.GetLockStatusResponse;
 import product.clicklabs.jugnoo.retrofit.model.AddCardPayStackModel;
@@ -754,5 +760,30 @@ public interface ApiService {
 	@FormUrlEncoded
     @POST("/settle_negative_wallet_balance")
     void settleNegativeWalletBalance(@FieldMap Map<String, String> params, Callback<NegativeWalletBalanceResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/taxiye-offers/offers")
+    void offers(@FieldMap Map<String, String> params,
+                            Callback<OfferMenu> callback);
+
+    @FormUrlEncoded
+    @POST("/taxiye-offers/buy-airtime")
+    void buyAirtime(@FieldMap Map<String, String> params,
+                Callback<BuyAirtime> callback);
+
+    @FormUrlEncoded
+    @POST("/taxiye-offers/airtime-history")
+    void airtimeHistory(@FieldMap Map<String, String> params,
+                Callback<ArrayList<AirtimeHistory>> callback);
+
+    @FormUrlEncoded
+    @POST("/taxiye-offers/transfer-history")
+    void offerTransaction(@FieldMap Map<String, String> params,
+                        Callback<OfferTransaction> callback);
+
+    @FormUrlEncoded
+    @POST("/taxiye-offers/transfer")
+    void offerTransfer(@FieldMap Map<String, String> params,
+                          Callback<OfferTransfer> callback);
 
 }

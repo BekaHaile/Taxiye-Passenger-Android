@@ -802,6 +802,16 @@
     <string name="empty_engagement_id">Empty engagement id</string>
     <string name="invalid_engagement_id">Invalid engagement id</string>
     <string name="offers">Offers</string>
+    <string name="balance">BALANCE</string>
+    <string name="buy_airtime">Buy Airtime</string>
+    <string name="airtime_hist">Airtime History</string>
+    <string name="transfer">Transfer</string>
+    <string name="transaction">Transaction</string>
+    <string name="transfer_coins">Transfer coins</string>
+    <string name="low_balance">You don\'t have enough balance to make this purchase</string>
+    <string name="are_you_sure_you_want_to_buy_airtime">Are you sure you want to buy %s airtime?</string>
+    <string name="points_transferred">Points transferred successfully.</string>
+    <string name="close">Close</string>
     <string name="add_new_address">Add new address</string>
     <string name="could_not_find_address">Could not find address</string>
     <string name="address_book">My Saved Locations</string>

@@ -226,6 +226,7 @@
     <color name="purple_menus_fab_pressed">#9f5495</color>
     <color name="green_delivery_customer_fab">#88c700</color>
     <color name="green_delivery_customer_fab_pressed">#9988c700</color>
+    <color name="green_card">#CAE5C3</color>
     <color name="yellow_pay_fab">#faaf40</color>
     <color name="yellow_pay_fab_pressed">#e69b2c</color>
 

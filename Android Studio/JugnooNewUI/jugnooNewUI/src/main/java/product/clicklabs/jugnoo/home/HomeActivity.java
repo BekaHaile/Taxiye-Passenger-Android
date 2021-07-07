@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -62,14 +61,12 @@ import android.text.style.StyleSpan;
 import android.util.Pair;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
@@ -136,7 +133,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.PicassoTools;
 import com.squareup.picasso.Target;
 import com.yarolegovich.discretescrollview.DiscreteScrollView;
-import com.yarolegovich.discretescrollview.transform.DiscreteScrollItemTransformer;
 import com.yarolegovich.discretescrollview.transform.Pivot;
 import com.yarolegovich.discretescrollview.transform.ScaleTransformer;
 
@@ -146,8 +142,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -161,28 +155,7 @@ import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import androidx.appcompat.widget.PopupMenu;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import io.branch.referral.Branch;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import kotlin.coroutines.CoroutineContext;
-import kotlinx.coroutines.CoroutineScope;
-import okio.BufferedSource;
 import kotlin.coroutines.CoroutineContext;
 import kotlinx.coroutines.CoroutineScope;
 import product.clicklabs.jugnoo.AccessTokenGenerator;
@@ -203,7 +176,6 @@ import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.RazorpayBaseActivity;
 import product.clicklabs.jugnoo.RideCancellationActivity;
 import product.clicklabs.jugnoo.SplashNewActivity;
-import product.clicklabs.jugnoo.adapters.BadgesAdapter;
 import product.clicklabs.jugnoo.adapters.BadgesAdapter;
 import product.clicklabs.jugnoo.adapters.BidsPlacedAdapter;
 import product.clicklabs.jugnoo.adapters.CorporatesAdapter;
@@ -227,10 +199,8 @@ import product.clicklabs.jugnoo.datastructure.AppLinkIndex;
 import product.clicklabs.jugnoo.datastructure.AutoData;
 import product.clicklabs.jugnoo.datastructure.BidInfo;
 import product.clicklabs.jugnoo.datastructure.CouponInfo;
-import product.clicklabs.jugnoo.datastructure.DialogErrorType;
 import product.clicklabs.jugnoo.datastructure.DriverInfo;
 import product.clicklabs.jugnoo.datastructure.EngagementStatus;
-import product.clicklabs.jugnoo.datastructure.FeedBackInfo;
 import product.clicklabs.jugnoo.datastructure.FeedbackReason;
 import product.clicklabs.jugnoo.datastructure.GAPIAddress;
 import product.clicklabs.jugnoo.datastructure.LatLngCoordinates;
@@ -245,7 +215,6 @@ import product.clicklabs.jugnoo.datastructure.PromotionInfo;
 import product.clicklabs.jugnoo.datastructure.PushFlags;
 import product.clicklabs.jugnoo.datastructure.RidePath;
 import product.clicklabs.jugnoo.datastructure.SPLabels;
-import product.clicklabs.jugnoo.datastructure.SearchMode;
 import product.clicklabs.jugnoo.datastructure.SearchResult;
 import product.clicklabs.jugnoo.datastructure.UserMode;
 import product.clicklabs.jugnoo.directions.JungleApisImpl;
@@ -275,7 +244,6 @@ import product.clicklabs.jugnoo.home.dialogs.PriorityTipDialog;
 import product.clicklabs.jugnoo.home.dialogs.PushDialog;
 import product.clicklabs.jugnoo.home.dialogs.RateAppDialog;
 import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
-import product.clicklabs.jugnoo.home.dialogs.RideConfirmationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SafetyInfoDialog;
 import product.clicklabs.jugnoo.home.dialogs.SaveLocationDialog;
 import product.clicklabs.jugnoo.home.dialogs.SavedAddressPickupDialog;
@@ -293,6 +261,7 @@ import product.clicklabs.jugnoo.home.models.VehicleIconSet;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogHelper;
 import product.clicklabs.jugnoo.home.trackinglog.TrackingLogModeValue;
 import product.clicklabs.jugnoo.newui.dialog.RewardsDialog;
+import product.clicklabs.jugnoo.offers.OffersActivity;
 import product.clicklabs.jugnoo.permission.PermissionCommon;
 import product.clicklabs.jugnoo.promotion.ReferralActions;
 import product.clicklabs.jugnoo.promotion.ShareActivity;
@@ -320,7 +289,6 @@ import product.clicklabs.jugnoo.room.DBObject;
 import product.clicklabs.jugnoo.room.apis.DBCoroutine;
 import product.clicklabs.jugnoo.room.database.SearchLocationDB;
 import product.clicklabs.jugnoo.room.model.SearchLocation;
-import product.clicklabs.jugnoo.smartlock.callbacks.SmartlockCallbacks;
 import product.clicklabs.jugnoo.support.SupportActivity;
 import product.clicklabs.jugnoo.support.SupportMailActivity;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
@@ -367,11 +335,9 @@ import retrofit.mime.TypedByteArray;
 import static com.google.android.gms.maps.model.JointType.ROUND;
 import static com.sabkuchfresh.feed.utils.FeedUtils.dpToPx;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
-import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_ASSIGNING;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_DRIVER_ARRIVED;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_INITIAL;
 import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_IN_RIDE;
-import static product.clicklabs.jugnoo.datastructure.PassengerScreenMode.P_REQUEST_FINAL;
 
 //import com.google.ads.conversiontracking.AdWordsAutomatedUsageReporter;
 //import com.google.ads.conversiontracking.AdWordsConversionReporter;
@@ -528,7 +494,8 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
             imageViewPaymentModeConfirm, imageViewRideEndWithImage;
     private Button buttonConfirmRequest, buttonEndRideSkip, buttonEndRideInviteFriends;
     private LinearLayout llPayOnline;
-    private TextView tvPayOnline, tvPayOnlineIn,textViewShowFareEstimate;
+    private TextView tvPayOnline, tvPayOnlineIn;
+    private ImageView textViewShowFareEstimate;
     private boolean isFromConfirmToOther;
     private CardView cvPayOnline;
 
@@ -1422,18 +1389,14 @@ public class HomeActivity extends RazorpayBaseActivity implements AppInterruptHa
 //        layoutParams.height = (int) (ASSL.Yscale() * 200);
 //        editTextRSFeedback.setLayoutParams(layoutParams);
         textViewRSOtherError.setText("");
-        textViewShowFareEstimate = (TextView)findViewById(R.id.tvShowFareEstimate);
-        textViewShowFareEstimate.setTypeface(Fonts.mavenRegular(this));
+        textViewShowFareEstimate = (ImageView) findViewById(R.id.tvShowFareEstimate);
+//        textViewShowFareEstimate.setTypeface(Fonts.mavenRegular(this));
         textViewShowFareEstimate.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    if (getSlidingBottomPanel().getSlidingUpPanelLayout().getPanelState() == SlidingUpPanelLayout.PanelState.COLLAPSED) {
-                        getSlidingBottomPanel().getSlidingUpPanelLayout().setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
-                        if(Data.autoData!=null && Data.autoData.getRegions().size()==1){
-                            getSlidingBottomPanel().getViewPager().setCurrentItem(1);
-                        }
-                    }
+                   startActivity(new Intent(HomeActivity.this, OffersActivity.class));
+                   overridePendingTransition(R.anim.right_in, R.anim.right_out);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

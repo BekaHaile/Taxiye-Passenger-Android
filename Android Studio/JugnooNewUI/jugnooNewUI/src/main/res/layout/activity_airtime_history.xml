@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/linearLayoutRoot"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/menu_item_selector_color_F7"
+    android:orientation="vertical"
+    android:splitMotionEvents="false"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_48"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            style="@style/title"
+            android:text="@string/airtime_hist"
+            android:textSize="@dimen/sp_16"
+            app:typekitFont="maven"
+            />
+
+        <ImageView
+            android:id="@+id/imageViewBack"
+            android:layout_width="@dimen/dp_38"
+            android:layout_height="@dimen/dp_38"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/dp_5"
+            android:padding="@dimen/dp_10"
+            android:theme="@style/GreyHighlight"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back_selector"
+            android:rotationY="@integer/locale_mirror_flip"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
+            android:layout_alignParentBottom="true"
+            android:background="@color/stroke_light_grey_alpha"
+            />
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/historyRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/topBar"
+        android:layout_marginTop="10sp"
+        tools:listitem="@layout/airtime_hist_list"
+        >
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+</RelativeLayout>
