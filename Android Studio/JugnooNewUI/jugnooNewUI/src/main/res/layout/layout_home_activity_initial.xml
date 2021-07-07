@@ -358,10 +358,9 @@
                 android:layout_marginTop="15px"
                 android:layout_marginEnd="30px"
                 android:background="@drawable/mylocation_btn_selector"
-                android:tag="mwar"
-                android:visibility="visible"
                 android:contentDescription="@string/move_to_your_location"
-                />
+                android:tag="mwar"
+                android:visibility="visible" />
 
 
             <ImageView
@@ -395,14 +394,15 @@
 
             <ImageView
                 android:id="@+id/tvShowFareEstimate"
+                android:layout_width="33dp"
+                android:layout_height="33dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:visibility="gone"
+                android:layout_marginTop="35dp"
+                android:layout_marginEnd="50px"
                 android:src="@drawable/ic_offer_icon"
                 android:textColor="@android:color/white"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="15dp"/>
+                android:visibility="visible" />
 
         </RelativeLayout>
 

@@ -14,8 +14,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import product.clicklabs.jugnoo.Constants;
@@ -85,7 +87,16 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
         TextView textViewPhone = holder.points;
         textViewPhone.setText(String.valueOf(offerTransaction.getPoints()));
         TextView textViewSecondaryPhone = holder.time;
-        textViewSecondaryPhone.setText(String.valueOf(DateOperations.getDateFromString(offerTransaction.getTime())));
+        DateFormat outPutFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.ENGLISH);
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.ENGLISH);
+        String date = "";
+        try {
+            Date dateInput = inputFormat.parse(offerTransaction.getTime());
+            date = outPutFormat.format(dateInput);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        textViewSecondaryPhone.setText(date);
     }
 
     @Override

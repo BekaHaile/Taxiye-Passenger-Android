@@ -11,7 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import product.clicklabs.jugnoo.R;
 import product.clicklabs.jugnoo.offers.model.AirtimeHistory;
@@ -77,7 +82,16 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         TextView textViewPhone = holder.airtimeAmount;
         textViewPhone.setText(String.valueOf(airtimeHistory.getAmount()));
         TextView textViewSecondaryPhone = holder.date;
-        textViewSecondaryPhone.setText(String.valueOf(DateOperations.getDateFromString(airtimeHistory.getDate())));
+        DateFormat outPutFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.ENGLISH);
+        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.ENGLISH);
+        String date = "";
+        try {
+            Date dateInput = inputFormat.parse(airtimeHistory.getDate());
+            date = outPutFormat.format(dateInput);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        textViewSecondaryPhone.setText(date);
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override
