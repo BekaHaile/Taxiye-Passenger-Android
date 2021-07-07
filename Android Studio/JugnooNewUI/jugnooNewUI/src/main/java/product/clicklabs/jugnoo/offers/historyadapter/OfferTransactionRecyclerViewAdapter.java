@@ -48,14 +48,14 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView imageView;
+        public TextView type;
         public TextView points;
         public TextView time;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            imageView = (ImageView) itemView.findViewById(R.id.type);
+            type = (TextView) itemView.findViewById(R.id.type);
             points = (TextView) itemView.findViewById(R.id.points);
             time = (TextView) itemView.findViewById(R.id.time);
         }
@@ -81,9 +81,8 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
         // Get the data model based on position
         Transaction offerTransaction = offerTransactions.get(position);
 
-        ImageView typeView = holder.imageView;
-        if(offerTransaction.getType() == "received") typeView.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_received));
-        else typeView.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.ic_sent));
+        TextView typeView = holder.type;
+        typeView.setText(offerTransaction.getType());
         TextView textViewPhone = holder.points;
         textViewPhone.setText(String.valueOf(offerTransaction.getPoints()));
         TextView textViewSecondaryPhone = holder.time;
