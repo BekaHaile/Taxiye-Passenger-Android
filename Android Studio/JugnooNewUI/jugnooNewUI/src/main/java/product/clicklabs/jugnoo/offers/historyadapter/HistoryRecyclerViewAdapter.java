@@ -77,21 +77,24 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         // Get the data model based on position
         AirtimeHistory airtimeHistory = airtimeHistories.get(position);
 
-        TextView textView = holder.voucherNumber;
-        textView.setText(airtimeHistory.getVoucherNumber());
-        TextView textViewPhone = holder.airtimeAmount;
-        textViewPhone.setText(String.valueOf(airtimeHistory.getAmount()));
-        TextView textViewSecondaryPhone = holder.date;
-        DateFormat outPutFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.ENGLISH);
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.ENGLISH);
-        String date = "";
+        TextView textViewAirtimeAmount = holder.airtimeAmount;
+        textViewAirtimeAmount.setText(String.valueOf(airtimeHistory.getAmount()));
+        TextView textViewDate = holder.date;
+
+        String dateString = airtimeHistory.getDate();
+
+        String temp = dateString.replace("Z", " UTC");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+        Date date = null;
         try {
-            Date dateInput = inputFormat.parse(airtimeHistory.getDate());
-            date = outPutFormat.format(dateInput);
+            date = sdf.parse(temp);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        textViewSecondaryPhone.setText(date);
+        SimpleDateFormat newDate = new SimpleDateFormat("MMM d, h:mm a");
+        String finalDate = newDate.format(date);
+
+        textViewDate.setText(finalDate);
 
         holder.callButton.setOnClickListener(new View.OnClickListener() {
             @Override

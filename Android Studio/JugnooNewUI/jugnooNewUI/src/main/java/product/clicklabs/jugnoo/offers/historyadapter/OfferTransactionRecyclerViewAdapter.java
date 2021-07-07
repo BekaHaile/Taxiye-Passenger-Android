@@ -83,19 +83,24 @@ public class OfferTransactionRecyclerViewAdapter extends RecyclerView.Adapter<Of
 
         TextView typeView = holder.type;
         typeView.setText(offerTransaction.getType());
-        TextView textViewPhone = holder.points;
-        textViewPhone.setText(String.valueOf(offerTransaction.getPoints()));
-        TextView textViewSecondaryPhone = holder.time;
-        DateFormat outPutFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy hh:mm a", Locale.ENGLISH);
-        DateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.ENGLISH);
-        String date = "";
+        TextView textViewPoints = holder.points;
+        textViewPoints.setText(String.valueOf(offerTransaction.getPoints()));
+        TextView textViewTime = holder.time;
+
+        String dateString = offerTransaction.getTime();
+
+        String temp = dateString.replace("Z", " UTC");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+        Date date = null;
         try {
-            Date dateInput = inputFormat.parse(offerTransaction.getTime());
-            date = outPutFormat.format(dateInput);
+            date = sdf.parse(temp);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        textViewSecondaryPhone.setText(date);
+        SimpleDateFormat newDate = new SimpleDateFormat("MMM d, h:mm a");
+        String finalDate = newDate.format(date);
+
+        textViewTime.setText(finalDate);
     }
 
     @Override
