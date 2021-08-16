@@ -643,6 +643,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/TransparentTheme">
         </activity>
+        <activity android:name=".wallet.TopUpOptionSelector"
+        android:label="TopUpOptionSelector"
+        android:screenOrientation="portrait"
+        android:theme="@style/TransparentTheme">
+        </activity>
+        <activity android:name=".wallet.HelloCash"
+            android:label="HelloCash"
+            android:screenOrientation="portrait"
+            android:theme="@style/TransparentTheme">
+        </activity>
     </application>
 
 </manifest>

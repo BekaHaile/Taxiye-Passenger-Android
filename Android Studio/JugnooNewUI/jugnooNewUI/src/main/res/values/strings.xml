@@ -595,6 +595,7 @@
 
     <string name="recharge">Recharge</string>
     <string name="amount">Amount</string>
+    <string name="selectPartner">Select Partner</string>
     <string name="driver">Driver</string>
     <string name="paytm_recharge_via_driver_info">is recharging\nyour Paytm account registered\non number</string>
     <string name="type_the_amount_to_confirm_the_transaction">Type the amount to confirm\nthe transaction</string>
@@ -805,6 +806,22 @@
     <string name="balance">BALANCE</string>
     <string name="buy_airtime">Buy Airtime</string>
     <string name="airtime_hist">Airtime History</string>
+    <string name="top_up">Top up Wallet</string>
+    <string name="cash_out">Cash out from Wallet</string>
+    <string name="cbe_birr">CBE Birr</string>
+    <string name="hello_cash">Hello Cash</string>
+    <string name="follow_the_following"><b>Follow the following steps</b></string>
+    <string name="press_the_call_button"> 1. Dial *847#. \n
+        2. Select the option number 5 (Pay Bill). \n
+        3. Select option number 1 (Select Beneficiary Short Code). \n
+        4. Select Zero(Input Short Code). \n
+        5. Enter the short code %s. \n
+        6. Enter the bill reference number %s. \n
+        7. Enter your CBE PIN. \n
+        8. Payment is Done. \n</string>
+    <string name="cbe_birr_cashout_message">Do you want to continue with this transaction?</string>
+    <string name="hello_cash_instruction">Pay your bill at your Lucy, Walya or Axum HelloCash agent or bank! Check *912# or call 8807 for information. \n ID: %s\n pay: %s \n Amount: %s Birr \n Description: %s</string>
+
     <string name="transfer">Transfer</string>
     <string name="transaction">Transaction</string>
     <string name="transfer_coins">Transfer coins</string>

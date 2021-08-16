@@ -36,6 +36,7 @@ import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
+import product.clicklabs.jugnoo.wallet.TopUpOptionSelector;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
 
 
@@ -59,7 +60,7 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
     RelativeLayout relativeLayoutFreeCharge;
     TextView textViewFreeCharge, textViewFreeChargeBalanceValue,textViewStripeCard,textViewAcceptCard,textViewPayStackCard;
 
-    RelativeLayout relativeLayoutWalletTransactions, relativeLayoutPayTransactions, relativeLayoutTransfer;
+    RelativeLayout relativeLayoutWalletTransactions, relativeLayoutPayTransactions, relativeLayoutTransfer, relativeLayoutTopUp, relativeLayoutCashOut;
 	private PaymentModeConfigData stripeConfigData;
 	private PaymentModeConfigData acceptCardConfigData;
 	private PaymentModeConfigData payStackConfigData;
@@ -134,6 +135,8 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		linearLayoutWalletContainer = (LinearLayout) rootView.findViewById(R.id.linearLayoutWalletContainer);
 		relativeLayoutJugnooCash = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutWallet);
 		relativeLayoutTransfer = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTransfer);
+		relativeLayoutTopUp = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutTopUp);
+		relativeLayoutCashOut = (RelativeLayout) rootView.findViewById(R.id.relativeLayoutCashOut);
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setTypeface(Fonts.mavenRegular(paymentActivity));
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashBalance)).setText(getString(R.string.jugnoo_cash, getString(R.string.app_name)));
 		((TextView)rootView.findViewById(R.id.textViewJugnooCashTNC)).setTypeface(Fonts.mavenLight(paymentActivity));
@@ -208,6 +211,24 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 			@Override
 			public void onClick(View view) {
 				startActivity(new Intent(paymentActivity,SendCreditsToCustomer.class));
+				paymentActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+
+		relativeLayoutTopUp.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Prefs.with(getContext()).save("isTopUp", true);
+				startActivity(new Intent(paymentActivity, TopUpOptionSelector.class));
+				paymentActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
+			}
+		});
+
+		relativeLayoutCashOut.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Prefs.with(getContext()).save("isTopUp", false);
+				startActivity(new Intent(paymentActivity,TopUpOptionSelector.class));
 				paymentActivity.overridePendingTransition(R.anim.right_in, R.anim.right_out);
 			}
 		});
@@ -470,6 +491,8 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		relativeLayoutWalletTransactions.setVisibility(Prefs.with(paymentActivity).getInt(Constants.KEY_CUSTOMER_SHOW_WALLET_TRANSACTIONS, 1) == 1 ? View.VISIBLE : View.GONE);
 		relativeLayoutJugnooCash.setVisibility(Prefs.with(paymentActivity).getInt(Constants.KEY_CUSTOMER_SHOW_WALLET_CASH, 1) == 1 ? View.VISIBLE : View.GONE);
 		relativeLayoutTransfer.setVisibility(View.VISIBLE);
+		relativeLayoutTopUp.setVisibility(View.VISIBLE);
+		relativeLayoutCashOut.setVisibility(View.VISIBLE);
 	}
 
 
@@ -508,6 +531,8 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 					}
 				}
 				linearLayoutWalletContainer.addView(relativeLayoutTransfer);
+				linearLayoutWalletContainer.addView(relativeLayoutTopUp);
+				linearLayoutWalletContainer.addView(relativeLayoutCashOut);
 			}
 		} catch (Exception e){
 			e.printStackTrace();

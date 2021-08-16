@@ -43,6 +43,8 @@ import product.clicklabs.jugnoo.retrofit.model.UploadDocumentResponse;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
+import product.clicklabs.jugnoo.wallet.models.HelloCashCashoutResponse;
+import product.clicklabs.jugnoo.wallet.models.ResponseModel;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -785,5 +787,15 @@ public interface ApiService {
     @POST("/taxiye-offers/transfer")
     void offerTransfer(@FieldMap Map<String, String> params,
                           Callback<OfferTransfer> callback);
+
+    @FormUrlEncoded
+    @POST("/deposit/request")
+    void helloCashTopUp(@FieldMap Map<String, String> params,
+                        Callback<ResponseModel<HelloCashCashoutResponse>> callback);
+
+    @FormUrlEncoded
+    @POST("/cashout/request")
+    void helloCashCashout(@FieldMap Map<String, String> params,
+                          Callback<ResponseModel<HelloCashCashoutResponse>> callback);
 
 }
