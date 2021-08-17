@@ -7,7 +7,7 @@ public class HelloCashCashoutResponse {
 
     @Expose
     @SerializedName("amount")
-    private String amount;
+    private int amount;
 
     @Expose
     @SerializedName("code")
@@ -39,7 +39,7 @@ public class HelloCashCashoutResponse {
 
     @Expose
     @SerializedName("id")
-    private int id ;
+    private String id ;
 
     @Expose
     @SerializedName("status")
@@ -51,17 +51,17 @@ public class HelloCashCashoutResponse {
 
     @Expose
     @SerializedName("toname")
-    private boolean toName ;
+    private String toName ;
 
     @Expose
     @SerializedName("to")
     private String to ;
 
-    public String getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
@@ -121,11 +121,11 @@ public class HelloCashCashoutResponse {
         this.fromName = fromName;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -145,11 +145,11 @@ public class HelloCashCashoutResponse {
         this.statusDetail = statusDetail;
     }
 
-    public boolean isToName() {
+    public String isToName() {
         return toName;
     }
 
-    public void setToName(boolean toName) {
+    public void setToName(String toName) {
         this.toName = toName;
     }
 

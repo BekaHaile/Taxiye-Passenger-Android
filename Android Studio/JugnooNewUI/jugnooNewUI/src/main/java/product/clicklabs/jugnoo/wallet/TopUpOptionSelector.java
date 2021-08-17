@@ -24,7 +24,7 @@ public class TopUpOptionSelector extends BaseActivity {
         setContentView(R.layout.activity_wallet_top_up);
 
         TextView title = (TextView) findViewById(R.id.textViewTitle);
-        title.setTypeface(Fonts.mavenRegular(this));
+        title.setTypeface(Fonts.avenirNext(TopUpOptionSelector.this));
 
         isTopUp = Prefs.with(this).getBoolean("isTopUp", false);
         if(isTopUp)

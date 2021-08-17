@@ -791,11 +791,11 @@ public interface ApiService {
     @FormUrlEncoded
     @POST("/deposit/request")
     void helloCashTopUp(@FieldMap Map<String, String> params,
-                        Callback<ResponseModel<HelloCashCashoutResponse>> callback);
+                        Callback<HelloCashCashoutResponse> callback);
 
     @FormUrlEncoded
     @POST("/cashout/request")
     void helloCashCashout(@FieldMap Map<String, String> params,
-                          Callback<ResponseModel<HelloCashCashoutResponse>> callback);
+                          Callback<HelloCashCashoutResponse> callback);
 
 }
