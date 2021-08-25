@@ -2,6 +2,7 @@ package product.clicklabs.jugnoo.wallet.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.sabkuchfresh.analytics.GACategory;
 import com.sabkuchfresh.analytics.GAUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.fragment.app.Fragment;
 import product.clicklabs.jugnoo.Constants;
@@ -24,10 +26,13 @@ import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.HelpParticularActivity;
 import product.clicklabs.jugnoo.MyApplication;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
 import product.clicklabs.jugnoo.credits.SendCreditsToCustomer;
 import product.clicklabs.jugnoo.datastructure.HelpSection;
 import product.clicklabs.jugnoo.datastructure.PaymentOption;
 import product.clicklabs.jugnoo.home.HomeActivity;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
 import product.clicklabs.jugnoo.stripe.StripeAddCardFragment;
 import product.clicklabs.jugnoo.stripe.StripeViewCardFragment;
 import product.clicklabs.jugnoo.utils.ASSL;
@@ -37,7 +42,11 @@ import product.clicklabs.jugnoo.utils.Prefs;
 import product.clicklabs.jugnoo.utils.Utils;
 import product.clicklabs.jugnoo.wallet.PaymentActivity;
 import product.clicklabs.jugnoo.wallet.TopUpOptionSelector;
+import product.clicklabs.jugnoo.wallet.models.PaymentConfig;
 import product.clicklabs.jugnoo.wallet.models.PaymentModeConfigData;
+import product.clicklabs.jugnoo.wallet.models.WalletEnabledPayments;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 
 public class WalletFragment extends Fragment implements GAAction, GACategory {
@@ -491,8 +500,46 @@ public class WalletFragment extends Fragment implements GAAction, GACategory {
 		relativeLayoutWalletTransactions.setVisibility(Prefs.with(paymentActivity).getInt(Constants.KEY_CUSTOMER_SHOW_WALLET_TRANSACTIONS, 1) == 1 ? View.VISIBLE : View.GONE);
 		relativeLayoutJugnooCash.setVisibility(Prefs.with(paymentActivity).getInt(Constants.KEY_CUSTOMER_SHOW_WALLET_CASH, 1) == 1 ? View.VISIBLE : View.GONE);
 		relativeLayoutTransfer.setVisibility(View.VISIBLE);
-		relativeLayoutTopUp.setVisibility(View.VISIBLE);
-		relativeLayoutCashOut.setVisibility(View.VISIBLE);
+
+		checkPaymentMethodAvailable();
+	}
+
+	private  void checkPaymentMethodAvailable(){
+		HashMap<String, String> params = new HashMap<>();
+		params.put(Constants.KEY_ACCESS_TOKEN, Data.userData.accessToken);
+		params.put(Constants.KEY_CLIENT_ID, Config.getLastOpenedClientId(getContext()));
+		params.put(Constants.KEY_IS_ACCESS_TOKEN_NEW, "1");
+		params.put(Constants.KEY_LATITUDE, String.valueOf(Data.latitude));
+		params.put(Constants.KEY_LONGITUDE, String.valueOf(Data.longitude));
+
+		new HomeUtil().putDefaultParams(params);
+		RestClient.getApiService().fetchWalletEnabledPayments(params, new retrofit.Callback<WalletEnabledPayments<PaymentConfig>>() {
+
+			@Override
+			public void success(WalletEnabledPayments<PaymentConfig> walletEnabledPayments, Response response) {
+				String name = "";
+				int enabled = 0;
+
+				for(PaymentConfig paymentConfig : walletEnabledPayments.getData()) {
+					name = paymentConfig.getName();
+					enabled = paymentConfig.getEnabled();
+
+					relativeLayoutTopUp.setVisibility(View.GONE);
+					relativeLayoutCashOut.setVisibility(View.GONE);
+
+					if (name.equals("hellocash") && enabled == 1) {
+						Prefs.with(getContext()).save("helloCashEnabled", true);
+						relativeLayoutTopUp.setVisibility(View.VISIBLE);
+						relativeLayoutCashOut.setVisibility(View.VISIBLE);
+					}
+				}
+			}
+
+			@Override
+			public void failure(RetrofitError error) {
+
+			}
+		});
 	}
 
 

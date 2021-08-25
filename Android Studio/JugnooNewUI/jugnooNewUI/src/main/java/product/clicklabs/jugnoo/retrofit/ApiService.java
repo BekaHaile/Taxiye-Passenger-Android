@@ -44,7 +44,9 @@ import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
 import product.clicklabs.jugnoo.wallet.models.HelloCashCashoutResponse;
+import product.clicklabs.jugnoo.wallet.models.PaymentConfig;
 import product.clicklabs.jugnoo.wallet.models.ResponseModel;
+import product.clicklabs.jugnoo.wallet.models.WalletEnabledPayments;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -483,6 +485,11 @@ public interface ApiService {
     @POST("/fetch_wallet_balance")
     void fetchWalletBalance(@FieldMap Map<String, String> params,
                            Callback<SettleUserDebt> callback);
+
+    @FormUrlEncoded
+    @POST("/fetch_wallet_balance")
+    void fetchWalletEnabledPayments(@FieldMap Map<String, String> params,
+                            Callback<WalletEnabledPayments<PaymentConfig>> callback);
 
     @FormUrlEncoded
     @POST("/mobikwik/unlink")

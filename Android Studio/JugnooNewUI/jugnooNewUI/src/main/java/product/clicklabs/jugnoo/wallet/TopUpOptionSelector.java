@@ -1,15 +1,28 @@
 package product.clicklabs.jugnoo.wallet;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+
 import product.clicklabs.jugnoo.BaseActivity;
+import product.clicklabs.jugnoo.Constants;
+import product.clicklabs.jugnoo.Data;
 import product.clicklabs.jugnoo.R;
+import product.clicklabs.jugnoo.config.Config;
+import product.clicklabs.jugnoo.home.HomeUtil;
+import product.clicklabs.jugnoo.retrofit.RestClient;
+import product.clicklabs.jugnoo.retrofit.model.SettleUserDebt;
 import product.clicklabs.jugnoo.utils.Fonts;
 import product.clicklabs.jugnoo.utils.Prefs;
+import product.clicklabs.jugnoo.wallet.models.PaymentConfig;
+import product.clicklabs.jugnoo.wallet.models.WalletEnabledPayments;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class TopUpOptionSelector extends BaseActivity {
 
@@ -79,6 +92,19 @@ public class TopUpOptionSelector extends BaseActivity {
     public void openHelloCashTopUpActivity(){
         startActivity(new Intent(TopUpOptionSelector.this, HelloCash.class));
         overridePendingTransition(R.anim.right_in, R.anim.right_out);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        boolean helloCashEnabled = Prefs.with(this).getBoolean("helloCashEnabled", true);
+        if(helloCashEnabled){
+            helloCashOption.setVisibility(View.VISIBLE);
+        }
+        else{
+            helloCashOption.setVisibility(View.GONE);
+        }
     }
 }
 
