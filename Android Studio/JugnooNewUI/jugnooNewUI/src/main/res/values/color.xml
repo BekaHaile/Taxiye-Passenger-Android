@@ -76,6 +76,7 @@
 
 
     <color name="red">#F23A30</color>
+    <color name="red_light">#FF2D55</color>
     <color name="red_dark">#EA452F</color>
     <color name="red_dark_alpha">#99EA452F</color>
     <color name="red_alert_no_address">#ff0437</color>
