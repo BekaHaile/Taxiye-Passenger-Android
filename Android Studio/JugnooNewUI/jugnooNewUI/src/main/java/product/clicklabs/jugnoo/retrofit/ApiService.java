@@ -43,6 +43,10 @@ import product.clicklabs.jugnoo.retrofit.model.UploadDocumentResponse;
 import product.clicklabs.jugnoo.stripe.model.StripeCardResponse;
 import product.clicklabs.jugnoo.support.models.ShowPanelResponse;
 import product.clicklabs.jugnoo.t20.models.MatchScheduleResponse;
+import product.clicklabs.jugnoo.wallet.models.HelloCashCashoutResponse;
+import product.clicklabs.jugnoo.wallet.models.PaymentConfig;
+import product.clicklabs.jugnoo.wallet.models.ResponseModel;
+import product.clicklabs.jugnoo.wallet.models.WalletEnabledPayments;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
@@ -483,6 +487,11 @@ public interface ApiService {
                            Callback<SettleUserDebt> callback);
 
     @FormUrlEncoded
+    @POST("/fetch_wallet_balance")
+    void fetchWalletEnabledPayments(@FieldMap Map<String, String> params,
+                            Callback<WalletEnabledPayments<PaymentConfig>> callback);
+
+    @FormUrlEncoded
     @POST("/mobikwik/unlink")
     void mobikwikUnlink(@FieldMap Map<String, String> params,
                             Callback<SettleUserDebt> callback);
@@ -785,5 +794,15 @@ public interface ApiService {
     @POST("/taxiye-offers/transfer")
     void offerTransfer(@FieldMap Map<String, String> params,
                           Callback<OfferTransfer> callback);
+
+    @FormUrlEncoded
+    @POST("/deposit/request")
+    void helloCashTopUp(@FieldMap Map<String, String> params,
+                        Callback<HelloCashCashoutResponse> callback);
+
+    @FormUrlEncoded
+    @POST("/cashout/request")
+    void helloCashCashout(@FieldMap Map<String, String> params,
+                          Callback<HelloCashCashoutResponse> callback);
 
 }
