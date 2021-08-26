@@ -595,6 +595,7 @@
 
     <string name="recharge">Recharge</string>
     <string name="amount">Amount</string>
+    <string name="minimumCashOut">Minimum Cash out amount is 25ETB.</string>
     <string name="selectPartner">Select Partner</string>
     <string name="driver">Driver</string>
     <string name="paytm_recharge_via_driver_info">is recharging\nyour Paytm account registered\non number</string>
