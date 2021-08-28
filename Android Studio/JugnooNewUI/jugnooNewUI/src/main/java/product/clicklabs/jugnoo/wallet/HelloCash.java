@@ -154,7 +154,7 @@ public class HelloCash extends BaseActivity implements OnCountryPickerListener {
         });
 
         Spinner dropdown = findViewById(R.id.spinner1);
-        String[] items = new String[]{"Lucy", "Walya", "Axum"};
+        String[] items = new String[]{"Lion", "Wogagen"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
