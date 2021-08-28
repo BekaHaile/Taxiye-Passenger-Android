@@ -1,7 +1,9 @@
 package product.clicklabs.jugnoo.wallet;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -154,7 +156,7 @@ public class HelloCash extends BaseActivity implements OnCountryPickerListener {
         });
 
         Spinner dropdown = findViewById(R.id.spinner1);
-        String[] items = new String[]{"Lion", "Wogagen"};
+        String[] items = new String[]{"Lion", "Wegagen"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
 
@@ -178,7 +180,8 @@ public class HelloCash extends BaseActivity implements OnCountryPickerListener {
                         @Override
                         public void success(HelloCashCashoutResponse helloCashCashoutResponse, Response response) {
                             DialogPopup.dismissLoadingDialog();
-                            buildDialog(helloCashCashoutResponse);
+                            if(!helloCashCashoutResponse.getIsUpcoming())
+                                buildDialog(helloCashCashoutResponse);
                         }
 
                         @Override
@@ -205,7 +208,8 @@ public class HelloCash extends BaseActivity implements OnCountryPickerListener {
                         public void success(HelloCashCashoutResponse helloCashCashoutResponse, Response response) {
                             DialogPopup.dismissLoadingDialog();
                             Toast.makeText(HelloCash.this, HelloCash.this.getString(R.string.successful), Toast.LENGTH_SHORT).show();
-                            finish();
+                            if(!helloCashCashoutResponse.getIsUpcoming())
+                                finish();
                         }
 
                         @Override
